@@ -1,0 +1,8 @@
+.MuiButton-outlined {
+    height: 40px;
+    background-color: green;
+}
+
+.MuiButton-outlined .MuiButton-label {
+    color: #ffffff;
+}

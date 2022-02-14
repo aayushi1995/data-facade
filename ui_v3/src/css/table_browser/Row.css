@@ -1,0 +1,83 @@
+.grid_root {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.box_root {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 40px;
+    margin-right: 40px;
+    border-color: #bdbdbd;
+}
+
+.row_contents {
+    display: "flex";
+}
+
+.MuiIconButton-root .MuiIconButton-label {
+    color: #42a5f5 !important;
+}
+
+.divider {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.row_items_container {
+    display: "flex";
+    align-items: center;
+    color: #616161;
+}
+
+.row_items_container .MuiGrid-grid-sm-3 {
+    color: #000000;
+}
+
+.icons_item_container {
+    display: "flex";
+    color: #616161;
+    align-items: center;
+}
+
+.collapse {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.link {
+    color: dodgerblue;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.sync:hover, .link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.box_root {
+    cursor: pointer;
+}
+
+.sync {
+    font-size: 16px;
+    justify-content: flex-start;
+    color: dodgerblue;
+    font-weight: bold;
+}
+
+.add_action_label {
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: none;
+    color: dodgerblue;
+    font-weight: bold;
+    align-items: center;
+    line-height: normal;
+}

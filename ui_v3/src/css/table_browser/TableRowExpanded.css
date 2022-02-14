@@ -1,0 +1,11 @@
+.link {
+    color: '#616161';
+    text-decoration: 'none';
+}
+
+.MuiButton-root {
+    outline: "none";
+    text-decoration: "none";
+    text-transform: "none";
+    font-weight: 400;
+}

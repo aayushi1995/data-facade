@@ -1,0 +1,13 @@
+.flex {
+    display: 'flex';
+}
+
+.button_green {
+    background-color: green;
+    color: white;
+}
+
+.search_filter {
+    margin-left: 40px;
+    margin-right: 40px;
+}

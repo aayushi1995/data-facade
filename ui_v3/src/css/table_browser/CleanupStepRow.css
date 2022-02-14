@@ -1,0 +1,11 @@
+.divider {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.grid_root {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 5px 15px;
+}

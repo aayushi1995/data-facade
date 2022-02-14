@@ -1,0 +1,73 @@
+.box_root {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 40px;
+    margin-right: 40px;
+    border-radius: 10px;
+}
+
+.grid_root {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.collapse {
+    color: #616161;
+    font-size: 20px;
+}
+
+.link {
+    color: #616161;
+    text-decoration: none;
+}
+
+.data_checks_icon {
+    width: 28px;
+}
+
+.divider {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.instance_name {
+    color: #000000;
+    font-size: 18px;
+}
+
+.grid_row {
+    font-size: 16px;
+    color: #616161;
+}
+
+.collapse_instance_details {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: dodgerblue;
+}
+
+.collapse_parameter_details {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: green;
+}
+
+.indicator {
+    margin-left: 10px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.execute-root {
+    background-color: green !important;
+}
+
+.execute-label {
+    color: white;
+}

@@ -1,0 +1,50 @@
+.box_root {
+    margin: 10px 40px;
+    border: 1px solid #bdbdbd;
+    border-radius: 10px;
+}
+
+.grid_root {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 5px 40px;
+}
+
+.link {
+    color: dodgerblue;
+    text-decoration: none;
+}
+
+.short_description {
+    display: flex;
+    font-size: 18px;
+    align-items: center;
+}
+
+.date {
+    color: #616161;
+    font-size: 18px;
+    align-items: center;
+    display: flex;
+}
+
+.collapse {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+.divider {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.alert_icon {
+    width: 28px;
+}
+
+.grid_content {
+    font-size: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}

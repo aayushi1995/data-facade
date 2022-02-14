@@ -1,0 +1,55 @@
+/tableBrowser :-
+	
+	Expand : false
+    
+    Request :- 
+    {
+        "entityName":"TableProperties",
+        "actionProperties":{
+            "filter":{
+                TABLE_PROPERTIES_FILTER
+            }
+        }
+    }
+    Response :- 
+    [
+        {
+            TableUniqueName : '',
+            TotalExecutions : '',
+            Alerts : '',
+            Checks : '',
+        }
+    ]
+
+	Expand : true
+
+    Request :-
+    {
+        "entityName":"TableProperties",
+        "actionProperties":{
+            "filter":{
+                TABLE_PROPERTIES_FILTER
+            },
+            "expand" : true
+        }
+    }
+    Response :- 
+    {
+        CompletedExecutions : '',
+        FailedExecutions : '',
+        StartedExecutions : '',
+        CreatedExecutions : '',
+        ProviderId : '',
+        ProviderName : '',
+        ColumnCount : [
+            {
+                type : 'string',
+                count : 3
+            },
+            {
+                type : 'int',
+                count : 2
+            }
+        ]
+    }
+
