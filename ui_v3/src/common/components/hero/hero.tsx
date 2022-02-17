@@ -40,10 +40,7 @@ const Hero = (props: HeroProps) => {
             <Grid item xs={11} className="card">
                 <Box>
                     <Box className="name">
-                        <Box className="avatar">
-                            <IconButton onClick={props.onAvatarClick}>
-                                <img className="circle" src={demoPic}/>
-                            </IconButton>              
+                        <Box className="avatar">            
                         </Box>
                         <Box className="name-1">
                             <Box>

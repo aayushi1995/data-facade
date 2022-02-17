@@ -8,7 +8,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import {useHistory, useRouteMatch} from 'react-router-dom'
 import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'
 import labels from './../../../labels/labels'
-
+import OverviewWeeklyEarnings from '../components/OverviewWeeklyEarnings'
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import NoData from '../../../common/components/NoData'
 import {PageHeader} from "../../../common/components/header/PageHeader";
@@ -123,6 +123,7 @@ const AllApplicationView = (props) => {
             <Grid container>
                 <Grid item xs={12}>
                     <PageHeader path={match.path} url={match.url}/>
+                    <OverviewWeeklyEarnings/>
                 </Grid>
                 <DataGrid
                     selectionModel={selectedAppIds}

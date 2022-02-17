@@ -30,8 +30,7 @@ DefaultView.args = {
     <IconButton>
         <DeleteIcon/>
     </IconButton>,
-    ],
-    onAvatarClick: (event) => console.log(event)
+    ]
 }
 
 export const LongDescription = Template.bind({});
@@ -44,8 +43,7 @@ LongDescription.args = {
     <IconButton>
         <DeleteIcon/>
     </IconButton>
-    ],
-    onAvatarClick: (event) => console.log(event)
+    ]
 }
 
 export const ManyButtons = Template.bind({});
@@ -79,6 +77,5 @@ ManyButtons.args = {
     <IconButton>
         <AlarmIcon/>
     </IconButton>,
-    ],
-    onAvatarClick: (event) => console.log(event)
+    ]
 }
