@@ -1,10 +1,10 @@
 import { Button } from "@material-ui/core"
 
 
-export const DataFacadeButton = (props ?: any) => {
+const DFButton = (props ?: any) => {
     return (
         <Button {...props}/>
     )
 }
 
-export default DataFacadeButton
+export default DFButton
