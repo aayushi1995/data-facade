@@ -1,17 +1,18 @@
 import React from 'react';
-import { IconButton } from '@material-ui/core';
+import { Box, IconButton } from '@material-ui/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AlarmIcon from '@mui/icons-material/Alarm';import {Meta, Story} from "@storybook/react";
-import Hero, {HeroProps} from "./hero"
+import HeroInfo, {HeroInfoProps} from "./HeroInfo"
 
 
 export default {
-    title: "Hero",
-    component: Hero
+    title: "Hero/Hero",
+    component: HeroInfo,
+    argTypes: { onAvatarClick: { action: 'clicked' } }
 }
 
 
-const Template: Story<HeroProps> = (args) => <Hero {...args} />
+const Template: Story<HeroInfoProps> = (args) => <Box><HeroInfo {...args} /></Box>
 
 
 export const DefaultView = Template.bind({});
@@ -30,7 +31,9 @@ DefaultView.args = {
     <IconButton>
         <DeleteIcon/>
     </IconButton>,
-    ]
+    ],
+    onAvatarClick: (event) => console.log(event),
+    onCardClick: (event) => console.log(event)
 }
 
 export const LongDescription = Template.bind({});
@@ -43,7 +46,9 @@ LongDescription.args = {
     <IconButton>
         <DeleteIcon/>
     </IconButton>
-    ]
+    ],
+    onAvatarClick: (event) => console.log(event),
+    onCardClick: (event) => console.log(event)
 }
 
 export const ManyButtons = Template.bind({});
@@ -77,5 +82,7 @@ ManyButtons.args = {
     <IconButton>
         <AlarmIcon/>
     </IconButton>,
-    ]
+    ],
+    onAvatarClick: (event) => console.log(event),
+    onCardClick: (event) => console.log(event)
 }
