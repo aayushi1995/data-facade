@@ -2,7 +2,7 @@ import { withDesign } from 'storybook-addon-designs'
 export const parameters = {
   design: {
     type: 'figma',
-    url: 'https://www.figma.com/file/awGFKcU9U0XpnU4b500iT8/Early-Concepts?node-id=240%3A21'
+    url: 'https://www.figma.com/file/CyosX2UsPUoIbt48of5tIz/Data-Facade-V0?node-id=251%3A15466'
   },
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
