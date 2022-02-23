@@ -1,0 +1,97 @@
+// @ts-nocheck
+
+import React from "react";
+import { Box } from "@material-ui/core";
+import { Story } from "@storybook/react";
+import WorkflowActionContainer, { WorkflowActionContainerProps } from "../WorkflowActionContainer";
+import { ActionCardProps } from "../../../../common/components/workflow-action/ActionCard";
+
+
+export default {
+    title: "WORKFLOW/Workflow Actions Container",
+    component: WorkflowActionContainer
+}
+
+const Template: Story<WorkflowActionContainerProps> = (args) => {
+    const [actions, setActions] = React.useState(args.Actions)
+
+    const onActionListChange = (e: ActionCardProps[]) => {
+        setActions(e)
+        console.log(e)
+    }
+
+    return (
+        <Box sx={{ display: 'flex', width: "400px"}}>
+            <WorkflowActionContainer Actions={actions} onActionListChange={onActionListChange} />
+        </Box>)
+}
+
+export const BuildingWorkflow = Template.bind({});
+
+var actions = [{
+                actionId: "Id1",
+                actionName: "name1",
+                actionGroup: "Data Ceansing",
+                isComplete: false,
+                displayRowsEffected: false,
+                deleteButtonAction: ((e) => {})
+            },
+            {
+                actionId: "Id2",
+                actionName: "name2",
+                actionGroup: "Data Ceansing",
+                isComplete: false,
+                displayRowsEffected: false,
+                deleteButtonAction: ((e) => {})
+            },
+            {
+                actionId: "Id3",
+                actionName: "name3",
+                actionGroup: "Data Ceansing",
+                isComplete: false,
+                displayRowsEffected: false,
+                deleteButtonAction: ((e) => {}),
+                isCardSelected: true
+            },
+            {
+                actionId: "Id4",
+                actionName: "name4",
+                actionGroup: "Data Ceansing",
+                isComplete: false,
+                displayRowsEffected: false,
+                deleteButtonAction: ((e) => {})
+            },
+            {
+                actionId: "Id5",
+                actionName: "name5",
+                actionGroup: "Data Ceansing",
+                isComplete: false,
+                displayRowsEffected: false,
+                deleteButtonAction: ((e) => {})
+            },
+            {
+                actionId: "Id6",
+                actionName: "name6",
+                actionGroup: "Data Ceansing",
+                isComplete: false,
+                displayRowsEffected: false,
+                deleteButtonAction: ((e) => {})
+            },
+            {
+                actionId: "Id7",
+                actionName: "name7",
+                actionGroup: "Data Ceansing",
+                isComplete: false,
+                displayRowsEffected: false,
+                deleteButtonAction: ((e) => {})
+            }]
+
+BuildingWorkflow.args = {
+    stageName: 'preprocess',
+    Actions: actions,
+    onActionListChange: ((x) => {
+        console.log("here")
+    })
+}
+
+
