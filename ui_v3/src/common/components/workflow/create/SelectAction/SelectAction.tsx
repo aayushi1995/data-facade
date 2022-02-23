@@ -5,10 +5,16 @@ import {Tabs, Tab} from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
 import { ReactComponent as DefaultIcon } from "../Icon.svg";
 import GroupDropDown from '../GroupDropDown';
+import SelectFromAllActions from '../SelectFromAllActions';
+
+export interface ActionDefinitionToAdd {
+    Id: string,
+    DisplayName: string
+}
 
 export interface SelectActionProps {
     groups: {groupName: string, actionCount: number}[],
-    onActionSearch: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>
+    onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void
 }
 
 interface TabPanelProps {
@@ -72,7 +78,7 @@ const SelectAction = (props: SelectActionProps) => {
                 </Box>
                 <Box sx={{pt: 2}}>
                     <TabPanel value={activeTab} index={0}>
-                        <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                        {/* <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
                             <Box sx={{width: "100%"}}>
                             <TextField
                                 id="input-with-icon-textfield"
@@ -97,10 +103,10 @@ const SelectAction = (props: SelectActionProps) => {
                                     </Box>
                                 )}
                             </Box>
-                        </Box>
+                        </Box> */}
                     </TabPanel>
                     <TabPanel value={activeTab} index={1}>
-                        awddw
+                        <SelectFromAllActions onAddAction={props.onAddAction}/>
                     </TabPanel>
                 </Box>
             </Box>

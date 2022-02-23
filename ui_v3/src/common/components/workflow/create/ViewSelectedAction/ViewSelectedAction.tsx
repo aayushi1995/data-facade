@@ -48,7 +48,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
 
     const onParameterSelectForEdit = (actionParameter: ActionParameterDefinition) => setSelectedParameterForEdit(actionParameter)
     const deleteParametersWithIds = (actionParameterIds: string[]) => console.log("Deleting", actionParameterIds)
-    const onCodeChange = (newCode) => console.log(newCode)
+    const onCodeChange = (newCode: string) => console.log(newCode)
 
     console.log(theme)
     return(

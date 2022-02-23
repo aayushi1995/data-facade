@@ -1,8 +1,11 @@
 import React, {useContext} from 'react'
-import {Button} from '@material-ui/core'
+import {Button, Box} from '@material-ui/core'
 import {useMutation} from 'react-query'
 import ColumnRangeChartVisualizer from '../../common/components/ColumnRangeChartVisualizer'
 import AppContext from '../../utils/AppContext'
+import labels from '../../labels/labels'
+import TagHandler from '../../common/components/tag-handler/TagHandler'
+import SelectAction from '../../common/components/workflow/create/SelectAction/SelectAction'
 
 
 const endPoint = require("../../common/config/config").FDSEndpoint
@@ -58,19 +61,20 @@ const DevTestPage = () => {
     }
 
     return (
-        <>
-            <div>
+        <Box>
+            <Box>
                 <Button onClick={handleBootstrap}>Bootstrap</Button>
-            </div>
-            <div>
+            </Box>
+            <Box>
                 <Button onClick={handleNuke}>Nuke</Button>
-            </div>
-            <div>
-                <ColumnRangeChartVisualizer/>
-            </div>
-        </>
-
+            </Box>
+            <Box>
+                <TagHandler entityType={labels.entities.TABLE_PROPERTIES} entityId={""} allowAdd={true} allowDelete={true}/>
+            </Box>
+            <Box>
+                <SelectAction onAddAction={(ad) => console.log(ad)}/>
+            </Box>
+        </Box>
     )
-
 }
 export default DevTestPage

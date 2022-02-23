@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { Box, Card, Chip, Grid, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@material-ui/core';
 import {Tabs, Tab} from "@mui/material"
@@ -6,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import PencilAltIcon from "../../../../../../icons/PencilAlt"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ActionParameterDefinition, Tag } from '../../../../../../generated/entities/Entities';
-import { DataGrid, GridToolbarContainer } from '@material-ui/data-grid';
+import { DataGrid, GridRowId, GridSelectionModel, GridToolbarContainer } from '@material-ui/data-grid';
 import { CustomToolbar } from '../../../../CustomToolbar';
 
 
@@ -19,7 +18,7 @@ export interface ActionParameterDefinitionListProps {
 
 const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps) => {
     const theme = useTheme();
-    const [selectedParameterIds, setSelectedParameterIds] = React.useState(new Array<string>())
+    const [selectedParameterIds, setSelectedParameterIds] = React.useState<string[]>(new Array<string>())
 
     const handleParameterDelete = () => {
         if(selectedParameterIds.length > 0) {
@@ -94,7 +93,9 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
             ])
         },
         selectionModel: selectedParameterIds,
-        onSelectionModelChange: (newSelectedParameterIds: React.SetStateAction<string[]>) => { setSelectedParameterIds(newSelectedParameterIds) }
+        onSelectionModelChange: (newSelectedParameterIds: GridRowId[]) => { 
+            setSelectedParameterIds(newSelectedParameterIds.map(x => x.toString())) 
+        }
     }
 
     return(
@@ -104,9 +105,5 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
         
     )
 }
-
-
-  
-
 
 export default ActionParameterDefinitionList;

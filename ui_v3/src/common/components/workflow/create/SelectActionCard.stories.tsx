@@ -13,9 +13,8 @@ const Template: Story<SelectActionCardProps> = (args) => <Box sx={{}}><SelectAct
 
 export const DefaultView = Template.bind({});
 DefaultView.args = {
+    actionId: "1",
     actionName: "Amazing Action",
     actionDescription: "This Amazing Action was created by an amazing Author and has amazing tags.",
-    actionTags: ["Amazing Tag 1", "Amazing Tag 2", "Amazing Tag 3", "Amazing Tag 4"],
-    actionIcon: "ok",
-    onAddAction: (event) => console.log("Added to stage")
+    onAddAction: (ad) => console.log(ad)
 }

@@ -17,32 +17,28 @@ DefaultView.args = {
     actionCount: 4,
     actions: [
         {
+            actionId: "1",
             actionName: "Amazing Action 1",
             actionDescription: "This Amazing Action was created by an amazing Author and has amazing tags.",
-            actionTags: ["Amazing Tag 1", "Amazing Tag 2", "Amazing Tag 3", "Amazing Tag 4"],
-            actionIcon: "ok",
-            onAddAction: (event) => console.log("Added to stage")
+            onAddAction: (ad) => console.log(ad)
         },
         {
+            actionId: "2",
             actionName: "Amazing Action 2",
             actionDescription: "This Amazing Action was created by an amazing Author and has amazing tags.",
-            actionTags: ["Amazing Tag 1", "Amazing Tag 2", "Amazing Tag 3", "Amazing Tag 4"],
-            actionIcon: "ok",
-            onAddAction: (event) => console.log("Added to stage")
+            onAddAction: (ad) => console.log(ad)
         },
         {
+            actionId: "3",
             actionName: "Amazing Action 3",
             actionDescription: "This Amazing Action was created by an amazing Author and has amazing tags.",
-            actionTags: ["Amazing Tag 1", "Amazing Tag 2", "Amazing Tag 3", "Amazing Tag 4"],
-            actionIcon: "ok",
-            onAddAction: (event) => console.log("Added to stage")
+            onAddAction: (ad) => console.log(ad)
         },
         {
+            actionId: "4",
             actionName: "Amazing Action 4",
             actionDescription: "This Amazing Action was created by an amazing Author and has amazing tags.",
-            actionTags: ["Amazing Tag 1", "Amazing Tag 2", "Amazing Tag 3", "Amazing Tag 4"],
-            actionIcon: "ok",
-            onAddAction: (event) => console.log("Added to stage")
+            onAddAction: (ad) => console.log(ad)
         }
     ]
 }

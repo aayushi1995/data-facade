@@ -1,5 +1,5 @@
 import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core"
+import Prism, { highlight, languages } from "prismjs"
 
 import './../../../css/customizations/CodeEditor.css'
 import "prismjs/components/prism-clike";
@@ -14,7 +14,7 @@ export interface CodeEditorProps {
     code?: string,
     language?: string,
     readOnly: boolean,
-    onCodeChange: (event: React.ChangeEvent<HTMLDivElement>) => void
+    onCodeChange: (newCode: string) => void
 }
 
 const CodeEditor = (props: CodeEditorProps) => {
@@ -24,7 +24,8 @@ const CodeEditor = (props: CodeEditorProps) => {
         [TemplateLanguage.SQL]: languages.sql,
         [TemplateLanguage.TEXT]: languages.text
     }
-    const [code, setCode] = useState(props.code)
+    const language = props.language || TemplateLanguage.SQL
+    const [code, setCode] = useState(props.code||"")
 
     return (
         <main className="container">
@@ -35,7 +36,7 @@ const CodeEditor = (props: CodeEditorProps) => {
                     <Editor
                         value={(props?.code||"")}
                         onValueChange={props.onCodeChange}
-                        highlight={(code) => highlight(code, languageToSyntaxMap[props.language || TemplateLanguage.SQL])
+                        highlight={(code) => highlight(code, languageToSyntaxMap[language], language)
                             .split("\n")
                             .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
                             .join("\n")

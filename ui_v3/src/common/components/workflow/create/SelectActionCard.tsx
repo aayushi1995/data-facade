@@ -3,19 +3,26 @@ import React from 'react'
 import { Box, Card, Chip, IconButton, SvgIcon, Typography, useTheme} from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
 import { ReactComponent as DefaultIcon } from "./Icon.svg";
+import { ActionDefinitionToAdd } from './SelectAction/SelectAction';
 
 export interface SelectActionCardProps {
+    actionId: string,
     actionName: string,
     actionDescription: string,
-    actionTags: string[],
-    actionIcon: string,
-    onAddAction: (event: React.MouseEvent<HTMLButtonElement>) => void
+    onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void
 }
 
 
 const SelectActionCard = (props: SelectActionCardProps) => {
     const theme = useTheme();
-    console.log(theme)
+    
+    const handleAdd = () => {
+        props.onAddAction({
+            Id: props.actionId,
+            DisplayName: props.actionName
+        })
+    }
+
     return(
         <Card
             sx={{
@@ -64,20 +71,7 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                         </Box>
                     </Box>
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap"}}>
-                        {props.actionTags.map(tag => 
-                        <Box>
-                            <Chip variant="outlined" color="primary" size="small" label={tag} sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: "normal",
-                                fontSize: "13px",
-                                lineHeight: "24px",
-                                display: "flex",
-                                alignItems: "center",
-                                letterSpacing: "0.073125px",
-                                color: "#253858"
-                            }}/>
-                        </Box>)}
+                        TAGS TO COME
                     </Box>
                 </Box>
                 <Box sx={{
@@ -88,7 +82,7 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                     borderRadius: "50%"
                 }}>
                     <IconButton sx={{p: "0px"}}>
-                        <AddIcon sx={{height: "25px", width: "25px", color: theme.palette.primary.contrastText}}/>
+                        <AddIcon sx={{height: "25px", width: "25px", color: theme.palette.primary.contrastText}} onClick={handleAdd}/>
                     </IconButton>
                 </Box>
             </Box>
