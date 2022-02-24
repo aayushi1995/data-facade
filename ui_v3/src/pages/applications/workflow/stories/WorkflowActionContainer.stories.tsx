@@ -20,8 +20,12 @@ const Template: Story<WorkflowActionContainerProps> = (args) => {
         console.log(e)
     }
 
+    React.useEffect(() => {
+        setActions(args.Actions)
+    }, [args.Actions])
+
     return (
-        <Box sx={{ display: 'flex', width: "400px"}}>
+        <Box sx={{ display: 'flex', width: "400px", maxHeight: "600px"}}>
             <WorkflowActionContainer Actions={actions} onActionListChange={onActionListChange} />
         </Box>)
 }

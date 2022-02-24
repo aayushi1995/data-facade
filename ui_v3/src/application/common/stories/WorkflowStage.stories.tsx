@@ -4,7 +4,7 @@ import { Story } from "@storybook/react";
 import { Box } from "@material-ui/core";
 
 export default{
-    title: "WorkflowStage",
+    title: "WORKFLOW/Stages/WorkflowStage",
     component: WorkflowStage,
     decorators: [withDesign],
     parameters: {

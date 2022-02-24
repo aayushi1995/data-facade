@@ -47,7 +47,6 @@ function TabPanel(props: TabPanelProps) {
 const SelectAction = (props: SelectActionProps) => {
     const theme = useTheme();
     const [activeTab, setActiveTab] = React.useState(0)
-    console.log(theme)
     return(
             <Box>
                 <Box>

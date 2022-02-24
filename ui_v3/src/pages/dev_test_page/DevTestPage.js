@@ -6,6 +6,8 @@ import AppContext from '../../utils/AppContext'
 import labels from '../../labels/labels'
 import TagHandler from '../../common/components/tag-handler/TagHandler'
 import SelectAction from '../../common/components/workflow/create/SelectAction/SelectAction'
+import { AddActionToWorkflowStage } from '../../common/components/workflow/create/addAction/AddActionToWorkflowStage'
+import { WorkflowContextProvider } from '../applications/workflow/WorkflowContext'
 
 
 const endPoint = require("../../common/config/config").FDSEndpoint
@@ -71,8 +73,11 @@ const DevTestPage = () => {
             <Box>
                 <TagHandler entityType={labels.entities.TABLE_PROPERTIES} entityId={""} allowAdd={true} allowDelete={true}/>
             </Box>
-            <Box>
-                <SelectAction onAddAction={(ad) => console.log(ad)}/>
+            <Box pt={1}>
+                {/* <SelectAction onAddAction={(ad) => console.log(ad)}/> */}
+                <WorkflowContextProvider>
+                    <AddActionToWorkflowStage stageId='stage1'/>
+                </WorkflowContextProvider>
             </Box>
         </Box>
     )

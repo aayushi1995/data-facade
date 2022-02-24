@@ -9,6 +9,7 @@ import { SystemStyleObject } from "@mui/system"
 
 
 export interface ActionCardProps {
+    index: number
     actionId: string
     actionName: string
     actionGroup: string
@@ -18,7 +19,7 @@ export interface ActionCardProps {
     dragHandleProps?: any
     percentageCompleted?: number
     isCardSelected?: boolean
-    deleteButtonAction: (event: string) => void
+    deleteButtonAction: (actionId: string, actionNumber: number) => void
 }
 
 const ActionCard = (props: ActionCardProps) => {
@@ -72,7 +73,7 @@ const ActionCard = (props: ActionCardProps) => {
                     </Box>
                 </Box>
                 <Box sx={{flex: 0.25}}>
-                    <IconButton onClick={() => props.deleteButtonAction(props.actionId)}>
+                    <IconButton onClick={() => props.deleteButtonAction(props.actionId, props.index)}>
                         <Icon>
                             <img src={closeIcon} alt='remove'/>
                         </Icon>

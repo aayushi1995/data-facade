@@ -15,7 +15,6 @@ const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
     } else if(!!allActionDefinitionsError) {
         return <>{allActionDefinitionsError}</>
     } else {
-        console.log(allActionDefinitionsData)
         return(
             <Grid container>
                 {allActionDefinitionsData.map(actionDefinition =>

@@ -6,7 +6,7 @@ import React from "react";
 import { v4 as uuidv4 } from 'uuid'
 
 export default{
-    title: "WorkflowStagesWrapper",
+    title: "WORKFLOW/Stages/WorkflowStagesWrapper",
     component: WorkflowStagesWrapper,
     decorators: [withDesign],
     parameters: {

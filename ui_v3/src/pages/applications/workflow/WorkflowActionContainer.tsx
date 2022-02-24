@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 import { Box, Card, IconButton } from "@material-ui/core";
 import { Divider } from "@mui/material";
 import React from "react";
-import { lightShadows } from '../../../../src/css/theme/shadows'
+import { lightShadows } from '../../../css/theme/shadows'
 import ActionCard, { ActionCardProps } from "../../../common/components/workflow-action/ActionCard";
 import addAction from '../../../../src/images/add_action_workflow_container.png'
 import buildAction from '../../../../src/images/Frame.png'
@@ -12,21 +12,18 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautif
 
 export interface WorkflowActionContainerProps {
     Actions: ActionCardProps[],
-    stageName: string
+    stageName: string,
+    stageId: string,
+    fromBuildAction: true,
     onActionListChange: (event: ActionCardProps[]) => void,
-    addActionHandler: (event: React.MouseEvent<HTMLButtonElement>) => void
+    addActionHandler?: (event: React.MouseEvent<HTMLButtonElement>) => void
     buildActionHandler: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     // TODO: add colors to theme
-    const handleDeleteAction = (actionId: string) => {
-        const newActions = props.Actions?.filter(action => action.actionId !== actionId)
-        props.onActionListChange(newActions)
-    }
 
     const handleDragEnd = (e: DropResult) => {
-        console.log(e)
         if (!e.destination) {
             return;
         }
@@ -39,8 +36,8 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     }
 
     return (
-        <Box sx={{ display: 'flex', flex: 1, }}>
-            <Card sx={{ display: 'flex', background: '#FFFFFF', boxShadow: lightShadows[26], alignContent: 'center', flex: 1, flexDirection: 'column', overflowY: 'auto' }}>
+        <Box sx={{ display: 'flex', flex: 1}}>
+            <Box sx={{ display: 'flex', alignContent: 'center', flex: 1, flexDirection: 'column', overflowY: 'auto' }}>
                 <Box sx={{ p: 1, flex: 0.05, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography sx={{ flex: 1, fontWeight: 600 }}>
                         Selected Actions
@@ -69,7 +66,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                                         {(_provided: any) => (
                                                             <li {..._provided.draggableProps} ref={_provided.innerRef}>
                                                                 <ActionCard
-                                                                    {...{ ...action, deleteButtonAction: handleDeleteAction, dragHandleProps: { ..._provided.dragHandleProps } }}
+                                                                    {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps } }}
                                                                 />
                                                             </li>
                                                         )}
@@ -87,26 +84,46 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                         )}
                     </Droppable>
                 </DragDropContext>
-                <Box sx={{ flex: 1, px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '10px', alignItems: 'center', height: '100%' }}>
-                        <Typography sx={{ flex: 1, pt: 1 }}>
-                            Add Action
-                        </Typography>
-                        <IconButton sx={{ flex: 1, paddingBottom: 1 }}>
-                            <img src={addAction} alt="add action" />
-                        </IconButton>
+                {props?.fromBuildAction === true ? (
+                    <Box sx={{ flex: 1, px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', flexDirection: 'column', height: '100%' }}>
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '6px', alignItems: 'center', flexBasis: 0, flexGrow: 1, width: '100%', minHeight: '70px'}}>
+                            <Typography sx={{ fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px', fontWeight: '500px' }}>
+                                Select Action to add here
+                            </Typography>
+                        </Box>
+                        <Box py={0.5} />
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '6px', alignItems: 'center', height: '100%', width: '100%' }}>
+                            <Typography sx={{ flex: 1, pt: 1, fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px' }}>
+                                Create New Action Action
+                            </Typography>
+                            <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={props.buildActionHandler}>
+                                <img src={addAction} alt="build action" />
+                            </IconButton>
+                        </Box>
                     </Box>
-                    <Box px={0.5} />
-                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '10px', alignItems: 'center', height: '100%' }}>
-                        <Typography sx={{ flex: 1, pt: 1 }}>
-                            Build Action
-                        </Typography>
-                        <IconButton sx={{ flex: 1, paddingBottom: 1 }}>
-                            <img src={buildAction} alt="build action" />
-                        </IconButton>
+                ) : (
+                    <Box sx={{ flex: 1, px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '10px', alignItems: 'center', height: '100%' }}>
+                            <Typography sx={{ flex: 1, pt: 1 }}>
+                                Add Action
+                            </Typography>
+                            <IconButton sx={{ flex: 1, paddingBottom: 1 }}>
+                                <img src={addAction} alt="add action" />
+                            </IconButton>
+                        </Box>
+                        <Box px={0.5} />
+                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '10px', alignItems: 'center', height: '100%' }}>
+                            <Typography sx={{ flex: 1, pt: 1 }}>
+                                Build Action
+                            </Typography>
+                            <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={props.buildActionHandler}>
+                                <img src={buildAction} alt="build action" />
+                            </IconButton>
+                        </Box>
                     </Box>
-                </Box>
-            </Card>
+                )}
+                
+            </Box>
         </Box>
     )
 }

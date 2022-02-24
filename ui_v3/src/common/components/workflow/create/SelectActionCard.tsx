@@ -30,7 +30,7 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                 '&:hover': {
                 backgroundColor: theme.palette.background.default
                 },
-                borderRadius: 4,
+                borderRadius: 2,
                 p: 2
             }}
             variant={'outlined'}    
