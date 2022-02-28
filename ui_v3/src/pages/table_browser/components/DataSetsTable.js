@@ -43,7 +43,7 @@ const getRowClassName = (classes) => (params) => {
     return classes.row;
 };
 
-const ButtonIconWithToolTip = ({
+export const ButtonIconWithToolTip = ({
                                    title, onClick = () => {
     }, Icon
                                }) => <Tooltip title={title}>

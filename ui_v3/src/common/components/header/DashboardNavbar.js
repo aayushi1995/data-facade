@@ -1,6 +1,6 @@
 import {Link as RouterLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {AppBar, Box, Toolbar} from '@material-ui/core';
+import {AppBar, Box, Toolbar, Tabs, Tab} from '@material-ui/core';
 import {experimentalStyled} from '@material-ui/core/styles';
 import AccountPopover from './AccountPopover';
 import ContentSearch from './ContentSearch';

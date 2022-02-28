@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router} from 'react-router-dom'
 import './index.css';
-import App from './App';
+import App, {AppInternal} from './App';
 import reportWebVitals from './reportWebVitals';
 import 'typeface-roboto'
 import {getConfig} from "./config";
@@ -13,6 +13,7 @@ import {auth0ClientId} from './common/config/config'
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import StyledEngineProvider from '@material-ui/core/StyledEngineProvider';
 import {SettingsProvider} from "./data_manager/SettingsContext";
+import {ModuleProvider} from "./common/components/header/data/ModuleContext";
 
 const onRedirectCallback = (appState) => {
     history.push(
@@ -35,18 +36,23 @@ const providerConfig = {
     onRedirectCallback,
 };
 
+export const RootComponent = ({children}) => <StyledEngineProvider><
+    ModuleProvider>
+    <Router>
+        <Auth0Provider {...providerConfig}>
+            <QueryClientProvider client={queryClient}>
+                <SettingsProvider>
+                    {children}
+                </SettingsProvider>
+            </QueryClientProvider>
+        </Auth0Provider>
+    </Router>
+</ModuleProvider>
+</StyledEngineProvider>;
 ReactDOM.render(
-    <StyledEngineProvider>
-        <Router>
-            <Auth0Provider {...providerConfig}>
-                <QueryClientProvider client={queryClient}>
-                    <SettingsProvider>
-                        <App/>
-                    </SettingsProvider>
-                </QueryClientProvider>
-            </Auth0Provider>
-        </Router>
-    </StyledEngineProvider>,
+    <RootComponent><App>{
+        (props) => <AppInternal {...props}/>
+    }</App></RootComponent>,
     document.getElementById('root')
 );
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {Redirect, Route, Router, Switch} from 'react-router-dom'
 import {SearchQueryProvider, TableBrowser} from './pages/table_browser/TableBrowser'
 import Customizations from './pages/customizations/Customizations'
@@ -17,9 +17,8 @@ import NotRegistered from './pages/home/NotRegistered'
 import {isNonProductionEnv} from './common/config/config'
 import {Users} from "./pages/users/Users";
 import {EULA} from "./pages/home/EULA";
-import {CssBaseline, Grid, ThemeProvider, Box} from "@material-ui/core";
+import {CssBaseline, Grid, ClassNameMap, ThemeProvider, Box} from "@material-ui/core";
 import {SideDrawer} from "./common/components/sideBar/SideDrawer";
-import DataFacadeAppBar from "./common/components/header/DataFacadeAppBar";
 import AutobookHomePage from './pages/applications/auto_book/AutobookHomePage'
 import {useAppInternal} from "./UseAppInternal";
 import ErrorBoundary from "./common/components/ErrorBoundry";
@@ -31,15 +30,16 @@ import UploadTablePage from './pages/upload_table/UploadTablePage'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { RunWorkflowHomePage } from './pages/applications/custom-applications/components/RunWorkflowHomePage'
 import ViewWorkflowHomePage from './pages/applications/view-workflow/ViewWorkflowHomePage'
+import {ReactJSXElement} from "@emotion/react/types/jsx-namespace";
+import DashboardNavbar from "./common/components/header/DashboardNavbar";
+import {ModuleSwitcher} from "./common/components/header/ModuleSwitcher";
 
-const AppInternal = (props) => {
+export const AppInternal = (props: { classes: any; userEmail: any; dummyData: any; dummyDataPending: any; activeLink: any; setActiveLink: any; isLoading: any; user: any }) => {
     const {
         classes,
         userEmail,
         dummyData,
         dummyDataPending,
-        activeLink,
-        setActiveLink,
         isLoading,
         user
     } = props;
@@ -66,14 +66,15 @@ const AppInternal = (props) => {
                 </Switch>
             )
         } else {
+
             return (
                 <Grid container
                       style={{justifyContent: "flex-start"}}>
-                    <DataFacadeAppBar/>
-                    <SideDrawer
-                        activeLink={activeLink}
-                        setActiveLink={setActiveLink}
-                    />
+                    <DashboardNavbar/>
+                    <Box sx={{position: 'relative', top: '64px'}}>
+                        <ModuleSwitcher/>
+                    </Box>
+
                     <div className={classes.mainContainer}>
                         <Grid container>
                             <Grid item xs={12}>
@@ -110,7 +111,11 @@ const AppInternal = (props) => {
         }
     }
 }
-const App = () => {
+
+type ApplicationType  =  (props: any) =>ReactJSXElement | null;
+
+const noop: ApplicationType = (restProps)=>null;
+const App = ({children =noop}) => {
     const {
         theme,
         userSettings,
@@ -123,7 +128,7 @@ const App = () => {
             <Router history={history}>
                 <SearchQueryProvider>
                     <ErrorBoundary>
-                        <AppInternal {...restProps}/>
+                        {children(restProps)}
                     </ErrorBoundary>
                 </SearchQueryProvider>
             </Router>
