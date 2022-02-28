@@ -4,11 +4,13 @@ import { Box, Card, Chip, IconButton, SvgIcon, Typography, useTheme} from '@mate
 import AddIcon from '@mui/icons-material/Add';
 import { ReactComponent as DefaultIcon } from "./Icon.svg";
 import { ActionDefinitionToAdd } from './SelectAction/SelectAction';
+import TagHandler from '../../tag-handler/TagHandler';
 
 export interface SelectActionCardProps {
     actionId: string,
     actionName: string,
     actionDescription: string,
+    defaultTemplateId: string
     onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void
 }
 
@@ -19,7 +21,8 @@ const SelectActionCard = (props: SelectActionCardProps) => {
     const handleAdd = () => {
         props.onAddAction({
             Id: props.actionId,
-            DisplayName: props.actionName
+            DisplayName: props.actionName,
+            DefaultTemplateId: props.defaultTemplateId
         })
     }
 
@@ -30,8 +33,9 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                 '&:hover': {
                 backgroundColor: theme.palette.background.default
                 },
-                borderRadius: 2,
-                p: 2
+                borderRadius: 1,
+                p: 2,
+                height: "100%"
             }}
             variant={'outlined'}    
         >
@@ -71,7 +75,13 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                         </Box>
                     </Box>
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap"}}>
-                        TAGS TO COME
+                        <TagHandler
+                            entityType={"ActionDefinition"}
+                            entityId={props.actionId}
+                            tagFilter={{}}
+                            allowAdd={false}
+                            allowDelete={true}
+                        />
                     </Box>
                 </Box>
                 <Box sx={{

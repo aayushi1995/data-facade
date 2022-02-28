@@ -17,7 +17,7 @@ export interface WorkflowStageProps {
     numberOfActions?: number,
     totalRunTime?: string,
     handleDeleteStage?: (event: string) => void
-    handleAddStage?: (event: React.MouseEvent<HTMLButtonElement>) => void
+    handleAddStage?: () => void
     handleStageNameChange?: (stageId: string, stageName: string) => void
 }
 
@@ -29,7 +29,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
         if(props.cardButton === 'minus') {
             props.handleDeleteStage?.(props.stageId)
         } else {
-            props.handleAddStage?.(event)
+            props.handleAddStage?.()
         }
     }
 

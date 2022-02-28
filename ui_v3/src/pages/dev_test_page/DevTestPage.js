@@ -7,7 +7,11 @@ import labels from '../../labels/labels'
 import TagHandler from '../../common/components/tag-handler/TagHandler'
 import SelectAction from '../../common/components/workflow/create/SelectAction/SelectAction'
 import { AddActionToWorkflowStage } from '../../common/components/workflow/create/addAction/AddActionToWorkflowStage'
-import { WorkflowContextProvider } from '../applications/workflow/WorkflowContext'
+import { WorkflowContext, WorkflowContextProvider } from '../applications/workflow/WorkflowContext'
+import ViewSelectedAction from '../../common/components/workflow/create/ViewSelectedAction/ViewSelectedAction'
+import { StagesWithActions } from '../../common/components/workflow/create/newStage/StagesWithActions'
+import { AddingActionView } from '../../common/components/workflow/create/addAction/AddingActionView'
+import { makeWorkflowTemplate } from '../../common/components/workflow/create/util/MakeWorkflowTemplate'
 
 
 const endPoint = require("../../common/config/config").FDSEndpoint
@@ -63,7 +67,7 @@ const DevTestPage = () => {
     }
 
     return (
-        <Box>
+        <Box sx={{display: "flex", flexDirection: "column", gap:10}}>
             <Box>
                 <Button onClick={handleBootstrap}>Bootstrap</Button>
             </Box>
@@ -73,13 +77,38 @@ const DevTestPage = () => {
             <Box>
                 <TagHandler entityType={labels.entities.TABLE_PROPERTIES} entityId={""} allowAdd={true} allowDelete={true}/>
             </Box>
-            <Box pt={1}>
-                {/* <SelectAction onAddAction={(ad) => console.log(ad)}/> */}
-                <WorkflowContextProvider>
-                    <AddActionToWorkflowStage stageId='stage1'/>
-                </WorkflowContextProvider>
-            </Box>
+            <WorkflowContextProvider>
+                <Test/>
+            </WorkflowContextProvider>   
+            {/* <Box>
+                <ViewSelectedAction
+                    actionDefinitionId="c18e6c3a-8d43-441e-bf63-263a191c7d22"
+                />
+            </Box> */}
         </Box>
     )
 }
+
+const Test = () => {
+    const workflowContext = React.useContext(WorkflowContext)
+
+    return (
+        <>
+            {workflowContext.currentSelectedStage ? (
+                <Box pt={1} sx={{maxHeight: '1000px'}}>
+                    <AddingActionView/>
+                </Box>
+            ) : (
+                <Box sx={{overflow: 'clip'}}>  
+                    <StagesWithActions/>    
+                    <Button onClick={() => {const template = makeWorkflowTemplate(workflowContext); console.log(template)}}>
+                        save
+                    </Button>
+                </Box>
+                
+            )}
+        </>
+    )
+}
+
 export default DevTestPage

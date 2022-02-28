@@ -1,13 +1,11 @@
-import { Box, Card } from "@material-ui/core"
+import { Box, Card, Grid } from "@material-ui/core"
 import { Divider } from "@mui/material"
 import React from "react"
 import { lightShadows } from '../../../../../css/theme/shadows'
-import ActionDefinitionTemplateType from "../../../../../enums/ActionDefinitionTemplateType"
 import WorkflowActionContainer from "../../../../../pages/applications/workflow/WorkflowActionContainer"
-import { SetWorkflowContext, WorkflowContext, WorkflowActionDefinition, WorkflowAction } from "../../../../../pages/applications/workflow/WorkflowContext"
-import NoData from "../../../NoData"
-import { ActionCardProps } from "../../../workflow-action/ActionCard"
+import { SetWorkflowContext, WorkflowActionDefinition } from "../../../../../pages/applications/workflow/WorkflowContext"
 import SelectAction, { ActionDefinitionToAdd } from "../SelectAction/SelectAction"
+import ViewSelectedAction from "../ViewSelectedAction/ViewSelectedAction"
 
 
 export interface AddActionToWorkflowStageProps {
@@ -15,53 +13,18 @@ export interface AddActionToWorkflowStageProps {
 }
 
 export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) => {
-    const workflowContext = React.useContext(WorkflowContext)
+    const [selectedAction, setSelectedAction] = React.useState({actionId: "", actionIndex: -1})
     const setWorkflowContext = React.useContext(SetWorkflowContext)
-    const stageDetails = workflowContext.stages.filter(stage => stage.Id === props.stageId)?.[0]
 
-    const handleDeleteAction = (actionId: string, actionIndex: number) => {
-        const payload = {
-            stageId: props.stageId,
-            actionId: actionId,
-            actionIndex: actionIndex
-        }
-
-        setWorkflowContext({type: 'DELETE_ACTION', payload: payload})
-
-    }
-
-    const stageActions = stageDetails?.Actions?.map((action, index) => {
-        return {
-            index: index,
-            actionId: action.Id,
-            actionName: action.DisplayName,
-            actionGroup: action.ActionGroup,
-            displayRowsEffected: false,
-            deleteButtonAction: handleDeleteAction
-        }
-    })
-    
-    
-
-    const onActionListChange = (actions: ActionCardProps[]) => {
-        const newWorkflowActions = actions.map(actionDefinition => {
-            return {
-                DisplayName: actionDefinition.actionName,
-                Id: actionDefinition.actionId,
-                DefaultTemplateId: 'defaultTemplateId',
-                Parameters: [],
-                ActionGroup: 'Data Cleansing'
-            }
-        })
-
-        setWorkflowContext({type: 'REORDER_ACTION', payload: {stageId: props.stageId, newActions: newWorkflowActions}})
+    const handleSelectAction = (actionId: string, actionIndex: number) => {
+        setSelectedAction({actionId: actionId, actionIndex: actionIndex})
     }
 
     const addActionHandler = (actionDefinition: ActionDefinitionToAdd) => {
         const newWorkflowAction: WorkflowActionDefinition = {
             DisplayName: actionDefinition.DisplayName,
             Id: actionDefinition.Id,
-            DefaultTemplateId: 'defaultTemplateId',
+            DefaultActionTemplateId: actionDefinition.DefaultTemplateId,
             Parameters: [],
             ActionGroup: 'Data Cleansing'
         }
@@ -75,30 +38,32 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
     }
 
 
-    if(stageDetails) {
-        return (
-            <Card sx={{display: 'flex', boxShadow: lightShadows[27], background: '#F8F8F8', borderRadius: '10px', width: '100%', height: '100%'}}>
-                <Box sx={{flex: 0.25, p: 3}}>
+    return (
+        <Card sx={{display: 'flex', boxShadow: lightShadows[27], background: '#F8F8F8', borderRadius: '10px', width: '100%', height: '100%'}}>
+            <Grid container spacing={1} sx={{height: "auto", p: 1}}>
+                <Grid item xs={3} sx={{ p: 3}}>
                     <Card sx={{ background: '#FFFFFF', boxShadow: lightShadows[26], height: '100%', borderRadius: '10px', overflowY: 'auto'}}>
                         <WorkflowActionContainer
                             stageId={props.stageId}
-                            stageName={stageDetails.Name}
-                            Actions={stageActions}
-                            onActionListChange={onActionListChange}
                             buildActionHandler={buildActionHandler}
                             fromBuildAction={true}
+                            handleSelectAction={handleSelectAction}
                         ></WorkflowActionContainer>
                     </Card>
-                </Box>
-                <Divider/>
-                <Box sx={{flex: 1, p: 1}}>
-                    <SelectAction groups={[]} onAddAction={addActionHandler}></SelectAction>
-                </Box>
+                </Grid>
+                <Grid item xs={9} sx={{overflowY: 'auto'}}>
+                    <Box p={1}>
+                        {selectedAction.actionIndex === -1 ? (
+                            <SelectAction groups={[]} onAddAction={addActionHandler}></SelectAction>
+                        ) : (
+                            <ViewSelectedAction stageId={props.stageId} actionDefinitionId={selectedAction.actionId} actionDefinitionIndex={selectedAction.actionIndex}/>
+                        )}
+                        
+                    </Box>
+                </Grid>
+            </Grid>
+        </Card>
+    )
 
-            </Card>
-        )
-    } else {
-        return <NoData/>
-    }
 
 }

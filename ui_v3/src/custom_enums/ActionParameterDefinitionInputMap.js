@@ -83,7 +83,19 @@ const getInputTypeFromAttributes = (language, tag, type, datatype) => {
     return ActionParameterDefinitionInputType.STRING
 }
 
+const getInputTypeFromAttributesNew = (language, tag, type, datatype) => {
+    if (language in InputMap) {
+        for (const [key, value] of Object.entries(InputMap[language])) {
+            if (value[ActionParameterDefinitionAttribute.TAG] === tag & value[ActionParameterDefinitionAttribute.DATATYPE] === datatype) {
+                return key;
+            }
+        }
+    }
+    return ActionParameterDefinitionInputType.STRING
+}
+
 export {
     InputMap,
-    getInputTypeFromAttributes
+    getInputTypeFromAttributes,
+    getInputTypeFromAttributesNew
 };

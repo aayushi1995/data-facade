@@ -10,13 +10,14 @@ import LoadingIndicator from './common/components/LoadingIndicator'
 import Home from './pages/home/Home'
 import TagHomePage from './pages/tag/TagHomePage'
 import ApplicationHomePage from './pages/apps/ApplicationHomePage'
+import BuildWorkflowHomePage from './pages/build_workflow/BuildWorkflowHomePage'
 import history from "./utils/history";
 import AppContext from "./utils/AppContext"
 import NotRegistered from './pages/home/NotRegistered'
 import {isNonProductionEnv} from './common/config/config'
 import {Users} from "./pages/users/Users";
 import {EULA} from "./pages/home/EULA";
-import {CssBaseline, Grid, ThemeProvider} from "@material-ui/core";
+import {CssBaseline, Grid, ThemeProvider, Box} from "@material-ui/core";
 import {SideDrawer} from "./common/components/sideBar/SideDrawer";
 import DataFacadeAppBar from "./common/components/header/DataFacadeAppBar";
 import AutobookHomePage from './pages/applications/auto_book/AutobookHomePage'
@@ -98,6 +99,7 @@ const AppInternal = (props) => {
                                     <Route path='/upload-file' component={UploadTablePage}/>
                                     <Route path='/run-workflow' component={RunWorkflowHomePage}/>
                                     <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
+                                    <Route path='/build-workflow' component={BuildWorkflowHomePage}/>
                                     <Redirect exact from="/" to="tableBrowser"/>
                                 </Switch>
                             </Grid>

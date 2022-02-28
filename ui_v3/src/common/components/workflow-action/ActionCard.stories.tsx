@@ -17,7 +17,6 @@ SingleCard.args = {
     actionGroup: "Data Cleansing",
     displayRowsEffected: false,
     isComplete: false,
-    isCardSelected: true
 }
 
 RowsEffected.args = {

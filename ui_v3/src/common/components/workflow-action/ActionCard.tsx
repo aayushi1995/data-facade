@@ -20,6 +20,7 @@ export interface ActionCardProps {
     percentageCompleted?: number
     isCardSelected?: boolean
     deleteButtonAction: (actionId: string, actionNumber: number) => void
+    onActionSelect?: (actionId: string, actionIndex: number) => void
 }
 
 const ActionCard = (props: ActionCardProps) => {
@@ -32,10 +33,16 @@ const ActionCard = (props: ActionCardProps) => {
         backgroundBlendMode: 'soft-light, normal'
     }
 
+    const handleClick = (e: any) => {
+        props.onActionSelect?.(props.actionId, props.index)
+    }
+
     return (
         <Card sx={{
-            borderRadius: '10px'
-        }}>
+            borderRadius: '10px',
+            maxWidth: '100%'
+            }} onClick={handleClick}
+        >
             <Box sx={{
                 backgroundColor: (props.isComplete ? '#DFFFEA' : '#FFFFFF'), 
                 display: "flex", 
@@ -43,20 +50,20 @@ const ActionCard = (props: ActionCardProps) => {
                 boxShadow: lightShadows[25], 
                 ...(props.isCardSelected && isSelectedStyles)
                 }}>
-                <Box sx={{flex: 2, display: 'flex', flexDirection: 'row', p: 2, justifyContent: 'flex-start'}}>
-                    <Box sx={{flex: 0.15, display: 'flex', alignItems: 'center'}} {...props.dragHandleProps}>
-                        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '12px', width: '12px', alignItems: 'center'}} >
+                <Box sx={{flex: 2, display: 'flex', flexDirection: 'row', p: 2, justifyContent: 'flex-start', gap: 1}}>
+                    <Box sx={{ display: 'flex', alignItems: 'center'}} {...props.dragHandleProps}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '12px', width: 'auto', alignItems: 'center'}} >
                             <img src={selectGrid} alt="select" ></img>
                         </Box>
                     </Box>
-                    <Box sx={{flex: 0.25, display: 'flex', alignItems: 'center'}}>
+                    <Box sx={{ display: 'flex', alignItems: 'center'}}>
                         <Box sx={{alignItems: 'center', justifyContent: 'center'}}>
                             <img src={dataCleansing} alt="action"></img>
                         </Box>
                     </Box>
                     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
                         <Box sx={{flex: 1}}>
-                            <Typography>
+                            <Typography sx={{overflowX: 'clip'}}>
                                 {props.actionName}
                             </Typography>
                         </Box>
@@ -73,7 +80,9 @@ const ActionCard = (props: ActionCardProps) => {
                     </Box>
                 </Box>
                 <Box sx={{flex: 0.25}}>
-                    <IconButton onClick={() => props.deleteButtonAction(props.actionId, props.index)}>
+                    <IconButton onClick={(e: any) => {
+                        e.stopPropagation?.()
+                        props.deleteButtonAction(props.actionId, props.index)}}>
                         <Icon>
                             <img src={closeIcon} alt='remove'/>
                         </Icon>

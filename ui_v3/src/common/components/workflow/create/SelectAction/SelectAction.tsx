@@ -10,6 +10,7 @@ import SelectFromAllActions from '../SelectFromAllActions';
 export interface ActionDefinitionToAdd {
     Id: string,
     DisplayName: string
+    DefaultTemplateId: string
 }
 
 export interface SelectActionProps {
@@ -47,8 +48,10 @@ function TabPanel(props: TabPanelProps) {
 const SelectAction = (props: SelectActionProps) => {
     const theme = useTheme();
     const [activeTab, setActiveTab] = React.useState(0)
+    const [actionDefinitionNameSearchQuery, setActionDefinitionNameSearchQuery] = React.useState<string>("")
+
     return(
-            <Box>
+            <Box sx={{display: "flex", gap: 1, flexDirection: "column"}}>
                 <Box>
                     <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
                         <Tab label="Groups" value={0} sx={{
@@ -75,25 +78,30 @@ const SelectAction = (props: SelectActionProps) => {
                         }}/>
                     </Tabs>
                 </Box>
-                <Box sx={{pt: 2}}>
+                <Box>
+                    <TextField
+                        id="input-with-icon-textfield"
+                        placeholder="Search action..."
+                        value={actionDefinitionNameSearchQuery}
+                        onChange={(event) => {setActionDefinitionNameSearchQuery(event.target.value)}}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon/>
+                                </InputAdornment>
+                            ),
+                        }}
+                        sx={{
+                            width: "100%"
+                        }}
+                        variant="outlined"
+                    />
+                </Box>
+                <Box sx={{}}>
                     <TabPanel value={activeTab} index={0}>
                         {/* <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
                             <Box sx={{width: "100%"}}>
-                            <TextField
-                                id="input-with-icon-textfield"
-                                placeholder="Search action..."
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon/>
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                sx={{
-                                    width: "100%"
-                                }}
-                                variant="outlined"
-                            />
+                            
                             </Box>
                             <Box sx={{display: "flex", flexDirection: "column", flexWrap: "nowrap", gap: 1}}>
                                 {props.groups.map(group => 
@@ -105,7 +113,7 @@ const SelectAction = (props: SelectActionProps) => {
                         </Box> */}
                     </TabPanel>
                     <TabPanel value={activeTab} index={1}>
-                        <SelectFromAllActions onAddAction={props.onAddAction}/>
+                        <SelectFromAllActions onAddAction={props.onAddAction} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
                     </TabPanel>
                 </Box>
             </Box>

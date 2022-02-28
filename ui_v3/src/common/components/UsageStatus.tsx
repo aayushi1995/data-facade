@@ -6,7 +6,6 @@ export interface UsageStatusProp {
 }
 
 const UsageStatus = (props: UsageStatusProp) => {
-    console.log(props)
     return (
         <Box sx={{display: "flex", gap: 1, justifyContent: "center", alignItems: "center"}}>
             <Box sx={{width: 40, backgroundColor: "rgba(76, 175, 80, 1)", borderRadius: 5, height: 10}}></Box>

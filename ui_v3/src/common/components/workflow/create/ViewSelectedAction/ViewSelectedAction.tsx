@@ -8,11 +8,13 @@ import GroupDropDown from '../GroupDropDown';
 import { ActionParameterDefinition, ActionTemplate } from '../../../../../generated/entities/Entities';
 import ActionParameterDefinitionList from './ActionParameterDefinitionList/ActionParameterDefinitionList';
 import EditActionParameterDefinition from './EditActionParameterDefinition/EditActionParameterDefinition';
-import CodeEditor from '../../../code-editor/CodeEditor';
+import CodeEditor from '../../../CodeEditor';
+import useViewAction, { ActionDetail } from './hooks/UseViewAction';
 
 export interface ViewSelectedActionProps {
-    actionParameterDefinitions: ActionParameterDefinition[]
-    actionTemplate: ActionTemplate
+    actionDefinitionId: string
+    stageId: string
+    actionDefinitionIndex: number
 }
 
 interface TabPanelProps {
@@ -43,66 +45,97 @@ function TabPanel(props: TabPanelProps) {
 
 const ViewSelectedAction = (props: ViewSelectedActionProps) => {
     const theme = useTheme();
+
     const [activeTab, setActiveTab] = React.useState(0)
     const [selectedParameterForEdit, setSelectedParameterForEdit] = React.useState<ActionParameterDefinition|undefined>()
+
+    const {isLoading, error, data} = useViewAction({actionDefinitionId: props.actionDefinitionId, expectUniqueResult: true})
 
     const onParameterSelectForEdit = (actionParameter: ActionParameterDefinition) => setSelectedParameterForEdit(actionParameter)
     const deleteParametersWithIds = (actionParameterIds: string[]) => console.log("Deleting", actionParameterIds)
     const onCodeChange = (newCode: string) => console.log(newCode)
 
-    console.log(theme)
-    return(
+    React.useEffect(() => {
+        setSelectedParameterForEdit(undefined)
+    }, [props.actionDefinitionId, props.actionDefinitionIndex, props.stageId])
+
+    if(isLoading) {
+        return <>Loading...</>
+    } else if(!!error) {
+        return <>{error}</>
+    } else {
+        const action = data as ActionDetail
+        const defaultActionTemplate = action.ActionTemplatesWithParameters.find(template => template.model.Id === action.ActionDefinition.DefaultActionTemplateId)
+        const firstActionTemplate = action.ActionTemplatesWithParameters[0]
+        const selectedActionTemplate = defaultActionTemplate || firstActionTemplate
+        const selectedActionTemplateModel = selectedActionTemplate?.model
+        return (
+        <Box>
             <Box>
-                <Box>
-                    <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
-                        <Tab label="Parameters" value={0} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
-                        <Tab label="Code" value={1} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
-                    </Tabs>
-                </Box>
-                <Box sx={{pt: 2}}>
-                    <TabPanel value={activeTab} index={0}>
-                        <Box>
-                            <Box>
-                                <EditActionParameterDefinition parameterDefinition={selectedParameterForEdit} template={props.actionTemplate}/>
-                            </Box>
-                            <Box>
-                                <ActionParameterDefinitionList parameters={props.actionParameterDefinitions} onParameterSelectForEdit={onParameterSelectForEdit} deleteParametersWithIds={deleteParametersWithIds}/>
-                            </Box>
-                        </Box>
-                    </TabPanel>
-                    <TabPanel value={activeTab} index={1}>
-                        <Box>
-                            <CodeEditor
-                                code={props.actionTemplate.Text}
-                                language={props.actionTemplate.Language}
-                                readOnly={false}
-                                onCodeChange={onCodeChange}
-                            />
-                        </Box>
-                    </TabPanel>
-                </Box>
+                <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
+                    <Tab label="Parameters" value={0} sx={{
+                            fontFamily: "SF Pro Text",
+                            fontStyle: "normal",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                            lineHeight: "24px",
+                            display: "flex",
+                            alignItems: "center",
+                            textAlign: "center",
+                            opacity: 0.7
+                    }}/>
+                    <Tab label="Code" value={1} sx={{
+                            fontFamily: "SF Pro Text",
+                            fontStyle: "normal",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                            lineHeight: "24px",
+                            display: "flex",
+                            alignItems: "center",
+                            textAlign: "center",
+                            opacity: 0.7
+                    }}/>
+                </Tabs>
             </Box>
-    )
+            <Box sx={{pt: 2}}>
+                <TabPanel value={activeTab} index={0}>
+                    <Card
+                        sx={{
+                            borderRadius: 1,
+                            p: 2,
+                            height: "100%"
+                        }}
+                        variant={'outlined'}    
+                    >
+                        <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                            <Box>
+                                <EditActionParameterDefinition 
+                                    parameter={selectedParameterForEdit}
+                                    template={selectedActionTemplateModel}
+                                    stageId={props.stageId}
+                                    actionIndex={props.actionDefinitionIndex}
+                                />
+                            </Box>
+                            <Box>
+                                <ActionParameterDefinitionList templateWithParams={selectedActionTemplate} onParameterSelectForEdit={onParameterSelectForEdit} deleteParametersWithIds={deleteParametersWithIds}/>
+                            </Box>
+                        </Box>
+                    </Card> 
+                </TabPanel>
+                <TabPanel value={activeTab} index={1}>
+                    <Box>
+                        <CodeEditor
+                            code={selectedActionTemplateModel?.Text}
+                            language={selectedActionTemplateModel?.Language}
+                            readOnly={false}
+                            onCodeChange={onCodeChange}
+                        />
+                    </Box>
+                </TabPanel>
+            </Box>
+        </Box>
+        )
+    }
 }
 
 

@@ -4,7 +4,8 @@ import { ActionDefinitionToAdd } from "./SelectAction/SelectAction";
 import SelectActionCard from "./SelectActionCard";
 
 export interface SelectFromAllActionsProps {
-    onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void
+    onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void,
+    actionDefinitionNameSearchQuery: string
 }
 
 const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
@@ -16,14 +17,15 @@ const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
         return <>{allActionDefinitionsError}</>
     } else {
         return(
-            <Grid container>
-                {allActionDefinitionsData.map(actionDefinition =>
+            <Grid container spacing={1}>
+                {allActionDefinitionsData.filter(actionDefinition => actionDefinition.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
                     <Grid item xs={12} md={6} lg={4}>
                         <SelectActionCard
                             actionId={actionDefinition.Id||"NA"}
                             actionName={actionDefinition.UniqueName||"NAME NA"}
                             actionDescription={actionDefinition.Description||"DESCRIPTION NA"}
                             onAddAction={props.onAddAction}
+                            defaultTemplateId={actionDefinition.DefaultActionTemplateId||"TEMPLATE NA"}
                         />
                     </Grid>)}
             </Grid>

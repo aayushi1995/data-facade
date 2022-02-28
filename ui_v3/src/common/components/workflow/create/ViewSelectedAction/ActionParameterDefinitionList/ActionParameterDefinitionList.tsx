@@ -7,10 +7,15 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import { ActionParameterDefinition, Tag } from '../../../../../../generated/entities/Entities';
 import { DataGrid, GridRowId, GridSelectionModel, GridToolbarContainer } from '@material-ui/data-grid';
 import { CustomToolbar } from '../../../../CustomToolbar';
+import { TemplateWithParams } from '../hooks/UseViewAction';
+import TagHandler from '../../../../tag-handler/TagHandler';
+import { getInputTypeFromAttributesNew, InputMap } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
+import { template } from '@babel/core';
+import TemplateLanguage from '../../../../../../enums/TemplateLanguage';
 
 
 export interface ActionParameterDefinitionListProps {
-    parameters: ActionParameterDefinition[],
+    templateWithParams?: TemplateWithParams,
     onParameterSelectForEdit: (actionParameter: ActionParameterDefinition) => void,
     deleteParametersWithIds: (actionParameterIds: string[]) => void
 }
@@ -29,15 +34,15 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
     const datagridProps = {
         columns: [
             {
-                field: "Parameter Name",
+                field: "ParameterName",
                 headerName: "Parameter Name"
             },
             {
-                field: "Parameter Type",
-                headerName: "Parameter Type"
+                field: "InputType",
+                headerName: "Input Type"
             },
             {
-                field: "Default Value",
+                field: "DefaultValue",
                 headerName: "Default Value"
             },
             {
@@ -47,13 +52,19 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
             {
                 field: "Tags",
                 headerName: "Tags",
-                width: 400,
-                renderCell: (props: any) => <></> // TODO: Add Edit Tag component 
+                width: 200,
+                renderCell: (props: any) => <TagHandler
+                    entityType="ActionParameterDefinition"
+                    entityId={props.row.id}
+                    tagFilter={{}}
+                    allowAdd={false}
+                    allowDelete={true}
+                />   
             },
             {
                 field: "Actions",
                 headerName: "Actions",
-                width: 120,
+                width: 200,
                 renderCell: (props: any) => {
                     const handleClick = (event:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
                         event.stopPropagation()
@@ -70,14 +81,13 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
                     )
                 }
             }
-        ].map(col => {return {width: 15*col.field.length, ...col}}),
-        rows: props.parameters.map(param => {
+        ].map(col => {return {width: 20*col.field.length, ...col}}),
+        rows: (props?.templateWithParams?.actionParameterDefinitions || []).map(param => {
             return {
-                "id": param.Id,
-                "Parameter Name": param.ParameterName,
-                "Parameter Type": param.Type,
-                "Default Value": param.DefaultParameterValue,
-                "User Input Required": false
+                ...param.model,
+                id: param.model.Id,
+                "User Input Required": false,
+                InputType: getInputTypeFromAttributesNew(props?.templateWithParams?.model?.Language || TemplateLanguage.SQL, param.model.Tag, param.model.Type, param.model.Datatype)
             }
         }),
         autoHeight: true,

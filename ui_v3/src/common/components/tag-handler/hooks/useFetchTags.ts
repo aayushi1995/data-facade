@@ -33,6 +33,8 @@ const useFetchTags = (params: UseFetchTagsParams): [string[], string[], boolean,
                     RelatedEntityId: entityId
                 }
             })
+        },{
+            staleTime: 60*1000
         }
     )
 
@@ -41,6 +43,8 @@ const useFetchTags = (params: UseFetchTagsParams): [string[], string[], boolean,
             return fetchedDataManagerInstance.retreiveData!(labels.entities.TAG, {
                 filter: tagFilter
             })
+        },{
+            staleTime: 60*1000
         }
     )
 
