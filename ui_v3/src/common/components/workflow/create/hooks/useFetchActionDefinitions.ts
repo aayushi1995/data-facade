@@ -15,7 +15,7 @@ const useFetchActionDefinitions = (params: UseFetchActionDefinitionsProps): [Act
             return fetchedDataManagerInstance.retreiveData!(labels.entities.ActionDefinition, {
                 filter: {}
             })
-        }
+        },
     )
 
     return [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]

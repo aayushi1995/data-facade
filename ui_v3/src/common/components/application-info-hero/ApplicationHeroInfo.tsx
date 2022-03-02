@@ -4,16 +4,18 @@ import UserAvatar from '../../types/UserAvatar';
 import NumberStat, { NumberStatProp } from '../NumberStat';
 import UsageStatus from './../UsageStatus';
 import ProviderAvatar from '../../types/ProviderAvatar';
+import { StringParameterInput } from '../workflow/create/ParameterInput';
 
 export interface ApplicationHeroInfoProps {
     applicationName: string,
     status: string,
     createdBy: UserAvatar,
-    lastUpdatedTimestamp: Date,
+    lastUpdatedTimestamp?: Date,
     numberStats: Array<NumberStatProp>,
-    usedBy: Array<UserAvatar>,
-    providers: Array<ProviderAvatar>,
-    onCardClick: (event: React.MouseEvent<HTMLDivElement>) => void
+    usedBy?: Array<UserAvatar>,
+    providers?: Array<ProviderAvatar>,
+    description?: string
+
 }
 
 const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
@@ -23,20 +25,8 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
     }
     console.log(props)
     return (
-        <Card
-            onClick={props.onCardClick}
-            sx={{
-                backgroundColor: 'background.paper',
-            '&:hover': {
-                backgroundColor: 'background.default'
-            },
-            borderRadius: 4,
-            p:1
-            }}
-            variant={'outlined'}
-        >
-
-            <Box sx={{display: "flex", flexDirection: "column", gap: 1}}>
+        <Box p={1} sx={{display: 'flex', maxHeight: '350px'}}>
+            <Box sx={{display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '50%'}}>
                 <Box className="header">
                     <Box className="name">
                         <Typography variant="h6" sx={{
@@ -61,7 +51,7 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                         }}>
                             <span>Created By <b>{props.createdBy.name}</b></span>
                             <span> | </span>
-                            <span>Last updated on {formTimestampHumanReadable(props.lastUpdatedTimestamp)}</span>
+                            <span>Last updated on {formTimestampHumanReadable(props.lastUpdatedTimestamp || new Date())}</span>
                         </Typography>
                     </Box>
                 </Box>
@@ -74,7 +64,7 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                     </Box>
                     <Box className="used-by">
                         <AvatarGroup max={9}>
-                            {props.usedBy.map(user => <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={user.name} src={user.url}/>)}
+                            {props.usedBy?.map?.(user => <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={user.name} src={user.url}/>)}
                         </AvatarGroup>
                     </Box>
                 </Box>
@@ -84,7 +74,7 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                     </Box>
                     <Box className="provider">
                         <AvatarGroup max={9}>
-                            {props.providers.map(provider => <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={provider.name} src={provider.url}/>)}
+                            {props.providers?.map?.(provider => <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={provider.name} src={provider.url}/>)}
                         </AvatarGroup>
                     </Box>
                 </Box>
@@ -96,8 +86,40 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                     )}
                 </Box>
             </Box>
+            <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
+                <Divider orientation="vertical" sx={{height: "100%"}}/>
+            </Box>
+            <Box sx={{display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '100%', marginLeft: 1}}>
+                <Box className="created-by">
+                    <Box sx={{display: 'flex', gap: 1, maxHeight: '45px', alignItems: 'center'}}>
+                        <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.createdBy.name} src={props.createdBy.url}/>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>  
+                            <Box>
+                                <Typography>Application Description</Typography>
+                            </Box>
+                            <Box sx={{display: 'flex'}}>
+                                <Box>
+                                    <Typography sx={{fontSize: '14px'}}>By {props.createdBy.name}</Typography>
+                                </Box>
+                                
+                                <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
+                                    <Divider orientation="vertical" sx={{height: "100%"}}/>
+                                </Box>
+                                <Typography sx={{fontSize: '14px'}}>Updated 0 min ago</Typography>
+                            </Box>
+
+                        </Box>
+                        
+                    </Box>
+                </Box>
+                <Box sx={{overflowY: 'auto'}}>
+                    <Typography sx={{wordWrap: 'break-word'}}>
+                        Description
+                    </Typography>
+                </Box>
+            </Box>
         
-        </Card>
+        </Box>
     )
 }
 

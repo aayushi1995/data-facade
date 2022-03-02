@@ -26,6 +26,24 @@ export interface ActionDefinitionWithTags {
 }
 
 
+export interface ActionDetailsForApplication {
+    model?: Entity.ActionDefinition
+	stagesOrParameters?: number
+	numberOfRuns?: number
+	numberOfWorkflowActions?: number
+	averageRunTime?: number
+}
+
+
+export interface ApplicationDetails {
+    numberOfActions?: number
+	numberOfFlows?: number
+	actions?: ActionDetailsForApplication[]
+	workflows?: ActionDetailsForApplication[]
+	model?: Entity.Application
+}
+
+
 export interface ActionTemplatesWithParameters {
     model?: Entity.ActionTemplate
 	tags?: Entity.Tag[]
