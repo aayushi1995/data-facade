@@ -6,6 +6,7 @@ import { Tag, TagMap } from '../../../../generated/entities/Entities';
 import labels from '../../../../labels/labels';
 import dataManagerInstance, { useRetreiveData } from './../../../../data_manager/data_manager'
 import TagGroups from '../../../../enums/TagGroups';
+import useFetchAvailableTags from './useFetchAvailableTags';
 
 export interface UseFetchTagsParams {
     entityType: string,
@@ -37,18 +38,9 @@ const useFetchTags = (params: UseFetchTagsParams): [string[], string[], boolean,
             staleTime: 60*1000
         }
     )
+    
+    const {data: avaialbleTagsForEntityData, error: avaialbleTagsForEntityError, isLoading: avaialbleTagsForEntityIsLoading} = useFetchAvailableTags({tagFilter})
 
-    const {data: avaialbleTagsForEntityData, error: avaialbleTagsForEntityError, isLoading: avaialbleTagsForEntityIsLoading} = useQuery([labels.entities.TAG, entityType, entityId],
-        () => {
-            return fetchedDataManagerInstance.retreiveData!(labels.entities.TAG, {
-                filter: tagFilter
-            })
-        },{
-            staleTime: 60*1000
-        }
-    )
-
-    // Tag related Mutations
     // Delete Tag Map
     const deleteTagMapMutation = useMutation((config: { tagName: string }) => {
         return fetchedDataManagerInstance.deleteData!(
@@ -104,7 +96,7 @@ const useFetchTags = (params: UseFetchTagsParams): [string[], string[], boolean,
     {
         onSuccess: (data: Tag[], variables, context) => {
             console.log(data)
-            queryClient.invalidateQueries([labels.entities.TAG, entityType, entityId])
+            queryClient.invalidateQueries([labels.entities.TAG, tagFilter])
             createTagMapMutation.mutate({
                 tagMapModel: {
                     TagName: data[0].Name

@@ -24,7 +24,7 @@ interface TabPanelProps {
     value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+export function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (

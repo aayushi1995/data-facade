@@ -17,6 +17,7 @@ import ActionParameterDefinitionTag from '../../../../../../enums/ActionParamete
 import ParameterInput, { BooleanParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
 import ActionParameterDefinitionType from '../../../../../../enums/ActionParameterDefinitionType';
 import ActionParameterDefinitionDatatype from '../../../../../../enums/ActionParameterDefinitionDatatype';
+import getParameterInputField from '../../ParameterInput';
 
 
 export interface EditActionParameterDefinitionProps {
@@ -151,8 +152,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             return {parameterType: undefined}
         }
     }
-     
-    return <ParameterInput {...formParameterInputProps()}/>
+    return getParameterInputField(formParameterInputProps())
 }
 
 const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps) => {

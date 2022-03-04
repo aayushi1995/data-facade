@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@types/react": "^17.0.39",
     "unique-names-generator": "^4.7.1"
   }
 }

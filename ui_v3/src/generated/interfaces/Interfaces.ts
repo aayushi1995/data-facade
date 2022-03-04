@@ -74,15 +74,54 @@ export interface ActionDefinitionDetail {
 }
 
 
-export interface ActionInstanceWithParameters {
-    model?: Entity.ActionInstance
-	ParameterInstances?: Entity.ActionParameterInstance[]
-}
-
-
 export interface ActionParameterDefinitionWithTags {
     model?: Entity.ActionParameterDefinition
 	tags?: Entity.Tag[]
+}
+
+
+export interface ApplicationDetails {
+    numberOfActions?: number
+	numberOfFlows?: number
+	actions?: ActionDetailsForApplication[]
+	workflows?: ActionDetailsForApplication[]
+	model?: Entity.Application
+}
+
+
+export interface ActionTemplatesWithParameters {
+    model?: Entity.ActionTemplate
+	tags?: Entity.Tag[]
+	actionParameterDefinitions?: ActionParameterDefinitionWithTags[]
+}
+
+
+export interface ActionDetailsForApplication {
+    model?: Entity.ActionDefinition
+	stagesOrParameters?: number
+	numberOfRuns?: number
+	numberOfWorkflowActions?: number
+	averageRunTime?: number
+}
+
+
+export interface UpdateActionDefinitionWithTemplate {
+    filter?: Entity.ActionDefinition
+	newProperties?: Entity.ActionDefinition
+	old?: ActionDefinitionDetail
+	new?: ActionDefinitionDetail
+}
+
+
+export interface ActionDefinitionWithTags {
+    model?: Entity.ActionDefinition
+	tags?: Entity.Tag[]
+}
+
+
+export interface ActionInstanceWithParameters {
+    model?: Entity.ActionInstance
+	ParameterInstances?: Entity.ActionParameterInstance[]
 }
 
 

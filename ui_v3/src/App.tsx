@@ -33,6 +33,7 @@ import ViewWorkflowHomePage from './pages/applications/view-workflow/ViewWorkflo
 import {ReactJSXElement} from "@emotion/react/types/jsx-namespace";
 import DashboardNavbar from "./common/components/header/DashboardNavbar";
 import {ModuleSwitcher} from "./common/components/header/ModuleSwitcher";
+import BuildActionHomePage from './pages/build_action/BuildActionHomePage'
 
 export const AppInternal = (props: { classes: any; userEmail: any; dummyData: any; dummyDataPending: any; activeLink: any; setActiveLink: any; isLoading: any; user: any }) => {
     const {
@@ -101,6 +102,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/run-workflow' component={RunWorkflowHomePage}/>
                                     <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
                                     <Route path='/build-workflow' component={BuildWorkflowHomePage}/>
+                                    <Route path='/build-action' component={BuildActionHomePage}/>
                                     <Redirect exact from="/" to="tableBrowser"/>
                                 </Switch>
                             </Grid>

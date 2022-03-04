@@ -28,7 +28,7 @@ const CodeEditor = (props) => {
             >
                 <div className="container_editor_area">
                     <Editor
-                        value={props.code}
+                        value={props.code||""}
                         onValueChange={props.onCodeChange || (() => {
                         })}
                         highlight={(code) => highlight(code, languageToSyntaxMap[props.language || TemplateLanguage.SQL])

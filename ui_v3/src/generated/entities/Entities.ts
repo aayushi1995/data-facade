@@ -8,74 +8,57 @@ export interface BaseEntity {}
  
  
 
-export interface Alert extends BaseEntity{
+export interface ActionParameterDefinition extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
 	DeletedOn?: number
-	CreatedOn?: number
-	ShortDescription?: string
-	LongDescription?: string
-	RelatedEntityID?: string
-	TableId?: string
-}
-
-
-export interface ColumnProperties extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	UniqueName?: string
-	TableId?: string
-	TableName?: string
-	IsPartition?: boolean
-	Datatype?: string
-	IsStale?: boolean
-	ColumnType?: string
-	ColumnPattern?: string
-}
-
-
-export interface DownloadTable extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	CreatedOn?: number
-	ProcessedOn?: number
-	Status?: string
-	TableId?: string
-	TableProviderInstanceId?: string
-	TableName?: string
-	UploadActionInstanceId?: string
-}
-
-
-export interface ActionInstance extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	DefinitionId?: string
+	ActionDefinitionId?: string
 	TemplateId?: string
-	Name?: string
-	LastRun?: string
-	RenderedTemplate?: string
-	RenderTemplate?: boolean
-	ProviderInstanceId?: string
-	IsRecurring?: boolean
-	RecurrenceIntervalInSecs?: number
-	UpstreamActionInstanceId?: string
-	RelatedEntityId?: string
-	ConfiguredRetryCount?: number
-	RetryInterval?: number
-	EmailNotificationProviderInstanceId?: string
-	SlackNotificationProviderInstanceId?: string
-	EnableForReporting?: boolean
+	ParameterName?: string
+	Datatype?: string
+	Type?: string
+	Tag?: string
+	DefaultParameterValue?: string
+}
+
+
+export interface ActionExecution extends BaseEntity{
+    Id?: string
+	InstanceId?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	Status?: string
+	Output?: string
+	ExecutionStartedOn?: number
+	RecurringRetry?: boolean
+	ExecutionCompletedOn?: number
+	ScheduledTime?: number
+	CurrentRetryCount?: number
+	RunId?: string
+	ActionInstanceName?: string
+	ActionInstanceRenderedTemplate?: string
 	TableId?: string
-	DisplayName?: string
-	ActionType?: string
-	TestField?: string
-	AnomalyInstanceId?: string
-	VisualizationFormat?: string
-	UploadExecutionData?: boolean
+	Config?: string
+	isAnomaly?: boolean
+	AnomalyReason?: string
+	IsSynchronous?: boolean
+	OutputFilePath?: string
+	UploadOutput?: boolean
+	ExecutionLogs?: string
+}
+
+
+export interface ActionParameterInstance extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	ActionParameterDefinitionId?: string
+	ActionInstanceId?: string
+	ParameterValue?: string
+	TableId?: string
+	ColumnId?: string
+	ProviderInstanceId?: string
+	SourceExecutionId?: string
 }
 
 
@@ -100,6 +83,71 @@ export interface ActionDefinition extends BaseEntity{
 }
 
 
+export interface Tag extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	Name?: string
+	TagGroup?: string
+	ParentTagName?: string
+	Scope?: string
+	CreatedBy?: string
+	Description?: string
+	ApplicationId?: string
+}
+
+
+export interface ProfileData extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	TableId?: string
+	TableName?: string
+	ColumnUniqueName?: string
+	ColumnDataType?: string
+	NullCounts?: number
+	Range?: string
+	UniqueValueCount?: number
+	RefreshTimestamp?: string
+	Partition?: string
+	TotalRowCount?: number
+}
+
+
+export interface DownloadTable extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	CreatedOn?: number
+	ProcessedOn?: number
+	Status?: string
+	TableId?: string
+	TableProviderInstanceId?: string
+	TableName?: string
+	UploadActionInstanceId?: string
+}
+
+
+export interface DataCheckDefinition extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	UniqueName?: string
+	CheckType?: string
+}
+
+
+export interface ActionTemplate extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	DefinitionId?: string
+	Text?: string
+	Language?: string
+	SupportedRuntimeGroup?: string
+}
+
+
 export interface Application extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -107,18 +155,6 @@ export interface Application extends BaseEntity{
 	Name?: string
 	ArtifactLocation?: string
 	Version?: string
-}
-
-
-export interface TagMap extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	TagName?: string
-	CreatedBy?: string
-	CreatedOn?: number
-	RelatedEntityType?: string
-	RelatedEntityId?: string
 }
 
 
@@ -131,27 +167,6 @@ export interface PredictionModel extends BaseEntity{
 	Framework?: string
 	OutputArtifact?: string
 	Config?: string
-}
-
-
-export interface TableProperties extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	UniqueName?: string
-	DisplayName?: string
-	DatabaseName?: string
-	SchemaName?: string
-	Owner?: string
-	CreatedOn?: string
-	ModifiedOn?: string
-	Description?: string
-	ProviderInstanceID?: string
-	ProviderInstanceName?: string
-	TableType?: string
-	IsStale?: boolean
-	FullSyncedOn?: number
-	Location?: string
 }
 
 
@@ -194,111 +209,6 @@ export interface ProviderDefinition extends BaseEntity{
 }
 
 
-export interface OptimisticTag extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	TableName?: string
-	ColumnName?: string
-	ProviderInstanceId?: string
-	TagName?: string
-	EntityType?: string
-}
-
-
-export interface ProviderParameterDefinition extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	ProviderDefinitionId?: string
-	ParameterName?: string
-	FilledBy?: string
-	Datatype?: string
-}
-
-
-export interface ProfileData extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	TableId?: string
-	TableName?: string
-	ColumnUniqueName?: string
-	ColumnDataType?: string
-	NullCounts?: number
-	Range?: string
-	UniqueValueCount?: number
-	RefreshTimestamp?: string
-	Partition?: string
-	TotalRowCount?: number
-}
-
-
-export interface ActionParameterInstance extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	ActionParameterDefinitionId?: string
-	ActionInstanceId?: string
-	ParameterValue?: string
-	TableId?: string
-	ColumnId?: string
-	ProviderInstanceId?: string
-	SourceExecutionId?: string
-}
-
-
-export interface ActionTemplate extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	DefinitionId?: string
-	Text?: string
-	Language?: string
-	SupportedRuntimeGroup?: string
-}
-
-
-export interface ActionParameterDefinition extends BaseEntity{
-    Id?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	ActionDefinitionId?: string
-	TemplateId?: string
-	ParameterName?: string
-	Datatype?: string
-	Type?: string
-	Tag?: string
-	DefaultParameterValue?: string
-}
-
-
-export interface ActionExecution extends BaseEntity{
-    Id?: string
-	InstanceId?: string
-	DeletedStatus?: string
-	DeletedOn?: number
-	Status?: string
-	Output?: string
-	ExecutionStartedOn?: number
-	RecurringRetry?: boolean
-	ExecutionCompletedOn?: number
-	ScheduledTime?: number
-	CurrentRetryCount?: number
-	RunId?: string
-	ActionInstanceName?: string
-	ActionInstanceRenderedTemplate?: string
-	TableId?: string
-	Config?: string
-	isAnomaly?: boolean
-	AnomalyReason?: string
-	IsSynchronous?: boolean
-	OutputFilePath?: string
-	UploadOutput?: boolean
-	ExecutionLogs?: string
-}
-
-
 export interface ProfileRequests extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -313,17 +223,59 @@ export interface ProfileRequests extends BaseEntity{
 }
 
 
-export interface Tag extends BaseEntity{
+export interface OptimisticTag extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
 	DeletedOn?: number
-	Name?: string
-	TagGroup?: string
-	ParentTagName?: string
-	Scope?: string
-	CreatedBy?: string
+	TableName?: string
+	ColumnName?: string
+	ProviderInstanceId?: string
+	TagName?: string
+	EntityType?: string
+}
+
+
+export interface TableProperties extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	UniqueName?: string
+	DisplayName?: string
+	DatabaseName?: string
+	SchemaName?: string
+	Owner?: string
+	CreatedOn?: string
+	ModifiedOn?: string
 	Description?: string
-	ApplicationId?: string
+	ProviderInstanceID?: string
+	ProviderInstanceName?: string
+	TableType?: string
+	IsStale?: boolean
+	FullSyncedOn?: number
+	Location?: string
+}
+
+
+export interface ProviderParameterDefinition extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	ProviderDefinitionId?: string
+	ParameterName?: string
+	FilledBy?: string
+	Datatype?: string
+}
+
+
+export interface TagMap extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	TagName?: string
+	CreatedBy?: string
+	CreatedOn?: number
+	RelatedEntityType?: string
+	RelatedEntityId?: string
 }
 
 
@@ -338,12 +290,30 @@ export interface ProviderInstance extends BaseEntity{
 }
 
 
-export interface DataCheckDefinition extends BaseEntity{
+export interface Alert extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	CreatedOn?: number
+	ShortDescription?: string
+	LongDescription?: string
+	RelatedEntityID?: string
+	TableId?: string
+}
+
+
+export interface ColumnProperties extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
 	DeletedOn?: number
 	UniqueName?: string
-	CheckType?: string
+	TableId?: string
+	TableName?: string
+	IsPartition?: boolean
+	Datatype?: string
+	IsStale?: boolean
+	ColumnType?: string
+	ColumnPattern?: string
 }
 
 
@@ -359,6 +329,36 @@ export interface ProviderParameterInstance extends BaseEntity{
 	Datatype?: string
 	CreatedOn?: number
 	ModifiedOn?: number
+}
+
+
+export interface ActionInstance extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	DefinitionId?: string
+	TemplateId?: string
+	Name?: string
+	LastRun?: string
+	RenderedTemplate?: string
+	RenderTemplate?: boolean
+	ProviderInstanceId?: string
+	IsRecurring?: boolean
+	RecurrenceIntervalInSecs?: number
+	UpstreamActionInstanceId?: string
+	RelatedEntityId?: string
+	ConfiguredRetryCount?: number
+	RetryInterval?: number
+	EmailNotificationProviderInstanceId?: string
+	SlackNotificationProviderInstanceId?: string
+	EnableForReporting?: boolean
+	TableId?: string
+	DisplayName?: string
+	ActionType?: string
+	TestField?: string
+	AnomalyInstanceId?: string
+	VisualizationFormat?: string
+	UploadExecutionData?: boolean
 }
 
 

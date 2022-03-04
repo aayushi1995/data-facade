@@ -94,8 +94,16 @@ const getInputTypeFromAttributesNew = (language, tag, type, datatype) => {
     return ActionParameterDefinitionInputType.STRING
 }
 
+const getAttributesFromInputType = (inputType, language) => {
+    if(language in InputMap && inputType in InputMap[language]){
+        return InputMap[language][inputType]
+    }
+    return InputMap[TemplateLanguage.PYTHON][ActionParameterDefinitionInputType.STRING]
+}
+
 export {
     InputMap,
+    getAttributesFromInputType,
     getInputTypeFromAttributes,
     getInputTypeFromAttributesNew
 };

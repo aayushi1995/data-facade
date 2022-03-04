@@ -1,70 +1,55 @@
-import { Autocomplete, Box, Button, Chip, TextField, createFilterOptions, Grid } from '@material-ui/core'
-import React from 'react'
-import TagScope from '../../../enums/TagScope'
-import { Tag } from '../../../generated/entities/Entities'
-import labels from '../../../labels/labels'
-import useFetchTags from './hooks/useFetchTags'
+import { Grid, Autocomplete, Box, Chip, TextField } from "@mui/material";
+import { Tag } from "../../../generated/entities/Entities";
+import useFetchAvailableTags from "./hooks/useFetchAvailableTags";
 
-export interface TagHandlerProps {
-    entityType: string,
-    entityId: string,
+export interface VirtualTagHandlerProps {
+    selectedTags: Tag[],
+    onSelectedTagsChange?: (newTags: Tag[]) => void
     tagFilter: Tag,
     allowAdd: boolean,
-    allowDelete: boolean
+    allowDelete: boolean,
+    orientation: "VERTICAL" | "HORIZONTAL",
+    direction: "REVERSE" | "DEFAULT"
 }
 
-const filter = createFilterOptions<string>()
+const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
+    const {selectedTags, onSelectedTagsChange, tagFilter, allowAdd, allowDelete, orientation, direction} = props
+    const {data, error, isLoading} = useFetchAvailableTags({tagFilter})
 
-const TagHandler = (props: TagHandlerProps) => {
-    const [tagsSelectedForEntity, tagsNotSelectedButAvaialbleForEntity, isLoading, isMutating, error, addTag, createAndAddTag, deleteTag] = useFetchTags({
-        entityType: props.entityType,
-        entityId: props.entityId,
-        tagFilter: props.tagFilter
-    })
-    
     if(isLoading) {
         return <>Loading...</>
     } else if(!!error) {
         return <>Error: {error}</>
     } else {
+        const selectedTagsId: string[] = selectedTags.map(tag => tag.Id!)
+        const availableTagsForEntity = (data as Tag[]).filter(availableTag => !selectedTagsId.includes(availableTag.Id!))
         return(
-            <Grid container spacing={1} sx={{overflowY: 'auto'}}>
-                {props.allowAdd && <Grid item xs={12} md={4} lg={2}>
+            <Grid container spacing={5} direction={direction==="DEFAULT" ? "row" : "column-reverse"}>
+                {props.allowAdd && <Grid item {...(orientation==="VERTICAL" ? {xs:12} : {xs:12, md:4, lg:3})}>
                     <Autocomplete
-                        options={tagsNotSelectedButAvaialbleForEntity}
+                        options={availableTagsForEntity}
+                        getOptionLabel={tag => tag.Name!}
                         filterSelectedOptions
                         fullWidth
                         selectOnFocus
                         clearOnBlur
                         handleHomeEndKeys
-                        disabled={(isLoading || isMutating ||(!!error))}
                         onChange={(event, value, reason, details) => {
                             if(!!value){
-                                if(value?.includes("Create Tag: ")){
-                                    createAndAddTag(value.substring(12))
-                                } else {
-                                    addTag(value)
-                                }
+                                onSelectedTagsChange?.([...selectedTags, value])
                             }
                         }}
                         renderInput={(params) => <TextField {...params} label="Add Tag"/>}
-                        filterOptions={(options, params) => {
-                            const filtered = filter(options, params);
-                            if (params.inputValue !== '') {
-                                filtered.push(`Create Tag: ${params.inputValue}`);
-                            }
-                            return filtered;
-                        }}
                     />
                 </Grid>}
-                <Grid item {...(props.allowAdd ? {xs:12, md:8, lg:10} : {xs:12})}> 
+                <Grid item {...(orientation==="VERTICAL" ? {xs:12} : {xs:12, md:8, lg:9})}> 
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%"}}>
-                        {tagsSelectedForEntity.length > 0 ? 
-                            tagsSelectedForEntity.map(tagName => 
+                        {selectedTags.length > 0 ? 
+                            selectedTags.map(tag => 
                                 <Box>
                                     <Chip variant="outlined" color="primary" size="small" 
-                                        label={tagName} 
-                                        onDelete={props.allowDelete ? (() => {deleteTag(tagName)}) : undefined}
+                                        label={tag.Name} 
+                                        onDelete={props.allowDelete ? (() => {onSelectedTagsChange?.(selectedTags.filter(selectedTag => selectedTag.Id!==tag.Id))}) : undefined}
                                         sx={{
                                             fontFamily: "SF Pro Text",
                                             fontStyle: "normal",
@@ -109,4 +94,4 @@ const TagHandler = (props: TagHandlerProps) => {
     }
 }
 
-export default TagHandler;
+export default VirtualTagHandler
