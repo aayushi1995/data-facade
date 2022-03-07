@@ -43,6 +43,12 @@
 	 static async fetchData(httpsVerb: "GET", endpoint: "/getTagDetailsWithSubsidiary", inputPayload: Entity.Tag): Promise<CustomInterface.TagDetails[]>; 
 	 
 	 /**
+	 Gives details about child action executions of a workflow
+	 */
+	 
+	 static async fetchData(httpsVerb: "GET", endpoint: "/workflowActionExecutionsStatus", inputPayload: Entity.ActionExecution): Promise<CustomInterface.WorkflowActionExecutions[]>; 
+	 
+	 /**
 	 Gives you the details of an application. It's actions, workflows etc.
 	 */
 	 

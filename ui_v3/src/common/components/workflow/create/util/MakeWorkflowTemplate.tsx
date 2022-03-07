@@ -1,7 +1,7 @@
 import { type } from "os";
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext";
 
-type WorkflowTemplate = {
+export type WorkflowTemplate = {
     Id: string,
     DefaultActionTemplateId: string,
     DisplayName: string,
@@ -24,7 +24,8 @@ export function makeWorkflowTemplate(workflowContext: WorkflowContextType): stri
                         SourceExecutionId: parameter.SourceExecutionId ? parameter.SourceExecutionId.actionId + offset: undefined,
                         ParameterValue: parameter.ParameterValue,
                         TableId: parameter.TableId,
-                        ColumnId: parameter.ColumnId
+                        ColumnId: parameter.ColumnId,
+                        GlobalParameterId: parameter.GlobalParameterId
                     }
                 }
                 return parameters
@@ -40,17 +41,16 @@ export function makeWorkflowTemplate(workflowContext: WorkflowContextType): stri
         })
         actionsInThisStage.forEach(stageAction => workflowActionDefinitions.push(stageAction))
     })
-
     return JSON.stringify(workflowActionDefinitions)
 }
 
 function calculateOffset(workflowContext: WorkflowContextType, stageId: string): number {
     var offset = 0
-    workflowContext.stages.forEach(stage => {
-        if(stage.Id === stageId) {
+    for(let i = 0; i < workflowContext.stages.length; i++) {
+        if(workflowContext.stages[i].Id == stageId) {
             return offset;
         }
-        offset += stage.Actions.length
-    })
+        offset += workflowContext.stages[i].Actions.length
+    }
     return offset
 }

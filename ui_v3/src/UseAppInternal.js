@@ -34,8 +34,8 @@ const useStyles = makeStyles(() => ({
         top: 64,
         position: "relative",
         padding: "0 24px",
-        width: "calc(100% - 224px)",
-        left: 224
+        width: "100%",
+        // left: 224
     }
 }));
 const fetchDummyData = (token, endPoint, email) => {

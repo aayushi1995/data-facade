@@ -18,27 +18,40 @@ const useSaveWorkflowMutation = (props: UseSaveWorkflowProps) => {
         props.mutationName,
         (workflowContext: WorkflowContextType) => {
             const definitionId = uuidv4()
+            const templateId = uuidv4()
             const actionDefinition: ActionDefinition = {
                 Id: definitionId,
                 DisplayName: workflowContext.Name,
                 Description: workflowContext.Description,
                 ActionType: "Workflow",
                 UniqueName: workflowContext.Name,
-                CreatedBy: workflowContext.Author
+                CreatedBy: workflowContext.Author,
+                DefaultActionTemplateId: templateId
             }
             const templateText = makeWorkflowTemplate(workflowContext)
             const workflowTemplate: ActionTemplate = {
-                Id: uuidv4(),
+                Id: templateId,
                 DefinitionId: definitionId,
                 Text: templateText,
             }
+            const workflowParameters = workflowContext.WorkflowParameters.map(parameter => {
+                const parameterDefinition = {
+                    ...parameter,
+                    ActionDefinitionId: definitionId,
+                    TemplateId: workflowTemplate.Id
+                }
+                return {
+                    model: parameterDefinition,
+                    tags: []
+                }
+            })
             const actionProperties = {
                 ActionDefinition: {
                     model: actionDefinition,
                     tags: []
                 },
                 ActionTemplatesWithParameters: [{
-                    actionParameterDefinitions: [],
+                    actionParameterDefinitions: workflowParameters,
                     model: workflowTemplate,
                     tags: []
                 }],

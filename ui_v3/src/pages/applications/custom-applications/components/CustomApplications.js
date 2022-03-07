@@ -83,8 +83,9 @@ export const RunWorkflow = (props) => {
                 onClick={(e) => {
                     e.stopPropagation();
                     console.log(props)
-                    props?.api?.componentsProps.setTableSelectDialog()
-                    props?.api?.componentsProps?.setWorkflowIdToRun(props.id)
+                    // props?.api?.componentsProps.setTableSelectDialog()
+                    // props?.api?.componentsProps?.setWorkflowIdToRun(props.id)
+                    history.push(`/execute-workflow/${props.id}`)
                 }}
             >
                 <PlayArrowIcon />
@@ -152,7 +153,7 @@ const CustomApplications = () => {
     }, [customApplications])
 
     const handleOpenDialog = () => {
-        setCreateDialog(true)
+        history.push('/build-workflow')
     }
 
     const handleDialogClose = () => {

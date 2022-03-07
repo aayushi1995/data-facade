@@ -6,6 +6,7 @@ import dataCleansing from '../../../../src/images/data_cleansing.png'
 import { Typography } from "@mui/material"
 import closeIcon from '../../../../src/images/delete_workflow_action.png'
 import { SystemStyleObject } from "@mui/system"
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 export interface ActionCardProps {
@@ -15,7 +16,7 @@ export interface ActionCardProps {
     actionGroup: string
     displayRowsEffected: boolean
     rowsEffected?: number
-    isComplete?: boolean
+    executionStaus?: string
     dragHandleProps?: any
     percentageCompleted?: number
     isCardSelected?: boolean
@@ -32,6 +33,18 @@ const ActionCard = (props: ActionCardProps) => {
         boxSizing: 'border-box',
         backgroundBlendMode: 'soft-light, normal'
     }
+    var background = '#FFFFFF'
+    switch(props.executionStaus){
+        case 'WaitingForUpstream': 
+            background = 'rgba(248, 241, 178, 1)';
+            break;
+        case 'Completed': 
+            background = '#DFFFEA'
+            break;
+        case 'Failed':
+            background = '#FFBDBD'
+            break;
+    } 
 
     const handleClick = (e: any) => {
         props.onActionSelect?.(props.actionId, props.index)
@@ -44,7 +57,7 @@ const ActionCard = (props: ActionCardProps) => {
             }} onClick={handleClick}
         >
             <Box sx={{
-                backgroundColor: (props.isComplete ? '#DFFFEA' : '#FFFFFF'), 
+                backgroundColor: background, 
                 display: "flex", 
                 flex: 1, 
                 boxShadow: lightShadows[25], 
@@ -89,6 +102,13 @@ const ActionCard = (props: ActionCardProps) => {
                     </IconButton>
                 </Box>
             </Box>
+            {props.executionStaus === "Started" ? (
+                <Box sx={{width: '100%'}}>
+                    <LinearProgress/>
+                </Box>
+            ) : (
+                <></>
+            )}
         </Card>
     )
 }

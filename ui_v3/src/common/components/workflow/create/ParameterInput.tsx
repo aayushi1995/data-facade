@@ -119,7 +119,7 @@ const StringInput = (props: StringParameterInput) => {
                 onChange={(event) => setInput(event.target.value)}
                 onBlur={() => onChange(input)}
                 variant="outlined"
-                label="Default Value"
+                label={props.inputProps.parameterName || "Default Value"}
                 fullWidth
             />
 }
@@ -201,6 +201,7 @@ const BooleanInput = (props: BooleanParameterInput) => {
 }
 
 const TableInput = (props: TableParameterInput) => {
+    // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableName, onChange} = props.inputProps
     const {tables, loading, error}  = useTables({tableFilter: {}})
     if(loading){
@@ -223,7 +224,7 @@ const TableInput = (props: TableParameterInput) => {
             onChange={(event, value, reason, details) => {
                 onChange(!!value ? value : undefined)
             }}
-            renderInput={(params) => <TextField {...params}/>}
+            renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName}/>}
         />
     )
 }

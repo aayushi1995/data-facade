@@ -30,6 +30,7 @@ const labels = {
 
     },
     "entities": {
+        "ActionTemplate": "ActionTemplate",
         "Alert": "Alert",
         "ActionExecution": "ActionExecution",
         "ActionInstance": "ActionInstance",

@@ -6,8 +6,8 @@ export interface WorkflowHeroProps {
     Name?: string,
     Description?: string,
     Author?: string,
-    onNameChange: (newName: string) => void
-    onDescriptionChange: (newDescription: string) => void
+    onNameChange?: (newName: string) => void
+    onDescriptionChange?: (newDescription: string) => void
 }
 
 const WorkflowHero = (props: WorkflowHeroProps) => {
@@ -24,7 +24,8 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
             border: "2px solid rgba(255, 255, 255, 0.4)",
             boxSizing: "border-box",
             boxShadow: "-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD",
-            borderRadius: "10px"
+            borderRadius: "10px",
+            minWidth: '100%'
             }}
             variant={'outlined'}
         >
@@ -36,7 +37,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                 <TextField value={props.Name} 
                                     variant="standard" 
                                     fullWidth
-                                    onChange={(event) => props.onNameChange(event.target.value)} 
+                                    onChange={(event) => props.onNameChange?.(event.target.value)} 
                                     InputProps ={{
                                         sx: {
                                             fontFamily: "SF Pro Display",
@@ -147,7 +148,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                     multiline
                                     minRows={4}
                                     maxRows={6}
-                                    onChange={(event) => props.onDescriptionChange(event.target.value)} 
+                                    onChange={(event) => props.onDescriptionChange?.(event.target.value)} 
                                     InputProps ={{
                                         sx: {
                                             fontFamily: "SF Pro Text",

@@ -68,7 +68,8 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             parameters: action.Parameters,
             defaultTemplateId: action.DefaultActionTemplateId,
             deleteButtonAction: handleDeleteAction,
-            onActionSelect: onActionSelect
+            onActionSelect: onActionSelect,
+            executionStaus: action.ExecutionStatus
         }
         if(selectedDefinition.index === index && selectedDefinition.id === action.Id) {
             return {
@@ -130,7 +131,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                     <Divider />
                     <Box p={1} />
                     <DragDropContext onDragEnd={handleDragEnd}>
-                        <Droppable droppableId="drop-id" >
+                        <Droppable droppableId="drop-id" isDropDisabled={!workflowContext.draggingAllowed}>
                             {(provided: any) => (
                                 <Box sx={{ flexShrink: 1, p: 0}} ref={provided.innerRef}>
                                     <ul style={{ 'listStyleType': 'none', padding: '0px'}}>

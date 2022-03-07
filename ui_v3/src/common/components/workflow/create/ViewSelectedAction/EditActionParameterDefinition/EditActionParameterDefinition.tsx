@@ -1,22 +1,20 @@
 
 import React from 'react'
-import { Autocomplete, Box, Card, Chip, FormControl, Grid, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, SvgIcon, TextField, Typography, useTheme} from '@material-ui/core';
-import {Tabs, Tab} from "@mui/material"
-import SearchIcon from '@mui/icons-material/Search';
-import PencilAltIcon from "../../../../../../icons/PencilAlt"
-import DeleteIcon from "@material-ui/icons/Delete"
+import { Autocomplete, Box, Card, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, TextField, useTheme, createFilterOptions} from '@material-ui/core';
+import {Tabs, Tab, SelectChangeEvent} from "@mui/material"
 import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from '../../../../../../generated/entities/Entities';
 import { DataGrid, GridToolbarContainer } from '@material-ui/data-grid';
 import { CustomToolbar } from '../../../../CustomToolbar';
 import { getInputTypeFromAttributesNew, InputMap } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
 import { TemplateWithParams } from '../hooks/UseViewAction';
 import TagHandler from '../../../../tag-handler/TagHandler';
-import { SetWorkflowContext, UpstreamAction, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
+import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
 import { ParameterName } from 'storybook-addon-designs/esm/addon';
 import ActionParameterDefinitionTag from '../../../../../../enums/ActionParameterDefinitionTag';
 import ParameterInput, { BooleanParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
 import ActionParameterDefinitionType from '../../../../../../enums/ActionParameterDefinitionType';
 import ActionParameterDefinitionDatatype from '../../../../../../enums/ActionParameterDefinitionDatatype';
+import { v4 as uuidv4 } from 'uuid'
 import getParameterInputField from '../../ParameterInput';
 
 
@@ -155,13 +153,89 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
     return getParameterInputField(formParameterInputProps())
 }
 
+const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, actionIndex: number, stageId: string}) => {
+    const workflowContext = React.useContext(WorkflowContext)
+    const setWorkflowContext = React.useContext(SetWorkflowContext)
+
+    const currentParameterInContext = workflowContext.stages.filter(stage => stage.Id === props.stageId)[0].Actions.filter((action, index) => index === props.actionIndex)[0].Parameters.filter(parameter => parameter.ActionParameterDefinitionId === props.parameter.Id)[0]
+    const currentGlobalParameterIfPresent = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Id === currentParameterInContext?.GlobalParameterId )
+    const currentGlobalParameter = currentGlobalParameterIfPresent.length > 0 ? currentGlobalParameterIfPresent[0] : {}
+
+    const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Tag === props.parameter.Tag && wfParameter.Datatype === props.parameter.Datatype)
+    const filter = createFilterOptions<ActionParameterDefinition>()
+
+    const addAndMapGlobalParameter = (parameter: ActionParameterDefinition) => {
+        const paramterName = parameter.ParameterName?.substring(25)
+        const id = uuidv4()
+        const newGlobalParamter: ActionParameterDefinition = {
+            ...parameter,
+            Id: id,
+            ParameterName: paramterName,
+            Datatype: props.parameter.Datatype,
+            Tag: props.parameter.Tag
+        }
+        setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: newGlobalParamter}})
+        mapToGlobalParameter(id)
+    }
+
+    const mapToGlobalParameter = (workflowParameterId: string) => {
+        console.log(workflowParameterId)
+        setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER', 
+                            payload: {stageId: props.stageId, globalParameterId: workflowParameterId, parameterDefinitionId: props.parameter.Id || "ID", actionIndex: props.actionIndex}})
+    }
+
+    return (
+        <Box>
+            <Autocomplete
+                options={availableParameters}
+                value={currentGlobalParameter}
+                getOptionLabel={parameter => parameter.ParameterName || ""}
+                
+                filterSelectedOptions
+                fullWidth
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                renderInput={(params) => <TextField label="Select Parameter" {...params}/>}
+                filterOptions={(options, params) => {
+                    const filtered = filter(options, params);
+                    if(params.inputValue !== '') {
+                        filtered.push({ParameterName: `Create Global Parameter: ${params.inputValue}`});
+                    }
+                    return filtered
+                }}
+                onChange={(event, value, reason, details) => {
+                    if(!!value) {
+                        if(value?.ParameterName?.includes('Create Global Parameter:')) {
+                            console.log("new parameter")
+                            addAndMapGlobalParameter(value)
+                        } else {
+                            mapToGlobalParameter(value.Id || "ID")
+                        }
+                    }
+                }}
+            />
+        </Box>
+    )
+}
+
 const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps) => {
     const theme = useTheme();
-    
+    const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const workflowContext = React.useContext(WorkflowContext)
+    const currentParameter = findIfParameterPresent(workflowContext, props.stageId, props.actionIndex, props.parameter?.Id || "id")
+    const userInputRequired = currentParameter?.userInputRequired || "No"
     const handleParameterNameChange = () => {}
     const handleParameterTypeChange = () => {}
-    const handleUserInputRequiredChange = () => {}
-    
+    const handleUserInputRequiredChange = (e: SelectChangeEvent<string>) => {
+        setWorkflowContext({type: 'CHANGE_USER_INPUT_REQUIRED', payload: {
+            stageId: props.stageId,
+            parameterDefinitionId: props.parameter?.Id || "NA",
+            actionIndex: props.actionIndex,
+            actionDefinitionId: props.template.DefinitionId || "NA",
+            userInput: e.target.value === "Yes" ? "Yes" : "No"
+        }})    
+    }
 
     if(!!props.parameter) {
         return(
@@ -199,20 +273,26 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                         <InputLabel htmlFor="component-outlined">User Input Required</InputLabel>
                         <Select
                             variant="outlined"
-                            value={"No"}
+                            value={userInputRequired}
                             fullWidth
                             onChange={handleUserInputRequiredChange}
                             label="User Input Required"
-                            disabled
                         >
                             <MenuItem value={"Yes"}>Yes</MenuItem>
                             <MenuItem value={"No"}>No</MenuItem>
                         </Select>
                     </FormControl>    
                 </Grid>
-                <Grid item xs={12} md={4} lg={4}>
-                    <DefaultValueSelector parameter={props.parameter} actionIndex={props.actionIndex} stageId={props.stageId}/>
-                </Grid>
+                {userInputRequired === "No" ? (
+                    <Grid item xs={12} md={4} lg={4}>
+                        <DefaultValueSelector parameter={props.parameter} actionIndex={props.actionIndex} stageId={props.stageId}/>
+                    </Grid>
+                ) : (
+                    <Grid item xs={12} md={4} lg={4}>
+                        <GlobalParameterHandler parameter={props.parameter} actionIndex={props.actionIndex} stageId={props.stageId}/>
+                    </Grid>
+                )}
+                
                 <Grid item xs={12} md={8} lg={8}>
                     <TagHandler
                         entityType='ActionParameterDefinition'
