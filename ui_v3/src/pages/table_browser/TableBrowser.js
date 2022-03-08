@@ -16,6 +16,7 @@ import SyncIcon from "@material-ui/icons/Sync";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {PageHeader} from "../../common/components/header/PageHeader";
 import { Alert } from '../../common/components/Alert';
+import {DATA_RAW_ROUTE} from "../../common/components/header/data/DataRoutesConfig";
 
 const filterOptionsMap = {
 
@@ -189,7 +190,6 @@ const TableView = () => {
                         {notificationState.message}
                     </Alert>
                 </Snackbar>
-                <PageHeader/>
                 <div id="tableBrowser-container">
                     {rows && <DataSetsTable
                         simplified={isDashboard}
@@ -224,11 +224,9 @@ const TableView = () => {
 }
 
 export const TableBrowser = withRouter(function TableBrowserRoutes() {
-    const match = useRouteMatch();
     return (
         <Switch>
-            <Route path={`${match.path}/:tableUniqueName`} component={TableDetails}/>
-            <Route path="/tableBrowser" component={TableView}/>
+            <Route path={DATA_RAW_ROUTE} component={TableView}/>
             <Route path="/dashboard" component={TableView}/>
         </Switch>
     )

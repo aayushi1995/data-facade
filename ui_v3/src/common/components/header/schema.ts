@@ -14,10 +14,10 @@ export type ModuleHeaderPropType =  {tab: TabType};
 export type TabsContainerType = {
     level: number,
     activeTabChildren?: TabsType,
-    LeafHeroComponent: React.FunctionComponent<ModuleHeaderPropType>,
     activeTab: TabType,
-    LeftComponent: React.FunctionComponent<ModuleHeaderPropType>, toggleModuleSwitch: any, open: boolean, value: number,
+    toggleModuleSwitch: any, open: boolean, value: number,
     isOpen: boolean,
-    tabs: TabsType, RightComponent: () => JSX.Element, launchSettings: any,
+    tabs: TabsType,
+    launchSettings: any,
     areLeafTabs: boolean
 }

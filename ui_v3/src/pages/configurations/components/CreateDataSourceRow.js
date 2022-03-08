@@ -33,7 +33,7 @@ const CreateDataSourceRow = ({selectedId, handleClose}) => {
     const {isLoading, error, data} = useRetreiveData(labels.entities.ProviderDefinition, {
         "filter": {
             "ProviderType": "DataSource",
-            Id: selectedId
+            Id: selectedId || Id
         },
         "withProviderParameterDefinition": true
     });

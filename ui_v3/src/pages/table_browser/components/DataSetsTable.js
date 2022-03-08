@@ -2,7 +2,7 @@ import {Link, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {useMutation} from 'react-query'
 import CloseIcon from '@material-ui/icons/Close';
-import {Dialog, Grid, IconButton, Snackbar, Tooltip} from '@material-ui/core'
+import {Dialog, Grid, IconButton, Snackbar} from '@material-ui/core'
 import CreateActionInstanceFormNew from './../../../common/components/CreateActionInstanceFormNew'
 import './../../../css/table_browser/Row.css'
 import dataManagerInstance from './../../../data_manager/data_manager'
@@ -14,7 +14,8 @@ import SyncIcon from '@material-ui/icons/Sync';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import {TABLE_CHECKS} from "../../table_details/TableDetails";
 import {CustomToolbar} from "../../../common/components/CustomToolbar";
-import { Alert } from '../../../common/components/Alert';
+import {Alert} from '../../../common/components/Alert';
+import {ButtonIconWithToolTip} from "../../../common/components/ButtonIconWithToolTip";
 
 const rowStyle = {};
 const cellStyle = {};
@@ -43,18 +44,6 @@ const getRowClassName = (classes) => (params) => {
     return classes.row;
 };
 
-export const ButtonIconWithToolTip = ({
-                                   title, onClick = () => {
-    }, Icon
-                               }) => <Tooltip title={title}>
-    <IconButton
-        onClick={onClick}
-        color="primary"
-        aria-label={title}
-        component="span"
-    >
-        <Icon/>
-    </IconButton></Tooltip>;
 const DataSetsTable = (props) => {
     const classes = useStyles();
     const history = useHistory();

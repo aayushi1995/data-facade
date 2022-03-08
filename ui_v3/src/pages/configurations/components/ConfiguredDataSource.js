@@ -14,7 +14,14 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import {PageHeader} from "../../../common/components/header/PageHeader";
 import CreateDataSource from "./CreateDataSource";
 import {CustomToolbar} from "../../../common/components/CustomToolbar";
-import { Alert } from '../../../common/components/Alert';
+import {Alert} from '../../../common/components/Alert';
+import SyncIcon from "@material-ui/icons/Sync";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import PreviewIcon from "@mui/icons-material/Preview";
+import {DATA_CONNECTIONS_ROUTE} from "../../../common/components/header/data/DataRoutesConfig";
+import {BaseCard} from "../../../common/components/basecard/BaseCard";
+import {ConnectionCard} from "../../data/components/connections/ConnectionCard";
+import {ButtonIconWithToolTip} from "../../../common/components/ButtonIconWithToolTip";
 
 const filterOptionsMap = {
     "Instance Name": "Name",
@@ -32,7 +39,7 @@ const filterOptionItems = [
     }
 ]
 
-const ConfiguredDataSourceInternal = (props) => {
+export const ConfiguredDataSourceInternal = (props) => {
     const classes = useStyles()
     const history = useHistory();
     const [searchQuery, setSearchQuery] = React.useState(props.searchValue)
@@ -50,7 +57,7 @@ const ConfiguredDataSourceInternal = (props) => {
         setOpen(false);
     };
     const body = (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{p: 3}}>
             <CreateDataSource handleClose={handleClose}/>
         </Box>
     );
@@ -86,7 +93,7 @@ const ConfiguredDataSourceInternal = (props) => {
         }, []
     )
 
-    const deleteSelectedEntities = (props) => {
+    const deleteSelectedEntities = (providerInstancesSelected) => {
         console.log("Deleting", providerInstancesSelected)
         deleteProviderInstanceMutation.mutate(providerInstancesSelected, {
             onSuccess: () => {
@@ -190,8 +197,23 @@ const ConfiguredDataSourceInternal = (props) => {
             description: `Source URL`,
             sortable: true,
             flex: 1,
-            renderCell: (params) => <Link href={params.row.SourceURL}  target="_blank"
-                                       rel="noreferrer"> {labels.CreateDataSourceRow.visit_provider} </Link>
+            renderCell: (params) => <Link href={params.row.SourceURL} target="_blank"
+                                          rel="noreferrer"> {labels.CreateDataSourceRow.visit_provider} </Link>
+        }, {
+            field: "",
+            headerName: "Actions",
+            description: `Buttons to do actions on a data provider instance`,
+            flex: 1,
+            renderCell: (params) => <Box>
+                <ButtonIconWithToolTip title={"sync this data source instance"} Icon={SyncIcon}
+                                       onClick={() => alert('sync')}/>
+                <ButtonIconWithToolTip title={"add a data source instance"} Icon={AddCircleIcon}
+                                       onClick={() => alert('add')}/>
+                <ButtonIconWithToolTip title={"delete data provider instance"} Icon={DeleteIcon}
+                                       onClick={() => deleteSelectedEntities([params.row])}/>
+                <ButtonIconWithToolTip title={"delete data provider instance"} Icon={PreviewIcon}
+                                       onClick={() => alert('preview')}/>
+            </Box>
         },
     ];
     if (isLoading) {
@@ -201,13 +223,19 @@ const ConfiguredDataSourceInternal = (props) => {
     } else {
         return (
             <>
-                <PageHeader/>
                 <Snackbar open={notificationState.open} autoHideDuration={4000} onClose={handleNotificationClose}>
                     <Alert onClose={handleNotificationClose} severity={notificationState.severity}>
                         {notificationState.message}
                     </Alert>
                 </Snackbar>
-                <Grid item xs={12}>
+                <Grid container gap={5}>
+                    {rows?.map(card=><Grid item>
+                        <ConnectionCard key={card.Id} {...card}/>
+                    </Grid>
+                    )}
+                </Grid>
+
+                {/*<Grid item xs={12}>
                     <DataGrid
                         columns={columns}
                         rows={rows}
@@ -252,7 +280,7 @@ const ConfiguredDataSourceInternal = (props) => {
                     >
                         {body}
                     </Dialog>
-                </Grid>
+                </Grid>*/}
 
             </>
         )
@@ -263,7 +291,7 @@ const ConfiguredDataSource = withRouter(function ConfiguredDataSourceRoutes() {
     return (
         <Switch>
             <Route path={`${match.path}/:Id`} component={ConfiguredDataSourceRow}/>
-            <Route path='/configurations' component={ConfiguredDataSourceInternal}/>
+            <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSourceInternal}/>
         </Switch>
     )
 });

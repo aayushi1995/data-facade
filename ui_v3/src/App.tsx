@@ -27,8 +27,8 @@ import {CreateActionPage} from "./pages/customizations/CreateActionPage";
 import {RunActionPage} from "./pages/customizations/RunActionPage";
 import WorkflowEditorPage from './pages/applications/custom-applications/WorkflowEditorPage'
 import UploadTablePage from './pages/upload_table/UploadTablePage'
-import { ReactQueryDevtools } from 'react-query/devtools'
-import { RunWorkflowHomePage } from './pages/applications/custom-applications/components/RunWorkflowHomePage'
+import {ReactQueryDevtools} from 'react-query/devtools'
+import {RunWorkflowHomePage} from './pages/applications/custom-applications/components/RunWorkflowHomePage'
 import ViewWorkflowHomePage from './pages/applications/view-workflow/ViewWorkflowHomePage'
 import {ReactJSXElement} from "@emotion/react/types/jsx-namespace";
 import DashboardNavbar from "./common/components/header/DashboardNavbar";
@@ -73,11 +73,12 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
             return (
                 <Grid container
                       style={{justifyContent: "flex-start"}}>
-                    <DashboardNavbar/>
-                    <Box sx={{position: 'relative', top: '64px'}}>
-                        <ModuleSwitcher/>
+                    <Box sx={{position: 'relative', display: 'flex', flex: 1}}>
+                        <DashboardNavbar/>
+                        <Box sx={{position: 'relative', top: '64px', display: 'flex', flex: 1}}>
+                            <ModuleSwitcher/>
+                        </Box>
                     </Box>
-
                     <div className={classes.mainContainer}>
                         <Grid container>
                             <Grid item xs={12}>
@@ -87,7 +88,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     {/*<Route path='/qualityChecks' component={QualityChecks}></Route>*/}
                                     <Route path='/customizations' component={Customizations}/>
                                     {isNonProductionEnv() &&
-                                    <Route path='/configurations' component={Configurations}/>}
+                                        <Route path='/configurations' component={Configurations}/>}
                                     <Route path='/jobs' component={Jobs}/>
                                     <Route path='/alerts' component={Alerts}/>
                                     <Route path='/testPage' component={DevTestPage}/>
@@ -118,17 +119,17 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
     }
 }
 
-type ApplicationType  =  (props: any) =>ReactJSXElement | null;
+type ApplicationType = (props: any) => ReactJSXElement | null;
 
-const noop: ApplicationType = (restProps)=>null;
-const App = ({children =noop}) => {
+const noop: ApplicationType = (restProps) => null;
+const App = ({children = noop}) => {
     const {
         theme,
         userSettings,
         ...restProps
     } = useAppInternal();
     return <ThemeProvider theme={theme}>
-        {process.env.NODE_ENV!=='production' && <ReactQueryDevtools initialIsOpen={false} />}
+        {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false}/>}
         <CssBaseline/>
         <AppContext.Provider value={userSettings}>
             <Router history={history}>

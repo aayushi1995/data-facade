@@ -1,14 +1,13 @@
 import {Box, Tab, Tabs} from "@material-ui/core";
 import {ModuleContext, ModuleSetContext, ModuleType} from "./data/ModuleContext";
 import React, {useContext} from "react";
-import {ButtonIconWithToolTip} from "../../../pages/table_browser/components/DataSetsTable";
 import ModuleSwitcherIcon from './images/module-switcher.svg';
 import SettingsIcon from './images/settings.svg';
-import {NavLink as RouterLink, Redirect, Switch, useLocation} from 'react-router-dom';
-import {Divider} from "@mui/material";
+import {NavLink as RouterLink, useLocation} from 'react-router-dom';
 import {tabs} from "./data/DataRoutesConfig";
 import {TabsContainerType, TabsTreePropType} from "./schema";
-import {ModuleContent} from "./ModuleContent";
+import {ModuleContent} from "../ModuleContent";
+import {ButtonIconWithToolTip} from "../ButtonIconWithToolTip";
 
 
 function findCurrentSelectedTabIndex({tabs, pathname, level}: TabsTreePropType) {
@@ -22,13 +21,10 @@ function TabsContainer(props: TabsContainerType) {
     const {
         areLeafTabs,
         tabs,
-        RightComponent,
         launchSettings,
-        activeTab,
         level,
         isOpen,
         toggleModuleSwitch,
-        LeftComponent,
         value
     } = props;
     const isFistTab = level === 0;
@@ -45,9 +41,10 @@ function TabsContainer(props: TabsContainerType) {
                                             Icon={() => <img src={ModuleSwitcherIcon}
                                                              style={{transform: (isOpen ? '' : 'rotate(90deg)')}}
                                                              alt="toggle"
-                                                             height={20} width={20}/>}
+                                                             height={25} width={25}/>}
                                             onClick={toggleModuleSwitch}
-        /> : <LeftComponent tab={activeTab}/>}
+                                            background={false}
+        /> : areLeafTabs ?  <div/>: <ModuleContent.ModuleSubHeader/>}
         {(isFistTab && !isOpen) ? null : <>
             <Tabs value={value}>
                 {tabs && tabs?.map(({label, href}) =>
@@ -55,15 +52,17 @@ function TabsContainer(props: TabsContainerType) {
                 )}
             </Tabs>
             {isFistTab ? <ButtonIconWithToolTip title="settings"
-                                                Icon={() => <img src={SettingsIcon} alt="settings" height={20}
-                                                                 width={20}/>}
+                                                Icon={() => <img src={SettingsIcon} alt="settings" height={25}
+                                                                 width={25}/>}
                                                 onClick={launchSettings}
-            /> : areLeafTabs ? <RightComponent/> : <div></div>}
+                                                background={false}
+            /> : <div/>}
         </>}</Box>;
 }
 
 const TabsTree = (props: TabsTreePropType) => {
     const {tabs, level, toggleModuleSwitch, isOpen, launchSettings} = props;
+    const isFistTab = level === 0;
     const _activeTabIndex = findCurrentSelectedTabIndex(props);
     const activeTabIndex = _activeTabIndex === -1 ? 0 : _activeTabIndex;
     const activeTab = tabs[activeTabIndex];
@@ -74,29 +73,24 @@ const TabsTree = (props: TabsTreePropType) => {
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            gap: 1
+            gap: 1,
+            mx: isFistTab? 0: 6
         }}>
 
-        {areLeafTabs ? <>
-            <ModuleContent.ModuleHeader
-                tab={activeTab}
-            />
-            <Divider/></> : null}
         <TabsContainer
             areLeafTabs={areLeafTabs}
             toggleModuleSwitch={toggleModuleSwitch}
             launchSettings={launchSettings}
             level={level}
             activeTabChildren={activeTabChildren}
-            LeafHeroComponent={ModuleContent.ModuleHeader}
             activeTab={activeTab}
             isOpen={isOpen}
-            LeftComponent={({tab}) => areLeafTabs ? <ModuleContent.ModuleSubHeader/> : <div/>}
-            open={isOpen} value={activeTabIndex} tabs={tabs}
-            RightComponent={() => <div/>}/>
-        <Switch>
-            <Redirect exact from={'/data'} to={tabs[0].href}/>
-        </Switch>
+            open={isOpen}
+            value={activeTabIndex}
+            tabs={tabs}/>
+        {areLeafTabs ? <ModuleContent.ModuleHeader
+            tab={activeTab}
+        />: null}
         {areLeafTabs ?
             <ModuleContent.MainContent/> :
             <TabsTree

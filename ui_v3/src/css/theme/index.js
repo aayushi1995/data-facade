@@ -18,6 +18,9 @@ const baseOptions = {
             styleOverrides: {
                 row: {
                     cursor: "pointer"
+                },
+                root: {
+                    boxShadow: lightShadows[23]
                 }
             }
         },

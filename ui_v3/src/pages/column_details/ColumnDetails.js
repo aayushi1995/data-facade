@@ -43,9 +43,6 @@ const ColumnDetailsView = () => {
         <React.Fragment>
             <Grid container spacing={0}>
                 <Grid item xs={12}>
-                    <PageHeader path={match.path} url={match.url}/>
-                </Grid>
-                <Grid item xs={12}>
                     <Tabs onChange={handleTabChange} value={tabState}>
                         <Tab label="Quick stats" {...a11yProps(0)}/>
                         <Tab label="Checks" {...a11yProps(1)}/>

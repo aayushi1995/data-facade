@@ -239,9 +239,6 @@ const ConfiguredDataSourceRow = () => {
     } else {
         return (
             <>
-                <Grid item xs={12}>
-                    <PageHeader pageHeading={"Instance Details - " + dataProviderInstanceCurrent.Name}/>
-                </Grid>
                 <Dialog onClose={handleDialogClose} open={dialogState.open} fullWidth={true}>
                     <DialogTitle id="simple-dialog-title"
                                  style={{background: "#f3f4ed"}}>Sync {dataProviderInstanceCurrent.Name}</DialogTitle>

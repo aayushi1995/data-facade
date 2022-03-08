@@ -85,10 +85,6 @@ const TableDetailsView = (props) => {
   return (
     <React.Fragment>
       <Grid container spacing={0}>
-        <Grid item xs={12}>
-          <PageHeader path={match.path} url={match.url} />
-        </Grid>
-
         <Grid item xs={12} className={classes.grid_root}>
           <Tabs
             indicatorColor="primary"

@@ -4,7 +4,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import * as PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import {decodeURL} from "./DataFacadeAppBar";
-import {useLocation} from "react-router-dom";
+import {Route, useLocation} from "react-router-dom";
 import {makeStyles} from "@material-ui/styles";
 import { Link } from "@material-ui/core";
 import {Link as ReactRouter} from "react-router-dom";
@@ -59,7 +59,7 @@ export function PageHeader(props) {
                 </Typography>
             </Grid>
             <Grid item>
-                    <Button variant="contained" to="/upload-file" component={ReactRouter}>
+                    <Button variant="contained" to="/data/connections/upload-file" component={ReactRouter}>
                         Upload File
                     </Button>
             </Grid>
