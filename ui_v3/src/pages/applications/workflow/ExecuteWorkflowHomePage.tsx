@@ -21,7 +21,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const history = useHistory()
 
     const handleInstanceSaved = (data: any) => {
-        history.push(`/workflow-execution/${data?.[0]?.Id}`)
+        history.push(`/application/workflow-execution/${data?.[0]?.Id}`)
     }
 
     const saveWorkflowMutation = useCreateWorkflowActionInstanceMutation(workflowContext, handleInstanceSaved)

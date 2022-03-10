@@ -85,7 +85,7 @@ export const RunWorkflow = (props) => {
                     console.log(props)
                     // props?.api?.componentsProps.setTableSelectDialog()
                     // props?.api?.componentsProps?.setWorkflowIdToRun(props.id)
-                    history.push(`/execute-workflow/${props.id}`)
+                    history.push(`/application/execute-workflow/${props.id}`)
                 }}
             >
                 <PlayArrowIcon />

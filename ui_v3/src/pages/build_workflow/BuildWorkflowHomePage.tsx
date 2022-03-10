@@ -7,7 +7,8 @@ import WorkflowHero, { WorkflowHeroProps } from "../../common/components/workflo
 import WorkflowDetails from "../../common/components/workflow/create/addAction/WorkflowDetails";
 import { makeWorkflowTemplate } from "../../common/components/workflow/create/util/MakeWorkflowTemplate";
 import useSaveWorkflowMutation from "../../common/components/workflow/create/hooks/useSaveWorkflowMutation";
-import {RouteComponentProps, useLocation} from "react-router-dom"
+import {RouteComponentProps, useHistory, useLocation} from "react-router-dom"
+import { useQueryClient } from "react-query";
 
 export interface BuildWorkflowHomePageProps {
 
@@ -62,16 +63,21 @@ const WorkflowHeroWrapper = () => {
 }
 
 const WorkflowEditor = (props: {applicationId?: string}) => {
+    const history = useHistory()
+    const queryClient = useQueryClient()
     console.log(props)
     const workflowContext = useContext(WorkflowContext)
     const setWorkflowState: SetWorkflowContextType = useContext(SetWorkflowContext)
     const saveWorkflowMutation = useSaveWorkflowMutation({mutationName: "CreateWorkflow", applicationId: props.applicationId})
 
     const handleSave = () => {
-        const workflowActionTemplate = makeWorkflowTemplate(workflowContext)
         setWorkflowState({type: 'SET_APPLICATION_ID', payload: props.applicationId})
         saveWorkflowMutation.mutate(workflowContext, {
-            onSuccess: () => console.log("SUCCESS")
+            onSuccess: () => {
+                console.log("SUCCESS")
+                queryClient.invalidateQueries("Application")
+                history.goBack()
+            }
         })
     }
     return (
@@ -87,11 +93,18 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
                         <AddingActionView/>
                     </Box>
                 ) : (
-                    <Box sx={{overflow: 'clip'}}>  
-                        <StagesWithActions/>    
-                        <Button onClick={handleSave}>
-                            save
-                        </Button>
+                    <Box sx={{overflow: 'clip', flexDirection: 'column', gap: 3}}>  
+                        <Box>
+                            <StagesWithActions/>  
+                        </Box>  
+                        <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3, mr: 5, gap: 2}}>
+                            <Button onClick={handleSave} color="primary" variant="contained">
+                                Test and Save
+                            </Button>
+                            <Button variant="contained" sx={{background: "#F178B6"}}>
+                                Save for later
+                            </Button>
+                        </Box>
                     </Box>
                     
                 )}

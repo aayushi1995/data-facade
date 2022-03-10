@@ -4,6 +4,8 @@ import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from '@mui/icons-material/Remove';
 import React from 'react';
 import { TextField } from '@material-ui/core';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
 
 export interface WorkflowStageProps {
     stageId: string
@@ -20,7 +22,6 @@ export interface WorkflowStageProps {
     handleAddStage?: (stageId?: string) => void
     handleStageNameChange?: (stageId: string, stageName: string) => void
 }
-
 
 export const WorkflowStage = (props: WorkflowStageProps) => {
     const [isDeleteDialogOpen, setIsDialogOpen] = React.useState(false)
@@ -63,14 +64,15 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
     }
 
     return (
-        <Box sx={{
+        <Box 
+        sx={{
             display: "flex", 
             flexDirection: "row", 
             backgroundColor: props.color, 
             alignItems: "center", 
             pt: 2, 
             pb: 2, 
-            borderRadius: 3
+            borderRadius: 3,
         }}>
             <Dialog open={isDeleteDialogOpen} onClose={handleDialogCloseWithoutDelete}fullWidth maxWidth="xs" scroll="paper">
                 <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>

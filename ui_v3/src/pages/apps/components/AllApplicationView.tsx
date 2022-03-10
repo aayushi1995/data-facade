@@ -8,7 +8,7 @@ import ApplicationCreationWizard from "../application_creation_wizard/Applicatio
 import { BuildApplicationContextProvider } from "../application_creation_wizard/context/BuildApplicationContext"
 
 const AllApplicationView = () => {
-    const [dialogState, setDialogState] = React.useState<{isOpen: boolean}>({isOpen: true})
+    const [dialogState, setDialogState] = React.useState<{isOpen: boolean}>({isOpen: false})
     const handleDialogClose = () => setDialogState(oldState => ({...oldState, isOpen: false}))
     const [searchQuery, setSearchQuery] = React.useState("")
 
@@ -16,10 +16,14 @@ const AllApplicationView = () => {
         setSearchQuery(search)
     }
 
+    const handleDialogOpen = () => {
+        setDialogState({isOpen: true})
+    }
+
     return (
         <Box sx={{p: 1, overflowY: 'auto', minHeight: '100%', display: 'flex', gap: 2, flexDirection: 'column'}}>
             <Box sx={{flex: 1}}>
-                <ApplicationHeader pageHeader="Application" subHeading="Create, Manage Applications from here" searchQuery={searchQuery} setSearchQuery={handleApplicationSearchQuery}></ApplicationHeader>
+                <ApplicationHeader pageHeader="Application" subHeading="Create, Manage Applications from here" searchQuery={searchQuery} setSearchQuery={handleApplicationSearchQuery} handleDialogOpen={handleDialogOpen}></ApplicationHeader>
             </Box>
             <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 4}}>
                 <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 1}}>
@@ -55,7 +59,7 @@ const AllApplicationView = () => {
                 <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
                     <DialogContent sx={{minHeight: "800px"}}>
                         <BuildApplicationContextProvider>
-                            <ApplicationCreationWizard/>
+                            <ApplicationCreationWizard onCreationComplete={() => handleDialogClose()}/>
                         </BuildApplicationContextProvider>
                     </DialogContent>
                 </Dialog>

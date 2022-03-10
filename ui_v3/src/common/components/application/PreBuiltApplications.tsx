@@ -17,8 +17,8 @@ const PreBuiltApplications = (props: PreBuiltApplicationsProps) => {
     }
 
     if(loading) {
-        return <>Lloading...</>
-    } else if(applications) {
+        return <>Loading...</>
+    } else if(!!applications) {
         const applicationCardsToRender = filterBySearchQuery(applications).map(application => {
             return (
                 <Box sx={{ height: '100%', p: 2}}>

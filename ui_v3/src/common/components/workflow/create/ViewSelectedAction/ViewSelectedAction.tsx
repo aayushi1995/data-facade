@@ -107,7 +107,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                         }}
                         variant={'outlined'}    
                     >
-                        <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                        <Box sx={{display: "flex", flexDirection: "column", gap: 5}}>
                             <Box>
                                 <EditActionParameterDefinition 
                                     parameter={selectedParameterForEdit}

@@ -32,7 +32,8 @@ type BuildActionContextState = {
     }[],
     activeTemplateId?: string,
     isLoadingAction: boolean,
-    sourcedFromActionDefiniton?: ActionDefinition
+    sourcedFromActionDefiniton?: ActionDefinition,
+    onSuccessfulBuild?: (actionDefinitionId?: ActionDefinition) => void
 }
 
 const defaultBuildActionContext: () => BuildActionContextState = () => {
@@ -186,6 +187,13 @@ type SetActionParameterDefintionTagsAction = {
     }
 }
 
+type SetSuccessCallbackFunction = {
+    type: "SetSuccessCallbackFunction",
+    payload: {
+        cb: (id?: ActionDefinition) => void
+    }
+}
+
 
 // Other
 type RefreshIdsAction = {
@@ -228,7 +236,8 @@ RefreshIdsAction |
 ResetAction |
 LoadingAction |
 LoadingOverAction |
-LoadFromExistingAction
+LoadFromExistingAction |
+SetSuccessCallbackFunction
 
 
 
@@ -437,6 +446,13 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             })
             console.log(newState)
             return newState
+        }
+
+        case "SetSuccessCallbackFunction": {
+            return {
+                ...state,
+                onSuccessfulBuild: action.payload.cb
+            }
         }
 
         default:

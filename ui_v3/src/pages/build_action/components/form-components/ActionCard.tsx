@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, Card, Chip, IconButton, SvgIcon, Typography, useTheme} from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
 import { ReactComponent as DefaultIcon } from "./../../../../common/components/workflow/create/Icon.svg";
-import { Checkbox } from '@mui/material';
+import { Radio } from '@mui/material';
 
 
 export interface ActionCardProps {
@@ -69,7 +69,7 @@ const ActionCard = (props: ActionCardProps) => {
                     </Box>
                 </Box>
                 <Box>
-                    <Checkbox checked={actionId===selectedActionId} onChange={(event) => onSelectAction(event.target.checked ? actionId : undefined)}/>
+                    <Radio checked={actionId===selectedActionId} onChange={(event) => onSelectAction(event.target.checked ? actionId : undefined)}/>
                 </Box>
             </Box>
         </Card>

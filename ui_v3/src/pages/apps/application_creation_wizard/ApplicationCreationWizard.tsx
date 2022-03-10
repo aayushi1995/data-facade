@@ -11,7 +11,8 @@ import Welcome2 from "./wizard_components/Welcome2"
 
 export interface BuildApplicationWizardStepProps {
     nextStep: () => void,
-    previousStep: () => void
+    previousStep: () => void,
+    onCreationComplete: () => void
 }
 
 type BuildActionWizardStepConfig = {
@@ -36,7 +37,11 @@ const steps: BuildActionWizardStepConfig[] = [
     }
 ]
 
-const ApplicationCreationWizard = () => {
+export interface ApplicationCreationWizardProps {
+    onCreationComplete: () => void
+}
+
+const ApplicationCreationWizard = (props: ApplicationCreationWizardProps) => {
     const [activeStep, setActiveStep] = React.useState(0)
     const context = React.useContext(BuildApplicationContext)
 
@@ -59,7 +64,8 @@ const ApplicationCreationWizard = () => {
     
     const stepProps: BuildApplicationWizardStepProps = {
         nextStep: nextStep,
-        previousStep: previousStep
+        previousStep: previousStep,
+        onCreationComplete: props.onCreationComplete
     }
     
     if(context.isCreating){

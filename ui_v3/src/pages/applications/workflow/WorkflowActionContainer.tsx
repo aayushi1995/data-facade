@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core";
-import { Box, Card, IconButton } from "@material-ui/core";
+import { Box, Card, IconButton, Dialog} from "@material-ui/core";
 import { Divider } from "@mui/material";
 import React from "react";
 import { lightShadows } from '../../../css/theme/shadows'
@@ -10,6 +10,11 @@ import arrow from '../../../../src/images/workflow_action_arrow.png'
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { SetWorkflowContext, WorkflowContext } from "./WorkflowContext";
 import NoData from "../../../common/components/NoData";
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
+import BuildActionFromWorkflow from "../../../common/components/workflow/create/addAction/BuildActionFromWorkflow";
+import { ActionDefinition } from "../../../generated/entities/Entities";
+import { BuildActionContextProvider } from "../../build_action/context/BuildActionContext";
 
 
 export interface WorkflowActionContainerProps {
@@ -21,10 +26,20 @@ export interface WorkflowActionContainerProps {
     handleSelectAction?: (actionId: string, actionIndex: number) => void
 }
 
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+      children?: React.ReactElement;
+    },
+    ref?: React.Ref<any>,
+  ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     // TODO: add colors to theme
     const workflowContext = React.useContext(WorkflowContext)
     const [selectedDefinition, setSelectedDefinition] = React.useState({id: "", index: -1})
+    const [isBuildDialogOpen, setIsBuildDialogOpen] = React.useState(false)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     // console.log(workflowContext)
     const stageDetails = workflowContext.stages.filter(stage => stage.Id === props.stageId)?.[0]
@@ -115,10 +130,37 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
         setWorkflowContext({type: 'CHANGE_CURRENT_SELECTED_STAGE', payload: {stageId: props.stageId}})
     }
 
+    const handleDialogClose = (action?: ActionDefinition) => {
+        if(!!action) {
+            setWorkflowContext({
+                type: 'ADD_ACTION',
+                payload: {
+                    stageId: props.stageId,
+                    Action: {
+                        Id: action.Id || "id",
+                        ActionGroup: "Data Cleansing",
+                        DisplayName: action.DisplayName || "Action added",
+                        DefaultActionTemplateId: action.DefaultActionTemplateId || "defaultTemplateId",
+                        Parameters: []
+                    }
+                }
+            })
+        }
+        setIsBuildDialogOpen(false)
+    }
 
     if(stageDetails) {
         return (
             <Box sx={{ display: 'flex', flex: 1, maxHeight: '600px'}}>
+                        <Dialog 
+                            fullScreen
+                            open={isBuildDialogOpen}
+                            TransitionComponent={Transition}
+                        >
+                            <BuildActionContextProvider>
+                                <BuildActionFromWorkflow handleDialogClose={handleDialogClose}/>
+                            </BuildActionContextProvider>
+                        </Dialog>
                 <Box sx={{ display: 'flex', alignContent: 'center', flex: 1, flexDirection: 'column', overflowY: 'auto' }}>
                     <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <Typography sx={{ flex: 1, fontWeight: 600 }}>
@@ -128,7 +170,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                             <IconButton sx={{ flex: 1 }} onClick={handleAddAction}>
                                 <img src={addAction} alt="add action" />
                             </IconButton>
-                            <IconButton sx={{ flex: 1 }} onClick={props.buildActionHandler}>
+                            <IconButton sx={{ flex: 1 }} onClick={() => setIsBuildDialogOpen(true)}>
                                 <img src={buildAction} alt="build action" />
                             </IconButton>
                         </Box>
@@ -178,7 +220,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                 <Typography sx={{ flex: 1, pt: 1, fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px' }}>
                                     Create New Action Action
                                 </Typography>
-                                <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={props.buildActionHandler}>
+                                <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={() => setIsBuildDialogOpen(true)}>
                                     <img src={addAction} alt="build action" />
                                 </IconButton>
                             </Box>
@@ -198,7 +240,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                 <Typography sx={{ flex: 1, pt: 1 }}>
                                     Build Action
                                 </Typography>
-                                <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={props.buildActionHandler}>
+                                <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={() => setIsBuildDialogOpen(true)}>
                                     <img src={buildAction} alt="build action" />
                                 </IconButton>
                             </Box>

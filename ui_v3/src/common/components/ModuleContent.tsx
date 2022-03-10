@@ -37,6 +37,11 @@ export const ModuleSubHeader = () => <Switch>{
 export const ModuleHeader = ({tab}: ModuleHeaderPropType) => {
     const label = tab.label;
     const [title, subTitle] = [tab?.title || label, tab?.subTitle || label];
+
+    // TODO: hack here to remove headers
+    if(title === "APPLICATION") {
+        return <></>
+    }
     return <Box
         sx={{display: 'flex', flexDirection: 'column'}}>
         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: "space-between", mb: 3}}>

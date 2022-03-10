@@ -15,7 +15,10 @@ const ConfigureAppDescriptionTags = (props: BuildApplicationWizardStepProps) => 
         mutationOptions: {
             onMutate: () => setContext({ type: "CreatingApplication" }),
             onSettled: () => setContext({ type: "CreatingApplicationOver" }),
-            onSuccess: () => setContext({ type: "RefreshId" })
+            onSuccess: () => {
+                setContext({ type: "RefreshId" });
+                props.onCreationComplete()
+            }
 
         }
     })

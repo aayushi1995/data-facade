@@ -19,7 +19,9 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
     const history = useHistory()
     const handleExecute = () => {
         if(props.isWorkflow === true) {
-            history.push(`/execute-workflow/${props.action.model?.Id || "idNotFound"}`)
+            history.push(`/application/execute-workflow/${props.action.model?.Id || "idNotFound"}`)
+        } else {
+            history.push(`/application/execute-action/${props.action.model?.Id || "id"}`)
         }
     }
 

@@ -54,7 +54,7 @@ const SelectAction = (props: SelectActionProps) => {
             <Box sx={{display: "flex", gap: 1, flexDirection: "column"}}>
                 <Box>
                     <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
-                        <Tab label="Groups" value={0} sx={{
+                        <Tab label="All Actions" value={0} sx={{
                               fontFamily: "SF Pro Text",
                               fontStyle: "normal",
                               fontWeight: 600,
@@ -65,7 +65,7 @@ const SelectAction = (props: SelectActionProps) => {
                               textAlign: "center",
                               opacity: 0.7
                         }}/>
-                        <Tab label="All Actions" value={1} sx={{
+                        <Tab label="Groups" value={1} sx={{
                               fontFamily: "SF Pro Text",
                               fontStyle: "normal",
                               fontWeight: 600,
@@ -99,21 +99,10 @@ const SelectAction = (props: SelectActionProps) => {
                 </Box>
                 <Box sx={{}}>
                     <TabPanel value={activeTab} index={0}>
-                        {/* <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
-                            <Box sx={{width: "100%"}}>
-                            
-                            </Box>
-                            <Box sx={{display: "flex", flexDirection: "column", flexWrap: "nowrap", gap: 1}}>
-                                {props.groups.map(group => 
-                                    <Box>
-                                        <GroupDropDown {...group} actions={[]}/>
-                                    </Box>
-                                )}
-                            </Box>
-                        </Box> */}
+                        <SelectFromAllActions onAddAction={props.onAddAction} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
                     </TabPanel>
                     <TabPanel value={activeTab} index={1}>
-                        <SelectFromAllActions onAddAction={props.onAddAction} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
+                        
                     </TabPanel>
                 </Box>
             </Box>

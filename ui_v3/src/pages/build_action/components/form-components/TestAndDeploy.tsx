@@ -1,11 +1,14 @@
 import { Box, Button, Switch, FormControlLabel, FormGroup, Typography, useTheme, Grid } from "@mui/material";
 import { useContext, useState } from "react";
 import { useQueryClient } from "react-query";
+import { useLocation, useHistory } from "react-router-dom";
 import labels from "../../../../labels/labels";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
 import useActionDefinitionFormCreate, { ActionDefinitionFormPayload } from "../../hooks/useActionDefinitionFormCreate";
 
 const TestAndDeploy = () => {
+    const location = useLocation()
+    const history = useHistory()
     const theme = useTheme()
     const queryClient = useQueryClient()
     const buildActionContext = useContext(BuildActionContext)
@@ -23,9 +26,15 @@ const TestAndDeploy = () => {
             onMutate: () => {
                 setBuildActionContext({type: "Loading"})
             },
-            onSuccess: () => {
+            onSuccess: (data, variables, context) => {
                 setBuildActionContext({type: "RefreshIds"})
                 queryClient.invalidateQueries([labels.entities.ActionDefinition, "All"])
+                if(buildActionContext.onSuccessfulBuild !== undefined) {
+                    buildActionContext.onSuccessfulBuild?.(buildActionContext.actionDefinitionWithTags.actionDefinition)
+                } else {
+                    queryClient.invalidateQueries("Application")
+                    history.goBack()
+                }
             },
             onSettled: () => {
                 setBuildActionContext({type: "LoadingOver"})
@@ -34,9 +43,10 @@ const TestAndDeploy = () => {
     })
 
     const createAction = () => {
+        const applicationId: string  = location.state as string
         const entityToCreate: ActionDefinitionFormPayload = {
             ActionDefinition: {
-                model: buildActionContext.actionDefinitionWithTags.actionDefinition,
+                model: {...buildActionContext.actionDefinitionWithTags.actionDefinition, ApplicationId: applicationId},
                 tags: buildActionContext.actionDefinitionWithTags.tags
             },
             ActionTemplatesWithParameters: buildActionContext.actionTemplateWithParams.map(at => ({

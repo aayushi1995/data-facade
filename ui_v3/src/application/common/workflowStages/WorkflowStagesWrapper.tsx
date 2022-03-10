@@ -1,5 +1,5 @@
 import WorkflowStage, { WorkflowStageProps } from "./WorkflowStage";
-import { Card, Box, Grid, Dialog, DialogTitle, Button, IconButton } from "@material-ui/core";
+import { Card, Box, Grid, Button, IconButton } from "@material-ui/core";
 import { v4 as uuidv4 } from 'uuid'
 import { WorkflowContextType, WorkflowActionDefinition } from "../../../pages/applications/workflow/WorkflowContext";
 import CloseIcon from '@material-ui/icons/Close';

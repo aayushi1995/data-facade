@@ -38,7 +38,7 @@ const ConfigureAppNameGroup = (props: BuildApplicationWizardStepProps) => {
             </Box>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 3, flexGrow: 1}}>
                 <Box sx={{width: "40%"}}>
-                    <TextField onBlur={setNameInContext} variant="outlined" label="Action Name" value={name} onChange={(event => setName(event.target.value))} fullWidth/>
+                    <TextField onBlur={setNameInContext} variant="outlined" label="Application Name" value={name} onChange={(event => setName(event.target.value))} fullWidth/>
                 </Box>
                 <Box sx={{width: "40%"}}>
                     <FormControl variant="outlined" fullWidth>

@@ -1,12 +1,11 @@
-import { Box, Card, Grid, IconButton } from "@material-ui/core"
-import React from "react"
+import { Box, Card, Grid, IconButton, DialogTitle, Dialog } from "@mui/material"
+import React, { ReactElement } from "react"
 import WorkflowStagesWrapper from "../../../../../application/common/workflowStages/WorkflowStagesWrapper"
 import WorkflowActionContainer from "../../../../../pages/applications/workflow/WorkflowActionContainer"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 import { lightShadows } from "../../../../../../src/css/theme/shadows"
 import slideNext from "../../../../../../src/images/new_frame.png"
-
-
+import BuildActionFromWorkflow from "../addAction/BuildActionFromWorkflow"
 
 export const StagesWithActions = () => {
     const workflowContext = React.useContext(WorkflowContext)

@@ -48,7 +48,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                 boxSizing: "content-box",
                 background: "#A4CAF0",
                 border: "0.439891px solid #FFFFFF",
-                boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
+                boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)",
+                cursor: 'pointer'
             }}>
                 <Box sx={{display: "flex", flexDirection: "row", height: "100%"}}>
                     <Box sx={{display: "flex", flexDirection: "column", width: "100%", pt: 2}}>

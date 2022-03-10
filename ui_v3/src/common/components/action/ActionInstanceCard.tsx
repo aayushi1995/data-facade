@@ -28,7 +28,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
             onSuccess: (data) => {
                 const createdExecutionId = data[0].Id
                 history.push({
-                    pathname: `/workflow-execution/${createdExecutionId}`
+                    pathname: `/application/workflow-execution/${createdExecutionId}`
                 })
             },
             onMutate: () => setCreatingExecution(true),

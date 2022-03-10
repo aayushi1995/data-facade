@@ -81,8 +81,8 @@ const BuildActionWizard = () => {
             <Box sx={{display: "flex", flexGrow: 8}}>
                 {steps[activeStep].component(stepProps)}
             </Box>
-            <Box sx={{display: "flex", flexGrow: 1}}>
-                <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 3, width: "100%", backgroundColor: "#e1e1e1"}}>
+            {/* <Box sx={{display: "flex", flexGrow: 1}}>
+                <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 3, width: "100%"}}>
                     <Box>
                         <Button variant="contained" onClick={previousStep}>Previous</Button>
                     </Box>
@@ -90,7 +90,7 @@ const BuildActionWizard = () => {
                         <Button variant="contained" onClick={nextStep}>Next</Button>
                     </Box>
                 </Box>
-            </Box>
+            </Box> */}
         </Box>
     )
 }

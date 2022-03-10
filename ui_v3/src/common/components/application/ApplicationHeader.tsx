@@ -10,7 +10,8 @@ interface ApplicationHeaderProps {
     fromApplicationDetail?: boolean,
     searchQuery?: string,
     setSearchQuery?: (e: string) => void
-    applicationId?: string
+    applicationId?: string,
+    handleDialogOpen?: () => void
 }
 
 const ApplicationHeader = (props: ApplicationHeaderProps) => {
@@ -40,14 +41,19 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                             {props.fromApplicationDetail ? (
                                 <>
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" to={{
-                                    pathname: "/build-workflow",
+                                    pathname: "/application/build-workflow",
                                     state: props?.applicationId || "Id"
                                 }}
                                 component={Link}
                                 >
                                     Create Workflow <AddIcon sx={{marginLeft: 2}}/>
                                 </Button>
-                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained">
+                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" to={{
+                                    pathname: "/application/build-action",
+                                    state: props?.applicationId || "Id"
+                                }} 
+                                component={Link}
+                                >
                                     Create Action <AddIcon sx={{marginLeft: 2}}/>
                                 </Button>
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained">
@@ -56,7 +62,7 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                                 </>
                             ) : (
                                 <>
-                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained">
+                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" onClick={() => props.handleDialogOpen?.()}>
                                     APP Builder <AddIcon sx={{marginLeft: 2}}/></Button>
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained">Import Application</Button>
                                 </>

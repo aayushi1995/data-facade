@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import { Box, Card, Chip, Grid, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@material-ui/core';
 import {Tabs, Tab} from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
 import PencilAltIcon from "../../../../../../icons/PencilAlt"
 import DeleteIcon from "@material-ui/icons/Delete"
 import { ActionParameterDefinition, Tag } from '../../../../../../generated/entities/Entities';
-import { DataGrid, GridRowId, GridSelectionModel, GridToolbarContainer } from '@material-ui/data-grid';
+import { DataGrid, GridRowId, GridRowParams, GridSelectionModel, GridToolbarContainer, MuiEvent } from '@material-ui/data-grid';
 import { CustomToolbar } from '../../../../CustomToolbar';
 import { TemplateWithParams } from '../hooks/UseViewAction';
 import TagHandler from '../../../../tag-handler/TagHandler';
@@ -29,6 +29,10 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
         if(selectedParameterIds.length > 0) {
             props.deleteParametersWithIds(selectedParameterIds)
         }
+    }
+
+    const handleRowClick = (params: GridRowParams, e: MuiEvent<SyntheticEvent<Element, Event>>, details?: any) => {
+        props.onParameterSelectForEdit(params.row)
     }
     
     const datagridProps = {
@@ -93,24 +97,19 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
         autoHeight: true,
         autoPageSize: true,
         rowsPerPageOptions: [5, 10, 15],
-        checkboxSelection: true,
         componentsProps: {
             onParameterSelectForEdit: props.onParameterSelectForEdit
         },
-        components: {
-            Toolbar: CustomToolbar([
-                <IconButton onClick={handleParameterDelete}><DeleteIcon/></IconButton>
-            ])
-        },
-        selectionModel: selectedParameterIds,
+        disableSelectionOnClick: true,
         onSelectionModelChange: (newSelectedParameterIds: GridRowId[]) => { 
             setSelectedParameterIds(newSelectedParameterIds.map(x => x.toString())) 
-        }
+        },
+        onRowClick: handleRowClick
     }
 
     return(
         <Box>
-            <DataGrid {...datagridProps}/> 
+            <DataGrid {...datagridProps} /> 
         </Box>
         
     )

@@ -36,7 +36,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
 
     const createActionInstance = () => {
         history.push({
-            pathname: `/execute-action/${actionDefinition.DefinitionId}`
+            pathname: `/application/execute-action/${actionDefinition.DefinitionId}`
         })
     }
 
