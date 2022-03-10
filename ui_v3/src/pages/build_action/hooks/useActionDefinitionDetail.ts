@@ -7,21 +7,6 @@ import labels from "../../../labels/labels"
 import dataManagerInstance, { useRetreiveData } from './../../../data_manager/data_manager'
 
 
-// export interface ActionDefinitionDetail {
-//     ActionDefinition: {
-//         model: ActionDefinition,
-//         tags: Tag[]
-//     },
-//     ActionTemplatesWithParameters: {
-//         model: ActionTemplate,
-//         tags: Tag[],
-//         actionParameterDefinitions: {
-//             model: ActionParameterDefinition,
-//             tags: Tag[]
-//         }[]
-//     }[]
-// }
-
 export interface UseActionDefintionDetail {
     options: UseQueryOptions<ActionDefinitionDetail[], unknown, unknown>,
     actionDefinitionId?: string

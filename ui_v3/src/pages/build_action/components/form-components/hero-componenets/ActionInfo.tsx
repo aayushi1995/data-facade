@@ -5,14 +5,15 @@ import UsageStatus from "../../../../../common/components/UsageStatus";
 export interface ActionInfoProps {
     Name?: string,
     Author?: string,
-    onNameChange: (newName: string|undefined) => void
+    onNameChange?: (newName: string|undefined) => void
+    readOnly?: boolean
 }
 
 const ActionInfo = (props: ActionInfoProps) => {
-    const {Name, onNameChange, Author} = props
+    const {Name, onNameChange, Author, readOnly} = props
     const [name, setName] = React.useState<string|undefined>()
 
-    const saveName = () => onNameChange(name)
+    const saveName = () => onNameChange?.(name)
     React.useEffect(() => {
         setName(Name)
     }, [Name])
@@ -27,6 +28,7 @@ const ActionInfo = (props: ActionInfoProps) => {
                         placeholder="Enter Action Name"
                         onChange={(event) => setName(event.target.value)} 
                         onBlur={saveName}
+                        disabled={readOnly}
                         InputProps ={{
                             sx: {
                                 fontFamily: "SF Pro Display",

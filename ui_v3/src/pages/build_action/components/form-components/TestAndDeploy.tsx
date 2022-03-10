@@ -72,7 +72,7 @@ const TestAndDeploy = () => {
                     </Box>
                     <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 2, width: "100%", px: 3}}>
                         <Box sx={{width: "100%"}}>
-                            <Button variant="contained" color="secondary" fullWidth>Test Action</Button>
+                            <Button variant="contained" color="secondary" fullWidth disabled>Test Action</Button>
                         </Box>
                         <Box sx={{width: "100%"}}>
                             <Button variant="contained" onClick={createAction} fullWidth>Save</Button>

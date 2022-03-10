@@ -36,6 +36,7 @@ import {ModuleSwitcher} from "./common/components/header/ModuleSwitcher";
 import ExecuteWorkflowHomePage from './pages/applications/workflow/ExecuteWorkflowHomePage'
 import BuildActionHomePage from './pages/build_action/BuildActionHomePage'
 import ViewWorkflowExecutionHomePage from './pages/applications/workflow/ViewWorkflowExecutionHomePage'
+import ExecuteActionHomePage from './pages/execute_action/ExecuteActionHomePage'
 
 export const AppInternal = (props: { classes: any; userEmail: any; dummyData: any; dummyDataPending: any; activeLink: any; setActiveLink: any; isLoading: any; user: any }) => {
     const {
@@ -107,6 +108,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/build-workflow' component={BuildWorkflowHomePage}/>
                                     <Route path="/execute-workflow" component={ExecuteWorkflowHomePage}/>
                                     <Route path='/build-action' component={BuildActionHomePage}/>
+                                    <Route path='/execute-action' component={ExecuteActionHomePage}/>
                                     <Route path="/workflow-execution" component={ViewWorkflowExecutionHomePage}/>
                                     <Redirect exact from="/" to="tableBrowser"/>
                                 </Switch>

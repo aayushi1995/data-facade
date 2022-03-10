@@ -4,49 +4,62 @@ import appLogo from "../../../../src/images/Segmentation_application.png"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PeopleIcon from '@mui/icons-material/People';
-import UsageStatus from "../../../common/components/UsageStatus"
+import UsageStatus from "../UsageStatus"
 import ShareIcon from '@mui/icons-material/Share';
 import { useHistory, useRouteMatch } from "react-router-dom"
-import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
+import { ActionInstanceCardViewResponse } from "../../../generated/interfaces/Interfaces"
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
+import React from "react";
+import { useCreateExecution } from "../application/hooks/useCreateExecution";
 
 
-interface ApplicationCardProps {
-    application: ApplicationCardViewResponse
+interface ActionInstanceCardProps {
+    actionInstance: ActionInstanceCardViewResponse
 }
-const ApplicationCard = (props: ApplicationCardProps) => {
-    const {application} = props
-    const name =  props.application.ApplicationName?.toUpperCase()
+const ActionInstanceCard = (props: ActionInstanceCardProps) => {
+    const {actionInstance} = props
     const history = useHistory()
     const match = useRouteMatch()
-
-    const formInfoString = () => {
-        return `${(application.NumberOfFlows===undefined||"0")} Flows  |  ${(application.NumberOfActions||"0")} Actions | ${(application.NumberOfDashboards||"0")} Dashboards`
-    }
+    const [creatingExecution, setCreatingExecution] = React.useState(false)
+    const actionExecutionMutation = useCreateExecution({ 
+        mutationOptions: {
+            onSuccess: (data) => {
+                const createdExecutionId = data[0].Id
+                history.push({
+                    pathname: `/workflow-execution/${createdExecutionId}`
+                })
+            },
+            onMutate: () => setCreatingExecution(true),
+            onSettled: () => setCreatingExecution(false)
+        }
+    })
 
     const formCreatedByString = () => {
-        return `${application.ApplicationCreatedBy||"No Author"}`
+        return `${actionInstance.DefinitionCreatedBy||"No Author"}`
     }
 
     const formCreatedOnString = () => {
-        const createdOnTimestamp = application.ApplicationCreatedOn||Date.now()
+        const createdOnTimestamp = actionInstance.DefinitionCreatedOn||Date.now()
 
         return `Created On ${new Date(createdOnTimestamp).toDateString()}`
     }
 
-    const onApplicationSelect = () => {
-        history.push(`${match.url}/${props.application.ApplicationId || "id"}`)
+    const executeActionInstance = () => {
+        if(actionInstance.DefinitionActionType === ActionDefinitionActionType.WORKFLOW){
+            actionExecutionMutation.mutate({actionInstanceId: actionInstance.InstanceId!})
+        }
     }
-
 
     return (
         <Box>
-            <Card onClick={onApplicationSelect} sx={{
+            <Card sx={{
                 width: "350px", 
                 borderRadius: 2, 
                 p: 2, 
                 boxSizing: "content-box",
-                background: "#A4CAF0",
+                background: creatingExecution ? "#FFFFFF" : "#A4CAF0",
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
@@ -62,7 +75,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 letterSpacing: "0.5px",
                                 textTransform: "uppercase"
                             }}>
-                                {application.ApplicationName}
+                                {actionInstance.InstanceName}
                             </Typography>
                         </Box>
                         <Box>
@@ -75,23 +88,11 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 display: "flex",
                                 alignItems: "center"
                             }}>
-                                {application.ApplicationDescription}
+                                {actionInstance.DefinitionDescription}
                             </Typography>
                         </Box>
                         <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", flexGrow: 1, mr: 3}}>
                             <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: 1}}>
-                                <Box>
-                                    <Typography sx={{
-                                        fontFamily: "SF Pro Display",
-                                        fontStyle: "normal",
-                                        fontWeight: 600,
-                                        fontSize: "12px",
-                                        lineHeight: "133.4%",
-                                        color: "#5B5B5B"
-                                    }}>
-                                        {formInfoString()}
-                                    </Typography>
-                                </Box>
                                 <Box sx={{display: "flex", flexDirection: "column"}}>
                                     <Box sx={{display: "flex", flexDirection: "row", width: "100%", gap: 1, alignContent: "center"}}>
                                         <Box sx={{
@@ -120,10 +121,10 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                 alignItems: "center",
                                                 fontFeatureSettings: "'liga' off",
                                                 color: "#AA9BBE"
-                                            }}>{application.NumberOfUsers||"-"}</Typography>
+                                            }}>{actionInstance.NumberOfUsers||"-"}</Typography>
                                         </Box>
                                         <Box sx={{display: "flex", alignContent: "center"}}>
-                                            <UsageStatus status={application.Status||"NA"}/>
+                                            <UsageStatus status={actionInstance.Status||"NA"}/>
                                         </Box>
                                     </Box>
                                     <Box sx={{display: "flex", flexDirection: "row", gap: 2}}>
@@ -167,12 +168,14 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                         alignItems: "center",
                                         justifyContent: "center"
                                     }}>
-                                    <IconButton sx={{
+                                    <IconButton onClick={executeActionInstance} sx={{
                                             height: "42px",
                                             width: "42px",
                                             background: "#A4CAF0",
                                             boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
                                         }}>
+                                            
+                                        <PlayArrowIcon/>
                                     </IconButton>
                                 </Box>
                             </Box>
@@ -217,4 +220,4 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     )
 }
 
-export default ApplicationCard
+export default ActionInstanceCard

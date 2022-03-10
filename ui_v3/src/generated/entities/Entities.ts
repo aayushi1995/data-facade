@@ -3,10 +3,10 @@
  * This is a generated code based on DDL yaml. Please don't edit it
  * (c) Data Facade LLC.
  */
-
+ 
 export interface BaseEntity {}
-
-
+ 
+ 
 
 export interface ActionParameterDefinition extends BaseEntity{
     Id?: string
@@ -59,11 +59,12 @@ export interface ActionParameterInstance extends BaseEntity{
 	ColumnId?: string
 	ProviderInstanceId?: string
 	SourceExecutionId?: string
+	GlobalParameterId?: string
 }
 
 
 export interface ActionDefinition extends BaseEntity{
-	Id?: string
+    Id?: string
 	DeletedStatus?: string
 	TemplateType?: string
 	DeletedOn?: number
@@ -155,6 +156,9 @@ export interface Application extends BaseEntity{
 	Name?: string
 	ArtifactLocation?: string
 	Version?: string
+	CreatedBy?: string
+	CreatedOn?: number
+	Description?: string
 }
 
 
@@ -171,7 +175,7 @@ export interface PredictionModel extends BaseEntity{
 
 
 export interface JobBase extends BaseEntity{
-	Id?: string
+    Id?: string
 	DeletedStatus?: string
 	DeletedOn?: number
 	Status?: string
@@ -197,7 +201,7 @@ export interface JobBase extends BaseEntity{
 
 
 export interface ProviderDefinition extends BaseEntity{
-	Id?: string
+    Id?: string
 	DeletedStatus?: string
 	DeletedOn?: number
 	ProviderType?: string
@@ -318,7 +322,7 @@ export interface ColumnProperties extends BaseEntity{
 
 
 export interface ProviderParameterInstance extends BaseEntity{
-	Id?: string
+    Id?: string
 	DeletedStatus?: string
 	DeletedOn?: number
 	ProviderInstanceId?: string

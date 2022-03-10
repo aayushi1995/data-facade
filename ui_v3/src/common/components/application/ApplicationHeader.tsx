@@ -73,12 +73,18 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                             <TextField variant="standard" 
                             value={props.searchQuery}
                             onChange={handleSearchChange}
+                            placeholder="Search Apps/Flows/Actions"
                             multiline={true}
                             sx={{width: '40%', 
                                 background: 'linear-gradient(317.7deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 105.18%), #EBECF0',
-                                boxSizing: 'border-box', boxShadow: 'inset -5px -5px 10px #FAFBFF, inset 5px 5px 10px #A6ABBD',
-                                backgroundBlendMode: 'soft-light, normal', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.4)'
-                                , display: 'flex', justifyContent: 'center', minHeight: '50px'}}
+                                boxSizing: 'border-box', 
+                                boxShadow: 'inset -5px -5px 10px #FAFBFF, inset 5px 5px 10px #A6ABBD',
+                                backgroundBlendMode: 'soft-light, normal', 
+                                borderRadius: '10px', 
+                                border: '1px solid rgba(255, 255, 255, 0.4)', 
+                                display: 'flex', 
+                                justifyContent: 'center', 
+                                minHeight: '50px'}}
                             InputProps={{
                                 disableUnderline: true,
                                 startAdornment: (

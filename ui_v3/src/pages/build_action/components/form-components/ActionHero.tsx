@@ -6,12 +6,13 @@ export interface ActionHeroProps {
     Name?: string,
     Description?: string,
     Author?: string,
-    onNameChange: (newName: string|undefined) => void,
-    onDescriptionChange: (newDescription: string|undefined) => void
+    onNameChange?: (newName: string|undefined) => void,
+    onDescriptionChange?: (newDescription: string|undefined) => void
+    readOnly?: boolean
 }
 
 const ActionHero = (props: ActionHeroProps) => {
-    const {Name, Description, onNameChange, onDescriptionChange, Author} = props
+    const {Name, Description, onNameChange, onDescriptionChange, Author, readOnly} = props
 
     return (
         <Card

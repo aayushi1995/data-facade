@@ -24,7 +24,6 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         })) : (
             [...props.parameterInstances, event]
         )
-        console.log(newParameterInstances)
         props.handleChange(newParameterInstances)
     }
 

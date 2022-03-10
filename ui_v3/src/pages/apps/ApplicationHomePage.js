@@ -10,7 +10,6 @@ export const ApplicationHomePage = withRouter(function TableBrowserRoutes() {
 
     return (
         <Switch>
-            {/* <Route path={`${match.path}/:applicationName`} component={SingleApplicationView}/> */}
             <Route path={`${match.path}/:applicationId`} component={ApplicationDetailView}></Route>
             <Route path="/application" component={AllApplicationView}/>
         </Switch>
