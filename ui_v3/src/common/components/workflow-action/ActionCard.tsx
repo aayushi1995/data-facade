@@ -7,6 +7,8 @@ import { Typography } from "@mui/material"
 import closeIcon from '../../../../src/images/delete_workflow_action.png'
 import { SystemStyleObject } from "@mui/system"
 import LinearProgress from '@mui/material/LinearProgress';
+import viewResultIcon from '../../../../src/images/ViewResult.png'
+import viewErrorIcon from '../../../../src/images/ShowErrorLogs.png'
 
 
 export interface ActionCardProps {
@@ -22,6 +24,7 @@ export interface ActionCardProps {
     isCardSelected?: boolean
     deleteButtonAction: (actionId: string, actionNumber: number) => void
     onActionSelect?: (actionId: string, actionIndex: number) => void
+    handlePreviewOutput: (executionId: string) => void
 }
 
 const ActionCard = (props: ActionCardProps) => {
@@ -92,14 +95,36 @@ const ActionCard = (props: ActionCardProps) => {
                         
                     </Box>
                 </Box>
-                <Box sx={{flex: 0.25}}>
-                    <IconButton onClick={(e: any) => {
-                        e.stopPropagation?.()
-                        props.deleteButtonAction(props.actionId, props.index)}}>
-                        <Icon>
-                            <img src={closeIcon} alt='remove'/>
-                        </Icon>
-                    </IconButton>
+                <Box>
+                    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                        <IconButton onClick={(e: any) => {
+                            e.stopPropagation?.()
+                            props.deleteButtonAction(props.actionId, props.index)}}>
+                            <Icon>
+                                <img src={closeIcon} alt='remove'/>
+                            </Icon>
+                        </IconButton>
+                        {props.executionStaus === "Completed" ? (
+                            <IconButton sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} onClick={(e: any) => {
+                                e.stopPropagation?.()
+                                props.handlePreviewOutput(props.actionId)
+                            }}>
+                                <img src={viewResultIcon} alt='view result'/>
+                            </IconButton>
+                        ) : (
+                            <></>
+                        )}
+                        {props.executionStaus === "Failed" ? (
+                            <IconButton sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} onClick={(e: any) => {
+                                e.stopPropagation?.()
+                                props.handlePreviewOutput(props.actionId)
+                            }}>
+                                <img src={viewErrorIcon} alt='view result'/>
+                            </IconButton>
+                        ): (
+                            <></>
+                        )}
+                    </Box>
                 </Box>
             </Box>
             {props.executionStaus === "Started" ? (

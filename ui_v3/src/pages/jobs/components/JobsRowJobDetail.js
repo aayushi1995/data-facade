@@ -47,7 +47,8 @@ export const formTimeStampOrReturnDefault = (date, defaultValue) => {
 
 const JobsRowJobDetail = (props) => {
     const match = useRouteMatch()
-    const actionExecutionId = match.params.actionExecutionId || props.actionExecutionId;
+    const actionExecutionId = match.params.actionExecutionId || props.actionExecutionId || props.ActionExecution.Id;
+    console.log(actionExecutionId)
     const {isLoading, error, data: JobBaseData} = useRetreiveData(labels.entities.JobBase, {
         "filter": {
             "RelatedEntityUniqueId": actionExecutionId
@@ -324,7 +325,7 @@ const DevDisplayData = (props) => {
                                         label="Output"
                                         multiline
                                         rows={4}
-                                        defaultValue={prettyJson(ActionExecution.Output)}
+                                        value={ActionExecution.Output.charAt(0) === '{' ? JSON.parse(ActionExecution.Output)?.Message : ActionExecution.Output}
                                         variant="outlined"
                                         InputProps={{readOnly: true}}
                                         fullWidth

@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, Button, TextField, InputAdornment } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import SearchIcon from '@mui/icons-material/Search';
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import PreBuiltApplications from "./PreBuiltApplications";
 
 interface ApplicationHeaderProps {
@@ -10,6 +10,7 @@ interface ApplicationHeaderProps {
     fromApplicationDetail?: boolean,
     searchQuery?: string,
     setSearchQuery?: (e: string) => void
+    applicationId?: string
 }
 
 const ApplicationHeader = (props: ApplicationHeaderProps) => {
@@ -38,7 +39,12 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                         <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2, minHeight: '80%'}}>
                             {props.fromApplicationDetail ? (
                                 <>
-                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" onClick={() => history.push('/build-workflow')}>
+                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" to={{
+                                    pathname: "/build-workflow",
+                                    state: props?.applicationId || "Id"
+                                }}
+                                component={Link}
+                                >
                                     Create Workflow <AddIcon sx={{marginLeft: 2}}/>
                                 </Button>
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained">

@@ -1,4 +1,4 @@
-import { IconButton, Typography } from '@material-ui/core';
+import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, Button } from '@material-ui/core';
 import { Box } from '@mui/material';
 import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -17,24 +17,49 @@ export interface WorkflowStageProps {
     numberOfActions?: number,
     totalRunTime?: string,
     handleDeleteStage?: (event: string) => void
-    handleAddStage?: () => void
+    handleAddStage?: (stageId?: string) => void
     handleStageNameChange?: (stageId: string, stageName: string) => void
 }
 
 
 export const WorkflowStage = (props: WorkflowStageProps) => {
+    const [isDeleteDialogOpen, setIsDialogOpen] = React.useState(false)
     const [isNameBeingEdited, setIsNameBeingEdited] = React.useState(false)
+    const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+    const open = Boolean(menuAnchor)
 
     const handleAddDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        if(props.cardButton === 'minus') {
-            props.handleDeleteStage?.(props.stageId)
-        } else {
+        setMenuAnchor(event.currentTarget)
+        // if(props.cardButton === 'minus') {
+        //     props.handleDeleteStage?.(props.stageId)
+        // } else {
+        //     props.handleAddStage?.()
+        // }
+    }
+
+    const handleMenuItemSelect = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        setMenuAnchor(null)
+        const menuItem: number = event.currentTarget.value
+        if(menuItem === 1) {
             props.handleAddStage?.()
+        } else if(menuItem === 0) {
+            props.handleAddStage?.(props.stageId)
+        } else if(menuItem === 2) {
+            setIsDialogOpen(true)
         }
     }
 
     const handleStageNameChange = (e: any) => {
         props.handleStageNameChange?.(props.stageId, e.target.value)
+    }
+
+    const handleDialogCloseWithoutDelete = () => {
+        setIsDialogOpen(false)
+    }
+
+    const handleDeleteStage = () => {
+        props?.handleDeleteStage?.(props.stageId)
+        setIsDialogOpen(false)
     }
 
     return (
@@ -47,6 +72,21 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
             pb: 2, 
             borderRadius: 3
         }}>
+            <Dialog open={isDeleteDialogOpen} onClose={handleDialogCloseWithoutDelete}fullWidth maxWidth="xs" scroll="paper">
+                <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>
+                    Confirm Delete {props.stageName}
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3}}>
+                        <Button color="primary" onClick={handleDeleteStage}>
+                            Yes
+                        </Button>
+                        <Button color="primary" onClick={handleDialogCloseWithoutDelete}>
+                            No
+                        </Button>
+                    </Box>
+                </DialogContent>
+            </Dialog>
             <Box sx={{
                 minWidth: "35px", 
                 zIndex: 1
@@ -132,6 +172,23 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                         )}
                         
                     </IconButton>
+                    <Menu 
+                        anchorEl={menuAnchor} 
+                        open={open} 
+                        onClose={() => {setMenuAnchor(null)}}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                    >
+                            <MenuItem onClick={handleMenuItemSelect} value={0}>Add Stage Next</MenuItem>
+                            <MenuItem onClick={handleMenuItemSelect} value={1}>Add Stage Last</MenuItem>
+                            <MenuItem onClick={handleMenuItemSelect} value={2}>Delete Stage</MenuItem>
+                    </Menu>
                 </Box>
             </Box>
             

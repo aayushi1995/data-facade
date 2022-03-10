@@ -6,6 +6,7 @@ import ExecuteImage from "../../../../src/images/Execute.png"
 import ShareIcon from '@mui/icons-material/Share';
 import FavouriteIcon from "../../../../src/images/Favourite.png"
 import OptionIcon from "../../../../src/images/Options.png"
+import { useHistory } from "react-router-dom";
 
 
 interface ApplicationActionCardProps {
@@ -14,6 +15,13 @@ interface ApplicationActionCardProps {
 }
 
 const ApplicationActionCard = (props: ApplicationActionCardProps) => {
+
+    const history = useHistory()
+    const handleExecute = () => {
+        if(props.isWorkflow === true) {
+            history.push(`/execute-workflow/${props.action.model?.Id || "idNotFound"}`)
+        }
+    }
 
     const background = !props.isWorkflow ? '#EEEEFF' : '#F8F8F8'
     return (
@@ -135,7 +143,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                             <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase', flex: 1}}>
                                 EXECUTE
                             </Typography>
-                            <IconButton sx={{flex: 3, height: '100%'}}>
+                            <IconButton sx={{flex: 3, height: '100%'}} onClick={handleExecute}>
                                 <img src={ExecuteImage} style={{width: '100%', height: '100%'}} alt="Execute"/>
                             </IconButton>
                         </Box>

@@ -58,6 +58,11 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
         
     }
 
+    const handlePreviewOutput = (executionId: string) => {
+        console.log("here")
+        setWorkflowContext({type: 'SET_EXECUTION_FOR_PREVIEW', payload: executionId})
+    }
+
     const stageActions = stageDetails?.Actions?.map((action, index) => {
         const baseAction = {
             index: index,
@@ -113,13 +118,13 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
 
     if(stageDetails) {
         return (
-            <Box sx={{ display: 'flex', flex: 1}}>
+            <Box sx={{ display: 'flex', flex: 1, maxHeight: '600px'}}>
                 <Box sx={{ display: 'flex', alignContent: 'center', flex: 1, flexDirection: 'column', overflowY: 'auto' }}>
-                    <Box sx={{ p: 1, flex: 0.05, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <Typography sx={{ flex: 1, fontWeight: 600 }}>
                             Selected Actions
                         </Typography>
-                        <Box sx={{ flex: 0.25, display: 'flex' }}>
+                        <Box sx={{  display: 'flex' }}>
                             <IconButton sx={{ flex: 1 }} onClick={handleAddAction}>
                                 <img src={addAction} alt="add action" />
                             </IconButton>
@@ -143,7 +148,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                                             {(_provided: any) => (
                                                                 <li {..._provided.draggableProps} ref={_provided.innerRef}>
                                                                     <ActionCard
-                                                                        {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect }}
+                                                                        {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput }}
                                                                     />
                                                                 </li>
                                                             )}

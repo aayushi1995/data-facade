@@ -6,10 +6,12 @@ import { WorkflowContextType } from "../../../../../pages/applications/workflow/
 import { v4 as uuidv4 } from 'uuid';
 import dataManager from "../../../../../data_manager/data_manager";
 import { makeWorkflowTemplate } from "../util/MakeWorkflowTemplate";
+import { useThemeProps } from "@material-ui/core";
 
 
 interface UseSaveWorkflowProps {
     mutationName: string
+    applicationId?: string
 }
 
 const useSaveWorkflowMutation = (props: UseSaveWorkflowProps) => {
@@ -26,7 +28,8 @@ const useSaveWorkflowMutation = (props: UseSaveWorkflowProps) => {
                 ActionType: "Workflow",
                 UniqueName: workflowContext.Name,
                 CreatedBy: workflowContext.Author,
-                DefaultActionTemplateId: templateId
+                DefaultActionTemplateId: templateId,
+                ApplicationId: props.applicationId
             }
             const templateText = makeWorkflowTemplate(workflowContext)
             const workflowTemplate: ActionTemplate = {

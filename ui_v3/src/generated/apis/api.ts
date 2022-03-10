@@ -37,6 +37,12 @@
 	 static async fetchData(httpsVerb: "GET", endpoint: "/getActionDefinitionDetails", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionDetail[]>; 
 	 
 	 /**
+	 Gives you the number of runs on any provider in the last five days. Also gives you the list of provider parameter instances.
+	 */
+	 
+	 static async fetchData(httpsVerb: "GET", endpoint: "/getProviderHistoryAndParameters", inputPayload: Entity.ProviderInstance): Promise<CustomInterface.ProviderRunsHistoryAndParameters[]>; 
+	 
+	 /**
 	 Gives you the details of all tags along with it's subsidiaries.
 	 */
 	 

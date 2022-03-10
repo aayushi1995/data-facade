@@ -66,6 +66,14 @@ export interface WorkflowActionExecutions {
 }
 
 
+export interface ProviderRunsHistoryAndParameters {
+    history?: number[]
+	ProviderParameterInstanceModels?: Entity.ProviderParameterInstance[]
+	model?: Entity.ProviderInstance
+	failedActions?: number
+}
+
+
 export interface TagDetails {
     Id?: string
 	Name?: string

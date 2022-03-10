@@ -50,7 +50,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
         return (
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                 <Box sx={{flex: 1}}>
-                    <ApplicationHeader pageHeader="Application Details" subHeading="Create, Manage Applications from here" fromApplicationDetail={true}/>
+                    <ApplicationHeader pageHeader="Application Details" subHeading="Create, Manage Applications from here" fromApplicationDetail={true} applicationId={application.model?.Id}/>
                 </Box>
                 <Box sx={{flex: 1}}>
                     <Card sx={{background: 'background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',

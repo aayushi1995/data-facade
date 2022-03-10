@@ -9,6 +9,9 @@ export const getActionExecutionParsedOutput = (actionExecutionFilter) => {
         }
     ).then((response) => {
         const actionExecution = response[0]
+        if(actionExecution?.Status === 'Failed') {
+            return actionExecution
+        }
         const actionExecutionOutput = JSON.parse(actionExecution.Output)
         const preview = JSON.parse(actionExecutionOutput.preview)
         preview.schema = preview.schema.fields.map(f => {return {...f, field: f.name, headerName: f.name}}).filter(col => col.field!=='datafacadeindex')

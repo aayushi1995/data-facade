@@ -53,11 +53,13 @@ export const StagesWithActions = () => {
         setWorkflowContext({type: 'SET_STAGES_IN_VIEW', payload: {startIndex: newStartIndex, endIndex: newEndIndex}})
     }
 
-    const handleAddStage = (newStage: {Id: string, Name: string, Actions: WorkflowActionDefinition[]}) => {
+    const handleAddStage = (newStage: {Id: string, Name: string, Actions: WorkflowActionDefinition[]}, stageId?: string) => {
 
-        setWorkflowContext({type: 'ADD_STAGE', payload: newStage})
+        setWorkflowContext({type: 'ADD_STAGE', payload: {...newStage, previousStageId: stageId}})
+
+
         if(workflowContext.stages.length >= 5) {
-            handleSlideNext()   
+            handleSlideNext()
         }
     }
 

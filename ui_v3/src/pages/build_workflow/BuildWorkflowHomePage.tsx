@@ -7,20 +7,24 @@ import WorkflowHero, { WorkflowHeroProps } from "../../common/components/workflo
 import WorkflowDetails from "../../common/components/workflow/create/addAction/WorkflowDetails";
 import { makeWorkflowTemplate } from "../../common/components/workflow/create/util/MakeWorkflowTemplate";
 import useSaveWorkflowMutation from "../../common/components/workflow/create/hooks/useSaveWorkflowMutation";
+import {RouteComponentProps, useLocation} from "react-router-dom"
 
 export interface BuildWorkflowHomePageProps {
 
 }
 
 const BuildWorkflowHomePage = (props: BuildWorkflowHomePageProps) => {
+    const location = useLocation()
+    const applicationId = location.state as string
+    console.log(applicationId)
     return (
         <WorkflowContextProvider>
             <Box sx={{display: "flex", flexDirection: "column", gap: 4, px: 2, py:2}}>
                 <Box>
-                    <WorkflowHeroWrapper/>
+                    <WorkflowHeroWrapper />
                 </Box>
                 <Box>
-                    <WorkflowEditor/>
+                    <WorkflowEditor applicationId={applicationId}/>
                 </Box>
             </Box>
         </WorkflowContextProvider>
@@ -30,6 +34,7 @@ const BuildWorkflowHomePage = (props: BuildWorkflowHomePageProps) => {
 const WorkflowHeroWrapper = () => {
     const workflowState: WorkflowContextType = useContext(WorkflowContext)
     const setWorkflowState: SetWorkflowContextType = useContext(SetWorkflowContext)
+
     const worflowHeroProps: WorkflowHeroProps = {
         readonly: false,
         Name: workflowState.Name,
@@ -48,22 +53,27 @@ const WorkflowHeroWrapper = () => {
             }
         })
     }
+    if(workflowState.Name === "") {
+        return <></>
+    }
     return (
         <WorkflowHero {...worflowHeroProps}/>
     )
 }
 
-const WorkflowEditor = () => {
+const WorkflowEditor = (props: {applicationId?: string}) => {
+    console.log(props)
     const workflowContext = useContext(WorkflowContext)
-    const saveWorkflowMutation = useSaveWorkflowMutation({mutationName: "CreateWorkflow"})
+    const setWorkflowState: SetWorkflowContextType = useContext(SetWorkflowContext)
+    const saveWorkflowMutation = useSaveWorkflowMutation({mutationName: "CreateWorkflow", applicationId: props.applicationId})
 
     const handleSave = () => {
         const workflowActionTemplate = makeWorkflowTemplate(workflowContext)
+        setWorkflowState({type: 'SET_APPLICATION_ID', payload: props.applicationId})
         saveWorkflowMutation.mutate(workflowContext, {
             onSuccess: () => console.log("SUCCESS")
         })
     }
-
     return (
         <>
             {workflowContext.Name === "" ? (

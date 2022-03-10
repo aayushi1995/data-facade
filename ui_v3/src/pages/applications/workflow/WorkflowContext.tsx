@@ -46,7 +46,9 @@ export type WorkflowContextType = {
     Author: string,
     Template?: ActionTemplate,
     WorkflowExecutionStatus?: string,
-    draggingAllowed?: boolean
+    draggingAllowed?: boolean,
+    actionExecutionIdForPreview?: string,
+    ApplicationId?: string
 }
 
 const defaultWorkflowContext: WorkflowContextType = {
@@ -92,7 +94,8 @@ type SetStagesInViewPayload = {
 type AddStagePayloadType = {
     Id: string
     Name: string,
-    Actions: WorkflowActionDefinition[]
+    Actions: WorkflowActionDefinition[],
+    previousStageId?: string
 }
 
 type StageNameChangePayloadType = {
@@ -285,6 +288,15 @@ type SetDraggableActionType = {
     payload: boolean
 }
 
+type SetActionExecutionForPreview = {
+    type: 'SET_EXECUTION_FOR_PREVIEW',
+    payload?: string
+}
+
+type SetApplicationId = {
+    type: 'SET_APPLICATION_ID',
+    payload?: string
+}
 
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
@@ -307,7 +319,9 @@ export type WorkflowAction = AddActionToWorfklowType |
                              ChangeWorkflowParameterInstancesActionType |
                              ChangeExecutionStatusActionType |
                              UpdateChildActionStatusType |
-                             SetDraggableActionType
+                             SetDraggableActionType |
+                             SetActionExecutionForPreview |
+                             SetApplicationId
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -399,8 +413,14 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 endIndex: action.payload.endIndex
             }}
         case 'ADD_STAGE':
+            console.log(action)
             const newState = {...state}
-            newState.stages.push(action.payload)
+            if(!!action.payload.previousStageId) {
+                const stageIndex = newState.stages.findIndex(stage => stage.Id === action.payload.previousStageId)
+                newState.stages.splice(stageIndex + 1, 0, action.payload)
+            } else {
+                newState.stages.push(action.payload)
+            }
             return {...newState}
 
         case 'DELETE_STAGE': {
@@ -547,6 +567,20 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return {
                 ...state,
                 draggingAllowed: action.payload
+            }
+        }
+
+        case 'SET_EXECUTION_FOR_PREVIEW': {
+            return {
+                ...state,
+                actionExecutionIdForPreview: action.payload
+            }
+        }
+
+        case 'SET_APPLICATION_ID': {
+            return {
+                ...state,
+                ApplicationId: action.payload
             }
         }
 
