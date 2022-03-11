@@ -53,7 +53,9 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                         DisplayName: childExecutions?.[i]?.ActionDefinition?.DisplayName || "Name",
                         DefaultActionTemplateId: childExecutions?.[i]?.ActionDefinition?.DefaultActionTemplateId || "templateId",
                         Parameters: [],
-                        ExecutionStatus: childExecutions?.[i]?.ActionExecution?.Status || "Created"
+                        ExecutionStatus: childExecutions?.[i]?.ActionExecution?.Status || "Created",
+                        ExecutionStartedOn: childExecutions?.[i]?.ActionExecution?.ExecutionStartedOn,
+                        ExecutionCompletedOn: childExecutions?.[i]?.ActionExecution?.ExecutionCompletedOn
                     })
                     i++;
                 }
@@ -65,7 +67,9 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                             stageId: currentStageId,
                             actionId: stageAction.Id,
                             actionIndex: index,
-                            newStatus: stageAction.ExecutionStatus
+                            newStatus: stageAction.ExecutionStatus,
+                            ExecutionStartedOn: stageAction.ExecutionStartedOn,
+                            ExecutionCompletedOn: stageAction.ExecutionCompletedOn
                         }})
                     })
                 } else {

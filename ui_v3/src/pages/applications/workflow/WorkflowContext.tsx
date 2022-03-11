@@ -1,5 +1,6 @@
 import React from "react"
 import { v4 as uuidv4 } from 'uuid'
+import { NumberFormat } from "xlsx/types";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate } from "../../../generated/entities/Entities";
 import { ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces";
@@ -25,7 +26,9 @@ export type WorkflowActionDefinition = {
     TemplateId?: string,
     DefinitionId?: string,
     Name?: string,
-    ExecutionStatus?: string
+    ExecutionStatus?: string,
+    ExecutionStartedOn?: number,
+    ExecutionCompletedOn?: number
 }
 
 export type WorkflowContextType = {
@@ -175,7 +178,9 @@ type UpdateActionStatus = {
     stageId: string,
     actionId: string,
     actionIndex: number,
-    newStatus: string
+    newStatus: string,
+    ExecutionCompletedOn?: number,
+    ExecutionStartedOn?: number
 }
 
 type AddActionToWorfklowType = {
@@ -557,7 +562,9 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     ...stage,
                     Actions: stage.Actions.map((stageAction, index) => (index !== action.payload.actionIndex || stageAction.Id !== action.payload.actionId) ? stageAction: {
                         ...stageAction,
-                        ExecutionStatus: action.payload.newStatus
+                        ExecutionStatus: action.payload.newStatus,
+                        ExecutionCompletedOn: action.payload.ExecutionCompletedOn,
+                        ExecutionStartedOn: action.payload.ExecutionStartedOn
                     } ) 
                 })
             }

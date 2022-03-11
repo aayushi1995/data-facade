@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { Fetcher } from '../../../../../generated/apis/api';
 import { ActionDefinition } from '../../../../../generated/entities/Entities';
 import labels from '../../../../../labels/labels';
 import dataManagerInstance, { useRetreiveData } from './../../../../../data_manager/data_manager'
@@ -12,15 +13,13 @@ const useFetchActionDefinitions = (params: UseFetchActionDefinitionsProps): [Act
 
     const {data: allActionDefinitionsData, error: allActionDefinitionsError, isLoading: allActionDefinitionsIsLoading} = useQuery([labels.entities.ActionDefinition, "All"],
         () => {
-            return fetchedDataManagerInstance.retreiveData!(labels.entities.ActionDefinition, {
-                filter: {}
-            })
+            return Fetcher.fetchData('GET', '/getFilteredActionDefinitions', {})
         }, {
             staleTime: 60*1000
         }
     )
 
-    return [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]
+    return [allActionDefinitionsData || [], allActionDefinitionsIsLoading, allActionDefinitionsError]
 }
 
 export default useFetchActionDefinitions;

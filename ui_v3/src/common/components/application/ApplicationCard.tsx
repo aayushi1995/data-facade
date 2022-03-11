@@ -21,7 +21,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const match = useRouteMatch()
 
     const formInfoString = () => {
-        return `${(application.NumberOfFlows===undefined||"0")} Flows  |  ${(application.NumberOfActions||"0")} Actions | ${(application.NumberOfDashboards||"0")} Dashboards`
+        return `${(application.NumberOfFlows || "0")} Flows  |  ${(application.NumberOfActions||"0")} Actions | ${(application.NumberOfDashboards||"0")} Dashboards`
     }
 
     const formCreatedByString = () => {

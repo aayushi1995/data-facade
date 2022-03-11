@@ -2,6 +2,7 @@ import { Box, Grid, Typography, Button, TextField, InputAdornment } from "@mater
 import AddIcon from "@material-ui/icons/Add"
 import SearchIcon from '@mui/icons-material/Search';
 import { useHistory, Link } from "react-router-dom";
+import UploadApplicationButton from "../UploadApplicationButton";
 import PreBuiltApplications from "./PreBuiltApplications";
 
 interface ApplicationHeaderProps {
@@ -64,7 +65,7 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                                 <>
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" onClick={() => props.handleDialogOpen?.()}>
                                     APP Builder <AddIcon sx={{marginLeft: 2}}/></Button>
-                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained">Import Application</Button>
+                                <UploadApplicationButton/>
                                 </>
                             )}
                             

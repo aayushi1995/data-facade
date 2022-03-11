@@ -79,6 +79,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     }
 
     const stageActions = stageDetails?.Actions?.map((action, index) => {
+        const runTime = ((action.ExecutionCompletedOn || 0) - (action.ExecutionStartedOn || 0))/1000 
         const baseAction = {
             index: index,
             actionId: action.Id,
@@ -89,7 +90,8 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             defaultTemplateId: action.DefaultActionTemplateId,
             deleteButtonAction: handleDeleteAction,
             onActionSelect: onActionSelect,
-            executionStaus: action.ExecutionStatus
+            executionStaus: action.ExecutionStatus,
+            runTime: runTime
         }
         if(selectedDefinition.index === index && selectedDefinition.id === action.Id) {
             return {
