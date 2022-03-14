@@ -81,6 +81,7 @@ export interface ProviderInstanceDetails {
     numberOfExecutions?: number
 	model?: Entity.ProviderInstance
 	numberOfTables?: number
+	lastSyncedOn?: number
 }
 
 

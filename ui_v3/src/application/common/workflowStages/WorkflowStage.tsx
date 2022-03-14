@@ -1,4 +1,4 @@
-import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, Button } from '@material-ui/core';
+import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, Button, LinearProgress } from '@material-ui/core';
 import { Box } from '@mui/material';
 import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -102,7 +102,8 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 boxSizing: "border-box", 
                 backgroundColor: "inherit",
                 zIndex: 2, 
-                flexGrow: 1
+                flexGrow: 1,
+                gap: 3
             }}>
                 <Box sx={{display: "flex"}}>
                     <Box sx={{alignItems: "flex-start", overflowY: 'clip'}}>
@@ -134,6 +135,13 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                         </Typography>
                     </Box>
                 ): (
+                    <></>
+                )}
+                {props.percentageCompleted !== undefined ? (
+                    <Box sx={{width: '100%'}}>
+                        <LinearProgress sx={{flex: 1}} variant="determinate" value={props.percentageCompleted}></LinearProgress>
+                    </Box>
+                ) : (
                     <></>
                 )}
                 
@@ -193,7 +201,6 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                     </Menu>
                 </Box>
             </Box>
-            
         </Box>
     )
 }

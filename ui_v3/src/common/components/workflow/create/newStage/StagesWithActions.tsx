@@ -20,7 +20,8 @@ export const StagesWithActions = () => {
         // console.log(stage)
         return {
             stageId: stage.Id,
-            stageName: stage.Name
+            stageName: stage.Name,
+            percentageCompleted: stage.Percentage
         }
     })
 

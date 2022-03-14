@@ -62,6 +62,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                 i--;
                 const currentStage = workflowContext.stages.find(stage => stage.Id === currentStageId)
                 if(!!currentStage) {
+                    var completedActions = 0;
                     stageActions.forEach((stageAction, index) => {
                         setWorkflowContext({type: 'UPDATE_CHILD_STATUS', payload: {
                             stageId: currentStageId,
@@ -71,7 +72,14 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                             ExecutionStartedOn: stageAction.ExecutionStartedOn,
                             ExecutionCompletedOn: stageAction.ExecutionCompletedOn
                         }})
+                        if(stageAction.ExecutionStatus === 'Completed' || stageAction.ExecutionStatus === 'Failed') {
+                            completedActions++;
+                        }
                     })
+                    setWorkflowContext({type: 'CHANGE_STAGE_PERCENTAGE', payload: {
+                        stageId: currentStageId,
+                        percentage: (completedActions/stageActions.length) * 100
+                    }})
                 } else {
                     setWorkflowContext({type: 'ADD_STAGE', payload: {
                         Name: childExecutions?.[i]?.stageName || "stage",

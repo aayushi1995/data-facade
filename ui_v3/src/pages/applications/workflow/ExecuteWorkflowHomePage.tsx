@@ -76,7 +76,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 </Box>
                 <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', mt: 5}}>
                     <Box sx={{flex: 1, maxWidth: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={executeWorkflow}>TEST/EXECUTE</Button>
+                        <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
                     </Box>
                 </Box>
             </Box>

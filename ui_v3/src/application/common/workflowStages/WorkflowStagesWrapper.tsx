@@ -1,9 +1,10 @@
 import WorkflowStage, { WorkflowStageProps } from "./WorkflowStage";
-import { Card, Box, Grid, Button, IconButton } from "@material-ui/core";
+import { Card, Box, Grid, Button, IconButton, Collapse } from "@material-ui/core";
 import { v4 as uuidv4 } from 'uuid'
 import { WorkflowContextType, WorkflowActionDefinition } from "../../../pages/applications/workflow/WorkflowContext";
 import CloseIcon from '@material-ui/icons/Close';
 import { DialogContent } from "@mui/material";
+import { TransitionGroup } from 'react-transition-group';
 // import './WorkflowStagesWrapper.css'
 
 export interface WorkflowStagesWrapperProps {
@@ -66,11 +67,15 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
         <Card className="root" sx={{maxHeight: '100%', boxShadow: '-6.41304px -6.41304px 12.8261px #E3E6F0, 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD'}}>
             <Box sx={{ display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden'}} p={1} pl={2}>
                 <Grid container >
-                {workflowStages.map((stage: WorkflowStageProps, index: number) =>  
-                    <Grid item xs={3} sx={{maxHeight: '100%', maxWidth: '24.55%'}}>
-                        <WorkflowStage {...{...stage, handleDeleteStage: handleDeleteStage, handleStageNameChange: props.handleStageNameChange, handleAddStage: handleAddStage}}/>
-                    </Grid>
-                )}
+                    <TransitionGroup style={{display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden'}}>
+                        {workflowStages.map((stage: WorkflowStageProps, index: number) =>  
+                            <Collapse key={stage.stageId} sx={{width: '24.55%'}}>
+                                <Grid item xs={12} sx={{maxHeight: '100%', width: '100%'}}>
+                                    <WorkflowStage {...{...stage, handleDeleteStage: handleDeleteStage, handleStageNameChange: props.handleStageNameChange, handleAddStage: handleAddStage}}/>
+                                </Grid>
+                            </Collapse>
+                        )}
+                    </TransitionGroup>
                 </Grid>
             </Box>
         </Card>

@@ -35,7 +35,8 @@ export type WorkflowContextType = {
     stages: {
         Id: string, 
         Name: string,
-        Actions: WorkflowActionDefinition[]
+        Actions: WorkflowActionDefinition[],
+        Percentage?: number
     }[]
     currentStageView?: {
         startIndex: number
@@ -303,6 +304,14 @@ type SetApplicationId = {
     payload?: string
 }
 
+type ChangeStagePercentage = {
+    type: 'CHANGE_STAGE_PERCENTAGE',
+    payload: {
+        stageId: string,
+        percentage: number
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -326,7 +335,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              UpdateChildActionStatusType |
                              SetDraggableActionType |
                              SetActionExecutionForPreview |
-                             SetApplicationId
+                             SetApplicationId |
+                             ChangeStagePercentage
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -588,6 +598,16 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return {
                 ...state,
                 ApplicationId: action.payload
+            }
+        }
+
+        case 'CHANGE_STAGE_PERCENTAGE': {
+            return {
+                ...state,
+                stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage : {
+                    ...stage,
+                    Percentage: action.payload.percentage
+                })
             }
         }
 
