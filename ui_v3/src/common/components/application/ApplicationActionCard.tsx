@@ -1,4 +1,5 @@
-import { Box, Card, Typography, Divider, IconButton } from "@mui/material";
+import React from "react"
+import { Box, Card, Typography, Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import { ActionDetailsForApplication } from "../../../generated/interfaces/Interfaces";
 import NumberStat from "../NumberStat";
 import TagHandler from "../tag-handler/TagHandler";
@@ -15,13 +16,29 @@ interface ApplicationActionCardProps {
 }
 
 const ApplicationActionCard = (props: ApplicationActionCardProps) => {
-
+    const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+    const open = Boolean(menuAnchor)
     const history = useHistory()
     const handleExecute = () => {
         if(props.isWorkflow === true) {
             history.push(`/application/execute-workflow/${props.action.model?.Id || "idNotFound"}`)
         } else {
             history.push(`/application/execute-action/${props.action.model?.Id || "id"}`)
+        }
+    }
+
+    
+    const openOptionsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if(props.isWorkflow) {
+            setMenuAnchor(event.currentTarget)
+        }
+    }
+
+    const handleMenuItemSelect = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        setMenuAnchor(null)
+        const menuItem: number = event.currentTarget.value
+        if(menuItem === 0) {
+            history.push(`/application/edit-workflow/${props.action.model?.Id || "Id"}`)
         }
     }
 
@@ -160,10 +177,25 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <IconButton>
                             <ShareIcon/>
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={openOptionsMenu}>
                             <img src={OptionIcon} alt="Options"/>
                         </IconButton>
                     </Box>
+                    <Menu 
+                        anchorEl={menuAnchor} 
+                        open={open} 
+                        onClose={() => {setMenuAnchor(null)}}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                    >
+                            <MenuItem onClick={handleMenuItemSelect} value={0}>Edit Flow</MenuItem>
+                    </Menu>
                 </Box>
             </Card>
         </Box>

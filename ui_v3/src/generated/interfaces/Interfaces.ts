@@ -15,8 +15,7 @@
 export interface UpdateActionDefinitionWithTemplate {
     filter?: Entity.ActionDefinition
 	newProperties?: Entity.ActionDefinition
-	old?: ActionDefinitionDetail
-	new?: ActionDefinitionDetail
+	ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
 }
 
 

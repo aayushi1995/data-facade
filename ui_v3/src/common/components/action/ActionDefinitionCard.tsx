@@ -61,7 +61,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                 fontSize: "12px",
                                 lineHeight: "266%",
                                 letterSpacing: "0.5px",
-                                textTransform: "uppercase"
+                                textTransform: "uppercase",
+                                color: 'rgba(66, 82, 110, 0.86)'
                             }}>
                                 {actionDefinition.DefinitionName}
                             </Typography>

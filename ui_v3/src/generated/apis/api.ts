@@ -104,11 +104,10 @@
 	 
 	 /**
 	 Updates the action definition properties. You can also send the updated template in the 'new' property of the request.
-	 It will edit the text of aciton template along with the action definition.
-	 You can't edit the parameter definition with this API. Only definition level details and template text. Update will fail otherwise.
+	 It will edit the text of aciton template along with the action definition. You can add new parameters but not edit existing parameters using this API
 	 */
 	 
-	 static async fetchData(httpsVerb: "PATCH", endpoint: "/updateActionDefinitionWithTemplate", inputPayload: CustomInterface.UpdateActionDefinitionWithTemplate): Promise<Entity.ActionDefinition[]>; 
+	 static async fetchData(httpsVerb: "PATCH", endpoint: "/updateActionDefinitionWithTemplateAndParameters", inputPayload: CustomInterface.UpdateActionDefinitionWithTemplate): Promise<Entity.ActionDefinition[]>; 
 	 
 	 /**
 	 Retrieves an action instance based on the filter and updates it with new properties

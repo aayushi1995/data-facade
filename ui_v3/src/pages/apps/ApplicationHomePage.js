@@ -1,5 +1,6 @@
 import React from 'react'
 import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom'
+import EditWorkflowHomePage from '../applications/workflow/EditWorkflowHomePage';
 import ExecuteWorkflowHomePage from '../applications/workflow/ExecuteWorkflowHomePage';
 import ViewWorkflowExecutionHomePage from '../applications/workflow/ViewWorkflowExecutionHomePage';
 import BuildActionHomePage from '../build_action/BuildActionHomePage';
@@ -21,6 +22,7 @@ export const ApplicationHomePage = withRouter(function TableBrowserRoutes() {
             <Route path="/application/execute-workflow" component={ExecuteWorkflowHomePage}/>
             <Route path="/application/workflow-execution" component={ViewWorkflowExecutionHomePage}/>
             <Route path="/application/execute-action" component={ExecuteActionHomePage}/>
+            <Route path="/application/edit-workflow" component={EditWorkflowHomePage}/>
             <Route path={`${match.path}/:applicationId`} component={ApplicationDetailView}></Route>
             <Route path="/application" component={AllApplicationView}/>
         </Switch>

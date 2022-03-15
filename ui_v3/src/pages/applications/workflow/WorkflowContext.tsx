@@ -312,6 +312,11 @@ type ChangeStagePercentage = {
     }
 }
 
+type SetEntireContext = {
+    type: 'SET_ENTIRE_CONTEXT',
+    payload: WorkflowContextType
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -336,7 +341,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetDraggableActionType |
                              SetActionExecutionForPreview |
                              SetApplicationId |
-                             ChangeStagePercentage
+                             ChangeStagePercentage |
+                             SetEntireContext
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -611,6 +617,10 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             }
         }
 
+        case 'SET_ENTIRE_CONTEXT': {
+            return {...action.payload}
+        }
+
         default:
             return state
     }
@@ -625,7 +635,7 @@ const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextTy
             Actions: stage.Actions.map((action, index) => { 
                 const newActions = {
                     ...action,
-                    Parameters: action.Parameters.filter(parameter => parameter?.SourceExecutionId === undefined || parameter?.SourceExecutionId?.actionId === stage.Actions?.[parameter.SourceExecutionId.actionIndex]?.Id)
+                    Parameters: action.Parameters.filter(parameter => parameter?.SourceExecutionId === undefined || parameter?.SourceExecutionId?.actionId === stage.Actions?.[parameter.SourceExecutionId?.actionIndex]?.Id)
                 }
                 return newActions
             })

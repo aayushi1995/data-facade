@@ -32,7 +32,7 @@ const BuildWorkflowHomePage = (props: BuildWorkflowHomePageProps) => {
     )
 }
 
-const WorkflowHeroWrapper = () => {
+export const WorkflowHeroWrapper = () => {
     const workflowState: WorkflowContextType = useContext(WorkflowContext)
     const setWorkflowState: SetWorkflowContextType = useContext(SetWorkflowContext)
 
@@ -94,14 +94,14 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
                     </Box>
                 ) : (
                     <Box sx={{overflow: 'clip', flexDirection: 'column', gap: 3}}>  
-                        <Box>
+                        <Box p={2}>
                             <StagesWithActions/>  
                         </Box>  
                         <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3, mr: 5, gap: 2}}>
                             <Button onClick={handleSave} color="primary" variant="contained">
                                 Test and Save
                             </Button>
-                            <Button variant="contained" sx={{background: "#F178B6"}}>
+                            <Button variant="contained" sx={{background: "#F178B6"}} disabled>
                                 Save for later
                             </Button>
                         </Box>
