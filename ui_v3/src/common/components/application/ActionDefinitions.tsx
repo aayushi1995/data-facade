@@ -28,7 +28,7 @@ const ActionDefinitions = (props: ActionDefinitionsProps) => {
             )
         })
         return (
-            <Box sx={{display: 'flex', overflowX: 'auto', flexDirection: 'row', maxWidth: '100%', minHeight: '100%', gap: 1, justifyContent: 'flex-start'}}>
+            <Box sx={{display: 'flex', overflowX: 'auto', flexDirection: 'row', maxWidth: '100%', minHeight: '100%', gap: 1, justifyContent: 'flex-start', pb: 2}}>
                 {actionDefinitionCardsToRender}
             </Box>
         )

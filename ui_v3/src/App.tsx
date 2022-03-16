@@ -105,11 +105,6 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/upload-file' component={UploadTablePage}/>
                                     <Route path='/run-workflow' component={RunWorkflowHomePage}/>
                                     <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
-                                    <Route path='/build-workflow' component={BuildWorkflowHomePage}/>
-                                    <Route path="/execute-workflow" component={ExecuteWorkflowHomePage}/>
-                                    <Route path='/build-action' component={BuildActionHomePage}/>
-                                    <Route path='/execute-action' component={ExecuteActionHomePage}/>
-                                    <Route path="/workflow-execution" component={ViewWorkflowExecutionHomePage}/>
                                     <Redirect exact from="/" to="application"/>
                                 </Switch>
                             </Grid>

@@ -11,13 +11,13 @@ export interface MutationContext {
 
 export interface UseCreateActionInstanceParams {
     syncOptions?: UseMutationOptions<ActionExecution[], unknown, MutationContext, unknown>
-    asyncOptions?: UseMutationOptions<unknown, unknown, MutationContext, unknown>
+    asyncOptions?: UseMutationOptions<ActionExecution[], unknown, MutationContext, unknown>
     fetchParsedOutputOptions?: UseMutationOptions<ActionExecution, unknown, ActionExecution, unknown>
 }
 
 export interface UseCreateActionInstanceReturn {
     createActionInstanceSyncMutation: UseMutationResult<ActionExecution[], unknown, MutationContext, unknown>,
-    createActionInstanceAsyncMutation: UseMutationResult<unknown, unknown, MutationContext, unknown>,
+    createActionInstanceAsyncMutation: UseMutationResult<ActionExecution[], unknown, MutationContext, unknown>,
     fetchActionExeuctionParsedOutputMutation: UseMutationResult<ActionExecution, unknown, ActionExecution, unknown>,
 }
 

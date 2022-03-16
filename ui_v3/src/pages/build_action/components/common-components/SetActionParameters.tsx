@@ -43,7 +43,8 @@ const SetActionParameters = () => {
 
     const editActionParameterProps: EditActionParameterProps = {
         template: activeTemplateWithParams?.template!,
-        paramsWithTag: activeTemplateWithParams?.parameterWithTags.find(param => param.parameter.Id===activeParameter?.parameter?.Id),
+        paramWithTag: activeTemplateWithParams?.parameterWithTags.find(param => param.parameter.Id===activeParameter?.parameter?.Id),
+        allParamsWithTags: activeTemplateWithParams?.parameterWithTags,
         onParameterEdit: (newParameter: ActionParameterDefinition) => setBuildActionContext({
             type: "SetParameterDetails",
             payload: {

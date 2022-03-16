@@ -1,10 +1,11 @@
 import React from "react";
-import { Box, InputAdornment, Tab, Tabs, TextField } from "@mui/material";
+import { Box, CSSObject, Divider, Drawer, IconButton, InputAdornment, List, Tab, Tabs, TextField, Theme } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import SelectFromAllActions from "../../../common/components/workflow/create/SelectFromAllActions";
 import { TabPanel } from "../../../common/components/workflow/create/SelectAction/SelectAction";
 import AllActions from "./form-components/AllActions";
 import useActionDefinitionDetail from "../hooks/useActionDefinitionDetail";
+import CollapsibleDrawer from "./form-components/CollapsibleDrawer"
+import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTone';
 import ActionDetailForm from "./form-components/ActionDetailForm";
 import { SetBuildActionContext } from "../context/BuildActionContext";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
@@ -13,12 +14,14 @@ export interface BuildActionFormProps {
 
 }
 
+
 const BuildActionForm = (props: BuildActionFormProps) => {
     const setBuildActionContext = React.useContext(SetBuildActionContext)
 
     const [sidePanelActiveTab, setSidePanelActiveTab] = React.useState(1)
     const [actionDefinitionNameSearchQuery, setActionDefinitionNameSearchQuery] = React.useState<string>("")
     const [selectedActionId, setSelectedActionId] = React.useState<string|undefined>()
+    const [sideBarOpen, setSideBarOpen] = React.useState<boolean>(true)
     const {data, error, isLoading, refetch} = useActionDefinitionDetail({
         options: {
             onSuccess: (data: unknown) => {
@@ -40,60 +43,80 @@ const BuildActionForm = (props: BuildActionFormProps) => {
         }
     }, [selectedActionId])
 
+    const toggleSidebar = () => setSideBarOpen(old => !old)
+
     return (
-        <Box sx={{display: "flex", flexDirection: "row", width: "100%", maxHeight: "900px"}}>
-            <Box sx={{display: "flex", flexDirection: "column", width: "300px"}}>
-                <Box>
-                    <Tabs value={sidePanelActiveTab} onChange={((event, newValue) => setSidePanelActiveTab(newValue))}>
-                        <Tab label="Groups" value={0} sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: 600,
-                                fontSize: "14px",
-                                lineHeight: "24px",
-                                display: "flex",
-                                alignItems: "center",
-                                textAlign: "center",
-                                opacity: 0.7
-                        }}/>
-                        <Tab label="All Actions" value={1} sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: 600,
-                                fontSize: "14px",
-                                lineHeight: "24px",
-                                display: "flex",
-                                alignItems: "center",
-                                textAlign: "center",
-                                opacity: 0.7
-                        }}/>
-                    </Tabs>
-                </Box>
-                <Box>
-                    <TextField
-                        id="input-with-icon-textfield"
-                        placeholder="Search action..."
-                        value={actionDefinitionNameSearchQuery}
-                        onChange={(event) => {setActionDefinitionNameSearchQuery(event.target.value)}}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon/>
-                                </InputAdornment>
-                            ),
-                        }}
-                        sx={{
-                            width: "100%"
-                        }}
-                        variant="outlined"
-                    />
-                </Box>
-                <Box sx={{overflowY: "auto"}}>
-                    <TabPanel value={sidePanelActiveTab} index={1}>
-                        <AllActions selectedActionId={selectedActionId} onSelectAction={(actionId: string|undefined) => setSelectedActionId(actionId)} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
-                    </TabPanel>
-                </Box>
-            </Box>
+        <Box sx={{display: "flex", flexDirection: "row", width: "100%"}} id="drawer-container">
+            <CollapsibleDrawer
+                open={sideBarOpen}
+                openWidth="320px"
+                closedWidth="50px"
+                openDrawer={() => toggleSidebar()}
+                maxHeight="850px"
+            >
+                {/* <Box sx={{display: "flex", flexDirection: "column", gap: 3}}> */}
+                    <Box sx={{display: "flex", flexDirection: "column", gap: 1}}>
+                        <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+                            <Box>
+                                <Tabs value={sidePanelActiveTab} onChange={((event, newValue) => setSidePanelActiveTab(newValue))}>
+                                    <Tab label="Groups" value={0} sx={{
+                                            fontFamily: "SF Pro Text",
+                                            fontStyle: "normal",
+                                            fontWeight: 600,
+                                            fontSize: "14px",
+                                            lineHeight: "24px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            opacity: 0.7
+                                    }}/>
+                                    <Tab label="All Actions" value={1} sx={{
+                                            fontFamily: "SF Pro Text",
+                                            fontStyle: "normal",
+                                            fontWeight: 600,
+                                            fontSize: "14px",
+                                            lineHeight: "24px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            opacity: 0.7
+                                    }}/>
+                                </Tabs>
+                            </Box>
+                            <Box>
+                                <IconButton onClick={() => toggleSidebar()}>
+                                    <ArrowBackIosNewTwoToneIcon/>
+                                </IconButton>
+                            </Box>
+                        </Box>
+                        <Box>
+                            <TextField
+                                id="input-with-icon-textfield"
+                                placeholder="Search action..."
+                                value={actionDefinitionNameSearchQuery}
+                                onChange={(event) => {setActionDefinitionNameSearchQuery(event.target.value)}}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon/>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                sx={{
+                                    width: "100%"
+                                }}
+                                variant="outlined"
+                            />
+                        </Box>
+                    </Box>
+                    <Box sx={{overflowY: "auto"}}>
+                        <TabPanel value={sidePanelActiveTab} index={1}>
+                            <AllActions selectedActionId={selectedActionId} onSelectAction={(actionId: string|undefined) => setSelectedActionId(actionId)} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
+                        </TabPanel>
+                    </Box>
+                {/* </Box> */}
+            </CollapsibleDrawer>
+
             <Box sx={{flexGrow: 10, px: 2, minHeight: "100%"}}>
                 <ActionDetailForm/>
             </Box>

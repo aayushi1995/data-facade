@@ -2,9 +2,11 @@ import { Autocomplete, FormControl, InputLabel, MenuItem, Select, TextField } fr
 import { Box } from "@mui/material"
 import React from "react"
 import { ChangeEvent } from "react"
-import { TableProperties } from "../../../../generated/entities/Entities"
+import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
 import { UpstreamAction, WorkflowContextType } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
+import LoadingWrapper from "../../LoadingWrapper"
+import useFetchColumnsForTables from "./hooks/useFetchColumnsForTables"
 
 
 export interface UpstreamActionParameterInput {
@@ -57,8 +59,18 @@ export interface TableParameterInput {
     parameterType: "TABLE",
     inputProps: {
         parameterName: string,
-        selectedTableName: string | undefined,
+        selectedTableFilter: TableProperties | undefined,
         onChange: (newTable?: TableProperties) => void
+    }
+}
+
+export interface ColumnParameterInput {
+    parameterType: "COLUMN",
+    inputProps: {
+        parameterName: string,
+        selectedColumnFilter: ColumnProperties | undefined,
+        tableFilters: TableProperties[] | undefined,
+        onChange: (newColumn?: ColumnProperties) => void
     }
 }
 
@@ -67,7 +79,7 @@ export interface NAInput {
 }
 
 
-export type ParameterInputProps = UpstreamActionParameterInput | StringParameterInput | IntParameterInput | FloatParameterInput | BooleanParameterInput | NAInput | TableParameterInput
+export type ParameterInputProps = UpstreamActionParameterInput | StringParameterInput | IntParameterInput | FloatParameterInput | BooleanParameterInput | NAInput | TableParameterInput | ColumnParameterInput
 
 const getParameterInputField = (props: ParameterInputProps) => {
     switch(props?.parameterType) {
@@ -77,8 +89,40 @@ const getParameterInputField = (props: ParameterInputProps) => {
         case "FLOAT": return <FloatInput {...props}/>
         case "INT": return <IntInput {...props}/>
         case "TABLE": return <TableInput {...props}/>
+        case "COLUMN": return <ColumnInput {...props}/>
         default: return <NoInput/>
     }
+}
+
+const ColumnInput = (props: ColumnParameterInput) => {
+    const {parameterName, selectedColumnFilter, tableFilters, onChange} = props.inputProps
+    const fetchTableQuery  = useFetchColumnsForTables({ tableFilters: tableFilters})
+
+
+    return (
+        <LoadingWrapper
+        isLoading={fetchTableQuery.isLoading}
+        error={fetchTableQuery.error}
+        data={fetchTableQuery.data}
+        >
+            <Autocomplete
+                options={fetchTableQuery.data!}
+                getOptionLabel={(column: ColumnProperties) => column.UniqueName!}
+                groupBy={(column) => column.TableName||"Table NA"}
+                value={fetchTableQuery.data!?.find(column => column.Id===selectedColumnFilter?.Id || ((selectedColumnFilter?.Id === undefined) && column.UniqueName===selectedColumnFilter?.UniqueName))}
+                filterSelectedOptions
+                fullWidth
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                onChange={(event, value, reason, details) => {
+                    onChange(!!value ? value : undefined)
+                }}
+                renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
+            />
+        </LoadingWrapper>
+        
+    )
 }
 
 const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
@@ -119,7 +163,7 @@ const StringInput = (props: StringParameterInput) => {
                 onChange={(event) => setInput(event.target.value)}
                 onBlur={() => onChange(input)}
                 variant="outlined"
-                label={props.inputProps.parameterName || "Default Value"}
+                label={props.inputProps.parameterName || "Parameter Name NA"}
                 fullWidth
             />
 }
@@ -144,7 +188,7 @@ const IntInput = (props: IntParameterInput) => {
             onChange={onValueChange}
             onBlur={() => onChange(input)}
             variant="outlined"
-            label="Default Value"
+            label={props.inputProps.parameterName || "Parameter Name NA"}
             fullWidth
         />
 }
@@ -175,7 +219,7 @@ const FloatInput = (props: FloatParameterInput) => {
             onChange={onValueChange}
             onBlur={() => onChange(input)}
             variant="outlined"
-            label="Default Value"
+            label={props.inputProps.parameterName || "Parameter Name NA"}
             fullWidth
         />
 }
@@ -185,12 +229,12 @@ const BooleanInput = (props: BooleanParameterInput) => {
     
     return (
         <FormControl variant="outlined" style={{ width: "100%" }}>
-        <InputLabel>Default Value</InputLabel>
+        <InputLabel>{props.inputProps.parameterName || "Parameter Name NA"}</InputLabel>
         <Select
             value={value || ""}
             onChange={(event) => onChange(event.target.value)}
             variant="outlined"
-            label="Default Value"
+            label={props.inputProps.parameterName || "Parameter Name NA"}
             fullWidth
         >
             <MenuItem value="true">True</MenuItem>
@@ -202,30 +246,30 @@ const BooleanInput = (props: BooleanParameterInput) => {
 
 const TableInput = (props: TableParameterInput) => {
     // TODO: Instead of selected table name, get selected table id
-    const {parameterName, selectedTableName, onChange} = props.inputProps
+    const {parameterName, selectedTableFilter, onChange} = props.inputProps
     const {tables, loading, error}  = useTables({tableFilter: {}})
-    if(loading){
-        return <>Loading...</>
-    } else if(!!error) {
-        console.log(error)
-        return <>Error</>
-    }
     return (
-        <Autocomplete
-            options={tables!}
-            getOptionLabel={(table: TableProperties) => table.UniqueName!}
-            groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
-            value={tables?.find(table => table.UniqueName===selectedTableName)}
-            filterSelectedOptions
-            fullWidth
-            selectOnFocus
-            clearOnBlur
-            handleHomeEndKeys
-            onChange={(event, value, reason, details) => {
-                onChange(!!value ? value : undefined)
-            }}
-            renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName}/>}
-        />
+        <LoadingWrapper
+        isLoading={loading}
+        error={error}
+        data={tables}
+        >
+            <Autocomplete
+                options={tables!}
+                getOptionLabel={(table: TableProperties) => table.UniqueName!}
+                groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
+                value={tables?.find(table => table.Id===selectedTableFilter?.Id || (selectedTableFilter?.Id===undefined && (table.UniqueName===selectedTableFilter?.UniqueName)))}
+                filterSelectedOptions
+                fullWidth
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                onChange={(event, value, reason, details) => {
+                    onChange(!!value ? value : undefined)
+                }}
+                renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
+            />
+        </LoadingWrapper>
     )
 }
 

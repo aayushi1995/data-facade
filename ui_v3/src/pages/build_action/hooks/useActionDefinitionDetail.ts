@@ -8,7 +8,7 @@ import dataManagerInstance, { useRetreiveData } from './../../../data_manager/da
 
 
 export interface UseActionDefintionDetail {
-    options: UseQueryOptions<ActionDefinitionDetail[], unknown, unknown>,
+    options: UseQueryOptions<ActionDefinitionDetail[], unknown, ActionDefinitionDetail[], (string|undefined)[]>,
     actionDefinitionId?: string
 }
 
@@ -16,14 +16,15 @@ const useActionDefinitionDetail = (props: UseActionDefintionDetail) => {
     const { options, actionDefinitionId } = props
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
 
-    const {data, error, isLoading, refetch} = useQuery([labels.entities.ActionDefinition, actionDefinitionId], () => 
-        Fetcher.fetchData("GET", "/getActionDefinitionDetails", {Id: actionDefinitionId}), {
+    const actionDefinitionDetailQuery = useQuery(
+        [labels.entities.ActionDefinition, actionDefinitionId], (context) => {return Fetcher.fetchData("GET", "/getActionDefinitionDetails", {Id: actionDefinitionId})}, 
+        {
             ...options,
             enabled: false
         }
     )
     
-    return {data, error, isLoading, refetch}
+    return actionDefinitionDetailQuery
 }
 
 export default useActionDefinitionDetail;

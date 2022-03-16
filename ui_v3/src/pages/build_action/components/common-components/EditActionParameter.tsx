@@ -2,47 +2,49 @@ import { FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectC
 import React from "react";
 import { ChangeEvent } from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
-import getParameterInputField, { BooleanParameterInput, FloatParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../common/components/workflow/create/ParameterInput";
+import getParameterInputField, { BooleanParameterInput, ColumnParameterInput, FloatParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType, getInputTypeFromAttributesNew, InputMap } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
 import ActionParameterDefinitionDatatype from "../../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../../enums/ActionParameterDefinitionTag";
-import { ActionParameterDefinition, ActionTemplate, TableProperties, Tag } from "../../../../generated/entities/Entities";
+import { ActionParameterDefinition, ActionTemplate, ColumnProperties, TableProperties, Tag } from "../../../../generated/entities/Entities";
 import { SetBuildActionContext } from "../../context/BuildActionContext";
 
 export type EditActionParameterProps = {
     template: ActionTemplate,
-    paramsWithTag?: {parameter: ActionParameterDefinition, tags: Tag[]},
+    paramWithTag?: {parameter: ActionParameterDefinition, tags: Tag[]},
+    allParamsWithTags?: {parameter: ActionParameterDefinition, tags: Tag[]}[] | undefined,
     onTagsChange: (newTags: Tag[]) => void,
     onParameterEdit: (newParameter: ActionParameterDefinition) => void,
     onParameterTypeEdit: (newParameter: ActionParameterDefinition) => void
 }
 
 const EditActionParameter = (props: EditActionParameterProps) => {
-    const {onParameterEdit, onTagsChange, onParameterTypeEdit, template, paramsWithTag} = props
+    const {onParameterEdit, onTagsChange, onParameterTypeEdit, template, paramWithTag, allParamsWithTags} = props
 
     const [paramName, setParamName] = React.useState<string|undefined>()
     React.useEffect(() => {
-        setParamName(paramsWithTag?.parameter?.ParameterName)
-    }, [paramsWithTag?.parameter?.ParameterName])
+        setParamName(paramWithTag?.parameter?.ParameterName)
+    }, [paramWithTag?.parameter?.ParameterName])
 
     const handleParameterNameChange = () => {
         onParameterEdit({
-            ...paramsWithTag?.parameter,
+            ...paramWithTag?.parameter,
             ParameterName: paramName
         })
     }
     const handleParameterTypeChange = (event: SelectChangeEvent<string>) => {
         const newInputType = event.target.value
         onParameterTypeEdit({
-            ...paramsWithTag?.parameter,
+            ...paramWithTag?.parameter,
             ...getAttributesFromInputType(newInputType, template.Language)
         })
     }
     const handleUserInputRequiredChange = () => {}
     
 
-    if(!!paramsWithTag) {
-        const {parameter, tags} = paramsWithTag
+    if(!!paramWithTag) {
+        const {parameter, tags} = paramWithTag
+        const allParameters = allParamsWithTags?.map(param => param.parameter)
         return(
             <Grid container spacing={3}>
                 <Grid item xs={12} md={8} lg={6}>
@@ -90,7 +92,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                     </FormControl>    
                 </Grid>
                 <Grid item xs={12} md={4} lg={4}>
-                    <DefaultValueSelector parameter={parameter}/>
+                    <DefaultValueSelector parameter={parameter} allParameters={allParameters}/>
                 </Grid>
                 <Grid item xs={12} md={8} lg={8}>
                     <VirtualTagHandler
@@ -110,17 +112,16 @@ const EditActionParameter = (props: EditActionParameterProps) => {
     }
 }
 
-const DefaultValueSelector = (props: {parameter: ActionParameterDefinition}) => {
-    const {parameter} = props
+const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allParameters: ActionParameterDefinition[]|undefined}) => {
+    const {parameter, allParameters} = props
     const setBuildActionContext = React.useContext(SetBuildActionContext)
-
     const formParameterInputProps: () => ParameterInputProps = () => {
         if(parameter.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             return {
                 parameterType: "TABLE",
                 inputProps: {
                     parameterName: parameter.ParameterName,
-                    selectedTableName: parameter.DefaultParameterValue,
+                    selectedTableFilter: {UniqueName: parameter.DefaultParameterValue},
                     onChange: (newTable?: TableProperties) => setBuildActionContext({
                         type: "SetParameterDetails",
                         payload: {
@@ -132,6 +133,25 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition}) => 
                     })
                 }
             } as TableParameterInput
+        // } else if(parameter.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
+        //     const tableFilters = allParameters?.filter(param => param?.Tag===ActionParameterDefinitionTag.TABLE_NAME && (!!param?.DefaultParameterValue)).map(param => ({UniqueName: param.DefaultParameterValue} as TableProperties))
+        //     return {
+        //         parameterType: "COLUMN",
+        //         inputProps: {
+        //             parameterName: parameter.ParameterName,
+        //             selectedColumnFilter: {UniqueName: parameter.DefaultParameterValue},
+        //             tableFilters: tableFilters,
+        //             onChange: (newColumn?: ColumnProperties) => setBuildActionContext({
+        //                 type: "SetParameterDetails",
+        //                 payload: {
+        //                     newParamConfig: {
+        //                         ...parameter,
+        //                         DefaultParameterValue: newColumn?.UniqueName
+        //                     }
+        //                 }
+        //             })
+        //         }
+        //     } as ColumnParameterInput
         } else if(parameter.Datatype === ActionParameterDefinitionDatatype.STRING) {
             return {
                 parameterType: "STRING",
@@ -204,7 +224,6 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition}) => 
             return {parameterType: undefined}
         }
     }
-
    return getParameterInputField(formParameterInputProps())
 }
 

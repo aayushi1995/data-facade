@@ -1,8 +1,8 @@
 import { Grid, Card, Box } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import { ActionParameterDefinition, ActionParameterInstance, TableProperties } from "../../../generated/entities/Entities";
-import ParameterInput, { ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
+import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
+import ParameterInput, { ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
 
 
 interface ParameterDefinitionsConfigPlaneProps {
@@ -32,86 +32,129 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         return parameterInstance?.ParameterValue
     }
 
-    const parameterDefinitions: ParameterInputProps[] = props.parameterDefinitions.map(parameter => {
-        const existingParameterValue = getExistingParameterValue(parameter.Id || "na")
-        if(parameter.Tag === ActionParameterDefinitionTag.DATA || parameter.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME) {
+    const getExistingParameterInstance = (parameterId: string) => {
+        const parameterInstance = props.parameterInstances.find(parameterInstance => parameterInstance.ActionParameterDefinitionId === parameterId)
+        return parameterInstance
+    }
+
+    const getParameterDefinition = (parameterDefinitionId: string| undefined) => props.parameterDefinitions.find(apd => apd.Id===parameterDefinitionId)
+
+    const parameterDefinitions: ParameterInputProps[] = props.parameterDefinitions.map(parameterDefinition => {
+        const existingParameterInstance = getExistingParameterInstance(parameterDefinition.Id || "na")
+        const existingParameterValue = getExistingParameterValue(parameterDefinition.Id || "na")
+        if(parameterDefinition.Tag === ActionParameterDefinitionTag.DATA || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME) {
             return {
                 parameterType: "TABLE",
                 inputProps: {
-                    parameterName: parameter.ParameterName || "parameterName",
-                    onChange: (selectedTable: TableProperties) => {
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    onChange: (selectedTable?: TableProperties) => {
                         const newParameterInstance: ActionParameterInstance = {
-                            TableId: selectedTable.Id,
-                            ParameterValue: selectedTable.DisplayName,
-                            ActionParameterDefinitionId: parameter.Id,
-                            ProviderInstanceId: selectedTable.ProviderInstanceID
+                            TableId: selectedTable?.Id,
+                            ParameterValue: selectedTable?.UniqueName,
+                            ActionParameterDefinitionId: parameterDefinition.Id,
+                            ProviderInstanceId: selectedTable?.ProviderInstanceID
                         }
                         onParameterValueChange(newParameterInstance)
                     },
-                    selectedTableName: existingParameterValue
+                    selectedTableFilter: {Id: existingParameterInstance?.TableId}
                 }
             } as TableParameterInput
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.STRING) {
+        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
+            return {
+                parameterType: "TABLE",
+                inputProps: {
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    onChange: (selectedTable?: TableProperties) => {
+                        const newParameterInstance: ActionParameterInstance = {
+                            TableId: selectedTable?.Id,
+                            ParameterValue: selectedTable?.UniqueName,
+                            ActionParameterDefinitionId: parameterDefinition.Id,
+                            ProviderInstanceId: selectedTable?.ProviderInstanceID
+                        }
+                        onParameterValueChange(newParameterInstance)
+                    },
+                    selectedTableFilter: {Id: existingParameterInstance?.TableId}
+                }
+            } as TableParameterInput
+        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
+            const tableFilters = props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
+            return {
+                parameterType: "COLUMN",
+                inputProps: {
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    selectedColumnFilter: {Id: existingParameterInstance?.ColumnId},
+                    tableFilters: tableFilters,
+                    onChange: (newColumn?: ColumnProperties) => {
+                        onParameterValueChange({
+                            ...existingParameterInstance,
+                            ColumnId: newColumn?.Id,
+                            ParameterValue: newColumn?.UniqueName,
+                            ActionParameterDefinitionId: parameterDefinition.Id
+                        })
+                    }
+                }
+            } as ColumnParameterInput
+        } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING) {
             return {
                 parameterType: "STRING",
                 inputProps: {
-                    parameterName: parameter.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
-                            ActionParameterDefinitionId: parameter.Id
+                            ActionParameterDefinitionId: parameterDefinition.Id
                         }
                         onParameterValueChange(newParameterInstance)
                     },
                     value: existingParameterValue
                 }
             } as StringParameterInput
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.INT) {
+        } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.INT) {
             return {
                 parameterType: "INT",
                 inputProps: {
-                    parameterName: parameter.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
-                            ActionParameterDefinitionId: parameter.Id
+                            ActionParameterDefinitionId: parameterDefinition.Id
                         }
                         onParameterValueChange(newParameterInstance)
                     },
                     value: existingParameterValue
                 }
             }
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
+        } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
             return {
                 parameterType: "FLOAT",
                 inputProps: {
-                    parameterName: parameter.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
-                            ActionParameterDefinitionId: parameter.Id
+                            ActionParameterDefinitionId: parameterDefinition.Id
                         }
                         onParameterValueChange(newParameterInstance)
                     },
                     value: existingParameterValue
                 }
             } 
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.BOOLEAN) {
+        } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.BOOLEAN) {
             return {
                 parameterType: "BOOLEAN",
                 inputProps: {
-                    parameterName: parameter.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
-                            ActionParameterDefinitionId: parameter.Id
+                            ActionParameterDefinitionId: parameterDefinition.Id
                         }
                         onParameterValueChange(newParameterInstance)
                     },
                     value: existingParameterValue
                 }
             }
-        } else if(parameter.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
+        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
             // TODO
             return {
                 parameterType: undefined

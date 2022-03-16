@@ -38,9 +38,9 @@ const ActionCard = (props: ActionCardProps) => {
                         <DefaultIcon/>
                     </SvgIcon>
                 </Box>
-                <Box sx={{display: "flex", flexDirection: "column", gap: 1, flexGrow: 1}}>
+                <Box sx={{display: "flex", flexDirection: "column", gap: 1, flexGrow: 1, overflowX: "hidden"}}>
                     <Box sx={{display: "flex", flexDirection: "column"}}>
-                        <Box>
+                        <Box sx={{ maxHeight: "80px", overflowY: "auto"}}>
                             <Typography variant="body1" sx={{
                                 fontFamily: "SF Pro Text",
                                 fontStyle: "normal",
@@ -48,12 +48,14 @@ const ActionCard = (props: ActionCardProps) => {
                                 fontSize: "14px",
                                 lineHeight: "157%",
                                 letterSpacing: "0.1px",
-                                color: "#253858"
+                                color: "#253858",
+                                wordWrap: "break-word",
+                                lineClamp: 1
                             }}>
                                 {actionName}
                             </Typography>
                         </Box>
-                        <Box>
+                        <Box sx={{ maxHeight: "120px", overflowY: "auto"}}>
                             <Typography variant="body1" sx={{
                                 fontFamily: "SF Pro Text",
                                 fontStyle: "normal",
@@ -61,7 +63,8 @@ const ActionCard = (props: ActionCardProps) => {
                                 fontSize: "12px",
                                 lineHeight: "143%",
                                 letterSpacing: "0.15px",
-                                color: "rgba(66, 82, 110, 0.86)"
+                                color: "rgba(66, 82, 110, 0.86)",
+                                wordWrap: "break-word"
                             }}>
                                 {actionDescription}
                             </Typography>
