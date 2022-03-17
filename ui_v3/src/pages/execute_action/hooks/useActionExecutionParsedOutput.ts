@@ -15,8 +15,7 @@ export interface UseActionExecutionParsedOutputParams {
 const useActionExecutionParsedOutput = (params: UseActionExecutionParsedOutputParams) => {
     const {actionExecutionFilter, queryOptions} = params
     const fetchActionExeuctionParsedOutputQuery = useQuery(["ActionExecutionParsedOutput", actionExecutionFilter?.Id], (context) => getActionExecutionParsedOutput({Id: context.queryKey[1]}), {
-        ...queryOptions,
-        enabled: false
+        ...queryOptions
     })
     return fetchActionExeuctionParsedOutputQuery
 }

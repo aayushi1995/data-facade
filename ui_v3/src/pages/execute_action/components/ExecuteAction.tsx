@@ -11,8 +11,8 @@ import { CreateActionPage } from "../../customizations/CreateActionPage";
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import ViewConfiguredParameters from "./ViewConfiguredParameters";
-import ActionExecutionResultDialog, { ActionExecutionResultDialogProps } from "./ActionExecutionResultDialog";
 import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
+import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 
 interface MatchParams {
     actionDefinitionId: string
@@ -21,13 +21,24 @@ interface MatchParams {
 const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
     const actionDefinitionId = match.params.actionDefinitionId
 
-    const { createActionInstanceAsyncMutation, createActionInstanceSyncMutation, fetchActionExeuctionParsedOutputMutation } = useCreateActionInstance({})
+    const { createActionInstanceAsyncMutation, createActionInstanceSyncMutation, fetchActionExeuctionParsedOutputMutation } = useCreateActionInstance({
+        asyncOptions: {
+            onMutate: () => {
+                setDialogState({isOpen: true})
+            }
+        },
+        syncOptions: {
+            onMutate: () => {
+                setDialogState({isOpen: true})
+            }
+        }
+    })
     const {data, error, isLoading, refetch} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: {}})
 
     const setExecuteActionContext = React.useContext(SetExecuteActionContext)
     const executeActionContext = React.useContext(ExecuteActionContext)
 
-    const [actionExecutionResultState, setActionExecutionResultState] = React.useState<ActionExecutionResultDialogProps>({})
+    const [resultActionExecutionId, setResultActionExecutionId] = React.useState<string|undefined>()
 
     const [dialogState, setDialogState] = React.useState<{isOpen: boolean}>({isOpen: false})
 
@@ -38,6 +49,11 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                 newActionParameterInstances: newActionParameterInstances
             }
         })
+    }
+
+    const handleDialogClose = () => {
+        setResultActionExecutionId(undefined)
+        setDialogState({isOpen: false})
     }
 
     React.useEffect(() => {
@@ -70,8 +86,8 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             createActionInstanceSyncMutation.mutate(request, {
                 onSuccess: (data) => {
                     const execution = data[0]
-                    setActionExecutionResultState(oldState => ({...oldState, actionExecution: execution}))
-                    setDialogState({isOpen: true})
+                    setResultActionExecutionId(execution.Id)
+                   
                 }
             })
         }
@@ -104,9 +120,9 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                     GET PREDICTION / RUN
                 </Button>
             </Box>
-            <Dialog open={dialogState.isOpen} onClose={() => setDialogState({isOpen: false})} fullWidth maxWidth="xl">
+            <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
                 <DialogContent>
-                    <ActionExecutionResultDialog {...actionExecutionResultState}/>
+                    <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
                 </DialogContent>
             </Dialog>
         </Box>

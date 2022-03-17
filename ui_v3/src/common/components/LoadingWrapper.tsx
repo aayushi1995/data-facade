@@ -15,7 +15,7 @@ const LoadingWrapper = (props: LoadingWrapperProps) => {
     } else if(!!props.data) {
         return (<>{props.children}</>)
     } else {
-        return <>UNKNOWN</>
+        return <LoadingIndicator/>
     }
 }
 
