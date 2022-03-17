@@ -29,10 +29,10 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                 <Grid item xs={12} container>
                     <Grid item xs={8}>
                         <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                            <Typography sx={{flex: 1, fontFamily: 'Rubik', fontSize: '33px', fontWeight: 500}}>
+                            <Typography sx={{flex: 1, fontFamily: 'SF Pro Display', fontSize: '33px', fontWeight: 500}}>
                                 Application
                             </Typography>
-                            <Typography sx={{flex: 1, fontFamily: 'Rubik', fontSize: '14px', fontStyle: 'normal'}}>
+                            <Typography sx={{flex: 1, fontFamily: 'SF Pro Text', fontSize: '14px', fontStyle: 'normal'}}>
                                 Create, Manage Applications from here
                             </Typography>
                         </Box>

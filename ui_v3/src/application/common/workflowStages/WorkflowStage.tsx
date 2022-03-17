@@ -18,9 +18,12 @@ export interface WorkflowStageProps {
     showDetails: boolean,
     numberOfActions?: number,
     totalRunTime?: string,
+    showArrow?: boolean,
+    fromAddActions?: boolean
     handleDeleteStage?: (event: string) => void
     handleAddStage?: (stageId?: string) => void
-    handleStageNameChange?: (stageId: string, stageName: string) => void
+    handleStageNameChange?: (stageId: string, stageName: string) => void,
+    setSelectedStage?: (stageId: string) => void
 }
 
 export const WorkflowStage = (props: WorkflowStageProps) => {
@@ -30,7 +33,9 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
     const open = Boolean(menuAnchor)
 
     const handleAddDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setMenuAnchor(event.currentTarget)
+        if(props.fromAddActions !== true) {
+            setMenuAnchor(event.currentTarget)
+        }
         // if(props.cardButton === 'minus') {
         //     props.handleDeleteStage?.(props.stageId)
         // } else {
@@ -63,6 +68,12 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
         setIsDialogOpen(false)
     }
 
+    const handleStageClick = () => {
+        if(props.showArrow === false) {
+            props.setSelectedStage?.(props.stageId)
+        }
+    }
+
     return (
         <Box 
         sx={{
@@ -72,8 +83,10 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
             alignItems: "center", 
             pt: 2, 
             pb: 2, 
-            borderRadius: 3,
-        }}>
+            borderRadius: 3
+        }}
+        onClick={handleStageClick}
+        >
             <Dialog open={isDeleteDialogOpen} onClose={handleDialogCloseWithoutDelete}fullWidth maxWidth="xs" scroll="paper">
                 <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>
                     Confirm Delete {props.stageName}
@@ -106,15 +119,20 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 gap: 3
             }}>
                 <Box sx={{display: "flex"}}>
-                    <Box sx={{alignItems: "flex-start", overflowY: 'clip'}}>
+                    <Box sx={{alignItems: "flex-start", overflowY: 'clip', textOverflow: 'ellipsis'}}>
                         {!isNameBeingEdited ? (
                             <Typography sx={{
                                 display: 'inline-block',
                                 whiteSpace: "nowrap",
-                                fontWeight: 800,
-                                
+                                fontWeight: 700,
+                                fontFamily: 'SF Pro Display',
+                                fontStyle: 'normal'
                             }}
-                            onClick = {() => {setIsNameBeingEdited(true)}}
+                            onClick = {() => {
+                                if(props.showArrow !== false) {
+                                    setIsNameBeingEdited(true)
+                                }
+                            }}
                             >
                                 {props.stageName}
                             </Typography>
@@ -146,61 +164,81 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 )}
                 
             </Box>
-            <Box sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                position: "relative",
-                left: "40px",
-                zIndex: 1
-            }}>
-                <Box sx={{
-                    width: "0",
-                    height: "0",
-                    borderTop: "25px solid transparent",
-                    borderLeft: "25px solid",
-                    borderLeftColor: props.color,
-                    borderBottom: "25px solid transparent"
-                }}>
-                    
-                </Box>
+            {props.showArrow === false ? (
                 <Box sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     position: "relative",
-                    right:"10px",
-                    backgroundColor: "rgba(3, 42, 90, 1)",
-                    borderRadius: "10px"
+                    left: "40px",
+                    zIndex: 1
                 }}>
-                    <IconButton sx={{p: "0px"}} onClick={handleAddDeleteClick}>
-                        {props.cardButton === 'plus' ? (
-                            <AddIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
-                        ):
-                        (
-                            <RemoveIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
-                        )}
-                        
-                    </IconButton>
-                    <Menu 
-                        anchorEl={menuAnchor} 
-                        open={open} 
-                        onClose={() => {setMenuAnchor(null)}}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                          }}
-                          transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                          }}
-                    >
-                            <MenuItem onClick={handleMenuItemSelect} value={0}>Add Stage Next</MenuItem>
-                            <MenuItem onClick={handleMenuItemSelect} value={1}>Add Stage Last</MenuItem>
-                            <MenuItem onClick={handleMenuItemSelect} value={2}>Delete Stage</MenuItem>
-                    </Menu>
+                    <Box sx={{
+                        width: "0",
+                        height: "0",
+                        borderTop: "25px solid transparent",
+                        borderLeft: "25px solid transparent",
+                        borderBottom: "25px solid transparent"
+                    }}>
+                    </Box>
                 </Box>
-            </Box>
+            ) : (
+                <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
+                    left: "40px",
+                    zIndex: 1
+                }}>
+                    <Box sx={{
+                        width: "0",
+                        height: "0",
+                        borderTop: "25px solid transparent",
+                        borderLeft: "25px solid",
+                        borderLeftColor: props.color,
+                        borderBottom: "25px solid transparent"
+                    }}>
+                        
+                    </Box>
+                    <Box sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
+                        right:"10px",
+                        backgroundColor: "rgba(3, 42, 90, 1)",
+                        borderRadius: "10px"
+                    }}>
+                        <IconButton sx={{p: "0px"}} onClick={handleAddDeleteClick}>
+                            {props.cardButton === 'plus' ? (
+                                <AddIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
+                            ):
+                            (
+                                <RemoveIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
+                            )}
+                            
+                        </IconButton>
+                        <Menu 
+                            anchorEl={menuAnchor} 
+                            open={open} 
+                            onClose={() => {setMenuAnchor(null)}}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                              }}
+                              transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                              }}
+                        >
+                                <MenuItem onClick={handleMenuItemSelect} value={0}>Add Stage Next</MenuItem>
+                                <MenuItem onClick={handleMenuItemSelect} value={1}>Add Stage Last</MenuItem>
+                                <MenuItem onClick={handleMenuItemSelect} value={2}>Delete Stage</MenuItem>
+                        </Menu>
+                    </Box>
+                </Box>
+            )}
         </Box>
     )
 }

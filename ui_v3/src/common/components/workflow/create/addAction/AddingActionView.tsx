@@ -10,12 +10,18 @@ export const AddingActionView = () => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
 
+    const allStages = workflowContext.stages.map(stage => {
+        return {
+            stageName: stage.Name,
+            stageId: stage.Id
+        }
+    })
     const currentStage = workflowContext.stages.filter(stage => stage.Id === workflowContext.currentSelectedStage)
     const selectedStage = currentStage.length > 0 ? (
-        [{
+        {
             stageName: currentStage[0].Name,
             stageId: currentStage[0].Id
-        }]
+        }
     ) : ( undefined )
 
     const handleGoBack = () => {
@@ -25,15 +31,15 @@ export const AddingActionView = () => {
     if(selectedStage) {
         return (
             <Box sx={{maxHeight: '100%', display: 'flex', flexDirection: 'column'}}>
-                <Box sx={{flex: 0.5}} onClick={handleGoBack}>
-                    <IconButton>
+                <Box sx={{flex: 1}} >
+                    <IconButton onClick={handleGoBack}>
                         <img src={slideNext} style={{transform: 'rotate(180deg)'}} alt="go back"/>
                     </IconButton>
                 </Box>
-                <Box sx={{flex: 0.5, minHeight: '100px'}}>
-                    <WorkflowStagesWrapper stages={[...selectedStage]} maxWidthInPixel={100} numberOfStages={1}></WorkflowStagesWrapper>
+                <Box sx={{flex: 1, minHeight: '100px'}}>
+                    <WorkflowStagesWrapper stages={allStages} selectedStage={selectedStage} maxWidthInPixel={100} numberOfStages={1} fromAddActionsView={true}></WorkflowStagesWrapper>
                 </Box>
-                <Box sx={{flex: 1, display: 'flex'}}>
+                <Box sx={{flex: 2, display: 'flex'}}>
                     <AddActionToWorkflowStage stageId={workflowContext.currentSelectedStage !== undefined ? workflowContext.currentSelectedStage: ""}></AddActionToWorkflowStage>
                 </Box>
                 

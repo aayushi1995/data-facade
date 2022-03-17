@@ -5,7 +5,7 @@ import { useGetWorkflowDetails } from "../../../common/components/workflow/execu
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces"
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail"
-import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
+import { SetWorkflowContext, UpstreamAction, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
 import WorkflowHeroInfo from "../../../common/components/workflow-editor/WorkflowHero"
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
 import NoData from "../../../common/components/NoData"
@@ -50,18 +50,31 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             Template: data?.[0]?.ActionTemplatesWithParameters?.[0]?.model
         }
         const workflowActions = JSON.parse(workflowTemplate) as WorkflowTemplateType[]
+        let upstreamMapping: {[key: string]: UpstreamAction} = {}
         for(let i = 0; i < workflowActions.length; i++) {
             const currentStageId = workflowActions[i].stageId
             const currentStageName = workflowActions[i].stageName
             const stageActions: WorkflowActionDefinition[] = []
+            let stageIndex = 0;
             while(i < workflowActions.length && workflowActions[i].stageId === currentStageId) {
+                const idWithIndex: string = workflowActions[i].Id + i
+                upstreamMapping[idWithIndex] = {
+                    actionId: workflowActions[i].Id,
+                    actionIndex: stageIndex,
+                    stageId: currentStageId,
+                    stageName: currentStageName,
+                    actionName: workflowActions[i].DisplayName
+                }
                 const parameterMappings = workflowActions[i].ParameterValues
                 const parameters = Object.entries(parameterMappings).map(([parameterDefinitionId, parameterInstance]) => {
+                    console.log(parameterInstance)
                     const actionParameter = {
                         ...parameterInstance,
                         ActionParameterDefinitionId: parameterDefinitionId,
-                        userInputRequired: parameterInstance.GlobalParameterId ? "Yes" : "No"
+                        userInputRequired: parameterInstance.GlobalParameterId ? "Yes" : "No",
+                        SourceExecutionId: upstreamMapping[parameterInstance?.SourceExecutionId]
                     }
+                    console.log(actionParameter)
                     return actionParameter
                 })
                 stageActions.push({
@@ -71,6 +84,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                     DefaultActionTemplateId: workflowActions[i].DefaultActionTemplateId,
                     Parameters: parameters
                 })  
+                stageIndex++;
                 i++;
             }
             workflowContextObject.stages.push({
@@ -79,6 +93,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 Actions: stageActions
             })
             i--;
+            stageIndex++;
         }
         setIsWorkflowFetched(true)
         setWorkflowContext({type: 'SET_ENTIRE_CONTEXT', payload: workflowContextObject})

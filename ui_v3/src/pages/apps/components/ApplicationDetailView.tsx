@@ -62,7 +62,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                     >
                         <ApplicationHeroInfo applicationName={application?.model?.Name || "Name"} createdBy={{name: "Created By"}} 
                         numberStats={[{value: application?.numberOfActions || 0, label: "Actions"}, {value: application?.numberOfFlows || 0, label: "Workflows"}]}
-                        status="In use"
+                        status="In use" description={application?.model?.Description}
                         />
                     </Card>
                 </Box>

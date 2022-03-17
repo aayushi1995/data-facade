@@ -95,7 +95,9 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                         <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.createdBy.name} src={props.createdBy.url}/>
                         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>  
                             <Box>
-                                <Typography>Application Description</Typography>
+                                <Typography sx={{fontFamily: 'SF Pro Text', fontWeight: 400, fontSize: '16px', lineHeight: '175%', letterSpacing: '0.15px'}}>
+                                    Application Description
+                                </Typography>
                             </Box>
                             <Box sx={{display: 'flex'}}>
                                 <Box>
@@ -113,8 +115,8 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                     </Box>
                 </Box>
                 <Box sx={{overflowY: 'auto'}}>
-                    <Typography sx={{wordWrap: 'break-word'}}>
-                        Description
+                    <Typography sx={{wordWrap: 'break-word', fontFamily: 'SF Pro Text', fontWeight: 400, fontSize: '14px', lineHeight: '175%', letterSpacing: '0.15px'}}>
+                        {props.description}
                     </Typography>
                 </Box>
             </Box>

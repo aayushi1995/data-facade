@@ -78,7 +78,7 @@ export const StagesWithActions = () => {
                 <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
                 onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} handleStageNameChange={handleStageNameChange}></WorkflowStagesWrapper>
             </Box>
-            <Box sx={{flex: 1, display: 'flex'}}>
+            <Box sx={{flex: 1, display: 'flex', mt: 1}}>
                 <Card sx={{display: 'flex', boxShadow: '-6.41304px -6.41304px 12.8261px #E3E6F0, 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD', flexDirection: 'column', p: 1, flex: 1}}>
                     <Grid container spacing={1}>
                     {currentStages.map(stage => {

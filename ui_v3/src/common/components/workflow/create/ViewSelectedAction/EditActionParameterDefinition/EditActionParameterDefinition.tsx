@@ -59,7 +59,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             const getCurrentValue = () => {
                 const parameterConfig = getCurrentParameterConfig()
                 // console.log(parameterConfig)
-                return allUpstreams.find((upstream, index) => parameterConfig?.SourceExecutionId?.actionId===upstream.actionId && parameterConfig?.SourceExecutionId?.actionIndex===index)
+                return allUpstreams.find((upstream, index) => parameterConfig?.SourceExecutionId?.actionId===upstream.actionId && parameterConfig?.SourceExecutionId?.actionIndex===upstream.actionIndex)
             }
     
             return {

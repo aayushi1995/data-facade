@@ -646,7 +646,7 @@ const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextTy
 }
 
 export function findIfParameterPresent(state: WorkflowContextType, stageId: string, actionIndex: number, parameterDefinitionId: string) {
-    return state.stages.filter(stage => stage.Id === stageId)[0].Actions.filter((action, index) => index === actionIndex)[0].Parameters.find(parameter => parameter.ActionParameterDefinitionId === parameterDefinitionId)
+    return state.stages.filter(stage => stage.Id === stageId)[0].Actions.filter((action, index) => index === actionIndex)[0]?.Parameters.find(parameter => parameter.ActionParameterDefinitionId === parameterDefinitionId)
 }
 
 export const WorkflowContextProvider = ({children}: {children: React.ReactElement}) => {

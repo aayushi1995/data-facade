@@ -165,7 +165,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                         </Dialog>
                 <Box sx={{ display: 'flex', alignContent: 'center', flex: 1, flexDirection: 'column', overflowY: 'auto' }}>
                     <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Typography sx={{ flex: 1, fontWeight: 600 }}>
+                        <Typography sx={{ flex: 1, fontWeight: 600, fontFamily: 'SF Pro Display' }}>
                             Selected Actions
                         </Typography>
                         <Box sx={{  display: 'flex' }}>

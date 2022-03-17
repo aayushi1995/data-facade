@@ -110,7 +110,7 @@ const ActionCard = (props: ActionCardProps) => {
                         </Box>
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
                             <Box sx={{flex: 1}}>
-                                <Typography sx={{overflowX: 'clip'}}>
+                                <Typography sx={{overflowX: 'clip', fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '13.6054px', lineHeight: '157%', letterSpacing: '0.097px', color: '#253858'}}>
                                     {props.actionName}
                                 </Typography>
                             </Box>
@@ -120,7 +120,9 @@ const ActionCard = (props: ActionCardProps) => {
                                 </Box>
                             ) : (
                                 <Box>
-                                    <span>{props.actionGroup}</span>
+                                    <Typography sx={{overflowX: 'clip', fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '11.66px', lineHeight: '143%', letterSpacing: '0.1457px', fontWeight: 400, color: 'rgba(66, 82, 110, 0.86)'}}>
+                                        {props.actionGroup}
+                                    </Typography>
                                 </Box>
                             )}
                             

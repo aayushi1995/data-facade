@@ -24,7 +24,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
             border: "2px solid rgba(255, 255, 255, 0.4)",
             boxSizing: "border-box",
             boxShadow: "-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD",
-            borderRadius: "10px",
+            borderRadius: "26.3934px",
             minWidth: '100%'
             }}
             variant={'outlined'}
@@ -45,7 +45,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                             fontWeight: 600,
                                             fontSize: "36px",
                                             lineHeight: "116.7%",
-                                            color: "#253858"
+                                            color: "#253858",
                                         },
                                         disableUnderline: true
                                     }}
@@ -82,9 +82,6 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: 2}} className="info">
                                 <Box className="createdBy">
                                     <Button variant="contained" size="small">ADD TO GROUP</Button>
-                                </Box>
-                                <Box className="status">
-                                    <Button variant="contained" size="small">ADD TO ADD</Button>
                                 </Box>
                             </Box>
                         </Box>
