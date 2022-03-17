@@ -12,10 +12,10 @@ const RunWorkflowButton = (props) => {
                 color="primary"
                 variant="contained"
                 aria-label={labels.RunWorkflowButton.runWorkflow}
-                to={{'pathname': `/run-workflow/20`, 'state': {'tableMeta': props?.tableMeta, 'runtimeWorkflow': true}}} 
+                to={{'pathname': `/application/build-table-workflow/${props?.tableMeta.Id}`}} 
                 component={Link}
             >
-                {labels.RunWorkflowButton.runWorkflow}
+                Make Tag Based Workflow
             </Button>
         </Tooltip>
     )

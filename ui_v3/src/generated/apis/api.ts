@@ -97,6 +97,12 @@
 	 static async fetchData(httpsVerb: "GET", endpoint: "/getWorkflowActionInstances", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionInstanceWithParameters[]>; 
 	 
 	 /**
+	 Gives back a workflow based on tag matching of the table
+	 */
+	 
+	 static async fetchData(httpsVerb: "GET", endpoint: "/getWorkflowForTableTags", inputPayload: Entity.TableProperties): Promise<CustomInterface.WorkflowStagesWithActions[]>; 
+	 
+	 /**
 	 Saves the action instance along with it's parameters. Also creates an action execution by default after it's creation is complete
 	 */
 	 

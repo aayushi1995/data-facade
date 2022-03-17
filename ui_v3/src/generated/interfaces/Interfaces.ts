@@ -132,6 +132,12 @@ export interface TagDetails {
 }
 
 
+export interface WorkflowStagesWithActions {
+    Actions?: Entity.ActionDefinition[]
+	stageName?: string
+}
+
+
 export interface ActionDefinitionDetail {
     ActionDefinition?: ActionDefinitionWithTags
 	ActionTemplatesWithParameters?: ActionTemplatesWithParameters[]
