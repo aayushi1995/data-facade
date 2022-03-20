@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Chip, TextField, createFilterOptions, Grid } from '@material-ui/core'
+import { Autocomplete, Box, Button, Chip, TextField, createFilterOptions, Grid } from '@mui/material'
 import React from 'react'
 import TagScope from '../../../enums/TagScope'
 import { Tag } from '../../../generated/entities/Entities'

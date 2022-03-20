@@ -1,5 +1,6 @@
-import { Grid, Autocomplete, Box, Chip, TextField } from "@mui/material";
+import { Grid, Autocomplete, Box, Chip, TextField, createFilterOptions } from "@mui/material";
 import { Tag } from "../../../generated/entities/Entities";
+import useCreateTag from "./hooks/createTag";
 import useFetchAvailableTags from "./hooks/useFetchAvailableTags";
 
 export interface VirtualTagHandlerProps {
@@ -12,9 +13,23 @@ export interface VirtualTagHandlerProps {
     direction: "REVERSE" | "DEFAULT"
 }
 
+const filter = createFilterOptions<Tag>()
+
 const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
     const {selectedTags, onSelectedTagsChange, tagFilter, allowAdd, allowDelete, orientation, direction} = props
     const {data, error, isLoading} = useFetchAvailableTags({tagFilter})
+    const createTagMutation = useCreateTag({
+        tagFilter: props.tagFilter,
+        createTagMutationOptions: {
+            onSuccess: (data, variables, context) => {
+                if(!!data && data.length === 1) {
+                    onSelectedTagsChange?.([...selectedTags, data[0]])
+                } else {
+                    console.log("Erroneous Response for Tag Creation", data, error, context)
+                }
+            }
+        }
+    })
 
     if(isLoading) {
         return <>Loading...</>
@@ -36,8 +51,24 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                         handleHomeEndKeys
                         onChange={(event, value, reason, details) => {
                             if(!!value){
-                                onSelectedTagsChange?.([...selectedTags, value])
+                                if(value?.Name?.includes("Create Tag: ")){
+                                    createTagMutation.mutate({
+                                        tagModel: {
+                                            Name: value?.Name?.substring(12)
+                                        }
+                                    })
+                                } else {
+                                    onSelectedTagsChange?.([...selectedTags, value])
+                                }
                             }
+                        }}
+                        filterOptions={(options, params) => {
+
+                            const filtered = filter(options, params);
+                            if (params.inputValue !== '') {
+                                filtered.push({ Name: `Create Tag: ${params.inputValue}` });
+                            }
+                            return filtered;
                         }}
                         renderInput={(params) => <TextField {...params} label="Add Tag"/>}
                     />
