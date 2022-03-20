@@ -13,6 +13,7 @@ import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import React from "react";
 import { useCreateExecution } from "../application/hooks/useCreateExecution";
+import labels from "../../../labels/labels";
 
 
 export interface ActionDefinitionCardProps {
@@ -35,9 +36,15 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
     }
 
     const createActionInstance = () => {
-        history.push({
-            pathname: `/application/execute-action/${actionDefinition.DefinitionId}`
-        })
+        if(props.actionDefinition.DefinitionActionType === ActionDefinitionActionType.WORKFLOW) {
+            history.push({
+                pathname: `/application/execute-workflow/${actionDefinition.DefinitionId}`
+            })
+        } else {
+            history.push({
+                pathname: `/application/execute-action/${actionDefinition.DefinitionId}`
+            })
+        }
     }
 
     return (
@@ -47,7 +54,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                 borderRadius: 2, 
                 p: 2, 
                 boxSizing: "content-box",
-                background: "#A4CAF0",
+                background: "#F4F4F4",
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
@@ -89,7 +96,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                             alignContent: "center", 
                                             width: "30px",
                                             height: "30px",
-                                            background: "#A4CAF0",
+                                            background: "#F4F4F4",
                                             boxShadow: "inset 8px 8px 8px rgba(0, 0, 0, 0.25), inset -8px -8px 8px #B8DBFF",
                                             borderRadius: "50%",
                                             p: "3px"
@@ -151,8 +158,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                         width: "60px",
                                         height: "60px",
                                         borderRadius: "50%",
-                                        background: "#A4CAF0",
-                                        boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)",
+                                        background: "#F4F4F4",
+                                        boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center"
@@ -160,9 +167,11 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                     <IconButton sx={{
                                             height: "42px",
                                             width: "42px",
-                                            background: "#A4CAF0",
-                                            boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
-                                        }}>
+                                            background: "linear-gradient(159.16deg, #917CE4 26.46%, rgba(63, 45, 137, 0) 116.55%)",
+                                            boxShadow: "inset 10px 10px 15px rgba(255, 255, 255, 0.2)",
+                                            filter: "drop-shadow(0px 5px 10px rgba(55, 46, 152, 0.65))"
+                                        }} onClick={createActionInstance}>
+                                            <PlayArrowIcon sx={{color: "white", width: '100%', height: '100%'}}/>
                                     </IconButton>
                                 </Box>
                             </Box>
@@ -173,28 +182,28 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#A4CAF0",
-                                boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
+                                background: "#F4F4F4",
+                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
                             }}>
-                                <FavoriteIcon/>
+                                <FavoriteIcon sx={{color: 'rgba(150, 142, 241, 1)'}}/>
                             </IconButton>
                         </Box>
                         <Box>
                             <IconButton onClick={createActionInstance} sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#A4CAF0",
-                                boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
+                                background: "#F4F4F4",
+                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
                             }}>
-                                <PlayArrowIcon/>
+                                <PlaylistAddIcon/>
                             </IconButton>
                         </Box>
                         <Box>
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#A4CAF0",
-                                boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
+                                background: "#F4F4F4",
+                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
                             }}>
                                 <ShareIcon/>
                             </IconButton>

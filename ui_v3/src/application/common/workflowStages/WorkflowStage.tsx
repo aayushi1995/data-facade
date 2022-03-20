@@ -1,4 +1,4 @@
-import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, Button, LinearProgress } from '@material-ui/core';
+import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, Button, LinearProgress } from '@mui/material';
 import { Box } from '@mui/material';
 import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -11,7 +11,7 @@ export interface WorkflowStageProps {
     stageId: string
     stageName: string,
     isDisabled: boolean,
-    color: 'blue' | 'pink'
+    color: string,
     percentageCompleted: number,
     failed: boolean,
     cardButton: 'minus' | 'plus',
@@ -121,12 +121,9 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 <Box sx={{display: "flex"}}>
                     <Box sx={{alignItems: "flex-start", overflowY: 'clip', textOverflow: 'ellipsis'}}>
                         {!isNameBeingEdited ? (
-                            <Typography sx={{
-                                display: 'inline-block',
-                                whiteSpace: "nowrap",
+                            <Typography variant="heroHeader" sx={{
+                                fontSize: '16px',
                                 fontWeight: 700,
-                                fontFamily: 'SF Pro Display',
-                                fontStyle: 'normal'
                             }}
                             onClick = {() => {
                                 if(props.showArrow !== false) {

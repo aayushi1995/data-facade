@@ -11,10 +11,9 @@ const NumberStat = (props: NumberStatProp) => {
     return (
         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
             <Box>
-                <Typography sx={{
-                    fontFamily: "SF Pro Display",
-                    fontStyle: "normal",
-                    fontWeight: 600,
+                <Typography 
+                variant="heroHeader"
+                sx={{
                     fontSize: "24px",
                     lineHeight: "133.4%"
                 }}>
@@ -22,13 +21,7 @@ const NumberStat = (props: NumberStatProp) => {
                 </Typography>
             </Box>
             <Box>
-            <Typography sx={{
-                fontFamily: "SF Pro Text",
-                fontStyle: "normal",
-                fontWeight: "normal",
-                fontSize: "12px",
-                lineHeight: "166%"
-            }}>
+            <Typography variant="heroMeta">
                     {props.label}
                 </Typography>
             </Box>

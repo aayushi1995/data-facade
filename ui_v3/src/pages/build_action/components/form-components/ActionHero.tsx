@@ -1,6 +1,7 @@
 import { Box, Card, Divider, Typography, Button, Avatar, TextField, Grid} from "@material-ui/core";
 import ActionInfo from "./hero-componenets/ActionInfo";
 import ActionDescription from "./hero-componenets/ActionDescription";
+import { lightShadows } from "../../../../css/theme/shadows";
 
 export interface ActionHeroProps {
     Name?: string,
@@ -26,8 +27,7 @@ const ActionHero = (props: ActionHeroProps) => {
             backgroundBlendMode: "soft-light, normal",
             border: "2px solid rgba(255, 255, 255, 0.4)",
             boxSizing: "border-box",
-            boxShadow: "-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD",
-            borderRadius: "10px"
+            boxShadow: lightShadows[29]
             }}
             variant={'outlined'}
         >

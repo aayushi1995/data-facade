@@ -1,5 +1,9 @@
-import { Box, Card, Divider, Typography, Button, Avatar, TextField, Grid} from "@material-ui/core";
+import { Box, Card, Divider, Typography, Button, Avatar, TextField, Grid, IconButton } from "@mui/material";
+import { lightShadows } from "../../../css/theme/shadows";
 import UsageStatus from "../UsageStatus";
+import LikeIcon from "../../../../src/images/Like.png"
+import ShareIcon from "../../../../src/images/Save.png"
+import EditIcon from "../../../../src/images/Edit.png"
 
 export interface WorkflowHeroProps {
     readonly: boolean,
@@ -23,7 +27,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
             backgroundBlendMode: "soft-light, normal",
             border: "2px solid rgba(255, 255, 255, 0.4)",
             boxSizing: "border-box",
-            boxShadow: "-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD",
+            boxShadow: lightShadows[29],
             borderRadius: "26.3934px",
             minWidth: '100%'
             }}
@@ -52,15 +56,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                 />
                             </Box>
                             <Box className="meta">
-                                <Typography sx={{
-                                    fontFamily: "SF Pro Text",
-                                    fontStyle: "normal",
-                                    fontWeight: "normal",
-                                    fontSize: "12px",
-                                    lineHeight: "143%",
-                                    letterSpacing: "0.0961957px",
-                                    color: "rgba(66, 82, 110, 0.86)"
-                                }}>
+                                <Typography variant="heroMeta">
                                     <span>Created By</span>
                                     <span><b>{props.Author}</b></span>
                                     <span> | </span>
@@ -88,82 +84,90 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{display: "flex", flexDirection: "row"}} className="master">
-                        <Box sx={{pl: 1, pt: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", flexGrow: 1}} className="data">
-                            <Box sx={{display: "flex", flexDirection: "row"}} className="data-author">
-                                <Box sx={{mr: 1, display: "flex", alignItems: "center", justifyContent: "center"}}className="data-author-avatar">
-                                    <Button sx={{m:0, p:0}}>
-                                        <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.Author}>
+                    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <Box sx={{display: "flex", flexDirection: "row", flex: 8}} className="master">
+                            <Box sx={{pl: 1, pt: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", flexGrow: 1}} className="data">
+                                <Box sx={{display: "flex", flexDirection: "row"}} className="data-author">
+                                    <Box sx={{mr: 1, display: "flex", alignItems: "center", justifyContent: "center"}}className="data-author-avatar">
+                                        <Button sx={{m:0, p:0}}>
+                                            <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.Author}>
 
-                                        </Avatar>
-                                    </Button>
-                                </Box>
-                                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-around"}} className="data-author-info">
-                                    <Box className="header">
-                                        <Typography variant="h6" sx={{
-                                            fontFamily: "SF Pro Text",
-                                            fontStyle: "normal",
-                                            fontWeight: "normal",
-                                            fontSize: "16px",
-                                            lineHeight: "175%",
-                                            letterSpacing: "0.15px",
-                                            color: "#253858"
-                                        }}>Workflow Description</Typography>
+                                            </Avatar>
+                                        </Button>
                                     </Box>
-                                    <Box className="meta">
-                                        <Typography variant="body1" sx={{
-                                            fontFamily: "SF Pro Text",
-                                            fontStyle: "normal",
-                                            fontWeight: "normal",
-                                            fontSize: "14px",
-                                            lineHeight: "143%",
-                                            letterSpacing: "0.15px",
-                                            color: "rgba(66, 82, 110, 0.86)"
-                                        }}>
-                                            <span>By <b>{props.Author}</b></span>
-                                            <span> | </span>
-                                            <span>Updated </span>
-                                        </Typography>
+                                    <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-around"}} className="data-author-info">
+                                        <Box className="header">
+                                            <Typography variant="heroMeta" sx={{
+                                                fontSize: '16px',
+                                                color: "#253858"
+                                            }}>Description</Typography>
+                                        </Box>
+                                        <Box className="meta">
+                                            <Typography variant="heroMeta">
+                                                <span>By <b>{props.Author}</b></span>
+                                                <span> | </span>
+                                                <span>Updated </span>
+                                            </Typography>
+                                        </Box>
                                     </Box>
                                 </Box>
+                                <Box sx={{ml: 3, mb: 2, mt: 1}} className="description">
+                                    {/* <Typography variant="body1" noWrap={false} suppressContentEditableWarning={true} contentEditable={true} onChange={(event) => console.log(event)} sx={{
+                                        fontFamily: "SF Pro Text",
+                                        fontStyle: "normal",
+                                        fontWeight: "normal",
+                                        fontSize: "14px",
+                                        lineHeight: "143%",
+                                        letterSpacing: "0.15px",
+                                        color: "rgba(66, 82, 110, 0.86)"
+                                    }}>
+                                        {props.Description}
+                                    </Typography> */}
+                                    <TextField value={props.Description} 
+                                        variant="standard" 
+                                        fullWidth
+                                        multiline
+                                        minRows={4}
+                                        maxRows={6}
+                                        onChange={(event) => props.onDescriptionChange?.(event.target.value)} 
+                                        InputProps ={{
+                                            sx: {
+                                                fontFamily: "SF Pro Text",
+                                                fontStyle: "normal",
+                                                fontWeight: "normal",
+                                                fontSize: "14px",
+                                                lineHeight: "143%",
+                                                letterSpacing: "0.15px",
+                                                color: "rgba(66, 82, 110, 0.86)"
+                                            },
+                                            disableUnderline: true
+                                        }}
+                                    />
+                                </Box>
                             </Box>
-                            <Box sx={{ml: 3, mb: 2, mt: 1}} className="description">
-                                {/* <Typography variant="body1" noWrap={false} suppressContentEditableWarning={true} contentEditable={true} onChange={(event) => console.log(event)} sx={{
-                                    fontFamily: "SF Pro Text",
-                                    fontStyle: "normal",
-                                    fontWeight: "normal",
-                                    fontSize: "14px",
-                                    lineHeight: "143%",
-                                    letterSpacing: "0.15px",
-                                    color: "rgba(66, 82, 110, 0.86)"
-                                }}>
-                                    {props.Description}
-                                </Typography> */}
-                                <TextField value={props.Description} 
-                                    variant="standard" 
-                                    fullWidth
-                                    multiline
-                                    minRows={4}
-                                    maxRows={6}
-                                    onChange={(event) => props.onDescriptionChange?.(event.target.value)} 
-                                    InputProps ={{
-                                        sx: {
-                                            fontFamily: "SF Pro Text",
-                                            fontStyle: "normal",
-                                            fontWeight: "normal",
-                                            fontSize: "14px",
-                                            lineHeight: "143%",
-                                            letterSpacing: "0.15px",
-                                            color: "rgba(66, 82, 110, 0.86)"
-                                        },
-                                        disableUnderline: true
-                                    }}
-                                />
-                            </Box>
+                            {/* <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", flexShrink: 1, flexGrow: 0, pt: 1, pb: 1}} className="buttons">
+                                {props.buttons?.map((button) => <Box>{button}</Box>)}
+                            </Box> */}
                         </Box>
-                        {/* <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", flexShrink: 1, flexGrow: 0, pt: 1, pb: 1}} className="buttons">
-                            {props.buttons?.map((button) => <Box>{button}</Box>)}
-                        </Box> */}
+                        <Box sx={{display: 'flex', flex: 1}}>
+                            <Grid container direction="column" justifyContent="center" alignContent="center" sx={{flex: 1}}>
+                                <Grid item xs={4} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                    <IconButton>
+                                        <img src={LikeIcon} alt="like"/>
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={4} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                    <IconButton>
+                                        <img src={ShareIcon} alt=""/>
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={4} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                    <IconButton>
+                                        <img src={EditIcon} alt=""/>
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        </Box>
                     </Box>
                 </Grid>
             </Grid>

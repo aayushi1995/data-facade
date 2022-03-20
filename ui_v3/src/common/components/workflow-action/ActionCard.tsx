@@ -47,12 +47,12 @@ const ActionCard = (props: ActionCardProps) => {
     // TODO: add in themes
     const isSelectedStyles: SystemStyleObject = {
         background: 'linear-gradient(317.7deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 105.18%), #FFFFFF;',
-        boxShadow: 'inset -5px -5px 10px #FAFBFF, inset 5px 5px 10px #A6ABBD',
+        boxShadow: lightShadows[28],
         border: '1px solid rgba(255, 255, 255, 0.4)',
         boxSizing: 'border-box',
         backgroundBlendMode: 'soft-light, normal'
     }
-    var background = '#FFFFFF'
+    var background = "#F8F8F8"
     switch(props.executionStaus){
         case 'WaitingForUpstream': 
             background = 'rgba(248, 241, 178, 1)';
@@ -86,15 +86,15 @@ const ActionCard = (props: ActionCardProps) => {
             width: '10px'
           }}}>
             <Card sx={{
-                borderRadius: '10px',
-                maxWidth: '100%'
+                maxWidth: '100%',
+                overflowX: 'auto'
                 }} onClick={handleClick}
             >
                 <Box sx={{
                     backgroundColor: background, 
                     display: "flex", 
                     flex: 1, 
-                    boxShadow: lightShadows[25], 
+                    boxShadow: lightShadows[30], 
                     ...(props.isCardSelected && isSelectedStyles)
                     }}>
                     <Box sx={{flex: 2, display: 'flex', flexDirection: 'row', p: 2, justifyContent: 'flex-start', gap: 1}}>
@@ -110,7 +110,7 @@ const ActionCard = (props: ActionCardProps) => {
                         </Box>
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
                             <Box sx={{flex: 1}}>
-                                <Typography sx={{overflowX: 'clip', fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '13.6054px', lineHeight: '157%', letterSpacing: '0.097px', color: '#253858'}}>
+                                <Typography variant="workflowActionCard" sx={{overflowX: 'clip'}}>
                                     {props.actionName}
                                 </Typography>
                             </Box>

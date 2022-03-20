@@ -74,17 +74,17 @@ export const StagesWithActions = () => {
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', maxWidth: 'inherit'}}>
-            <Box sx={{flex: 1, minHeight: '100px'}}>
+            <Box sx={{flex: 1, minHeight: '100px', minWidth: '300px'}}>
                 <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
                 onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} handleStageNameChange={handleStageNameChange}></WorkflowStagesWrapper>
             </Box>
             <Box sx={{flex: 1, display: 'flex', mt: 1}}>
-                <Card sx={{display: 'flex', boxShadow: '-6.41304px -6.41304px 12.8261px #E3E6F0, 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD', flexDirection: 'column', p: 1, flex: 1}}>
+                <Card sx={{display: 'flex', boxShadow: lightShadows[27], flexDirection: 'column', p: 1, flex: 1}}>
                     <Grid container spacing={1}>
                     {currentStages.map(stage => {
                         return (
                             <Grid sx={{flex: 1,}} item xs={3}>
-                                <Card sx={{ background: '#FFFFFF', boxShadow: lightShadows[26], height: '100%', maxWidth: '100%', borderRadius: '10px', overflowY: 'auto'}}>
+                                <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px'}}>
                                     <WorkflowActionContainer {...{stageId: stage.Id, actionSelectable: false}}></WorkflowActionContainer>
                                 </Card>
                             </Grid>)

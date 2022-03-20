@@ -1,10 +1,12 @@
 import React from 'react';
-import {Box, IconButton, Link, Avatar, AvatarGroup, Button, Typography, Divider, Card} from "@material-ui/core"
+import {Box, IconButton, Link, Avatar, AvatarGroup, Button, Divider, Card} from "@material-ui/core"
 import UserAvatar from '../../types/UserAvatar';
 import NumberStat, { NumberStatProp } from '../NumberStat';
 import UsageStatus from './../UsageStatus';
 import ProviderAvatar from '../../types/ProviderAvatar';
 import { StringParameterInput } from '../workflow/create/ParameterInput';
+import Typography from '@mui/material/Typography';
+
 
 export interface ApplicationHeroInfoProps {
     applicationName: string,
@@ -29,26 +31,12 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
             <Box sx={{display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '50%'}}>
                 <Box className="header">
                     <Box className="name">
-                        <Typography variant="h6" sx={{
-                            fontFamily: "SF Pro Display",
-                            fontStyle: "normal",
-                            fontWeight: 600,
-                            fontSize: "36px",
-                            lineHeight: "116.7%"
-                        }}>
+                        <Typography variant="heroHeader">
                             {props.applicationName}
                         </Typography>
                     </Box>
                     <Box className="meta">
-                        <Typography variant="body1" sx={{
-                            fontFamily: "SF Pro Text",
-                            fontStyle: "normal",
-                            fontWeight: "normal",
-                            fontSize: "12px",
-                            lineHeight: "143%",
-                            letterSpacing: "0.15px",
-                            color: "rgba(66, 82, 110, 0.86)"
-                        }}>
+                        <Typography variant="heroMeta">
                             <span>Created By <b>{props.createdBy.name}</b></span>
                             <span> | </span>
                             <span>Last updated on {formTimestampHumanReadable(props.lastUpdatedTimestamp || new Date())}</span>
@@ -115,7 +103,7 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                     </Box>
                 </Box>
                 <Box sx={{overflowY: 'auto'}}>
-                    <Typography sx={{wordWrap: 'break-word', fontFamily: 'SF Pro Text', fontWeight: 400, fontSize: '14px', lineHeight: '175%', letterSpacing: '0.15px'}}>
+                    <Typography variant="heroMeta" sx={{wordWrap: 'break-word',fontWeight: 400, fontSize: '14px'}}>
                         {props.description}
                     </Typography>
                 </Box>

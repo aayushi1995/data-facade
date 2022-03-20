@@ -37,6 +37,7 @@ import ExecuteWorkflowHomePage from './pages/applications/workflow/ExecuteWorkfl
 import BuildActionHomePage from './pages/build_action/BuildActionHomePage'
 import ViewWorkflowExecutionHomePage from './pages/applications/workflow/ViewWorkflowExecutionHomePage'
 import ExecuteActionHomePage from './pages/execute_action/ExecuteActionHomePage'
+import DeclareModules from './css/theme/schema'
 
 export const AppInternal = (props: { classes: any; userEmail: any; dummyData: any; dummyDataPending: any; activeLink: any; setActiveLink: any; isLoading: any; user: any }) => {
     const {

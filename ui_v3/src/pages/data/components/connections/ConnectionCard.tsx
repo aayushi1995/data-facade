@@ -1,6 +1,6 @@
 import {Link as RouterLink} from 'react-router-dom';
 import {BaseCard} from "../../../../common/components/basecard/BaseCard";
-import {Button, Divider, Stack, Typography} from "@mui/material";
+import {Button, Divider, Stack, Typography, Box} from "@mui/material";
 import {Image} from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SyncIcon from "@material-ui/icons/Sync";
@@ -17,11 +17,14 @@ const MainContent = ({
                          imgSrc = NA
                      }) => <Stack direction='column' alignItems={"center"}>
     <Image/>
-    <Divider variant={"middle"} />
-    <Typography  fontSize={12} fontWeight='bold'>
+    <Box sx={{margin: "4px 4px 4px 4px", display: "flex", alignItems: "center"}}>
+        <Divider orientation="horizontal" sx={{width: "40px", height: '100%'}}/>
+    </Box>
+    {/* <Divider variant={"middle"} /> */}
+    <Typography  fontSize={12} fontWeight='bold' variant="heroHeader" sx={{fontSize: '14px'}}>
         {Name}
     </Typography>
-    <Typography fontSize={12}  fontWeight='bold' mt={1}>
+    <Typography fontSize={12}  fontWeight='bold' mt={1} variant="heroHeader" sx={{fontSize: '12px'}}>
         Connection ID {ConnectionID}
     </Typography>
     <Typography  fontSize={9}>
@@ -69,7 +72,7 @@ function ConnectionsPrimaryActionButtons(props: { Actions: string, Tables: strin
 export const ConnectionCard = (props: ConnectionCardType) => <BaseCard
     height = {250}
     width = {236}
-    background={"yellow"}
+    background={"rgba(20, 255, 0, 0.17)"}
     ActionIconButtons={<Stack direction='column' gap={1}>
         <ButtonIconWithToolTip Icon={SyncIcon} onClick={props.onSync} title="sync"/>
         <ButtonIconWithToolTip Icon={DeleteIcon} onClick={props.onDelete} title="delete"/>

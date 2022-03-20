@@ -8,6 +8,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import FavouriteIcon from "../../../../src/images/Favourite.png"
 import OptionIcon from "../../../../src/images/Options.png"
 import { useHistory } from "react-router-dom";
+import { lightShadows } from "../../../css/theme/shadows";
 
 
 interface ApplicationActionCardProps {
@@ -45,11 +46,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
     const background = !props.isWorkflow ? '#EEEEFF' : '#F8F8F8'
     return (
         <Box sx={{height: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
-            <Card sx={{background: background, boxShadow: '-6.41304px -6.41304px 12.8261px #E3E6F0, 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD', borderRadius: '10.2px', minHeight: '100%', minWidth: '100%'}}>
+            <Card sx={{background: background, boxShadow: lightShadows[27], borderRadius: '10.2px', minHeight: '100%', minWidth: '100%'}}>
                 <Box sx={{display: 'flex', minHeight: '100%'}}>
                     <Box sx={{flex: 4, width: '100%', height: '100%'}}>
                         <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 2, p: 1}}>
-                            <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase'}}>
+                            <Typography variant="applicationActionCard">
                                 {props.action.model?.DisplayName || "Name"}
                             </Typography>
                             <Typography sx={{wordWrap: 'break-word', fontFamily: 'SF Pro Display', fontStyle: 'normal', fontWeight: 'normal', fontSize: '12px', lineHeight: '133.4%'}}> 
@@ -65,7 +66,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         {props.isWorkflow ? (
                             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Box mb={3}>
-                                    <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase'}}>
+                                    <Typography variant="heroMeta" sx={{lineHeight: '266%', textTransform: 'uppercase'}}>
                                         Details
                                     </Typography>
                                 </Box>
@@ -90,12 +91,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                             <Box sx={{display: 'flex', alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'column', mt: 1}}>
                                 <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2}}>
                                     <Typography 
-                                    sx={{fontFamily: 'SF Pro Text', 
-                                    fontStyle: 'normal', 
+                                    variant="applicationActionCard"
+                                    sx={{
                                     fontWeight: 'normal', 
                                     fontSize: '12px', 
-                                    lineHeight: '166%', 
-                                    color: 'rgba(66, 82, 110, 0.86)'}}>
+                                    lineHeight: '166%'}}>
                                         Output Type: 
                                     </Typography>
                                     <Typography sx={{
@@ -110,12 +110,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                 </Box>
                                 <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2}}>
                                     <Typography 
-                                        sx={{fontFamily: 'SF Pro Text', 
-                                        fontStyle: 'normal', 
+                                        variant="applicationActionCard"
+                                        sx={{
                                         fontWeight: 'normal', 
                                         fontSize: '12px', 
-                                        lineHeight: '166%', 
-                                        color: 'rgba(66, 82, 110, 0.86)'}}>
+                                        lineHeight: '166%'}}>
                                             Average Run Time: 
                                         </Typography>
                                         <Typography sx={{

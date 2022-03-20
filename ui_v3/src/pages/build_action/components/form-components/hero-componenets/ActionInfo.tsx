@@ -1,6 +1,8 @@
-import { Box, Divider, Typography, Button, Avatar, TextField} from "@material-ui/core";
+import { Box, Divider, Button, Avatar, TextField} from "@material-ui/core";
+import { Typography } from "@mui/material";
 import React from "react";
 import UsageStatus from "../../../../../common/components/UsageStatus";
+
 
 export interface ActionInfoProps {
     Name?: string,
@@ -43,15 +45,7 @@ const ActionInfo = (props: ActionInfoProps) => {
                     />
                 </Box>
                 <Box className="meta">
-                    <Typography sx={{
-                        fontFamily: "SF Pro Text",
-                        fontStyle: "normal",
-                        fontWeight: "normal",
-                        fontSize: "12px",
-                        lineHeight: "143%",
-                        letterSpacing: "0.0961957px",
-                        color: "rgba(66, 82, 110, 0.86)"
-                    }}>
+                    <Typography variant="heroMeta">
                         <span>Created By</span>
                         <span><b> {Author}</b></span>
                         <span> | </span>

@@ -26,7 +26,10 @@ export const lightShadows = [
     '0 0 1px 0 rgba(0,0,0,0.31), 0 24px 36px -8px rgba(0,0,0,0.25)',
     '0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)',
     '0px 1px 2px rgba(0, 0, 0, 0.12), 0px 0px 0px 1px rgba(0, 0, 0, 0.05)',
-    '-6.41304px -6.41304px 12.8261px #E3E6F0, 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD'
+    '-6.41304px -6.41304px 12.8261px #E3E6F0, 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD',
+    'inset -5px -5px 10px #FAFBFF, inset 5px 5px 10px #A6ABBD',
+    '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
+    '-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)'
 ];
 
 export const darkShadows = [

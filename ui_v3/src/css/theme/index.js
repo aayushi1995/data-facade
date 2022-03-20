@@ -1,7 +1,10 @@
 import merge from 'lodash/merge';
-import {createTheme, responsiveFontSizes} from '@material-ui/core/styles';
+import {createTheme, responsiveFontSizes} from '@mui/material/styles';
 import {THEMES} from '../../data_manager/constants';
 import {darkShadows, lightShadows} from './shadows';
+import { borderRadius } from '@mui/system';
+
+const { palette } = createTheme()
 
 const baseOptions = {
     direction: 'ltr',
@@ -57,6 +60,14 @@ const baseOptions = {
                 },
                 '#nprogress .bar': {
                     zIndex: '2000 !important'
+                }
+            }
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    background: '#FFFFFF',
+                    borderRadius: '10px'
                 }
             }
         },
@@ -122,6 +133,39 @@ const baseOptions = {
         },
         overline: {
             fontWeight: 600
+        },
+        heroHeader: {
+            fontFamily: "SF Pro Display",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "36px",
+            lineHeight: "116.7%"
+        },
+        heroMeta: {
+            fontFamily: "SF Pro Text",
+            fontStyle: "normal",
+            fontWeight: "normal",
+            fontSize: "12px",
+            lineHeight: "143%",
+            letterSpacing: "0.15px",
+            color: "rgba(66, 82, 110, 0.86)"
+        },
+        workflowActionCard: {
+            fontFamily: 'SF Pro Text', 
+            fontStyle: 'normal', 
+            fontSize: '13.6054px', 
+            lineHeight: '157%', 
+            letterSpacing: '0.097px', 
+            color: '#253858'
+        },
+        applicationActionCard: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontSize: "14px",
+            lineHeight: "266%",
+            letterSpacing: "0.5px",
+            textTransform: "uppercase",
+            color: "rgba(66, 82, 110, 0.86)"
         }
     }
 };
@@ -175,7 +219,17 @@ const themesOptions = {
             warning: {
                 contrastText: '#ffffff',
                 main: '#ff9800'
-            }
+            },
+            lightBrown: palette.augmentColor({
+                color: {
+                    main: '#B0757C'
+                }
+            }),
+            lightBlueDF: palette.augmentColor({
+                color: {
+                    main: '#A4CAF0'
+                }
+            })
         },
         shadows: lightShadows
     },

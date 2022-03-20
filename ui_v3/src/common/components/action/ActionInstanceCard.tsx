@@ -59,7 +59,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                 borderRadius: 2, 
                 p: 2, 
                 boxSizing: "content-box",
-                background: creatingExecution ? "#FFFFFF" : "#A4CAF0",
+                bgcolor: creatingExecution ? "#FFFFFF" : "lightBrown.main",
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
@@ -73,7 +73,8 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                 fontSize: "12px",
                                 lineHeight: "266%",
                                 letterSpacing: "0.5px",
-                                textTransform: "uppercase"
+                                textTransform: "uppercase",
+                                color: "white"
                             }}>
                                 {actionInstance.InstanceName}
                             </Typography>
@@ -100,7 +101,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                             alignContent: "center", 
                                             width: "30px",
                                             height: "30px",
-                                            background: "#A4CAF0",
+                                            bgcolor: "lightBrown.main",
                                             boxShadow: "inset 8px 8px 8px rgba(0, 0, 0, 0.25), inset -8px -8px 8px #B8DBFF",
                                             borderRadius: "50%",
                                             p: "3px"
@@ -136,7 +137,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                                 fontSize: "10px",
                                                 lineHeight: "157%",
                                                 letterSpacing: "0.1px",
-                                                color: "#253858"
+                                                color: "white"
                                             }}>
                                                 {formCreatedByString()}
                                             </Typography>
@@ -149,7 +150,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                                 fontSize: "9px",
                                                 lineHeight: "166%",
                                                 letterSpacing: "0.4px",
-                                                color: "rgba(66, 82, 110, 0.86)"
+                                                color: "#F8F8F8"
                                             }}>
                                                 {formCreatedOnString()}
                                             </Typography>
@@ -162,8 +163,8 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                         width: "60px",
                                         height: "60px",
                                         borderRadius: "50%",
-                                        background: "#A4CAF0",
-                                        boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)",
+                                        bgcolor: "lightBrown.main",
+                                        boxShadow: "inset 8px 8px 8px rgba(0, 0, 0, 0.25), inset -8px -8px 8px #C38B8B;",
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center"
@@ -171,11 +172,11 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                     <IconButton onClick={executeActionInstance} sx={{
                                             height: "42px",
                                             width: "42px",
-                                            background: "#A4CAF0",
-                                            boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
+                                            bgcolor: "lightBrown.main",
+                                            boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C38B8B"
                                         }}>
                                             
-                                        <PlayArrowIcon/>
+                                        <PlayArrowIcon sx={{color: "white"}}/>
                                     </IconButton>
                                 </Box>
                             </Box>
@@ -186,30 +187,30 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#A4CAF0",
+                                bgcolor: "lightBrown.main",
                                 boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
                             }}>
-                                <FavoriteIcon/>
+                                <FavoriteIcon sx={{color: 'rgba(95, 48, 193, 1)'}}/>
                             </IconButton>
                         </Box>
                         <Box>
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#A4CAF0",
+                                bgcolor: "lightBrown.main",
                                 boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
                             }}>
-                                <PlaylistAddIcon/>
+                                <PlaylistAddIcon sx={{color: "white"}}/>
                             </IconButton>
                         </Box>
                         <Box>
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#A4CAF0",
+                                bgcolor: "lightBrown.main",
                                 boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
                             }}>
-                                <ShareIcon/>
+                                <ShareIcon sx={{color: "white"}}/>
                             </IconButton>
                         </Box>
                     </Box>

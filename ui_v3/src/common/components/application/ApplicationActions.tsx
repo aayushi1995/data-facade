@@ -10,7 +10,7 @@ interface ApplicationActionsProps {
 
 const ApplicationActions = (props: ApplicationActionsProps) => {
     return (
-        <Box sx={{overflowY: 'auto', display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
+        <Box sx={{overflowY: 'auto', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 1, p: 1}}>
             {props.actions.map((action, index) => {
                 return (
                     <Box sx={{maxWidth: '100%', mt: 1}}>

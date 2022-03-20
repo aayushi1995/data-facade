@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Button, TextField, InputAdornment } from "@material-ui/core"
+import { Box, Grid, Typography, Button, TextField, InputAdornment } from "@mui/material"
 import AddIcon from "@material-ui/icons/Add"
 import SearchIcon from '@mui/icons-material/Search';
 import { useHistory, Link } from "react-router-dom";
@@ -29,10 +29,10 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                 <Grid item xs={12} container>
                     <Grid item xs={8}>
                         <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                            <Typography sx={{flex: 1, fontFamily: 'SF Pro Display', fontSize: '33px', fontWeight: 500}}>
+                            <Typography variant="heroHeader" sx={{flex: 1}}>
                                 Application
                             </Typography>
-                            <Typography sx={{flex: 1, fontFamily: 'SF Pro Text', fontSize: '14px', fontStyle: 'normal'}}>
+                            <Typography variant="heroMeta" sx={{flex: 1}}>
                                 Create, Manage Applications from here
                             </Typography>
                         </Box>
@@ -57,13 +57,13 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                                 >
                                     Create Action <AddIcon sx={{marginLeft: 2}}/>
                                 </Button>
-                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained">
+                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" disabled>
                                     Export Application
                                 </Button>
                                 </>
                             ) : (
                                 <>
-                                <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" onClick={() => props.handleDialogOpen?.()}>
+                                <Button sx={{flex: 1, borderRadius: '10px', bgcolor: 'black'}} variant="contained" onClick={() => props.handleDialogOpen?.()}>
                                     APP Builder <AddIcon sx={{marginLeft: 2}}/></Button>
                                 <UploadApplicationButton/>
                                 </>

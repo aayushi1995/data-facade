@@ -58,9 +58,6 @@ const ActionDetailForm = () => {
                 </Box>
                 <Box>
                     <Card
-                        sx={{
-                            borderRadius: "10px",
-                        }}
                         variant={'outlined'}            
                     >
                         <Grid container>

@@ -4,6 +4,7 @@ import {AppBar, Box, Toolbar, Tabs, Tab} from '@material-ui/core';
 import {experimentalStyled} from '@material-ui/core/styles';
 import AccountPopover from './AccountPopover';
 import ContentSearch from './ContentSearch';
+import {useAppBarProps} from "./DataFacadeAppBar";
 import {DataFacadeLogo as Logo} from "../sideBar/DataFacadeLogo";
 
 const DashboardNavbarRoot = experimentalStyled(AppBar)(({theme}) => ({
@@ -21,6 +22,7 @@ const DashboardNavbarRoot = experimentalStyled(AppBar)(({theme}) => ({
 }));
 
 const DashboardNavbar = (props) => {
+    const {appcontext, setSearchQuery} = useAppBarProps();
     const {onSidebarMobileOpen, ...other} = props;
 
     return (
@@ -50,6 +52,9 @@ const DashboardNavbar = (props) => {
                 </Box>
                 <Box sx={{ml: 2}}>
                     <AccountPopover/>
+                </Box>
+                <Box sx={{ml: 2}}>
+                    {appcontext.workspaceName}
                 </Box>
             </Toolbar>
         </DashboardNavbarRoot>

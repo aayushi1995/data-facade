@@ -113,12 +113,12 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                                 </Button>
                             </Box>
                             <Box>
-                                <Button variant="contained">
+                                <Button variant="contained" disabled>
                                     Download File
                                 </Button>
                             </Box>
                             <Box>
-                                <Button variant="contained">
+                                <Button variant="contained" disabled>
                                     Export Results
                                 </Button>
                             </Box>

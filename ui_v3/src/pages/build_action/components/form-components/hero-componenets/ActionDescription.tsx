@@ -41,7 +41,7 @@ const ActionDescription = (props: ActionDescriptionProps) => {
                                 lineHeight: "175%",
                                 letterSpacing: "0.15px",
                                 color: "#253858"
-                            }}>{Name||"Workflow Description"}</Typography>
+                            }}>{Name||"Description"}</Typography>
                         </Box>
                         <Box className="meta">
                             <Typography variant="body1" sx={{

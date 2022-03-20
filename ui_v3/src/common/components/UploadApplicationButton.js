@@ -131,7 +131,7 @@ const UploadApplicationButton = (props) => {
 
     return (
         <>
-            <Button color="primary" onClick={handleDialogOpen} variant="contained">
+            <Button onClick={handleDialogOpen} variant="contained" sx={{flex: 1, borderRadius: '10px', bgcolor: 'lightBlueDF.main'}}>
                 <AddIcon fontSize="small"/> Import Application
             </Button>
             <Dialog onClose={handleDialogClose} open={dialogState.isDialogOpen}

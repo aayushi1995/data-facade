@@ -6,6 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { DialogContent } from "@mui/material";
 import { TransitionGroup } from 'react-transition-group';
 import React from "react";
+import { lightShadows } from "../../../css/theme/shadows";
 // import './WorkflowStagesWrapper.css'
 
 export interface WorkflowStagesWrapperProps {
@@ -75,7 +76,7 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
     }
 
     return (
-        <Card className="root" sx={{maxHeight: '100%', boxShadow: '-6.41304px -6.41304px 12.8261px #E3E6F0, 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD'}}>
+        <Card className="root" sx={{maxHeight: '100%', boxShadow: lightShadows[27]}}>
             <Box sx={{ display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden'}} p={1} pl={2}>
                 <Grid container >
                     <TransitionGroup style={{display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden'}}>

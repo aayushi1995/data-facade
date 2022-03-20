@@ -1,5 +1,5 @@
 import {Grid} from "@material-ui/core";
-import Logo from "../../../images/Monochrome.svg";
+import Logo from "../../../images/DataFacadeLogo.png";
 import React from "react";
 
 export function DataFacadeLogo() {
