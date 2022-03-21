@@ -176,7 +176,7 @@ const SelectTags = (props) => {
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            variant="outlined"
+                            variant="standard"
                             label={props.label || "Selected Tags"}
                             placeholder="Tags"
                         />

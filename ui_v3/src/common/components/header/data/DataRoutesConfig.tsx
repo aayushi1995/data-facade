@@ -1,15 +1,16 @@
 import {TabsType} from "../schema";
 
-const BLANK_STRING = '';
-export const DATA_ROUTE = '/data';
+
 export const DATA_CONNECTIONS_ROUTE = '/data/connections';
 export const DATA_RAW_ROUTE = '/data/raw';
 export const DATA_DERIVED_ROUTE = '/data/derived';
 
-export const APPLICATION_ROUTE = '/application';
-export const INSIGHTS_ROUTE = '/insights';
+export const DATA_CONNECTIONS_UPLOAD_ROUTE = '/data/connections/upload-file';
+export const DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE = `${DATA_CONNECTIONS_UPLOAD_ROUTE}/preview`;
+export const DATA_CONNECTIONS_UPLOAD_COLUMNS_ROUTE = `${DATA_CONNECTIONS_UPLOAD_ROUTE}/columns`;
+export const BLANK_STRING = '';
 
-export const dataSubTabs: TabsType = [
+export const DATA_SUB_TABS: TabsType = [
     {
         id: 'Connections',
         label: 'Connections',
@@ -33,27 +34,3 @@ export const dataSubTabs: TabsType = [
     }
 ];
 
-export const tabs: TabsType = [
-    {
-        id: 'DATA',
-        label: 'DATA',
-        href: DATA_ROUTE,
-        children: dataSubTabs,
-        title: BLANK_STRING,
-        subTitle: BLANK_STRING
-    },
-    {
-        id: 'APPLICATION',
-        label: 'APPLICATION',
-        href: APPLICATION_ROUTE,
-        title: BLANK_STRING,
-        subTitle: BLANK_STRING
-    },
-    {
-        id: 'INSIGHTS',
-        label: 'INSIGHTS',
-        href: INSIGHTS_ROUTE,
-        title: BLANK_STRING,
-        subTitle: BLANK_STRING
-    },
-]

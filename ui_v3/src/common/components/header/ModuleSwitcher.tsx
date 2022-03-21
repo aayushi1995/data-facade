@@ -4,20 +4,20 @@ import React, {useContext} from "react";
 import ModuleSwitcherIcon from './images/module-switcher.svg';
 import SettingsIcon from './images/settings.svg';
 import {NavLink as RouterLink, useLocation} from 'react-router-dom';
-import {tabs} from "./data/DataRoutesConfig";
 import {TabsContainerType, TabsTreePropType} from "./schema";
 import {ModuleContent} from "../ModuleContent";
 import {ButtonIconWithToolTip} from "../ButtonIconWithToolTip";
+import {tabs} from "./data/RoutesConfig";
 
 
-function findCurrentSelectedTabIndex({tabs, pathname, level}: TabsTreePropType) {
+export function findCurrentSelectedTabIndex({tabs, pathname, level}: Pick<TabsTreePropType, "tabs" | "pathname" | "level">) {
     return tabs.findIndex(({href}) => {
         const slugs = pathname.split('/').filter(slug => !!slug);
         return '/' + slugs.slice(0, level + 1).join('/') === href
     });
 }
 
-function TabsContainer(props: TabsContainerType) {
+export function TabsContainer(props: TabsContainerType) {
     const {
         areLeafTabs,
         tabs,

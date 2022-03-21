@@ -1,7 +1,6 @@
 import React from 'react'
 import Papa from 'papaparse';
 import {v4 as uuidv4} from 'uuid'
-import DeleteIcon from '@material-ui/icons/Delete';
 import {
     Box,
     Button,
@@ -17,14 +16,8 @@ import {
     ListItem,
     MenuItem,
     Select,
-    Table,
-    TableBody,
-    TableCell,
     Typography,
-    Fab,
-    Autocomplete,
-    TextField,
-    TableRow
+    TextField, Stack, LinearProgress, useTheme
 } from '@material-ui/core'
 import {makeStyles} from '@material-ui/styles'
 import './../../css/table_browser/TableBrowser.css'
@@ -32,13 +25,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import dataManagerInstance from './../../data_manager/data_manager'
 import TagGroups from './../../enums/TagGroups'
 import ColumnDataType from './../../enums/ColumnDataType'
-import ExternalStorageUploadRequestContentType from './../../enums/ExternalStorageUploadRequestContentType'
 import TagScope from './../../enums/TagScope'
 import {useMutation} from 'react-query'
 import SelectTags from './SelectTags.js'
 import AddIcon from "@material-ui/icons/Add";
 import {DataGrid} from "@material-ui/data-grid";
-import { UploadTableDialogContent } from './UploadTableDialogContent';
+import {UploadTableDialogContent} from './UploadTableDialogContent';
 
 export const useStyles = makeStyles(() => ({
     requiredTags: {
@@ -76,11 +68,7 @@ export const useStyles = makeStyles(() => ({
     TablePreview: {
         width: "100%",
     },
-    TablePreviewBox: {
-        height: 600,
-        overflow: 'auto',
-        width: '100%'
-    },
+    TablePreviewBox: {},
     TableNameTextField: {
         height: 75,
     },
@@ -89,6 +77,9 @@ export const useStyles = makeStyles(() => ({
     },
     TagDropDown: {
         maxHeight: 75
+    },
+    headerClassName: {
+        height: 1000
     }
 }))
 
@@ -138,8 +129,9 @@ const UploadTableButton = (props) => {
                     </IconButton>
                 </Grid>
                 <DialogContent className={classes.dialog}>
-                    <Box my={1} style={{width:"100%", height:"100%"}}>
-                        <UploadTableDialogContent closeDialogFunction={memoizedHandleDialogClose} isApplication={props?.isApplication}/>
+                    <Box my={1} style={{width: "100%", height: "100%"}}>
+                        <UploadTableDialogContent closeDialogFunction={memoizedHandleDialogClose}
+                                                  isApplication={props?.isApplication}/>
                     </Box>
                 </DialogContent>
             </Dialog>
@@ -455,8 +447,7 @@ export const TableSchemaSelection = (props) => {
                 ]
             })
         }, [])
-
-    const schemaDataSelector = (displayColumnProperties || []).map((columnProperty, columnIndex) =>
+    const getColumnPropertiesLayout = (columnProperty, columnIndex) =>
         <>
             <ListItem
                 style={((columnProperty.duplicateColor !== undefined) ? {background: columnProperty.duplicateColor} : {})}>
@@ -464,9 +455,8 @@ export const TableSchemaSelection = (props) => {
                                                   setColumnProperty={setColumnProperty} key={columnIndex}/>
             </ListItem>
             {columnIndex !== displayColumnProperties.length - 1 &&
-            <Divider style={{height: 4, background: "#FFFFFF"}} variant="middle"/>}
+                <Divider style={{height: 4, background: "#FFFFFF"}} variant="middle"/>}
         </>
-    )
 
     const whyTableNameNotValid = () => {
         if (tableProperties.isValid) {
@@ -477,48 +467,13 @@ export const TableSchemaSelection = (props) => {
     }
 
     return (
-        <Grid container spacing={2}>
-            <Grid container item xs={4}>
-                <Grid item xs={12} className={classes.ColumnSearchTextField}>
-                    <TextField
-                        label="Search Column"
-                        value={columnSearchQuery}
-                        onChange={(event) => {
-                            setColumnSearchQuery(event.target.value)
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <List className={classes.columnPropertiesList}>
-                        {schemaDataSelector}
-                    </List>
-                </Grid>
-            </Grid>
-            <Grid container item xs={8} alignContent="flex-start">
-                <Grid container item xs={12}>
-                    <Grid item xs={4} className={classes.TableNameTextField}>
-                        <TextField
-                            label="Table Name"
-                            value={tableProperties.tableName}
-                            error={tableProperties.tableName && !tableProperties.isValid}
-                            helperText={tableProperties.tableName && whyTableNameNotValid()}
-                            onChange={(event) => {
-                                setTableName(event.target.value)
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={8} className={classes.TagDropDown}>
-                        <SelectTags setTags={handleTableTagChange}
-                                    tagOptionFilter={{Scope: TagScope.TABLE, TagGroup: TagGroups.GENERIC}} label="Tags"
-                                    selectedTags={tableProperties.tags}/>
-                    </Grid>
-                </Grid>
-                <Grid container item xs={12}>
-                    <TablePreview data={parsedFileResult?.data} columns={columnProperties}
-                                  tableName={tableProperties?.tableName}/>
-                </Grid>
-            </Grid>
-        </Grid>
+        <Stack flex={1} spacing={2}>
+            <TablePreview data={parsedFileResult?.data} columns={columnProperties}
+                          tableName={tableProperties?.tableName} getColumnPropertiesLayout={getColumnPropertiesLayout}/>
+            <SelectTags setTags={handleTableTagChange}
+                        tagOptionFilter={{Scope: TagScope.TABLE, TagGroup: TagGroups.GENERIC}} label="Tags"
+                        selectedTags={tableProperties.tags}/>
+        </Stack>
     )
 }
 
@@ -557,35 +512,32 @@ const ColumnPropertiesSelector = (props) => {
     }
 
     return (
-        <Grid container spacing={2}>
-            <Grid container item xs={12} spacing={1} direction="row">
-                <Grid item xs={6}>
-                    <TextField value={props.columnProperty.columnName} error={!isColumnFieldValid()}
-                               helperText={whyColumnFieldNotValid()} onChange={handleColumnNameChange}/>
-                </Grid>
-                <Grid container item xs={6} alignItems="centerc">
-                    <FormControl className={classes.formControl}>
-                        <Select
-                            labelId="demo-simple-select-helper-label"
-                            id="demo-simple-select-helper"
-                            value={props.columnProperty.columnDatatype}
-                            onChange={handleColumnDataTypeChange}
-                        >
-                            <MenuItem value={ColumnDataType.INT}>Integer</MenuItem>
-                            <MenuItem value={ColumnDataType.STRING}>String</MenuItem>
-                            <MenuItem value={ColumnDataType.BOOLEAN}>Boolean</MenuItem>
-                            <MenuItem value={ColumnDataType.FLOAT}>Float</MenuItem>
-                        </Select>
-                        <FormHelperText>Datatype</FormHelperText>
-                    </FormControl>
-                </Grid>
-            </Grid>
-            <Grid item xs={12}>
-                <SelectTags setTags={handleColumnTagChange}
-                            tagOptionFilter={{Scope: TagScope.COLUMN, TagGroup: TagGroups.GENERIC}} label="Tags"
-                            selectedTags={props.columnProperty.columnTags}/>
-            </Grid>
-        </Grid>
+        <Stack direction="column">
+
+            <TextField value={props.columnProperty.columnName} error={!isColumnFieldValid()}
+                       variant="standard"
+                       helperText={whyColumnFieldNotValid()} onChange={handleColumnNameChange}/>
+            <FormControl>
+                <Select
+                    variant="standard"
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    value={props.columnProperty.columnDatatype}
+                    onChange={handleColumnDataTypeChange}
+                >
+                    <MenuItem value={ColumnDataType.INT}>Integer</MenuItem>
+                    <MenuItem value={ColumnDataType.STRING}>String</MenuItem>
+                    <MenuItem value={ColumnDataType.BOOLEAN}>Boolean</MenuItem>
+                    <MenuItem value={ColumnDataType.FLOAT}>Float</MenuItem>
+                </Select>
+                <FormHelperText>Datatype</FormHelperText>
+            </FormControl>
+
+            <SelectTags setTags={handleColumnTagChange}
+                        tagOptionFilter={{Scope: TagScope.COLUMN, TagGroup: TagGroups.GENERIC}} label="Tags"
+                        selectedTags={props.columnProperty.columnTags}/>
+
+        </Stack>
     )
 }
 
@@ -601,7 +553,7 @@ function MemoizedColumnPropertiesSelector(props) {
 
 const TablePreview = (props) => {
     const classes = useStyles()
-
+    const theme = useTheme();
     const formData = () => {
         if (props.data === undefined) {
             return []
@@ -617,43 +569,51 @@ const TablePreview = (props) => {
         if (props.columns === undefined) {
             return []
         } else {
-            const columnProp = props.columns.map(column => {
+            const columnProp = props.columns.map((column, index) => {
                 const headerName = `${column.columnName} (${column.columnDatatype})`
                 return {
                     field: column.columnName,
                     width: headerName.length * 12,
-                    headerName: headerName
+                    headerName: headerName,
+                    height: 1000,
+                    headerClassName: classes.headerClassName,
+                    renderHeader: (headerparams) => {
+                        console.log(headerparams);
+                        return (
+                            <Stack direction="column" flexGrow={1}>
+                                {props.getColumnPropertiesLayout(column, index)}
+                                <LinearProgress color='success' sx={{height: 10}} />
+                            </Stack>
+                        )
+                    }
                 }
             })
             return columnProp
         }
     }
-
-    const formOptions = () => {
-        const defaultOptions = {
-            resizableColumns: true,
-            download: false,
-            print: false,
-            selectableRows: 'none',
-            rowsPerPageOptions: [10, 25, 50, 100]
-        }
-        if (props.options === undefined) {
-            return defaultOptions
-        } else {
-            return {
-                ...defaultOptions,
-                ...props.options
-            }
-        }
-    }
+    const [pageSize, setPageSize] = React.useState(10);
     return (
-        <Box className={classes.TablePreviewBox} fullWidth>
+        <Box className={classes.TablePreviewBox} fullWidth sx={{
+            '& .MuiDataGrid-window': {
+                top: '300px!important'
+            },
+            '& .MuiDataGrid-columnsContainer': {
+                height: 300,
+                maxHeight: '300px!important'
+            },
+            '& .MuiDataGrid-columnHeaderWrapper': {
+                background: theme.palette.background.default
+            },
+            py: 2
+        }}>
             <DataGrid autoHeight className={classes.TablePreview}
                       title={props.tableName || "Not Named"}
                       rows={formData()}
                       columns={formColumns()}
-                      options={formOptions()}
-            />
+                      rowsPerPageOptions={[10, 25, 50, 100]}
+                      onPageSizeChange={(newPage) => setPageSize(newPage)}
+                      pageSize={pageSize}
+                />
         </Box>
     )
 }
@@ -667,7 +627,7 @@ const getTypeOfValue = (dataPoints) => {
                 // if (Number(dataPoint) === dataPoint && dataPoint % 1 === 0) {
                 //     return ColumnDataType.INT
                 // } else {
-                    return ColumnDataType.FLOAT
+                return ColumnDataType.FLOAT
                 // }
             } else if (typeof dataPoint === "boolean") {
                 return ColumnDataType.BOOLEAN

@@ -224,10 +224,11 @@ const TableView = () => {
 }
 
 export const TableBrowser = withRouter(function TableBrowserRoutes() {
+    const match = useRouteMatch();
     return (
-        <Switch>
-            <Route path={DATA_RAW_ROUTE} component={TableView}/>
-            <Route path="/dashboard" component={TableView}/>
-        </Switch>
+        <>
+            <Route path={match.path} component={TableView}/>
+            <Route path={`${match.path}/:tableUniqueName`} component={TableDetails}/>
+        </>
     )
 });

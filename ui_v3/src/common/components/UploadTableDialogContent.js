@@ -1,8 +1,8 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
+import {Link as RouterLink, Redirect, Route} from 'react-router-dom';
 import {
     Box,
-    Button, Grid, TextField
+    Button, Grid, Tab, Tabs, TextField
 } from '@material-ui/core';
 import dataManagerInstance from './../../data_manager/data_manager';
 import S3UploadState from './../../custom_enums/S3UploadState';
@@ -14,6 +14,8 @@ import SelectTags from './SelectTags.js';
 import * as XLSX from 'xlsx';
 import { useStyles, formActionPropertiesForLoadTableIntoLocal, TableSchemaSelection } from './UploadTableButton';
 import DisplaySelectedFilesDetail from './DisplaySelectedFilesDetail'
+import {DATA_CONNECTIONS_UPLOAD_ROUTE} from "./header/data/DataRoutesConfig";
+import {Divider, Stack, Typography} from "@mui/material";
 
 export const UploadTableDialogContent = (props) => {
     const classes = useStyles();
@@ -315,9 +317,10 @@ export const UploadTableDialogContent = (props) => {
                     </Box>
                 </Grid>}
             {selectedFile &&
-                <Grid container item xs={12}>
+                <Stack direction="column" flex={1} spacing={2} px={2}>
+                    <Divider sx={{p: 3}}/>
                     <DisplaySelectedFilesDetail selectedFile={selectedFile} />
-                </Grid>}
+                </Stack>}
             {/* {selectedFile &&
             <Grid container item xs={6}>
                 <TableRequiredTagSelection enableUploadButton={enableUploadButton}

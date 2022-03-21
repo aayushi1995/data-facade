@@ -103,7 +103,6 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/autobook/customers' component={AutobookHomePage}/>
                                     <Route path='/custom-applications' component={CustomApplicationsHomePage}/>
                                     <Route path='/workflow-editor' component={WorkflowEditorPage}/>
-                                    <Route path='/upload-file' component={UploadTablePage}/>
                                     <Route path='/run-workflow' component={RunWorkflowHomePage}/>
                                     <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
                                     <Redirect exact from="/" to="application"/>

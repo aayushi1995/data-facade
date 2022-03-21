@@ -25,7 +25,7 @@ import UploadTableSteps from './../../custom_enums/UploadTableSteps'
 import S3UploadState from './../../custom_enums/S3UploadState';
 
 
-const UploadTablePage = (props) => {
+export const UploadTablePage = (props) => {
     const uploadButtonRef = React.useRef(null)
     const [uploadState, setUploadState] = React.useState(S3UploadState.NO_FILE_SELECTED)
     const [selectedFile, setSelectedFile] = React.useState()
@@ -83,19 +83,6 @@ const UploadTablePage = (props) => {
     return (
         <Box px={1} py={2}>
             <Grid container spacing={5}>
-                <Grid item xs={12}>
-                    <Stepper activeStep={activeStep.stepIndex}>
-                        <Step active={activeStep.stepIndex===0} key={UploadTableSteps.SELECT_FILE.label} completed={activeStep.stepIndex>0}>
-                            <StepLabel>{UploadTableSteps.SELECT_FILE.label}</StepLabel>
-                        </Step>
-                        <Step active={activeStep.stepIndex===1} key={UploadTableSteps.SELECT_TABLE.label} completed={activeStep.stepIndex>1}>
-                            <StepLabel>{UploadTableSteps.SELECT_TABLE.label}</StepLabel>
-                        </Step>
-                        <Step active={activeStep.stepIndex===2} key={UploadTableSteps.CONFIGURE_METADATA.label} completed={activeStep.stepIndex>2}>
-                            <StepLabel>{UploadTableSteps.CONFIGURE_METADATA.label}</StepLabel>
-                        </Step> 
-                    </Stepper>
-                </Grid>
                 { (activeStep.stepIndex===0) &&<Grid item xs={12}>
                     <SelectFileStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
                 </Grid> }
