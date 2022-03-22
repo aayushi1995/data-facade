@@ -78,19 +78,19 @@ export const StagesWithActions = () => {
                 <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
                 onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} handleStageNameChange={handleStageNameChange}></WorkflowStagesWrapper>
             </Box>
-            <Box sx={{flex: 1, display: 'flex', mt: 1}}>
-                <Card sx={{display: 'flex', boxShadow: lightShadows[27], flexDirection: 'column', p: 1, flex: 1}}>
-                    <Grid container spacing={1}>
+            <Box sx={{flex: 1, display: 'flex', mt: 1, p: 1, flexDirection: 'column'}}>
+                {/* <Card sx={{display: 'flex', boxShadow: lightShadows[27], flexDirection: 'column', p: 1, flex: 1}}> */}
+                    <Grid container spacing={1} sx={{flex: 1}}>
                     {currentStages.map(stage => {
                         return (
                             <Grid sx={{flex: 1,}} item xs={3}>
-                                <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px'}}>
+                                <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px', background: '#F5F9FF'}}>
                                     <WorkflowActionContainer {...{stageId: stage.Id, actionSelectable: false}}></WorkflowActionContainer>
                                 </Card>
                             </Grid>)
                     })}
                     </Grid>
-                    <Box sx={{display: 'flex'}}>
+                    <Box sx={{display: 'flex', flex: 1}}>
                         <IconButton onClick={handleSlidePrev}>
                             <img src={slideNext} alt="previos" style={{transform: 'rotate(180deg)'}}/>
                         </IconButton>
@@ -98,7 +98,7 @@ export const StagesWithActions = () => {
                             <img src={slideNext} alt="next"/>
                         </IconButton>
                     </Box>
-                </Card>
+                {/* </Card> */}
                 
             </Box>
         </Box>

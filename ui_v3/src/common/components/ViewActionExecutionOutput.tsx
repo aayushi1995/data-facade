@@ -33,7 +33,6 @@ const ViewActionExecutionOutput = (props: { executionId: string }) => {
         if(fetchActionExeuctionParsedOutput.data?.Status === 'Completed'){
             return <QueryData props={[fetchActionExeuctionParsedOutput?.data?.Output]}/>
         } else {
-            console.log("here")
             return <JobsRowJobDetail ActionExecution={fetchActionExeuctionParsedOutput.data}/>
         }
     } else {

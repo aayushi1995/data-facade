@@ -2,6 +2,7 @@ import { Application } from "../../../generated/entities/Entities"
 import { Grid, Card, Box, Typography, IconButton } from "@material-ui/core"
 import appLogo from "../../../../src/images/Segmentation_application.png"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
+import PackageLogo from "../../../../src/images/package.svg"
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PeopleIcon from '@mui/icons-material/People';
@@ -174,6 +175,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                             background: "#A4CAF0",
                                             boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
                                         }}>
+                                            <img src={PackageLogo} alt="Package"/>
                                     </IconButton>
                                 </Box>
                             </Box>

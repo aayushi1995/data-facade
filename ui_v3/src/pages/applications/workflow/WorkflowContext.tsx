@@ -21,7 +21,8 @@ export type WorkflowActionDefinition = {
         TableId?: string,
         ColumnId?: string,
         userInputRequired?: "Yes" | "No",
-        GlobalParameterId?: string
+        GlobalParameterId?: string,
+        ParameterName?: string
     }[],
     TemplateId?: string,
     DefinitionId?: string,
@@ -160,7 +161,8 @@ type MapParameterToGloabalParameterPayload = {
     parameterDefinitionId: string,
     stageId: string,
     actionIndex: number,
-    globalParameterId: string
+    globalParameterId: string,
+    parameterName: string
 }
 
 type AddActionTemplatePayload = {
@@ -536,7 +538,8 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         ...actionDef,
                         Parameters: actionDef.Parameters.map(parameter => parameter.ActionParameterDefinitionId !== action.payload.parameterDefinitionId ? parameter : {
                             ...parameter,
-                            GlobalParameterId: action.payload.globalParameterId
+                            GlobalParameterId: action.payload.globalParameterId,
+                            ParameterName: action.payload.parameterName
                         })
                     })
                 })

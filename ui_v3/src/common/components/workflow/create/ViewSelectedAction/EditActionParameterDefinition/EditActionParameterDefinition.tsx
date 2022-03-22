@@ -181,7 +181,7 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
     const mapToGlobalParameter = (workflowParameterId: string) => {
         console.log(workflowParameterId)
         setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER', 
-                            payload: {stageId: props.stageId, globalParameterId: workflowParameterId, parameterDefinitionId: props.parameter.Id || "ID", actionIndex: props.actionIndex}})
+                            payload: {stageId: props.stageId, globalParameterId: workflowParameterId, parameterDefinitionId: props.parameter.Id || "ID", actionIndex: props.actionIndex, parameterName: props.parameter.ParameterName || "parameterName"}})
     }
 
     return (

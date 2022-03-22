@@ -12,6 +12,7 @@ import NoData from "../../../common/components/NoData"
 import { AddingActionView } from "../../../common/components/workflow/create/addAction/AddingActionView"
 import { WorkflowHeroWrapper } from "../../build_workflow/BuildWorkflowHomePage"
 import { useUpdateWorkflow } from "../../../common/components/workflow/edit/hooks/useUpdateWorkflow"
+import WorkflowTabs from "../../../common/components/workflow/create/WorkflowTabs"
 
 
 interface MatchParams {
@@ -126,7 +127,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                     {workflowContext.currentSelectedStage ? (
                         <AddingActionView/>
                     ) : (
-                        <StagesWithActions/>
+                        <WorkflowTabs/>
                     )}
                 </Box> 
                 <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}} mb={3}>

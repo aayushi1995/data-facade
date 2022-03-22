@@ -5,7 +5,8 @@ import React from "react";
 import { lightShadows } from '../../../css/theme/shadows'
 import ActionCard, { ActionCardProps } from "../../../common/components/workflow-action/ActionCard";
 import addAction from '../../../../src/images/add_action_workflow_container.png'
-import buildAction from '../../../../src/images/Frame.png'
+import buildActionIcon from '../../../../src/images/build_action.svg'
+import addActionIcon from "../../../../src/images/add_action.svg"
 import arrow from '../../../../src/images/workflow_action_arrow.png'
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { SetWorkflowContext, WorkflowContext } from "./WorkflowContext";
@@ -150,6 +151,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
         }
         setIsBuildDialogOpen(false)
     }
+    
 
     if(stageDetails) {
         return (
@@ -168,14 +170,19 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                         <Typography sx={{ flex: 1, fontWeight: 600, fontFamily: 'SF Pro Display' }}>
                             Selected Actions
                         </Typography>
-                        <Box sx={{  display: 'flex' }}>
-                            <IconButton sx={{ flex: 1 }} onClick={handleAddAction}>
-                                <img src={addAction} alt="add action" />
-                            </IconButton>
-                            <IconButton sx={{ flex: 1 }} onClick={() => setIsBuildDialogOpen(true)}>
-                                <img src={buildAction} alt="build action" />
-                            </IconButton>
-                        </Box>
+                        
+                        {workflowContext.WorkflowExecutionStatus === undefined ? (
+                            <Box sx={{  display: 'flex' }}>
+                                <IconButton sx={{ flex: 1, background: "#F8F8F8",  boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={handleAddAction}>
+                                    <img src={addActionIcon} alt="add action" style={{height: '100%', width: '100%', transform: 'scale(1.7)'}}/>
+                                </IconButton>
+                                <IconButton sx={{ flex: 1, background: "#F8F8F8",  boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={() => setIsBuildDialogOpen(true)}>
+                                    <img src={buildActionIcon} alt="build action" />
+                                </IconButton>
+                            </Box>
+                        ) : (
+                            <></>
+                        )}
                     </Box>
                     <Divider />
                     <Box p={1} />
@@ -191,16 +198,23 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                                         <Draggable key={action.actionId} draggableId={action.actionId + index} index={index}>
                                                             {(_provided: any) => (
                                                                 <li {..._provided.draggableProps} ref={_provided.innerRef}>
+                                                                    <Box px={3}>
                                                                     <ActionCard
                                                                         {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput }}
                                                                     />
+                                                                    </Box>
                                                                 </li>
                                                             )}
                                                         </Draggable>
                                                     </Box>
-                                                    <Box sx={{ flex: 0.5, display: 'flex', justifyContent: 'center' }}>
-                                                        <img src={arrow} alt="arrow" />
-                                                    </Box>
+                                                    {index !== (stageActions.length - 1) ? (
+                                                        <Box sx={{ flex: 0.5, display: 'flex', justifyContent: 'center', zIndex: 2 }}>
+                                                            <img src={arrow} alt="arrow" />
+                                                        </Box>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                    
                                                 </Box>
                                             )
                                         })}
@@ -210,7 +224,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                             )}
                         </Droppable>
                     </DragDropContext>
-                    {props?.fromBuildAction === true ? (
+                    {props?.fromBuildAction === true || stageActions.length === 0 ? (
                         <Box sx={{ flex: 1, px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', flexDirection: 'column', height: '100%' }}>
                             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '6px', alignItems: 'center', flexBasis: 0, flexGrow: 1, width: '100%', minHeight: '70px'}}>
                                 <Typography sx={{ fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px', fontWeight: '500px' }}>
@@ -220,33 +234,15 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                             <Box py={0.5} />
                             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '6px', alignItems: 'center', height: '100%', width: '100%' }}>
                                 <Typography sx={{ flex: 1, pt: 1, fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px' }}>
-                                    Create New Action Action
+                                    Create New Action
                                 </Typography>
                                 <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={() => setIsBuildDialogOpen(true)}>
-                                    <img src={addAction} alt="build action" />
+                                    <img src={buildActionIcon} alt="build action" style={{transform: 'scale(1.5)'}}/>
                                 </IconButton>
                             </Box>
                         </Box>
                     ) : (
-                        <Box sx={{ flex: 1, px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '10px', alignItems: 'center', height: '100%' }}>
-                                <Typography sx={{ flex: 1, pt: 1 }}>
-                                    Add Action
-                                </Typography>
-                                <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={handleAddAction}>
-                                    <img src={addAction} alt="add action" />
-                                </IconButton>
-                            </Box>
-                            <Box px={0.5} />
-                            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '10px', alignItems: 'center', height: '100%' }}>
-                                <Typography sx={{ flex: 1, pt: 1 }}>
-                                    Build Action
-                                </Typography>
-                                <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={() => setIsBuildDialogOpen(true)}>
-                                    <img src={buildAction} alt="build action" />
-                                </IconButton>
-                            </Box>
-                        </Box>
+                        <></>
                     )}
                     
                 </Box>

@@ -5,7 +5,7 @@ import dataManager, { useRetreiveData } from "../../../data_manager/data_manager
 import { DataGrid } from "@material-ui/data-grid";
 import { CustomToolbar } from "../../../common/components/CustomToolbar";
 import { useCustomizationToolBarButtons } from "../../customizations/UseCustomizationToolBarButtons";
-import { Dialog, Grid, Link, Tooltip, TextField, Button } from "@material-ui/core"
+import { Dialog, Grid, Link, Tooltip, TextField, Button, DialogContent } from "@material-ui/core"
 import { formTimeStampOrReturnDefault } from '../../jobs/components/JobsRowJobDetail'
 import { Box, IconButton } from "@mui/material";
 import PreviewIcon from "@mui/icons-material/Preview";
@@ -17,6 +17,9 @@ import {v4 as uuidv4} from 'uuid'
 import { useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import {getActionExecutionParsedOutput} from "../../../data_manager/entity_data_handlers/action_execution_data"
+import UploadTableDialogContent from "../../../common/components/UploadTableDialogContent";
+import S3UploadState from "../../../custom_enums/S3UploadState";
+import ConfigureTableMetadata from "../../upload_table/components/ConfigureTableMetadata";
 
 const columns = [
     {
@@ -57,6 +60,11 @@ const useStyles = makeStyles(() => ({
     },
     dialogTable: {
         minWidth: 500,
+    },
+    dialogUpload: {
+        minHeight: '100vh',
+        maxHeight: '100vh',
+        minWidth: '100vh'
     }
 }))
 
@@ -94,8 +102,7 @@ export const PreviewTable = (props) => {
 export const ImportTable = (props) => {
     
     const handleImportTable = () => {
-        props.api.componentsProps.setSelectedExecution(props.id)
-        props.api.componentsProps.setImportAsTableDialog(true)
+        props.api.componentsProps.handleImportTable?.(props.id)
     }
     
     return (
@@ -106,9 +113,18 @@ export const ImportTable = (props) => {
 const IntermediaryTables = (props) => {
     
     const classes = useStyles()
-    const history = useHistory()
     const tableId = props?.table?.Id
-    const providerInstanceId = props?.table?.ProviderInstanceID
+
+    const fetchS3PresignedDownloadUrl = useMutation(
+        "GetS3PresignedDownloadUrl",
+        ({ actionExecutionOutputPath, expirationDurationInMinutes}) => dataManager.getInstance.s3PresignedDownloadUrlRequest(actionExecutionOutputPath, expirationDurationInMinutes, "JobOutput")
+    )
+
+    const downloadFileFromS3Mutation = useMutation(
+        "DownloadFileFromS3",
+        (config) => dataManager.getInstance.s3DownloadRequest(config.requestUrl, config.headers)
+    )
+
     const {isLoading, data, errors} = useRetreiveData(
         "TableProperties",
         {
@@ -119,28 +135,12 @@ const IntermediaryTables = (props) => {
         }
     )
 
-    const saveAsTableActionInstance = useMutation(({actionInstance, actionParameterInstances}) => {
-        console.log(actionInstance)
-        console.log(actionParameterInstances)
-        const response = dataManager.getInstance.saveData(
-            "ActionInstance",
-            {
-                entityProperties: actionInstance,
-                "withActionParameterInstance": true,
-                "ActionParameterInstanceEntityProperties": actionParameterInstances,
-                "SynchronousActionExecution": true
-            }
-        )
-        return response
-    })
-
     const [actionExecutions, setActionExecutions] = React.useState()
     const [dataDialogOpen, setDataDialogOpen] = React.useState(false)
     const [queryData, setQueryData] = React.useState([])
-    const [importAsTableDialog, setImportAsTableDialog] = React.useState(false)
-    const [selectedExecution, setSelectedExecution] = React.useState()
-    const [tableName, setTableName] = React.useState()
     const [fetchingActionexecutionOutput, setFetchingActionexecutionOutput] = React.useState(false)
+    const [uploadTableDialog, setUploadDialogOpen] = React.useState(false)
+    const [downloadingFile, setDownloadingFile] = React.useState(false)
     
     
     React.useEffect(() => {
@@ -149,86 +149,54 @@ const IntermediaryTables = (props) => {
         }
     }, [data])
 
-    const handleName = (event) => {
-        setTableName(event.target.value)
-    }
-
     const handleDialogClose = () => {
         setDataDialogOpen(false)
     }
 
-    const handleSaveAsTable = () => {
-        const actionInstance = {
-            Id: uuidv4(),
-            Name: `Load table ${tableName} from execution output`,
-            DisplayName: `Load table ${tableName} from execution output`,
-            ProviderInstanceId: providerInstanceId,
-            DefinitionId: "21"
-        }
-        const actionParameterInstances = [
-            {
-                Id: uuidv4(),
-                ActionInstanceId: actionInstance.Id,
-                ParameterValue: tableName,
-                ActionParameterDefinitionId: "22"
-            },
-            {
-                Id: uuidv4(),
-                ActionInstanceId: actionInstance.Id,
-                ParameterValue: selectedExecution,
-                ActionParameterDefinitionId: "21"
-            }
-        ]
-
-        saveAsTableActionInstance.mutate({actionInstance, actionParameterInstances}, 
-            {
-                onSettled: () => {},
-                onSuccess: (data) => {
-                    setImportAsTableDialog(false)
-                    history.goBack()
+    const handleImportTable = (actionExecutionId) => {
+        const selectedActionExecution = actionExecutions?.find(ae => ae.Id === actionExecutionId)
+        if(!!selectedActionExecution) {
+            setDownloadingFile(true)
+            setUploadDialogOpen(true)
+            fetchS3PresignedDownloadUrl.mutate(({actionExecutionOutputPath: selectedActionExecution.OutputFilePath + "/output.txt", expirationDurationInMinutes: 5}), {
+                onSuccess: (data, variables, context) => {
+                    downloadFileFromS3Mutation.mutate({
+                        requestUrl: data.requestUrl,
+                        headers: data.headers
+                    }, {
+                        onSuccess: (data) => {
+                            console.log(data)
+                            setDownloadingFile(false)
+                        }
+                    })
                 }
-            }
-        )
-
+            })
+        }
     }
 
     if(actionExecutions) {
         return (
             <Grid container>
-                <Dialog open={importAsTableDialog} onClose={() => {setImportAsTableDialog(false)}} fullWidth
-                    classes={{paper: classes.dialogTable}} scroll="paper"
-                >
+                <Dialog open={uploadTableDialog} fullWidth onClose={() => setUploadDialogOpen(false)} maxWidth="xl" scroll="paper" maxHeight="xl">
                     <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <IconButton aria-label="close" onClick={() => {setImportAsTableDialog(false)}}>
-                            <CloseIcon/>
-                        </IconButton>
-                    </Grid>
-                    <DialogTitle>
-                        Save Output As table
-                    </DialogTitle>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <Box m={2}>
-                                <TextField
-                                    value={tableName}
-                                    onChange={handleName}
-                                    variant="outlined"
-                                    label="Table Name"
-                                    fullWidth
-                                ></TextField>
-                                <Box mt={2}>
-                                    <Grid item xs={6}>
-                                        <Button variant="contained" component="label" classes={{root: "select-all"}} onClick={handleSaveAsTable}>
-                                            Save
-                                        </Button>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        {saveAsTableActionInstance?.isLoading ? (<LoadingIndicator/>): (<></>)}
-                                    </Grid>
-                                </Box>
-                            </Box>
+                            <IconButton aria-label="close" onClick={() => setUploadDialogOpen(false)}>
+                                <CloseIcon/>
+                            </IconButton>
                         </Grid>
-                    </Grid>
+                    <DialogTitle>
+                        Import Intermediary Table
+                    </DialogTitle>
+                    <DialogContent sx={{minHeight: '800px', minWidth: '600px'}}>
+                        {downloadingFile ? (
+                            <Grid item xs={12}>
+                                <LoadingIndicator/>
+                            </Grid>
+                        ) : (
+                            <Box p={1}>
+                                <ConfigureTableMetadata file={new File([downloadFileFromS3Mutation.data], "Execution Output.csv")} uploadState={S3UploadState.FILE_BUILT_FOR_UPLOAD} currentEnabled={5} setUploadState={() => {return}}/>
+                            </Box>
+                        )}
+                    </DialogContent>
                 </Dialog>
                 <Dialog open={dataDialogOpen} onClose={handleDialogClose} fullWidth
                 classes={{paper: classes.dialogPaper}} scroll="paper" title={"Table Preview"}>
@@ -262,9 +230,8 @@ const IntermediaryTables = (props) => {
                         componentsProps={{
                             setDataDialogOpen: setDataDialogOpen,
                             setQueryData: setQueryData,
-                            setImportAsTableDialog: setImportAsTableDialog,
-                            setSelectedExecution: setSelectedExecution,
-                            setFetching: setFetchingActionexecutionOutput
+                            setFetching: setFetchingActionexecutionOutput,
+                            handleImportTable: handleImportTable
                         }}
                     ></DataGrid>
                 </Grid>

@@ -32,7 +32,7 @@ const AllApplicationView = () => {
                             Prebuilt Apps
                         </Typography>
                     </Box>
-                    <Box sx={{flex: 1, overflowX: 'auto'}}>
+                    <Box sx={{flex: 1, overflowX: 'auto', ml: 2, pr: 2}}>
                         <PreBuiltApplications searchQuery={searchQuery}/>
                     </Box>
                 </Box>

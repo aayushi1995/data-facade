@@ -9,6 +9,7 @@ import { makeWorkflowTemplate } from "../../common/components/workflow/create/ut
 import useSaveWorkflowMutation from "../../common/components/workflow/create/hooks/useSaveWorkflowMutation";
 import {RouteComponentProps, useHistory, useLocation} from "react-router-dom"
 import { useQueryClient } from "react-query";
+import WorkflowTabs from "../../common/components/workflow/create/WorkflowTabs";
 
 export interface BuildWorkflowHomePageProps {
 
@@ -95,7 +96,8 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
                 ) : (
                     <Box sx={{overflow: 'clip', flexDirection: 'column', gap: 3}}>  
                         <Box p={2}>
-                            <StagesWithActions/>  
+                            <WorkflowTabs/>
+                            {/* <StagesWithActions/>   */}
                         </Box>  
                         <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3, mr: 5, gap: 2}}>
                             <Button onClick={handleSave} color="primary" variant="contained">

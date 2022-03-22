@@ -83,12 +83,11 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                             placeholder="Search Apps/Flows/Actions"
                             multiline={true}
                             sx={{width: '40%', 
-                                background: 'linear-gradient(317.7deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 105.18%), #EBECF0',
+                                background: '#E0E5EC',
                                 boxSizing: 'border-box', 
-                                boxShadow: 'inset -5px -5px 10px #FAFBFF, inset 5px 5px 10px #A6ABBD',
+                                boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                                 backgroundBlendMode: 'soft-light, normal', 
-                                borderRadius: '10px', 
-                                border: '1px solid rgba(255, 255, 255, 0.4)', 
+                                borderRadius: '26px',
                                 display: 'flex', 
                                 justifyContent: 'center', 
                                 minHeight: '50px'}}

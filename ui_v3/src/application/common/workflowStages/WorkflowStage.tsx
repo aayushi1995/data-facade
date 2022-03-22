@@ -2,6 +2,7 @@ import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, Di
 import { Box } from '@mui/material';
 import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from '@mui/icons-material/Remove';
+import AddRemoveIcon from "../../../../src/images/add_stage.svg"
 import React from 'react';
 import { TextField } from '@material-ui/core';
 import Slide from '@mui/material/Slide';
@@ -83,7 +84,8 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
             alignItems: "center", 
             pt: 2, 
             pb: 2, 
-            borderRadius: 3
+            borderRadius: 3,
+            height: '80%'
         }}
         onClick={handleStageClick}
         >
@@ -204,17 +206,16 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                         justifyContent: "center",
                         position: "relative",
                         right:"10px",
-                        backgroundColor: "rgba(3, 42, 90, 1)",
                         borderRadius: "10px"
                     }}>
-                        <IconButton sx={{p: "0px"}} onClick={handleAddDeleteClick}>
-                            {props.cardButton === 'plus' ? (
+                        <IconButton sx={{p: "0px", mt: '5px'}} onClick={handleAddDeleteClick}>
+                            {/* {props.cardButton === 'plus' ? (
                                 <AddIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
                             ):
                             (
                                 <RemoveIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
-                            )}
-                            
+                            )} */}
+                            <img src={AddRemoveIcon} alt="Add" style={{height: '20px', width: '20px', background: 'transparent', transform: 'scale(1.5)'}}/>
                         </IconButton>
                         <Menu 
                             anchorEl={menuAnchor} 
