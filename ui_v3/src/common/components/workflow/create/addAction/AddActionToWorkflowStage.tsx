@@ -42,7 +42,7 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
         <Card sx={{display: 'flex', boxShadow: lightShadows[27], background: '#F8F8F8', borderRadius: '10px', width: '100%', height: '100%'}}>
             <Grid container spacing={1} sx={{height: "auto", p: 1}}>
                 <Grid item xs={3} sx={{ p: 3}}>
-                    <Card sx={{ background: '#FFFFFF', boxShadow: lightShadows[26], height: '100%', borderRadius: '10px', overflowY: 'auto'}}>
+                    <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px', background: '#F5F9FF'}}>
                         <WorkflowActionContainer
                             stageId={props.stageId}
                             buildActionHandler={buildActionHandler}

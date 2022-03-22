@@ -87,7 +87,6 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
             borderRadius: 3,
             height: '80%'
         }}
-        onClick={handleStageClick}
         >
             <Dialog open={isDeleteDialogOpen} onClose={handleDialogCloseWithoutDelete}fullWidth maxWidth="xs" scroll="paper">
                 <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>
@@ -118,10 +117,11 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 backgroundColor: "inherit",
                 zIndex: 2, 
                 flexGrow: 1,
-                gap: 3
-            }}>
+                gap: 3,
+                cursor: 'pointer'
+            }} onClick={handleStageClick}>
                 <Box sx={{display: "flex"}}>
-                    <Box sx={{alignItems: "flex-start", overflowY: 'clip', textOverflow: 'ellipsis'}}>
+                    <Box sx={{alignItems: "flex-start", overflowY: 'clip', textOverflow: 'ellipsis'}} >
                         {!isNameBeingEdited ? (
                             <Typography variant="heroHeader" sx={{
                                 fontSize: '16px',

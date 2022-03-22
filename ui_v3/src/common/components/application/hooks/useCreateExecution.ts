@@ -10,7 +10,8 @@ export interface useCreateExecutionParams {
 }
 
 export interface useCreateExecutionVariables {
-    actionInstanceId: string
+    actionInstanceId: string,
+    options?: object
 }
 
 export const useCreateExecution = (params: useCreateExecutionParams) => {
@@ -20,6 +21,7 @@ export const useCreateExecution = (params: useCreateExecutionParams) => {
     const mutation = useMutation((variables: useCreateExecutionVariables) => fetchedDataManagerInstance.executeInstance(
         labels.entities.ActionInstance,
         {
+            ...variables.options,
             filter: {
                 Id: variables.actionInstanceId
             }

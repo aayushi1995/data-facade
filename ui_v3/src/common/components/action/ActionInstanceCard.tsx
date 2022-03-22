@@ -1,5 +1,5 @@
 import { Application } from "../../../generated/entities/Entities"
-import { Grid, Card, Box, Typography, IconButton } from "@material-ui/core"
+import { Grid, Card, Box, Typography, IconButton, Dialog, DialogContent } from "@mui/material"
 import appLogo from "../../../../src/images/Segmentation_application.png"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
@@ -13,6 +13,8 @@ import { ActionInstanceCardViewResponse } from "../../../generated/interfaces/In
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import React from "react";
 import { useCreateExecution } from "../application/hooks/useCreateExecution";
+import ViewActionExecution from "../../../pages/view_action_execution/VIewActionExecution";
+import LoadingIndicator from "../LoadingIndicator";
 
 
 interface ActionInstanceCardProps {
@@ -23,7 +25,8 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
     const history = useHistory()
     const match = useRouteMatch()
     const [creatingExecution, setCreatingExecution] = React.useState(false)
-    const actionExecutionMutation = useCreateExecution({ 
+    const [dialogState, setDialogState] = React.useState<{isOpen: boolean}>({isOpen: false})
+    const actionExecutionMutationWorkflow = useCreateExecution({ 
         mutationOptions: {
             onSuccess: (data) => {
                 const createdExecutionId = data[0].Id
@@ -33,6 +36,21 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
             },
             onMutate: () => setCreatingExecution(true),
             onSettled: () => setCreatingExecution(false)
+        }
+    })
+
+    const actionExecutionMutation = useCreateExecution({
+        mutationOptions: {
+            onSuccess: (data) => {
+                console.log(data)
+            },
+            onMutate: () => {
+                setCreatingExecution(true)
+                setDialogState({isOpen: true})
+            }, 
+            onSettled: () => {
+                setCreatingExecution(false)
+            }
         }
     })
 
@@ -48,8 +66,14 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
 
     const executeActionInstance = () => {
         if(actionInstance.DefinitionActionType === ActionDefinitionActionType.WORKFLOW){
-            actionExecutionMutation.mutate({actionInstanceId: actionInstance.InstanceId!})
+            actionExecutionMutationWorkflow.mutate({actionInstanceId: actionInstance.InstanceId!})
+        } else {
+            actionExecutionMutation.mutate({actionInstanceId: actionInstance.InstanceId!, options: {SynchronousActionExecution: true}})
         }
+    }
+
+    const handleDialogClose = () => {
+        setDialogState({isOpen: false})
     }
 
     return (
@@ -63,6 +87,18 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
+                <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
+                    <DialogContent>
+                        {actionExecutionMutation.isLoading ? (
+                            <Grid item xs={12}>
+                                <LoadingIndicator/>
+                            </Grid>
+                        ) : (
+                            <ViewActionExecution actionExecutionId={actionExecutionMutation.data?.[0]?.Id}/>
+                        )}
+                        
+                    </DialogContent>
+                </Dialog>
                 <Box sx={{display: "flex", flexDirection: "row", height: "100%"}}>
                     <Box sx={{display: "flex", flexDirection: "column", width: "100%", pt: 2}}>
                         <Box>
