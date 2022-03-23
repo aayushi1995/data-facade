@@ -4,7 +4,7 @@ import { ActionDetailsForApplication } from "../../../generated/interfaces/Inter
 import NumberStat from "../NumberStat";
 import TagHandler from "../tag-handler/TagHandler";
 import ExecuteImage from "../../../../src/images/Execute.png"
-import ShareIcon from '@mui/icons-material/Share';
+import EditIcon from '@mui/icons-material/Edit';
 import FavouriteIcon from "../../../../src/images/Favourite.png"
 import OptionIcon from "../../../../src/images/Options.png"
 import { useHistory } from "react-router-dom";
@@ -28,7 +28,12 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
         }
     }
 
-    
+    const editAction = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if(!props.isWorkflow){
+            history.push(`/application/edit-action/${props.action.model?.Id || "idNotFound"}`)
+        }
+    }
+
     const openOptionsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         if(props.isWorkflow) {
             setMenuAnchor(event.currentTarget)
@@ -173,8 +178,8 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <IconButton>
                             <img src={FavouriteIcon} alt="favoutite"/>
                         </IconButton>
-                        <IconButton>
-                            <ShareIcon/>
+                        <IconButton onClick={editAction}>
+                            <EditIcon/>
                         </IconButton>
                         <IconButton onClick={openOptionsMenu}>
                             <img src={OptionIcon} alt="Options"/>

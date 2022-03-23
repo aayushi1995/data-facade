@@ -6,6 +6,7 @@ import ViewWorkflowExecutionHomePage from '../applications/workflow/ViewWorkflow
 import BuildActionHomePage from '../build_action/BuildActionHomePage';
 import BuildTableWorkflowHomePage from '../build_workflow/BuildTableWorkflowHomePage';
 import BuildWorkflowHomePage from '../build_workflow/BuildWorkflowHomePage';
+import EditActionHomePage from '../edit_action/EditActionHomePage';
 import ExecuteActionHomePage from '../execute_action/ExecuteActionHomePage';
 // import SingleTagView from './components/SingleApplicationView';
 import AllApplicationView from './components/AllApplicationView.tsx';
@@ -20,6 +21,7 @@ export const ApplicationHomePage = withRouter(function TableBrowserRoutes() {
             {/* <Route path={`${match.path}/:applicationName`} component={SingleApplicationView}/> */}
             <Route path="/application/build-workflow" component={BuildWorkflowHomePage}/>
             <Route path="/application/build-action" component={BuildActionHomePage}/>
+            <Route path="/application/edit-action/:ActionDefinitionId" component={EditActionHomePage}/>
             <Route path="/application/execute-workflow" component={ExecuteWorkflowHomePage}/>
             <Route path="/application/workflow-execution" component={ViewWorkflowExecutionHomePage}/>
             <Route path="/application/execute-action" component={ExecuteActionHomePage}/>

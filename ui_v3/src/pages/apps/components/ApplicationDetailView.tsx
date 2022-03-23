@@ -40,12 +40,9 @@ function TabPanel(props: TabPanelProps) {
 const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
     const [tabValue, setTableValue] = React.useState(0)
     const applicationId = match.params.applicationId
-    console.log(applicationId)
 
     const [applicationDetailData, applicationDataError, applicationDetailLoading] = useGetApplicationDetails(applicationId)
-    console.log(applicationDetailData)
     if(applicationDetailData) {
-        console.log(applicationDetailData)
         const application = applicationDetailData[0]
         return (
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
@@ -146,7 +143,6 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
         return <>Loading...</>
     }
 
-    console.log(applicationDataError)
     return <NoData/>
 
 }

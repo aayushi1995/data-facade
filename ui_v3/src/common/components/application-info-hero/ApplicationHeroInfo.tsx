@@ -25,7 +25,7 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
     const formTimestampHumanReadable = (date: Date) => {
         return `${date.toDateString()}`
     }
-    console.log(props)
+
     return (
         <Box p={1} sx={{display: 'flex', maxHeight: '350px'}}>
             <Box sx={{display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '50%'}}>

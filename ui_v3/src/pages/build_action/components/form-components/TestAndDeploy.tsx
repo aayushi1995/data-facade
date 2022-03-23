@@ -39,27 +39,12 @@ const TestAndDeploy = () => {
             onSettled: () => {
                 setBuildActionContext({type: "LoadingOver"})
             }
-        }
+        },
+        mode: buildActionContext.mode
     })
 
     const createAction = () => {
-        const applicationId: string  = location.state as string
-        const entityToCreate: ActionDefinitionFormPayload = {
-            ActionDefinition: {
-                model: {...buildActionContext.actionDefinitionWithTags.actionDefinition, ApplicationId: applicationId},
-                tags: buildActionContext.actionDefinitionWithTags.tags
-            },
-            ActionTemplatesWithParameters: buildActionContext.actionTemplateWithParams.map(at => ({
-                model: at.template,
-                tags: [],
-                actionParameterDefinitions: at.parameterWithTags.map(apwt => ({
-                    model: apwt.parameter,
-                    tags: apwt.tags
-                }))
-            }))
-        }
-        
-        saveMutation.mutate(entityToCreate)
+        saveMutation.mutate(buildActionContext)
     }
 
     return (

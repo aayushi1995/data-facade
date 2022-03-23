@@ -80,7 +80,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                                 <Box>
                                     <Chip variant="outlined" color="primary" size="small" 
                                         label={tag.Name} 
-                                        onDelete={props.allowDelete ? (() => {onSelectedTagsChange?.(selectedTags.filter(selectedTag => selectedTag.Id!==tag.Id))}) : undefined}
+                                        onDelete={props.allowDelete ? (() => {onSelectedTagsChange?.(selectedTags.filter(selectedTag => selectedTag.Name!==tag.Name))}) : undefined}
                                         sx={{
                                             fontFamily: "SF Pro Text",
                                             fontStyle: "normal",

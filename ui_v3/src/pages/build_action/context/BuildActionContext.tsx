@@ -21,7 +21,10 @@ type ActionParameterDefinitionWithTags = {
     tags: Tag[]
 }
 
-type BuildActionContextState = {
+export type ContextModes = "CREATE" | "UPDATE"
+
+export type BuildActionContextState = {
+    mode: ContextModes,
     actionDefinitionWithTags: {
         actionDefinition: ActionDefinition,
         tags: Tag[]
@@ -36,10 +39,24 @@ type BuildActionContextState = {
     onSuccessfulBuild?: (actionDefinitionId?: ActionDefinition) => void
 }
 
-const defaultBuildActionContext: () => BuildActionContextState = () => {
+
+const formDefaultUpdateContext: () => BuildActionContextState = () => {
+    return {
+        mode: "UPDATE",
+        actionDefinitionWithTags: {
+            actionDefinition: {},
+            tags: []
+        },
+        actionTemplateWithParams: [],
+        isLoadingAction: false
+    }
+}
+
+const formDefaultCreateContext: () => BuildActionContextState = () => {
     const actionDefinitionId: string = uuidv4()
     const actionTemplateId: string = uuidv4()
     const newState: BuildActionContextState = {
+        mode: "CREATE",
         actionDefinitionWithTags: {
             actionDefinition: {
                 Id: actionDefinitionId,
@@ -66,13 +83,19 @@ const defaultBuildActionContext: () => BuildActionContextState = () => {
     return newState
 }
 
-export const BuildActionContext = React.createContext<BuildActionContextState>(defaultBuildActionContext()) 
+export const BuildActionContext = React.createContext<BuildActionContextState>(formDefaultCreateContext()) 
 
 // Set Build Action Context State
 type SetBuildActionContextState = (action: BuildActionAction) => void
 const defaultSetBuildActionContextState: SetBuildActionContextState = (action: BuildActionAction) => {}
 export const SetBuildActionContext = React.createContext<SetBuildActionContextState>(defaultSetBuildActionContextState)
 
+type SetModeAction = {
+    type: "SetMode",
+    payload: {
+        mode: ContextModes
+    }
+}
 // Action Types
 // Action Definition
 type SetActionDefinitionNameAction = {
@@ -194,6 +217,12 @@ type SetSuccessCallbackFunction = {
     }
 }
 
+type SetApplicationIdAction = {
+    type: "SetApplicationId",
+    payload: {
+        newApplicationId?: string
+    }
+}
 
 // Other
 type RefreshIdsAction = {
@@ -237,8 +266,9 @@ ResetAction |
 LoadingAction |
 LoadingOverAction |
 LoadFromExistingAction |
-SetSuccessCallbackFunction
-
+SetSuccessCallbackFunction |
+SetModeAction |
+SetApplicationIdAction
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -414,7 +444,11 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
         }
         
         case "Reset": {
-            return defaultBuildActionContext()
+            switch(state.mode){
+                case "CREATE": return formDefaultCreateContext()
+                case "UPDATE": return formDefaultUpdateContext()
+                default: return formDefaultCreateContext()
+            }
         }
 
         case "Loading": {
@@ -427,7 +461,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
 
         case "LoadFromExisting": {
             const activeTemplateId = state?.actionDefinitionWithTags?.actionDefinition?.DefaultActionTemplateId||state?.actionTemplateWithParams[0]?.template?.Id
-            const newState = refreshContextIds({
+            const newState = {
                 ...state,
                 actionDefinitionWithTags: {
                     actionDefinition: action.payload?.ActionDefinition?.model!,
@@ -443,15 +477,48 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 isLoadingAction: false,
                 activeTemplateId: activeTemplateId,
                 sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!
-            })
-            console.log(newState)
-            return newState
+            }
+
+            if(state.mode==="CREATE") {
+                const x = assignActiveTemplateId(refreshContextIds(newState))
+                return x
+            } else if(state.mode==="UPDATE") {
+                return assignActiveTemplateId(newState)
+            } else {
+                return assignActiveTemplateId(newState)
+            }
         }
 
         case "SetSuccessCallbackFunction": {
             return {
                 ...state,
                 onSuccessfulBuild: action.payload.cb
+            }
+        }
+
+        case "SetApplicationId": {
+            return {
+                ...state,
+                actionDefinitionWithTags: {
+                    ...state.actionDefinitionWithTags,
+                    actionDefinition: {
+                        ...state.actionDefinitionWithTags.actionDefinition,
+                        ApplicationId: action.payload.newApplicationId
+                    }
+                }
+            }
+        }
+
+        case "SetMode": {
+            switch(action.payload.mode) {
+                case "CREATE":
+                    return formDefaultCreateContext()
+
+                case "UPDATE":
+                    return formDefaultUpdateContext()
+                    
+                default:
+                    return state
             }
         }
 
@@ -501,7 +568,12 @@ const refreshContextIds = (state: BuildActionContextState) => {
         }),
         isLoadingAction: false
     }
-    
+
+    return newState
+}
+
+const assignActiveTemplateId = (state: BuildActionContextState) => {
+    const newState = {...state}
     if(!newState.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId){ 
         newState.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId = newState.actionTemplateWithParams[0]?.template?.Id
     }
@@ -538,7 +610,7 @@ const getDefaultParameterWithTags: (definitionId: string, templateId: string) =>
 
 
 export const BuildActionContextProvider = ({children}: {children: React.ReactElement}) => {
-    const [contextState, dispatch] = React.useReducer(reducer, defaultBuildActionContext())
+    const [contextState, dispatch] = React.useReducer(reducer, formDefaultCreateContext())
     const setContextState: SetBuildActionContextState = ( args: BuildActionAction) => dispatch(args)
 
     return (

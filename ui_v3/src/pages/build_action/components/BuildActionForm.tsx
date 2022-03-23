@@ -7,15 +7,18 @@ import useActionDefinitionDetail from "../hooks/useActionDefinitionDetail";
 import CollapsibleDrawer from "./form-components/CollapsibleDrawer"
 import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTone';
 import ActionDetailForm from "./form-components/ActionDetailForm";
-import { SetBuildActionContext } from "../context/BuildActionContext";
+import { BuildActionContext, SetBuildActionContext } from "../context/BuildActionContext";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import { useHistory } from "react-router-dom";
 
 export interface BuildActionFormProps {
-
+    preSelectedActionDefiniitonId?: string
 }
 
 
 const BuildActionForm = (props: BuildActionFormProps) => {
+    const history = useHistory()
+    const actionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
 
     const [sidePanelActiveTab, setSidePanelActiveTab] = React.useState(1)
@@ -31,17 +34,33 @@ const BuildActionForm = (props: BuildActionFormProps) => {
                     payload: actionDetail
                 })
             },
-            onSettled: () => setBuildActionContext({type: "LoadingOver"})
+            onSettled: () => setBuildActionContext({type: "LoadingOver"}),
         },
         actionDefinitionId: selectedActionId
     })
-    console.log(error)
+
+    React.useEffect(() => {
+        if(!!props.preSelectedActionDefiniitonId){
+            setSelectedActionId(props.preSelectedActionDefiniitonId)
+        }
+    }, [props.preSelectedActionDefiniitonId])
+
     React.useEffect(() => {
         if(!!selectedActionId){
             setBuildActionContext({type: "Loading"})
             refetch() 
         }
     }, [selectedActionId])
+
+    const handleActionSelection = (actionId: string|undefined) => {
+        if(!!actionId) {
+            if(actionContext.mode==="CREATE") {
+                setSelectedActionId(actionId)
+            } else if(actionContext.mode==="UPDATE") {
+                history.push(`/application/edit-action/${actionId}`)
+            }
+        }
+    }
 
     const toggleSidebar = () => setSideBarOpen(old => !old)
 
@@ -111,7 +130,7 @@ const BuildActionForm = (props: BuildActionFormProps) => {
                     </Box>
                     <Box sx={{overflowY: "auto"}}>
                         <TabPanel value={sidePanelActiveTab} index={1}>
-                            <AllActions selectedActionId={selectedActionId} onSelectAction={(actionId: string|undefined) => setSelectedActionId(actionId)} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
+                            <AllActions selectedActionId={selectedActionId} onSelectAction={handleActionSelection} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
                         </TabPanel>
                     </Box>
                 {/* </Box> */}

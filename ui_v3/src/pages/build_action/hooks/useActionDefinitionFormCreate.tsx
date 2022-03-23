@@ -1,6 +1,8 @@
+import { ContextType } from "react"
 import { useMutation, UseMutationOptions, useQuery, useQueryClient } from "react-query"
 import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from "../../../generated/entities/Entities"
 import labels from "../../../labels/labels"
+import { BuildActionContextState, ContextModes } from "../context/BuildActionContext"
 import dataManagerInstance, { useRetreiveData } from './../../../data_manager/data_manager'
 
 
@@ -20,23 +22,96 @@ export type ActionDefinitionFormPayload = {
 }
 
 export interface UseActionDefinitionFormCreateProps {
-    options: UseMutationOptions<ActionDefinitionFormPayload, unknown, unknown, unknown>
+    options: UseMutationOptions<ActionDefinitionFormPayload, unknown, unknown, unknown>,
+    mode: ContextModes
+}
+
+export interface UseActionDefinitionFormUpdateProps {
+    
 }
 
 const useActionDefinitionFormCreate = (props: UseActionDefinitionFormCreateProps) => {
-    const {options} = props
-    const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
+    const { options, mode } = props
+    const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function, patchData: Function}
 
-    const mutation = useMutation((payload: ActionDefinitionFormPayload) => 
-        fetchedDataManagerInstance.saveData(labels.entities.ActionDefinition, {
-            ...payload,
-            CreateActionDefinitionForm: true,
-            entityProperties: {}
-        }),{
+    const createMutation = useMutation((state: BuildActionContextState) => {
+            return fetchedDataManagerInstance.saveData(labels.entities.ActionDefinition, 
+                formCreateRequestBodyFromContextState(state)
+            )
+        },
+        {
             ...options
         }
     )
-    return {mutation}
+
+    const updateMutation = useMutation((state: BuildActionContextState) => {
+            return fetchedDataManagerInstance.patchData(labels.entities.ActionDefinition, 
+                formUpdateRequestBodyFromContextState(state)
+            )
+        },
+        {
+            ...options
+        }
+    )
+
+    const getMutation = (mode: ContextModes) => {
+        switch(mode){
+            case "CREATE":
+                return createMutation
+            case "UPDATE":
+                return updateMutation
+            default:
+                return updateMutation
+        }   
+    }
+    return {mutation: getMutation(mode)}
+}
+
+
+
+const formCreateRequestBodyFromContextState = (state: BuildActionContextState) => {
+    const entityToCreate: ActionDefinitionFormPayload = {
+        ActionDefinition: {
+            model: state.actionDefinitionWithTags.actionDefinition,
+            tags: state.actionDefinitionWithTags.tags
+        },
+        ActionTemplatesWithParameters: state.actionTemplateWithParams.map(at => ({
+            model: at.template,
+            tags: [],
+            actionParameterDefinitions: at.parameterWithTags.map(apwt => ({
+                model: apwt.parameter,
+                tags: apwt.tags
+            }))
+        }))
+    }
+
+    return {
+        entityProperties: {},
+        CreateActionDefinitionForm: true,
+        ...entityToCreate
+    }
+}
+
+const formUpdateRequestBodyFromContextState = (state: BuildActionContextState) => {
+    const updatedAction: ActionDefinitionFormPayload = {
+        ActionDefinition: {
+            model: state.actionDefinitionWithTags.actionDefinition,
+            tags: state.actionDefinitionWithTags.tags
+        },
+        ActionTemplatesWithParameters: state.actionTemplateWithParams.map(at => ({
+            model: at.template,
+            tags: [],
+            actionParameterDefinitions: at.parameterWithTags.map(apwt => ({
+                model: apwt.parameter,
+                tags: apwt.tags
+            }))
+        }))
+    }
+
+    return {
+        ActionDefinitionForm: true,
+        UpdatedAction: updatedAction
+    }
 }
 
 export default useActionDefinitionFormCreate;
