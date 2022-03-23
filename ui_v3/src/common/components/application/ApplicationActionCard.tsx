@@ -28,22 +28,10 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
         }
     }
 
-    const editAction = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const edit = () => {
         if(!props.isWorkflow){
             history.push(`/application/edit-action/${props.action.model?.Id || "idNotFound"}`)
-        }
-    }
-
-    const openOptionsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-        if(props.isWorkflow) {
-            setMenuAnchor(event.currentTarget)
-        }
-    }
-
-    const handleMenuItemSelect = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-        setMenuAnchor(null)
-        const menuItem: number = event.currentTarget.value
-        if(menuItem === 0) {
+        } else {
             history.push(`/application/edit-workflow/${props.action.model?.Id || "Id"}`)
         }
     }
@@ -178,28 +166,13 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <IconButton>
                             <img src={FavouriteIcon} alt="favoutite"/>
                         </IconButton>
-                        <IconButton onClick={editAction}>
+                        <IconButton onClick={edit}>
                             <EditIcon/>
                         </IconButton>
-                        <IconButton onClick={openOptionsMenu}>
+                        <IconButton>
                             <img src={OptionIcon} alt="Options"/>
                         </IconButton>
                     </Box>
-                    <Menu 
-                        anchorEl={menuAnchor} 
-                        open={open} 
-                        onClose={() => {setMenuAnchor(null)}}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                          }}
-                          transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                          }}
-                    >
-                            <MenuItem onClick={handleMenuItemSelect} value={0}>Edit Flow</MenuItem>
-                    </Menu>
                 </Box>
             </Card>
         </Box>
