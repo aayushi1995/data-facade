@@ -659,12 +659,12 @@ export const formActionPropertiesForLoadTableIntoLocal = (fdsResponse, selectedF
             DisplayName: `Load Table(${selectedFile.name}) from S3`,
             IsRecurring: false,
             RenderTemplate: false,
-            ProviderInstanceId: fdsResponse.providerInstanceId,
+            ProviderInstanceId: "8",
         },
         SynchronousActionExecution: true,
         tableSchema: fileSchema,
         otherConfig: {
-            filePath: fdsResponse.filepath
+            filePath: fdsResponse.key
         }
     }
 }
