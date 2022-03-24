@@ -2,7 +2,7 @@
 import {Link as RouterLink, Redirect, Route, Switch} from "react-router-dom";
 import {
     DATA_CONNECTIONS_ROUTE,
-    DATA_RAW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE,
+    DATA_RAW_ROUTE,
     DATA_SUB_TABS, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE
 } from "./header/data/DataRoutesConfig";
 import {Box, Tab, Tabs} from "@mui/material";
@@ -14,7 +14,6 @@ import {CreateConnectionButton} from "../../pages/data/components/connections/Cr
 import ConfiguredDataSource from "../../pages/configurations/components/ConfiguredDataSource";
 import {TableBrowser} from "../../pages/table_browser/TableBrowser";
 import UploadTableDialogContent from "./UploadTableDialogContent";
-import {DATA_ROUTE} from "./header/data/RoutesConfig";
 
 
 export const ModuleSubHeader = () => <Switch>{

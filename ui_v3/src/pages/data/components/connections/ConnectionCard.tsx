@@ -1,11 +1,16 @@
 import {Link as RouterLink} from 'react-router-dom';
 import {BaseCard} from "../../../../common/components/basecard/BaseCard";
-import {Button, Divider, Stack, Typography, Box} from "@mui/material";
+import {Button, Divider, Stack, Typography, Box, alpha} from "@mui/material";
 import {Image} from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SyncIcon from "@mui/icons-material/Sync";
 import {ButtonIconWithToolTip} from "../../../../common/components/ButtonIconWithToolTip";
 import {DATA_RAW_ROUTE} from "../../../../common/components/header/data/DataRoutesConfig";
+import {ProviderInstance} from "../../../../generated/entities/Entities";
+import {useDeleteSelectedConnection} from "../../../configurations/hooks/useDeleteSelectedConnection";
+import {useTheme} from "@mui/styles";
+import {lightGreen} from "@mui/material/colors";
+import {LightInsetShadows} from "../../../../css/theme/shadows";
 
 const NA = 'NA';
 
@@ -17,7 +22,7 @@ const MainContent = ({
                          imgSrc = NA
                      }) => <Stack direction='column' alignItems={"center"}>
     <Image/>
-    <Box sx={{margin: "4px 4px 4px 4px", display: "flex", alignItems: "center"}}>
+    <Box sx={{margin: "4px", display: "flex", alignItems: "center"}}>
         <Divider orientation="horizontal" sx={{width: "40px", height: '100%'}}/>
     </Box>
     {/* <Divider variant={"middle"} /> */}
@@ -35,20 +40,21 @@ const MainContent = ({
     </Typography>
 </Stack>;
 
-export type ConnectionCardType = {
-    Name: string,
+export type ConnectionCardType = Partial<ProviderInstance> & {
+    Id?: string,
+    Name?: string,
     ConnectionID: string,
-    CreatedBy: string,
-    LastSyncOn: string,
-    imgSrc: string,
-    onDelete: () => void,
-    Actions: string,
-    Tables: string,
-    onSync: () => void
+    CreatedBy?: string,
+    LastSyncOn?: string,
+    imgSrc?: string,
+    Actions?: number,
+    Tables?: number,
+    onClick: (ConnectionID: string) => void,
+    isSelected?: boolean
 };
 const buttonStyle = {fontSize: 8}
 
-function ConnectionsPrimaryActionButtons(props: { Actions: string, Tables: string }) {
+function ConnectionsPrimaryActionButtons(props: { Actions?: number, Tables?: number }) {
     return <Stack direction={"column"} gap={1} alignItems="center">
         <Stack direction={"row"} gap={1}>
             <Button variant="outlined" sx={buttonStyle}>
@@ -69,17 +75,26 @@ function ConnectionsPrimaryActionButtons(props: { Actions: string, Tables: strin
     </Stack>;
 }
 
-export const ConnectionCard = (props: ConnectionCardType) => <BaseCard
-    height = {250}
-    width = {236}
-    background={"rgba(20, 255, 0, 0.17)"}
-    ActionIconButtons={<Stack direction='column' gap={1}>
-        <ButtonIconWithToolTip Icon={SyncIcon} onClick={props.onSync} title="sync"/>
-        <ButtonIconWithToolTip Icon={DeleteIcon} onClick={props.onDelete} title="delete"/>
-    </Stack>}
-    PrimaryActionIconButtons={<ConnectionsPrimaryActionButtons
-        Actions={props.Actions ?? NA}
-        Tables={props.Tables  ?? NA}/>}
->
-    <MainContent {...props}/>
-</BaseCard>
+
+export const ConnectionCard = (props: ConnectionCardType) => {
+    const deleteSelectedConnection = useDeleteSelectedConnection();
+    const syncSelectedConnection = (connectionId?: string)=>alert('todo'+ connectionId);
+    const theme = useTheme();
+    return <Box onClick={()=>props.onClick(props.ConnectionID)} sx={{cursor: "pointer"}}>
+        <BaseCard
+            height={250}
+            width={236}
+            background={ alpha(lightGreen.A400, 0.17) }
+            boxShadow={props.isSelected? LightInsetShadows[1]: theme.shadows[23]}
+            ActionIconButtons={<Stack direction='column' gap={1}>
+                <ButtonIconWithToolTip Icon={SyncIcon} onClick={()=>syncSelectedConnection(props.Id)} title="sync"/>
+                <ButtonIconWithToolTip Icon={DeleteIcon} onClick={()=>deleteSelectedConnection(props.Id)} title="delete"/>
+            </Stack>}
+            PrimaryActionIconButtons={<ConnectionsPrimaryActionButtons
+                Actions={props.Actions }
+                Tables={props.Tables }/>}
+        >
+            <MainContent {...props}/>
+        </BaseCard>
+    </Box>
+}

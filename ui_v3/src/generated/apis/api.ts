@@ -79,13 +79,13 @@ export class Fetcher {
 	/**
 	Gives you the number of runs on any provider in the last five days. Also gives you the list of provider parameter instances.
 	*/
-	
+	//todo
 	static async fetchData(httpsVerb: "GET", endpoint: "/getProviderHistoryAndParameters", inputPayload: Entity.ProviderInstance): Promise<CustomInterface.ProviderRunsHistoryAndParameters[]>; 
 	
 	/**
 	Gives you the details of a provider Instance. You give the filter in the request body.
 	*/
-	
+	//todo
 	static async fetchData(httpsVerb: "GET", endpoint: "/getProviderInstanceDetails", inputPayload: Entity.ProviderInstance): Promise<CustomInterface.ProviderInstanceDetails[]>; 
 	
 	/**

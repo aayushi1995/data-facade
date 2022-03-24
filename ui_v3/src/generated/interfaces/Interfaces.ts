@@ -114,6 +114,7 @@ export interface ApplicationCardViewResponse {
 
 export interface ProviderRunsHistoryAndParameters {
     history?: number[]
+	//past 5 days
 	ProviderParameterInstanceModels?: Entity.ProviderParameterInstance[]
 	model?: Entity.ProviderInstance
 	failedActions?: number

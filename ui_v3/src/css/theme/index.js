@@ -97,7 +97,7 @@ const baseOptions = {
         MuiPaper: {
             styleOverrides: {
                 root: {
-                    backgroundImage: 'none'
+
                 }
             }
         }

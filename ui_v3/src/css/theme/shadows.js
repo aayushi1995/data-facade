@@ -31,7 +31,10 @@ export const lightShadows = [
     '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
     '-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)'
 ];
-
+export const LightInsetShadows = [
+    'none',
+    'inset -6.41304px -6.41304px 12.8261px #E3E6F0, inset 6.41304px 6.41304px 12.8261px 0.641304px #A6ABBD'
+];
 export const darkShadows = [
     'none',
     '0 0 1px 0 rgba(0,0,0,0.70), 0 3px 4px -2px rgba(0,0,0,0.50)',

@@ -1,6 +1,6 @@
 import {TabsType} from "../schema";
 
-
+export const DATA_ROUTE = '/data';
 export const DATA_CONNECTIONS_ROUTE = '/data/connections';
 export const DATA_RAW_ROUTE = '/data/raw';
 export const DATA_DERIVED_ROUTE = '/data/derived';

@@ -82,7 +82,7 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
             </TableWrapper>
         </Route>
         <Route exact path={CHOOSE_CONNECTOR_SELECTED_ROUTE}>
-            <CreateDataSourceRow selectedId='' handleClose={()=>{
+            <CreateDataSourceRow isUpdate={false} selectedId='' handleClose={()=>{
                 history.push(DATA_CONNECTIONS_ROUTE);
             }}/>
         </Route>

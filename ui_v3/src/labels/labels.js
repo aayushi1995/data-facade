@@ -106,7 +106,8 @@ const labels = {
         "new_instance": "Create a new instance",
         "create": "Create",
         "success": "Success",
-        "create_and_sync": "Create and sync"
+        "create_and_sync": "Create and sync",
+        "update": "Update",
     },
     "CustomizationActionInstanceRow": {
         "execute": "Execute",

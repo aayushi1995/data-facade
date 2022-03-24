@@ -58,7 +58,8 @@ const useStyles = makeStyles(() => ({
     text_field: {
         marginLeft: 30,
         marginRight: 30,
-        marginTop: 20
+        marginTop: 20,
+        width: '100%'
     },
     create_button: {
         backgroundColor: 'green',
