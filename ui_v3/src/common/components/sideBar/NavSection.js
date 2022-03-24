@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import {matchPath} from 'react-router-dom';
-import {List, ListSubheader, useTheme} from '@material-ui/core';
+import {List, ListSubheader, useTheme} from '@mui/material';
 import NavItem from './NavItem';
 
 const renderNavItems = ({depth = 0, items, pathname}) => (

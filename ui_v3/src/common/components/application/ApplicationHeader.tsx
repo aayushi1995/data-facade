@@ -1,5 +1,5 @@
 import { Box, Grid, Typography, Button, TextField, InputAdornment } from "@mui/material"
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import SearchIcon from '@mui/icons-material/Search';
 import { useHistory, Link } from "react-router-dom";
 import UploadApplicationButton from "../UploadApplicationButton";

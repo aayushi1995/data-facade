@@ -1,5 +1,5 @@
 import React from "react";
-import {IconButton, Tooltip} from "@material-ui/core";
+import {IconButton, Tooltip} from "@mui/material";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AddIcon from '@mui/icons-material/Add';
 import {Link as RouterLink, useLocation} from 'react-router-dom';

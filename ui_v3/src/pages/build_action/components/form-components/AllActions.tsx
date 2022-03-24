@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import useFetchActionDefinitions from "../../../../common/components/workflow/create/hooks/useFetchActionDefinitions";
 import ActionCard from "./ActionCard";
 
@@ -17,7 +17,7 @@ const AllActions = (props: AllActionsProps) => {
         return <>{allActionDefinitionsError}</>
     } else {
         return(
-            <Grid container spacing={1}>
+            <Grid container spacing={3} sx={{px: 2}}>
                 {allActionDefinitionsData.filter(actionDefinition => actionDefinition.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
                     <Grid item xs={12}>
                         <ActionCard
@@ -25,7 +25,7 @@ const AllActions = (props: AllActionsProps) => {
                             actionName={actionDefinition.UniqueName||"NAME NA"}
                             actionDescription={actionDefinition.Description||"DESCRIPTION NA"}
                             selectedActionId={props.selectedActionId}
-                            onSelectAction={props.onSelectAction}
+                            onRadioToggle={props.onSelectAction}
                         />
                     </Grid>)}
             </Grid>

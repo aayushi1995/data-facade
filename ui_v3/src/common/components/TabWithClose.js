@@ -1,7 +1,7 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
-import {Grid, IconButton, Tab} from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close';
+import { makeStyles } from '@mui/styles'
+import {Grid, IconButton, Tab} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const useStyles = makeStyles(() => ({

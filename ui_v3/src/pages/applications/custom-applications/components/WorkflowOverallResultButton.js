@@ -1,5 +1,5 @@
 import {DIALOG_CONTENT_TYPE, useStyles, useWorkflowDialogState, WorkflowResultDialog} from "./WorkflowListItem";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import React from "react";
 
 export const WorkflowOverallResultButton = ({actionResultList}) => {

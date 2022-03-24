@@ -1,5 +1,5 @@
 import React from 'react'
-import {Grid} from '@material-ui/core'
+import {Grid} from '@mui/material'
 import AlertDetails from './components/AlertDetails'
 import {Route, Switch, useHistory, useRouteMatch, withRouter} from 'react-router-dom'
 import LoadingIndicator from '../../common/components/LoadingIndicator'
@@ -7,7 +7,7 @@ import NoData from '../../common/components/NoData'
 import {useRetreiveData} from './../../data_manager/data_manager'
 import './../../css/alerts/Alert.css'
 import labels from './../../labels/labels'
-import {DataGrid, GridToolbar} from "@material-ui/data-grid";
+import {DataGrid, GridToolbar} from "@mui/x-data-grid";
 import {formDateOrReturnDefault} from "../jobs/components/JobsRow";
 import {PageHeader} from "../../common/components/header/PageHeader";
 

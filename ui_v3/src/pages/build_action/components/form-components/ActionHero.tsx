@@ -1,4 +1,4 @@
-import { Box, Card, Divider, Typography, Button, Avatar, TextField, Grid} from "@material-ui/core";
+import { Box, Card, Divider, Typography, Button, Avatar, TextField, Grid} from "@mui/material";
 import ActionInfo from "./hero-componenets/ActionInfo";
 import ActionDescription from "./hero-componenets/ActionDescription";
 import { lightShadows } from "../../../../css/theme/shadows";

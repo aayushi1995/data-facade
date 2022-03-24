@@ -1,11 +1,11 @@
 import React from 'react'
-import {Box, Grid, Tab, Tabs} from '@material-ui/core'
+import {Box, Grid, Tab, Tabs} from '@mui/material'
 import {useRetreiveData} from '../../../../data_manager/data_manager'
 import {PageHeader} from "../../../../common/components/header/PageHeader";
 import {Redirect, Route, Switch, useHistory, useRouteMatch, withRouter} from 'react-router-dom'
 import LoadingIndicator from '../../../../common/components/LoadingIndicator';
 import NoData from '../../../../common/components/NoData'
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {customerSubRoutes} from "../../../../common/components/header/DataFacadeAppBar";
 import * as PropTypes from "prop-types";
 

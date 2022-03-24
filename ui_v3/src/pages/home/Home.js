@@ -1,5 +1,5 @@
 import React from "react";
-import {Grid} from '@material-ui/core'
+import {Grid} from '@mui/material'
 import {useAuth0} from "@auth0/auth0-react";
 import LoginButton from "./components/Login"
 import useHomeStyles from './../../css/home/Home'

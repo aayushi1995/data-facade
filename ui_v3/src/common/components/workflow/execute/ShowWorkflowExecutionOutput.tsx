@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Divider } from "@material-ui/core"
+import { Box, Grid, Typography, Divider } from "@mui/material"
 import React from "react"
 import { WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
 import ViewActionExecutionOutput from "../../ViewActionExecutionOutput"

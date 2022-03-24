@@ -1,4 +1,4 @@
-import { Box, Card, Grid } from "@material-ui/core"
+import { Box, Card, Grid } from "@mui/material"
 import { Divider } from "@mui/material"
 import React from "react"
 import { lightShadows } from '../../../../../css/theme/shadows'

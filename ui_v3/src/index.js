@@ -11,7 +11,7 @@ import history from "./utils/history";
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {auth0ClientId} from './common/config/config'
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import StyledEngineProvider from '@material-ui/core/StyledEngineProvider';
+import StyledEngineProvider from '@mui/material/StyledEngineProvider';
 import {SettingsProvider} from "./data_manager/SettingsContext";
 import {ModuleProvider} from "./common/components/header/data/ModuleContext";
 

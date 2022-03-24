@@ -1,10 +1,10 @@
 import React, {useContext} from 'react'
-import {Button, Grid, MenuItem, Select, TextField} from '@material-ui/core'
+import {Button, Grid, MenuItem, Select, TextField} from '@mui/material'
 import {useMutation, useQuery} from 'react-query'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import {v4 as uuidv4} from 'uuid'
 import LoadingIndicator from './LoadingIndicator'
-import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined'
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined'
 import AppContext from "../../utils/AppContext";
 
 

@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { Box, Button, TextField } from "@mui/material";
 import React from "react";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";

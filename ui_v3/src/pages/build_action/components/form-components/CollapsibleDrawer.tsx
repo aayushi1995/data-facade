@@ -1,4 +1,4 @@
-import { ArrowRight } from "@material-ui/icons";
+import { ArrowRight } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 
 export interface CollapsibleDrawerProps {
@@ -18,7 +18,9 @@ const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
             width: open ? openWidth : closedWidth,
             marginY: 1,
             maxHeight: maxHeight,
-           ...(open ? {} : {
+           ...(open ? {
+                backgroundColor: "#F5F9FF"
+           } : {
                 background:
                 "linear-gradient(135.37deg, rgba(0, 0, 0, 0.4) 4.29%, rgba(255, 255, 255, 0.4) 95.6%), #A6CEE3",
                 backgroundBlendMode: "soft-light, normal",
@@ -26,7 +28,8 @@ const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
                 boxSizing: "border-box",
                 boxShadow: "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",
                 borderRadius: 3
-           })
+           }),
+           px: 1
         }}>
             {open ?
                 <Box sx={{ display: "flex", flexDirection: "column",  gap: 3}}>

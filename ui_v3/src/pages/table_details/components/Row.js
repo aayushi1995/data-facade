@@ -1,13 +1,13 @@
 import React from 'react'
 import {Link, useRouteMatch} from 'react-router-dom'
 
-import {makeStyles} from '@material-ui/styles'
-import {Box, Collapse, Divider, Grid, IconButton, Table, TableBody, TableCell, TableRow} from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
+import {Box, Collapse, Divider, Grid, IconButton, Table, TableBody, TableCell, TableRow} from '@mui/material'
 import {Cell, Legend, Pie, PieChart, ResponsiveContainer} from 'recharts'
-import {KeyboardArrowDown, KeyboardArrowRight, Tv} from '@material-ui/icons'
-import ErrorIcon from '@material-ui/icons/Error'
-import TableChartIcon from '@material-ui/icons/TableChart'
-import BarChartIcon from '@material-ui/icons/BarChart'
+import {KeyboardArrowDown, KeyboardArrowRight, Tv} from '@mui/icons-material'
+import ErrorIcon from '@mui/icons-material/Error'
+import TableChartIcon from '@mui/icons-material/TableChart'
+import BarChartIcon from '@mui/icons-material/BarChart'
 
 const useStyles = makeStyles(() => ({
 

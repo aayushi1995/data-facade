@@ -30,9 +30,7 @@ const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string})
     
     
     return (
-        <Box>
-            <BuildActionForm preSelectedActionDefiniitonId={props.preSelectedActionDefiniitonId}/>
-        </Box>
+        <BuildActionForm preSelectedActionDefiniitonId={props.preSelectedActionDefiniitonId}/>
     )
 }
 export default EditActionHomePage;

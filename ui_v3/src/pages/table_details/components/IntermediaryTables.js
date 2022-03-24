@@ -2,16 +2,16 @@ import React from "react"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import NoData from "../../../common/components/NoData"
 import dataManager, { useRetreiveData } from "../../../data_manager/data_manager"
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { CustomToolbar } from "../../../common/components/CustomToolbar";
 import { useCustomizationToolBarButtons } from "../../customizations/UseCustomizationToolBarButtons";
-import { Dialog, Grid, Link, Tooltip, TextField, Button, DialogContent } from "@material-ui/core"
+import { Dialog, Grid, Link, Tooltip, TextField, Button, DialogContent } from "@mui/material"
 import { formTimeStampOrReturnDefault } from '../../jobs/components/JobsRowJobDetail'
 import { Box, IconButton } from "@mui/material";
 import PreviewIcon from "@mui/icons-material/Preview";
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import QueryData from '../../../common/components/QueryData'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import DialogTitle from '@mui/material/DialogTitle';
 import {v4 as uuidv4} from 'uuid'
 import { useMutation } from "react-query";

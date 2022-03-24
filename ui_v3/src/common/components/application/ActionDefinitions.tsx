@@ -1,6 +1,6 @@
 import NoData from "../NoData"
 import { useGetPrebuiltApplications } from "./hooks/useGetPrebuildApplications"
-import { Box, Card } from "@material-ui/core"
+import { Box, Card } from "@mui/material"
 import ActionDefinitionCard from "../action/ActionDefinitionCard"
 import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import { useGetActionDefinitions } from "./hooks/useGetActionDefinitions"

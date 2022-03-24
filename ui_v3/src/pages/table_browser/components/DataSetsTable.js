@@ -1,17 +1,17 @@
 import {Link, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {useMutation} from 'react-query'
-import CloseIcon from '@material-ui/icons/Close';
-import {Dialog, Grid, IconButton, Snackbar} from '@material-ui/core'
+import CloseIcon from '@mui/icons-material/Close';
+import {Dialog, Grid, IconButton, Snackbar} from '@mui/material'
 import CreateActionInstanceFormNew from './../../../common/components/CreateActionInstanceFormNew'
 import './../../../css/table_browser/Row.css'
 import dataManagerInstance from './../../../data_manager/data_manager'
 import React from 'react';
 import labels from './../../../labels/labels';
-import {DataGrid} from "@material-ui/data-grid";
-import {makeStyles} from "@material-ui/styles";
-import SyncIcon from '@material-ui/icons/Sync';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import {DataGrid} from "@mui/x-data-grid";
+import {makeStyles} from "@mui/styles";
+import SyncIcon from '@mui/icons-material/Sync';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {TABLE_CHECKS} from "../../table_details/TableDetails";
 import {CustomToolbar} from "../../../common/components/CustomToolbar";
 import {Alert} from '../../../common/components/Alert';

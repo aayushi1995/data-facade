@@ -1,8 +1,8 @@
 import React from 'react'
 import {
     Box, Grid, Tab, Table, TableBody, TableCell, TableRow, Tabs
-} from '@material-ui/core'
-import {makeStyles} from '@material-ui/styles'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import {
     DATA_CONNECTIONS_UPLOAD_COLUMNS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE
 } from "./header/data/DataRoutesConfig";

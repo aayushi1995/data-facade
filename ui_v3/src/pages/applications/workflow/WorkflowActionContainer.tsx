@@ -1,5 +1,5 @@
-import { Typography } from "@material-ui/core";
-import { Box, Card, IconButton, Dialog} from "@material-ui/core";
+import { Typography } from "@mui/material";
+import { Box, Card, IconButton, Dialog} from "@mui/material";
 import { Divider } from "@mui/material";
 import React from "react";
 import { lightShadows } from '../../../css/theme/shadows'
@@ -29,11 +29,11 @@ export interface WorkflowActionContainerProps {
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
-      children?: React.ReactElement;
+      children: React.ReactElement;
     },
-    ref?: React.Ref<any>,
+    ref: React.Ref<unknown>,
   ) {
-    return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="up" {...props}/>
 });
 
 const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {

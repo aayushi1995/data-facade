@@ -1,14 +1,14 @@
 import React from 'react'
 import {Link, useRouteMatch} from 'react-router-dom'
-import {Box, Button, Collapse, Dialog, Divider, Grid, IconButton} from '@material-ui/core'
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons'
+import {Box, Button, Collapse, Dialog, Divider, Grid, IconButton} from '@mui/material'
+import {KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material'
 import {useMutation} from 'react-query'
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import NoData from './../../../common/components/NoData'
 import ColumnIcon from './../../../images/column_icon.png'
 import StatsTable from './StatsTable'
 import CreateActionInstanceFormNew from './../../../common/components/CreateActionInstanceFormNew'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import labels from './../../../labels/labels'
 import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'
 import useStyles from './../../../css/table_details/ColumnViewRow'

@@ -1,5 +1,5 @@
 import React from 'react'
-import {createSvgIcon, Grid, IconButton, Snackbar, Tooltip} from '@material-ui/core'
+import {createSvgIcon, Grid, IconButton, Snackbar, Tooltip} from '@mui/material'
 import {useHistory, useRouteMatch} from 'react-router-dom'
 import {formDateOrReturnDefault, formTimeStampOrReturnDefault, getExecutionTime, getStatusIndicatorComponent} from './JobsRow'
 import {useMutation, useQueryClient} from 'react-query'
@@ -11,8 +11,8 @@ import dataManagerInstance, {
 } from './../../../data_manager/data_manager'
 import labels from './../../../labels/labels'
 import * as PropTypes from "prop-types";
-import {DataGrid} from "@material-ui/data-grid";
-import DeleteIcon from "@material-ui/icons/Delete";
+import {DataGrid} from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {CustomToolbar} from "../../../common/components/CustomToolbar";
 import { Alert } from '../../../common/components/Alert';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid} from '@material-ui/core'
+import {Grid} from '@mui/material'
 import QualityChecksRow from './components/QualityChecksRow'
 import {useRouteMatch} from 'react-router-dom'
 import LoadingIndicator from './../../common/components/LoadingIndicator'

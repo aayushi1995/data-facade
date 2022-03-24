@@ -5,7 +5,7 @@ import {
     Grid,
     IconButton,
     TextField
-} from '@material-ui/core'
+} from '@mui/material'
 import * as XLSX from 'xlsx';
 
 import './../../../css/table_browser/TableBrowser.css'
@@ -13,7 +13,7 @@ import './../../../css/table_browser/TableBrowser.css'
 import S3UploadState from '../../../custom_enums/S3UploadState';
 import labels from './../../../labels/labels'
 import {convertToCsv} from './util'
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 
 
 /*

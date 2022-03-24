@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Container, FormControl, Input, InputLabel as Label} from "@material-ui/core";
+import {Button, Container, FormControl, Input, InputLabel as Label} from "@mui/material";
 import dataManager from "../../data_manager/data_manager";
 import {useMutation, useQueryClient} from "react-query";
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import {v4 as uuidv4} from 'uuid'
 
-import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from '@material-ui/core'
-import {makeStyles} from "@material-ui/styles";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material'
+import {makeStyles} from "@mui/styles";
+import Autocomplete from '@mui/material/Autocomplete';
 
 import {useMutation} from 'react-query'
 

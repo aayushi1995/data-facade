@@ -1,10 +1,10 @@
 import React, {useContext} from "react";
-import {Grid, Typography} from "@material-ui/core";
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import {Grid, Typography} from "@mui/material";
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import AppContext from "../../../utils/AppContext";
-import PersonIcon from '@material-ui/icons/Person';
+import PersonIcon from '@mui/icons-material/Person';
 import Logout from "../../../pages/home/components/Logout";
 
 //props.appcontext.userName//workspaceName

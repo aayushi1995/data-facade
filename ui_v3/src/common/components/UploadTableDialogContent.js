@@ -3,7 +3,7 @@ import {Link as RouterLink, Redirect, Route} from 'react-router-dom';
 import {
     Box,
     Button, Grid, Tab, Tabs, TextField
-} from '@material-ui/core';
+} from '@mui/material';
 import dataManagerInstance from './../../data_manager/data_manager';
 import S3UploadState from './../../custom_enums/S3UploadState';
 import TagGroups from './../../enums/TagGroups';

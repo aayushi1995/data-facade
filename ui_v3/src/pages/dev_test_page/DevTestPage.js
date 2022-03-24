@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {Button, Box} from '@material-ui/core'
+import {Button, Box} from '@mui/material'
 import {useMutation} from 'react-query'
 import ColumnRangeChartVisualizer from '../../common/components/ColumnRangeChartVisualizer'
 import AppContext from '../../utils/AppContext'

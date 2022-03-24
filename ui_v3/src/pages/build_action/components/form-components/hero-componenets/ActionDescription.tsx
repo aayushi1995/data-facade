@@ -1,4 +1,4 @@
-import { Box, Card, Divider, Typography, Button, Avatar, TextField} from "@material-ui/core";
+import { Box, Card, Divider, Typography, Button, Avatar, TextField} from "@mui/material";
 import { IconButton } from "@mui/material";
 import React from "react";
 

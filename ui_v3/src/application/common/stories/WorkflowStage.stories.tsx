@@ -1,7 +1,7 @@
 import WorkflowStage, {WorkflowStageProps} from "../workflowStages/WorkflowStage";
 import { withDesign } from 'storybook-addon-designs'
 import { Story } from "@storybook/react";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 
 export default{
     title: "WORKFLOW/Stages/WorkflowStage",

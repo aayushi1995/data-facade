@@ -1,6 +1,6 @@
 import React from 'react'
-import {createFilterOptions, Grid, TextField} from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import {createFilterOptions, Grid, TextField} from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete';
 import dataManagerInstance, {useRetreiveData} from './../../data_manager/data_manager'
 import labels from '../../labels/labels';
 import {v4 as uuidv4} from 'uuid'

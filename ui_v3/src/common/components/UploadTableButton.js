@@ -18,18 +18,18 @@ import {
     Select,
     Typography,
     TextField, Stack, LinearProgress, useTheme
-} from '@material-ui/core'
-import {makeStyles} from '@material-ui/styles'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import './../../css/table_browser/TableBrowser.css'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import dataManagerInstance from './../../data_manager/data_manager'
 import TagGroups from './../../enums/TagGroups'
 import ColumnDataType from './../../enums/ColumnDataType'
 import TagScope from './../../enums/TagScope'
 import {useMutation} from 'react-query'
 import SelectTags from './SelectTags.js'
-import AddIcon from "@material-ui/icons/Add";
-import {DataGrid} from "@material-ui/data-grid";
+import AddIcon from "@mui/icons-material/Add";
+import {DataGrid} from "@mui/x-data-grid";
 import {UploadTableDialogContent} from './UploadTableDialogContent';
 
 export const useStyles = makeStyles(() => ({

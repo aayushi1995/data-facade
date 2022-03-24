@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import { Story } from "@storybook/react";
 import GroupDropDown, {GroupDropDownProps} from "./GroupDropDown";
 

@@ -2,17 +2,17 @@ import React, {useCallback, useEffect} from 'react';
 import {ActionInstanceDetails} from './ActionInstancesRow'
 import labels from './../../../labels/labels'
 import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {Route, Switch, useHistory, useRouteMatch, withRouter} from "react-router-dom";
 import {useCustomizationToolBarButtons} from "../UseCustomizationToolBarButtons";
 import {CustomToolbar} from "../../../common/components/CustomToolbar";
-import {Box, Dialog, Grid, IconButton} from '@material-ui/core';
+import {Box, Dialog, Grid, IconButton} from '@mui/material';
 import {v4 as uuidv4} from 'uuid';
 import {useMutation} from 'react-query'
 import LinearProgress from '@mui/material/LinearProgress';
 import QueryData from "../../../common/components/QueryData";
-import CloseIcon from '@material-ui/icons/Close';
-import {makeStyles} from "@material-ui/styles";
+import CloseIcon from '@mui/icons-material/Close';
+import {makeStyles} from "@mui/styles";
 import {WorkflowActionButtons} from "../../applications/custom-applications/components/WorkflowActionButtons";
 import {ACTION_EXECUTION_STATUS} from "../../applications/custom-applications/hooks/useRunActions";
 import {TableWrapper} from "../../../common/components/TableWrapper";

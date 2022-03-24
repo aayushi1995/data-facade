@@ -1,4 +1,4 @@
-import { DataGrid } from "@material-ui/data-grid"
+import { DataGrid } from "@mui/x-data-grid"
 import { CustomToolbar } from "../../common/components/CustomToolbar"
 import LoadingWrapper from "../../common/components/LoadingWrapper"
 import ActionDefinitionPresentationFormat from "../../enums/ActionDefinitionPresentationFormat"

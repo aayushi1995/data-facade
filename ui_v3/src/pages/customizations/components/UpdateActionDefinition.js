@@ -1,8 +1,8 @@
 import React from 'react'
 import { useMutation } from 'react-query';
-import { Backdrop, Snackbar } from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Backdrop, Snackbar } from '@mui/material'
+import MuiAlert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import ActionDefinitionForm from './ActionDefinitionForm'
 import EntityCreationRequestState from '../../../custom_enums/RequestState.js'

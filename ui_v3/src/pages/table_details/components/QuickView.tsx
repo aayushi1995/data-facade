@@ -2,7 +2,7 @@ import React from 'react'
 import { useRetreiveData } from "../../../data_manager/data_manager";
 import { TableWrapper } from "../../../common/components/TableWrapper";
 import { CustomToolbar } from "../../../common/components/CustomToolbar";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 
 
 export const useActionExecution1000RowsQuery = (tableId: string) => useRetreiveData('ActionExecution',

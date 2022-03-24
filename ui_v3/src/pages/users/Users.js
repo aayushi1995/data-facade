@@ -1,12 +1,12 @@
 import React, {useRef, useState} from "react";
-import {makeStyles} from '@material-ui/styles';
-import Modal from '@material-ui/core/Modal';
-import {Button, Grid, Typography} from "@material-ui/core";
+import { makeStyles } from '@mui/styles';
+import Modal from '@mui/material/Modal';
+import {Button, Grid, Typography} from "@mui/material";
 import {UserEdit} from "../../common/components/UserEdit";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import dataManager from "../../data_manager/data_manager";
-import {Error} from "@material-ui/icons";
-import {DataGrid} from '@material-ui/data-grid';
+import {Error} from "@mui/icons-material";
+import {DataGrid} from '@mui/x-data-grid';
 import {useRouteMatch} from "react-router-dom";
 import {PageHeader} from "../../common/components/header/PageHeader";
 

@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { Box, Card, Chip, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@material-ui/core';
+import { Box, Card, Chip, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@mui/material';
 import {Tabs, Tab} from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
 import { ReactComponent as DefaultIcon } from "../Icon.svg";

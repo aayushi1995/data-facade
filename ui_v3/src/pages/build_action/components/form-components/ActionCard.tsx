@@ -1,8 +1,7 @@
 
 import React from 'react'
-import { Box, Card, Chip, IconButton, SvgIcon, Typography, useTheme} from '@material-ui/core';
-import AddIcon from '@mui/icons-material/Add';
-import { ReactComponent as DefaultIcon } from "./../../../../common/components/workflow/create/Icon.svg";
+import { Box, Card, Chip, IconButton, Icon, Typography, useTheme} from '@mui/material';
+import DataCleansingIcon from "./../../../../images/Group 1545.svg"
 import { Radio } from '@mui/material';
 
 
@@ -11,68 +10,46 @@ export interface ActionCardProps {
     actionName: string,
     actionDescription: string,
     selectedActionId?: string,
-    onSelectAction: (actionDefinitionId: string|undefined) => void
+    onRadioToggle: (actionDefinitionId: string|undefined) => void
 }
 
 
 const ActionCard = (props: ActionCardProps) => {
-    const {actionId, actionName, actionDescription, selectedActionId, onSelectAction} = props
+    const {actionId, actionName, actionDescription, selectedActionId, onRadioToggle} = props
     const theme = useTheme();
-
+    console.log(theme.palette.primary)
     return(
         <Card
             sx={{
-                backgroundColor: theme.palette.background.paper,
-                '&:hover': {
-                backgroundColor: theme.palette.background.default
-                },
-                borderRadius: 1,
-                p: 2,
+                background: "#F8F8F8",
+                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)",
+                borderRadius: "10px",
+                p: 1,
                 height: "100%"
-            }}
-            variant={'outlined'}    
+            }}    
         >
-            <Box sx={{display: "flex", flexDirection: "row", gap: 2, alignItems: "flex-start"}}>
-                <Box sx={{backgroundColor: theme.palette.primary.main, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <SvgIcon sx={{backgroundColor: theme.palette.primary.main, borderRadius: "50%"}}>
-                        <DefaultIcon/>
-                    </SvgIcon>
+            <Box sx={{display: "flex", flexDirection: "row", gap: 2, alignItems: "flex-start", height: "100%"}}>
+                <Box sx={{ height: "100%", display: "flex",  justifyContent: "center", alignItems: "center" }}>
+                    <Icon sx={{backgroundColor: theme.palette.primary.main, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", p: 2}}>
+                        <img src={DataCleansingIcon} alt="NA"/>
+                    </Icon>
                 </Box>
                 <Box sx={{display: "flex", flexDirection: "column", gap: 1, flexGrow: 1, overflowX: "hidden"}}>
                     <Box sx={{display: "flex", flexDirection: "column"}}>
                         <Box sx={{ maxHeight: "80px", overflowY: "auto"}}>
-                            <Typography variant="body1" sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                lineHeight: "157%",
-                                letterSpacing: "0.1px",
-                                color: "#253858",
-                                wordWrap: "break-word",
-                                lineClamp: 1
-                            }}>
+                            <Typography variant="actionCardHeader">
                                 {actionName}
                             </Typography>
                         </Box>
                         <Box sx={{ maxHeight: "120px", overflowY: "auto"}}>
-                            <Typography variant="body1" sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: "normal",
-                                fontSize: "12px",
-                                lineHeight: "143%",
-                                letterSpacing: "0.15px",
-                                color: "rgba(66, 82, 110, 0.86)",
-                                wordWrap: "break-word"
-                            }}>
+                            <Typography variant="actionCardSubHeader">
                                 {actionDescription}
                             </Typography>
                         </Box>
                     </Box>
                 </Box>
-                <Box>
-                    <Radio checked={actionId===selectedActionId} onChange={(event) => onSelectAction(event.target.checked ? actionId : undefined)}/>
+                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%"}}>
+                    <Radio checked={actionId===selectedActionId} onChange={(event) => onRadioToggle(event.target.checked ? actionId : undefined)}/>
                 </Box>
             </Box>
         </Card>

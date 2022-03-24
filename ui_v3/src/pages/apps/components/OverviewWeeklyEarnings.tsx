@@ -10,8 +10,8 @@ import {
   CardContent,
   Divider,
   Typography
-} from '@material-ui/core';
-import { alpha, useTheme } from '@material-ui/core/styles';
+} from '@mui/material';
+import { alpha, useTheme } from '@mui/material';
 import ArrowRightIcon from '../../../icons/ArrowRight';
 import ChevronUpIcon from '../../../icons/ChevronUp';
 

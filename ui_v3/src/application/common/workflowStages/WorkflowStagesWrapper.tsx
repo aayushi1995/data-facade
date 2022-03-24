@@ -1,8 +1,8 @@
 import WorkflowStage, { WorkflowStageProps } from "./WorkflowStage";
-import { Card, Box, Grid, Button, IconButton, Collapse, formLabelClasses } from "@material-ui/core";
+import { Card, Box, Grid, Button, IconButton, Collapse, formLabelClasses } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid'
 import { WorkflowContextType, WorkflowActionDefinition, SetWorkflowContext } from "../../../pages/applications/workflow/WorkflowContext";
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import { DialogContent } from "@mui/material";
 import { TransitionGroup } from 'react-transition-group';
 import React from "react";
@@ -76,31 +76,28 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
     }
 
     return (
-        <Card className="root" sx={{maxHeight: '100%', boxShadow: lightShadows[27]}}>
-            <Box sx={{ display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden'}} p={1} pl={2}>
-                <Grid container >
-                    <TransitionGroup style={{display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden'}}>
-                        {workflowStages.map((stage: WorkflowStageProps, index: number) => { 
-                            if(stage.stageId === props.selectedStage?.stageId || props.selectedStage === undefined) {
-                                return ( 
-                                    <Collapse key={stage.stageId} sx={{width: '24.55%'}}>
-                                        <Grid item xs={12} sx={{maxHeight: '100%', width: '100%'}}>
-                                            <WorkflowStage {...{...stage, handleDeleteStage: handleDeleteStage, handleStageNameChange: props.handleStageNameChange, handleAddStage: handleAddStage, fromAddActions: props.fromAddActionsView}}/>
-                                        </Grid>
-                                    </Collapse>
-                                )
-                            } else {
-                                return (
-                                    <Collapse key={stage.stageId} sx={{width: '5%', height: '100%'}}>
-                                        <Grid item xs={12} sx={{height: '100%', width: '100%'}}>
-                                            <WorkflowStage {...{...stage, handleDeleteStage: handleDeleteStage, handleStageNameChange: props.handleStageNameChange, handleAddStage: handleAddStage, showArrow: false, setSelectedStage: setSelectedStage, fromAddActions: props.fromAddActionsView}}/>
-                                        </Grid>
-                                    </Collapse>
-                                )
-                            }
-                        })} 
-                    </TransitionGroup>
-                </Grid>
+        <Card sx={{ boxShadow: lightShadows[27], height: "100px" }}>
+            <Box sx={{ display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden', height: "100%"}} p={1} pl={2}>
+                <TransitionGroup style={{display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden', height: "100%"}}>
+                    {workflowStages.map((stage: WorkflowStageProps, index: number) => 
+                        <Collapse key={stage.stageId} sx={{ 
+                            width: (props.selectedStage?.stageId===stage.stageId || props.selectedStage?.stageId===undefined) ? "24.5%": "10%", 
+                            height: "100%", 
+                            "& .MuiCollapse-wrapper": { height: "100%"}, 
+                            "& .MuiCollapse-wrapperInner": { height: "100%"}
+                        }}>
+                            <WorkflowStage {...
+                                {...stage, 
+                                selectedStageId: props.selectedStage?.stageId, 
+                                handleDeleteStage: handleDeleteStage, 
+                                handleStageNameChange: props.handleStageNameChange, 
+                                handleAddStage: handleAddStage, 
+                                fromAddActions: props.fromAddActionsView,
+                                setSelectedStage: setSelectedStage
+                                }}/>
+                        </Collapse>
+                    )}
+                </TransitionGroup>
             </Box>
         </Card>
     )

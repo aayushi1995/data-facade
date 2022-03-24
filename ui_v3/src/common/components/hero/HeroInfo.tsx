@@ -1,12 +1,12 @@
 import React from 'react';
-import Grid from "@material-ui/core/Grid"
-import Box from "@material-ui/core/Box"
-import IconButton from "@material-ui/core/IconButton"
-import Link from "@material-ui/core/Link"
-import Avatar from "@material-ui/core/Avatar"
-import Button from "@material-ui/core/Button"
-import Typography from "@material-ui/core/Typography"
-import Card from "@material-ui/core/Card"
+import Grid from "@mui/material/Grid"
+import Box from "@mui/material/Box"
+import IconButton from "@mui/material/IconButton"
+import Link from "@mui/material/Link"
+import Avatar from "@mui/material/Avatar"
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import Card from "@mui/material/Card"
 
 export interface HeroInfoProps {
     header: string,

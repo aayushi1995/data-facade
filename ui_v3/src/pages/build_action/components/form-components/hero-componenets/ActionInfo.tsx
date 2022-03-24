@@ -1,4 +1,4 @@
-import { Box, Divider, Button, Avatar, TextField} from "@material-ui/core";
+import { Box, Divider, Button, Avatar, TextField} from "@mui/material";
 import { Typography } from "@mui/material";
 import React from "react";
 import UsageStatus from "../../../../../common/components/UsageStatus";

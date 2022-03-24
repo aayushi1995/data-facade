@@ -1,9 +1,9 @@
 import {Link as RouterLink} from 'react-router-dom';
 import {BaseCard} from "../../../../common/components/basecard/BaseCard";
 import {Button, Divider, Stack, Typography, Box} from "@mui/material";
-import {Image} from "@material-ui/icons";
-import DeleteIcon from "@material-ui/icons/Delete";
-import SyncIcon from "@material-ui/icons/Sync";
+import {Image} from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SyncIcon from "@mui/icons-material/Sync";
 import {ButtonIconWithToolTip} from "../../../../common/components/ButtonIconWithToolTip";
 import {DATA_RAW_ROUTE} from "../../../../common/components/header/data/DataRoutesConfig";
 

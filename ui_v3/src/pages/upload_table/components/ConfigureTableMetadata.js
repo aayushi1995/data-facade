@@ -26,9 +26,9 @@ import {
     Autocomplete,
     TextField,
     TableRow
-} from '@material-ui/core'
+} from '@mui/material'
 import dataManagerInstance from './../../../data_manager/data_manager';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 import S3UploadState from './../../../custom_enums/S3UploadState';
 import TagGroups from './../../../enums/TagGroups';
 import { useMutation } from 'react-query';
@@ -42,13 +42,13 @@ import DisplaySelectedFilesDetail from './../../../common/components/DisplaySele
 import SelectHeaderRowsButton from './SelectHeaderRowsButton'
 import {findHeaderRows} from './util'
 
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import './../../../css/table_browser/TableBrowser.css'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import ColumnDataType from './../../../enums/ColumnDataType'
 import TagScope from './../../../enums/TagScope'
-import AddIcon from "@material-ui/icons/Add";
-import {DataGrid} from "@material-ui/data-grid";
+import AddIcon from "@mui/icons-material/Add";
+import {DataGrid} from "@mui/x-data-grid";
 
 const useStyles = makeStyles(() => ({
     requiredTags: {

@@ -1,5 +1,5 @@
-import { Avatar, Box, Card, Divider, FormControl, InputLabel, MenuItem, TextField, Typography } from '@material-ui/core';
-import { flexbox } from '@material-ui/system';
+import { Avatar, Box, Card, Divider, FormControl, InputLabel, MenuItem, TextField, Typography } from '@mui/material';
+import { flexbox } from '@mui/system';
 import React, { ChangeEvent } from 'react';
 import UserAvatar from '../../types/UserAvatar';
 import UsageStatus from './../UsageStatus';

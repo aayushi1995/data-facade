@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Link as RouterLink, useLocation} from "react-router-dom";
-import {Avatar, Box, Button, Divider, Drawer, Link, Typography, useTheme,} from "@material-ui/core";
+import {Avatar, Box, Button, Divider, Drawer, Link, Typography, useTheme,} from "@mui/material";
 import {menuItems} from "./sideMenuConfig";
 import NavSection from "./NavSection";
 import Scrollbar from "./Scrollbar";

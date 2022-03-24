@@ -3,7 +3,7 @@ import { useRouteMatch, RouteComponentProps } from "react-router-dom"
 import ApplicationHeader from "../../../common/components/application/ApplicationHeader"
 import NoData from "../../../common/components/NoData"
 import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
-import { Box, Card, Tab, Tabs, Typography } from "@material-ui/core"
+import { Box, Card, Tab, Tabs, Typography } from "@mui/material"
 import ApplicationHeroInfo from "../../../common/components/application-info-hero/ApplicationHeroInfo"
 import ApplicationActions from "../../../common/components/application/ApplicationActions"
 import ApplicationWorkflows from "../../../common/components/application/ApplicationWorkflows"
@@ -65,62 +65,22 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                 </Box>
                 <Box>
                     <Tabs value={tabValue} onChange={((event, newValue) => setTableValue(newValue))}>
-                        <Tab label="Flows" value={0} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
-                        <Tab label="Actions" value={1} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
-                        <Tab label="Runs by Me" value={2} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
-                        <Tab label="History" value={3} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
-                        <Tab label="Live Apps" value={4} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7,
-                              color: 'rgba(0, 170, 17, 1)'
-                        }}/>
+                    {
+                        ["Flows", "Actions", "Runs By Me", "History", "Live Apps"].map((label, index) => 
+                            <Tab label={label} value={index} sx={{
+                                fontFamily: "SF Pro Text",
+                                fontStyle: "normal",
+                                fontWeight: 600,
+                                fontSize: "14px",
+                                lineHeight: "24px",
+                                display: "flex",
+                                alignItems: "center",
+                                textAlign: "center",
+                                opacity: 0.7
+                                }}
+                            />
+                        )
+                    }
                     </Tabs>
                 </Box>
                 <Box mb={3}>

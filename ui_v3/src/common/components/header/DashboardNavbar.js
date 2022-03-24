@@ -1,13 +1,13 @@
 import {Link as RouterLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {AppBar, Box, Toolbar, Tabs, Tab} from '@material-ui/core';
-import {experimentalStyled} from '@material-ui/core/styles';
+import {AppBar, Box, Toolbar, Tabs, Tab} from '@mui/material';
+import { styled } from '@mui/styles';
 import AccountPopover from './AccountPopover';
 import ContentSearch from './ContentSearch';
 import {useAppBarProps} from "./DataFacadeAppBar";
 import {DataFacadeLogo as Logo} from "../sideBar/DataFacadeLogo";
 
-const DashboardNavbarRoot = experimentalStyled(AppBar)(({theme}) => ({
+const DashboardNavbarRoot = styled(AppBar)(({theme}) => ({
     ...(theme.palette.mode === 'light' && {
         backgroundColor: theme.palette.primary.main,
         boxShadow: 'none',

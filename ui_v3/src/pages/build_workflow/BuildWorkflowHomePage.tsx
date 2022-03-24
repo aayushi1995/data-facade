@@ -1,4 +1,4 @@
-import { Box, Button } from "@material-ui/core";
+import { Box, Button } from "@mui/material";
 import { useContext } from "react";
 import { AddingActionView } from "../../common/components/workflow/create/addAction/AddingActionView";
 import { WorkflowContext, SetWorkflowContext, WorkflowContextProvider, WorkflowContextType, SetWorkflowContextType } from "../applications/workflow/WorkflowContext";

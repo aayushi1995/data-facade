@@ -1,8 +1,8 @@
 import React from "react";
-import {Button} from '@material-ui/core'
+import {Button} from '@mui/material'
 import {useAuth0} from "@auth0/auth0-react";
-import {makeStyles} from '@material-ui/styles'
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import { makeStyles } from '@mui/styles'
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {LOGIN_STATE_KEY, LOGIN_STATE_PROGRESS_VALUE} from "../EULA";
 
 const useStyles = makeStyles(() => ({

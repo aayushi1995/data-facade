@@ -2,8 +2,8 @@ import React from 'react'
 import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom';
 import { PageHeader } from '../../../../common/components/header/PageHeader';
 import dataManager, { useRetreiveData } from '../../../../data_manager/data_manager';
-import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from '@material-ui/core'
-import { Card, Box } from "@material-ui/core";
+import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material'
+import { Card, Box } from "@mui/material";
 import { TableWrapper } from '../../../../common/components/TableWrapper';
 import { ActionExecutionSection } from './ActionExecutionSection';
 import { WorkflowList } from './WorkflowList';

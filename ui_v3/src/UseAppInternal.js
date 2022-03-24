@@ -5,7 +5,7 @@ import {createCustomTheme} from "./css/theme";
 import {useUserSettingsSingleton} from "./data_manager/userSettingsSingleton";
 import {useAuth0} from "@auth0/auth0-react";
 import {FDSEndpoint} from "./common/config/config";
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles} from "@mui/styles";
 import dataManager from "./data_manager/data_manager";
 
 const useStyles = makeStyles(() => ({

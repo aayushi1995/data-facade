@@ -1,8 +1,8 @@
 
 import React from 'react'
-import { Box, Card, Chip, IconButton, SvgIcon, Typography, useTheme} from '@material-ui/core';
+import { Box, Card, Chip, Icon, IconButton, SvgIcon, Typography, useTheme} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { ReactComponent as DefaultIcon } from "./Icon.svg";
+import DataCleansingIcon from "./../../../../images/Group 1545.svg"
 import { ActionDefinitionToAdd } from './SelectAction/SelectAction';
 import TagHandler from '../../tag-handler/TagHandler';
 
@@ -10,14 +10,15 @@ export interface SelectActionCardProps {
     actionId: string,
     actionName: string,
     actionDescription: string,
-    defaultTemplateId: string
+    groupName?: string,
+    defaultTemplateId: string,
+    showTags?: boolean,
     onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void
 }
 
 
 const SelectActionCard = (props: SelectActionCardProps) => {
     const theme = useTheme();
-    
     const handleAdd = () => {
         props.onAddAction({
             Id: props.actionId,
@@ -39,60 +40,41 @@ const SelectActionCard = (props: SelectActionCardProps) => {
             }}
             variant={'outlined'}    
         >
-            <Box sx={{display: "flex", flexDirection: "row", gap: 2, alignItems: "flex-start"}}>
-                <Box sx={{backgroundColor: theme.palette.primary.main, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <SvgIcon sx={{backgroundColor: theme.palette.primary.main, borderRadius: "50%"}}>
-                        <DefaultIcon/>
-                    </SvgIcon>
+            <Box sx={{display: "flex", flexDirection: "row", gap: 2, alignItems: "flex-start", height: "100%"}}>
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%"}}>
+                    <Icon sx={{backgroundColor: theme.palette.primary.main, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", p: 2}}>
+                        <img src={DataCleansingIcon} alt="NA"/>
+                    </Icon>
                 </Box>
                 <Box sx={{display: "flex", flexDirection: "column", gap: 1, flexGrow: 1}}>
                     <Box sx={{display: "flex", flexDirection: "column"}}>
                         <Box>
-                            <Typography variant="body1" sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: 500,
-                                fontSize: "14px",
-                                lineHeight: "157%",
-                                letterSpacing: "0.1px",
-                                color: "#253858"
-                            }}>
+                            <Typography variant="actionCardHeader">
                                 {props.actionName}
                             </Typography>
                         </Box>
                         <Box>
-                            <Typography variant="body1" sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: "normal",
-                                fontSize: "12px",
-                                lineHeight: "143%",
-                                letterSpacing: "0.15px",
-                                color: "rgba(66, 82, 110, 0.86)"
-                            }}>
-                                {props.actionDescription}
+                            <Typography variant="actionCardSubHeader">
+                                {props.groupName||"NA"}
                             </Typography>
                         </Box>
                     </Box>
-                    <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap"}}>
-                        <TagHandler
-                            entityType={"ActionDefinition"}
-                            entityId={props.actionId}
-                            tagFilter={{}}
-                            allowAdd={false}
-                            allowDelete={true}
-                        />
-                    </Box>
+                    {!!props.showTags &&
+                        <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap"}}>
+                            <TagHandler
+                                entityType={"ActionDefinition"}
+                                entityId={props.actionId}
+                                tagFilter={{}}
+                                allowAdd={false}
+                                allowDelete={true}
+                            />
+                        </Box>
+                    }
                 </Box>
-                <Box sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: theme.palette.primary.main,
-                    borderRadius: "50%"
-                }}>
-                    <IconButton sx={{p: "0px"}}>
-                        <AddIcon sx={{height: "25px", width: "25px", color: theme.palette.primary.contrastText}} onClick={handleAdd}/>
+
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%"}}>
+                    <IconButton sx={{ display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: theme.palette.primary.main, borderRadius: "50%", height: "32px", width: "32px"}} onClick={handleAdd}>
+                        <AddIcon sx={{ color: theme.palette.primary.contrastText }}/>
                     </IconButton>
                 </Box>
             </Box>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Dialog, Divider, Grid, Tab, Tabs} from '@material-ui/core'
-import {makeStyles} from '@material-ui/styles';
+import {Dialog, Divider, Grid, Tab, Tabs} from '@mui/material'
+import { makeStyles } from '@mui/styles';
 import {Redirect, Route, Switch, useHistory, useRouteMatch, withRouter} from 'react-router-dom'
 import ActionInstances from './components/ActionInstances'
 import AllActions from "./components/AllActions";

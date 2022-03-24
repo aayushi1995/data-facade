@@ -4,7 +4,7 @@ import { v4 as uuidv4} from 'uuid'
 import TagGroups from "../../../../enums/TagGroups"
 import TagMapCreatedBy from "../../../../enums/TagMapCreatedBy"
 import { Tag } from "../../../../generated/entities/Entities"
-import { circularProgressClasses } from "@material-ui/core"
+import { circularProgressClasses } from "@mui/material"
 import labels from "../../../../labels/labels"
 
 

@@ -15,10 +15,10 @@ import {
     Select,
     Tabs,
     TextField
-} from '@material-ui/core'
+} from '@mui/material'
 import { useMutation } from 'react-query'
-import { makeStyles } from '@material-ui/styles'
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { makeStyles } from '@mui/styles'
+import Autocomplete from '@mui/material/Autocomplete';
 
 import CodeEditor from './CodeEditor'
 import TabWithClose from './TabWithClose'
@@ -28,7 +28,7 @@ import dataManagerInstance, { useRetreiveData } from "../../data_manager/data_ma
 import ActionParameterDefinitionTag from '../../enums/ActionParameterDefinitionTag'
 import SagemakerKNNPredictorType from '../../enums/SagemakerKNNPredictorType'
 import SagemakerXGBOOSTPredictorType from '../../enums/SagemakerXGBOOSTPredictorType'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import ActionParameterDefinitionDatatype from '../../enums/ActionParameterDefinitionDatatype'
 import {getActionExecutionParsedOutput} from '../../data_manager/entity_data_handlers/action_execution_data'
 import QueryData from './QueryData'

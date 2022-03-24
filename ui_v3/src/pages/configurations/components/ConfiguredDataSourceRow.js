@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import {
     Box,
     Button,
@@ -12,9 +12,9 @@ import {
     Grid,
     TextField,
     Typography
-} from '@material-ui/core'
+} from '@mui/material'
 import {useMutation} from 'react-query'
-import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import NoData from '../../../common/components/NoData'
 import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'

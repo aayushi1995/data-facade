@@ -1,6 +1,6 @@
 import NoData from "../NoData"
 import { useGetPrebuiltApplications } from "./hooks/useGetPrebuildApplications"
-import { Box, Card } from "@material-ui/core"
+import { Box, Card } from "@mui/material"
 import ApplicationCard from "./ApplicationCard"
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 

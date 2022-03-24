@@ -1,7 +1,7 @@
 import React from 'react'
-import {Box, Button, Dialog, Grid, IconButton, TextField} from '@material-ui/core'
+import {Box, Button, Dialog, Grid, IconButton, TextField} from '@mui/material'
 import UpdateActionDefinition from './UpdateActionDefinition.js'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import useStyles from './../../../css/customizations/DataProfilingRow'
 import labels from './../../../labels/labels'
 import * as PropTypes from "prop-types";

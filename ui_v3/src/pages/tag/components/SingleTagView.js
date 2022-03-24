@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {Box, Grid, Tab, Tabs} from '@material-ui/core'
-import {DataGrid} from "@material-ui/data-grid";
-import {makeStyles} from "@material-ui/styles";
+import {Box, Grid, Tab, Tabs} from '@mui/material'
+import {DataGrid} from "@mui/x-data-grid";
+import {makeStyles} from "@mui/styles";
 import {useHistory, useRouteMatch} from 'react-router-dom'
 
 import LoadingIndicator from '../../../common/components/LoadingIndicator'

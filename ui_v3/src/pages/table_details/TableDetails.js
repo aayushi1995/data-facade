@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { Box, Divider, Grid, Tab, Tabs } from "@material-ui/core";
+import { Box, Divider, Grid, Tab, Tabs } from "@mui/material";
 import ColumnView from "./components/ColumnView";
 import ColumnDetails from "./../column_details/ColumnDetails";
 import Checks, { useTablePropertiesWithChecksQuery } from "./components/Checks";

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Box, IconButton, Link, Avatar, Button, Typography} from "@material-ui/core"
+import {Grid, Box, IconButton, Link, Avatar, Button, Typography} from "@mui/material"
 
 export interface UsageStatusProp {
     status: string

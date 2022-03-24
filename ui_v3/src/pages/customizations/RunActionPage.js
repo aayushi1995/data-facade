@@ -1,4 +1,4 @@
-import {Box, Grid} from "@material-ui/core";
+import {Box, Grid} from "@mui/material";
 import CreateActionInstanceForm from "../../common/components/CreateActionInstanceForm";
 import React from "react";
 import {PageHeader} from "../../common/components/header/PageHeader";

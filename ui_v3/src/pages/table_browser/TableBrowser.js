@@ -1,6 +1,6 @@
 import React from 'react'
 import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom'
-import {IconButton, Snackbar, Tooltip} from '@material-ui/core'
+import {IconButton, Snackbar, Tooltip} from '@mui/material'
 import DataSetsTable from './components/DataSetsTable'
 import Search from './../../common/components/Search'
 import TableDetails from '../table_details/TableDetails'
@@ -12,8 +12,8 @@ import './../../css/table_browser/TableBrowser.css'
 import {actionInstanceFormDataNeeds} from "../../common/components/CreateActionInstanceFormNew";
 import labels from './../../labels/labels';
 import * as PropTypes from "prop-types";
-import SyncIcon from "@material-ui/icons/Sync";
-import DeleteIcon from "@material-ui/icons/Delete";
+import SyncIcon from "@mui/icons-material/Sync";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {PageHeader} from "../../common/components/header/PageHeader";
 import { Alert } from '../../common/components/Alert';
 import {DATA_RAW_ROUTE} from "../../common/components/header/data/DataRoutesConfig";

@@ -1,5 +1,5 @@
-import DoneOutlineOutlinedIcon from '@material-ui/icons/DoneOutlineOutlined';
-import WarningOutlinedIcon from '@material-ui/icons/WarningOutlined';
+import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
+import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import LoadingIndicator from '../common/components/LoadingIndicator'
 
 const ApplicationInstallState = {

@@ -1,4 +1,4 @@
-import {Box, Tab, Tabs} from "@material-ui/core";
+import {Box, Tab, Tabs} from "@mui/material";
 import {ModuleContext, ModuleSetContext, ModuleType} from "./data/ModuleContext";
 import React, {useContext} from "react";
 import ModuleSwitcherIcon from './images/module-switcher.svg';

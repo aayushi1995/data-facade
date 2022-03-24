@@ -17,7 +17,7 @@ import NotRegistered from './pages/home/NotRegistered'
 import {isNonProductionEnv} from './common/config/config'
 import {Users} from "./pages/users/Users";
 import {EULA} from "./pages/home/EULA";
-import {CssBaseline, Grid, ClassNameMap, ThemeProvider, Box} from "@material-ui/core";
+import {CssBaseline, Grid, ClassNameMap, ThemeProvider, Box} from "@mui/material";
 import {SideDrawer} from "./common/components/sideBar/SideDrawer";
 import AutobookHomePage from './pages/applications/auto_book/AutobookHomePage'
 import {useAppInternal} from "./UseAppInternal";

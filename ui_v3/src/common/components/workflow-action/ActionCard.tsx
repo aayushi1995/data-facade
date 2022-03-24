@@ -1,16 +1,17 @@
 import React from "react"
-import { Card, Box, IconButton, Icon } from "@material-ui/core"
+import { Card, Box, IconButton, Icon } from "@mui/material"
 import { lightShadows } from '../../../../src/css/theme/shadows'
 import selectGrid from '../../../../src/images/select_icon.png'
 import dataCleansing from '../../../../src/images/data_cleansing.png'
 import { Typography } from "@mui/material"
 import closeIcon from '../../../../src/images/delete_workflow_action.png'
-import { createTheme, SystemStyleObject, useTheme } from "@mui/system"
+import { createTheme, SystemStyleObject } from "@mui/system"
+import {useTheme} from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
 import viewResultIcon from '../../../../src/images/ViewResult.png'
 import viewErrorIcon from '../../../../src/images/ShowErrorLogs.png'
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/styles';
 
 
 export interface ActionCardProps {
@@ -37,7 +38,6 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
       backgroundColor: '#F9F9F9',
       color: 'rgba(0, 0, 0, 0.87)',
       maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
       borderRadius: '8px 8px 8px 8px',
     },
   }));
@@ -112,7 +112,7 @@ const ActionCard = (props: ActionCardProps) => {
                         </Box>
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
                             <Box sx={{flex: 1}}>
-                                <Typography variant="workflowActionCard" sx={{overflowX: 'clip'}}>
+                                <Typography variant="actionCardHeader" sx={{overflowX: 'clip'}}>
                                     {props.actionName}
                                 </Typography>
                             </Box>
@@ -122,7 +122,7 @@ const ActionCard = (props: ActionCardProps) => {
                                 </Box>
                             ) : (
                                 <Box>
-                                    <Typography sx={{overflowX: 'clip', fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '11.66px', lineHeight: '143%', letterSpacing: '0.1457px', fontWeight: 400, color: 'rgba(66, 82, 110, 0.86)'}}>
+                                    <Typography variant="actionCardSubHeader">
                                         {props.actionGroup}
                                     </Typography>
                                 </Box>

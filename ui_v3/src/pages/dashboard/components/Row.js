@@ -1,9 +1,9 @@
 import React from 'react'
 import {Link, useRouteMatch} from 'react-router-dom'
 
-import {makeStyles} from '@material-ui/styles'
-import {Box, Divider, Grid, IconButton} from '@material-ui/core'
-import TableChartIcon from '@material-ui/icons/TableChart'
+import { makeStyles } from '@mui/styles'
+import {Box, Divider, Grid, IconButton} from '@mui/material'
+import TableChartIcon from '@mui/icons-material/TableChart'
 
 const useStyles = makeStyles(() => ({
 

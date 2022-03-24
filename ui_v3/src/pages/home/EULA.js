@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {getModalStyle, useStyles} from "../users/Users";
-import Modal from "@material-ui/core/Modal";
-import {Button} from "@material-ui/core";
+import Modal from "@mui/material/Modal";
+import {Button} from "@mui/material";
 
 export const LOGIN_STATE_KEY = "loginState";
 export const LOGIN_STATE_PROGRESS_VALUE = "in-progress";

@@ -1,5 +1,5 @@
 import { Application } from "../../../generated/entities/Entities"
-import { Grid, Card, Box, Typography, IconButton } from "@material-ui/core"
+import { Grid, Card, Box, Typography, IconButton } from "@mui/material"
 import appLogo from "../../../../src/images/Segmentation_application.png"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';

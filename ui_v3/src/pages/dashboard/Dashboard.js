@@ -1,6 +1,6 @@
 import React from 'react'
 import {Route, Switch, useRouteMatch} from 'react-router-dom'
-import {Grid, Snackbar} from '@material-ui/core'
+import {Grid, Snackbar} from '@mui/material'
 import Row from './components/Row'
 import LoadingIndicator from './../../common/components/LoadingIndicator'
 import NoData from './../../common/components/NoData'

@@ -1,14 +1,14 @@
 import React, {useContext} from 'react'
 import {Link, useRouteMatch} from 'react-router-dom'
-import {Button, Card, Grid, MenuItem, Select, Table, TableCell, TableHead, TableRow} from '@material-ui/core'
+import {Button, Card, Grid, MenuItem, Select, Table, TableCell, TableHead, TableRow} from '@mui/material'
 import ColumnChartVisualizer from './../../../common/components/ColumnChartVisualizer'
 import ColumnRangeChartVisualizer from './../../../common/components/ColumnRangeChartVisualizer'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import NoData from '../../../common/components/NoData';
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import {useMutation} from 'react-query'
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import ElementFrequencyTable from './../../table_details/components/ElementFrequencyTable'
 import PresentationFormatCollection from './../../../custom_enums/PresentationFormatCollection'
 import SelectOption from './../../../common/components/SelectOption'

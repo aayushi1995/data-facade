@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {
     Button, Tooltip
-} from '@material-ui/core'
+} from '@mui/material'
 import labels from '../../labels/labels'
 
 const RunWorkflowButton = (props) => {

@@ -10,7 +10,7 @@ import {
     TableRow,
     TextField,
     Typography
-} from '@material-ui/core'
+} from '@mui/material'
 import {useRetreiveData} from './../../../data_manager/data_manager'
 import labels from './../../../labels/labels'
 import {useRouteMatch} from "react-router-dom";

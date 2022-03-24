@@ -24,12 +24,12 @@ import {
     Autocomplete,
     TextField,
     TableRow
-} from '@material-ui/core'
-import {makeStyles} from '@material-ui/styles'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import {useMutation} from 'react-query'
 
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
 
 import ExternalStorageUploadRequestContentType from './../../enums/ExternalStorageUploadRequestContentType'

@@ -1,9 +1,9 @@
 import React from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles} from "@mui/styles";
 import {Route, Switch, useHistory, useRouteMatch, withRouter} from "react-router-dom";
 import {Link as RouterLink, useLocation} from 'react-router-dom';
-import {Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Tooltip} from '@material-ui/core'
+import {Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Tooltip} from '@mui/material'
 
 const useStyles = makeStyles(() => ({
     dialogPaper: {

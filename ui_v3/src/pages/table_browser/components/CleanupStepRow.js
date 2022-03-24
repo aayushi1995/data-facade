@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Checkbox, Divider, Grid} from '@material-ui/core'
+import {Button, Checkbox, Divider, Grid} from '@mui/material'
 import labels from './../../../labels/labels'
 
 const CleanupStepRow = (props) => {

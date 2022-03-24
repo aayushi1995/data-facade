@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Card, CardContent, Grid, TextField, Typography} from "@material-ui/core";
+import {Box, Card, CardContent, Grid, TextField, Typography} from "@mui/material";
 import {TableWrapper} from "../../../../common/components/TableWrapper";
 import {Route, useHistory} from "react-router-dom";
 import CreateDataSourceRow from "../../../configurations/components/CreateDataSourceRow";

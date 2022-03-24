@@ -1,10 +1,10 @@
 import React from 'react';
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import { AllActionsRowDetails } from './AllActionsRow'
 import labels from './../../../labels/labels'
 import { useRetreiveData } from './../../../data_manager/data_manager'
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { Route, Switch, useHistory, useRouteMatch, withRouter } from "react-router-dom";
 import { useCustomizationToolBarButtons } from "../UseCustomizationToolBarButtons";
 import { CustomToolbar } from "../../../common/components/CustomToolbar";

@@ -43,7 +43,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                 <Box sx={{display: 'flex', minHeight: '100%'}}>
                     <Box sx={{flex: 4, width: '100%', height: '100%'}}>
                         <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 2, p: 1}}>
-                            <Typography variant="applicationActionCard">
+                            <Typography variant="actionCardHeader">
                                 {props.action.model?.DisplayName || "Name"}
                             </Typography>
                             <Typography sx={{wordWrap: 'break-word', fontFamily: 'SF Pro Display', fontStyle: 'normal', fontWeight: 'normal', fontSize: '12px', lineHeight: '133.4%'}}> 
@@ -84,7 +84,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                             <Box sx={{display: 'flex', alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'column', mt: 1}}>
                                 <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2}}>
                                     <Typography 
-                                    variant="applicationActionCard"
+                                    variant="actionCardHeader"
                                     sx={{
                                     fontWeight: 'normal', 
                                     fontSize: '12px', 
@@ -103,7 +103,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                 </Box>
                                 <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2}}>
                                     <Typography 
-                                        variant="applicationActionCard"
+                                        variant="actionCardHeader"
                                         sx={{
                                         fontWeight: 'normal', 
                                         fontSize: '12px', 

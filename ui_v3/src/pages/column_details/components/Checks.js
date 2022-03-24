@@ -1,10 +1,10 @@
 import React, {useContext} from 'react'
-import {Grid} from '@material-ui/core'
+import {Grid} from '@mui/material'
 import NoData from '../../../common/components/NoData';
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import {useQuery} from 'react-query'
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import ChecksRow from './ChecksRow'
 import Search from './../../../common/components/Search'
 import SelectOption from './../../../common/components/SelectOption'

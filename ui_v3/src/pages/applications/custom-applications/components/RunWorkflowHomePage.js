@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import { PageHeader } from '../../../../common/components/header/PageHeader';
-import { Card, Grid } from '@material-ui/core'
+import { Card, Grid } from '@mui/material'
 import { WorkflowList } from './WorkflowList';
 import { WorkflowMeta } from "./WorkflowMeta";
 import { TableWrapper } from '../../../../common/components/TableWrapper';

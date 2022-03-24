@@ -1,6 +1,6 @@
 import React from 'react'
 import {Route, Switch, useRouteMatch} from 'react-router-dom'
-import {Grid, Tab, Tabs} from '@material-ui/core'
+import {Grid, Tab, Tabs} from '@mui/material'
 import Checks from './components/Checks'
 import QuickStatsNewTemp from './components/QuickStatsNewTemp'
 import {PageHeader} from "../../common/components/header/PageHeader";

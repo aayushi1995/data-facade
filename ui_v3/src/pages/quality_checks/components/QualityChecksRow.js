@@ -1,7 +1,7 @@
 import React from 'react'
-import {Box, Button, Collapse, Divider, Grid, IconButton, TextField} from '@material-ui/core'
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons'
-import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
+import {Box, Button, Collapse, Divider, Grid, IconButton, TextField} from '@mui/material'
+import {KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material'
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import {v4 as uuidv4} from 'uuid';
 import {useMutation} from 'react-query'
 import LoadingIndicator from './../../../common/components/LoadingIndicator'

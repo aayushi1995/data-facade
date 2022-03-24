@@ -1,5 +1,5 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import {v4 as uuidv4} from 'uuid'
 import {
     Box,
@@ -13,7 +13,7 @@ import {
     TableCell,
     TableRow,
     TextField
-} from '@material-ui/core'
+} from '@mui/material'
 import {useMutation} from 'react-query'
 import dataManagerInstance, {useRetreiveData} from './../../data_manager/data_manager'
 import S3DownloadState from '../../custom_enums/S3DownloadState'

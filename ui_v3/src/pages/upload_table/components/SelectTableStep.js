@@ -1,10 +1,10 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import { 
     Grid ,
     Box
-} from "@material-ui/core"
-import {DataGrid} from "@material-ui/data-grid";
+} from "@mui/material"
+import {DataGrid} from "@mui/x-data-grid";
 
 
 export const useStyles = makeStyles(() => ({

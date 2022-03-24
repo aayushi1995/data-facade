@@ -1,4 +1,4 @@
-import { Box, Card, IconButton } from "@material-ui/core"
+import { Box, Card, IconButton } from "@mui/material"
 import React from "react"
 import WorkflowStagesWrapper from "../../../../../application/common/workflowStages/WorkflowStagesWrapper"
 import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"

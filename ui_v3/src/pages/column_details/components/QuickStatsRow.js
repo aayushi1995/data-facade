@@ -1,5 +1,5 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import {
     Box,
     Collapse,
@@ -11,8 +11,8 @@ import {
     TableCell,
     TableRow,
     Typography
-} from '@material-ui/core'
-import CircularProgress from '@material-ui/core/CircularProgress';
+} from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress';
 import {
     Bar,
     BarChart,
@@ -26,7 +26,7 @@ import {
     YAxis,
 } from 'recharts';
 
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons'
+import {KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material'
 import {Link} from 'react-router-dom'
 import DataChecksIcon from './../../../images/data_check_icon.png'
 

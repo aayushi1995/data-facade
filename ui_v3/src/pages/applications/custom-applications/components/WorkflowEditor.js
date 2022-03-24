@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   Grid
-} from "@material-ui/core";
+} from "@mui/material";
 import { PageHeader } from "../../../../common/components/header/PageHeader";
 import { useGetActionDefinitionForTable, usePrevious } from "../hooks/useGetActionDefinitionForTable";
 import { useRouteMatch } from "react-router-dom";

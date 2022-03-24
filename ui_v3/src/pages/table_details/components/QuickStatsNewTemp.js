@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Button, Card, Grid, Menu, MenuItem, Select, Table, TableCell, TableHead, TableRow, Link } from '@material-ui/core'
+import { Button, Card, Grid, Menu, MenuItem, Select, Table, TableCell, TableHead, TableRow, Link } from '@mui/material'
 import ColumnChartVisualizer from './../../../common/components/ColumnChartVisualizer'
 import ColumnRangeChartVisualizer from './../../../common/components/ColumnRangeChartVisualizer'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import NoData from '../../../common/components/NoData';
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import { useMutation } from 'react-query'
@@ -12,7 +12,7 @@ import SelectOption from './../../../common/components/SelectOption'
 import Search from './../../../common/components/Search'
 import AppContext from "../../../utils/AppContext";
 import { useRetreiveData } from "../../../data_manager/data_manager";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { v4 as uuidv4 } from 'uuid'
 import {getActionExecutionParsedOutput} from '../../../data_manager/entity_data_handlers/action_execution_data'
 import { CustomToolbar } from "../../../common/components/CustomToolbar";

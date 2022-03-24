@@ -1,19 +1,19 @@
 import React from 'react'
-import { Box, Container, Dialog, Grid, IconButton, Tooltip, Button, DialogTitle } from '@material-ui/core'
-import AddIcon from "@material-ui/icons/Add";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Box, Container, Dialog, Grid, IconButton, Tooltip, Button, DialogTitle } from '@mui/material'
+import AddIcon from "@mui/icons-material/Add";
+import Autocomplete from '@mui/material/Autocomplete';
 import { PageHeader } from "../../../../common/components/header/PageHeader";
 import { useHistory, useRouteMatch, Link } from 'react-router-dom'
-import { makeStyles } from "@material-ui/styles";
-import { DataGrid } from "@material-ui/data-grid";
-import CloseIcon from '@material-ui/icons/Close';
+import { makeStyles } from "@mui/styles";
+import { DataGrid } from "@mui/x-data-grid";
+import CloseIcon from '@mui/icons-material/Close';
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { CustomToolbar } from "../../../../common/components/CustomToolbar";
 import { TextField } from "@mui/material";
 import dataManagerInstance, { useRetreiveData } from '../../../../data_manager/data_manager';
 import LoadingIndicator from '../../../../common/components/LoadingIndicator';
 import NoData from '../../../../common/components/NoData';
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {useMutation} from 'react-query'
 import CustomApplicationsHomePage from '../CustomApplicationsHomePage';
 import PreviewIcon from "@mui/icons-material/Preview";

@@ -1,5 +1,5 @@
-import { DataGrid } from '@material-ui/data-grid';
-import { Typography } from "@material-ui/core";
+import { DataGrid } from '@mui/x-data-grid';
+import { Typography } from "@mui/material";
 import { CustomToolbar } from './CustomToolbar';
 
 

@@ -1,11 +1,11 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
-import {Box, Collapse, Divider, Grid, IconButton, Table, TableBody, TableCell, TableRow} from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
+import {Box, Collapse, Divider, Grid, IconButton, Table, TableBody, TableCell, TableRow} from '@mui/material'
 import {Brush, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons'
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
+import {KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material'
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import {Link} from 'react-router-dom'
 import DataChecksIcon from './../../../images/data_check_icon.png'
 

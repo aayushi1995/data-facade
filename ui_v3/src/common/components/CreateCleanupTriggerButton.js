@@ -1,5 +1,5 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import {
     Box,
     Button,
@@ -12,14 +12,14 @@ import {
     List,
     ListItem,
     TextField
-} from '@material-ui/core'
+} from '@mui/material'
 import ActionDefinitionActionType from './../../enums/ActionDefinitionActionType.js'
 import {useMutation} from 'react-query'
 import labels from './../../labels/labels'
 import dataManagerInstance, {useRetreiveData} from './../../data_manager/data_manager'
 import CodeEditor from './CodeEditor.js'
 import LoadingIndicator from './LoadingIndicator.js'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 const useStyles = makeStyles(() => ({

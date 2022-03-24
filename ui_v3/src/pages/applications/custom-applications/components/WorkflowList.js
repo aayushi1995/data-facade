@@ -5,7 +5,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import CleaningServicesIcon from "@mui/icons-material/CleaningServices";
 import { getAction, getActionInstance, WorkflowListItem } from "./WorkflowListItem";
 import { withRunActionsHookHOC } from "../hooks/withRunActionsHookHOC";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { ActionExecutionSection } from "./ActionExecutionSection";
 
 export const actionIconMap = {

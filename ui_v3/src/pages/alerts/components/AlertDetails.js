@@ -1,5 +1,5 @@
 import React from 'react'
-import {Grid, Table, TableBody, TableCell, TableRow} from '@material-ui/core'
+import {Grid, Table, TableBody, TableCell, TableRow} from '@mui/material'
 import {useTranslation} from "react-i18next";
 import './../../../css/alerts/AlertRow.css'
 import {useRouteMatch} from "react-router-dom";

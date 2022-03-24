@@ -1,10 +1,10 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
-import {Box, Collapse, Divider, Grid, IconButton, MenuItem, Select, Table, TableCell, TableRow} from '@material-ui/core'
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons'
+import { makeStyles } from '@mui/styles'
+import {Box, Collapse, Divider, Grid, IconButton, MenuItem, Select, Table, TableCell, TableRow} from '@mui/material'
+import {KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material'
 import DataChecksIcon from './../../../images/data_check_icon.png'
-import CheckIcon from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import {Link} from 'react-router-dom'
 
 

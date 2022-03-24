@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
 import {useAuth0} from "@auth0/auth0-react";
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import AppContext from "../../../utils/AppContext";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid} from "@mui/material";
 
 const useStyles = makeStyles(() => ({
     "button:hover": {

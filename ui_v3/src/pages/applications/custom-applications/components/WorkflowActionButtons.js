@@ -1,8 +1,8 @@
-import { Grid, IconButton, Tooltip } from "@material-ui/core";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import { ACTION_EXECUTION_STATUS } from "../hooks/useRunActions";
 import ShowActionTemplate from "../../../customizations/components/ActionInstancesRow";
-import InputIcon from "@material-ui/icons/Input";
-import DeleteIcon from "@material-ui/icons/Delete";
+import InputIcon from "@mui/icons-material/Input";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import * as PropTypes from "prop-types";
 import { RUN_WORKFLOW_VIEWS } from "./RunWorkflowHomePage";

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import {Box, Button, Grid, TextField} from '@material-ui/core'
-import {makeStyles} from "@material-ui/styles";
+import {Box, Button, Grid, TextField} from '@mui/material'
+import {makeStyles} from "@mui/styles";
 
 import {useMutation} from 'react-query'
 

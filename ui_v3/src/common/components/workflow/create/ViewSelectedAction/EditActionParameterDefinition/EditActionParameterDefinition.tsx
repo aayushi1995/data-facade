@@ -1,9 +1,9 @@
 
 import React from 'react'
-import { Autocomplete, Box, Card, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, TextField, useTheme, createFilterOptions} from '@material-ui/core';
+import { Autocomplete, Box, Card, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, TextField, useTheme, createFilterOptions} from '@mui/material';
 import {Tabs, Tab, SelectChangeEvent} from "@mui/material"
 import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from '../../../../../../generated/entities/Entities';
-import { DataGrid, GridToolbarContainer } from '@material-ui/data-grid';
+import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid';
 import { CustomToolbar } from '../../../../CustomToolbar';
 import { getInputTypeFromAttributesNew, InputMap } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
 import { TemplateWithParams } from '../hooks/UseViewAction';

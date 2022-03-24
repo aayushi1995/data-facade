@@ -1,8 +1,8 @@
 import React from 'react'
 import {useMutation} from 'react-query';
 import {v4 as uuidv4} from 'uuid'
-import {Backdrop, Snackbar} from '@material-ui/core'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import {Backdrop, Snackbar} from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress';
 import { useHistory } from "react-router-dom";
 
 import ActionDefinitionForm from './ActionDefinitionForm'

@@ -1,6 +1,6 @@
 import useSettings from "../../../data_manager/useSettings";
 import {THEMES} from "../../../data_manager/constants";
-import {Switch} from "@material-ui/core";
+import {Switch} from "@mui/material";
 
 export const ThemeToggle = () => {
   const {settings, saveSettings} = useSettings();

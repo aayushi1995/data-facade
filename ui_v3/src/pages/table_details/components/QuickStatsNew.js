@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {Card, Grid} from '@material-ui/core'
+import {Card, Grid} from '@mui/material'
 import {useQuery} from 'react-query'
 import NoData from './../../../common/components/NoData'
 import LoadingIndicator from './../../../common/components/LoadingIndicator'

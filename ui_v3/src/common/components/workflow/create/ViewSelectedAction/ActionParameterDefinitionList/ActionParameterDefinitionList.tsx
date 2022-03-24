@@ -1,11 +1,11 @@
 import React, { SyntheticEvent } from 'react'
-import { Box, Card, Chip, Grid, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@material-ui/core';
+import { Box, Card, Chip, Grid, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@mui/material';
 import {Tabs, Tab} from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
 import PencilAltIcon from "../../../../../../icons/PencilAlt"
-import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { ActionParameterDefinition, Tag } from '../../../../../../generated/entities/Entities';
-import { DataGrid, GridRowId, GridRowParams, GridSelectionModel, GridToolbarContainer, MuiEvent } from '@material-ui/data-grid';
+import { DataGrid, GridRowId, GridRowParams, GridSelectionModel, GridToolbarContainer, MuiEvent } from '@mui/x-data-grid';
 import { CustomToolbar } from '../../../../CustomToolbar';
 import { TemplateWithParams } from '../hooks/UseViewAction';
 import TagHandler from '../../../../tag-handler/TagHandler';

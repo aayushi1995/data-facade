@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {Box, Checkbox, Collapse, Grid} from '@material-ui/core'
+import {Box, Checkbox, Collapse, Grid} from '@mui/material'
 import {useMutation} from 'react-query'
 import JobsRowJobDetail from './JobsRowJobDetail'
 import labels from './../../../labels/labels'

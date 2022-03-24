@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {Grid} from '@material-ui/core'
+import {Grid} from '@mui/material'
 import SelectOption from './../../../common/components/SelectOption'
 import Search from './../../../common/components/Search'
 import QuickStatsRow from './QuickStatsRow'

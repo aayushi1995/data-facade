@@ -17,12 +17,12 @@ import {
   Dialog,
   IconButton,
   TextField
-} from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
+} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useFetchActionDefinitionQuery } from "../../../customizations/components/AllActions";
 import { ActionsIcon } from "../../../../images/actions_icon";
 import { PageHeader } from "../../../../common/components/header/PageHeader";
-import { withStyles } from "@material-ui/styles"
+import { withStyles } from "@mui/styles"
 import CheckIcon from '@mui/icons-material/Check';
 import ActionDefinitionActionType from "../../../../enums/ActionDefinitionActionType";
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
@@ -33,7 +33,7 @@ import dataManager, { useRetreiveData } from "../../../../data_manager/data_mana
 import { userSettingsSingleton } from "../../../../data_manager/userSettingsSingleton";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import PreviewIcon from "@mui/icons-material/Preview";
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import ShowActionTemplate from "../../../customizations/components/ActionInstancesRow";
 import CodeEditor from "../../../../common/components/CodeEditor";
 import { WorkflowMeta } from "./WorkflowMeta";

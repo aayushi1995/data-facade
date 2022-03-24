@@ -150,13 +150,23 @@ const baseOptions = {
             letterSpacing: "0.15px",
             color: "rgba(66, 82, 110, 0.86)"
         },
-        workflowActionCard: {
-            fontFamily: 'SF Pro Text', 
-            fontStyle: 'normal', 
-            fontSize: '13.6054px', 
-            lineHeight: '157%', 
-            letterSpacing: '0.097px', 
-            color: '#253858'
+        actionCardHeader: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 500,
+            fontSize: "14px",
+            lineHeight: "157%",
+            letterSpacing: "0.1px",
+            color: "#253858"
+        },
+        actionCardSubHeader: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "12px",
+            lineHeight: "143%",
+            letterSpacing: "0.15px",
+            color: "rgba(66, 82, 110, 0.86)"
         },
         applicationActionCard: {
             fontFamily: "'SF Pro Text'",
@@ -166,7 +176,19 @@ const baseOptions = {
             letterSpacing: "0.5px",
             textTransform: "uppercase",
             color: "rgba(66, 82, 110, 0.86)"
+        },
+        tabHeader: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "14px",
+            lineHeight: "24px",
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            opacity: 0.7
         }
+        
     }
 };
 
@@ -189,6 +211,11 @@ const themesOptions = {
                         background: '#ffffff'
                     }
                 }
+            },
+            typography: {
+                tabHeader: {
+                    color: '#5664D2'
+                }
             }
         },
         palette: {
@@ -206,7 +233,7 @@ const themesOptions = {
             mode: 'light',
             primary: {
                 contrastText: '#ffffff',
-                main: '#5664d2'
+                main: '#5664D2'
             },
             success: {
                 contrastText: '#ffffff',

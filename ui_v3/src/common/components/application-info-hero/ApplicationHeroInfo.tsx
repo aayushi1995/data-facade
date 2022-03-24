@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, IconButton, Link, Avatar, AvatarGroup, Button, Divider, Card} from "@material-ui/core"
+import {Box, IconButton, Link, Avatar, AvatarGroup, Button, Divider, Card} from "@mui/material"
 import UserAvatar from '../../types/UserAvatar';
 import NumberStat, { NumberStatProp } from '../NumberStat';
 import UsageStatus from './../UsageStatus';

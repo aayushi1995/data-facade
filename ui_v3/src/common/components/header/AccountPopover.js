@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Avatar, Box, ButtonBase, Divider, Popover, Typography} from '@material-ui/core';
+import {Avatar, Box, ButtonBase, Divider, Popover, Typography} from '@mui/material';
 import Logout from "../../../pages/home/components/Logout";
 import {useAppBarProps} from "./DataFacadeAppBar";
 import {ThemeToggle} from "./ThemeToggle";

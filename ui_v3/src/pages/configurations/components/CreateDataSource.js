@@ -5,8 +5,8 @@ import {useRetreiveData} from './../../../data_manager/data_manager'
 import useStyles from './../../../css/configurations/CreateDataSource'
 import {useHistory, useRouteMatch} from "react-router-dom";
 import CreateDataSourceRow from "./CreateDataSourceRow";
-import {Box, Container, Grid, IconButton, Link, TextField} from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import {Box, Container, Grid, IconButton, Link, TextField} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 
 const filterOptionsMap = {

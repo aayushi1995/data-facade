@@ -2,11 +2,11 @@ import { Route, Switch, useRouteMatch, withRouter, useHistory } from 'react-rout
 import dataManager, { useRetreiveData } from '../../../data_manager/data_manager';
 import React from 'react';
 import labels from '../../../labels/labels';
-import { Card, Grid, IconButton } from '@material-ui/core'
-import { DataGrid } from "@material-ui/data-grid";
+import { Card, Grid, IconButton } from '@mui/material'
+import { DataGrid } from "@mui/x-data-grid";
 import { PageHeader } from "../../../common/components/header/PageHeader";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import NoData from '../../../common/components/NoData';
 import { useMutation } from 'react-query';

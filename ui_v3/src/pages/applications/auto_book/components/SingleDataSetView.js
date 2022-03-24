@@ -1,11 +1,11 @@
 import React from 'react'
-import {Box, Grid} from '@material-ui/core'
+import {Box, Grid} from '@mui/material'
 import dataManagerInstance, {useRetreiveData} from '../../../../data_manager/data_manager'
 import {PageHeader} from "../../../../common/components/header/PageHeader";
 import {useRouteMatch} from 'react-router-dom'
 import LoadingIndicator from '../../../../common/components/LoadingIndicator';
 import NoData from '../../../../common/components/NoData'
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {v4 as uuidv4} from 'uuid'
 import {useMutation} from 'react-query';
 

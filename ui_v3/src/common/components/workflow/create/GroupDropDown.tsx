@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { Accordion, AccordionSummary, Box, Card, AccordionDetails, IconButton, Typography, useTheme, Grid, Icon, SvgIcon} from '@material-ui/core';
+import { Accordion, AccordionSummary, Box, Card, AccordionDetails, IconButton, Typography, useTheme, Grid, Icon, SvgIcon} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SelectActionCard, { SelectActionCardProps } from './SelectActionCard';
 import { ReactComponent as DefaultIcon } from "./Icon.svg";

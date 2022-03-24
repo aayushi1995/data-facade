@@ -1,4 +1,4 @@
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import Logo from "../../../images/DF_icon.svg";
 import React from "react";
 

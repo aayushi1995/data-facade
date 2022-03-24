@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Grid, Table, TableBody, TableCell, TableRow, TextField} from '@material-ui/core'
+import {Button, Grid, Table, TableBody, TableCell, TableRow, TextField} from '@mui/material'
 import {Cell, Legend, Pie, PieChart, ResponsiveContainer} from 'recharts'
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import {useMutation} from 'react-query'

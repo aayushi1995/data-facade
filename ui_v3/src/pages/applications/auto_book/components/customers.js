@@ -1,14 +1,14 @@
 import React from 'react'
-import {Box, Dialog, DialogTitle, Grid, IconButton, Tooltip} from '@material-ui/core'
+import {Box, Dialog, DialogTitle, Grid, IconButton, Tooltip} from '@mui/material'
 import dataManagerInstance, {useRetreiveData} from '../../../../data_manager/data_manager'
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 import {PageHeader} from "../../../../common/components/header/PageHeader";
 import {useHistory, useRouteMatch} from 'react-router-dom'
 import LoadingIndicator from '../../../../common/components/LoadingIndicator';
 import NoData from '../../../../common/components/NoData'
-import {makeStyles} from "@material-ui/styles";
-import {DataGrid} from "@material-ui/data-grid";
-import CloseIcon from '@material-ui/icons/Close';
+import {makeStyles} from "@mui/styles";
+import {DataGrid} from "@mui/x-data-grid";
+import CloseIcon from '@mui/icons-material/Close';
 import CreateTag from '../../../tag/components/CreateTag'
 import {CustomToolbar} from "../../../../common/components/CustomToolbar";
 

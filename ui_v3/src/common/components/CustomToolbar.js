@@ -4,8 +4,8 @@ import {
     GridToolbarDensitySelector,
     GridToolbarExport,
     GridToolbarFilterButton
-} from "@material-ui/data-grid";
-import {Grid} from "@material-ui/core";
+} from "@mui/x-data-grid";
+import {Grid} from "@mui/material";
 import React from "react";
 
 export const CustomToolbar = (children) => () => {

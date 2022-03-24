@@ -1,10 +1,10 @@
 import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, Button, LinearProgress } from '@mui/material';
 import { Box } from '@mui/material';
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddRemoveIcon from "../../../../src/images/add_stage.svg"
 import React from 'react';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 
@@ -19,7 +19,7 @@ export interface WorkflowStageProps {
     showDetails: boolean,
     numberOfActions?: number,
     totalRunTime?: string,
-    showArrow?: boolean,
+    selectedStageId?: string,
     fromAddActions?: boolean
     handleDeleteStage?: (event: string) => void
     handleAddStage?: (stageId?: string) => void
@@ -34,17 +34,14 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
     const open = Boolean(menuAnchor)
 
     const handleAddDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation()
         if(props.fromAddActions !== true) {
             setMenuAnchor(event.currentTarget)
         }
-        // if(props.cardButton === 'minus') {
-        //     props.handleDeleteStage?.(props.stageId)
-        // } else {
-        //     props.handleAddStage?.()
-        // }
     }
 
     const handleMenuItemSelect = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        event.stopPropagation()
         setMenuAnchor(null)
         const menuItem: number = event.currentTarget.value
         if(menuItem === 1) {
@@ -65,28 +62,29 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
     }
 
     const handleDeleteStage = () => {
+        console.log(props.stageId)
         props?.handleDeleteStage?.(props.stageId)
         setIsDialogOpen(false)
     }
 
     const handleStageClick = () => {
-        if(props.showArrow === false) {
+        if(props.selectedStageId!==undefined){
             props.setSelectedStage?.(props.stageId)
         }
     }
 
     return (
         <Box 
-        sx={{
-            display: "flex", 
-            flexDirection: "row", 
-            backgroundColor: props.color, 
-            alignItems: "center", 
-            pt: 2, 
-            pb: 2, 
-            borderRadius: 3,
-            height: '80%'
-        }}
+            sx={{
+                display: "flex", 
+                flexDirection: "row", 
+                backgroundColor: props.color, 
+                alignItems: "center", 
+                pt: 2, 
+                pb: 2, 
+                borderRadius: 1,
+                height: '100%'
+            }}
         >
             <Dialog open={isDeleteDialogOpen} onClose={handleDialogCloseWithoutDelete}fullWidth maxWidth="xs" scroll="paper">
                 <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>
@@ -104,7 +102,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 </DialogContent>
             </Dialog>
             <Box sx={{
-                minWidth: "35px", 
+                minWidth: "40px", 
                 zIndex: 1
             }}></Box>
             <Box sx={{
@@ -128,7 +126,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                                 fontWeight: 700,
                             }}
                             onClick = {() => {
-                                if(props.showArrow !== false) {
+                                if(props.selectedStageId===undefined) {
                                     setIsNameBeingEdited(true)
                                 }
                             }}
@@ -163,25 +161,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 )}
                 
             </Box>
-            {props.showArrow === false ? (
-                <Box sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    position: "relative",
-                    left: "40px",
-                    zIndex: 1
-                }}>
-                    <Box sx={{
-                        width: "0",
-                        height: "0",
-                        borderTop: "25px solid transparent",
-                        borderLeft: "25px solid transparent",
-                        borderBottom: "25px solid transparent"
-                    }}>
-                    </Box>
-                </Box>
-            ) : (
+            {(props.selectedStageId===undefined || props.selectedStageId===props.stageId) &&
                 <Box sx={{
                     display: "flex",
                     alignItems: "center",
@@ -198,45 +178,50 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                         borderLeftColor: props.color,
                         borderBottom: "25px solid transparent"
                     }}>
-                        
                     </Box>
+
                     <Box sx={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         position: "relative",
                         right:"10px",
-                        borderRadius: "10px"
+                        borderRadius: "10px",
+                        minWidth: "20px"
                     }}>
-                        <IconButton sx={{p: "0px", mt: '5px'}} onClick={handleAddDeleteClick}>
-                            {/* {props.cardButton === 'plus' ? (
-                                <AddIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
-                            ):
-                            (
-                                <RemoveIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
-                            )} */}
-                            <img src={AddRemoveIcon} alt="Add" style={{height: '20px', width: '20px', background: 'transparent', transform: 'scale(1.5)'}}/>
-                        </IconButton>
-                        <Menu 
-                            anchorEl={menuAnchor} 
-                            open={open} 
-                            onClose={() => {setMenuAnchor(null)}}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                              }}
-                              transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                              }}
-                        >
-                                <MenuItem onClick={handleMenuItemSelect} value={0}>Add Stage Next</MenuItem>
-                                <MenuItem onClick={handleMenuItemSelect} value={1}>Add Stage Last</MenuItem>
-                                <MenuItem onClick={handleMenuItemSelect} value={2}>Delete Stage</MenuItem>
-                        </Menu>
+                        {props.selectedStageId === undefined &&
+                            <>
+                                <IconButton sx={{p: "0px", mt: '5px'}} onClick={handleAddDeleteClick}>
+                                    {/* {props.cardButton === 'plus' ? (
+                                        <AddIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
+                                    ):
+                                    (
+                                        <RemoveIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
+                                    )} */}
+                                    <img src={AddRemoveIcon} alt="Add" style={{height: '20px', width: '20px', background: 'transparent', transform: 'scale(1.5)'}}/>
+                                </IconButton>
+                                <Menu 
+                                    anchorEl={menuAnchor} 
+                                    open={open} 
+                                    onClose={() => {setMenuAnchor(null)}}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                        }}
+                                        transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                        }}
+                                >
+                                        <MenuItem onClick={handleMenuItemSelect} value={0}>Add Stage Next</MenuItem>
+                                        <MenuItem onClick={handleMenuItemSelect} value={1}>Add Stage Last</MenuItem>
+                                        <MenuItem onClick={handleMenuItemSelect} value={2}>Delete Stage</MenuItem>
+                                </Menu>
+                            </>
+                        }
                     </Box>
                 </Box>
-            )}
+            }
         </Box>
     )
 }

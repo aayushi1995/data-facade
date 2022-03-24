@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import {useState} from 'react';
-import {Box, Button, Container, Drawer, IconButton, InputAdornment, TextField, Tooltip} from '@material-ui/core';
+import {Box, Button, Container, Drawer, IconButton, InputAdornment, TextField, Tooltip} from '@mui/material';
 import SearchIcon from '../icons/Search';
 import XIcon from '../icons/X';
 import {useAppBarProps} from "./DataFacadeAppBar";

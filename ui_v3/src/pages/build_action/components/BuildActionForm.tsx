@@ -9,6 +9,7 @@ import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTo
 import ActionDetailForm from "./form-components/ActionDetailForm";
 import { BuildActionContext, SetBuildActionContext } from "../context/BuildActionContext";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import DoubeLeftIcon from './../../../images/Group 691.svg'
 import { useHistory } from "react-router-dom";
 
 export interface BuildActionFormProps {
@@ -65,10 +66,10 @@ const BuildActionForm = (props: BuildActionFormProps) => {
     const toggleSidebar = () => setSideBarOpen(old => !old)
 
     return (
-        <Box sx={{display: "flex", flexDirection: "row", width: "100%"}} id="drawer-container">
+        <Box sx={{display: "flex", flexDirection: "row", width: "100%", pl: 1}} id="drawer-container">
             <CollapsibleDrawer
                 open={sideBarOpen}
-                openWidth="320px"
+                openWidth="370px"
                 closedWidth="50px"
                 openDrawer={() => toggleSidebar()}
                 maxHeight="850px"
@@ -104,7 +105,7 @@ const BuildActionForm = (props: BuildActionFormProps) => {
                             </Box>
                             <Box>
                                 <IconButton onClick={() => toggleSidebar()}>
-                                    <ArrowBackIosNewTwoToneIcon/>
+                                    <img src={DoubeLeftIcon} alt="NA"/>
                                 </IconButton>
                             </Box>
                         </Box>
@@ -120,6 +121,7 @@ const BuildActionForm = (props: BuildActionFormProps) => {
                                             <SearchIcon/>
                                         </InputAdornment>
                                     ),
+                                    sx: { borderRadius: "15px" }
                                 }}
                                 sx={{
                                     width: "100%"

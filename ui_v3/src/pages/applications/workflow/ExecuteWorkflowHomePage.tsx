@@ -6,7 +6,7 @@ import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, Workflow
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
 import NoData from "../../../common/components/NoData"
-import { Box, Button } from "@material-ui/core"
+import { Box, Button } from "@mui/material"
 import WorkflowHero  from "../../../common/components/workflow-editor/WorkflowHero"
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
 import useCreateWorkflowActionInstanceMutation from "../../../common/components/workflow/execute/hooks/useCreateWorkflowActionInstanceMutation"

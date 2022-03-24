@@ -1,8 +1,8 @@
 import {Button} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React from "react";
-import {Box, Dialog, DialogContent, DialogTitle, Grid, IconButton} from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import {Box, Dialog, DialogContent, DialogTitle, Grid, IconButton} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import {ConnectionBreadCrumbs} from "./ConnectionBreadCrumbs";
 import {ConnectionDialogContent} from "./ConnectionDialogContent";
 import {Route, useHistory, useRouteMatch} from "react-router-dom";

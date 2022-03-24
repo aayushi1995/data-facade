@@ -1,8 +1,8 @@
-import { makeStyles } from "@material-ui/styles";
-import { TextField, IconButton, Tooltip, Grid, Button } from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
+import { TextField, IconButton, Tooltip, Grid, Button } from "@mui/material";
 import { useState } from "react";
-import { Box } from "@material-ui/system";
-import { GridCloseIcon } from "@material-ui/data-grid";
+import { Box } from "@mui/system";
+import { GridCloseIcon } from "@mui/x-data-grid";
 import { Dialog } from "@mui/material";
 import { ACTION_EXECUTION_STATUS } from "../hooks/useRunActions";
 import { QuickStatsNewTempWrapper } from "../../../table_details/components/QuickStatsNewTemp";

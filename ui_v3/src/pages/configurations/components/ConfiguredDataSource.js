@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
-import {Box, Dialog, Grid, IconButton, Link, Snackbar, Tooltip} from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert';
+import {Box, Dialog, Grid, IconButton, Link, Snackbar, Tooltip} from '@mui/material'
+import MuiAlert from '@mui/material/Alert';
 import ConfiguredDataSourceRow from './ConfiguredDataSourceRow'
 import {useMutation} from 'react-query'
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
@@ -8,15 +8,15 @@ import labels from './../../../labels/labels'
 import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'
 import useStyles from './../../../css/configurations/ConfiguredDataSource'
 import {Route, Switch, useHistory, useRouteMatch, withRouter} from "react-router-dom";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {PageHeader} from "../../../common/components/header/PageHeader";
 import CreateDataSource from "./CreateDataSource";
 import {CustomToolbar} from "../../../common/components/CustomToolbar";
 import {Alert} from '../../../common/components/Alert';
-import SyncIcon from "@material-ui/icons/Sync";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import SyncIcon from "@mui/icons-material/Sync";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PreviewIcon from "@mui/icons-material/Preview";
 import {DATA_CONNECTIONS_ROUTE} from "../../../common/components/header/data/DataRoutesConfig";
 import {BaseCard} from "../../../common/components/basecard/BaseCard";

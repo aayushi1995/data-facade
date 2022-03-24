@@ -1,13 +1,13 @@
 import React, {useContext} from 'react'
-import {Button, Grid} from '@material-ui/core'
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import {Button, Grid} from '@mui/material'
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 import {SearchBar, SearchQueryContext} from "../../../pages/table_browser/TableBrowser";
 import AppContext from "../../../utils/AppContext";
 import {DataFacadeLogo} from "../sideBar/DataFacadeLogo";
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import Logout from "../../../pages/home/components/Logout";
-import Menu from "@material-ui/core/Menu";
+import Menu from "@mui/material/Menu";
 import DashboardNavBar from "./DashboardNavbar";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 

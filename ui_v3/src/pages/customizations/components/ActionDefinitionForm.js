@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {v4 as uuidv4} from 'uuid'
-import {makeStyles} from '@material-ui/styles'
+import { makeStyles } from '@mui/styles'
 import {
     AppBar,
     Box,
@@ -15,9 +15,9 @@ import {
     Select,
     Tabs,
     TextField
-} from '@material-ui/core'
+} from '@mui/material'
 
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 
 import TabWithClose from '../../../common/components/TabWithClose.js'
 import CodeEditor from './../../../common/components/CodeEditor.js'

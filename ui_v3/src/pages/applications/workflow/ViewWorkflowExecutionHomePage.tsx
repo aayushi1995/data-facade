@@ -1,4 +1,4 @@
-import { Box, Dialog, Grid, IconButton } from "@material-ui/core"
+import { Box, Dialog, Grid, IconButton } from "@mui/material"
 import { DialogContent, DialogTitle } from "@mui/material"
 import React from "react"
 import { Route, RouteComponentProps, Switch, useRouteMatch } from "react-router-dom"
@@ -9,7 +9,7 @@ import { StagesWithActions } from "../../../common/components/workflow/create/ne
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
 
 interface MatchParams {

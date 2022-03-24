@@ -1,10 +1,10 @@
-import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
-import DoneAllOutlinedIcon from '@material-ui/icons/DoneAllOutlined';
-import DoneOutlineOutlinedIcon from '@material-ui/icons/DoneOutlineOutlined';
-import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
-import WarningOutlinedIcon from '@material-ui/icons/WarningOutlined';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import DoneAllOutlinedIcon from '@mui/icons-material/DoneAllOutlined';
+import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import LoadingIndicator from '../common/components/LoadingIndicator'
-import SyncIcon from '@material-ui/icons/Sync';
+import SyncIcon from '@mui/icons-material/Sync';
 
 const S3DownloadState = {
     TABLE_EXISTENCE_LOADING: {

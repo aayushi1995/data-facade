@@ -1,7 +1,7 @@
 import WorkflowStagesWrapper, {WorkflowStagesWrapperProps} from "../workflowStages/WorkflowStagesWrapper";
 import { withDesign } from 'storybook-addon-designs'
 import { Story } from "@storybook/react";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import React from "react";
 import { v4 as uuidv4 } from 'uuid'
 

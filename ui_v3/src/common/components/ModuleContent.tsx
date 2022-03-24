@@ -5,7 +5,7 @@ import {
     DATA_RAW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE,
     DATA_SUB_TABS, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE
 } from "./header/data/DataRoutesConfig";
-import {Box, Tab, Tabs} from "@material-ui/core";
+import {Box, Tab, Tabs} from "@mui/material";
 import {Button, Typography} from "@mui/material";
 import React, {ReactChildren} from "react";
 import {ModuleHeaderPropType} from "./header/schema";

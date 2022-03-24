@@ -1,5 +1,5 @@
-import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
-import WarningOutlinedIcon from '@material-ui/icons/WarningOutlined';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import LoadingIndicator from '../common/components/LoadingIndicator'
 import EntityCreationRequestState from './RequestState.js'
 

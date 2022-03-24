@@ -7,7 +7,7 @@ import RefreshIcon from "@mui/icons-material/Refresh"
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
 import { ActionParameterDefinition, ActionTemplate, Tag } from "../../../../generated/entities/Entities";
 import { CustomToolbar } from "../../../../common/components/CustomToolbar";
-import { DataGrid, GridRowId, GridToolbarContainer, GridValueGetterParams } from "@material-ui/data-grid";
+import { DataGrid, GridRowId, GridToolbarContainer, GridValueGetterParams } from "@mui/x-data-grid";
 import TemplateLanguage from "../../../../enums/TemplateLanguage";
 import { getInputTypeFromAttributesNew } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
 import { template } from "@babel/core";

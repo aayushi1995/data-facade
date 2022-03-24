@@ -1,14 +1,14 @@
 import React from 'react'
 import Editor from "react-simple-code-editor";
-import { Box, Button, Dialog, Grid, IconButton, TextField, Tooltip } from '@material-ui/core'
-import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
+import { Box, Button, Dialog, Grid, IconButton, TextField, Tooltip } from '@mui/material'
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import { v4 as uuidv4 } from 'uuid';
 import { useMutation } from 'react-query'
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import labels from './../../../labels/labels'
 import dataManagerInstance from './../../../data_manager/data_manager'
 import useStyles from './../../../css/customizations/ActionInstancesRow'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import { highlight, languages } from "prismjs/components/prism-core"
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-sql";

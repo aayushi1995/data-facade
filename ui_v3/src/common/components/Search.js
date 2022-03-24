@@ -1,7 +1,7 @@
 import React from 'react'
-import {FormControl, InputAdornment, OutlinedInput} from '@material-ui/core'
-import SearchIcon from '@material-ui/icons/Search'
-import {makeStyles} from "@material-ui/styles";
+import {FormControl, InputAdornment, OutlinedInput} from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
+import {makeStyles} from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
     root: {

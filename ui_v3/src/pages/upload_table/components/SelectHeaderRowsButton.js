@@ -23,11 +23,11 @@ import {
     Autocomplete,
     TextField,
     TableRow
-} from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close';
-import {makeStyles} from '@material-ui/styles'
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close';
+import { makeStyles } from '@mui/styles'
 
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 
 const useStyles = makeStyles(() => ({
     requiredTags: {

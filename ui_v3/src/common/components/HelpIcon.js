@@ -1,7 +1,7 @@
 import React from 'react'
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import {Tooltip} from '@material-ui/core';
-import {makeStyles} from '@material-ui/styles'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import {Tooltip} from '@mui/material';
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(() => ({
 

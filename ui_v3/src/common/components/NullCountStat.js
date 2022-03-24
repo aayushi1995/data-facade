@@ -1,6 +1,6 @@
 import React from 'react'
-import {makeStyles} from '@material-ui/styles'
-import {Box, Collapse, Divider, Grid, IconButton} from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
+import {Box, Collapse, Divider, Grid, IconButton} from '@mui/material'
 import {
     Bar,
     BarChart,
@@ -14,7 +14,7 @@ import {
     YAxis,
 } from 'recharts';
 
-import {KeyboardArrowDown, KeyboardArrowRight} from '@material-ui/icons'
+import {KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material'
 import {useRouteMatch} from 'react-router-dom'
 import DataChecksIcon from './../../images/data_check_icon.png'
 

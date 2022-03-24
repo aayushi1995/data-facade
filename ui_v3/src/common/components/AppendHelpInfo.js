@@ -1,8 +1,8 @@
 import React from 'react'
-import InfoIcon from '@material-ui/icons/Info';
-import CloseIcon from '@material-ui/icons/Close';
-import {makeStyles} from '@material-ui/styles'
-import {Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField, Tooltip} from '@material-ui/core'
+import InfoIcon from '@mui/icons-material/Info';
+import CloseIcon from '@mui/icons-material/Close';
+import {makeStyles} from '@mui/styles'
+import {Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField, Tooltip} from '@mui/material'
 
 
 const useStyles = makeStyles(() => ({

@@ -1,5 +1,5 @@
-import {useTheme} from "@material-ui/core/styles";
-import {IconButton, Tooltip} from "@material-ui/core";
+import {useTheme} from "@mui/material";
+import {IconButton, Tooltip} from "@mui/material";
 import React from "react";
 import {Box} from "@mui/system";
 

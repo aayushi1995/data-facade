@@ -1,12 +1,12 @@
-import {Breadcrumbs, Grid, Typography, Button} from "@material-ui/core";
+import {Breadcrumbs, Grid, Typography, Button} from "@mui/material";
 import UploadApplicationButton from "../UploadApplicationButton"
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import * as PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import {decodeURL} from "./DataFacadeAppBar";
 import {Route, useLocation} from "react-router-dom";
-import {makeStyles} from "@material-ui/styles";
-import { Link } from "@material-ui/core";
+import {makeStyles} from "@mui/styles";
+import { Link } from "@mui/material";
 import {Link as ReactRouter} from "react-router-dom";
 
 const useStyles = makeStyles(() => ({

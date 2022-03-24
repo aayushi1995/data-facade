@@ -8,7 +8,7 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-sql";
 import "prismjs/components/prism-python"
 import "prismjs/themes/prism.css";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import { useState } from "react";
 
 

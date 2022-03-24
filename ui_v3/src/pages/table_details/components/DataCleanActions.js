@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid} from '@material-ui/core'
+import {Grid} from '@mui/material'
 import Search from './../../../common/components/Search'
 import SelectOption from './../../../common/components/SelectOption'
 import DataCleanActionsRow from './DataCleanActionsRow'

@@ -1,6 +1,6 @@
 import React from "react";
-import { Grid, Card } from "@material-ui/core";
-import { Link } from "@material-ui/core";
+import { Grid, Card } from "@mui/material";
+import { Link } from "@mui/material";
 import { Link as ReactRouter } from "react-router-dom";
 
 export const WorkflowMeta = ({ tableMeta }) => {
