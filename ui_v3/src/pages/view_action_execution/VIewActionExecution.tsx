@@ -1,12 +1,18 @@
-import { Box, Button, Card, Dialog, DialogContent, Typography } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogContent, Typography, DialogTitle } from "@mui/material";
 import React from "react";
+import LoadingIndicator from "../../common/components/LoadingIndicator";
 import LoadingWrapper from "../../common/components/LoadingWrapper";
 import ProgressBar from "../../common/ProgressBar";
+import S3UploadState from "../../custom_enums/S3UploadState";
+import ActionDefinitionPresentationFormat from "../../enums/ActionDefinitionPresentationFormat";
 import ActionExecutionStatus from "../../enums/ActionExecutionStatus";
 import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "../../generated/interfaces/Interfaces";
 import ViewConfiguredParameters from "../execute_action/components/ViewConfiguredParameters";
 import useActionExecutionParsedOutput from "../execute_action/hooks/useActionExecutionParsedOutput";
+import ConfigureTableMetadata from "../upload_table/components/ConfigureTableMetadata";
 import FetchActionExecutionDetails from "./hooks/FetchActionExecutionDetails";
+import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOutputFromS3";
+import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput";
 import ViewActionExecutionOutput from "./ViewActionExecutionOutput";
 
 export interface ViewActionExecutionProps {
@@ -59,14 +65,38 @@ const ViewExecutingActionExecution = (props: ResolvedActionExecutionProps) => {
 const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
     const { actionExecutionDetail } = props
     const [dialogState, setDialogState] = React.useState(false)
+    const [importTableDialog, setImportTableDialog] = React.useState(false)
+    const [fileFetched, setFileFetched] = React.useState(false)
     const handleClose = () => setDialogState(false)
     const handleOpen = () => setDialogState(true)
 
     const useActionExecutionParsedOutputQuery = useActionExecutionParsedOutput({ actionExecutionFilter: {Id: actionExecutionDetail?.ActionExecution?.Id}, queryOptions: {}})
-    
+    const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionOutput(actionExecutionDetail.ActionExecution?.OutputFilePath || "NA", 5)
+    const downloadExecutionOutputFromS3 = useDownloadExecutionOutputFromS3()
+
     const viewResult = () => {
         useActionExecutionParsedOutputQuery.refetch()
-    
+    }
+
+    const handleExportResults = () => {
+        const s3Path = props.actionExecutionDetail.ActionExecution?.OutputFilePath || "s3Path"
+        setImportTableDialog(true)
+        useGetPresignedDowloadUrl.mutate(
+            (undefined),
+            {
+                onSuccess: (data, variables, context) => {
+                    const s3Data = data as {requestUrl: string, headers: any}
+                    downloadExecutionOutputFromS3.mutate(
+                        ({requestUrl: s3Data.requestUrl as string, headers: s3Data.headers}),
+                        {
+                            onSuccess: (data, variables, context) => {
+                                setFileFetched(true)
+                            }
+                        }
+                    )
+                },
+            }
+        )
     }
     
     const progressBarProps = {
@@ -76,6 +106,18 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
 
     return (
         <Box>
+            <Dialog open={importTableDialog} onClose={() => {setImportTableDialog(false); setFileFetched(false)}} fullWidth maxWidth="xl">
+                <DialogTitle>
+                    Export As Table
+                </DialogTitle>
+                <DialogContent>
+                    {fileFetched ? (
+                        <ConfigureTableMetadata file={new File([downloadExecutionOutputFromS3.data as Blob], `${actionExecutionDetail.ActionExecution?.ActionInstanceName || "Execution"}.csv`)} uploadState={S3UploadState.FILE_BUILT_FOR_UPLOAD} currentEnabled={5} setUploadState={() => {return}}/>
+                    ) : (
+                        <LoadingIndicator/>
+                    )}
+                </DialogContent>
+            </Dialog>
             <Dialog open={dialogState} onClose={handleClose} fullWidth maxWidth="md">
                 <DialogContent>
                     <ViewActionExecutionOutput 
@@ -118,7 +160,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                                 </Button>
                             </Box>
                             <Box>
-                                <Button variant="contained" disabled>
+                                <Button variant="contained" disabled={actionExecutionDetail.ActionDefinition?.PresentationFormat !== ActionDefinitionPresentationFormat.TABLE_VALUE} onClick={handleExportResults}>
                                     Export Results
                                 </Button>
                             </Box>

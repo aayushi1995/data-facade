@@ -167,8 +167,8 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
 
     const actionInstance: ActionInstance = {
         Id: uuidv4(),
-        Name: "Test",
-        DisplayName: "Test",
+        Name: ActionDefinition.DisplayName,
+        DisplayName: ActionDefinition.DisplayName,
         DefinitionId: ActionDefinition?.Id,
         TemplateId: ActionDefinition?.DefaultActionTemplateId,
         ProviderInstanceId: providerInstanceId,

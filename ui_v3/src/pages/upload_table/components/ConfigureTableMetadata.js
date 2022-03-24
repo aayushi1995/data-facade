@@ -267,7 +267,7 @@ export const ConfigureTableMetadata = (props) => {
                                         onSuccess: () => {
                                             props.setUploadState(S3UploadState.FDS_TABLE_FETCH_SUCCESS);
                                             enableUploadButton(4);
-                                            history.push("/tableBrowser")
+                                            history.push("/data/raw")
                                         },
                                         onError: (err, variables, context) => {
                                             console.log(err, variables, context)
