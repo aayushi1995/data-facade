@@ -289,7 +289,6 @@ const DataSetsTable = (props) => {
                 components={{
                     Toolbar: CustomToolbar(props.toolBarButtons)
                 }}
-                autoHeight
                 autoPageSize
                 checkboxSelection={!hide}
                 disableSelectionOnClick
@@ -300,6 +299,9 @@ const DataSetsTable = (props) => {
                     history.push(`${match.url}/${params.row.TableUniqueName}`)
                 }}
                 {...props}
+                sx={{
+                    height: "800px"
+                }}
             />
         </>
     )

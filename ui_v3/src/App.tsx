@@ -38,6 +38,8 @@ import BuildActionHomePage from './pages/build_action/BuildActionHomePage'
 import ViewWorkflowExecutionHomePage from './pages/applications/workflow/ViewWorkflowExecutionHomePage'
 import ExecuteActionHomePage from './pages/execute_action/ExecuteActionHomePage'
 import DeclareModules from './css/theme/schema'
+import { UploadFilePage } from './common/components/data-raw/UploadFilePage'
+import { DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE } from './common/components/header/data/DataRoutesConfig'
 
 export const AppInternal = (props: { classes: any; userEmail: any; dummyData: any; dummyDataPending: any; activeLink: any; setActiveLink: any; isLoading: any; user: any }) => {
     const {
@@ -105,6 +107,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/workflow-editor' component={WorkflowEditorPage}/>
                                     <Route path='/run-workflow' component={RunWorkflowHomePage}/>
                                     <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
+                                    <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
                                     <Redirect exact from="/" to="/application"/>
                                 </Switch>
                             </Grid>

@@ -83,7 +83,7 @@ export function useCreateDataSource(selectedId: string | undefined, isUpdate: bo
             "entityProperties": providerInstance,
             "providerParameterInstances": providerParameterInstance
         }, {
-            onSettled: handleClose()
+            onSettled: () => handleClose?.()
         })
     }
     const syncProviderInstance = useMutation((config: {

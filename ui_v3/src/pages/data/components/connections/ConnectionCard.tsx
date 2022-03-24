@@ -85,7 +85,6 @@ export const ConnectionCard = (props: ConnectionCardType) => {
             height={250}
             width={236}
             background={ alpha(lightGreen.A400, 0.17) }
-            boxShadow={props.isSelected? LightInsetShadows[1]: theme.shadows[23]}
             ActionIconButtons={<Stack direction='column' gap={1}>
                 <ButtonIconWithToolTip Icon={SyncIcon} onClick={()=>syncSelectedConnection(props.Id)} title="sync"/>
                 <ButtonIconWithToolTip Icon={DeleteIcon} onClick={()=>deleteSelectedConnection(props.Id)} title="delete"/>

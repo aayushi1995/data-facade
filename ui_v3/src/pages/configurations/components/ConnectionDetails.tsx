@@ -3,7 +3,6 @@ import CreateDataSourceRow from "./CreateDataSourceRow";
 import React from "react";
 import {ConnectionsContext} from "../context/ConnectionsContext";
 import {TableWrapper} from "../../../common/components/TableWrapper";
-import {ActionsChart} from "./ActionsChart";
 
 
 export const ConnectionDetails = () => {
@@ -35,10 +34,10 @@ export const ConnectionDetails = () => {
                     <Typography variant={'body1'}>
                         Number of actions run per day
                     </Typography>
-                    <ActionsChart
+                    {/* <ActionsChart
                         dataX={days}
                         dataY={details?.history}
-                    />
+                    /> */}
                     <Stack direction={"row"}>
                         <Paper sx={{p:2}}>
                             <Stack direction='column' gap={2}>
