@@ -42,7 +42,7 @@ const AllApplicationView = () => {
                             Action Instances
                         </Typography>
                     </Box>
-                    <Box sx={{flex: 1, overflowX: 'auto'}}>
+                    <Box sx={{flex: 1, overflowX: 'auto', ml: 2, pr: 2}}>
                         <ActionInstances searchQuery={searchQuery}/>
                     </Box>
                 </Box>
@@ -52,7 +52,7 @@ const AllApplicationView = () => {
                         Action Definitions
                         </Typography>
                     </Box>
-                    <Box sx={{flex: 1, overflowX: 'auto'}}>
+                    <Box sx={{flex: 1, overflowX: 'auto', ml: 2, pr: 2}}>
                         <ActionDefinitions searchQuery={searchQuery}/>
                     </Box>
                 </Box>

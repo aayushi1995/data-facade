@@ -22,7 +22,7 @@ const ActionInstances = (props: ActionInstancesProps) => {
     } else if(actionInstances) {
         const actionInstanceCardsToRender = filterBySearchQuery(actionInstances).map(actionInstance => {
             return (
-                <Box sx={{ height: '100%', p: 2}} key={actionInstance.InstanceId}>
+                <Box sx={{ height: '100%', p: 2, ml: 2}} key={actionInstance.InstanceId}>
                     <ActionInstanceCard actionInstance={actionInstance}/>
                 </Box>
             )

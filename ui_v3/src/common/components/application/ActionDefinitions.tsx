@@ -22,7 +22,7 @@ const ActionDefinitions = (props: ActionDefinitionsProps) => {
     } else if(actionDefinitions) {
         const actionDefinitionCardsToRender = filterBySearchQuery(actionDefinitions).map(actionDefinition => {
             return (
-                <Box sx={{ height: '100%', p: 2}}  key={actionDefinition.DefinitionId}>
+                <Box sx={{ height: '100%', p: 2, ml: 2}}  key={actionDefinition.DefinitionId}>
                     <ActionDefinitionCard actionDefinition={actionDefinition}/>
                 </Box>
             )

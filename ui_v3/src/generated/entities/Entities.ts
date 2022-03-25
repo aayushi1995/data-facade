@@ -81,6 +81,7 @@ export interface ActionDefinition extends BaseEntity{
 	CreatedBy?: string
 	Description?: string
 	ApplicationId?: string
+	IsVisibleOnUI?: boolean
 }
 
 
@@ -159,6 +160,7 @@ export interface Application extends BaseEntity{
 	CreatedBy?: string
 	CreatedOn?: number
 	Description?: string
+	IsVisibleOnUI?: boolean
 }
 
 
