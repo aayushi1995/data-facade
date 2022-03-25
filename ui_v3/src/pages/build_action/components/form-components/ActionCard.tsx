@@ -17,7 +17,7 @@ export interface ActionCardProps {
 const ActionCard = (props: ActionCardProps) => {
     const {actionId, actionName, actionDescription, selectedActionId, onRadioToggle} = props
     const theme = useTheme();
-    console.log(theme.palette.primary)
+
     return(
         <Card
             sx={{

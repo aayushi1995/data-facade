@@ -36,6 +36,7 @@ export type BuildActionContextState = {
     activeTemplateId?: string,
     isLoadingAction: boolean,
     sourcedFromActionDefiniton?: ActionDefinition,
+    SourceApplicationId?: string,
     onSuccessfulBuild?: (actionDefinitionId?: ActionDefinition) => void
 }
 
@@ -217,8 +218,8 @@ type SetSuccessCallbackFunction = {
     }
 }
 
-type SetApplicationIdAction = {
-    type: "SetApplicationId",
+type SetSourceApplicationIdAction = {
+    type: "SetSourceApplicationId",
     payload: {
         newApplicationId?: string
     }
@@ -268,7 +269,7 @@ LoadingOverAction |
 LoadFromExistingAction |
 SetSuccessCallbackFunction |
 SetModeAction |
-SetApplicationIdAction
+SetSourceApplicationIdAction
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -464,7 +465,10 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             const newState = {
                 ...state,
                 actionDefinitionWithTags: {
-                    actionDefinition: action.payload?.ActionDefinition?.model!,
+                    actionDefinition: {
+                        ...action.payload?.ActionDefinition?.model!,
+                        ApplicationId: undefined
+                    },
                     tags: action.payload?.ActionDefinition?.tags!
                 },
                 actionTemplateWithParams: (action.payload?.ActionTemplatesWithParameters||[]).map(at => ({
@@ -477,7 +481,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 isLoadingAction: false,
                 activeTemplateId: activeTemplateId,
                 sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!
-            }
+            } as BuildActionContextState
 
             if(state.mode==="CREATE") {
                 const x = assignActiveTemplateId(refreshContextIds(newState))
@@ -496,16 +500,10 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
-        case "SetApplicationId": {
+        case "SetSourceApplicationId": {
             return {
                 ...state,
-                actionDefinitionWithTags: {
-                    ...state.actionDefinitionWithTags,
-                    actionDefinition: {
-                        ...state.actionDefinitionWithTags.actionDefinition,
-                        ApplicationId: action.payload.newApplicationId
-                    }
-                }
+                SourceApplicationId: action.payload.newApplicationId
             }
         }
 

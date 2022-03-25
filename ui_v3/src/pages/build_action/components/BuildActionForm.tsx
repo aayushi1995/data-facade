@@ -21,7 +21,7 @@ const BuildActionForm = (props: BuildActionFormProps) => {
     const history = useHistory()
     const actionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
-
+    console.log(actionContext)
     const [sidePanelActiveTab, setSidePanelActiveTab] = React.useState(1)
     const [actionDefinitionNameSearchQuery, setActionDefinitionNameSearchQuery] = React.useState<string>("")
     const [selectedActionId, setSelectedActionId] = React.useState<string|undefined>()

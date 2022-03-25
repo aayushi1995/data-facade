@@ -21,6 +21,7 @@ const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string})
     const setActionContext = React.useContext(SetBuildActionContext)
     const [showWizard, setShowWizard] = React.useState(true)
     const location = useLocation()
+    console.log(location.state)
     React.useEffect(() => {
         setActionContext({
             type: "SetMode",
@@ -30,7 +31,7 @@ const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string})
         })
 
         setActionContext({
-            type: "SetApplicationId",
+            type: "SetSourceApplicationId",
             payload: {
                 newApplicationId: location.state as string|undefined
             }

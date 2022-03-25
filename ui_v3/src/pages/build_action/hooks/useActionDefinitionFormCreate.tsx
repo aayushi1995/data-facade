@@ -72,7 +72,10 @@ const useActionDefinitionFormCreate = (props: UseActionDefinitionFormCreateProps
 const formCreateRequestBodyFromContextState = (state: BuildActionContextState) => {
     const entityToCreate: ActionDefinitionFormPayload = {
         ActionDefinition: {
-            model: state.actionDefinitionWithTags.actionDefinition,
+            model: {
+                ...state.actionDefinitionWithTags.actionDefinition,
+                ApplicationId: state.SourceApplicationId
+            },
             tags: state.actionDefinitionWithTags.tags
         },
         ActionTemplatesWithParameters: state.actionTemplateWithParams.map(at => ({
