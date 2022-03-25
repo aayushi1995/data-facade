@@ -73,7 +73,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         <Box>
             <Box>
                 <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
-                    <Tab label="Parameters" value={0} sx={{
+                <Tab label="Code" value={1} sx={{
                             fontFamily: "SF Pro Text",
                             fontStyle: "normal",
                             fontWeight: 600,
@@ -84,7 +84,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                             textAlign: "center",
                             opacity: 0.7
                     }}/>
-                    <Tab label="Code" value={1} sx={{
+                    <Tab label="Parameters" value={0} sx={{
                             fontFamily: "SF Pro Text",
                             fontStyle: "normal",
                             fontWeight: 600,

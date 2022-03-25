@@ -26,7 +26,8 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
             Id: actionDefinition.Id,
             DefaultActionTemplateId: actionDefinition.DefaultTemplateId,
             Parameters: [],
-            ActionGroup: 'Data Cleansing'
+            // TODO: Add action group back once it's ready from backend     
+            ActionGroup: "Yet to define"
         }
 
         setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: props.stageId, Action: newWorkflowAction}})
