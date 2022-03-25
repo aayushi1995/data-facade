@@ -11,6 +11,8 @@ import {useDeleteSelectedConnection} from "../../../configurations/hooks/useDele
 import {useTheme} from "@mui/styles";
 import {lightGreen} from "@mui/material/colors";
 import {LightInsetShadows} from "../../../../css/theme/shadows";
+import useSyncProviderInstance from '../../../configurations/components/hooks/useSyncProviderInstance';
+import React from 'react';
 
 const NA = 'NA';
 
@@ -77,17 +79,32 @@ function ConnectionsPrimaryActionButtons(props: { Actions?: number, Tables?: num
 
 
 export const ConnectionCard = (props: ConnectionCardType) => {
+    const [syncing, setSyncing] = React.useState(false)
+    const syncyProviderMutation = useSyncProviderInstance({ mutationOptions: {
+        onMutate: () => setSyncing(true),
+        onSettled: () => setSyncing(false)
+    } })
     const deleteSelectedConnection = useDeleteSelectedConnection();
-    const syncSelectedConnection = (connectionId?: string)=>alert('todo'+ connectionId);
+    const syncSelectedConnection = (connectionId?: string) => {
+        console.log(connectionId)
+        syncyProviderMutation.mutate({
+            providerInstanceId: connectionId,
+            syncDepthConfig: {
+                providerSyncAction: true,
+                SyncDepth: "TablesAndColumns"
+            },
+            recurrenceConfig: {}
+        })
+    }
     const theme = useTheme();
     return <Box onClick={()=>props.onClick(props.ConnectionID)} sx={{cursor: "pointer"}}>
         <BaseCard
             height={250}
             width={236}
-            background={ alpha(lightGreen.A400, 0.17) }
+            background={ syncing ? "F3F3F3" : alpha(lightGreen.A400, 0.17) }
             ActionIconButtons={<Stack direction='column' gap={1}>
-                <ButtonIconWithToolTip Icon={SyncIcon} onClick={()=>syncSelectedConnection(props.Id)} title="sync"/>
-                <ButtonIconWithToolTip Icon={DeleteIcon} onClick={()=>deleteSelectedConnection(props.Id)} title="delete"/>
+                <ButtonIconWithToolTip Icon={SyncIcon} onClick={()=>syncSelectedConnection(props.ConnectionID)} title="sync"/>
+                <ButtonIconWithToolTip Icon={DeleteIcon} onClick={()=>deleteSelectedConnection(props.ConnectionID)} title="delete"/>
             </Stack>}
             PrimaryActionIconButtons={<ConnectionsPrimaryActionButtons
                 Actions={props.Actions }

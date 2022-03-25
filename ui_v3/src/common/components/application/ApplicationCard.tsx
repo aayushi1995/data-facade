@@ -37,6 +37,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const [moreOptionsSpeedDialState, setMoreOptionsSpeedDialState] = React.useState({ isOpen: false })
     const handleMoreOptionsSpeedDialClose = () => setMoreOptionsSpeedDialState(oldState => ({ ...oldState, isOpen: false }))
     const handleMoreOptionsSpeedDialOpen = () => setMoreOptionsSpeedDialState(oldState => ({ ...oldState, isOpen: true }))
+    const handleMoreOptionsSpeedDialToggle = () => setMoreOptionsSpeedDialState(oldState => ({ ...oldState, isOpen: !oldState.isOpen }))
 
 
     const formInfoString = () => {
@@ -57,14 +58,9 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         history.push(`${match.url}/${props.application.ApplicationId || "id"}`)
     }
 
-    const closeMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>, reason: string) => {
-        if(reason==="toggle") {
-            handleMoreOptionsSpeedDialClose()
-        }
-    }
-    const openMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>) => {
+    const toggleMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>) => {
         event.stopPropagation()
-        handleMoreOptionsSpeedDialOpen()
+        handleMoreOptionsSpeedDialToggle()
     }
 
     const promptDeleteApplication = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -253,10 +249,9 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                             background: "#A4CAF0",
                                             boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
                                         }
-                                    }}
+                                    }}  
                                     open={moreOptionsSpeedDialState.isOpen}
-                                    onClose = {closeMoreOptionsSpeedDial}
-                                    onClick = {openMoreOptionsSpeedDial}
+                                    onClick = {toggleMoreOptionsSpeedDial}
                                     icon={<PlaylistAddIcon/>}
                                 >
                                     <SpeedDialAction
