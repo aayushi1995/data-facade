@@ -7,6 +7,7 @@ import React from 'react';
 import { TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import ConfirmationDialog from '../../../common/components/ConfirmationDialog';
 
 export interface WorkflowStageProps {
     stageId: string
@@ -86,21 +87,13 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 height: '100%'
             }}
         >
-            <Dialog open={isDeleteDialogOpen} onClose={handleDialogCloseWithoutDelete}fullWidth maxWidth="xs" scroll="paper">
-                <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>
-                    Confirm Delete {props.stageName}
-                </DialogTitle>
-                <DialogContent>
-                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3}}>
-                        <Button color="primary" onClick={handleDeleteStage}>
-                            Yes
-                        </Button>
-                        <Button color="primary" onClick={handleDialogCloseWithoutDelete}>
-                            No
-                        </Button>
-                    </Box>
-                </DialogContent>
-            </Dialog>
+            <ConfirmationDialog
+                messageToDisplay={`Confirm Delete ${props.stageName}`}
+                dialogOpen={isDeleteDialogOpen}
+                onDialogClose={handleDialogCloseWithoutDelete}
+                onAccept={handleDeleteStage}
+                onDecline={handleDialogCloseWithoutDelete}
+            />
             <Box sx={{
                 minWidth: "40px", 
                 zIndex: 1

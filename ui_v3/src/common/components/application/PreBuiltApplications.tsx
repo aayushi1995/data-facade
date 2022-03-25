@@ -21,7 +21,7 @@ const PreBuiltApplications = (props: PreBuiltApplicationsProps) => {
     } else if(!!applications) {
         const applicationCardsToRender = filterBySearchQuery(applications).map(application => {
             return (
-                <Box sx={{ height: '100%', p: 2, ml: 2}}>
+                <Box sx={{ height: '100%', p: 2, ml: 2}} key={application.ApplicationId}>
                     <ApplicationCard application={application}/>
                 </Box>
             )
