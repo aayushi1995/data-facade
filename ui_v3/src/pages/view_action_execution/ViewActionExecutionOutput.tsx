@@ -16,7 +16,7 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     const actionExecutionParsedOutputQuery = useActionExecutionParsedOutput({ actionExecutionFilter: {Id: ActionExecution?.Id}, queryOptions: {}})
     
     const outputComponentToRender = (output?: any) => {
-        if(ActionDefinition.PresentationFormat===ActionDefinitionPresentationFormat.TABLE_VALUE){
+        if(ActionDefinition.PresentationFormat===ActionDefinitionPresentationFormat.TABLE_VALUE || ActionDefinition.PresentationFormat===ActionDefinitionPresentationFormat.OBJECT){
             return <ViewActionExecutionTableOutput TableOutput={output as TableOutputFormat}/>
         } else {
             return <>TO BUILD...</>

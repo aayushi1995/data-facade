@@ -5,7 +5,6 @@ import { CustomToolbar } from './CustomToolbar';
 
 const QueryData = (props) => {
     const columnData = props?.props[0]?.schema
-    console.log(props)
     let rowData = props.props[0]?.data
     let column = []
     let rows = []
@@ -22,7 +21,6 @@ const QueryData = (props) => {
         }
 
     }}
-    console.log(columnData, column)
     return (
         (columnData !== undefined && rowData !== undefined) ? (
             <DataGrid autoHeight columns={column} rows={rowData}

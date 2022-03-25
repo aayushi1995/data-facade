@@ -55,7 +55,8 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                         Parameters: [],
                         ExecutionStatus: childExecutions?.[i]?.ActionExecution?.Status || "Created",
                         ExecutionStartedOn: childExecutions?.[i]?.ActionExecution?.ExecutionStartedOn,
-                        ExecutionCompletedOn: childExecutions?.[i]?.ActionExecution?.ExecutionCompletedOn
+                        ExecutionCompletedOn: childExecutions?.[i]?.ActionExecution?.ExecutionCompletedOn,
+                        PresentationFormat: childExecutions?.[i]?.ActionDefinition?.PresentationFormat
                     })
                     i++;
                 }
@@ -136,7 +137,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     </Grid>
                     <DialogTitle>Output preview</DialogTitle>
                     <DialogContent sx={{overflow: 'auto', p: 1}}>
-                        <ViewActionExecutionOutput executionId={workflowContext.actionExecutionIdForPreview || "executionId"} />
+                        <ViewActionExecutionOutput executionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"} presentationFormat={workflowContext.actionExecutionIdForPreview?.presentationFormat || "NA"}/>
                     </DialogContent>
                 </Dialog>
                 <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>

@@ -29,7 +29,8 @@ export type WorkflowActionDefinition = {
     Name?: string,
     ExecutionStatus?: string,
     ExecutionStartedOn?: number,
-    ExecutionCompletedOn?: number
+    ExecutionCompletedOn?: number,
+    PresentationFormat?: string
 }
 
 export type WorkflowContextType = {
@@ -52,7 +53,10 @@ export type WorkflowContextType = {
     Template?: ActionTemplate,
     WorkflowExecutionStatus?: string,
     draggingAllowed?: boolean,
-    actionExecutionIdForPreview?: string,
+    actionExecutionIdForPreview?: {
+        executionId?: string,
+        presentationFormat?: string
+    },
     ApplicationId?: string
 }
 
@@ -298,7 +302,7 @@ type SetDraggableActionType = {
 
 type SetActionExecutionForPreview = {
     type: 'SET_EXECUTION_FOR_PREVIEW',
-    payload?: string
+    payload?: {executionId?: string, presentationFormat?: string}
 }
 
 type SetApplicationId = {

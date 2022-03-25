@@ -16,7 +16,7 @@ const ShowWorkflowExecutionOutput = () => {
                                 {actionExecution.DisplayName}
                             </Typography>
                             <Divider/>
-                            <ViewActionExecutionOutput executionId={actionExecution.Id} />
+                            <ViewActionExecutionOutput executionId={actionExecution.Id} presentationFormat={actionExecution.PresentationFormat || "NA"}/>
                         </Box>
                     )
                 })
