@@ -108,7 +108,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
             }
         ].map(col => {return {width: 20*col.field.length, ...col}}),
         rows: paramsWithTag!.map(p => ({...p, id: p.parameter.Id})),
-        autoHeight: true,
         autoPageSize: true,
         rowsPerPageOptions: [5, 10, 15],
         checkboxSelection: true,
@@ -136,7 +135,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
 
     if(!!paramsWithTag && !!template) {
         return (
-            <Box>
+            <Box style={{ height: 300, width: "100%" }}>
                 <DataGrid {...getDatagridProps()}/> 
             </Box>
         )

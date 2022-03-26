@@ -50,7 +50,7 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
                 headerName: "Default Value"
             },
             {
-                field: "User Input Required",
+                field: "UserInputRequired",
                 headerName: "User Input Required"
             },
             {
@@ -91,10 +91,10 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
                 ...param.model,
                 id: param.model.Id,
                 "User Input Required": false,
-                InputType: getInputTypeFromAttributesNew(props?.templateWithParams?.model?.Language || TemplateLanguage.SQL, param.model.Tag, param.model.Type, param.model.Datatype)
+                InputType: getInputTypeFromAttributesNew(props?.templateWithParams?.model?.Language || TemplateLanguage.SQL, param.model.Tag, param.model.Type, param.model.Datatype),
+                Tags: param.tags,
             }
         }),
-        autoHeight: true,
         autoPageSize: true,
         rowsPerPageOptions: [5, 10, 15],
         componentsProps: {
@@ -108,10 +108,9 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
     }
 
     return(
-        <Box>
-            <DataGrid {...datagridProps} /> 
+        <Box style={{ height: 300, width: "100%" }}>
+            <DataGrid {...datagridProps}/> 
         </Box>
-        
     )
 }
 
