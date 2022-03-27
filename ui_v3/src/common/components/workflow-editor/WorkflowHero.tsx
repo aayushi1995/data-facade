@@ -36,6 +36,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                     variant="standard" 
                                     fullWidth
                                     onChange={(event) => props.onNameChange?.(event.target.value)} 
+                                    placeholder="Enter Workflow Name Here"
                                     InputProps ={{
                                         sx: {
                                             fontFamily: "SF Pro Display",
@@ -71,7 +72,7 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                             </Box>
                             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: 2}} className="info">
                                 <Box className="createdBy">
-                                    <Button variant="contained" size="small">ADD TO GROUP</Button>
+                                    <Button variant="contained" size="small" disabled>ADD TO GROUP</Button>
                                 </Box>
                             </Box>
                         </Box>
@@ -106,23 +107,13 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                     </Box>
                                 </Box>
                                 <Box sx={{ml: 3, mb: 2, mt: 1}} className="description">
-                                    {/* <Typography variant="body1" noWrap={false} suppressContentEditableWarning={true} contentEditable={true} onChange={(event) => console.log(event)} sx={{
-                                        fontFamily: "SF Pro Text",
-                                        fontStyle: "normal",
-                                        fontWeight: "normal",
-                                        fontSize: "14px",
-                                        lineHeight: "143%",
-                                        letterSpacing: "0.15px",
-                                        color: "rgba(66, 82, 110, 0.86)"
-                                    }}>
-                                        {props.Description}
-                                    </Typography> */}
                                     <TextField value={props.Description} 
                                         variant="standard" 
                                         fullWidth
                                         multiline
                                         minRows={4}
                                         maxRows={6}
+                                        placeholder="Enter Description Here"
                                         onChange={(event) => props.onDescriptionChange?.(event.target.value)} 
                                         InputProps ={{
                                             sx: {

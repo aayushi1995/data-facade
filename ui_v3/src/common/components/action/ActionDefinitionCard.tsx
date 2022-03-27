@@ -189,7 +189,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                             </IconButton>
                         </Box>
                         <Box>
-                            <IconButton onClick={createActionInstance} sx={{
+                            <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
                                 background: "#F4F4F4",

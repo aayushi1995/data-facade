@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query";
-import { getActionExecutionParsedOutput } from "../../../data_manager/entity_data_handlers/action_execution_data";
+import { getActionExecutionParsedOutput, getActionExecutionParsedOutputNew } from "../../../data_manager/entity_data_handlers/action_execution_data";
 import { ActionExecution } from "../../../generated/entities/Entities";
 
 export interface QueryResult extends Omit<ActionExecution, "Output"> {
@@ -19,5 +19,14 @@ const useActionExecutionParsedOutput = (params: UseActionExecutionParsedOutputPa
     })
     return fetchActionExeuctionParsedOutputQuery
 }
+
+export const useActionExecutionParsedOutputNew = (params: UseActionExecutionParsedOutputParams) => {
+    const {actionExecutionFilter, queryOptions} = params
+    const fetchActionExeuctionParsedOutputQuery = useQuery(["ActionExecutionParsedOutputNew", actionExecutionFilter?.Id], (context) => getActionExecutionParsedOutputNew({Id: context.queryKey[1]}), {
+        ...queryOptions
+    })
+    return fetchActionExeuctionParsedOutputQuery
+}
+
 
 export default useActionExecutionParsedOutput;

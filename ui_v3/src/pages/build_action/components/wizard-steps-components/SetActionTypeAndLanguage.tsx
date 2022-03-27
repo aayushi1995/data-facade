@@ -43,7 +43,7 @@ const SetActionTypeAndLanguage = (props: BuildActionWizardStepProps) => {
                 }
             })
         }
-        props.nextStep()
+        buildNew ? props.closeDialog() : props.nextStep()
     }
 
     return (

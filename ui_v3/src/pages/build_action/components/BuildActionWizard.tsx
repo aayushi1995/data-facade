@@ -12,7 +12,8 @@ import Congratulations from "./wizard-steps-components/Congratulations";
 
 export interface BuildActionWizardStepProps {
     nextStep: () => void,
-    previousStep: () => void
+    previousStep: () => void,
+    closeDialog: () => void
 }
 
 type BuildActionWizardStepConfig = {
@@ -49,14 +50,15 @@ const steps: BuildActionWizardStepConfig[] = [
     }
 ]
 
-const BuildActionWizard = () => {
+export interface BuildActionWizardProps {
+    handleClose: () => void
+}
+
+const BuildActionWizard = (props: BuildActionWizardProps) => {
     const [activeStep, setActiveStep] = React.useState(0)
 
     const nextStep = () => {
         setActiveStep(oldStep => {
-            if(oldStep===steps.length-1){
-                return oldStep
-            }
             return oldStep+1
         })
     }
@@ -68,18 +70,28 @@ const BuildActionWizard = () => {
             return oldStep-1
         })
     }
+
+    const closeDialog = () => {
+        setActiveStep(steps.length)
+    }
     
     const stepProps: BuildActionWizardStepProps = {
         nextStep: nextStep,
-        previousStep: previousStep
+        previousStep: previousStep,
+        closeDialog: closeDialog
     }
+
+    React.useEffect(() => {
+        if(activeStep===steps.length) {
+            props.handleClose()
+        }
+    }, [activeStep])
     
     return(
         <Box sx={{display: "flex", flexDirection: "column", minHeight: "inherit", gap: 2}}>
-            <Box sx={{display: "flex", flexGrow: 1}}>
-            </Box>
+            {/* <Box sx={{display: "flex", flexGrow: 1}}></Box> */}
             <Box sx={{display: "flex", flexGrow: 8}}>
-                {steps[activeStep].component(stepProps)}
+                { (activeStep < steps.length) ? steps[activeStep].component(stepProps) : <></> }
             </Box>
             {/* <Box sx={{display: "flex", flexGrow: 1}}>
                 <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 3, width: "100%"}}>

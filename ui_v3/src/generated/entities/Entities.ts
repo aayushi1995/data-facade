@@ -212,6 +212,7 @@ export interface ProviderDefinition extends BaseEntity{
 	SourceURL?: string
 	ImageURL?: string
 	SupportedRuntimeGroup?: string
+	IsVisibleOnUI?: boolean
 }
 
 
@@ -293,6 +294,7 @@ export interface ProviderInstance extends BaseEntity{
 	Name?: string
 	ProviderDefinitionId?: string
 	CreatedOn?: number
+	IsVisibleOnUI?: boolean
 }
 
 

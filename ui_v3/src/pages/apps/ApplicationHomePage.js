@@ -11,6 +11,7 @@ import ExecuteActionHomePage from '../execute_action/ExecuteActionHomePage';
 // import SingleTagView from './components/SingleApplicationView';
 import AllApplicationView from './components/AllApplicationView.tsx';
 import ApplicationDetailView from './components/ApplicationDetailView';
+import Jobs from '../../pages/jobs/Jobs'
 
 
 export const ApplicationHomePage = withRouter(function TableBrowserRoutes() {
@@ -19,6 +20,7 @@ export const ApplicationHomePage = withRouter(function TableBrowserRoutes() {
     return (
         <Switch>
             {/* <Route path={`${match.path}/:applicationName`} component={SingleApplicationView}/> */}
+            <Route path='/application/jobs' component={Jobs}/>
             <Route path="/application/build-workflow" component={BuildWorkflowHomePage}/>
             <Route path="/application/build-action" component={BuildActionHomePage}/>
             <Route path="/application/edit-action/:ActionDefinitionId" component={EditActionHomePage}/>

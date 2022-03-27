@@ -22,6 +22,7 @@ export const getActionExecutionParsedOutput = (actionExecutionFilter) => {
     return response
 }
 
+
 export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilter) => {
     const response = dataManager.getInstance.retreiveData(
         "ActionExecution",
@@ -82,5 +83,25 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
             }
     })
 
+    return response
+}
+
+
+export const getActionExecutionParsedOutputNew = (actionExecutionFilter) => {
+    const response = dataManager.getInstance.retreiveData(
+        "ActionExecution",
+        {
+            filter: {Id: actionExecutionFilter.Id},
+            "getExecutionParsedOutput": true
+        }
+    ).then((response) => {
+        const actionExecution = response[0]
+        if(actionExecution?.Status === 'Failed') {
+            return actionExecution
+        }
+        const actionExecutionOutput = JSON.parse(actionExecution.Output)
+        actionExecution.Output = actionExecutionOutput
+        return actionExecution
+    })
     return response
 }

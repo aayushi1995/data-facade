@@ -25,20 +25,17 @@ interface ResolvedActionExecutionProps {
 
 const ViewActionExecution = (props: ViewActionExecutionProps) => {
     const { actionExecutionId } = props
-    console.log(actionExecutionId)
     const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: actionExecutionId, queryOptions: {}})
     
     const getToRenderComponent = () => {
         const data = actionExecutionDetailQuery?.data
         if(!!data){
-            console.log(data)
             const props = {actionExecutionDetail: data}
             switch(actionExecutionDetailQuery.data?.ActionExecution?.Status) {
                 case ActionExecutionStatus.COMPLETED:
                     return <ViewCompletedActionExecution {...props}/>
                 default:
-                    console.log(data, ActionExecutionStatus.COMPLETED)
-                    return <>TO BUILD...</>
+                    return <>Action Execution Status: {actionExecutionDetailQuery.data?.ActionExecution?.Status}.</>
             }
         }
     }

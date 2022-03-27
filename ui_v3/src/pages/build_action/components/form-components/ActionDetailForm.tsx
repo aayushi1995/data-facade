@@ -52,7 +52,7 @@ const ActionDetailForm = () => {
         )
     } else {
         return (
-            <Box sx={{display: "flex", flexDirection: "column", gap: 3, minHeight: "100%"}}>
+            <Box sx={{display: "flex", flexDirection: "column", gap: 3, minHeight: "100%", background: "#ffffff"}}>
                 <Box>
                     <ActionHero {...actionHeroProps}/>
                 </Box>

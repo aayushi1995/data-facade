@@ -74,6 +74,14 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         deleteApplicationMutation.mutate([props.application.ApplicationId])
     }
 
+    const onFavorite = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.stopPropagation()
+    }
+
+    const onShare = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.stopPropagation()
+    }
+
     return (
         <>
             <ConfirmationDialog
@@ -230,7 +238,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     width: "42px",
                                     background: "#A4CAF0",
                                     boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
-                                }}>
+                                }} onClick={onFavorite}>
                                     <FavoriteIcon/>
                                 </IconButton>
                             </Box>
@@ -275,7 +283,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     width: "42px",
                                     background: "#A4CAF0",
                                     boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
-                                }}>
+                                }} onClick={onShare}>
                                     <ShareIcon/>
                                 </IconButton>
                             </Box>

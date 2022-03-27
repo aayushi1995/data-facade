@@ -22,6 +22,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
     ]
 
     const [selectedOption, setSelectedOption] = React.useState<string>(createOptions[0].value)
+    const [aiFlowButtoVisible, setAiFlowButtonVisible] = React.useState(false)
 
     const onContinue = () => {
         if(selectedOption===createOptions[0].value){
@@ -36,6 +37,14 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
             })
         }
     }
+
+    React.useEffect(() => {
+        if(selectedOption===createOptions[2].value) {
+            setAiFlowButtonVisible(true)
+        } else {
+            setAiFlowButtonVisible(false)
+        }
+    })
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", px:4}}>
@@ -81,7 +90,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                     <Button variant="contained" onClick={onContinue}>Continue</Button>
                 </Box>
                 <Box>
-                    <Button variant="contained">Not Sure</Button>
+                    {aiFlowButtoVisible && <Button variant="contained" disabled>AI Flow</Button>}
                 </Box>
             </Box>
         </Box>

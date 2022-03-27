@@ -1,9 +1,10 @@
+import { Box, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { CustomToolbar } from "../../common/components/CustomToolbar"
 import LoadingWrapper from "../../common/components/LoadingWrapper"
 import ActionDefinitionPresentationFormat from "../../enums/ActionDefinitionPresentationFormat"
 import { ActionDefinition, ActionExecution, ActionInstance } from "../../generated/entities/Entities"
-import useActionExecutionParsedOutput from "../execute_action/hooks/useActionExecutionParsedOutput"
+import { useActionExecutionParsedOutputNew } from "../execute_action/hooks/useActionExecutionParsedOutput"
 
 export interface ViewActionExecutionOutputProps {
     ActionExecution: ActionExecution,
@@ -13,13 +14,18 @@ export interface ViewActionExecutionOutputProps {
 
 const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     const { ActionExecution, ActionDefinition } = props
-    const actionExecutionParsedOutputQuery = useActionExecutionParsedOutput({ actionExecutionFilter: {Id: ActionExecution?.Id}, queryOptions: {}})
+    const actionExecutionParsedOutputQuery = useActionExecutionParsedOutputNew({ actionExecutionFilter: {Id: ActionExecution?.Id}, queryOptions: {}})
     
     const outputComponentToRender = (output?: any) => {
-        if(ActionDefinition.PresentationFormat===ActionDefinitionPresentationFormat.TABLE_VALUE || ActionDefinition.PresentationFormat===ActionDefinitionPresentationFormat.OBJECT){
-            return <ViewActionExecutionTableOutput TableOutput={output as TableOutputFormat}/>
-        } else {
-            return <>TO BUILD...</>
+        switch(ActionDefinition.PresentationFormat) {
+            case ActionDefinitionPresentationFormat.TABLE_VALUE:
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputFormat}/>
+            case ActionDefinitionPresentationFormat.OBJECT:
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputFormat}/>
+            case ActionDefinitionPresentationFormat.SINGLE_VALUE:
+                return <ViewActionExecutionSingleValueOutput SingleValueOutput={output as SingleValueOutputFormat}/>
+            default:
+                return <>Not Supported Format: {ActionDefinition.PresentationFormat}</>
         }
     }
 
@@ -35,8 +41,16 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
 }
 
 export interface TableOutputFormat {
-    schema: any,
-    data: any[]
+    preview: {
+        schema: any,
+        data: any[],    
+    },
+    column_stats?: any[]
+    
+}
+
+export interface SingleValueOutputFormat {
+    value: number | string | boolean
 }
 
 export interface ViewActionExecutionTableOutputProps {
@@ -47,7 +61,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
     const { TableOutput } = props
     if(!!TableOutput) {
         return (
-            <DataGrid autoHeight columns={TableOutput.schema} rows={TableOutput.data.map((row, index) => ({...row, id: row?.Id||index}))}
+            <DataGrid autoHeight columns={TableOutput.preview.schema} rows={TableOutput.preview.data.map((row, index) => ({...row, id: row?.Id||index}))}
                 components={{
                     Toolbar: CustomToolbar([])
                 }}
@@ -57,6 +71,20 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         return <>Error</>
     }
     
+}
+
+export interface ViewActionExecutionSingleValueOutputProps {
+    SingleValueOutput: SingleValueOutputFormat
+}
+
+const ViewActionExecutionSingleValueOutput = (props: ViewActionExecutionSingleValueOutputProps) => {
+    return (
+        <Box m={3}>
+            <Typography variant="h3" sx={{ textAlign: "center" }}>
+                {props.SingleValueOutput.value}
+            </Typography>
+        </Box>
+    )
 }
 
 export default ViewActionExecutionOutput;

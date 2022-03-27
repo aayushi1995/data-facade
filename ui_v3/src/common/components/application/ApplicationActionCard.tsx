@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, Card, Typography, Divider, IconButton, Menu, MenuItem } from "@mui/material";
+import { Box, Card, Typography, Divider, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { ActionDetailsForApplication } from "../../../generated/interfaces/Interfaces";
 import NumberStat from "../NumberStat";
 import TagHandler from "../tag-handler/TagHandler";
@@ -166,9 +166,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <IconButton>
                             <img src={FavouriteIcon} alt="favoutite"/>
                         </IconButton>
-                        <IconButton onClick={edit}>
-                            <EditIcon/>
-                        </IconButton>
+                        <Tooltip title="Edit">
+                            <IconButton onClick={edit}>
+                                <EditIcon/>
+                            </IconButton>
+                        </Tooltip>
                         <IconButton>
                             <img src={OptionIcon} alt="Options"/>
                         </IconButton>

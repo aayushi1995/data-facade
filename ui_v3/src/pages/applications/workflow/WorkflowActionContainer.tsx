@@ -156,7 +156,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
 
     if(stageDetails) {
         return (
-            <Box sx={{ display: 'flex', flex: 1, maxHeight: '600px'}}>
+            <Box sx={{ display: 'flex', flex: 1, maxHeight: !!!(props.handleSelectAction) ? "600px" : undefined}}>
                         <Dialog 
                             fullScreen
                             open={isBuildDialogOpen}
@@ -231,6 +231,9 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                 <Typography sx={{ fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px', fontWeight: '500px' }}>
                                     Select Action to add here
                                 </Typography>
+                                <IconButton sx={{ flex: 1, background: "#F8F8F8",  boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={handleAddAction}>
+                                    <img src={addActionIcon} alt="add action" style={{height: '100%', width: '100%', transform: 'scale(1.7)'}}/>
+                                </IconButton>
                             </Box>
                             <Box py={0.5} />
                             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '6px', alignItems: 'center', height: '100%', width: '100%' }}>

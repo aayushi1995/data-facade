@@ -3,7 +3,6 @@ import {Redirect, Route, Router, Switch} from 'react-router-dom'
 import {SearchQueryProvider, TableBrowser} from './pages/table_browser/TableBrowser'
 import Customizations from './pages/customizations/Customizations'
 import Configurations from './pages/configurations/Configurations'
-import Jobs from './pages/jobs/Jobs'
 import Alerts from './pages/alerts/Alerts'
 import DevTestPage from './pages/dev_test_page/DevTestPage'
 import LoadingIndicator from './common/components/LoadingIndicator'
@@ -92,8 +91,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     {/*<Route path='/qualityChecks' component={QualityChecks}></Route>*/}
                                     <Route path='/customizations' component={Customizations}/>
                                     {isNonProductionEnv() &&
-                                        <Route path='/configurations' component={Configurations}/>}
-                                    <Route path='/jobs' component={Jobs}/>
+                                    <Route path='/configurations' component={Configurations}/>}
                                     <Route path='/alerts' component={Alerts}/>
                                     <Route path='/testPage' component={DevTestPage}/>
                                     <Route path='/users' component={Users}/>

@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { useContext } from "react";
 import { AddingActionView } from "../../common/components/workflow/create/addAction/AddingActionView";
 import { WorkflowContext, SetWorkflowContext, WorkflowContextProvider, WorkflowContextType, SetWorkflowContextType } from "../applications/workflow/WorkflowContext";
@@ -10,6 +10,7 @@ import useSaveWorkflowMutation from "../../common/components/workflow/create/hoo
 import {RouteComponentProps, useHistory, useLocation} from "react-router-dom"
 import { useQueryClient } from "react-query";
 import WorkflowTabs from "../../common/components/workflow/create/WorkflowTabs";
+import React from "react";
 
 export interface BuildWorkflowHomePageProps {
 
@@ -55,9 +56,7 @@ export const WorkflowHeroWrapper = () => {
             }
         })
     }
-    if(workflowState.Name === "") {
-        return <></>
-    }
+
     return (
         <WorkflowHero {...worflowHeroProps}/>
     )
@@ -66,7 +65,7 @@ export const WorkflowHeroWrapper = () => {
 const WorkflowEditor = (props: {applicationId?: string}) => {
     const history = useHistory()
     const queryClient = useQueryClient()
-    console.log(props)
+    const [ dialogopen, setDialogOpen ]  = React.useState(true)
     const workflowContext = useContext(WorkflowContext)
     const setWorkflowState: SetWorkflowContextType = useContext(SetWorkflowContext)
     const saveWorkflowMutation = useSaveWorkflowMutation({mutationName: "CreateWorkflow", applicationId: props.applicationId})
@@ -81,36 +80,36 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
             }
         })
     }
+
     return (
         <>
-            {workflowContext.Name === "" ? (
-                <Box p={2} sx={{minHeight: '100%'}}>
-                    <WorkflowDetails/>
+            <Dialog open={dialogopen}>
+                <DialogContent>
+                    <Box p={2} sx={{minHeight: '100%'}}>
+                        <WorkflowDetails onContinue={() => setDialogOpen(false)}/>
+                    </Box>    
+                </DialogContent>
+            </Dialog>
+            {workflowContext.currentSelectedStage ? (
+                <Box pt={1} sx={{maxHeight: 'inherit'}}>
+                    <AddingActionView/>
                 </Box>
             ) : (
-                <>
-                {workflowContext.currentSelectedStage ? (
-                    <Box pt={1} sx={{maxHeight: 'inherit'}}>
-                        <AddingActionView/>
+                <Box sx={{overflow: 'clip', flexDirection: 'column', gap: 3}}>  
+                    <Box p={2}>
+                        <WorkflowTabs/>
+                        {/* <StagesWithActions/>   */}
+                    </Box>  
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3, mr: 5, gap: 2}}>
+                        <Button onClick={handleSave} color="primary" variant="contained">
+                            Test and Save
+                        </Button>
+                        <Button variant="contained" sx={{background: "#F178B6"}} disabled>
+                            Save for later
+                        </Button>
                     </Box>
-                ) : (
-                    <Box sx={{overflow: 'clip', flexDirection: 'column', gap: 3}}>  
-                        <Box p={2}>
-                            <WorkflowTabs/>
-                            {/* <StagesWithActions/>   */}
-                        </Box>  
-                        <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3, mr: 5, gap: 2}}>
-                            <Button onClick={handleSave} color="primary" variant="contained">
-                                Test and Save
-                            </Button>
-                            <Button variant="contained" sx={{background: "#F178B6"}} disabled>
-                                Save for later
-                            </Button>
-                        </Box>
-                    </Box>
-                    
-                )}
-                </>
+                </Box>
+                
             )}
         </>
     )

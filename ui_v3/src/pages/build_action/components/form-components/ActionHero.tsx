@@ -18,17 +18,13 @@ const ActionHero = (props: ActionHeroProps) => {
     return (
         <Card
             sx={{
-                backgroundColor: 'background.paper',
-            '&:hover': {
-                backgroundColor: 'background.default'
-            },
-            background:
-            "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0",
-            backgroundBlendMode: "soft-light, normal",
-            border: "2px solid rgba(255, 255, 255, 0.4)",
-            boxSizing: "border-box",
-            boxShadow: lightShadows[29]
-            }}
+                backgroundColor: '#F5F9FF',
+                boxSizing: "border-box",
+                boxShadow: '0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)',
+                borderRadius: "26.3934px",
+                border: '0.439891px solid #FFFFFF',
+                minWidth: '100%'
+                }}
             variant={'outlined'}
         >
             <Grid container>

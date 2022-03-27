@@ -46,7 +46,7 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
     };
 
     const providerInstanceDetailsQueryData = useQuery(["ProviderInstanceDetails"], ()=>{
-            return Fetcher.fetchData('GET', '/getProviderInstanceDetails', {});
+            return Fetcher.fetchData('GET', '/getProviderInstanceDetails', { IsVisibleOnUI: true });
     });
 
     const selectedConnection = useMemo(()=>{

@@ -116,7 +116,7 @@ const Jobs = withRouter(function JobsRoutes() {
     return (
         <Switch>
             <Route path={`${match.path}/:actionExecutionId`} component={JobsRowJobDetail}/>
-            <Route path="/jobs" component={_Jobs}/>
+            <Route path="/application/jobs" component={_Jobs}/>
         </Switch>
     )
 });

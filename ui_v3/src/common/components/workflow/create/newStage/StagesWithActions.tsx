@@ -1,4 +1,4 @@
-import { Box, Card, Grid, IconButton, DialogTitle, Dialog } from "@mui/material"
+import { Box, Card, Grid, IconButton, DialogTitle, Dialog, Tooltip } from "@mui/material"
 import React, { ReactElement } from "react"
 import WorkflowStagesWrapper from "../../../../../application/common/workflowStages/WorkflowStagesWrapper"
 import WorkflowActionContainer from "../../../../../pages/applications/workflow/WorkflowActionContainer"
@@ -74,6 +74,20 @@ export const StagesWithActions = () => {
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', maxWidth: 'inherit'}}>
+            <Box sx={{ display: 'flex', flexDirection: "row-reverse", width: "100%"}}>
+                <Box>
+                    <Tooltip title="Previous">
+                        <IconButton onClick={handleSlidePrev}>
+                            <img src={slideNext} alt="previos" style={{transform: 'rotate(180deg)'}}/>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Next">
+                        <IconButton onClick={handleSlideNext}>
+                            <img src={slideNext} alt="next"/>
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+            </Box>
             <Box sx={{flex: 1, minHeight: '100px', minWidth: '300px'}}>
                 <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
                 onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} handleStageNameChange={handleStageNameChange}></WorkflowStagesWrapper>
@@ -90,14 +104,6 @@ export const StagesWithActions = () => {
                             </Grid>)
                     })}
                     </Grid>
-                    <Box sx={{display: 'flex', flex: 1}}>
-                        <IconButton onClick={handleSlidePrev}>
-                            <img src={slideNext} alt="previos" style={{transform: 'rotate(180deg)'}}/>
-                        </IconButton>
-                        <IconButton onClick={handleSlideNext}>
-                            <img src={slideNext} alt="next"/>
-                        </IconButton>
-                    </Box>
                 {/* </Card> */}
                 
             </Box>

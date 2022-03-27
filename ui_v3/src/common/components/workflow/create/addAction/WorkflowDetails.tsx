@@ -2,8 +2,11 @@ import { Card , Grid , Typography, Box, TextField, Button} from "@mui/material"
 import React from "react"
 import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 
+export interface WorkflowDetailsProps {
+    onContinue?: () => void
+}
 
-const WorkflowDetails = () => {
+const WorkflowDetails = (props: WorkflowDetailsProps) => {
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const [error, setError] = React.useState(true)
     const [name, setName] = React.useState("")
@@ -25,6 +28,7 @@ const WorkflowDetails = () => {
     }
 
     const handleContinue = () => {
+        props?.onContinue?.()
         setWorkflowContext({type: 'SET_WORKFLOW_DETAILS', payload: {actionName: name, description: description}})
     }
 

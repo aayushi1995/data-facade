@@ -66,7 +66,7 @@ const ActionInfo = (props: ActionInfoProps) => {
                 </Box>
                 <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: 2}} className="info">
                     <Box className="createdBy">
-                        <Button variant="contained" size="small">ADD TO GROUP</Button>
+                        <Button variant="contained" size="small" disabled>ADD TO GROUP</Button>
                     </Box>
                 </Box>
             </Box>

@@ -1,6 +1,6 @@
-import {Box, Tab, Tabs} from "@mui/material";
+import {Box, Button, Popover, Tab, Tabs} from "@mui/material";
 import {ModuleContext, ModuleSetContext, ModuleType} from "./data/ModuleContext";
-import React, {useContext} from "react";
+import React, {useContext, useRef, useState} from "react";
 import ModuleSwitcherIcon from './images/module-switcher.svg';
 import SettingsIcon from './images/settings.svg';
 import {NavLink as RouterLink, useLocation} from 'react-router-dom';
@@ -18,6 +18,16 @@ export function findCurrentSelectedTabIndex({tabs, pathname, level}: Pick<TabsTr
 }
 
 export function TabsContainer(props: TabsContainerType) {
+    const anchorRef = useRef(null);
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     const {
         areLeafTabs,
         tabs,
@@ -28,36 +38,63 @@ export function TabsContainer(props: TabsContainerType) {
         value
     } = props;
     const isFistTab = level === 0;
-    return <Box
-        sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            backgroundColor: level === 0 ? "background.paper" : "background.default",
-            flex: (isFistTab && !isOpen) ? 0 : 1,
-            position: 'relative'
-        }}>
-        {isFistTab ? <ButtonIconWithToolTip title="toggle"
-                                            Icon={() => <img src={ModuleSwitcherIcon}
-                                                             style={{transform: (isOpen ? '' : 'rotate(90deg)')}}
-                                                             alt="toggle"
-                                                             height={25} width={25}/>}
-                                            onClick={toggleModuleSwitch}
-                                            background={false}
-        /> : areLeafTabs ?  <div/>: <ModuleContent.ModuleSubHeader/>}
-        {(isFistTab && !isOpen) ? null : <>
-            <Tabs value={value}>
-                {tabs && tabs?.map(({label, href}) =>
-                    <Tab label={label} key={label} sx={{px: 10}} component={RouterLink} to={href}/>
-                )}
-            </Tabs>
-            {isFistTab ? <ButtonIconWithToolTip title="settings"
-                                                Icon={() => <img src={SettingsIcon} alt="settings" height={25}
-                                                                 width={25}/>}
-                                                onClick={launchSettings}
+    return (
+        <>
+            <Box
+            sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                backgroundColor: level === 0 ? "background.paper" : "background.default",
+                flex: (isFistTab && !isOpen) ? 0 : 1,
+                position: 'relative'
+            }}>
+            {isFistTab ? <ButtonIconWithToolTip title="toggle"
+                                                Icon={() => <img src={ModuleSwitcherIcon}
+                                                                style={{transform: (isOpen ? '' : 'rotate(90deg)')}}
+                                                                alt="toggle"
+                                                                height={25} width={25}/>}
+                                                onClick={toggleModuleSwitch}
                                                 background={false}
-            /> : <div/>}
-        </>}</Box>;
+            /> : areLeafTabs ?  <div/>: <ModuleContent.ModuleSubHeader/>}
+            {(isFistTab && !isOpen) ? null : <>
+                <Tabs value={value}>
+                    {tabs && tabs?.map(({label, href}) =>
+                        <Tab label={label} key={label} sx={{px: 10}} component={RouterLink} to={href}/>
+                    )}
+                </Tabs>
+                {isFistTab ? <Box ref={anchorRef} onClick={handleOpen}><ButtonIconWithToolTip title="settings" 
+                                                    Icon={() => <img src={SettingsIcon} alt="settings" height={25}
+                                                                    width={25}/>}
+                                                    onClick={launchSettings}
+                                                    background={false}
+                /></Box>: <div/>}
+            </>}</Box>;
+            <Popover
+                anchorEl={anchorRef.current}
+                anchorOrigin={{
+                    horizontal: 'center',
+                    vertical: 'bottom'
+                }}
+                keepMounted
+                onClose={handleClose}
+                open={open}
+                PaperProps={{
+                    sx: {width: 240}
+                }}
+            >
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2}}>
+                    <Box sx={{ display: "flex" }}>
+                        <Box sx={{display: "flex"}}>
+                            <RouterLink to="/application/jobs">
+                                <Button variant="contained">Jobs And Logs </Button>
+                            </RouterLink>
+                        </Box>
+                    </Box>
+                </Box>
+            </Popover>
+        </>
+    )
 }
 
 const TabsTree = (props: TabsTreePropType) => {

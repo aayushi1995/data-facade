@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
-import {Avatar, Box, ButtonBase, Divider, Popover, Typography} from '@mui/material';
+import {Avatar, Box, Button, ButtonBase, Divider, Popover, Typography} from '@mui/material';
+import {Link as RouterLink, useLocation} from "react-router-dom";
 import Logout from "../../../pages/home/components/Logout";
 import {useAppBarProps} from "./DataFacadeAppBar";
 import {ThemeToggle} from "./ThemeToggle";
@@ -49,29 +50,25 @@ const AccountPopover = () => {
                     sx: {width: 240}
                 }}
             >
-                <Box sx={{p: 2}}>
-                    <Typography
-                        color="textPrimary"
-                        variant="subtitle2"
-                    >
-                        {appcontext.userName}
-                    </Typography>
-                    <Typography
-                        color="textSecondary"
-                        variant="subtitle2"
-                    >
-                        {appcontext.workspaceName}
-                    </Typography>
-                    <Typography
-                        color="textSecondary"
-                        variant="subtitle2"
-                    >
-                        Toggle Theme: <ThemeToggle/>
-                    </Typography>
-                </Box>
-                <Divider/>
-                <Box sx={{p: 2}}>
-                    <Logout/>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2}}>
+                    <Box>
+                        <Typography
+                            color="textPrimary"
+                            variant="subtitle2"
+                        >
+                            {appcontext.userName}
+                        </Typography>
+                        <Typography
+                            color="textSecondary"
+                            variant="subtitle2"
+                        >
+                            {appcontext.workspaceName}
+                        </Typography>
+                    </Box>
+                    <Divider/>
+                    <Box>
+                        <Logout/>
+                    </Box>
                 </Box>
             </Popover>
         </>

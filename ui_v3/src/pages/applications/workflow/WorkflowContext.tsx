@@ -64,7 +64,7 @@ const defaultWorkflowContext: WorkflowContextType = {
     stages: [
         {
             Id: uuidv4(),
-            Name: "Stage 1",
+            Name: "Enter Stage Name Here",
             Actions: []
         }
     ],
