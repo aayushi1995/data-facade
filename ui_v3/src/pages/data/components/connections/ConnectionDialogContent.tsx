@@ -1,6 +1,6 @@
 import React from "react";
 import {Box, Card, CardContent, Grid, TextField, Typography} from "@mui/material";
-import {TableWrapper} from "../../../../common/components/TableWrapper";
+import {ReactQueryWrapper} from "../../../../common/components/ReactQueryWrapper";
 import {Route, useHistory} from "react-router-dom";
 import CreateDataSourceRow from "../../../configurations/components/CreateDataSourceRow";
 import {useConnectionProviders} from "./hooks/useConnectionProviders";
@@ -8,8 +8,17 @@ import {
     CHOOSE_CONNECTOR_ROUTE,
     CHOOSE_CONNECTOR_SELECTED_ROUTE,
 } from "./DataRoutesConstants";
-import {CardActionArea, CardMedia} from "@mui/material";
 import {DATA_CONNECTIONS_ROUTE} from "../../../../common/components/header/data/DataRoutesConfig";
+import {iconProviderMap} from "./iconProviderMap";
+import {makeStyles} from "@mui/styles";
+
+
+const useStyles = makeStyles(() => ({
+    img: {
+        maxWidth: 100
+    }
+}))
+
 
 export type ProviderType = {
     ProviderParameterDefinition:
@@ -26,27 +35,44 @@ export type ProviderType = {
     }
 }
 
+export function ProviderIcon({ provider }: {provider?: ProviderType}) {
+    const classes = useStyles();
+    const providerUniqueName = provider?.ProviderDefinition?.UniqueName;
+    // ignoring because server should send ProviderType with only legit enum UniqueNames in its type
+    // @ts-ignore
+    const src = (providerUniqueName && (providerUniqueName in iconProviderMap))? iconProviderMap[providerUniqueName]: '';
+    return src? <img src={src}
+                className={classes.img}
+                height={50}
+                alt={provider?.ProviderDefinition?.UniqueName}
+    />: null;
+}
+
 function ConnectorCard(props: { onClick: () => void, provider: ProviderType }
 ) {
     const {currentProvider} = useConnectionProviders();
+
     return <Card
         onClick={props.onClick}
         sx={{
             width: 150,
+            height: 140,
             backgroundColor: currentProvider?.ProviderDefinition?.Id === props.provider.ProviderDefinition.Id ?
-                "black" : ""
+                "black" : "",
+            cursor: 'pointer'
         }}>
-        <CardActionArea>
-            <CardMedia src={props.provider.ProviderDefinition.ImageURL}
-                       component="img"
-                       height="140"
-                       alt={props.provider.ProviderDefinition.UniqueName}/>
-            <CardContent>
-                <Typography
-                    gutterBottom variant="h6" component="div"
-                >{props.provider.ProviderDefinition.UniqueName}</Typography>
-            </CardContent>
-        </CardActionArea>
+        <CardContent sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'column',
+            height: '100%',
+            alignItems: 'center'
+        }}>
+            <ProviderIcon provider={props.provider}/>
+            <Typography
+                gutterBottom variant="h6" component="div"
+            >{props.provider.ProviderDefinition.UniqueName}</Typography>
+        </CardContent>
     </Card>;
 }
 
@@ -67,11 +93,19 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
                 fullWidth
                 placeholder="Search Connector"
             />
-            <Box sx={{fontSize: "xs"}}><Typography>Available Connectors</Typography></Box>
-            <TableWrapper
+            <Box sx={{fontSize: "xs", p: 2}}>
+                <Typography>Available Connectors</Typography>
+            </Box>
+            <ReactQueryWrapper
                 {...queryData}
+                sx={{
+                    minHeight: 200,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
             >
-                {() => <Grid container gap={2}>
+                {() => <Grid container gap={2} alignItems={'space-between'} justifyContent={'space-between'}>
                     {filterQueryData(searchPredicate)?.map((provider, i: number) =>
                         <Grid item key={i}>
                             <ConnectorCard onClick={() => {
@@ -79,10 +113,10 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
                             }} provider={provider}/>
                         </Grid>)}
                 </Grid>}
-            </TableWrapper>
+            </ReactQueryWrapper>
         </Route>
         <Route exact path={CHOOSE_CONNECTOR_SELECTED_ROUTE}>
-            <CreateDataSourceRow isUpdate={false} selectedId='' handleClose={()=>{
+            <CreateDataSourceRow isUpdate={false} selectedId='' handleClose={() => {
                 history.push(DATA_CONNECTIONS_ROUTE);
             }}/>
         </Route>

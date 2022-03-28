@@ -4,7 +4,7 @@ import { PageHeader } from '../../../../common/components/header/PageHeader';
 import dataManager, { useRetreiveData } from '../../../../data_manager/data_manager';
 import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField} from '@mui/material'
 import { Card, Box } from "@mui/material";
-import { TableWrapper } from '../../../../common/components/TableWrapper';
+import { ReactQueryWrapper } from '../../../../common/components/ReactQueryWrapper';
 import { ActionExecutionSection } from './ActionExecutionSection';
 import { WorkflowList } from './WorkflowList';
 import NoData from '../../../../common/components/NoData';
