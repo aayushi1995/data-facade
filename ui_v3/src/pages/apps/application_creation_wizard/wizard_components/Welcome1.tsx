@@ -8,32 +8,12 @@ const Welcome1 = (props: BuildApplicationWizardStepProps) => {
         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%"}}>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", flexGrow: 1}}>
                 <Box>
-                    <Typography sx={{
-                        fontFamily: "'SF Compact Display'",
-                        fontStyle: "normal",
-                        fontWeight: 900,
-                        fontSize: "25px",
-                        lineHeight: "45px",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                        color: "#A7A9AC"
-                    }}>
+                    <Typography variant="wizardText">
                         Welcome to Data Facade APP-Creation widget.
                     </Typography>
                 </Box>
                 <Box>
-                    <Typography sx={{
-                        fontFamily: "'SF Compact Display'",
-                        fontStyle: "normal",
-                        fontWeight: 900,
-                        fontSize: "25px",
-                        lineHeight: "45px",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                        color: "#A7A9AC"
-                    }}>
+                    <Typography variant="wizardText">
                         Experience a new way in how you create apps 
                     </Typography>
                 </Box>

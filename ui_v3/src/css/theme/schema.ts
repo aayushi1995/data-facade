@@ -7,6 +7,8 @@ declare module '@mui/styles' {
       heroMeta: React.CSSProperties;
       actionCardHeader: React.CSSProperties;
       actionCardSubHeader: React.CSSProperties
+      allApplicationViewSectionHeader: React.CSSProperties,
+      wizardText: React.CSSProperties
     }
   
     // allow configuration using `createTheme`
@@ -15,6 +17,8 @@ declare module '@mui/styles' {
       heroMeta?: React.CSSProperties;
       actionCardHeader?: React.CSSProperties;
       actionCardSubHeader?: React.CSSProperties;
+      allApplicationViewSectionHeader?: React.CSSProperties,
+      wizardText?: React.CSSProperties
     }
 }
 declare module '@mui/material/Typography' {
@@ -23,6 +27,8 @@ declare module '@mui/material/Typography' {
         heroMeta: true;
         actionCardHeader: true;
         actionCardSubHeader: true;
+        allApplicationViewSectionHeader: true;
+        wizardText: true;
     }
 }
 

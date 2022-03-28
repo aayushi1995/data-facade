@@ -45,7 +45,7 @@ const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string})
     
     return (
         <Box>
-            <Dialog open={showWizard} onClose={handleClose} fullWidth maxWidth="xl">
+            <Dialog open={showWizard} fullWidth maxWidth="xl">
                 <DialogContent sx={{minHeight: "800px"}}>
                     <BuildActionWizard handleClose={handleClose}/>
                 </DialogContent>

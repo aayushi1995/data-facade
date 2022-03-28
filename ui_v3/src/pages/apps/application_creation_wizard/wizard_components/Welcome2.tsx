@@ -8,43 +8,13 @@ const Welcome2 = (props: BuildApplicationWizardStepProps) => {
         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%"}}>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", flexGrow: 1}}>
                 <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                    <Typography sx={{
-                        fontFamily: "'SF Compact Display'",
-                        fontStyle: "normal",
-                        fontWeight: 900,
-                        fontSize: "25px",
-                        lineHeight: "45px",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                        color: "#A7A9AC"
-                    }}>
+                    <Typography variant="wizardText">
                         Data Facade brings you the power to use
                     </Typography>
-                    <Typography sx={{
-                        fontFamily: "'SF Compact Display'",
-                        fontStyle: "normal",
-                        fontWeight: 900,
-                        fontSize: "25px",
-                        lineHeight: "45px",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                        color: "#A7A9AC"
-                    }}>
+                    <Typography variant="wizardText">
                         either a No-code or a Hybrid-code platform to create your actions
                     </Typography>
-                    <Typography sx={{
-                        fontFamily: "'SF Compact Display'",
-                        fontStyle: "normal",
-                        fontWeight: 900,
-                        fontSize: "25px",
-                        lineHeight: "45px",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                        color: "#A7A9AC"
-                    }}>
+                    <Typography variant="wizardText">
                         The first step in building your AI App
                     </Typography>
                 </Box>

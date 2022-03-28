@@ -42,30 +42,12 @@ const SelectActionTags = (props: BuildActionWizardStepProps) => {
             <Grid item xs={12} lg={6}>
                 <Box sx={{display: "flex", flexDirection: "column", gap: 4, alignItems: "center", justifyContent: "space-around", minHeight: "100%"}}>
                     <Box sx={{width: "100%"}}>
-                        <Typography sx={{
-                            fontFamily: "SF Compact Display",
-                            fontStyle: "normal",
-                            fontWeight: 300,
-                            fontSize: "25px",
-                            lineHeight: "45px",
-                            display: "flex",
-                            alignItems: "center",
-                            color: "#A7A9AC"
-                        }}>
+                        <Typography variant="wizardText">
                             Tags defines your action .........
                         </Typography>
                     </Box>
                     <Box sx={{width: "100%"}}>
-                        <Typography sx={{
-                            fontFamily: "SF Compact Display",
-                            fontStyle: "normal",
-                            fontWeight: 300,
-                            fontSize: "25px",
-                            lineHeight: "33px",
-                            display: "flex",
-                            alignItems: "center",
-                            color: "#A7A9AC"
-                        }}>
+                        <Typography variant="wizardText">
                             Tags can help you choose appropiate actions to run on your data
                         </Typography>
                     </Box>

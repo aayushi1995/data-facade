@@ -61,7 +61,7 @@ const ActionDescription = (props: ActionDescriptionProps) => {
                     </Box>
                 </Box>
                 <Box sx={{ml: 3, mb: 2, mt: 1}} className="description">
-                    <TextField value={description} 
+                    <TextField value={readOnly? (description||"NA") : description} 
                         variant="standard" 
                         fullWidth
                         multiline

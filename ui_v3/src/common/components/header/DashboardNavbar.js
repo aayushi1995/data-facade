@@ -4,6 +4,7 @@ import {AppBar, Box, Toolbar, Tabs, Tab} from '@mui/material';
 import { styled } from '@mui/styles';
 import AccountPopover from './AccountPopover';
 import ContentSearch from './ContentSearch';
+import DfLogoText from './../../../common/components/logos/DfLogoText'
 import {useAppBarProps} from "./DataFacadeAppBar";
 import {DataFacadeLogo as Logo} from "../sideBar/DataFacadeLogo";
 
@@ -27,19 +28,17 @@ const DashboardNavbar = (props) => {
 
     return (
         <DashboardNavbarRoot {...other}>
-            <Toolbar sx={{minHeight: 64}}>
-                <RouterLink to="/">
-                    <Logo
-                        sx={{
-                            display: {
-                                lg: 'inline',
-                                xs: 'none'
-                            },
-                            height: 40,
-                            width: 40
-                        }}
-                    />
-                </RouterLink>
+            <Toolbar sx={{minHeight: 100, pl: 0, pr: 2}} disableGutters={true}>
+                <Box sx={{ display: "flex", flexDirection: "row", height: "100%", alignItems: "center", gap: 2 }}>
+                    <Box sx={{ height: "100%", width: "auto" }}>
+                        <RouterLink to="/">
+                            <Logo/>
+                        </RouterLink>
+                    </Box>
+                    <Box sx={{ height: "55%" }}>
+                        <DfLogoText fill='#ff0000'/>
+                    </Box>
+                </Box>
                 <Box
                     sx={{
                         flexGrow: 1,

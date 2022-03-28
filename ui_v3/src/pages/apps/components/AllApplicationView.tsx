@@ -1,8 +1,9 @@
 import React from "react"
-import { Grid, Box, Typography, Dialog, DialogContent } from '@mui/material'
+import { Grid, Box, Typography, Dialog, DialogContent, DialogActions, IconButton } from '@mui/material'
 import ApplicationHeader from '../../../common/components/application/ApplicationHeader'
 import PreBuiltApplications from '../../../common/components/application/PreBuiltApplications'
 import ActionInstances from "../../../common/components/application/ActionInstances"
+import CloseIcon from "@mui/icons-material/Close"
 import ActionDefinitions from "../../../common/components/application/ActionDefinitions"
 import ApplicationCreationWizard from "../application_creation_wizard/ApplicationCreationWizard"
 import { BuildApplicationContextProvider } from "../application_creation_wizard/context/BuildApplicationContext"
@@ -28,7 +29,7 @@ const AllApplicationView = () => {
             <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 4}}>
                 <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 1}}>
                     <Box sx={{flex: 1}}>
-                        <Typography sx={{color: '#304FFE'}}>
+                        <Typography variant="allApplicationViewSectionHeader">
                             Prebuilt Apps
                         </Typography>
                     </Box>
@@ -38,7 +39,7 @@ const AllApplicationView = () => {
                 </Box>
                 <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 1}}>
                     <Box sx={{flex: 1}}>
-                        <Typography sx={{color: '#304FFE'}}>
+                        <Typography variant="allApplicationViewSectionHeader">
                             Action Instances
                         </Typography>
                     </Box>
@@ -48,7 +49,7 @@ const AllApplicationView = () => {
                 </Box>
                 <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 1}}>
                     <Box sx={{flex: 1}}>
-                        <Typography sx={{color: '#304FFE'}}>
+                        <Typography variant="allApplicationViewSectionHeader">
                         Action Definitions
                         </Typography>
                     </Box>
@@ -56,7 +57,14 @@ const AllApplicationView = () => {
                         <ActionDefinitions searchQuery={searchQuery}/>
                     </Box>
                 </Box>
-                <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
+                <Dialog open={dialogState.isOpen} fullWidth maxWidth="xl">
+                    <DialogActions>
+                        <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
+                            <IconButton onClick={handleDialogClose}>
+                                <CloseIcon/>
+                            </IconButton>
+                        </Box>
+                    </DialogActions>
                     <DialogContent sx={{minHeight: "800px"}}>
                         <BuildApplicationContextProvider>
                             <ApplicationCreationWizard onCreationComplete={() => handleDialogClose()}/>

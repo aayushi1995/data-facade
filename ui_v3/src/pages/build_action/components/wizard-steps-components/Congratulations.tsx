@@ -24,28 +24,8 @@ const Congratulations = (props: BuildActionWizardStepProps) => {
                     <Grid item xs={12} md={6}>
                         <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-around", minHeight: "100%"}}>    
                             <Box>
-                                <Typography sx={{
-                                    fontFamily: "SF Compact Display",
-                                    fontStyle: "normal",
-                                    fontWeight: 900,
-                                    fontSize: "25px",
-                                    lineHeight: "45px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    textAlign: "center",
-                                    color: "#A7A9AC"
-                                }}>CONGRATULATIONS !!! </Typography>
-                                <Typography sx={{
-                                    fontFamily: "SF Compact Display",
-                                    fontStyle: "normal",
-                                    fontWeight: 900,
-                                    fontSize: "25px",
-                                    lineHeight: "45px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    textAlign: "center",
-                                    color: "#A7A9AC"
-                                }}>You have successfully created your action</Typography>
+                                <Typography variant="wizardText">CONGRATULATIONS !!! </Typography>
+                                <Typography variant="wizardText">You have successfully created your action</Typography>
                             </Box>
                         </Box>
                     </Grid>

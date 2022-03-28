@@ -227,8 +227,8 @@ export const TableBrowser = withRouter(function TableBrowserRoutes() {
     const match = useRouteMatch();
     return (
         <>
-            <Route path={match.path} component={TableView}/>
-            <Route path={`${match.path}/:tableUniqueName`} component={TableDetails}/>
+            <Route exact path={match.path} component={TableView}/>
+            <Route exact path={`${match.path}/:tableUniqueName`} component={TableDetails}/>
         </>
     )
 });

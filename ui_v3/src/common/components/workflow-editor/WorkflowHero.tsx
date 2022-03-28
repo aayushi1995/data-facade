@@ -134,25 +134,6 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                 {props.buttons?.map((button) => <Box>{button}</Box>)}
                             </Box> */}
                         </Box>
-                        <Box sx={{display: 'flex', flex: 1}}>
-                            <Grid container direction="column" justifyContent="center" alignContent="center" sx={{flex: 1}}>
-                                <Grid item xs={4} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                    <IconButton>
-                                        <img src={LikeIcon} alt="like"/>
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={4} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                    <IconButton>
-                                        <img src={ShareIcon} alt=""/>
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={4} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                                    <IconButton>
-                                        <img src={EditIcon} alt=""/>
-                                    </IconButton>
-                                </Grid>
-                            </Grid>
-                        </Box>
                     </Box>
                 </Grid>
             </Grid>

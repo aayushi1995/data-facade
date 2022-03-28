@@ -187,8 +187,27 @@ const baseOptions = {
             alignItems: "center",
             textAlign: "center",
             opacity: 0.7
+        },
+        allApplicationViewSectionHeader: {
+            fontFamily: "'SF Pro Display'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "18px",
+            lineHeight: "160%",
+            letterSpacing: "0.15px",
+            color: "#304FFE"
+        },
+        wizardText: {
+            fontFamily: "'SF Compact Display'",
+            fontStyle: "normal",
+            fontWeight: 900,
+            fontSize: "25px",
+            lineHeight: "45px",
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            color: "#A7A9AC"
         }
-        
     }
 };
 

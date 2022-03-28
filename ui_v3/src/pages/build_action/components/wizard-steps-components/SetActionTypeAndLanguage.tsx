@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Radio, Typography } from "@mui/material";
 import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import React from "react";
 import ActionTypeToSupportedRuntimes from "../../../../custom_enums/ActionTypeToSupportedRuntimes";
@@ -21,7 +21,7 @@ const SetActionTypeAndLanguage = (props: BuildActionWizardStepProps) => {
     const [actionType, setActionType] = React.useState(getInitialActionType())
     const [templateSupportedRuntimeGroup, setTemplateSupportedRuntimeGroup] = React.useState(getInitialTemplateLanguage())
     const [buildNew, setBuildNew] = React.useState(false)
-    const [useTemplate, setUseTemplate] = React.useState(false)
+    const [aiAction, setAIAction] = React.useState(false)
 
     console.log(actionType, templateSupportedRuntimeGroup, buildActionContext)
 
@@ -89,7 +89,7 @@ const SetActionTypeAndLanguage = (props: BuildActionWizardStepProps) => {
                         <Box>
                             <FormControlLabel
                                 control={
-                                <Checkbox checked={buildNew} onChange={(event)=> setBuildNew(event.target.checked)} name="jason" />
+                                    <Radio checked={buildNew} onChange={(event)=> setBuildNew(event.target.checked)} name="jason" />
                                 }
                                 label="Build New"
                             />
@@ -97,9 +97,9 @@ const SetActionTypeAndLanguage = (props: BuildActionWizardStepProps) => {
                         <Box>
                             <FormControlLabel
                                 control={
-                                <Checkbox checked={useTemplate} onChange={(event)=> setUseTemplate(event.target.checked)} name="jason" />
+                                    <Radio checked={aiAction} onChange={(event)=> setAIAction(event.target.checked)} name="jason" />
                                 }
-                                label="Use Template"
+                                label="AI Action"
                             />
                         </Box>
                     </Box>

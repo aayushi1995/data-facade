@@ -21,7 +21,7 @@ const ActionHero = (props: ActionHeroProps) => {
                 backgroundColor: '#F5F9FF',
                 boxSizing: "border-box",
                 boxShadow: '0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)',
-                borderRadius: "26.3934px",
+                borderRadius: 1,
                 border: '0.439891px solid #FFFFFF',
                 minWidth: '100%'
                 }}

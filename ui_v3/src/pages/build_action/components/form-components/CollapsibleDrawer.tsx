@@ -1,23 +1,24 @@
 import { ArrowRight } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
+import { minHeight } from "@mui/system";
 
 export interface CollapsibleDrawerProps {
     open: boolean,
     openWidth: string,
     closedWidth: string,
-    children: React.ReactNode[],
+    children: React.ReactNode,
     openDrawer: () => void,
-    maxHeight: string
+    minHeight: string
 }
  
 
 const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
-    const { open, openWidth, closedWidth, openDrawer, children, maxHeight} = props
+    const { open, openWidth, closedWidth, openDrawer, children, minHeight} = props
+
     return (
         <Box sx={{
             width: open ? openWidth : closedWidth,
             marginY: 1,
-            maxHeight: maxHeight,
            ...(open ? {
                 backgroundColor: "#F5F9FF"
            } : {
@@ -32,14 +33,7 @@ const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
            px: 1
         }}>
             {open ?
-                <Box sx={{ display: "flex", flexDirection: "column",  gap: 3}}>
-                    <Box>
-                        {children?.[0]}
-                    </Box>
-                    <Box sx={{overflowY: "auto", maxHeight: `calc(${props.maxHeight} - 150px)`, flexGrow: 1}}>
-                        {children?.[1]}
-                    </Box>
-                </Box>
+                children
                 :
                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", height: "100%"}}>
                     <IconButton onClick={() => openDrawer()}>

@@ -26,17 +26,7 @@ const SetActionName = (props: BuildActionWizardStepProps) => {
     return (
         <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 3, width: "100%"}}>
             <Box>
-                <Typography sx={{
-                    fontFamily: "SF Compact Display",
-                    fontStyle: "normal",
-                    fontWeight: 300,
-                    fontSize: "25px",
-                    lineHeight: "45px",
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                    color: "#A7A9AC"
-                }}>
+                <Typography variant="wizardText">
                     Type your Action Name
                 </Typography>
             </Box>
