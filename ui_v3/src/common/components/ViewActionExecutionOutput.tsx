@@ -45,7 +45,7 @@ const ViewActionExecutionOutput = (props: { executionId: string, presentationFor
         if(fetchActionExecutionTimeSeriesParsedOutput.data?.actionExecution?.Status === 'Completed'){
             return <ColumnChartVisualizer options={fetchActionExecutionTimeSeriesParsedOutput.data?.defaultOptions}/>
         } else {
-            return <JobsRowJobDetail ActionExecution={fetchActionExeuctionParsedOutput.data}/>
+            return <JobsRowJobDetail ActionExecution={fetchActionExeuctionParsedOutput.data?.actionExecution}/>
         }
     } else {
         return <NoData/>

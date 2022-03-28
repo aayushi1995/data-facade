@@ -55,6 +55,9 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
     }
 
     const handleStageNameChange = (e: any) => {
+        if(e.target.value === "") {
+            setIsNameBeingEdited(true)
+        }
         props.handleStageNameChange?.(props.stageId, e.target.value)
     }
 
@@ -127,7 +130,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                                 {props.stageName}
                             </Typography>
                         ) : (
-                            <TextField autoFocus value={props.stageName} onBlur={(e) => setIsNameBeingEdited(false)} variant="standard" sx={{maxHeight: '24px'}} onChange={handleStageNameChange}/>
+                            <TextField autoFocus value={props.stageName} onBlur={(e) => {if(props.stageName !== ""){setIsNameBeingEdited(false)}}} variant="standard" sx={{maxHeight: '24px'}} onChange={handleStageNameChange}/>
                             )}
                         
                     </Box>

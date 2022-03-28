@@ -89,7 +89,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
                     })
                 }
             } as UpstreamActionParameterInput
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.STRING) {
+        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.STRING || parameter.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES) {
             const parameterConfig = getCurrentParameterConfig()
             return {
                 parameterType: "STRING",

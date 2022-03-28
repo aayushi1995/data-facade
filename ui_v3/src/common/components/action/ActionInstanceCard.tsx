@@ -68,7 +68,8 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
         if(actionInstance.DefinitionActionType === ActionDefinitionActionType.WORKFLOW){
             actionExecutionMutationWorkflow.mutate({actionInstanceId: actionInstance.InstanceId!})
         } else {
-            actionExecutionMutation.mutate({actionInstanceId: actionInstance.InstanceId!, options: {SynchronousActionExecution: true}})
+            // actionExecutionMutation.mutate({actionInstanceId: actionInstance.InstanceId!, options: {SynchronousActionExecution: true}})
+            history.push(`/application/execute-instance/${props.actionInstance.InstanceId}`)
         }
     }
 

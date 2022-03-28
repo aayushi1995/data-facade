@@ -69,7 +69,10 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         const firstActionTemplate = action.ActionTemplatesWithParameters[0]
         const selectedActionTemplate = defaultActionTemplate || firstActionTemplate
         const selectedActionTemplateModel = selectedActionTemplate?.model
-//        const selectedActionParams = selectedActionTemplate.actionParameterDefinitions
+        const selectedActionParams = selectedActionTemplate.actionParameterDefinitions
+        if(!selectedParameterForEdit) {
+            setSelectedParameterForEdit(selectedActionParams?.[0]?.model)
+        }
         return (
         <Box>
             <Box>
@@ -121,7 +124,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                         <Box sx={{display: "flex", flexDirection: "column", gap: 5}}>
                             <Box>
                                 <EditActionParameterDefinition 
-                                    parameter={selectedActionTemplate.actionParameterDefinitions[0].model}
+                                    parameter={selectedParameterForEdit}
                                     template={selectedActionTemplateModel}
                                     stageId={props.stageId}
                                     actionIndex={props.actionDefinitionIndex}
