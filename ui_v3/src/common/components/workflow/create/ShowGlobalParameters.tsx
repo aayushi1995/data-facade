@@ -51,16 +51,14 @@ const ShowGlobalParameters = () => {
                 headerName: "Data Type"
             }
         ].map(column => { return {...column, width: column.field.length*20}}),
-
         rows: getRows(),
-        autoHeight: true,
         autoPageSize: true,
         rowsPerPageOptions: [5, 10, 15],
         disableSelectionOnClick: true
     }
     console.log(dataGridProps)
     return (
-        <DataGrid {...dataGridProps}/>
+        <DataGrid {...dataGridProps} sx={{minHeight: '400px'}}/>
     )
     
 }

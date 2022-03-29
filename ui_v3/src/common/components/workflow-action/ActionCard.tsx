@@ -25,10 +25,12 @@ export interface ActionCardProps {
     dragHandleProps?: any
     percentageCompleted?: number
     isCardSelected?: boolean,
-    runTime?: number
+    runTime?: number,
+    stageId?: string
     deleteButtonAction: (actionId: string, actionNumber: number) => void
     onActionSelect?: (actionId: string, actionIndex: number) => void
     handlePreviewOutput: (executionId: string) => void
+    handleActionClick?: (actionId: string, actionIndex: number, stageId: string) => void
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -68,6 +70,11 @@ const ActionCard = (props: ActionCardProps) => {
     const handleClick = (e: any) => {
         props.onActionSelect?.(props.actionId, props.index)
     }
+
+    const handleActionClick = () => {
+        props.handleActionClick?.(props.actionId, props.index, props.stageId || "stageID")
+    }
+
     const tooltipTitle = (props?.executionStaus === 'Completed' || props?.executionStaus === 'Failed') ? props.runTime : "";
 
     return (
@@ -105,12 +112,12 @@ const ActionCard = (props: ActionCardProps) => {
                                 <img src={selectGrid} alt="select" ></img>
                             </Box>
                         </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center'}}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer'}} onClick={handleActionClick}>
                             <Box sx={{alignItems: 'center', justifyContent: 'center'}}>
                                 <img src={dataCleansing} alt="action"></img>
                             </Box>
                         </Box>
-                        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'}}>
+                        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', cursor: 'pointer'}} onClick={handleActionClick}>
                             <Box sx={{flex: 1}}>
                                 <Typography variant="actionCardHeader" sx={{overflowX: 'clip'}}>
                                     {props.actionName}

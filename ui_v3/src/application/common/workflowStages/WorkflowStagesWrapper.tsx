@@ -29,7 +29,6 @@ export interface WorkflowStagesWrapperProps {
     }[]
     onAddStage?: (e: {Id: string, Name: string, Actions: WorkflowActionDefinition[]}, stageId?: string) => void
     onDeleteStage?: (stageId: string) => void
-    handleStageNameChange?: (stageId: string, stageName: string) => void
 }
 
 const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
@@ -89,8 +88,7 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
                             <WorkflowStage {...
                                 {...stage, 
                                 selectedStageId: props.selectedStage?.stageId, 
-                                handleDeleteStage: handleDeleteStage, 
-                                handleStageNameChange: props.handleStageNameChange, 
+                                handleDeleteStage: handleDeleteStage,
                                 handleAddStage: handleAddStage, 
                                 fromAddActions: props.fromAddActionsView,
                                 setSelectedStage: setSelectedStage

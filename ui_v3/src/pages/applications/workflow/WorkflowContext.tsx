@@ -47,6 +47,7 @@ export type WorkflowContextType = {
     WorkflowParameterInstance?: ActionParameterInstance[]
     WorkflowParameters: ActionParameterDefinition[]
     currentSelectedStage?: string,
+    currentSelectedAction?: {actionId: string, actionIndex: number}
     Name: string,
     Description: string,
     Author: string,
@@ -323,6 +324,14 @@ type SetEntireContext = {
     payload: WorkflowContextType
 }
 
+type SetSelectedAction = {
+    type: 'SET_SELECTED_ACTION',
+    payload: {
+        actionId: string,
+        actionIndex: number
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -348,7 +357,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetActionExecutionForPreview |
                              SetApplicationId |
                              ChangeStagePercentage |
-                             SetEntireContext
+                             SetEntireContext |
+                             SetSelectedAction
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -626,6 +636,10 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
 
         case 'SET_ENTIRE_CONTEXT': {
             return {...action.payload}
+        }
+
+        case 'SET_SELECTED_ACTION': {
+            return {...state, currentSelectedAction: action.payload}
         }
 
         default:

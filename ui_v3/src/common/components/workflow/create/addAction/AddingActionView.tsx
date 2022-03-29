@@ -1,4 +1,4 @@
-import { Box, Card, IconButton } from "@mui/material"
+import { Box, Card, IconButton, Typography, Tooltip } from "@mui/material"
 import React from "react"
 import WorkflowStagesWrapper from "../../../../../application/common/workflowStages/WorkflowStagesWrapper"
 import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
@@ -26,15 +26,19 @@ export const AddingActionView = () => {
 
     const handleGoBack = () => {
         setWorkflowContext({type: 'CHANGE_CURRENT_SELECTED_STAGE', payload: {stageId: undefined}})
+        setWorkflowContext({type: 'SET_SELECTED_ACTION', payload: {actionId: "", actionIndex: -1}})
     }
 
     if(selectedStage) {
         return (
-            <Box sx={{maxHeight: '100%', display: 'flex', flexDirection: 'column'}}>
-                <Box sx={{flex: 1}} >
-                    <IconButton onClick={handleGoBack}>
-                        <img src={slideNext} style={{transform: 'rotate(180deg)'}} alt="go back"/>
-                    </IconButton>
+            <Box sx={{maxHeight: '100%', display: 'flex', flexDirection: 'column', gap: 1}}>
+                <Box sx={{flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center'}} >
+                    <Tooltip title="Go Back">
+                        <IconButton onClick={handleGoBack}>
+                            <img src={slideNext} style={{transform: 'rotate(180deg)'}} alt="go back"/>
+                        </IconButton>
+                    </Tooltip>
+                    <Typography sx={{fontFamily: 'SF Pro Text', fontWeight: 300}}>Go Back to Save</Typography>
                 </Box>
                 <Box sx={{flex: 1, minHeight: '100px'}}>
                     <WorkflowStagesWrapper stages={allStages} selectedStage={selectedStage} maxWidthInPixel={100} numberOfStages={1} fromAddActionsView={true}></WorkflowStagesWrapper>

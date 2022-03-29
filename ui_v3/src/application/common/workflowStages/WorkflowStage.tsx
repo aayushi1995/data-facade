@@ -8,6 +8,7 @@ import { TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import ConfirmationDialog from '../../../common/components/ConfirmationDialog';
+import { SetWorkflowContext } from '../../../pages/applications/workflow/WorkflowContext';
 
 export interface WorkflowStageProps {
     stageId: string
@@ -24,11 +25,11 @@ export interface WorkflowStageProps {
     fromAddActions?: boolean
     handleDeleteStage?: (event: string) => void
     handleAddStage?: (stageId?: string) => void
-    handleStageNameChange?: (stageId: string, stageName: string) => void,
     setSelectedStage?: (stageId: string) => void
 }
 
 export const WorkflowStage = (props: WorkflowStageProps) => {
+    const setWorkflowContext = React.useContext(SetWorkflowContext)
     const [isDeleteDialogOpen, setIsDialogOpen] = React.useState(false)
     const [isNameBeingEdited, setIsNameBeingEdited] = React.useState(false)
     const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
@@ -58,7 +59,10 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
         if(e.target.value === "") {
             setIsNameBeingEdited(true)
         }
-        props.handleStageNameChange?.(props.stageId, e.target.value)
+        setWorkflowContext({type: 'STAGE_NAME_CHANGE', payload: {
+            stageId: props.stageId,
+            Name: e.target.value
+        }})
     }
 
     const handleDialogCloseWithoutDelete = () => {
@@ -122,7 +126,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                                 fontWeight: 700,
                             }}
                             onClick = {() => {
-                                if(props.selectedStageId===undefined) {
+                                if(props.selectedStageId===undefined || props.selectedStageId === props.stageId) {
                                     setIsNameBeingEdited(true)
                                 }
                             }}

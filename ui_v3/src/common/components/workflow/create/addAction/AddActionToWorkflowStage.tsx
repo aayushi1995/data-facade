@@ -3,7 +3,7 @@ import { Divider } from "@mui/material"
 import React from "react"
 import { lightShadows } from '../../../../../css/theme/shadows'
 import WorkflowActionContainer from "../../../../../pages/applications/workflow/WorkflowActionContainer"
-import { SetWorkflowContext, WorkflowActionDefinition } from "../../../../../pages/applications/workflow/WorkflowContext"
+import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 import SelectAction, { ActionDefinitionToAdd } from "../SelectAction/SelectAction"
 import ViewSelectedAction from "../ViewSelectedAction/ViewSelectedAction"
 
@@ -13,11 +13,12 @@ export interface AddActionToWorkflowStageProps {
 }
 
 export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) => {
-    const [selectedAction, setSelectedAction] = React.useState({actionId: "", actionIndex: -1})
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const workflowContext = React.useContext(WorkflowContext)
+    const selectedAction = workflowContext.currentSelectedAction || {actionId: "", actionIndex: -1}
 
     const handleSelectAction = (actionId: string, actionIndex: number) => {
-        setSelectedAction({actionId: actionId, actionIndex: actionIndex})
+        setWorkflowContext({type: 'SET_SELECTED_ACTION', payload: {actionId: actionId, actionIndex: actionIndex}})
     }
 
     const addActionHandler = (actionDefinition: ActionDefinitionToAdd) => {

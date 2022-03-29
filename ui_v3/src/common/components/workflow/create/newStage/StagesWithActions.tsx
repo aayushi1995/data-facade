@@ -68,10 +68,6 @@ export const StagesWithActions = () => {
 
     }
 
-    const handleStageNameChange = (stageId: string, stageName: string) => {
-        setWorkflowContext({type: 'STAGE_NAME_CHANGE', payload: {stageId: stageId, Name: stageName}})
-    }
-
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', maxWidth: 'inherit'}}>
             <Box sx={{ display: 'flex', flexDirection: "row-reverse", width: "100%"}}>
@@ -90,7 +86,7 @@ export const StagesWithActions = () => {
             </Box>
             <Box sx={{flex: 1, minHeight: '100px', minWidth: '300px'}}>
                 <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
-                onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} handleStageNameChange={handleStageNameChange}></WorkflowStagesWrapper>
+                onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length}></WorkflowStagesWrapper>
             </Box>
             <Box sx={{flex: 1, display: 'flex', mt: 1, p: 1, flexDirection: 'column'}}>
                 {/* <Card sx={{display: 'flex', boxShadow: lightShadows[27], flexDirection: 'column', p: 1, flex: 1}}> */}

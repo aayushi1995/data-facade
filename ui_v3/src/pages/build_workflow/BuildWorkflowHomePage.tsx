@@ -76,7 +76,7 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
             onSuccess: () => {
                 console.log("SUCCESS")
                 queryClient.invalidateQueries("Application")
-                history.goBack()
+                history.push(`/application/${props.applicationId || 1}`)
             }
         })
     }

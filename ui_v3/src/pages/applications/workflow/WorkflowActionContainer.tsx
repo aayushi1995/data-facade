@@ -39,7 +39,7 @@ const Transition = React.forwardRef(function Transition(
 const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     // TODO: add colors to theme
     const workflowContext = React.useContext(WorkflowContext)
-    const [selectedDefinition, setSelectedDefinition] = React.useState({id: "", index: -1})
+    const selectedDefinition = workflowContext.currentSelectedAction || {actionId: "", actionIndex: -1}
     const [isBuildDialogOpen, setIsBuildDialogOpen] = React.useState(false)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     // console.log(workflowContext)
@@ -61,17 +61,33 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             return;
         }
 
-        if(selectedDefinition.index === -1) {
-            setSelectedDefinition({id: actionId, index: actionIndex})
+        if(selectedDefinition.actionIndex === -1) {
             props.handleSelectAction?.(actionId, actionIndex)
-        } else if(selectedDefinition.index === actionIndex) {
-            setSelectedDefinition({id: "", index: -1})
+        } else if(selectedDefinition.actionIndex === actionIndex) {
             props.handleSelectAction?.("", -1)
         } else {
-            setSelectedDefinition({id: actionId, index: actionIndex})
             props.handleSelectAction?.(actionId, actionIndex)
         }
         
+    }
+
+    const handleActionClick = (actionId: string, actionIndex: number, stageId: string) => {
+        if(!!workflowContext.currentSelectedStage) {
+            return;
+        }
+        setWorkflowContext({
+            type: 'CHANGE_CURRENT_SELECTED_STAGE',
+            payload: {
+                stageId: stageId
+            }
+        })
+        setWorkflowContext({
+            type: 'SET_SELECTED_ACTION',
+            payload: {
+                actionId: actionId,
+                actionIndex: actionIndex
+            }
+        })
     }
 
     const handlePreviewOutput = (executionId: string) => {
@@ -95,7 +111,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             executionStaus: action.ExecutionStatus,
             runTime: runTime
         }
-        if(selectedDefinition.index === index && selectedDefinition.id === action.Id) {
+        if(selectedDefinition.actionIndex === index && selectedDefinition.actionId === action.Id) {
             return {
                 ...baseAction,
                 isCardSelected: true
@@ -201,7 +217,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                                                 <li {..._provided.draggableProps} ref={_provided.innerRef}>
                                                                     <Box px={3}>
                                                                     <ActionCard
-                                                                        {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput }}
+                                                                        {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput, handleActionClick: handleActionClick, stageId: props.stageId }}
                                                                     />
                                                                     </Box>
                                                                 </li>
