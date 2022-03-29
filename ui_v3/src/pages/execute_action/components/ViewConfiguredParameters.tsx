@@ -44,7 +44,8 @@ const ConfiguredParameter = (props: {definition: ActionParameterDefinition, inst
                         letterSpacing: "0.5px",
                         textTransform: "uppercase",
                         color: "rgba(66, 82, 110, 0.86)",
-                        textAlign: "center"
+                        textAlign: "center",
+                        
                     }}>
                         {definition.ParameterName}
                     </Typography>
@@ -57,6 +58,7 @@ const ConfiguredParameter = (props: {definition: ActionParameterDefinition, inst
                         fontSize: "24px",
                         lineHeight: "133.4%",
                         color: "#253858",
+                        overflowWrap: 'break-word',
                         textAlign: "center"
                     }}>
                         {instance.ParameterValue}

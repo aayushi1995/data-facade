@@ -229,18 +229,7 @@ export function JobsFiltered(props) {
                                                     </IconButton>
                                                 </Tooltip>
                                             ]),
-                                        }}
-                                        {
-                                            ...filterOption ? {
-                                                filterModel: {
-                                                    items: [{
-                                                        columnField: filterOption,
-                                                        operatorValue: 'contains',
-                                                        value: searchValue
-                                                    }],
-                                                }
-                                            } : {}
-                                        }
+                                        }}                        
                                         onSelectionModelChange={(params) => {
                                             toggleSelectActionExecutionWithId(params[params?.length - 1]);
                                         }}

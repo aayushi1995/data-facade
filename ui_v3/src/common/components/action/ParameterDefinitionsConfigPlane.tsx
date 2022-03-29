@@ -2,7 +2,7 @@ import { Grid, Card, Box } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
-import ParameterInput, { ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
+import ParameterInput, { ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
 
 
 interface ParameterDefinitionsConfigPlaneProps {
@@ -94,7 +94,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     }
                 }
             } as ColumnParameterInput
-        } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING) {
+        } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES) {
             return {
                 parameterType: "STRING",
                 inputProps: {
@@ -154,10 +154,25 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     value: existingParameterValue
                 }
             }
-        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
-            // TODO
+        } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
+            const tableFilters = props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
             return {
-                parameterType: undefined
+                parameterType: "COLUMN_LIST",
+                inputProps: {
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    onChange: (newColumns?: ColumnProperties[]) => {
+                        const names = newColumns?.map(column => column.UniqueName) || []
+                        const newParameterInstance: ActionParameterInstance = {
+                            ParameterValue: names.join(','),
+                            ActionParameterDefinitionId: parameterDefinition.Id
+                        }
+                        onParameterValueChange(newParameterInstance)
+                    },
+                    selectedColumnFilters: existingParameterValue?.split(',')?.map(name => {
+                        return {UniqueName: name}
+                    }) || [],
+                    tableFilters: tableFilters
+                }
             }
         } else {
             return {

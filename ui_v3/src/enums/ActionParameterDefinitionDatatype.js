@@ -10,7 +10,8 @@ const ActionParameterDefinitionDatatype = {
     INT: "int",
     FLOAT: "float",
     INFER_FROM_COLUMN: "infer",
-    PANDAS_DATAFRAME: "pandas_dataframe"
+    PANDAS_DATAFRAME: "pandas_dataframe",
+    COLUMN_NAMES_LIST: "column_names_list"
 }
 
 export default ActionParameterDefinitionDatatype;

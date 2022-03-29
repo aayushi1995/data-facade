@@ -74,12 +74,22 @@ export interface ColumnParameterInput {
     }
 }
 
+export interface ColumnListParameterInput {
+    parameterType: "COLUMN_LIST",
+    inputProps: {
+        parameterName: string,
+        selectedColumnFilters: ColumnProperties[] | undefined,
+        tableFilters: TableProperties[] | undefined,
+        onChange: (newColumnList?: ColumnProperties[]) => void
+    }
+}
+
 export interface NAInput {
     parameterType: undefined
 }
 
 
-export type ParameterInputProps = UpstreamActionParameterInput | StringParameterInput | IntParameterInput | FloatParameterInput | BooleanParameterInput | NAInput | TableParameterInput | ColumnParameterInput
+export type ParameterInputProps = UpstreamActionParameterInput | StringParameterInput | IntParameterInput | FloatParameterInput | BooleanParameterInput | NAInput | TableParameterInput | ColumnParameterInput | ColumnListParameterInput
 
 const getParameterInputField = (props: ParameterInputProps) => {
     switch(props?.parameterType) {
@@ -90,8 +100,43 @@ const getParameterInputField = (props: ParameterInputProps) => {
         case "INT": return <IntInput {...props}/>
         case "TABLE": return <TableInput {...props}/>
         case "COLUMN": return <ColumnInput {...props}/>
+        case "COLUMN_LIST": return <ColumnListInput {...props}/>
         default: return <NoInput/>
     }
+}
+
+const ColumnListInput = (props: ColumnListParameterInput) => {
+    const {parameterName, selectedColumnFilters, tableFilters, onChange} = props.inputProps
+    const fetchTableQuery = useFetchColumnsForTables({tableFilters: tableFilters})
+
+    return (
+        <LoadingWrapper
+            {...fetchTableQuery}
+        >
+            <Autocomplete
+                options={fetchTableQuery.data || []}
+                multiple={true}
+                fullWidth
+                getOptionLabel={(column: ColumnProperties) => column.UniqueName || "Un-named column"}
+                groupBy={(column) => column.TableName || "Table NA"}
+                value={fetchTableQuery.data!?.filter(column => props.inputProps.selectedColumnFilters?.find(selectedColumn => selectedColumn.Id === column.Id || (selectedColumn.Id === undefined && selectedColumn.UniqueName === column.UniqueName) ) !== undefined)}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label={props.inputProps.parameterName || "Parameter Name NA"}
+                    />
+                )}
+                disableCloseOnSelect
+                clearOnBlur
+                handleHomeEndKeys
+                limitTags={2}
+                filterSelectedOptions
+                onChange={(event, value, reason, details) => {
+                    onChange(value ?? undefined)
+                }}
+            ></Autocomplete>
+        </LoadingWrapper>
+    )
 }
 
 const ColumnInput = (props: ColumnParameterInput) => {
