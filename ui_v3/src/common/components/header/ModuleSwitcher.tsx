@@ -129,11 +129,11 @@ const TabsTree = (props: TabsTreePropType) => {
         />: null}
         {areLeafTabs ?
             <ModuleContent.MainContent/> :
-            <TabsTree
+            activeTabChildren? <TabsTree
                 {...props}
                 tabs={activeTabChildren}
                 level={level + 1}
-            />}
+            />: null}
     </Box>;
 }
 
