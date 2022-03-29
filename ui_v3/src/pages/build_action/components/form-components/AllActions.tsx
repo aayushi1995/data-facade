@@ -1,4 +1,5 @@
 import { Grid } from "@mui/material";
+import LoadingWrapper from "../../../../common/components/LoadingWrapper";
 import useFetchActionDefinitions from "../../../../common/components/workflow/create/hooks/useFetchActionDefinitions";
 import ActionCard from "./ActionCard";
 
@@ -11,12 +12,8 @@ export interface AllActionsProps {
 const AllActions = (props: AllActionsProps) => {
     const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError] = useFetchActionDefinitions({})
 
-    if(allActionDefinitionsIsLoading) {
-        return <>Loading...</>
-    } else if(!!allActionDefinitionsError) {
-        return <>{allActionDefinitionsError}</>
-    } else {
-        return(
+    return (
+        <LoadingWrapper isLoading={allActionDefinitionsIsLoading} error={allActionDefinitionsError} data={allActionDefinitionsData}>
             <Grid container spacing={3} sx={{px: 2}}>
                 {allActionDefinitionsData.filter(actionDefinition => actionDefinition.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
                     <Grid item xs={12}>
@@ -29,8 +26,8 @@ const AllActions = (props: AllActionsProps) => {
                         />
                     </Grid>)}
             </Grid>
-        )
-    }
+        </LoadingWrapper>
+    )
 }
 
 export default AllActions;

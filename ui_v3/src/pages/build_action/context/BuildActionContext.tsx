@@ -37,7 +37,8 @@ export type BuildActionContextState = {
     isLoadingAction: boolean,
     sourcedFromActionDefiniton?: ActionDefinition,
     SourceApplicationId?: string,
-    onSuccessfulBuild?: (actionDefinitionId?: ActionDefinition) => void
+    onSuccessfulBuild?: (actionDefinitionId?: ActionDefinition) => void,
+    lastCreatedActionDefinition?: ActionDefinition
 }
 
 
@@ -247,6 +248,10 @@ type LoadFromExistingAction = {
     payload: ActionDefinitionDetail
 }
 
+type SaveActionToLastCreatedAction = {
+    type: "SaveActionToLastCreated"
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -269,7 +274,8 @@ LoadingOverAction |
 LoadFromExistingAction |
 SetSuccessCallbackFunction |
 SetModeAction |
-SetSourceApplicationIdAction
+SetSourceApplicationIdAction |
+SaveActionToLastCreatedAction
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -517,6 +523,13 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                     
                 default:
                     return state
+            }
+        }
+
+        case "SaveActionToLastCreated": {
+            return {
+                ...state,
+                lastCreatedActionDefinition: state?.actionDefinitionWithTags?.actionDefinition
             }
         }
 

@@ -13,7 +13,8 @@ const ProviderName = {
     NATIVE_PYTHON: "NativePython",
     POSTGRESQL: "PostgreSql",
     LAMBDA: "AWS-Lambda",
-    SAGEMAKER: "Sagemaker"
+    SAGEMAKER: "Sagemaker",
+    SALESFORCE: "Salesforce"
 }
 
 export default ProviderName;

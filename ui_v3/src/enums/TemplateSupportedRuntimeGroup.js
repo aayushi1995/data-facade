@@ -10,7 +10,8 @@ const TemplateSupportedRuntimeGroup = {
     SNOWFLAKE_SQL: "snowflake_sql",
     COMMON: "common",
     JSON: "json",
-    SAGEMAKER: "sagemaker"
+    SAGEMAKER: "sagemaker",
+    SALESFORCE_OBJECT_QUERY_LANGUAGE: "soql"
 }
 
 export default TemplateSupportedRuntimeGroup;

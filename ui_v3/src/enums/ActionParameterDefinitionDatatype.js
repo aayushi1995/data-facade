@@ -11,6 +11,8 @@ const ActionParameterDefinitionDatatype = {
     FLOAT: "float",
     INFER_FROM_COLUMN: "infer",
     PANDAS_DATAFRAME: "pandas_dataframe",
+    STRING_LIST: "string_list",
+    LIST: "list",
     COLUMN_NAMES_LIST: "column_names_list"
 }
 

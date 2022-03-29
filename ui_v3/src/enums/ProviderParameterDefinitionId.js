@@ -19,7 +19,10 @@ const ProviderParameterDefinitionId = {
     SNOWFLAKE_ACCOUNT_ID: "4",
     SNOWFLAKE_WAREHOUSE: "8",
     SNOWFLAKE_DATABASE: "7",
-    SNOWFLAKE_USERNAME: "6"
+    SNOWFLAKE_USERNAME: "6",
+    SALESFORCE_USERNAME: "40",
+    SALESFORCE_PASSWORD: "41",
+    SALESFORCE_SECURITY_TOKEN: "42"
 }
 
 export default ProviderParameterDefinitionId;

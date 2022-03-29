@@ -25,7 +25,7 @@ const BuildActionForm = (props: BuildActionFormProps) => {
     const [sidePanelActiveTab, setSidePanelActiveTab] = React.useState(1)
     const [actionDefinitionNameSearchQuery, setActionDefinitionNameSearchQuery] = React.useState<string>("")
     const [selectedActionId, setSelectedActionId] = React.useState<string|undefined>()
-    const [sideBarOpen, setSideBarOpen] = React.useState<boolean>(true)
+    const [sideBarOpen, setSideBarOpen] = React.useState<boolean>(false)
     const {data, error, isLoading, refetch} = useActionDefinitionDetail({
         options: {
             onSuccess: (data: unknown) => {

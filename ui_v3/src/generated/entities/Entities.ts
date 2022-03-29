@@ -82,6 +82,8 @@ export interface ActionDefinition extends BaseEntity{
 	Description?: string
 	ApplicationId?: string
 	IsVisibleOnUI?: boolean
+	PinnedToDashboard?: boolean
+	Visibility?: string
 }
 
 
@@ -363,10 +365,12 @@ export interface ActionInstance extends BaseEntity{
 	TableId?: string
 	DisplayName?: string
 	ActionType?: string
-	TestField?: string
+	CreatedBy?: string
 	AnomalyInstanceId?: string
 	VisualizationFormat?: string
 	UploadExecutionData?: boolean
+	PinnedToDashboard?: boolean
+	Visibility?: string
 }
 
 

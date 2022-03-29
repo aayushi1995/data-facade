@@ -27,6 +27,7 @@ const TestAndDeploy = () => {
                 setBuildActionContext({type: "Loading"})
             },
             onSuccess: (data, variables, context) => {
+                setBuildActionContext({type: "SaveActionToLastCreated"})
                 setBuildActionContext({type: "RefreshIds"})
                 queryClient.invalidateQueries([labels.entities.ActionDefinition, "All"])
                 if(buildActionContext.onSuccessfulBuild !== undefined) {
@@ -45,6 +46,10 @@ const TestAndDeploy = () => {
 
     const createAction = () => {
         saveMutation.mutate(buildActionContext)
+    }
+
+    const handleCreateActionInstance = () => {
+        console.log(buildActionContext.lastCreatedActionDefinition)
     }
 
     return (
@@ -75,7 +80,7 @@ const TestAndDeploy = () => {
                     </Box>
                 </Box>
             </Grid>
-            <Grid item xs={12} lg={8}>
+            <Grid item xs={12} lg={7}>
                 <Box sx={{display: "flex", flexDirection: "column", width: "100%", alignItems: "center", justifyContent: "center", minHeight: "100%"}}>
                     <Box>
                         <Typography sx={{
@@ -106,13 +111,14 @@ const TestAndDeploy = () => {
                             letterSpacing: "0.15px",
                             color: "#66748A"
                         }}>
-                            THE TESTING WAS SUCCESSFULL. PLEASE SAVE YOUR ACTION 
+                            THE TESTING WAS SUCCESSFUL. PLEASE SAVE YOUR ACTION 
                         </Typography>
                     </Box>
                 </Box>
                 
             </Grid>
-            <Grid container item xs={12} lg={2} sx={{justifyContent: "flex-end"}}>
+            <Grid container item xs={12} lg={3} sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 3}}>
+                <Box>
                     <FormGroup>
                         <FormControlLabel control={<Switch checked={selectDefaultFields} onChange={(event) => {setSelectDefaultFields(event.target.checked)}}/>} label="Set Default fields"/>
                         <FormControlLabel control={<Switch checked={makePublic} onChange={(event) => {setMakePublic(event.target.checked)}}/>} label="Make public"/>
@@ -121,6 +127,10 @@ const TestAndDeploy = () => {
                         <FormControlLabel control={<Switch checked={createDashboard} onChange={(event) => {setCreateDashboard(event.target.checked)}}/>} label="Create Dashboard"/>
                         <FormControlLabel control={<Switch checked={pinToMyInsight} onChange={(event) => {setPinToMyInsight(event.target.checked)}}/>} label="Pin to My Insight"/>
                     </FormGroup>
+                </Box>
+                <Box>
+                    <Button variant="contained" disabled={buildActionContext?.lastCreatedActionDefinition?.Id === undefined} onClick={handleCreateActionInstance}>Create Instance</Button>
+                </Box>
             </Grid>
         </Grid>
     )

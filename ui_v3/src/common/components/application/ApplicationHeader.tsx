@@ -3,9 +3,8 @@ import AddIcon from "@mui/icons-material/Add"
 import SearchIcon from '@mui/icons-material/Search';
 import { useHistory, Link } from "react-router-dom";
 import UploadApplicationButton from "../UploadApplicationButton";
-import PreBuiltApplications from "./PreBuiltApplications";
 
-interface ApplicationHeaderProps {
+export interface ApplicationHeaderProps {
     pageHeader: string
     subHeading: string,
     fromApplicationDetail?: boolean,
