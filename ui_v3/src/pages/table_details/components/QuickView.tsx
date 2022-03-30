@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRetreiveData } from "../../../data_manager/data_manager";
-import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
+import { TableWrapper } from "../../../common/components/TableWrapper";
 import { CustomToolbar } from "../../../common/components/CustomToolbar";
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -21,8 +21,8 @@ const QuickView = (props: { tableId: string; }) => {
     } = useActionExecution1000RowsQuery(props.tableId);
 
     return (
-        <ReactQueryWrapper isLoading={actionExecutionLoading} error={actionExecutionError || actionExecutionData?.[0]?.Output === undefined}
-                           data={actionExecutionData}>
+        <TableWrapper isLoading={actionExecutionLoading} error={actionExecutionError || actionExecutionData?.[0]?.Output === undefined}
+            data={actionExecutionData}>
             {() => {
                 const output = JSON.parse(actionExecutionData?.[0]?.Output);
                 const columns = output?.Value?.schema?.map((column: { columnName: any; }) => {
@@ -48,7 +48,7 @@ const QuickView = (props: { tableId: string; }) => {
                     rows={rows}
                 />
             }}
-        </ReactQueryWrapper>
+        </TableWrapper>
     );
 }
 export default QuickView

@@ -8,7 +8,7 @@ export interface QueryResult extends Omit<ActionExecution, "Output"> {
 
 export interface UseActionExecutionParsedOutputParams {
     actionExecutionFilter?: ActionExecution,
-    queryOptions?: UseQueryOptions<ActionExecution, unknown, QueryResult, [string, undefined|string]>
+    queryOptions?: UseQueryOptions<ActionExecution, unknown, QueryResult>
 }
 
 

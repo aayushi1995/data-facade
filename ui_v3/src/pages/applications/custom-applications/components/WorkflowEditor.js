@@ -6,7 +6,7 @@ import { PageHeader } from "../../../../common/components/header/PageHeader";
 import { useGetActionDefinitionForTable, usePrevious } from "../hooks/useGetActionDefinitionForTable";
 import { useRouteMatch } from "react-router-dom";
 import { useRunActions } from "../hooks/useRunActions";
-import { ReactQueryWrapper } from "../../../../common/components/ReactQueryWrapper";
+import { TableWrapper } from "../../../../common/components/TableWrapper";
 import { WorkflowMeta } from "./WorkflowMeta";
 import { getWorkflowEditorData } from "../selectors/getWorkflowEditorData";
 import { WorkflowList } from "./WorkflowList";
@@ -74,12 +74,12 @@ const WorkflowEditor = (props) => {
         {tableMeta?.Table && <Grid item xs={12} justifyContent="center">
           <WorkflowMeta tableMeta={tableMeta} />
         </Grid>}
-        <ReactQueryWrapper error={erroneous || tagsError} data={selectedActions} isLoading={isLoading || isTagsLoading}>
+        <TableWrapper error={erroneous || tagsError} data={selectedActions} isLoading={isLoading || isTagsLoading}>
           {() => <WorkflowList
             tableMeta={tableMeta}
             data={actionsList}
             onReset={onReset}
-          />}</ReactQueryWrapper>
+          />}</TableWrapper>
       </Grid>
     </Grid>
   );

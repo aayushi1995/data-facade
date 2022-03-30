@@ -14,7 +14,7 @@ import {
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import labels from './../../../labels/labels'
-import {ReactQueryWrapper} from "../../../common/components/ReactQueryWrapper";
+import {TableWrapper} from "../../../common/components/TableWrapper";
 import {ProviderParameterInstance} from "../../../generated/entities/Entities";
 import {useCreateDataSource} from "../hooks/useCreateDataSource";
 
@@ -46,14 +46,7 @@ const CreateDataSourceRow = ({selectedId, handleClose= () => {}, isUpdate}:
     }
     const providerParameterInstances = isUpdate ? providerHistoryAndParametersQueryData?.data?.[0]?.ProviderParameterInstanceModels : dataParameters;
     return (
-        <ReactQueryWrapper {...isUpdate ? providerHistoryAndParametersQueryData : providerDefinitionsQueryData}
-                           sx={{
-                               minHeight: 400,
-                               display: 'flex',
-                               justifyContent: 'center',
-                               alignItems: 'center'
-                           }}
-        >
+        <TableWrapper {...isUpdate ? providerHistoryAndParametersQueryData : providerDefinitionsQueryData}>
             {() => <Box>
                 <Grid container alignItems="flex-start" spacing={2} style={{
                     flexDirection: "column"
@@ -137,7 +130,7 @@ const CreateDataSourceRow = ({selectedId, handleClose= () => {}, isUpdate}:
                     </DialogContent>
                 </Dialog>
             </Box>}
-        </ReactQueryWrapper>
+        </TableWrapper>
     )
 }
 

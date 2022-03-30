@@ -15,7 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {makeStyles} from "@mui/styles";
 import {WorkflowActionButtons} from "../../applications/custom-applications/components/WorkflowActionButtons";
 import {ACTION_EXECUTION_STATUS} from "../../applications/custom-applications/hooks/useRunActions";
-import {ReactQueryWrapper} from "../../../common/components/ReactQueryWrapper";
+import {TableWrapper} from "../../../common/components/TableWrapper";
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import {getActionExecutionParsedOutput} from './../../../data_manager/entity_data_handlers/action_execution_data'
 
@@ -220,7 +220,7 @@ const ActionInstancesInternal = (props) => {
         setIsDataDialogOpen(false)
     }
         return (
-            <ReactQueryWrapper data={dataGridRows} error={error} isLoading={isLoading}>
+            <TableWrapper data={dataGridRows} error={error} isLoading={isLoading}>
                 {() => <Grid>
                     <Dialog onClose={handleQueryDataDialogClose} open={isDataDialogOpen} fullWidth
                             classes={{paper: classes.dialogPaper}} scroll="paper">
@@ -263,7 +263,7 @@ const ActionInstancesInternal = (props) => {
                     />
 
                 </Grid>}
-            </ReactQueryWrapper>
+            </TableWrapper>
         );
 }
 

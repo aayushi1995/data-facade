@@ -19,7 +19,7 @@ import { useRetreiveData } from "./../../data_manager/data_manager";
 import useStyles from "./../../css/table_details/TableDetails";
 import TableRowExpanded from "../table_browser/components/TableRowExpanded";
 import { PageHeader } from "../../common/components/header/PageHeader";
-import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper";
+import { TableWrapper } from "../../common/components/TableWrapper";
 import IntermediaryTables from "./components/IntermediaryTables";
 
 const TabPanel = (props) => {
@@ -107,7 +107,7 @@ const TableDetailsView = (props) => {
         </Grid>
       
       <Grid item xs={12} className={classes.grid_root}>
-      <ReactQueryWrapper {...result}>
+      <TableWrapper {...result}>
         {() => (
           <Box sx={{ mt: 3 }}>
             <Grid>
@@ -151,7 +151,7 @@ const TableDetailsView = (props) => {
             </Grid>
           </Box>
         )}
-      </ReactQueryWrapper>
+      </TableWrapper>
       </Grid>
       </Grid>
     </React.Fragment>

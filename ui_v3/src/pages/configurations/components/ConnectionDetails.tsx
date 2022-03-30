@@ -2,8 +2,7 @@ import {Divider, Paper, Stack, ToggleButton, Box, Typography, useTheme} from "@m
 import CreateDataSourceRow from "./CreateDataSourceRow";
 import React from "react";
 import {ConnectionsContext} from "../context/ConnectionsContext";
-import {ReactQueryWrapper} from "../../../common/components/ReactQueryWrapper";
-import {BarChart} from "../../../common/components/charts/bar/BarChart";
+import {TableWrapper} from "../../../common/components/TableWrapper";
 
 
 export const ConnectionDetails = () => {
@@ -11,20 +10,15 @@ export const ConnectionDetails = () => {
     const details = providerHistoryAndParametersQueryData?.data?.[0];
     const theme = useTheme();
     const today = new Date();
-    const days = [...new Array(5)].map((_) => {
-        today.setDate(today.getDate() + 1);
-        return today.toString().slice(0, 10);
+    const days = [...new Array(5)].map((_)=>{
+        today.setDate(today.getDate()+1);
+        return today.toString().slice(0,10);
     });
 
     return selectedConnectionId ? <Box sx={{
         boxShadow: theme.shadows[20]
     }}>
-        <ReactQueryWrapper {...providerHistoryAndParametersQueryData} sx={{
-            minHeight: 500,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
+        <TableWrapper {...providerHistoryAndParametersQueryData}>
             {() => <Stack direction={"row"} sx={{p: 2}} gap={2}>
                 <Stack direction={"column"} flex={1}>
                     <CreateDataSourceRow
@@ -40,12 +34,12 @@ export const ConnectionDetails = () => {
                     <Typography variant={'body1'}>
                         Number of actions run per day
                     </Typography>
-                    <BarChart
-                        dataX = {days}
-                        dataY = {details?.history || []}
-                    />
+                    {/* <ActionsChart
+                        dataX={days}
+                        dataY={details?.history}
+                    /> */}
                     <Stack direction={"row"}>
-                        <Paper sx={{p: 2}}>
+                        <Paper sx={{p:2}}>
                             <Stack direction='column' gap={2}>
                                 <Typography>
                                     Number of failed actions
@@ -58,6 +52,6 @@ export const ConnectionDetails = () => {
                     </Stack>
                 </Stack>
             </Stack>}
-        </ReactQueryWrapper>
+        </TableWrapper>
     </Box> : null;
 }

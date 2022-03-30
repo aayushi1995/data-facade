@@ -17,7 +17,7 @@ export const ButtonIconWithToolTip = ({
             position: "relative",
             backgroundColor: {backgroundColor},
             borderRadius: "100%",
-            boxShadow: background? theme.shadows[22]: 'none'
+            boxShadow: background? theme.shadows[23]: 'none'
         }}>
         <IconButton
             size="small"

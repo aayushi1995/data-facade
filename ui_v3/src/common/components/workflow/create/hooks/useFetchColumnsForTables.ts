@@ -5,7 +5,7 @@ import dataManagerInstance, { useRetreiveData } from './../../../../../data_mana
 
 export interface UseFetchColumnsForTablesProps {
     tableFilters?: undefined | TableProperties[],
-    queryOptions?: UseQueryOptions<ColumnProperties[], unknown, ColumnProperties[],[string, undefined | TableProperties[]]>
+    queryOptions?: UseQueryOptions<ColumnProperties[], unknown, ColumnProperties[]>
 }
 
 const useFetchColumnsForTables = (params: UseFetchColumnsForTablesProps) => {

@@ -7,18 +7,12 @@ import { useQuery, UseQueryResult} from "react-query";
 import {Fetcher} from "../../../generated/apis/api";
 import {ProviderInstanceDetails} from "../../../generated/interfaces/Interfaces";
 import * as CustomInterface from "../../../generated/interfaces/Interfaces";
-import {
-    ProviderDataType,
-    useConnectionProviders,
-    UseRetrieveData
-} from "../../data/components/connections/hooks/useConnectionProviders";
 
 export type NotificationType = {open: boolean, message?: string, severity?: AlertColor};
 export type ConnectionsType = {
     selectedConnectionId?: string,
     providerInstanceDetailsQueryData?: UseQueryResult<ProviderInstanceDetails[]>,
-    providerHistoryAndParametersQueryData?:  UseQueryResult<CustomInterface.ProviderRunsHistoryAndParameters[] | undefined>,
-    ProvidersQueryData?:UseRetrieveData<ProviderDataType>,
+    providerHistoryAndParametersQueryData?:  UseQueryResult<CustomInterface.ProviderRunsHistoryAndParameters[] | undefined>
 };
 export const ConnectionsContext = React.createContext<ConnectionsType>(
     {}
@@ -62,13 +56,11 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
     const providerHistoryAndParametersQueryData = useQuery(["getProviderHistoryAndParameters", selectedConnection?.model?.Id], ()=>{
         return selectedConnection?.model? Fetcher.fetchData('GET', '/getProviderHistoryAndParameters', selectedConnection.model): undefined;
     }, {enabled: !!selectedConnection});
-    const {queryData: ProvidersQueryData} = useConnectionProviders();
 
     const connectionsState = {
         selectedConnectionId: connectionsUserState.selectedConnectionId,
         providerInstanceDetailsQueryData,
-        providerHistoryAndParametersQueryData,
-        ProvidersQueryData
+        providerHistoryAndParametersQueryData
     };
 
     return <ConnectionsContext.Provider value={connectionsState}>
