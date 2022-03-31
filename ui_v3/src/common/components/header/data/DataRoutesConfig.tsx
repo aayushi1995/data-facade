@@ -15,21 +15,21 @@ export const DATA_SUB_TABS: TabsType = [
         id: 'Connections',
         label: 'Connections',
         href: DATA_CONNECTIONS_ROUTE,
-        title: "DATA",
+        title: "Extenal Connections",
         subTitle: "Create, Manage, Data connections and data from here",
     },
     {
         id: 'Raw',
         label: 'Raw',
         href: DATA_RAW_ROUTE,
-        title: "DATASET DETAILS",
+        title: "Ingested Tables",
         subTitle: "Create, Manage, Dataset from here"
     },
     {
         id: 'Derived',
         label: 'Derived',
         href: DATA_DERIVED_ROUTE,
-        title: BLANK_STRING,
+        title: "Derived Tables",
         subTitle: BLANK_STRING
     }
 ];

@@ -4,7 +4,7 @@ import { DATA_SUB_TABS} from "./DataRoutesConfig";
 export const BLANK_STRING = '';
 export const APPLICATION_ROUTE = '/application';
 export const INSIGHTS_ROUTE = '/insights';
-export const DATA_ROUTE = '/data/connections';
+export const DATA_ROUTE = '/data/raw';
 
 export const tabs: TabsType = [
     {

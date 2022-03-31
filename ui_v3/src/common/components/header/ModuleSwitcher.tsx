@@ -84,12 +84,15 @@ export function TabsContainer(props: TabsContainerType) {
                 }}
             >
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2}}>
-                    <Box sx={{ display: "flex" }}>
-                        <Box sx={{display: "flex"}}>
-                            <RouterLink to="/application/jobs">
-                                <Button variant="contained">Jobs And Logs </Button>
-                            </RouterLink>
-                        </Box>
+                    <Box sx={{display: "flex"}}>
+                        <RouterLink to="/application/jobs">
+                            <Button variant="contained">Jobs And Logs </Button>
+                        </RouterLink>
+                    </Box>
+                    <Box sx={{display: "flex"}}>
+                        <RouterLink to="/users">
+                            <Button variant="contained">Users </Button>
+                        </RouterLink>
                     </Box>
                 </Box>
             </Popover>
