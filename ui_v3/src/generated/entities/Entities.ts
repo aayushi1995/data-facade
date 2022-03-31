@@ -19,6 +19,7 @@ export interface ActionParameterDefinition extends BaseEntity{
 	Type?: string
 	Tag?: string
 	DefaultParameterValue?: string
+	OptionSetValues?: string
 }
 
 

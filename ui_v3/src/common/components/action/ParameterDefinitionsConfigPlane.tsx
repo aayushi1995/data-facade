@@ -94,6 +94,45 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     }
                 }
             } as ColumnParameterInput
+        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
+            const allOptions = parameterDefinition.OptionSetValues?.split(',')
+            return {
+                parameterType: "OPTION_SET_SINGLE",
+                inputProps: {
+                    availableOptions: allOptions?.map(option => ({'name': option})) || [],
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    selectedOptions: {name: existingParameterValue || ""},
+                    onChange: (newOptions?: {name: string}) => {
+                        const newValue = newOptions?.name
+                        onParameterValueChange({
+                            ActionParameterDefinitionId: parameterDefinition.Id,
+                            ParameterValue: newValue
+                        })
+                    }
+                }
+            }
+
+        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE) {
+            const allOptions = parameterDefinition.OptionSetValues?.split(',')
+            const selectedOptions = existingParameterValue?.split(',')?.map(option => ({name: option}))
+            return {
+                parameterType: 'OPTION_SET_MULTIPLE',
+                inputProps: {
+                    availableOptions: allOptions?.map(option => ({'name': option})) || [],
+                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    selectedOptions: selectedOptions,
+                    onChange: (newOption?: {name: string}[]) => {
+                        const optionList = newOption?.map(option => option.name)
+                        const newValue = optionList?.join(',')
+                        const newParameterInstance = {
+                            ParameterValue: newValue,
+                            ActionParameterDefinitionId: parameterDefinition.Id
+                        }
+                        onParameterValueChange(newParameterInstance)
+                    }
+                }
+            }
+
         } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES) {
             return {
                 parameterType: "STRING",

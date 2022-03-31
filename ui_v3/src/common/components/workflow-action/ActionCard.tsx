@@ -72,6 +72,9 @@ const ActionCard = (props: ActionCardProps) => {
     }
 
     const handleActionClick = () => {
+        if(props.executionStaus !== undefined) {
+            return;
+        }
         props.handleActionClick?.(props.actionId, props.index, props.stageId || "stageID")
     }
 

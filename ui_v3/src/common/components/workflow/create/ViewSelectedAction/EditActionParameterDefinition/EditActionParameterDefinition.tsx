@@ -89,6 +89,51 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
                     })
                 }
             } as UpstreamActionParameterInput
+        } else if(parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
+            const parameterConfig = getCurrentParameterConfig()
+            return {
+                parameterType: "OPTION_SET_SINGLE",
+                inputProps: {
+                    parameterName: props.parameter.ParameterName || "parameter name NA",
+                    availableOptions: props.parameter.OptionSetValues?.split(',')?.map(option => ({name: option})) || [],
+                    selectedOptions: {name: parameterConfig?.ParameterValue || ""},
+                    onChange: (newOption?: {name: string}) => {
+                        setWorkflowState({
+                            type: "ASSIGN_DEFAULT_VALUE",
+                            payload: {
+                                stageId: props.stageId,
+                                actionDefinitionId: props.parameter.ActionDefinitionId!,
+                                actionIndex: props.actionIndex,
+                                actionParameterDefinitionId: props.parameter.Id!,
+                                parameterValue: newOption?.name
+                            }
+                        })
+                    }
+                }
+            }
+        } else if(parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE) {
+            const parameterConfig = getCurrentParameterConfig()
+            return {
+                parameterType: "OPTION_SET_MULTIPLE",
+                inputProps: {
+                    parameterName: props.parameter.ParameterName || "parameter Name NA",
+                    availableOptions: props.parameter.OptionSetValues?.split(',')?.map(option => ({name: option})) || [],
+                    selectedOptions: parameterConfig?.ParameterValue?.split(',')?.map(selected => ({name: selected})),
+                    onChange: (newOptions?: {name: string}[]) => {
+                        const newValue = newOptions?.map(option => option.name)?.join(',')
+                        setWorkflowState({
+                            type: 'ASSIGN_DEFAULT_VALUE',
+                            payload: {
+                                stageId: props.stageId,
+                                actionDefinitionId: props.parameter.ActionDefinitionId!,
+                                actionIndex: props.actionIndex,
+                                actionParameterDefinitionId: props.parameter.Id!,
+                                parameterValue: newValue
+                            }
+                        })
+                    }
+                }
+            }
         } else if(parameter.Datatype === ActionParameterDefinitionDatatype.STRING || parameter.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES) {
             const parameterConfig = getCurrentParameterConfig()
             return {

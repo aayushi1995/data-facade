@@ -84,12 +84,43 @@ export interface ColumnListParameterInput {
     }
 }
 
+export interface OptionSetStringParameterInput {
+    parameterType: "OPTION_SET_SINGLE",
+    inputProps: {
+        parameterName: string,
+        availableOptions: {name: string}[],
+        selectedOptions?: {name: string},
+        onChange: (newOptions?: {name: string}) => void
+    }
+}
+
+export interface OptionSetMultipleParameterInput {
+    parameterType: "OPTION_SET_MULTIPLE",
+    inputProps: {
+        parameterName: string,
+        availableOptions: {name: string}[],
+        selectedOptions?: {name: string}[],
+        onChange: (newOptions?: {name: string}[]) => void
+    }
+}
+
 export interface NAInput {
     parameterType: undefined
 }
 
 
-export type ParameterInputProps = UpstreamActionParameterInput | StringParameterInput | IntParameterInput | FloatParameterInput | BooleanParameterInput | NAInput | TableParameterInput | ColumnParameterInput | ColumnListParameterInput
+export type ParameterInputProps = UpstreamActionParameterInput 
+                                | StringParameterInput 
+                                | IntParameterInput 
+                                | FloatParameterInput 
+                                | BooleanParameterInput 
+                                | NAInput 
+                                | TableParameterInput 
+                                | ColumnParameterInput 
+                                | ColumnListParameterInput 
+                                | OptionSetStringParameterInput
+                                | OptionSetMultipleParameterInput
+
 
 const getParameterInputField = (props: ParameterInputProps) => {
     switch(props?.parameterType) {
@@ -101,8 +132,66 @@ const getParameterInputField = (props: ParameterInputProps) => {
         case "TABLE": return <TableInput {...props}/>
         case "COLUMN": return <ColumnInput {...props}/>
         case "COLUMN_LIST": return <ColumnListInput {...props}/>
+        case "OPTION_SET_SINGLE": return <OptionSetSingleInput {...props}/>
+        case "OPTION_SET_MULTIPLE": return <OptionSetMultipleInput {...props}/>
         default: return <NoInput/>
     }
+}
+
+const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
+    const {parameterName, availableOptions, selectedOptions, onChange} = props.inputProps
+
+    return (
+        <Autocomplete 
+            options={availableOptions}
+            multiple
+            fullWidth
+            getOptionLabel={(option) => option.name}
+            value={availableOptions.filter(option => selectedOptions?.find(selected => selected.name === option.name) !== undefined)}
+            clearOnBlur
+            handleHomeEndKeys
+            limitTags={2}
+            filterSelectedOptions
+            disableCloseOnSelect
+            renderInput={(params) => (
+                <TextField 
+                    {...params}
+                    label={parameterName || "Parameter Name NA"}
+                />
+            )}
+            onChange={(event, value, reason, details) => {
+                    console.log(value)
+                    onChange(value ?? undefined)
+                } 
+            }
+        />
+    )
+}
+
+const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
+    const {parameterName, availableOptions, selectedOptions, onChange} = props.inputProps
+
+    return (
+        <Autocomplete 
+            options={availableOptions}
+            fullWidth
+            getOptionLabel={(option) => option.name}
+            value={availableOptions.find(option => option.name === selectedOptions?.name)}
+            clearOnBlur
+            handleHomeEndKeys
+            filterSelectedOptions
+            renderInput={(params) => (
+                <TextField 
+                    {...params}
+                    label={parameterName || "Parameter Name NA"}
+                />
+            )}
+            onChange={(event, value, reason, details) => {
+                    onChange(value ?? undefined)
+                } 
+            }
+        />
+    )
 }
 
 const ColumnListInput = (props: ColumnListParameterInput) => {

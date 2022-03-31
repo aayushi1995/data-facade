@@ -18,7 +18,9 @@ const ActionParameterDefinitionTag = {
     NEW_PREDICTION_MODEL_NAME: "new_prediction_model_name",
     SAGEMAKER_KNN_PREDICTOR_TYPE: "sagemaker_knn_predictor_type",
     SAGEMAKER_XGBOOST_PREDICTOR_TYPE: "sagemaker_xgboost_predictor_type",
-    SAGEMAKER_MODEL_URI: "sagemaker_model_uri"
+    SAGEMAKER_MODEL_URI: "sagemaker_model_uri",
+    OPTION_SET_SINGLE: "option_set_single",
+    OPTION_SET_MULTIPLE: "option_set_multiple"
 }
 
 export default ActionParameterDefinitionTag;
