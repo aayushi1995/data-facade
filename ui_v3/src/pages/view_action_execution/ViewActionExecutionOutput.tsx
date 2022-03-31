@@ -41,12 +41,18 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
 }
 
 export interface TableOutputFormat {
-    preview: {
-        schema: any,
-        data: any[],    
-    },
+    preview: string,
     column_stats?: any[]
     
+}
+
+export interface TablePreview {
+    schema: {
+        fields: {
+            name: string
+        }[]
+    },
+    data: any[]
 }
 
 export interface SingleValueOutputFormat {
@@ -54,14 +60,20 @@ export interface SingleValueOutputFormat {
 }
 
 export interface ViewActionExecutionTableOutputProps {
-    TableOutput?: TableOutputFormat
+    TableOutput: TableOutputFormat
 }
 
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
     const { TableOutput } = props
+    const preview: TablePreview = JSON.parse(TableOutput.preview)
+    const dataGridColumns = (preview?.schema?.fields || []).map(f => {return {...f, field: f.name, headerName: f.name}}).filter(col => col.field!=='datafacadeindex')
+    const dataGridRows = (preview?.data || []).map((row, index) => ({...row, id: row?.Id||index}))
     if(!!TableOutput) {
         return (
-            <DataGrid autoHeight columns={TableOutput.preview.schema} rows={TableOutput.preview.data.map((row, index) => ({...row, id: row?.Id||index}))}
+            <DataGrid 
+                autoHeight 
+                columns={dataGridColumns} 
+                rows={dataGridRows}
                 components={{
                     Toolbar: CustomToolbar([])
                 }}
