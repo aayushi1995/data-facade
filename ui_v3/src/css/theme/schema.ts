@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 
 
 declare module '@mui/styles' {
@@ -8,7 +7,11 @@ declare module '@mui/styles' {
       actionCardHeader: React.CSSProperties;
       actionCardSubHeader: React.CSSProperties
       allApplicationViewSectionHeader: React.CSSProperties,
-      wizardText: React.CSSProperties
+      wizardText: React.CSSProperties,
+      wizardHeader: React.CSSProperties,
+      wrapInHeader: React.CSSProperties,
+      actionDefinitionSummaryStatValue: React.CSSProperties,
+      actionDefinitionSummaryStatLabel: React.CSSProperties
     }
   
     // allow configuration using `createTheme`
@@ -18,7 +21,11 @@ declare module '@mui/styles' {
       actionCardHeader?: React.CSSProperties;
       actionCardSubHeader?: React.CSSProperties;
       allApplicationViewSectionHeader?: React.CSSProperties,
-      wizardText?: React.CSSProperties
+      wizardText?: React.CSSProperties,
+      wizardHeader?: React.CSSProperties,
+      wrapInHeader?: React.CSSProperties,
+      actionDefinitionSummaryStatValue?: React.CSSProperties,
+      actionDefinitionSummaryStatLabel?: React.CSSProperties
     }
 }
 declare module '@mui/material/Typography' {
@@ -29,6 +36,10 @@ declare module '@mui/material/Typography' {
         actionCardSubHeader: true;
         allApplicationViewSectionHeader: true;
         wizardText: true;
+        wizardHeader: true,
+        wrapInHeader: true,
+      actionDefinitionSummaryStatValue: true,
+      actionDefinitionSummaryStatLabel: true
     }
 }
 

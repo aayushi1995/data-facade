@@ -1,7 +1,5 @@
-import { Box, Button, Grid } from "@mui/material";
-import React from "react";
-import { useContext } from "react";
-import { EditActionParameterDefinitionProps } from "../../../../common/components/workflow/create/ViewSelectedAction/EditActionParameterDefinition/EditActionParameterDefinition";
+import { Grid } from "@mui/material";
+import React, { useContext } from "react";
 import { ActionParameterDefinition, Tag } from "../../../../generated/entities/Entities";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
 import EditActionParameter, { EditActionParameterProps } from "./EditActionParameter";
@@ -25,7 +23,7 @@ const SetActionParameters = () => {
     const viewActionParameterProps: ViewActionParametersProps = {
         template: activeTemplateWithParams?.template,
         paramsWithTag: activeTemplateWithParams?.parameterWithTags,
-        onSelectParameterForEdit: (selectedParam: {parameter: ActionParameterDefinition, tags: Tag[]}) => setActiveParameter(selectedParam),
+        onSelectParameterForEdit: (selectedParam: {parameter: ActionParameterDefinition, tags: Tag[]}) => {console.log(selectedParam); setActiveParameter(selectedParam)},
         onDeleteParameters: (deletedParams: ActionParameterDefinition[]) => setBuildActionContext({
             type: "RemoveActionParameterDefinitions",
             payload: {

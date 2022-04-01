@@ -22,7 +22,7 @@ const AllActions = (props: AllActionsProps) => {
                             actionName={actionDefinition.UniqueName||"NAME NA"}
                             actionDescription={actionDefinition.Description||"DESCRIPTION NA"}
                             selectedActionId={props.selectedActionId}
-                            onRadioToggle={props.onSelectAction}
+                            onSelectAction={props.onSelectAction}
                         />
                     </Grid>)}
             </Grid>

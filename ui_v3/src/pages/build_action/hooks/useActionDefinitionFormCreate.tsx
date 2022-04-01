@@ -1,9 +1,8 @@
-import { ContextType } from "react"
-import { useMutation, UseMutationOptions, useQuery, useQueryClient } from "react-query"
+import { useMutation, UseMutationOptions } from "react-query"
 import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from "../../../generated/entities/Entities"
 import labels from "../../../labels/labels"
 import { BuildActionContextState, ContextModes } from "../context/BuildActionContext"
-import dataManagerInstance, { useRetreiveData } from './../../../data_manager/data_manager'
+import dataManagerInstance from './../../../data_manager/data_manager'
 
 
 export type ActionDefinitionFormPayload = {
@@ -30,11 +29,12 @@ export interface UseActionDefinitionFormUpdateProps {
     
 }
 
-const useActionDefinitionFormCreate = (props: UseActionDefinitionFormCreateProps) => {
+const useActionDefinitionFormSave = (props: UseActionDefinitionFormCreateProps) => {
     const { options, mode } = props
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function, patchData: Function}
 
     const createMutation = useMutation((state: BuildActionContextState) => {
+        console.log(formCreateRequestBodyFromContextState(state))
             return fetchedDataManagerInstance.saveData(labels.entities.ActionDefinition, 
                 formCreateRequestBodyFromContextState(state)
             )
@@ -64,7 +64,7 @@ const useActionDefinitionFormCreate = (props: UseActionDefinitionFormCreateProps
                 return updateMutation
         }   
     }
-    return {mutation: getMutation(mode)}
+    return  getMutation(mode)
 }
 
 
@@ -117,4 +117,4 @@ const formUpdateRequestBodyFromContextState = (state: BuildActionContextState) =
     }
 }
 
-export default useActionDefinitionFormCreate;
+export default useActionDefinitionFormSave;

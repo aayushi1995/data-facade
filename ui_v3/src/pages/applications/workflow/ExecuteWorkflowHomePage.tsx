@@ -1,15 +1,15 @@
+import { Box, Button } from "@mui/material"
 import React from "react"
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
-import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
-import { useGetWorkflowChildInstances, useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
-import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
-import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
+import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import NoData from "../../../common/components/NoData"
-import { Box, Button } from "@mui/material"
-import WorkflowHero  from "../../../common/components/workflow-editor/WorkflowHero"
-import { ActionParameterInstance } from "../../../generated/entities/Entities"
+import WorkflowHero from "../../../common/components/workflow-editor/WorkflowHero"
 import useCreateWorkflowActionInstanceMutation from "../../../common/components/workflow/execute/hooks/useCreateWorkflowActionInstanceMutation"
+import { useGetWorkflowChildInstances, useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
+import { ActionParameterInstance } from "../../../generated/entities/Entities"
+import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
+import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
     workflowId: string
@@ -82,7 +82,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             </Box>
         )
     } else if(loading || instancesLoading){
-        return <>Loading...</>
+        return <LoadingIndicator/>
     } else if(instancesError || error){
         return <>Fetching Instances Error...</>
     } else {

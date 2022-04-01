@@ -82,6 +82,7 @@ export interface ActionDefinitionCardViewResponse {
 	UsageStatus?: string
 	DefinitionCreatedOn?: number
 	NumberOfUsers?: number
+	DefinitionPublishStatus?: string
 }
 
 
@@ -145,6 +146,11 @@ export interface UpdateActionDefinitionWithTemplate {
 export interface ActionDefinitionWithTags {
     model?: Entity.ActionDefinition
 	tags?: Entity.Tag[]
+}
+
+
+export interface CopyActionDefinitionPayload {
+    ExistingActionId?: string
 }
 
 

@@ -1,12 +1,9 @@
-import { Box, Button } from "@mui/material"
+import { Box } from "@mui/material"
 import React from "react"
 import { BuildApplicationContext } from "./context/BuildApplicationContext"
 import ConfigureAppDescriptionTags from "./wizard_components/ConfigureAppDescriptionTags"
 import ConfigureAppNameGroup from "./wizard_components/ConfigureAppNameGroup"
-import ConnectWithData from "./wizard_components/ConnectWithData"
 import CreateAppActionFlow from "./wizard_components/CreateAppActionFlow"
-import Welcome1 from "./wizard_components/Welcome1"
-import Welcome2 from "./wizard_components/Welcome2"
 
 
 export interface BuildApplicationWizardStepProps {
@@ -20,12 +17,6 @@ type BuildActionWizardStepConfig = {
 }
 
 const steps: BuildActionWizardStepConfig[] = [
-    {
-        component: (props) => <Welcome1 {...props}/>
-    },
-    {
-        component: (props) => <Welcome2 {...props}/>
-    },
     {
         component: (props) => <CreateAppActionFlow {...props}/>
     },
@@ -78,16 +69,6 @@ const ApplicationCreationWizard = (props: ApplicationCreationWizardProps) => {
                 <Box sx={{display: "flex", flexGrow: 8}}>
                     {steps[activeStep].component(stepProps)}
                 </Box>
-                {/* <Box sx={{display: "flex", flexGrow: 1}}>
-                    <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 3, width: "100%", backgroundColor: "#e1e1e1"}}>
-                        <Box>
-                            <Button variant="contained" onClick={previousStep}>Previous</Button>
-                        </Box>
-                        <Box>
-                            <Button variant="contained" onClick={nextStep}>Next</Button>
-                        </Box>
-                    </Box>
-                </Box> */}
             </Box>
         )
     }

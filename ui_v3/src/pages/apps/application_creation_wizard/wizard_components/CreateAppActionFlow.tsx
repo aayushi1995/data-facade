@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControlLabel, Grid, Radio, Typography } from "@mui/material";
+import { Box, Button, Grid, Radio, Typography } from "@mui/material";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { BuildApplicationWizardStepProps } from "../ApplicationCreationWizard";
@@ -49,6 +49,21 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
     return (
         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", px:4}}>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", flexGrow: 1}}>
+                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", flexGrow: 1}}>
+                    <Box>
+                        <Typography variant="wizardText">
+                            Welcome to Data Facade APP-Creation widget.
+                            Experience a new way in how you create apps 
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Typography variant="wizardText">
+                            Data Facade brings you the power to use
+                            either a No-code or a Hybrid-code platform to create your actions
+                            The first step in building your AI App
+                        </Typography>
+                    </Box>
+                </Box>
                 <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Typography sx={{
                         fontFamily: "'SF Compact Display'",

@@ -1,14 +1,13 @@
-import { Box, Button, IconButton } from "@mui/material";
-import React from "react";
-import SetActionName from "./wizard-steps-components/SetActionName";
-import SelectActionTags from "./wizard-steps-components/SetActionTags";
-import SetActionTypeAndLanguage from "./wizard-steps-components/SetActionTypeAndLanguage";
-import SetActionParametersWizardWrapper from "./wizard-steps-components/SetActionParametersWizardWrapper"
-import WelcomeComponent1 from "./wizard-steps-components/welcome-componenet/WelcomeComponent1";
-import WelcomeComponent3 from "./wizard-steps-components/welcome-componenet/WelcomeComponent3";
-import SetActionReturnType from "./wizard-steps-components/SetActionReturnType";
-import Congratulations from "./wizard-steps-components/Congratulations";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import CloseIcon from '@mui/icons-material/Close';
+import { Box, IconButton, Typography } from "@mui/material";
+import React from "react";
+import { useHistory } from "react-router-dom";
+import LoadingIndicator from "../../../common/components/LoadingIndicator";
+import { ActionDefinition } from "../../../generated/entities/Entities";
+import { BuildActionContext, UseActionHooks } from "../context/BuildActionContext";
+import WizardView1 from "./wizard-steps-components/WizardView1";
+import WizardView2 from "./wizard-steps-components/WizardView2";
 
 export interface BuildActionWizardStepProps {
     nextStep: () => void,
@@ -17,85 +16,96 @@ export interface BuildActionWizardStepProps {
 }
 
 type BuildActionWizardStepConfig = {
-    component: (props: BuildActionWizardStepProps) => JSX.Element
+    component: (props: BuildActionWizardStepProps) => JSX.Element,
+    label: string
 }
 
 const steps: BuildActionWizardStepConfig[] = [
     {
-        component: (props) => <WelcomeComponent1 {...props}/>
+        component: (props) => <WizardView1 {...props}/>,
+        label: "Create Action Name"
     },
     {
-        component: (props) => <WelcomeComponent3 {...props}/>
-    },
-    {
-        component: (props) => <SetActionName {...props}/>
-    },
-    {
-        component: (props) => <SetActionTypeAndLanguage {...props}/>
-    },
-    {
-        component: (props) => <SelectActionTags {...props}/>
-    },
-    {
-        component: (props) => <SetActionParametersWizardWrapper {...props}/>
-    },
-    {
-        component: (props) => <SetActionReturnType {...props}/>
-    },
-    {
-        component: (props) => <Congratulations {...props}/>
+        component: (props) => <WizardView2 {...props}/>,
+        label: "Create Action"
     }
 ]
 
-export interface BuildActionWizardProps {
-    handleClose: () => void
+export interface CreateActionWizardProps {
+    onSuccessfulCreation?: (actionDefinition: ActionDefinition) => void,
+    onCancelCreation?: () => void
 }
 
-const BuildActionWizard = (props: BuildActionWizardProps) => {
+const CreateActionWizard = (props: CreateActionWizardProps) => {
+    const history = useHistory()
     const [activeStep, setActiveStep] = React.useState(0)
-
-    const nextStep = () => {
-        setActiveStep(oldStep => {
-            return oldStep+1
-        })
-    }
-    const previousStep = () => {
-        setActiveStep(oldStep => {
-            if(oldStep===0){
-                return oldStep
-            }
-            return oldStep-1
-        })
-    }
+    const actionContext = React.useContext(BuildActionContext)
+    const useActionHooks = React.useContext(UseActionHooks)
 
     const closeDialog = () => {
-        setActiveStep(steps.length)
+        cancelFlow()
     }
     
+    const successFlow = () => {
+        const lastCreatedActionDefinition = actionContext?.lastSavedActionDefinition
+        if(!!lastCreatedActionDefinition && !!(lastCreatedActionDefinition?.Id)) {
+            props?.onSuccessfulCreation?.(lastCreatedActionDefinition)
+        } else {
+            console.log("Something went wrong. Action Definiton ID field is empty for most recent created")
+        }
+    }
+
+    const cancelFlow = () => {
+            props?.onCancelCreation?.()
+    }
+
     const stepProps: BuildActionWizardStepProps = {
-        nextStep: nextStep,
-        previousStep: previousStep,
+        nextStep: () => setActiveStep(oldStep => oldStep+1),
+        previousStep: () => setActiveStep(oldStep => Math.max(0, oldStep-1)),
         closeDialog: closeDialog
     }
 
     React.useEffect(() => {
         if(activeStep===steps.length) {
-            props.handleClose()
+            useActionHooks.useActionDefinitionFormSave?.mutate(actionContext)
         }
     }, [activeStep])
+
+    React.useEffect(() => {
+        const lastCreatedActionDefinitionId = actionContext?.lastSavedActionDefinition?.Id
+        if(actionContext.savingAction===false && !!lastCreatedActionDefinitionId){
+            successFlow()
+        }
+    }, [actionContext.savingAction])
     
     return(
-        <Box sx={{display: "flex", flexDirection: "column", minHeight: "inherit", gap: 2}}>
-            <Box sx={{ display: "flex", flexDirection: "row-reverse"}}>
-                <IconButton onClick={closeDialog}>
-                    <CloseIcon/>
-                </IconButton>
+        (activeStep < steps.length) ?
+            <Box sx={{display: "flex", flexDirection: "column", minHeight: "inherit", gap: 2}}>
+                <Box sx={{ display: "flex", flexDirection: "row"}}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <IconButton onClick={stepProps.previousStep}>
+                            <ArrowBackIosIcon/>
+                        </IconButton>
+                    </Box>  
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Typography variant="wizardHeader">
+                            {steps[activeStep].label}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }}/>
+                    <Box>
+                        <IconButton onClick={closeDialog}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
+                </Box>
+                <Box sx={{display: "flex", flexGrow: 8}}>
+                    {steps[activeStep].component(stepProps)}
+                </Box>
             </Box>
-            <Box sx={{display: "flex", flexGrow: 8}}>
-                { (activeStep < steps.length) ? steps[activeStep].component(stepProps) : <></> }
-            </Box>
-        </Box>
+            : 
+            <LoadingIndicator/>
     )
 }
 
-export default BuildActionWizard;
+export default CreateActionWizard;

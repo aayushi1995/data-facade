@@ -1,24 +1,26 @@
-import { type } from "os";
-import React from "react"
-import { v4 as uuidv4 } from 'uuid'
+import React from "react";
+import { UseMutationResult, useQueryClient } from "react-query";
+import { v4 as uuidv4 } from 'uuid';
 import { getAttributesFromInputType } from "../../../custom_enums/ActionParameterDefinitionInputMap";
 import { getLanguage } from "../../../custom_enums/SupportedRuntimeGroupToLanguage";
-import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat";
-import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
+import ActionDefinitionPublishStatus from "../../../enums/ActionDefinitionPublishStatus";
+import ActionDefinitionQueryLanguage from "../../../enums/ActionDefinitionQueryLanguage";
+import ActionDefinitionVisibility from "../../../enums/ActionDefinitionVisibility";
 import ActionParameterDefinitionInputType from "../../../enums/ActionParameterDefinitionInputType";
-import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import ActionParameterDefinitionType from "../../../enums/ActionParameterDefinitionType";
 import TemplateLanguage from "../../../enums/TemplateLanguage";
 import TemplateSupportedRuntimeGroup from "../../../enums/TemplateSupportedRuntimeGroup";
 import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import useActionDefinitionDetail from "../hooks/useActionDefinitionDetail";
+import useActionDefinitionFormSave, { ActionDefinitionFormPayload } from "../hooks/useActionDefinitionFormCreate";
 
 // Build Action Context State
-type ActionParameterDefinitionWithTags = {
+export type ActionContextActionParameterDefinitionWithTags = {
     parameter: ActionParameterDefinition,
-    tags: Tag[]
+    tags: Tag[],
+    existsInDB: boolean
 }
 
 export type ContextModes = "CREATE" | "UPDATE"
@@ -31,14 +33,14 @@ export type BuildActionContextState = {
     },
     actionTemplateWithParams: {
         template: ActionTemplate,
-        parameterWithTags: ActionParameterDefinitionWithTags[]
+        parameterWithTags: ActionContextActionParameterDefinitionWithTags[]
     }[],
     activeTemplateId?: string,
-    isLoadingAction: boolean,
-    sourcedFromActionDefiniton?: ActionDefinition,
-    SourceApplicationId?: string,
-    onSuccessfulBuild?: (actionDefinitionId?: ActionDefinition) => void,
-    lastCreatedActionDefinition?: ActionDefinition
+    lastSavedActionDefinition?: ActionDefinition,
+    savingAction: boolean,
+    loadingActionForEdit: boolean,
+    actionDefinitionToLoadId?: string,
+    SourceApplicationId?: string
 }
 
 
@@ -50,7 +52,9 @@ const formDefaultUpdateContext: () => BuildActionContextState = () => {
             tags: []
         },
         actionTemplateWithParams: [],
-        isLoadingAction: false
+        isLoadingAction: false,
+        savingAction: false,
+        loadingActionForEdit: false
     }
 }
 
@@ -63,7 +67,11 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
             actionDefinition: {
                 Id: actionDefinitionId,
                 ActionType: ActionDefinitionActionType.PROFILING,
-                PresentationFormat: ActionDefinitionPresentationFormat.TABLE_VALUE
+                PresentationFormat: ActionDefinitionPresentationFormat.TABLE_VALUE,
+                PinnedToDashboard: true,
+                Visibility: ActionDefinitionVisibility.CREATED_BY,
+                PublishStatus: ActionDefinitionPublishStatus.DRAFT,
+                DefaultActionTemplateId: actionTemplateId
             },
             tags: []
         },
@@ -73,13 +81,15 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
                     Id: actionTemplateId,
                     DefinitionId: actionDefinitionId,
                     Language: TemplateLanguage.PYTHON,
-                    SupportedRuntimeGroup: TemplateSupportedRuntimeGroup.PYTHON
+                    SupportedRuntimeGroup: TemplateSupportedRuntimeGroup.PYTHON,
+                    Text: "def execute(self, df): # FILL IN CODE"
                 },
                 parameterWithTags: []
             }
         ],
         activeTemplateId: actionTemplateId,
-        isLoadingAction: false
+        savingAction: false,
+        loadingActionForEdit: false
     }
     newState.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId = newState.actionTemplateWithParams[0].template.Id
     return newState
@@ -91,6 +101,14 @@ export const BuildActionContext = React.createContext<BuildActionContextState>(f
 type SetBuildActionContextState = (action: BuildActionAction) => void
 const defaultSetBuildActionContextState: SetBuildActionContextState = (action: BuildActionAction) => {}
 export const SetBuildActionContext = React.createContext<SetBuildActionContextState>(defaultSetBuildActionContextState)
+
+
+// Data Query Hooks Context
+type UseActionHooksState = {
+    useActionDefinitionFormSave?: UseMutationResult<ActionDefinitionFormPayload, unknown, BuildActionContextState, unknown>,
+    refreshActionDefinitionToLoad?: () => void
+}
+export const UseActionHooks = React.createContext<UseActionHooksState>({})
 
 type SetModeAction = {
     type: "SetMode",
@@ -212,13 +230,6 @@ type SetActionParameterDefintionTagsAction = {
     }
 }
 
-type SetSuccessCallbackFunction = {
-    type: "SetSuccessCallbackFunction",
-    payload: {
-        cb: (id?: ActionDefinition) => void
-    }
-}
-
 type SetSourceApplicationIdAction = {
     type: "SetSourceApplicationId",
     payload: {
@@ -235,14 +246,6 @@ type ResetAction = {
     type: "Reset"
 }
 
-type LoadingAction = {
-    type: "Loading"
-}
-
-type LoadingOverAction = {
-    type: "LoadingOver"
-}
-
 type LoadFromExistingAction = {
     type: "LoadFromExisting",
     payload: ActionDefinitionDetail
@@ -250,6 +253,45 @@ type LoadFromExistingAction = {
 
 type SaveActionToLastCreatedAction = {
     type: "SaveActionToLastCreated"
+}
+
+type TogglePinnedToDashboardAction = {
+    type: "TogglePinnedToDashboard"
+}
+
+type ToggleVisibilityAction = {
+    type: "ToggleVisibility"
+}
+
+type TogglePublishStatusAction = {
+    type: "TogglePublishStatus"
+}
+
+type SaveActionDefinitionMutatingAction = {
+    type: "SaveActionDefinitionMutating"
+}
+
+type SaveActionDefinitionSettledAction = {
+    type: "SaveActionDefinitionSettled"
+}
+
+type LoadActionForEditMutatingAction = {
+    type: "LoadActionForEditMutating"
+}
+
+type LoadActionForEditSettledAction = {
+    type: "LoadActionForEditSettled"
+}
+
+type SetActionDefinitionToLoadIdAction = {
+    type: "SetActionDefinitionToLoadId",
+    payload: {
+        actionDefinitionToLoadId?: string
+    }
+}
+
+type InferParametersAction = {
+    type: "InferParameters"
 }
 
 export type BuildActionAction = SetActionDefinitionNameAction |
@@ -269,13 +311,19 @@ ResetActionParameterDefinitions |
 SetActionParameterDefintionTagsAction |
 RefreshIdsAction |
 ResetAction |
-LoadingAction |
-LoadingOverAction |
 LoadFromExistingAction |
-SetSuccessCallbackFunction |
 SetModeAction |
 SetSourceApplicationIdAction |
-SaveActionToLastCreatedAction
+SaveActionToLastCreatedAction |
+TogglePinnedToDashboardAction |
+ToggleVisibilityAction |
+TogglePublishStatusAction |
+SaveActionDefinitionMutatingAction |
+SaveActionDefinitionSettledAction |
+LoadActionForEditMutatingAction |
+LoadActionForEditSettledAction |
+SetActionDefinitionToLoadIdAction |
+InferParametersAction
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -390,6 +438,20 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
+        case "InferParameters": {
+            const activeTemplate = state?.actionTemplateWithParams.find(at => at?.template?.Id===state?.activeTemplateId)
+            const inferredParameters = extractParameterNamesFromCode(activeTemplate?.template?.Text, activeTemplate?.template?.Language)
+            const existingParameters = activeTemplate?.parameterWithTags
+            const newParameters = inferredParameters.map(paramName => (existingParameters?.find(p => p?.parameter?.ParameterName===paramName) || getDefaultParameterDefinition(paramName, activeTemplate?.template?.Language, activeTemplate?.template?.Id, state?.actionDefinitionWithTags?.actionDefinition?.Id)))
+            return {
+                ...state,
+                actionTemplateWithParams: state.actionTemplateWithParams.map(actionTemplate => actionTemplate.template.Id!==state.activeTemplateId ? actionTemplate : {
+                    ...actionTemplate,
+                    parameterWithTags: newParameters
+                })
+            }
+        }
+
         case "SetParameterDetails": {
             return {
                 ...state,
@@ -458,14 +520,6 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
-        case "Loading": {
-            return {...state, isLoadingAction: true}
-        }
-
-        case "LoadingOver": {
-            return {...state, isLoadingAction: false}
-        }
-
         case "LoadFromExisting": {
             const activeTemplateId = state?.actionDefinitionWithTags?.actionDefinition?.DefaultActionTemplateId||state?.actionTemplateWithParams[0]?.template?.Id
             const newState = {
@@ -481,7 +535,8 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                     template: at.model!,
                     parameterWithTags: (at?.actionParameterDefinitions||[]).map(apd => ({
                         parameter: apd.model!,
-                        tags: apd.tags!
+                        tags: apd.tags!,
+                        existsInDB: true
                     }))
                 })),
                 isLoadingAction: false,
@@ -496,13 +551,6 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 return assignActiveTemplateId(newState)
             } else {
                 return assignActiveTemplateId(newState)
-            }
-        }
-
-        case "SetSuccessCallbackFunction": {
-            return {
-                ...state,
-                onSuccessfulBuild: action.payload.cb
             }
         }
 
@@ -529,7 +577,81 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
         case "SaveActionToLastCreated": {
             return {
                 ...state,
-                lastCreatedActionDefinition: state?.actionDefinitionWithTags?.actionDefinition
+                lastSavedActionDefinition: state?.actionDefinitionWithTags?.actionDefinition
+            }
+        }
+        
+        case "TogglePinnedToDashboard": {
+            return {
+                ...state,
+                actionDefinitionWithTags: {
+                    ...state.actionDefinitionWithTags,
+                    actionDefinition: {
+                        ...state.actionDefinitionWithTags.actionDefinition,
+                        PinnedToDashboard: !(state.actionDefinitionWithTags.actionDefinition.PinnedToDashboard)
+                    }
+                }
+            }
+        }
+
+        case "ToggleVisibility": {
+            return {
+                ...state,
+                actionDefinitionWithTags: {
+                    ...state.actionDefinitionWithTags,
+                    actionDefinition: {
+                        ...state.actionDefinitionWithTags.actionDefinition,
+                        Visibility: (state.actionDefinitionWithTags.actionDefinition.Visibility === ActionDefinitionVisibility.CREATED_BY ? ActionDefinitionVisibility.ORG : ActionDefinitionVisibility.CREATED_BY)
+                    }
+                }
+            }
+        }
+
+        case "TogglePublishStatus": {
+            return {
+                ...state,
+                actionDefinitionWithTags: {
+                    ...state.actionDefinitionWithTags,
+                    actionDefinition: {
+                        ...state.actionDefinitionWithTags.actionDefinition,
+                        PublishStatus: (state.actionDefinitionWithTags.actionDefinition.PublishStatus === ActionDefinitionPublishStatus.READY_TO_USE ? ActionDefinitionPublishStatus.DRAFT : ActionDefinitionPublishStatus.READY_TO_USE)
+                    }
+                }
+            }
+        }
+
+        case "SaveActionDefinitionMutating": {
+            return {
+                ...state,
+                savingAction: true
+            }
+        }
+
+        case "SaveActionDefinitionSettled": {
+            return {
+                ...state,
+                savingAction: false
+            }
+        }
+        
+        case "LoadActionForEditMutating": {
+            return {
+                ...state,
+                loadingActionForEdit: true
+            }
+        }
+        
+        case "LoadActionForEditSettled": {
+            return {
+                ...state,
+                loadingActionForEdit: false
+            }
+        }
+
+        case "SetActionDefinitionToLoadId": {
+            return {
+                ...state,
+                actionDefinitionToLoadId: action.payload.actionDefinitionToLoadId
             }
         }
 
@@ -540,14 +662,101 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
     }
 }
 
+const extractParameterNamesFromCode = (code?: string, language?: string) => {
+    console.log(code, language)
+    if(!!code && !!language) {
+        const parametersArray = []
+        if (language === ActionDefinitionQueryLanguage.PYTHON) {
+            for (let i = 0; i < code.length; i++) {
+                if (code.substring(i, i + 3) === "def") {
+                    let j = i + 4
+                    if (code.substring(j, j + 7) === "execute") {
+                        while (j < code.length && code.charAt(j) !== ',') {
+                            j++
+                        }
+                        let parameter = ""
+                        while (j < code.length && code.charAt(j) !== ')') {
+                            if (code.charAt(j) !== ',' && code.charAt(j) !== ' ') {
+                                parameter = parameter + code.charAt(j)
+                            }
+                            if (code.charAt(j) === ',' || code.charAt(j + 1) === ')') {
+                                if (parameter.length !== 0) {
+                                    parametersArray.push(parameter)
+                                    parameter = ""
+                                }
+                            }
+                            j++
+                        }
+                    }
+                }
+            }
+        } else if (language === ActionDefinitionQueryLanguage.SQL) {
+            for (let i = 0; i < code.length; i++) {
+                if (code.charAt(i) === '}') {
+                    let j = i - 1
+                    let parameter = ""
+                    while (j >= 0 && code.charAt(j) != '{' && code.charAt(j) != '}') {
+                        parameter = code.charAt(j) + parameter
+                        j--
+                    }
+                    parametersArray.push(parameter)
+                }
+            }
+        }
+        return parametersArray;
+    }
+    return []
+}
+
+const getDefaultParameterDefinition = (parameterName: string, language?: string, templateId?: string, definitionId?: string): ActionContextActionParameterDefinitionWithTags => {
+    if (parameterName.search('table') >= 0) {
+        return {
+            parameter: {
+                Id: uuidv4(),
+                ParameterName: parameterName,
+                TemplateId: templateId,
+                ActionDefinitionId: definitionId,
+                ...getAttributesFromInputType(ActionParameterDefinitionInputType.TABLE_NAME, language)
+            },
+            tags: [],
+            existsInDB: false
+        }
+    } else if (parameterName.search('column') >= 0) {
+        return {
+            parameter: {
+                Id: uuidv4(),
+                ParameterName: parameterName,
+                TemplateId: templateId,
+                ActionDefinitionId: definitionId,
+                ...getAttributesFromInputType(ActionParameterDefinitionInputType.COLUMN_NAME, language)
+            },
+            tags: [],
+            existsInDB: false
+        }
+    } else {
+        return {
+            parameter: {
+                Id: uuidv4(),
+                ParameterName: parameterName,
+                TemplateId: templateId,
+                ActionDefinitionId: definitionId,
+                ...getAttributesFromInputType(ActionParameterDefinitionInputType.STRING, language)
+            },
+            tags: [],
+            existsInDB: false
+        }
+    }
+}
+
 const refreshContextIds = (state: BuildActionContextState) => {
     const oldToNewIdMap: Record<string, string> = {}
     setIdMap(state.actionDefinitionWithTags.actionDefinition.Id, oldToNewIdMap)
+    setIdMap(state.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId, oldToNewIdMap)
     state.actionTemplateWithParams.forEach(at => {
         setIdMap(at.template.Id, oldToNewIdMap)
         at.parameterWithTags.forEach(apwt => setIdMap(apwt.parameter.Id, oldToNewIdMap))
     })
-  
+
     const newState: BuildActionContextState = {
         ...state,
         actionDefinitionWithTags: {
@@ -577,7 +786,7 @@ const refreshContextIds = (state: BuildActionContextState) => {
                 }))
             }
         }),
-        isLoadingAction: false
+        activeTemplateId: getIdMap(state.activeTemplateId, oldToNewIdMap)
     }
 
     return newState
@@ -614,21 +823,90 @@ const defaultParameter: (definitionId: string, templateId: string) => ActionPara
     ...getAttributesFromInputType()
 })
 
-const getDefaultParameterWithTags: (definitionId: string, templateId: string) => ActionParameterDefinitionWithTags = (definitionId: string, templateId: string) => ({
+const getDefaultParameterWithTags: (definitionId: string, templateId: string) => ActionContextActionParameterDefinitionWithTags = (definitionId: string, templateId: string) => ({
     parameter: defaultParameter(definitionId, templateId),
-    tags: []
+    tags: [],
+    existsInDB: false
 })
 
 
 export const BuildActionContextProvider = ({children}: {children: React.ReactElement}) => {
+    const queryClient = useQueryClient()
     const [contextState, dispatch] = React.useReducer(reducer, formDefaultCreateContext())
     const setContextState: SetBuildActionContextState = ( args: BuildActionAction) => dispatch(args)
 
+    // Data Query Hooks
+    // Save Action(Create/ Update)
+    const saveMutation = useActionDefinitionFormSave({
+        options: {
+            onMutate: () => {
+                setContextState({type: "SaveActionDefinitionMutating"})
+            },
+            onSuccess: (data, variables, context) => {
+                setContextState({type: "SaveActionToLastCreated"})
+                if(contextState.mode==="UPDATE" && !!contextState.actionDefinitionToLoadId){ loadActionForEditQuery.refetch() }
+            },
+            onSettled: () => {
+                setContextState({type: "SaveActionDefinitionSettled"})
+            }
+        },
+        mode: contextState.mode
+    })
+
+
+    const loadActionForEditQuery = useActionDefinitionDetail({
+        options: {
+            onSuccess: (data) => {
+                setContextState({type: "LoadFromExisting", payload: data[0]})
+            },
+            onSettled: () => {
+                setContextState({type: "LoadActionForEditSettled"})
+            },
+            enabled: false
+        },
+        actionDefinitionId: contextState.actionDefinitionToLoadId
+    })
+
+    // Hook to refetch Action Data on selection change
+    React.useEffect(() => {
+        if(!!contextState.actionDefinitionToLoadId){
+            loadActionForEditQuery.refetch()
+        }
+    }, [contextState.actionDefinitionToLoadId]) 
+
+    React.useEffect(() => {
+        if(loadActionForEditQuery.isLoading===true){
+            setContextState({type: "LoadActionForEditMutating"})
+        }
+    }, [loadActionForEditQuery.isLoading])
+    
+    React.useEffect(() => {
+        if(!!contextState?.actionDefinitionWithTags?.actionDefinition?.Id && contextState?.mode==="UPDATE"){
+            setContextState({type: "SaveActionToLastCreated"})
+        }
+    }, [contextState?.actionDefinitionWithTags?.actionDefinition?.Id]) 
+
+    // Hook to infer params on code change
+    const activeTemplate = contextState?.actionTemplateWithParams.find(at => at.template.Id===contextState?.activeTemplateId)
+    React.useEffect(() => {
+        if(activeTemplate?.template?.Text!==undefined){
+            setContextState({ type: "InferParameters" })
+        }
+    }, [activeTemplate?.template?.Text])
+
+
+    const actionHooks: UseActionHooksState = {
+        useActionDefinitionFormSave: saveMutation,
+        refreshActionDefinitionToLoad: () => { loadActionForEditQuery.refetch() }
+    }
+
     return (
-        <BuildActionContext.Provider value={contextState}>
-            <SetBuildActionContext.Provider value={setContextState}>
-                {children}
-            </SetBuildActionContext.Provider>
-        </BuildActionContext.Provider>
+        <UseActionHooks.Provider value={actionHooks}>
+            <BuildActionContext.Provider value={contextState}>
+                <SetBuildActionContext.Provider value={setContextState}>
+                    {children}
+                </SetBuildActionContext.Provider>
+            </BuildActionContext.Provider>
+        </UseActionHooks.Provider>
     )
 }

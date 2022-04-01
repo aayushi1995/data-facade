@@ -1,8 +1,8 @@
 
-import React from 'react'
-import { Box, Card, Chip, IconButton, Icon, Typography, useTheme} from '@mui/material';
-import DataCleansingIcon from "./../../../../images/Group 1545.svg"
-import { Radio } from '@mui/material';
+import { Box, Card, Icon, IconButton, Typography, useTheme } from '@mui/material';
+import React from 'react';
+import Eye from "./../../../../images/eye.svg";
+import DataCleansingIcon from "./../../../../images/Group 1545.svg";
 
 
 export interface ActionCardProps {
@@ -10,12 +10,12 @@ export interface ActionCardProps {
     actionName: string,
     actionDescription: string,
     selectedActionId?: string,
-    onRadioToggle: (actionDefinitionId: string|undefined) => void
+    onSelectAction: (actionDefinitionId: string|undefined) => void
 }
 
 
 const ActionCard = (props: ActionCardProps) => {
-    const {actionId, actionName, actionDescription, selectedActionId, onRadioToggle} = props
+    const {actionId, actionName, actionDescription, selectedActionId, onSelectAction} = props
     const theme = useTheme();
 
     return(
@@ -49,7 +49,10 @@ const ActionCard = (props: ActionCardProps) => {
                     </Box>
                 </Box>
                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%"}}>
-                    <Radio checked={actionId===selectedActionId} onChange={(event) => onRadioToggle(event.target.checked ? actionId : undefined)}/>
+                    {/* <Radio checked={actionId===selectedActionId} onChange={(event) => onSelectAction(event.target.checked ? actionId : undefined)}/> */}
+                    <IconButton onClick={(event) => onSelectAction(actionId)}>
+                        <img src={Eye} style={{ transform: "scale(1.5)"}}/>
+                    </IconButton>
                 </Box>
             </Box>
         </Card>

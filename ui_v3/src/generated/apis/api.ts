@@ -29,6 +29,12 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "GET", endpoint: "/applicationCardView", inputPayload: Entity.Application): Promise<CustomInterface.ApplicationCardViewResponse[]>; 
 	
 	/**
+	Creates and saves a copy of the action definition whose ID you send in the payload
+	*/
+	
+	static async fetchData(httpsVerb: "POST", endpoint: "/copyAndSaveActionDefinition", inputPayload: CustomInterface.CopyActionDefinitionPayload): Promise<Entity.ActionDefinition[]>; 
+	
+	/**
 	Returns data needed to render an Application Card
 	*/
 	

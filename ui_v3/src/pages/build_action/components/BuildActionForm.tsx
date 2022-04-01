@@ -1,71 +1,63 @@
-import React from "react";
-import { Box, Card, CSSObject, Divider, Drawer, IconButton, InputAdornment, List, Tab, Tabs, TextField, Theme } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import { Box, Card, Dialog, DialogActions, DialogContent, IconButton, InputAdornment, Tab, Tabs, TextField } from "@mui/material";
+import React from "react";
 import { TabPanel } from "../../../common/components/workflow/create/SelectAction/SelectAction";
-import AllActions from "./form-components/AllActions";
-import useActionDefinitionDetail from "../hooks/useActionDefinitionDetail";
-import CollapsibleDrawer from "./form-components/CollapsibleDrawer"
-import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTone';
+import { SetBuildActionContext } from "../context/BuildActionContext";
+import DoubeLeftIcon from './../../../images/Group 691.svg';
 import ActionDetailForm from "./form-components/ActionDetailForm";
-import { BuildActionContext, SetBuildActionContext } from "../context/BuildActionContext";
-import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
-import DoubeLeftIcon from './../../../images/Group 691.svg'
-import { useHistory } from "react-router-dom";
+import AllActions from "./form-components/AllActions";
+import CollapsibleDrawer from "./form-components/CollapsibleDrawer";
+import ShowActionInfo from "./form-components/ShowActionInfo";
 
-export interface BuildActionFormProps {
-    preSelectedActionDefiniitonId?: string
+export interface EditActionFormProps {
+    actionDefinitionId?: string
 }
 
 
-const BuildActionForm = (props: BuildActionFormProps) => {
-    const history = useHistory()
-    const actionContext = React.useContext(BuildActionContext)
-    const setBuildActionContext = React.useContext(SetBuildActionContext)
-    console.log(actionContext)
+const EditActionForm = (props: EditActionFormProps) => {
+    const setActionContext = React.useContext(SetBuildActionContext)
     const [sidePanelActiveTab, setSidePanelActiveTab] = React.useState(1)
     const [actionDefinitionNameSearchQuery, setActionDefinitionNameSearchQuery] = React.useState<string>("")
     const [selectedActionId, setSelectedActionId] = React.useState<string|undefined>()
     const [sideBarOpen, setSideBarOpen] = React.useState<boolean>(false)
-    const {data, error, isLoading, refetch} = useActionDefinitionDetail({
-        options: {
-            onSuccess: (data: unknown) => {
-                const actionDetail: ActionDefinitionDetail = (data as unknown[])[0] as ActionDefinitionDetail
-                setBuildActionContext({
-                    type: "LoadFromExisting",
-                    payload: actionDetail
-                })
-            },
-            onSettled: () => setBuildActionContext({type: "LoadingOver"}),
-        },
-        actionDefinitionId: selectedActionId
-    })
+    const [showSelectedActionInfoDialog, setShowSelectedActionInfoDialog] = React.useState<boolean>(false)
 
     React.useEffect(() => {
-        if(!!props.preSelectedActionDefiniitonId){
-            setSelectedActionId(props.preSelectedActionDefiniitonId)
+        console.log(props.actionDefinitionId)
+        if(!!props.actionDefinitionId) {
+            setActionContext({
+                type: "SetActionDefinitionToLoadId",
+                payload: {
+                    actionDefinitionToLoadId: props.actionDefinitionId
+                }
+            })   
         }
-    }, [props.preSelectedActionDefiniitonId])
-
-    React.useEffect(() => {
-        if(!!selectedActionId){
-            setBuildActionContext({type: "Loading"})
-            refetch() 
-        }
-    }, [selectedActionId])
+    }, [props.actionDefinitionId])
 
     const handleActionSelection = (actionId: string|undefined) => {
-        if(!!actionId) {
-            if(actionContext.mode==="CREATE") {
-                setSelectedActionId(actionId)
-            } else if(actionContext.mode==="UPDATE") {
-                history.push(`/application/edit-action/${actionId}`)
-            }
-        }
+        setSelectedActionId(actionId)
+        setShowSelectedActionInfoDialog(true)
     }
 
     const toggleSidebar = () => setSideBarOpen(old => !old)
 
     return (
+        <>
+        <Dialog open={showSelectedActionInfoDialog} onClose={() => setShowSelectedActionInfoDialog(false)} fullWidth maxWidth="lg">
+            <DialogActions>
+                <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
+                    <Box>
+                        <IconButton onClick={() => setShowSelectedActionInfoDialog(false)}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
+                </Box>
+            </DialogActions>
+            <DialogContent sx={{ minHeight: "600px" }}>
+                <ShowActionInfo actionId={selectedActionId}/>
+            </DialogContent>
+        </Dialog>
         <Box sx={{display: "flex", flexDirection: "row", width: "100%", pl: 1}} id="drawer-container">
             <CollapsibleDrawer
                 open={sideBarOpen}
@@ -151,7 +143,8 @@ const BuildActionForm = (props: BuildActionFormProps) => {
                 <ActionDetailForm/>
             </Box>
         </Box>
+    </>
     )
 }
 
-export default BuildActionForm;
+export default EditActionForm;

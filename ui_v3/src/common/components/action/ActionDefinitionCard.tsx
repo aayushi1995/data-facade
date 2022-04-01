@@ -1,19 +1,16 @@
-import { Application } from "../../../generated/entities/Entities"
-import { Grid, Card, Box, Typography, IconButton } from "@mui/material"
-import appLogo from "../../../../src/images/Segmentation_application.png"
-import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PeopleIcon from '@mui/icons-material/People';
-import UsageStatus from "../UsageStatus"
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import ShareIcon from '@mui/icons-material/Share';
-import { useHistory, useRouteMatch } from "react-router-dom"
-import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces"
-import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
+import { Box, Card, IconButton, Tooltip, Typography } from "@mui/material";
 import React from "react";
-import { useCreateExecution } from "../application/hooks/useCreateExecution";
-import labels from "../../../labels/labels";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png";
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
+import ActionDefinitionPublishStatus from "../../../enums/ActionDefinitionPublishStatus";
+import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces";
+import UsageStatus from "../UsageStatus";
 
 
 export interface ActionDefinitionCardProps {
@@ -46,6 +43,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
             })
         }
     }
+
+    const actionReadyToUse = actionDefinition.DefinitionPublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE
 
     return (
         <Box>
@@ -154,7 +153,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                 </Box>
                             </Box>
                             <Box sx={{display: "flex", alignItems: "flex-end"}}>
-                                <Box sx={{
+                                <Tooltip title={actionReadyToUse ? "Run Action" : "Action Not Ready To Use"}>
+                                    <Box sx={{
                                         width: "60px",
                                         height: "60px",
                                         borderRadius: "50%",
@@ -164,16 +164,18 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                         alignItems: "center",
                                         justifyContent: "center"
                                     }}>
-                                    <IconButton sx={{
-                                            height: "42px",
-                                            width: "42px",
-                                            background: "linear-gradient(159.16deg, #917CE4 26.46%, rgba(63, 45, 137, 0) 116.55%)",
-                                            boxShadow: "inset 10px 10px 15px rgba(255, 255, 255, 0.2)",
-                                            filter: "drop-shadow(0px 5px 10px rgba(55, 46, 152, 0.65))"
-                                        }} onClick={createActionInstance}>
-                                            <PlayArrowIcon sx={{color: "white", width: '100%', height: '100%'}}/>
-                                    </IconButton>
-                                </Box>
+                                        
+                                        <IconButton sx={{
+                                                height: "42px",
+                                                width: "42px",
+                                                background: "linear-gradient(159.16deg, #917CE4 26.46%, rgba(63, 45, 137, 0) 116.55%)",
+                                                boxShadow: "inset 10px 10px 15px rgba(255, 255, 255, 0.2)",
+                                                filter: "drop-shadow(0px 5px 10px rgba(55, 46, 152, 0.65))"
+                                            }} onClick={createActionInstance} disabled={!actionReadyToUse}>
+                                                <PlayArrowIcon sx={{color: "white", width: '100%', height: '100%'}}/>
+                                        </IconButton>
+                                    </Box>
+                                </Tooltip>
                             </Box>
                         </Box>
                     </Box>

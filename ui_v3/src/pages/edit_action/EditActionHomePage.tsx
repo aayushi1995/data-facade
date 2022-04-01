@@ -1,8 +1,9 @@
 import { Box, Dialog, DialogContent } from "@mui/material";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import BuildActionForm from "../build_action/components/BuildActionForm";
-import { BuildActionContextProvider, SetBuildActionContext } from "../build_action/context/BuildActionContext";
+import LoadingIndicator from "../../common/components/LoadingIndicator";
+import EditActionForm from "../build_action/components/BuildActionForm";
+import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from "../build_action/context/BuildActionContext";
 
 interface MatchParams {
     ActionDefinitionId: string
@@ -12,12 +13,13 @@ const EditActionHomePage = ({match}: RouteComponentProps<MatchParams>) => {
     const actionDefinitionId = match.params.ActionDefinitionId
     return(
         <BuildActionContextProvider>
-            <ContextWrappedHomePage preSelectedActionDefiniitonId={actionDefinitionId}/>
+            <EditActionFormInitialized actionDefinitionId={actionDefinitionId}/>
         </BuildActionContextProvider>
     )
 }
 
-const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string}) => {
+export const EditActionFormInitialized = (props: {actionDefinitionId?: string}) => {
+    const actionContext = React.useContext(BuildActionContext)
     const setActionContext = React.useContext(SetBuildActionContext)
     React.useEffect(() => {
         setActionContext({
@@ -30,7 +32,10 @@ const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string})
     
     
     return (
-        <BuildActionForm preSelectedActionDefiniitonId={props.preSelectedActionDefiniitonId}/>
+        actionContext.mode==="UPDATE" ?
+            <EditActionForm actionDefinitionId={props.actionDefinitionId}/>
+        :
+            <LoadingIndicator/>
     )
 }
-export default EditActionHomePage;
+export default EditActionHomePage

@@ -1,18 +1,14 @@
 import { Box, Button, Dialog, DialogContent } from "@mui/material";
-import {v4 as uuidv4} from 'uuid'
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { ActionExecution, ActionInstance, ActionParameterInstance } from "../../../generated/entities/Entities";
-import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
+import { ActionParameterInstance } from "../../../generated/entities/Entities";
 import ActionHero from "../../build_action/components/form-components/ActionHero";
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
-import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
-import { CreateActionPage } from "../../customizations/CreateActionPage";
-import useCreateActionInstance from "../hooks/useCreateActionInstance";
-import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import ViewConfiguredParameters from "./ViewConfiguredParameters";
-import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
+import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
+import useCreateActionInstance from "../hooks/useCreateActionInstance";
+import ViewConfiguredParameters from "./ViewConfiguredParameters";
 
 interface MatchParams {
     actionDefinitionId: string
@@ -33,7 +29,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             }
         }
     })
-    const {data, error, isLoading, refetch} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: {}})
+    const {data, error, isLoading, refetch} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: { enabled: false }})
 
     const setExecuteActionContext = React.useContext(SetExecuteActionContext)
     const executeActionContext = React.useContext(ExecuteActionContext)

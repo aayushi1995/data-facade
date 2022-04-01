@@ -85,6 +85,7 @@ export interface ActionDefinition extends BaseEntity{
 	IsVisibleOnUI?: boolean
 	PinnedToDashboard?: boolean
 	Visibility?: string
+	PublishStatus?: string
 }
 
 

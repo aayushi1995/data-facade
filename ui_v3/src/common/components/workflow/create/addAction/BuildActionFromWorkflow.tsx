@@ -1,48 +1,28 @@
-import { AppBar, Box, IconButton, Toolbar, Button, Typography } from "@mui/material"
-import CloseIcon from '@mui/icons-material/Close';
-import { ActionDefinition } from "../../../../../generated/entities/Entities";
-import BuildActionForm from "../../../../../pages/build_action/components/BuildActionForm";
-import { BuildActionContextProvider, SetBuildActionContext } from "../../../../../pages/build_action/context/BuildActionContext";
+import { Box } from "@mui/material";
 import React from "react";
+import { ActionDefinition } from "../../../../../generated/entities/Entities";
+import { SetBuildActionContext } from "../../../../../pages/build_action/context/BuildActionContext";
 
 interface BuildActionFromWorkflow {
-    handleDialogClose: (actionDefinition?: ActionDefinition) => void
+    handleAddActionToWorkflow: (actionDefinition: ActionDefinition) => void,
+    handleDialogClose: () => void,
+    applicationId?: string
 }
 
 const BuildActionFromWorkflow = (props: BuildActionFromWorkflow) => {
     const setBuildActionState = React.useContext(SetBuildActionContext)
+    const [createdActionId, setCreatedActionId] = React.useState<string|undefined>()
 
-    const handleClose = (actionDefinition?: ActionDefinition) => {
-        console.log(actionDefinition)
-        props.handleDialogClose(actionDefinition)
+    const onSuccessfulCreation = (actionDefinition: ActionDefinition) => {
+        props.handleAddActionToWorkflow(actionDefinition)
+        setCreatedActionId(actionDefinition.Id)
     }
-    React.useEffect(() => {
-        setBuildActionState({type: 'SetSuccessCallbackFunction', payload: {cb: handleClose}})
-    }, [props])
 
-    return (
+    console.log(createdActionId)
+
+    return (  
         <Box>
-           <AppBar sx={{ position: 'relative' }}>
-                <Toolbar>
-                    <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="close"
-                    onClick={() => {
-                        console.log('here')
-                        props.handleDialogClose()
-                    }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                    <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
-                        Build Workflow Action
-                    </Typography>
-                </Toolbar>
-            </AppBar> 
-            <Box sx={{mt: 3}}>
-                <BuildActionForm/>
-            </Box>
+           
         </Box>
     )
 }

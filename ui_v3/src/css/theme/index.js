@@ -1,8 +1,7 @@
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import merge from 'lodash/merge';
-import {createTheme, responsiveFontSizes} from '@mui/material/styles';
-import {THEMES} from '../../data_manager/constants';
-import {darkShadows, lightShadows} from './shadows';
-import { borderRadius } from '@mui/system';
+import { THEMES } from '../../data_manager/constants';
+import { darkShadows, lightShadows } from './shadows';
 
 const { palette } = createTheme()
 
@@ -207,6 +206,41 @@ const baseOptions = {
             alignItems: "center",
             textAlign: "center",
             color: "#A7A9AC"
+        },
+        wizardHeader: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "16px",
+            lineHeight: "150%",
+            letterSpacing: "0.15px",
+            color: "#253858"
+        },
+        wrapInHeader: {
+            fontFamily: "'SF Pro Display'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "18px",
+            lineHeight: "160%",
+            letterSpacing: "0.15px",
+            color: "#253858"
+        },
+        actionDefinitionSummaryStatValue: {
+            fontFamily: "'SF Pro Display'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "48.8571px",
+            lineHeight: "133.4%",
+            color: "#253858"
+        },
+        actionDefinitionSummaryStatLabel: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "24.4286px",
+            lineHeight: "166%",
+            letterSpacing: "0.814286px",
+            color: "rgba(66, 82, 110, 0.86)"
         }
     }
 };

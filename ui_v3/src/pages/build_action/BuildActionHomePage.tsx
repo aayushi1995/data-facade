@@ -1,9 +1,10 @@
-import { Box, Dialog, DialogContent } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
-import { useLocation } from "react-router-dom";
-import BuildActionForm from "./components/BuildActionForm";
-import BuildActionWizard from "./components/BuildActionWizard";
-import { BuildActionContextProvider, SetBuildActionContext } from "./context/BuildActionContext";
+import { useHistory } from "react-router-dom";
+import ApplicationID from "../../enums/ApplicationID";
+import { ActionDefinition } from "../../generated/entities/Entities";
+import CreateActionWizardDialog from "./components/form-components/CreateActionWizardDialog";
+import { BuildActionContextProvider } from "./context/BuildActionContext";
 
 export interface BuildActionHomePageProps {
 
@@ -17,40 +18,24 @@ const BuildActionHomePage = (props: BuildActionHomePageProps) => {
     )
 }
 
-const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string}) => {
-    const setActionContext = React.useContext(SetBuildActionContext)
+const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string}) => { 
+    const history = useHistory()
     const [showWizard, setShowWizard] = React.useState(true)
-    const location = useLocation()
-    console.log(location.state)
-    React.useEffect(() => {
-        setActionContext({
-            type: "SetMode",
-            payload: {
-                mode: "CREATE"
-            }
-        })
-
-        setActionContext({
-            type: "SetSourceApplicationId",
-            payload: {
-                newApplicationId: location.state as string|undefined
-            }
-        })
-    }, [])
-
-    const handleClose = () => {
-        setShowWizard(false)
-    }
-    
-    
     return (
         <Box>
-            <Dialog open={showWizard} fullWidth maxWidth="xl">
-                <DialogContent sx={{minHeight: "800px"}}>
-                    <BuildActionWizard handleClose={handleClose}/>
-                </DialogContent>
-            </Dialog>
-            <BuildActionForm/>
+            <CreateActionWizardDialog
+                applicationId={ApplicationID.DEFAULT_APPLICATION}
+                onSuccessfulCreation={(createdActionDefinition: ActionDefinition) => {
+                    if(!!createdActionDefinition?.Id) {
+                        history.push(`/application/edit-action/${createdActionDefinition?.Id!}`)
+                    }
+                }}
+                onCancelCreation={() => {
+                    history.push(`/application`)
+                }}
+                showWizard={showWizard}
+                onWizardClose={() => setShowWizard(false)}
+            />
         </Box>
     )
 }
