@@ -3,6 +3,7 @@ import { Box, Button, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import LoadingIndicator from "../../../../common/components/LoadingIndicator";
+import useCopyAndSaveDefinition from '../../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition';
 import { TabPanel } from "../../../../common/components/workflow/create/SelectAction/SelectAction";
 import ActionDefinitionPublishStatus from '../../../../enums/ActionDefinitionPublishStatus';
 import { BuildActionContext, UseActionHooks } from "../../context/BuildActionContext";
@@ -15,6 +16,7 @@ const ActionConfigComponent = () => {
     const buildActionContext = React.useContext(BuildActionContext)
     const useActionHooks = React.useContext(UseActionHooks)
     const [activeTab, setActiveTab] = React.useState(1)
+    const copyActionDefinition = useCopyAndSaveDefinition({mutationName: "CopyWhileEditingAction"})
 
 
     const onActionSave = () => {
@@ -26,6 +28,16 @@ const ActionConfigComponent = () => {
         if(!!actionId) {
             history.push(`/application/execute-action/${actionId}`)
         }
+    }
+
+    const handleDuplicate = () => {
+        copyActionDefinition.mutate(
+            {actionDefinitionId: buildActionContext.actionDefinitionWithTags.actionDefinition.Id!}, {
+                onSuccess: (data) => {
+                    history.push(`/application/edit-action/${data?.[0]?.Id}`)
+                }
+            }
+        )
     }
 
     console.log(buildActionContext.savingAction, buildActionContext.loadingActionForEdit)
@@ -94,6 +106,13 @@ const ActionConfigComponent = () => {
                         background: "#F178B6"
                     }}>
                         Test
+                    </Button>
+                    <Button variant="contained" sx={{ 
+                        minWidth: "150px",
+                        borderRadius: "64px",
+                        background: "#F178B6"
+                    }} onClick={handleDuplicate}>
+                        Duplicate
                     </Button>
                     <Box sx={{ display: "flex", alignItems: "center", px: 2 }}>
                         {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <LoadingIndicator/> : <DoneIcon sx={{ transform: "scale(1.5)"  }}/> }

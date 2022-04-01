@@ -8,17 +8,18 @@ export interface CollapsibleDrawerProps {
     closedWidth: string,
     children: React.ReactNode,
     openDrawer: () => void,
-    minHeight: string
 }
  
 
 const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
-    const { open, openWidth, closedWidth, openDrawer, children, minHeight} = props
+    const { open, openWidth, closedWidth, openDrawer, children} = props
 
     return (
         <Box sx={{
             width: open ? openWidth : closedWidth,
             marginY: 1,
+            pb: 2,
+            minHeight: "100%",
            ...(open ? {
                 backgroundColor: "#F5F9FF"
            } : {
@@ -28,14 +29,14 @@ const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
                 border: "1px solid rgba(255, 255, 255, 0.4)",
                 boxSizing: "border-box",
                 boxShadow: "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",
-                borderRadius: 3
+                borderRadius: '10px'
            }),
            px: 1
         }}>
             {open ?
                 children
                 :
-                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", height: "100%"}}>
+                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center"}}>
                     <IconButton onClick={() => openDrawer()}>
                         <ArrowRight/>
                     </IconButton>

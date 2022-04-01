@@ -1,16 +1,18 @@
 import { Grid } from "@mui/material";
 import LoadingWrapper from "../../../../common/components/LoadingWrapper";
 import useFetchActionDefinitions from "../../../../common/components/workflow/create/hooks/useFetchActionDefinitions";
+import { ActionDefinition } from "../../../../generated/entities/Entities";
 import ActionCard from "./ActionCard";
 
 export interface AllActionsProps {
     actionDefinitionNameSearchQuery: string,
     selectedActionId?: string,
-    onSelectAction: (actionDefinitionId: string|undefined) => void
+    onSelectAction: (actionDefinitionId: string|undefined) => void,
+    filter?: ActionDefinition
 }
 
 const AllActions = (props: AllActionsProps) => {
-    const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError] = useFetchActionDefinitions({})
+    const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError] = useFetchActionDefinitions({filter: props.filter})
 
     return (
         <LoadingWrapper isLoading={allActionDefinitionsIsLoading} error={allActionDefinitionsError} data={allActionDefinitionsData}>

@@ -4,14 +4,20 @@ import UsageStatus from "../UsageStatus";
 import LikeIcon from "../../../../src/images/Like.png"
 import ShareIcon from "../../../../src/images/Save.png"
 import EditIcon from "../../../../src/images/Edit.png"
+import WorkflowButtonOptions from "../workflow/WorkflowButtonOptions";
 
 export interface WorkflowHeroProps {
     readonly: boolean,
+    lastSyncOn?: number
     Name?: string,
     Description?: string,
     Author?: string,
     onNameChange?: (newName: string) => void
     onDescriptionChange?: (newDescription: string) => void
+    handleSave?: () => void
+    handleRun?: () => void,
+    showButtons?: boolean,
+    usageState?: string
 }
 
 const WorkflowHero = (props: WorkflowHeroProps) => {
@@ -52,10 +58,11 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                             </Box>
                             <Box className="meta">
                                 <Typography variant="heroMeta">
-                                    <span>Created By</span>
+                                    <span>Created By </span>
                                     <span><b>{props.Author}</b></span>
                                     <span> | </span>
-                                    <span>Last Sync on</span>
+                                    <span>Last Sync on </span>
+                                    <span><b>{new Date(props.lastSyncOn || Date.now()).toString()}</b></span>
                                     {/* <span>{formTimestampHumanReadable(props.lastSyncTimestamp)}</span> */}
                                 </Typography>
                             </Box>
@@ -67,14 +74,10 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                 </Box>
                                     <Divider orientation="vertical" flexItem/>
                                 <Box className="status">
-                                    <UsageStatus status="IN DEVELOPMENT"/>
+                                    <UsageStatus status={props.usageState || "IN DEVELOPMENT"}/>
                                 </Box>
                             </Box>
-                            <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: 2}} className="info">
-                                <Box className="createdBy">
-                                    <Button variant="contained" size="small" disabled>ADD TO GROUP</Button>
-                                </Box>
-                            </Box>
+                            
                         </Box>
                     </Box>
                 </Grid>
@@ -106,10 +109,9 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                         </Box>
                                     </Box>
                                 </Box>
-                                <Box sx={{ml: 3, mb: 2, mt: 1}} className="description">
+                                <Box sx={{ml: 3, mb: 2, mt: 1, display: 'flex', gap: 3}} className="description">
                                     <TextField value={props.Description} 
                                         variant="standard" 
-                                        fullWidth
                                         multiline
                                         minRows={4}
                                         maxRows={6}
@@ -128,6 +130,17 @@ const WorkflowHero = (props: WorkflowHeroProps) => {
                                             disableUnderline: true
                                         }}
                                     />
+                                    {props.showButtons ? (
+                                        <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "center", gap: 2, ml: 6}} className="info">
+                                            {/* <Box className="createdBy">
+                                                <Button variant="contained" size="small" disabled>ADD TO GROUP</Button>
+                                            </Box> */}
+                                            <WorkflowButtonOptions handleSave={props.handleSave} handleRun={props.handleRun}/>
+                                        </Box>
+                                    ) : (
+                                        <></>
+                                    )}
+
                                 </Box>
                             </Box>
                             {/* <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-end", flexShrink: 1, flexGrow: 0, pt: 1, pb: 1}} className="buttons">

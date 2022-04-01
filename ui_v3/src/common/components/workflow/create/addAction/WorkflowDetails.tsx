@@ -19,17 +19,19 @@ const WorkflowDetails = (props: WorkflowDetailsProps) => {
             setError(true)
             return;
         }
+        setWorkflowContext({type: 'CHANGE_NAME', payload: {newName: name}})
         setError(false)
     }
 
     const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const description = e.target.value
         setDescription(description)
+        setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: {newDescription: description}})
     }
 
     const handleContinue = () => {
+        // setWorkflowContext({type: 'SET_WORKFLOW_DETAILS', payload: {actionName: name, description: description}})
         props?.onContinue?.()
-        setWorkflowContext({type: 'SET_WORKFLOW_DETAILS', payload: {actionName: name, description: description}})
     }
 
     return (

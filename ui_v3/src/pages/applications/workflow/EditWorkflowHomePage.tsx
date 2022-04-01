@@ -13,6 +13,10 @@ import { AddingActionView } from "../../../common/components/workflow/create/add
 import { WorkflowHeroWrapper } from "../../build_workflow/BuildWorkflowHomePage"
 import { useUpdateWorkflow } from "../../../common/components/workflow/edit/hooks/useUpdateWorkflow"
 import WorkflowTabs from "../../../common/components/workflow/create/WorkflowTabs"
+import MakeWorkflowContextFromDetail from "../../../common/components/workflow/edit/hooks/MakeWorkflowContextFromDetails"
+import ApplicationID from "../../../enums/ApplicationID"
+import WorkflowSideDrawer from "../../../common/components/workflow/create/SelectAction/WorkflowSideDrawer"
+import useCopyAndSaveDefinition from "../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition"
 
 
 interface MatchParams {
@@ -29,81 +33,35 @@ export interface WorkflowTemplateType {
 }
 
 const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
+    const [initalWorkflow, setInitaWorkflow] = React.useState<WorkflowContextType>()
+
+    const duplicateFlow = useCopyAndSaveDefinition({mutationName: "CopyWorkflow"})
     const history = useHistory()
     const workflowId = match.params.workflowId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const [isWorkflowFetched, setIsWorkflowFetched] = React.useState(false)
     const useWorkflowUpdate = useUpdateWorkflow("UpdateWorkflow", workflowContext)
+    const useContinuosWorkflowUpdate = useUpdateWorkflow("ContinuosUpdate", workflowContext)
 
     const handleSuccess = (data: ActionDefinitionDetail[]) => {
-        const workflowTemplate = data?.[0]?.ActionTemplatesWithParameters?.[0]?.model?.Text || "{}"
+        const workflowTemplate = data?.[0]?.ActionTemplatesWithParameters?.[0]?.model
         const workflowParameters = data?.[0]?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions?.map(apd => apd?.model || {}) || []
         const workflowDefinition = data?.[0]?.ActionDefinition?.model
-        const workflowContextObject: WorkflowContextType = {
-            stages: [],
-            Name: workflowDefinition?.DisplayName || "",
-            WorkflowParameters: workflowParameters || [],
-            Description: workflowDefinition?.Description || "",
-            Author: workflowDefinition?.CreatedBy || "",
-            draggingAllowed: true,
-            ApplicationId: workflowDefinition?.ApplicationId,
-            Template: data?.[0]?.ActionTemplatesWithParameters?.[0]?.model
-        }
-        const workflowActions = JSON.parse(workflowTemplate) as WorkflowTemplateType[]
-        let upstreamMapping: {[key: string]: UpstreamAction} = {}
-        for(let i = 0; i < workflowActions.length; i++) {
-            const currentStageId = workflowActions[i].stageId
-            const currentStageName = workflowActions[i].stageName
-            const stageActions: WorkflowActionDefinition[] = []
-            let stageIndex = 0;
-            while(i < workflowActions.length && workflowActions[i].stageId === currentStageId) {
-                const idWithIndex: string = workflowActions[i].Id + i
-                upstreamMapping[idWithIndex] = {
-                    actionId: workflowActions[i].Id,
-                    actionIndex: stageIndex,
-                    stageId: currentStageId,
-                    stageName: currentStageName,
-                    actionName: workflowActions[i].DisplayName
-                }
-                const parameterMappings = workflowActions[i].ParameterValues
-                const parameters = Object.entries(parameterMappings).map(([parameterDefinitionId, parameterInstance]) => {
-                    console.log(parameterInstance)
-                    const actionParameter = {
-                        ...parameterInstance,
-                        ActionParameterDefinitionId: parameterDefinitionId,
-                        userInputRequired: parameterInstance.GlobalParameterId ? "Yes" : "No",
-                        SourceExecutionId: upstreamMapping[parameterInstance?.SourceExecutionId]
-                    }
-                    console.log(actionParameter)
-                    return actionParameter
-                })
-                stageActions.push({
-                    Id: workflowActions[i].Id,
-                    ActionGroup: "Data Cleansing", // TODO: Remove Hard Coding after introduction of groups
-                    DisplayName: workflowActions[i].DisplayName,
-                    DefaultActionTemplateId: workflowActions[i].DefaultActionTemplateId,
-                    Parameters: parameters
-                })  
-                stageIndex++;
-                i++;
-            }
-            workflowContextObject.stages.push({
-                Id: currentStageId,
-                Name: currentStageName,
-                Actions: stageActions
-            })
-            i--;
-            stageIndex++;
-        }
+        const workflowContextObject = MakeWorkflowContextFromDetail({
+            workflowDefinition: workflowDefinition || {},
+            workflowParameters: workflowParameters,
+            workflowTemplateModel: workflowTemplate || {}
+        })
         setIsWorkflowFetched(true)
         setWorkflowContext({type: 'SET_ENTIRE_CONTEXT', payload: workflowContextObject})
+        setInitaWorkflow(workflowContextObject)
     }
 
     const [workflowDetails, error, isLoading] = useGetWorkflowDetails(workflowId, {enabled: !isWorkflowFetched, onSuccess: handleSuccess})
     
     const handleReset = () => {
-        setIsWorkflowFetched(false)
+        setWorkflowContext({type: 'SET_ENTIRE_CONTEXT', payload: initalWorkflow!})
     }
     
     const handleUpdate = () => {
@@ -112,29 +70,55 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         },{
             onSuccess: () => {
                 console.log("UPDATED")
-                history.goBack()
+                history.push(`/application/${workflowContext.ApplicationId || ApplicationID.DEFAULT_APPLICATION}`)
             }
         })
     }
 
+    React.useEffect(() => {
+        console.log("SAVING")
+        useContinuosWorkflowUpdate.mutate({workflowId: workflowId})
+    }, [workflowContext])
+
+    const handleRun = () => {
+        history.push(`/application/execute-workflow/${workflowId}`)
+    }
+
+    const handleDuplicate = () => {
+        duplicateFlow.mutate(
+            {actionDefinitionId: workflowId}, {
+                onSuccess: (data) => {
+                    setIsWorkflowFetched(false)
+                    history.push(`/application/edit-workflow/${data?.[0]?.Id}`)
+                }
+            }
+        )
+    }
+
     if(isWorkflowFetched && !useWorkflowUpdate.isLoading) {
         return (
-            <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center'}}>
-               <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>
-                    <WorkflowHeroWrapper/>
+            <Box sx={{display: 'flex', gap: 1, flexDirection: 'row', width: '100%', height: '100%', overflowY: 'clip'}}>
+                <Box sx={{maxHeight: '100%', py: 2}}>
+                <WorkflowSideDrawer/>
                 </Box>
-                <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%'}}>
-                    {workflowContext.currentSelectedStage ? (
-                        <AddingActionView/>
-                    ) : (
-                        <WorkflowTabs/>
-                    )}
-                </Box> 
-                <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}} mb={3}>
-                    <Button variant="contained" color="primary" onClick={handleUpdate}>Update Workflow</Button>
-                    <Button variant="contained" color="primary" onClick={handleReset}>Reset Changes</Button>
+                <Box sx={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center', px: 2, py: 1}}>
+                    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <WorkflowHeroWrapper handleSave={handleUpdate} handleRun={handleRun} showButton={true}/>
+                    </Box>
+                    <Box sx={{flex: 4, height: '100%', width: '100%'}}>
+                        {workflowContext.currentSelectedStage ? (
+                            <AddingActionView/>
+                        ) : (
+                            <WorkflowTabs/>
+                        )}
+                    </Box> 
+                    <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}} mb={3}>
+                        <Button variant="contained" color="primary" onClick={handleReset}>Reset Changes</Button>
+                        <Button variant="contained" color="primary" onClick={handleDuplicate}>Duplicate</Button>
+                    </Box>
                 </Box>
             </Box>
+            
         )
     } else if(error){
         return <NoData/>

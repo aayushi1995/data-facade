@@ -9,23 +9,60 @@ import FavouriteIcon from "../../../../src/images/Favourite.png"
 import OptionIcon from "../../../../src/images/Options.png"
 import { useHistory } from "react-router-dom";
 import { lightShadows } from "../../../css/theme/shadows";
+import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
+import useDeleteAction from "./hooks/useDeleteActions";
+import { useQueryClient } from "react-query";
 
 
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
-    action: ActionDetailsForApplication
+    action: ActionDetailsForApplication,
+    handleDeleteAction?: (idToDelete: string, applicationId: string) => void
 }
 
 const ApplicationActionCard = (props: ApplicationActionCardProps) => {
     const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
     const open = Boolean(menuAnchor)
     const history = useHistory()
+    const queryClient = useQueryClient()
+    const copyAndSaveDefinition = useCopyAndSaveDefinition({mutationName: "CopyActionDefinition"})
+    const deleteActionDefintion = useDeleteAction({mutationName: "DeleteApplicationActionDefinition"})
     const handleExecute = () => {
         if(props.isWorkflow === true) {
             history.push(`/application/execute-workflow/${props.action.model?.Id || "idNotFound"}`)
         } else {
             history.push(`/application/execute-action/${props.action.model?.Id || "id"}`)
         }
+    }
+    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation()
+        setMenuAnchor(event.currentTarget)
+        
+    }
+
+    const handleCopy = () => {
+        copyAndSaveDefinition.mutate(
+            ({actionDefinitionId: props.action.model?.Id!}), {
+                onSuccess: (data) => {
+                    if(props.action.model?.ActionType === ActionDefinitionActionType.WORKFLOW){
+                        history.push(`/application/edit-workflow/${data?.[0]?.Id}`)
+                    } else {
+                        history.push(`/application/edit-action/${data?.[0]?.Id}`)
+                    }
+                }
+            }
+        )
+    }
+
+    const handleDelete = () => {
+        deleteActionDefintion.mutate(
+            {idsToDelete: [props.action.model?.Id!]}, {
+                onSuccess: (data) => {
+                    props.handleDeleteAction?.(props.action.model?.Id!, props.action.model?.ApplicationId || "1")
+                }
+        })
     }
 
     const edit = () => {
@@ -163,17 +200,36 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <Divider orientation="vertical" sx={{height: "200%"}}/>
                     </Box>
                     <Box sx={{flex: 1, width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '100%', overflowY: 'auto'}}>
-                        <IconButton>
+                        {/* <IconButton>
                             <img src={FavouriteIcon} alt="favoutite"/>
-                        </IconButton>
+                        </IconButton> */}
                         <Tooltip title="Edit">
                             <IconButton onClick={edit}>
                                 <EditIcon/>
                             </IconButton>
                         </Tooltip>
-                        <IconButton>
+                        <Tooltip title="Duplicate">
+                            <IconButton onClick={handleCopy}>
+                                <ContentCopyIcon/>
+                            </IconButton>
+                        </Tooltip>
+                        <IconButton onClick={handleMenuOpen}>
                             <img src={OptionIcon} alt="Options"/>
                         </IconButton>
+                        <Menu
+                            anchorEl={menuAnchor} 
+                            open={open} 
+                            onClose={() => {setMenuAnchor(null)}}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                        }}>
+                            <MenuItem onClick={handleDelete} value={0}>Delete</MenuItem>
+                        </Menu>
                     </Box>
                 </Box>
             </Card>

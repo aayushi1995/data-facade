@@ -5,14 +5,13 @@ export type WorkflowTemplate = {
     Id: string,
     DefaultActionTemplateId: string,
     DisplayName: string,
-    Parameters?: object,
+    ParameterValues?: object,
     stageId: string,
     stageName: string
 }
 
 export function makeWorkflowTemplate(workflowContext: WorkflowContextType): string {
     const workflowActionDefinitions: WorkflowTemplate[] = []
-
     workflowContext.stages.map(stage => {
         const actionsInThisStage = stage.Actions.map(stageAction => {
             var parameters = {}

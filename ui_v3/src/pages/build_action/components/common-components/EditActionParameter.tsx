@@ -1,4 +1,5 @@
-import { FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
+import { FormControlLabel, FormGroup } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Checkbox, Autocomplete, TextField, createFilterOptions } from "@mui/material";
 import React from "react";
 import { ChangeEvent } from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
@@ -40,11 +41,11 @@ const EditActionParameter = (props: EditActionParameterProps) => {
         })
     }
     const handleUserInputRequiredChange = () => {}
-    
 
     if(!!paramWithTag) {
         const {parameter, tags} = paramWithTag
         const allParameters = allParamsWithTags?.map(param => param.parameter)
+        const attributeValue = getInputTypeFromAttributesNew(template.Language, parameter.Tag, parameter.Type, parameter.Datatype)
         return(
             <Grid container spacing={3}>
                 <Grid item xs={12} md={8} lg={6}>
@@ -105,6 +106,13 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         direction="DEFAULT"
                     />
                 </Grid>
+                {attributeValue === "String" || attributeValue === "Integer" || attributeValue === "Decimal" ? (
+                    <Grid item xs={6}>
+                        <OptionSetSelector parameter={parameter} onParameterEdit={onParameterEdit}/>
+                    </Grid>
+                ) : (
+                    <></>
+                )}
             </Grid>
         )
     } else {
@@ -225,6 +233,98 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allP
         }
     }
    return getParameterInputField(formParameterInputProps())
+}
+
+const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void}) => {
+
+    const filter = createFilterOptions<string>()
+    const handleChange = (newOptions: string[]) => {
+        const newOption = newOptions.find(option => option.includes("Create Option:"))
+        if(!!newOption) {
+            const optionName = newOption.substring(14)
+            const exisitingOpts = props.parameter.OptionSetValues?.split(',') || []
+            exisitingOpts.push(optionName)
+            props.onParameterEdit({
+                ...props.parameter,
+                OptionSetValues: exisitingOpts.join(',')
+            })
+        } else {
+            props.onParameterEdit({
+                ...props.parameter,
+                OptionSetValues: newOptions.length ? newOptions?.join(',') : undefined
+            })
+        }
+    }
+
+    const handleOptionSingleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.checked || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE) {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OPTION_SET_SINGLE
+            })
+        } else {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OTHER,
+                OptionSetValues: undefined
+            })
+        }
+    }
+
+    const handleOptionMultipleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.checked || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OPTION_SET_MULTIPLE
+            })
+        } else {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OTHER,
+                OptionSetValues: undefined
+            })
+        }
+    }
+
+    return (
+        <Box sx={{display: 'flex', gap: 1}}>
+           <FormGroup>
+                <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE} onChange={handleOptionSingleChange}/>} label="Option Set Single"/>
+                <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE} onChange={handleOptionMultipleChange} />} label="Option Set Multiple"/>
+            </FormGroup>
+            {props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE ? 
+                (
+                    <Autocomplete
+                        options={"".split(',') || []}
+                        filterSelectedOptions
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        multiple
+                        fullWidth
+                        value={props.parameter.OptionSetValues?.split(',') || []}
+                        onChange={(event, value, reason, details) => {
+                            if(!!value){
+                                handleChange(value)
+                            }
+                        }}
+                        filterOptions={(options, params) => {
+
+                            const filtered = filter(options, params);
+                            if (params.inputValue !== '') {
+                                filtered.push(`Create Option: ${params.inputValue}`);
+                            }
+                            return filtered;
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Add Options"/>}
+                    />
+                ) : (
+                    <></>
+                )
+            } 
+            
+        </Box>
+    )
 }
 
 export default EditActionParameter;

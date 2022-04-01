@@ -16,9 +16,11 @@ export const useUpdateWorkflow = (mutationName: string, workflowContext: Workflo
                 Id: options.workflowId
             }
             const newActionDefinitionProperties = {
-                Description: workflowContext.Description,
+                ...workflowContext,
                 DisplayName: workflowContext.Name,
-                UniqueName: workflowContext.Name
+                UniqueName: workflowContext.Name,
+                UpdatedOn: undefined,
+                
             } as ActionDefinition
             const actionTemplateWithParameters = {
                 model: {

@@ -58,13 +58,12 @@ const EditActionForm = (props: EditActionFormProps) => {
                 <ShowActionInfo actionId={selectedActionId}/>
             </DialogContent>
         </Dialog>
-        <Box sx={{display: "flex", flexDirection: "row", width: "100%", pl: 1}} id="drawer-container">
+        <Box sx={{display: "flex", flexDirection: "row", width: "100%", pl: 1, height: '100%'}} id="drawer-container">
             <CollapsibleDrawer
                 open={sideBarOpen}
                 openWidth="400px"
                 closedWidth="50px"
                 openDrawer={() => toggleSidebar()}
-                minHeight="800px"
             >
                 <Card sx={{ 
                     p: 2,
@@ -91,7 +90,7 @@ const EditActionForm = (props: EditActionFormProps) => {
                                                 textAlign: "center",
                                                 opacity: 0.7
                                         }}/>
-                                        <Tab label="All Actions" value={1} sx={{
+                                        <Tab label={"All Actions"} value={1} sx={{
                                                 fontFamily: "SF Pro Text",
                                                 fontStyle: "normal",
                                                 fontWeight: 600,

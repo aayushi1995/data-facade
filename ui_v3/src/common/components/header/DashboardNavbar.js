@@ -28,14 +28,14 @@ const DashboardNavbar = (props) => {
 
     return (
         <DashboardNavbarRoot {...other}>
-            <Toolbar sx={{minHeight: 100, pl: 0, pr: 2}} disableGutters={true}>
-                <Box sx={{ display: "flex", flexDirection: "row", height: "100%", alignItems: "center", gap: 2 }}>
+            <Toolbar sx={{minHeight: 100, pl: 0, pr: 2, background: '#A6CEE3'}} disableGutters={true}>
+                <Box sx={{ display: "flex", flexDirection: "row", height: "100%", alignItems: "center", justifyContent: 'flex-start' }}>
                     <Box sx={{ height: "100%", width: "auto" }}>
                         <RouterLink to="/">
                             <Logo/>
                         </RouterLink>
                     </Box>
-                    <Box sx={{ height: "55%" }}>
+                    <Box sx={{ height: "55%", ml: 7 }}>
                         <DfLogoText fill='#ff0000'/>
                     </Box>
                 </Box>

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, IconButton } from "@mui/material";
 import { useContext } from "react";
 import { AddingActionView } from "../../common/components/workflow/create/addAction/AddingActionView";
 import { WorkflowContext, SetWorkflowContext, WorkflowContextProvider, WorkflowContextType, SetWorkflowContextType } from "../applications/workflow/WorkflowContext";
@@ -11,6 +11,11 @@ import {RouteComponentProps, useHistory, useLocation} from "react-router-dom"
 import { useQueryClient } from "react-query";
 import WorkflowTabs from "../../common/components/workflow/create/WorkflowTabs";
 import React from "react";
+import { ArrowRight } from "@mui/icons-material";
+import CollapsibleDrawer from "../build_action/components/form-components/CollapsibleDrawer";
+import SelectActionDrawer from "../../common/components/common/SelectActionDrawer";
+import WorkflowSideDrawer from "../../common/components/workflow/create/SelectAction/WorkflowSideDrawer";
+import {v4 as uuidv4} from "uuid"
 
 export interface BuildWorkflowHomePageProps {
 
@@ -22,19 +27,22 @@ const BuildWorkflowHomePage = (props: BuildWorkflowHomePageProps) => {
     console.log(applicationId)
     return (
         <WorkflowContextProvider>
-            <Box sx={{display: "flex", flexDirection: "column", gap: 4, px: 2, py:2}}>
-                <Box>
-                    <WorkflowHeroWrapper />
-                </Box>
-                <Box>
-                    <WorkflowEditor applicationId={applicationId}/>
+            <Box sx={{display: 'flex', gap: 1, flexDirection: 'row', width: '100%', height: '100%', overflowY: 'clip'}}>
+                <WorkflowSideDrawer/>
+                <Box sx={{display: "flex", flexDirection: "column", gap: 1, px: 2, py:1, width: '100%'}}>
+                    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <WorkflowHeroWrapper />
+                    </Box>
+                    <Box>
+                        <WorkflowEditor applicationId={applicationId}/>
+                    </Box>
                 </Box>
             </Box>
         </WorkflowContextProvider>
     )
 }
 
-export const WorkflowHeroWrapper = () => {
+export const WorkflowHeroWrapper = (props: {handleSave?: () => void, handleRun?: () => void, showButton?: boolean}) => {
     const workflowState: WorkflowContextType = useContext(WorkflowContext)
     const setWorkflowState: SetWorkflowContextType = useContext(SetWorkflowContext)
 
@@ -54,7 +62,12 @@ export const WorkflowHeroWrapper = () => {
             payload: {
                 newDescription: newDescription
             }
-        })
+        }),
+        handleSave: props.handleSave,
+        handleRun: props.handleRun,
+        showButtons: props.showButton,
+        lastSyncOn: workflowState.UpdatedOn,
+        usageState: workflowState.PublishStatus
     }
 
     return (
@@ -72,11 +85,13 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
 
     const handleSave = () => {
         setWorkflowState({type: 'SET_APPLICATION_ID', payload: props.applicationId})
-        saveWorkflowMutation.mutate(workflowContext, {
+        const definitionId = uuidv4()
+        saveWorkflowMutation.mutate(({workflowContext: workflowContext, definitionId: definitionId}), {
             onSuccess: () => {
                 console.log("SUCCESS")
                 queryClient.invalidateQueries("Application")
-                history.push(`/application/${props.applicationId || 1}`)
+                setDialogOpen(false)
+                history.push(`/application/edit-workflow/${definitionId}`)
             }
         })
     }
@@ -86,21 +101,20 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
             <Dialog open={dialogopen} fullWidth maxWidth="md">
                 <DialogContent>
                     <Box p={2} sx={{minHeight: '100%'}}>
-                        <WorkflowDetails onContinue={() => setDialogOpen(false)}/>
+                        <WorkflowDetails onContinue={handleSave}/>
                     </Box>    
                 </DialogContent>
             </Dialog>
             {workflowContext.currentSelectedStage ? (
-                <Box pt={1} sx={{maxHeight: 'inherit'}}>
+                <Box pt={1} sx={{maxHeight: 'inherit', overflowY: 'clip'}}>
                     <AddingActionView/>
                 </Box>
             ) : (
                 <Box sx={{overflow: 'clip', flexDirection: 'column', gap: 3}}>  
                     <Box p={2}>
                         <WorkflowTabs/>
-                        {/* <StagesWithActions/>   */}
                     </Box>  
-                    <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3, mr: 5, gap: 2}}>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3, mr: 5, gap: 2, pb: 2}}>
                         <Button onClick={handleSave} color="primary" variant="contained">
                             Test and Save
                         </Button>

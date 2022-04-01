@@ -45,6 +45,11 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
                         zoomType: 'x'
                     },
                     plotOptions: {
+                        series: {
+                            marker: {
+                                enabled: false
+                            }
+                        },
                         area: {
                             fillColor: {
                                 linearGradient: {
@@ -54,10 +59,10 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
                                     y2: 1
                                 }
                             },
-                            stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                            ],
+                            // stops: [
+                            //     [0, Highcharts.getOptions().colors[0]],
+                            //     [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            // ],
                             lineWidth: 1,
                             states: {
                                 hover: {
@@ -72,7 +77,19 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
                         align: 'right',
                         verticalAlign: 'middle'
                     },
-                    series: preview.series,
+                    series: preview.series.map(wholeData => {
+                        return {
+                            ...wholeData,
+                            zoneAxis: 'x',
+                            zones: [
+                                {
+                                    value: preview.historical
+                                },{
+                                    dashStyle: 'dash'
+                                }
+                            ],
+                        }
+                    }),
             
                     xAxis: {
                         type: 'datetime',

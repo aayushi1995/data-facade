@@ -69,7 +69,7 @@ export function TabsContainer(props: TabsContainerType) {
                                                     onClick={launchSettings}
                                                     background={false}
                 /></Box>: <div/>}
-            </>}</Box>;
+            </>}</Box>
             <Popover
                 anchorEl={anchorRef.current}
                 anchorOrigin={{

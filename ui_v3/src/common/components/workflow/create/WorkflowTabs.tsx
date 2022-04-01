@@ -36,7 +36,7 @@ const WorkflowTabs = () => {
     return (
         <Box >
             <Tabs value={tabValue} onChange={((event, newValue) => setTableValue(newValue))}>
-               <Tab label="Workflow" value={0} sx={{
+               <Tab label="Flow" value={0} sx={{
                    fontFamily: "SF Pro Text",
                    fontStyle: "normal",
                    fontWeight: 600,

@@ -30,7 +30,7 @@ export type WorkflowActionDefinition = {
     ExecutionStatus?: string,
     ExecutionStartedOn?: number,
     ExecutionCompletedOn?: number,
-    PresentationFormat?: string
+    PresentationFormat?: string,
 }
 
 export type WorkflowContextType = {
@@ -58,7 +58,13 @@ export type WorkflowContextType = {
         executionId?: string,
         presentationFormat?: string
     },
-    ApplicationId?: string
+    ApplicationId?: string,
+    sideDrawerState?: {open: boolean},
+    PinnedToDashboard?: boolean,
+    ActionGroup?: string,
+    PublishStatus?: string,
+    UpdatedOn?: number,
+    CreatedOn?: number
 }
 
 const defaultWorkflowContext: WorkflowContextType = {
@@ -332,6 +338,28 @@ type SetSelectedAction = {
     }
 }
 
+type SetSideDrawerState = {
+    type: 'SET_SIDE_DRAWER_STATE',
+    payload: {
+        open: boolean
+    }
+}
+
+type SetPinnedToDashboard = {
+    type: 'SET_PINNED_TO_DASHBOAD',
+    payload?: boolean
+}
+
+type SetPublishedStatus = {
+    type: 'SET_PUBLISHED_STATUS',
+    payload?: string
+}
+
+type SetActionGroup = {
+    type: 'SET_ACTION_GROUP',
+    payload?: string
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -358,7 +386,11 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetApplicationId |
                              ChangeStagePercentage |
                              SetEntireContext |
-                             SetSelectedAction
+                             SetSelectedAction |
+                             SetSideDrawerState |
+                             SetPinnedToDashboard |
+                             SetPublishedStatus | 
+                             SetActionGroup
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -640,6 +672,22 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
 
         case 'SET_SELECTED_ACTION': {
             return {...state, currentSelectedAction: action.payload}
+        }
+
+        case 'SET_SIDE_DRAWER_STATE': {
+            return {...state, sideDrawerState: action.payload}
+        }
+
+        case 'SET_PINNED_TO_DASHBOAD': {
+            return {...state, PinnedToDashboard: action.payload}
+        }
+
+        case 'SET_PUBLISHED_STATUS': {
+            return {...state, PublishStatus: action.payload}
+        }
+
+        case 'SET_ACTION_GROUP': {
+            return {...state, ActionGroup: action.payload}
         }
 
         default:

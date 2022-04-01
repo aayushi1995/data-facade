@@ -1,16 +1,27 @@
+import { Application } from "../../../generated/entities/Entities"
+import { Grid, Card, Box, Typography, IconButton, SpeedDial, SpeedDialAction, Tooltip } from "@mui/material"
+import appLogo from "../../../../src/images/Segmentation_application.png"
+import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PeopleIcon from '@mui/icons-material/People';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import ShareIcon from '@mui/icons-material/Share';
-import { Box, Card, IconButton, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionDefinitionPublishStatus from "../../../enums/ActionDefinitionPublishStatus";
 import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces";
 import UsageStatus from "../UsageStatus";
+import { useCreateExecution } from "../application/hooks/useCreateExecution";
+import labels from "../../../labels/labels";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
+import DeleteIcon from '@mui/icons-material/Delete';
+import useDeleteAction from "../application/hooks/useDeleteActions";
+import { useQueryClient } from "react-query";
+import ActionDefinitionVisibility from "../../../enums/ActionDefinitionVisibility";
+import EditIcon from '@mui/icons-material/Edit';
 
 
 export interface ActionDefinitionCardProps {
@@ -18,10 +29,19 @@ export interface ActionDefinitionCardProps {
 }
 
 const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
+    
+    const [moreOptionsSpeedDialState, setMoreOptionsSpeedDialState] = React.useState({ isOpen: false })
+    const [deletingState, setDeletingState] = React.useState<boolean>(false)
+    const deleteAction = useDeleteAction({mutationName: "DeletePinnedAction", mutationOptions: {
+        onMutate: () => setDeletingState(true)
+    }})
+    const queryClient = useQueryClient()
     const {actionDefinition} = props
     const history = useHistory()
     const match = useRouteMatch()
+    const saveAndCopyWorkflow = useCopyAndSaveDefinition({mutationName: "SaveAndCopyDefinition"})
 
+    const handleMoreOptionsSpeedDialToggle = () => setMoreOptionsSpeedDialState(oldState => ({ ...oldState, isOpen: !oldState.isOpen }))
     const formCreatedByString = () => {
         return `${actionDefinition.DefinitionCreatedBy||"No Author"}`
     }
@@ -30,6 +50,25 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
         const createdOnTimestamp = actionDefinition.DefinitionCreatedOn||Date.now()
 
         return `Created On ${new Date(createdOnTimestamp).toDateString()}`
+    }
+
+    const toggleMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>) => {
+        event.stopPropagation()
+        handleMoreOptionsSpeedDialToggle()
+    }
+
+    const handleCopyWorkflow = () => {
+        saveAndCopyWorkflow.mutate({actionDefinitionId: props.actionDefinition.DefinitionId!}, 
+            {
+                onSuccess: (data) => {
+                    if(props.actionDefinition.DefinitionActionType === ActionDefinitionActionType.WORKFLOW){
+                        history.push(`/application/edit-workflow/${data?.[0]?.Id}`)
+                    } else {
+                        history.push(`/application/edit-action/${data?.[0]?.Id}`)
+                    }
+                }
+            }    
+        )
     }
 
     const createActionInstance = () => {
@@ -44,6 +83,27 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
         }
     }
 
+    const handleDelete = () => {
+        deleteAction.mutate({idsToDelete: [props.actionDefinition.DefinitionId!]}, {
+            onSuccess: () => {
+                setDeletingState(false)
+                queryClient.invalidateQueries(["ActionDefinition", "CardView", ActionDefinitionVisibility.CREATED_BY])
+            }
+        })
+    }
+
+    const handleEdit = () => {
+        if(props.actionDefinition.DefinitionActionType === ActionDefinitionActionType.WORKFLOW) {
+            history.push({
+                pathname: `/application/edit-workflow/${actionDefinition.DefinitionId}`
+            })
+        } else {
+            history.push({
+                pathname: `/application/edit-action/${actionDefinition.DefinitionId}`
+            })
+        }
+    }
+
     const actionReadyToUse = actionDefinition.DefinitionPublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE
 
     return (
@@ -53,7 +113,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                 borderRadius: 2, 
                 p: 2, 
                 boxSizing: "content-box",
-                background: "#F4F4F4",
+                background: !deletingState ? "#F4F4F4": "#A4CAF0",
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
@@ -181,6 +241,53 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                     </Box>
                     <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
                         <Box>
+                            <SpeedDial
+                                ariaLabel={props.actionDefinition.DefinitionId||""}
+                                direction="down"
+                                sx={{ 
+                                    height: "42px", 
+                                    width: "42px",
+                                }}
+                                FabProps={{
+                                    sx: {
+                                        minHeight: "42px", 
+                                        width: "42px",
+                                        background: "#F4F4F4",
+                                        boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
+                                    }
+                                }}  
+                                open={moreOptionsSpeedDialState.isOpen}
+                                onClick = {toggleMoreOptionsSpeedDial}
+                                icon={<PlaylistAddIcon sx={{color: 'black'}}/>}
+                            >
+                                <SpeedDialAction
+                                    key="Delete"
+                                    icon={
+                                        <DeleteIcon/>
+                                    }
+                                    tooltipTitle="Delete"
+                                    onClick={handleDelete}
+                                    sx={{
+                                        height: "42px",
+                                        width: "42px",
+                                        background: "#F4F4F4"
+                                    }}
+                                />
+                                
+                            </SpeedDial>
+                        </Box>
+                        
+                        <Box>
+                            <IconButton sx={{
+                                height: "42px",
+                                width: "42px",
+                                background: "#F4F4F4",
+                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
+                            }}>
+                                <EditIcon onClick={handleEdit}/>
+                            </IconButton>
+                        </Box>
+                        {/* <Box>
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
@@ -189,27 +296,12 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                             }}>
                                 <FavoriteIcon sx={{color: 'rgba(150, 142, 241, 1)'}}/>
                             </IconButton>
-                        </Box>
-                        <Box>
-                            <IconButton sx={{
-                                height: "42px",
-                                width: "42px",
-                                background: "#F4F4F4",
-                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
-                            }}>
-                                <PlaylistAddIcon/>
+                        </Box> */}
+                        <Tooltip title="Duplicate">
+                            <IconButton>
+                                <ContentCopyIcon onClick={handleCopyWorkflow}/>
                             </IconButton>
-                        </Box>
-                        <Box>
-                            <IconButton sx={{
-                                height: "42px",
-                                width: "42px",
-                                background: "#F4F4F4",
-                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
-                            }}>
-                                <ShareIcon/>
-                            </IconButton>
-                        </Box>
+                        </Tooltip>
                     </Box>
                 </Box>
             </Card>

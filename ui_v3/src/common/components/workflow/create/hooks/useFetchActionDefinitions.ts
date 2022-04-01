@@ -5,17 +5,21 @@ import labels from '../../../../../labels/labels';
 import dataManagerInstance, { useRetreiveData } from './../../../../../data_manager/data_manager'
 
 export interface UseFetchActionDefinitionsProps {
-    actionType?: string
+    filter?: ActionDefinition,
+    handleSuccess?: (data: ActionDefinition[]) => void
 }
 
 const useFetchActionDefinitions = (params: UseFetchActionDefinitionsProps): [ActionDefinition[], boolean, any] => {
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
 
-    const {data: allActionDefinitionsData, error: allActionDefinitionsError, isLoading: allActionDefinitionsIsLoading} = useQuery([labels.entities.ActionDefinition, "All"],
+    const {data: allActionDefinitionsData, error: allActionDefinitionsError, isLoading: allActionDefinitionsIsLoading} = useQuery([labels.entities.ActionDefinition, "All", params.filter || "No filter"],
         () => {
-            return Fetcher.fetchData('GET', '/getFilteredActionDefinitions', {})
+            return Fetcher.fetchData('GET', '/getFilteredActionDefinitions', params.filter || {})
         }, {
-            staleTime: 60*1000
+            staleTime: 60*1000,
+            onSuccess: (data) => {
+                params.handleSuccess?.(data)
+            }
         }
     )
 

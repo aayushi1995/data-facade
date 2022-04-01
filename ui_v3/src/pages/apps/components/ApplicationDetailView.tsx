@@ -91,7 +91,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                     </TabPanel>
                     <TabPanel value={tabValue} index={1}>
                         <Box mt={1}>
-                            <ApplicationActions actions={application.actions || []}/>
+                            <ApplicationActions application={application}/>
                         </Box>
                     </TabPanel>
                 </Box>

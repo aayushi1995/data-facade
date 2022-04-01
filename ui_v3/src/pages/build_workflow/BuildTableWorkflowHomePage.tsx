@@ -52,7 +52,7 @@ const BuildTableWorkflow = ({match}: RouteComponentProps<{tableId: string}>) => 
     }
 
     const handleSaveWorkflow = () => {
-        useSaveWorkflow.mutate(workflowContext, {
+        useSaveWorkflow.mutate({workflowContext: workflowContext, definitionId: uuidv4()}, {
             onSuccess: () => history.goBack()
         })
     }

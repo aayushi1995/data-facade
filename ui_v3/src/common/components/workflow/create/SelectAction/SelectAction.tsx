@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { ReactComponent as DefaultIcon } from "../Icon.svg";
 import GroupDropDown from '../GroupDropDown';
 import SelectFromAllActions from '../SelectFromAllActions';
+import SelectFromGroups from '../addAction/SelectFromGroups';
 
 export interface ActionDefinitionToAdd {
     Id: string,
@@ -102,7 +103,7 @@ const SelectAction = (props: SelectActionProps) => {
                         <SelectFromAllActions onAddAction={props.onAddAction} actionDefinitionNameSearchQuery={actionDefinitionNameSearchQuery}/>
                     </TabPanel>
                     <TabPanel value={activeTab} index={1}>
-                        
+                        <SelectFromGroups onAddAction={props.onAddAction}/>
                     </TabPanel>
                 </Box>
             </Box>

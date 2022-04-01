@@ -65,6 +65,12 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "GET", endpoint: "/getApplicationDetails", inputPayload: Entity.Application): Promise<CustomInterface.ApplicationDetails[]>; 
 	
 	/**
+	Gives you the applications based on filter
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getApplications", inputPayload: Entity.Application): Promise<Entity.Application[]>; 
+	
+	/**
 	Gives you the the action definitions of the types that should be visible to the user.
 	*/
 	
