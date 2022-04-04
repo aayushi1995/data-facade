@@ -4,7 +4,7 @@ import { PageHeader } from '../../../../common/components/header/PageHeader';
 import { Card, Grid } from '@mui/material'
 import { WorkflowList } from './WorkflowList';
 import { WorkflowMeta } from "./WorkflowMeta";
-import { TableWrapper } from '../../../../common/components/TableWrapper';
+import { ReactQueryWrapper } from '../../../../common/components/ReactQueryWrapper';
 import { useRunWorkflow } from "../hooks/UseRunWorkflow.js";
 
 export const RUN_WORKFLOW_VIEWS = {
@@ -32,7 +32,7 @@ const RunWorkflow = (props) => {
                 </Grid>}
                 <Grid item xs={5} />
                 <Grid item xs={12} justifyContent="center">
-                    <TableWrapper
+                    <ReactQueryWrapper
                         data={data}
                         isLoading={!data || data?.length<=0}
                     >{() =>
@@ -44,7 +44,7 @@ const RunWorkflow = (props) => {
                             saveCreateActionInstanceFormConfig={saveCreateActionInstanceFormConfig}
                             {...viewsDataMap[currentView]}
                         />: null}
-                    </TableWrapper>
+                    </ReactQueryWrapper>
                 </Grid>
             </Grid>
         </Grid>

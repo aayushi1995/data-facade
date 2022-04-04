@@ -3,8 +3,8 @@ import labels from "../../../../../labels/labels";
 import {useRouteMatch} from "react-router-dom";
 import {ProviderType} from "../ConnectionDialogContent";
 
-type ProviderDataType = ProviderType[];
-type UseRetrieveData<T> = { isLoading: boolean, error: string, data: T | undefined };
+export type ProviderDataType = ProviderType[];
+export type UseRetrieveData<T> = { isLoading: boolean, error: string, data: T | undefined };
 
 export function useConnectionProviders() {
     const queryData = useRetreiveData(labels.entities.ProviderDefinition, {

@@ -59,8 +59,8 @@ export const ModuleHeader = ({tab}: ModuleHeaderPropType) => {
 //different for different leaf tab
 export const MainContent = () => {
     return <Box>
-        {/* <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTableDialogContent}/> */}
-        <Route exact path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
+        <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTableDialogContent}/>
+        <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
         <Route path={DATA_RAW_ROUTE} component={TableBrowser}/>
     </Box>
 }

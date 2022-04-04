@@ -116,7 +116,6 @@ const TabsTree = (props: TabsTreePropType) => {
             gap: 1,
             mx: isFistTab? 0: 6
         }}>
-
         <TabsContainer
             areLeafTabs={areLeafTabs}
             toggleModuleSwitch={toggleModuleSwitch}
@@ -133,12 +132,11 @@ const TabsTree = (props: TabsTreePropType) => {
         />: null}
         {areLeafTabs ?
             <ModuleContent.MainContent/> :
-            <TabsTree
+            activeTabChildren? <TabsTree
                 {...props}
                 tabs={activeTabChildren}
                 level={level + 1}
-            />}
-
+            />: null}
     </Box>;
 }
 

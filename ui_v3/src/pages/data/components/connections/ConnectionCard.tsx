@@ -1,7 +1,6 @@
 import {Link as RouterLink} from 'react-router-dom';
 import {BaseCard} from "../../../../common/components/basecard/BaseCard";
 import {Button, Divider, Stack, Typography, Box, alpha} from "@mui/material";
-import {Image} from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SyncIcon from "@mui/icons-material/Sync";
 import {ButtonIconWithToolTip} from "../../../../common/components/ButtonIconWithToolTip";
@@ -10,9 +9,9 @@ import {ProviderInstance} from "../../../../generated/entities/Entities";
 import {useDeleteSelectedConnection} from "../../../configurations/hooks/useDeleteSelectedConnection";
 import {useTheme} from "@mui/styles";
 import {lightGreen} from "@mui/material/colors";
-import {LightInsetShadows} from "../../../../css/theme/shadows";
 import useSyncProviderInstance from '../../../configurations/components/hooks/useSyncProviderInstance';
 import React from 'react';
+import {ReactElement} from "react";
 
 const NA = 'NA';
 
@@ -21,20 +20,21 @@ const MainContent = ({
                          ConnectionID = NA,
                          CreatedBy = NA,
                          LastSyncOn = NA,
-                         imgSrc = NA
-                     }) => <Stack direction='column' alignItems={"center"}>
-    <Image/>
-    <Box sx={{margin: "4px", display: "flex", alignItems: "center"}}>
-        <Divider orientation="horizontal" sx={{width: "40px", height: '100%'}}/>
+                         Icon
+                     }: ConnectionCardType) => <Stack direction='column' alignItems={"center"}
+                                                      justifyContent={"space-between"} flex={1} py={1}>
+    <Box p={1}>
+        {Icon}
     </Box>
+    <Divider orientation="horizontal" sx={{width: "40px"}}/>
     {/* <Divider variant={"middle"} /> */}
-    <Typography  fontSize={12} fontWeight='bold' variant="heroHeader" sx={{fontSize: '14px'}}>
+    <Typography fontSize={12} fontWeight='bold' variant="heroHeader">
         {Name}
     </Typography>
-    <Typography fontSize={12}  fontWeight='bold' mt={1} variant="heroHeader" sx={{fontSize: '12px'}}>
+    <Typography fontSize={12} fontWeight='bold' mt={1} variant="heroHeader">
         Connection ID {ConnectionID}
     </Typography>
-    <Typography  fontSize={9}>
+    <Typography fontSize={9}>
         Created By {CreatedBy}
     </Typography>
     <Typography fontSize={9}>
@@ -48,13 +48,13 @@ export type ConnectionCardType = Partial<ProviderInstance> & {
     ConnectionID: string,
     CreatedBy?: string,
     LastSyncOn?: string,
-    imgSrc?: string,
+    Icon?: ReactElement,
     Actions?: number,
     Tables?: number,
     onClick: (ConnectionID: string) => void,
     isSelected?: boolean
 };
-const buttonStyle = {fontSize: 8}
+const buttonStyle = {fontSize: 7}
 
 function ConnectionsPrimaryActionButtons(props: { Actions?: number, Tables?: number }) {
     return <Stack direction={"column"} gap={1} alignItems="center">
@@ -97,7 +97,7 @@ export const ConnectionCard = (props: ConnectionCardType) => {
         })
     }
     const theme = useTheme();
-    return <Box onClick={()=>props.onClick(props.ConnectionID)} sx={{cursor: "pointer"}}>
+    return <Box onClick={() => props.onClick(props.ConnectionID)} sx={{cursor: "pointer"}}>
         <BaseCard
             height={250}
             width={236}
@@ -107,8 +107,8 @@ export const ConnectionCard = (props: ConnectionCardType) => {
                 <ButtonIconWithToolTip Icon={DeleteIcon} onClick={()=>deleteSelectedConnection(props.ConnectionID)} title="delete"/>
             </Stack>}
             PrimaryActionIconButtons={<ConnectionsPrimaryActionButtons
-                Actions={props.Actions }
-                Tables={props.Tables }/>}
+                Actions={props.Actions}
+                Tables={props.Tables}/>}
         >
             <MainContent {...props}/>
         </BaseCard>
