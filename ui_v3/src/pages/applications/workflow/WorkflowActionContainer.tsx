@@ -87,7 +87,6 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     }
 
     const handlePreviewOutput = (executionId: string) => {
-        console.log("here")
         const presentationFormat = stageDetails.Actions.filter((action, index) => action.Id == executionId)?.[0]?.PresentationFormat
         setWorkflowContext({type: 'SET_EXECUTION_FOR_PREVIEW', payload: {executionId: executionId, presentationFormat: presentationFormat}})
     }
@@ -167,7 +166,6 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
         }
     }
     
-    console.log(isBuildDialogOpen)
     if(stageDetails) {
         return (
             <Box sx={{ display: 'flex', flex: 1}}>

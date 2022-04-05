@@ -26,7 +26,7 @@ const CreateActionWizardDialog = (props: CreateActionWizardDialogProps) => {
         })
 
         setActionContext({
-            type: "SetSourceApplicationId",
+            type: "SetApplicationId",
             payload: {
                 newApplicationId: props.applicationId
             }

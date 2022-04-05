@@ -1,27 +1,21 @@
-import { Application } from "../../../generated/entities/Entities"
-import { Grid, Card, Box, Typography, IconButton, SpeedDial, SpeedDialAction, Tooltip } from "@mui/material"
-import appLogo from "../../../../src/images/Segmentation_application.png"
-import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import PeopleIcon from '@mui/icons-material/People';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import ShareIcon from '@mui/icons-material/Share';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import { Box, Card, IconButton, SpeedDial, SpeedDialAction, Tooltip, Typography } from "@mui/material";
 import React from "react";
+import { useQueryClient } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionDefinitionPublishStatus from "../../../enums/ActionDefinitionPublishStatus";
-import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces";
-import UsageStatus from "../UsageStatus";
-import { useCreateExecution } from "../application/hooks/useCreateExecution";
-import labels from "../../../labels/labels";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
-import DeleteIcon from '@mui/icons-material/Delete';
-import useDeleteAction from "../application/hooks/useDeleteActions";
-import { useQueryClient } from "react-query";
 import ActionDefinitionVisibility from "../../../enums/ActionDefinitionVisibility";
-import EditIcon from '@mui/icons-material/Edit';
+import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces";
+import useDeleteAction from "../application/hooks/useDeleteActions";
+import UsageStatus from "../UsageStatus";
+import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 
 
 export interface ActionDefinitionCardProps {
@@ -104,7 +98,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
         }
     }
 
-    const actionReadyToUse = actionDefinition.DefinitionPublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE
+    const actionReadyToUse = actionDefinition.DefinitionPublishStatus===ActionDefinitionPublishStatus.READY_TO_USE
 
     return (
         <Box>
@@ -179,7 +173,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                             }}>{actionDefinition.NumberOfUsers||"-"}</Typography>
                                         </Box>
                                         <Box sx={{display: "flex", alignContent: "center"}}>
-                                            <UsageStatus status={actionDefinition.UsageStatus||"NA"}/>
+                                            <UsageStatus status={actionDefinition.DefinitionPublishStatus}/>
                                         </Box>
                                     </Box>
                                     <Box sx={{display: "flex", flexDirection: "row", gap: 2}}>

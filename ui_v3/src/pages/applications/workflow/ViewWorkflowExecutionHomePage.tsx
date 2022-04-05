@@ -1,16 +1,15 @@
-import { Box, Dialog, Grid, IconButton } from "@mui/material"
-import { DialogContent, DialogTitle } from "@mui/material"
+import CloseIcon from '@mui/icons-material/Close'
+import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material"
 import React from "react"
 import { Route, RouteComponentProps, Switch, useRouteMatch } from "react-router-dom"
 import NoData from "../../../common/components/NoData"
 import ViewActionExecutionOutput from "../../../common/components/ViewActionExecutionOutput"
-import WorkflowHeroInfo from "../../../common/components/workflow-editor/WorkflowHero"
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
-import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
-import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
-import CloseIcon from '@mui/icons-material/Close';
 import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
+import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
+import ActionDefinitionHero from '../../build_action/components/shared-components/ActionDefinitionHero'
+import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
     workflowExecutionId: string
@@ -93,6 +92,9 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             setWorkflowContext({type: 'SET_WORKFLOW_DETAILS', payload: {actionName: data?.[0]?.WorkflowDefinition?.DisplayName || "WorkflowName", description: data?.[0]?.WorkflowDefinition?.Description || "NA"}})
             setWorkflowContext({type: 'CHANGE_EXECUTION_STATUS', payload: {status: data?.[0]?.WorkflowExecution?.Status || "NA"}})
             setWorkflowContext({type: 'SET_DRAGGABLE_PROPERTY', payload: false})
+            setWorkflowContext({type: 'SET_APPLICATION_ID', payload: data?.[0]?.WorkflowDefinition?.ApplicationId })
+            setWorkflowContext({type: 'SET_ACTION_GROUP', payload: data?.[0]?.WorkflowDefinition?.ActionGroup })
+            setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: { newDescription: data?.[0]?.WorkflowDefinition?.Description||"NA" }})
             setAreChildActionReady(true)   
             checkIfActionsCompleted(data || [])
         }
@@ -141,7 +143,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     </DialogContent>
                 </Dialog>
                 <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>
-                    <WorkflowHeroInfo readonly={true} Name={workflowContext.Name} Description={workflowContext.Description} Author={workflowContext.Author}/>
+                    <ActionDefinitionHero mode="READONLY" name={workflowContext.Name} description={workflowContext.Description} createdBy={workflowContext.Author} applicationId={workflowContext.ApplicationId} group={workflowContext.ActionGroup}/>
                 </Box>
                 <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%', mb: 4}}>
                     <StagesWithActions/>

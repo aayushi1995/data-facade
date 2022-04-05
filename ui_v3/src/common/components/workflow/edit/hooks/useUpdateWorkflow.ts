@@ -3,10 +3,11 @@ import { Fetcher } from "../../../../../generated/apis/api";
 import { ActionDefinition } from "../../../../../generated/entities/Entities";
 import { ActionTemplatesWithParameters, UpdateActionDefinitionWithTemplate } from "../../../../../generated/interfaces/Interfaces";
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext";
+import { BuildActionContextState } from "../../../../../pages/build_action/context/BuildActionContext";
 import { makeWorkflowTemplate } from "../../create/util/MakeWorkflowTemplate";
 
 
-export const useUpdateWorkflow = (mutationName: string, workflowContext: WorkflowContextType) => {
+export const useUpdateWorkflow = (mutationName: string, workflowContext: WorkflowContextType, actionContext: BuildActionContextState) => {
     const actionTemplateText = makeWorkflowTemplate(workflowContext)
 
     return useMutation(
@@ -15,14 +16,10 @@ export const useUpdateWorkflow = (mutationName: string, workflowContext: Workflo
             const filter = {
                 Id: options.workflowId
             }
-            const newActionDefinitionProperties = {
-                ...workflowContext,
-                DisplayName: workflowContext.Name,
-                UniqueName: workflowContext.Name,
-                UpdatedOn: undefined,
-                
-            } as ActionDefinition
-            const actionTemplateWithParameters = {
+            const newActionDefinitionProperties: ActionDefinition = {
+                ...actionContext?.actionDefinitionWithTags?.actionDefinition
+            }
+            const actionTemplateWithParameters: ActionTemplatesWithParameters = {
                 model: {
                    Id: workflowContext.Template?.Id,
                    Text: actionTemplateText
@@ -34,7 +31,7 @@ export const useUpdateWorkflow = (mutationName: string, workflowContext: Workflo
                         tags: []
                     }
                 })
-            } as ActionTemplatesWithParameters
+            }
 
             const payload: UpdateActionDefinitionWithTemplate = {
                 filter: filter,

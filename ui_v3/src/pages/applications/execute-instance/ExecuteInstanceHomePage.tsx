@@ -1,16 +1,15 @@
-import { Route, useRouteMatch, RouteComponentProps, Switch } from "react-router-dom"
-import React from "react"
-import { useGetInstanceDetails } from "../../../common/components/application/hooks/useGetInstanceDetails"
-import { ActionInstanceDetails } from "../../../generated/interfaces/Interfaces"
-import { ExecuteActionContext, ExecuteActionContextProvider, SetExecuteActionContext } from "../../execute_action/context/ExecuteActionContext"
-import { ActionInstance, ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities"
-import NoData from "../../../common/components/NoData"
 import { Box, Button, Dialog, DialogContent } from "@mui/material"
-import ActionHero from "../../build_action/components/form-components/ActionHero"
+import React from "react"
+import { Route, RouteComponentProps, Switch, useRouteMatch } from "react-router-dom"
+import { v4 as uuidv4 } from "uuid"
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
+import { useGetInstanceDetails } from "../../../common/components/application/hooks/useGetInstanceDetails"
+import NoData from "../../../common/components/NoData"
+import { ActionInstance, ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities"
+import { ActionInstanceDetails } from "../../../generated/interfaces/Interfaces"
+import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero"
 import ViewConfiguredParameters from "../../execute_action/components/ViewConfiguredParameters"
 import useCreateActionInstance from "../../execute_action/hooks/useCreateActionInstance"
-import { v4 as uuidv4 } from "uuid"
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution"
 
 
@@ -78,14 +77,15 @@ export const ExecuteInstance = ({match}: RouteComponentProps<{actionInstanceId: 
         setDialogState(false)
     }
 
+    // TODO: Review How ActionDefinition Hero is Used Here
     const [actionInstanceDetails, isLoading, error] = useGetInstanceDetails({instanceId: instanceId, enabled: instancesWithParameters === undefined, handleSuccess: handleSuccess})
     if(instancesWithParameters) {
         return (
             <Box sx={{display: "flex", flexDirection: "column", gap: 4, mb: 2}}>
                 <Box>
-                    <ActionHero 
-                        Name={instancesWithParameters.actionInstance?.Name}
-                        readOnly={true}
+                    <ActionDefinitionHero
+                        mode="READONLY"
+                        name={instancesWithParameters.actionInstance?.Name}
                     />
                 </Box>
                 <Box>

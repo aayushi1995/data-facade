@@ -1,19 +1,16 @@
 //different for different leaf tab according to current active tab
-import {Link as RouterLink, Redirect, Route, Switch} from "react-router-dom";
-import {
-    DATA_CONNECTIONS_ROUTE,
-    DATA_RAW_ROUTE,
-    DATA_SUB_TABS, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE
-} from "./header/data/DataRoutesConfig";
-import {Box, Tab, Tabs} from "@mui/material";
-import {Button, Typography} from "@mui/material";
-import React, {ReactChildren} from "react";
-import {ModuleHeaderPropType} from "./header/schema";
 import AddIcon from "@mui/icons-material/Add";
-import {CreateConnectionButton} from "../../pages/data/components/connections/CreateConnectionButton";
+import { Box, Button, Typography } from "@mui/material";
+import React, { ReactChildren } from "react";
+import { Link as RouterLink, Route, Switch } from "react-router-dom";
 import ConfiguredDataSource from "../../pages/configurations/components/ConfiguredDataSource";
-import {TableBrowser} from "../../pages/table_browser/TableBrowser";
-import UploadTableDialogContent from "./UploadTableDialogContent";
+import { CreateConnectionButton } from "../../pages/data/components/connections/CreateConnectionButton";
+import { TableBrowser } from "../../pages/table_browser/TableBrowser";
+import {
+    DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_RAW_ROUTE,
+    DATA_SUB_TABS
+} from "./header/data/DataRoutesConfig";
+import { ModuleHeaderPropType } from "./header/schema";
 
 
 export const ModuleSubHeader = () => <Switch>{
@@ -49,6 +46,7 @@ export const ModuleHeader = ({tab}: ModuleHeaderPropType) => {
                 <Button variant="contained" to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={RouterLink}
                         title="Upload File"
                         endIcon={<AddIcon sx={{fontSize: "small", backgroundColor: "secondary"}}/>}
+                        sx={{flex: 1, borderRadius: '10px', bgcolor: 'lightBlueDF.main'}}
                 >
                     Upload File
                 </Button>

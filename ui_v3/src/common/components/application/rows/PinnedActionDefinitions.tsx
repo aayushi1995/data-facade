@@ -1,9 +1,9 @@
 import { Box } from "@mui/material"
-import ActionDefinitionCard from "../../action/ActionDefinitionCard"
 import { ActionDefinitionCardViewResponse } from "../../../../generated/interfaces/Interfaces"
-import { useGetPinnedActionDefinitions } from "./../hooks/useGetPinnedActionDefinitions"
-import LoadingWrapper from "../../LoadingWrapper"
 import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
+import ActionDefinitionCard from "../../action/ActionDefinitionCard"
+import LoadingWrapper from "../../LoadingWrapper"
+import { useGetPinnedActionDefinitions } from "./../hooks/useGetPinnedActionDefinitions"
 
 
 const PinnedActionDefinitions = (props: AllApplicationRowProps) => {
@@ -13,7 +13,6 @@ const PinnedActionDefinitions = (props: AllApplicationRowProps) => {
     const renderCards = (actionDefinitions: ActionDefinitionCardViewResponse[] | undefined) => (actionDefinitions||[])
         .filter(actionDefinitions => {
             const show = (actionDefinitions.DefinitionName?.toLowerCase().includes(searchQuery.toLowerCase())||actionDefinitions.DefinitionName?.toLowerCase().includes(searchQuery.toLowerCase()))
-            console.log(show, actionDefinitions)
             return show
         })
         .map(actionDefinition => 

@@ -23,7 +23,7 @@ export type ActionContextActionParameterDefinitionWithTags = {
     existsInDB: boolean
 }
 
-export type ContextModes = "CREATE" | "UPDATE"
+export type ContextModes = "CREATE" | "UPDATE" | "EMPTY" | undefined
 
 export type BuildActionContextState = {
     mode: ContextModes,
@@ -43,6 +43,19 @@ export type BuildActionContextState = {
     SourceApplicationId?: string
 }
 
+const formEmptyDefaultContext: () => BuildActionContextState = () => {
+    return {
+        mode: undefined,
+        actionDefinitionWithTags: {
+            actionDefinition: {},
+            tags: []
+        },
+        actionTemplateWithParams: [],
+        isLoadingAction: false,
+        savingAction: false,
+        loadingActionForEdit: false
+    }
+}
 
 const formDefaultUpdateContext: () => BuildActionContextState = () => {
     return {
@@ -95,7 +108,7 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
     return newState
 }
 
-export const BuildActionContext = React.createContext<BuildActionContextState>(formDefaultCreateContext()) 
+export const BuildActionContext = React.createContext<BuildActionContextState>(formEmptyDefaultContext()) 
 
 // Set Build Action Context State
 type SetBuildActionContextState = (action: BuildActionAction) => void
@@ -184,6 +197,19 @@ type SetActionTemplateTextAction = {
     }
 }
 
+type SetActionGroupAction = {
+    type: "SetActionGroup",
+    payload: {
+        newGroup?: string
+    }
+}
+
+type SetActionDefinitionAction = {
+    type: "SetActionDefinition",
+    payload: {
+        newActionDefinition: ActionDefinition
+    }
+}
 
 
 // Action Parameter
@@ -230,8 +256,8 @@ type SetActionParameterDefintionTagsAction = {
     }
 }
 
-type SetSourceApplicationIdAction = {
-    type: "SetSourceApplicationId",
+type SetApplicationIdAction = {
+    type: "SetApplicationId",
     payload: {
         newApplicationId?: string
     }
@@ -298,6 +324,7 @@ export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
 SetActionDefinitionReturnTypeAction |
+SetActionGroupAction |
 AddActionDefinitionTagAction |
 RemoveActionDefinitionTagAction |
 ReAssignActionDefinitionTagAction |
@@ -305,6 +332,7 @@ SetActionTemplateSupportedRuntimeGroupAction |
 SetActionTemplateTextAction |
 SetParameterDetailsAction |
 SetParameterTypeAction |
+SetActionDefinitionAction |
 AddActionParameterDefinitionAction |
 RemoveActionParameterDefinitionsAction |
 ResetActionParameterDefinitions |
@@ -313,7 +341,7 @@ RefreshIdsAction |
 ResetAction |
 LoadFromExistingAction |
 SetModeAction |
-SetSourceApplicationIdAction |
+SetApplicationIdAction |
 SaveActionToLastCreatedAction |
 TogglePinnedToDashboardAction |
 ToggleVisibilityAction |
@@ -375,7 +403,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                     ...state.actionDefinitionWithTags,
                     actionDefinition: {
                         ...state.actionDefinitionWithTags.actionDefinition,
-                        OutputFormat: action.payload.newReturnType
+                        PresentationFormat: action.payload.newReturnType
                     }
                 }
             }
@@ -422,6 +450,32 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                         Language: getLanguage(action.payload.newSupportedRuntimeGroup)
                     }
                 })
+            }
+        }
+
+        case "SetActionGroup": {
+            return {
+                ...state,
+                actionDefinitionWithTags: {
+                    ...state.actionDefinitionWithTags,
+                    actionDefinition: {
+                        ...state?.actionDefinitionWithTags?.actionDefinition,
+                        ActionGroup: action.payload.newGroup
+                    }
+                }
+            }
+        }
+
+        case "SetActionDefinition": {
+            return {
+                ...state,
+                actionDefinitionWithTags: {
+                    ...state?.actionDefinitionWithTags,
+                    actionDefinition: {
+                        ...state?.actionDefinitionWithTags?.actionDefinition,
+                        ...action?.payload?.newActionDefinition
+                    }
+                }
             }
         }
 
@@ -526,8 +580,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 ...state,
                 actionDefinitionWithTags: {
                     actionDefinition: {
-                        ...action.payload?.ActionDefinition?.model!,
-                        ApplicationId: undefined
+                        ...action.payload?.ActionDefinition?.model!
                     },
                     tags: action.payload?.ActionDefinition?.tags!
                 },
@@ -554,10 +607,16 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
-        case "SetSourceApplicationId": {
+        case "SetApplicationId": {
             return {
                 ...state,
-                SourceApplicationId: action.payload.newApplicationId
+                actionDefinitionWithTags: {
+                    ...state?.actionDefinitionWithTags,
+                    actionDefinition: {
+                        ...state?.actionDefinitionWithTags?.actionDefinition,
+                        ApplicationId: action.payload.newApplicationId
+                    }
+                }
             }
         }
 
@@ -663,7 +722,6 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
 }
 
 const extractParameterNamesFromCode = (code?: string, language?: string) => {
-    console.log(code, language)
     if(!!code && !!language) {
         const parametersArray = []
         if (language === ActionDefinitionQueryLanguage.PYTHON) {
@@ -830,9 +888,16 @@ const getDefaultParameterWithTags: (definitionId: string, templateId: string) =>
 })
 
 
-export const BuildActionContextProvider = ({children}: {children: React.ReactElement}) => {
+export const BuildActionContextProvider = ({children, mode}: {children: React.ReactElement, mode?: ContextModes}) => {
     const queryClient = useQueryClient()
-    const [contextState, dispatch] = React.useReducer(reducer, formDefaultCreateContext())
+    const getInitialState = (mode: ContextModes) => {
+        switch(mode){
+            case "CREATE": return formDefaultCreateContext()
+            case "UPDATE": return formDefaultUpdateContext()
+            default: return formEmptyDefaultContext()
+        }
+    }
+    const [contextState, dispatch] = React.useReducer(reducer, getInitialState(mode))
     const setContextState: SetBuildActionContextState = ( args: BuildActionAction) => dispatch(args)
 
     // Data Query Hooks

@@ -58,7 +58,7 @@ const EditActionForm = (props: EditActionFormProps) => {
                 <ShowActionInfo actionId={selectedActionId}/>
             </DialogContent>
         </Dialog>
-        <Box sx={{display: "flex", flexDirection: "row", width: "100%", pl: 1, height: '100%'}} id="drawer-container">
+        <Box sx={{display: "flex", flexDirection: "row", width: "100%", pl: 1, height: '100%', pb: 5}}>
             <CollapsibleDrawer
                 open={sideBarOpen}
                 openWidth="400px"

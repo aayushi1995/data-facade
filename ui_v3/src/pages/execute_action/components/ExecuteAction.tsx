@@ -3,7 +3,7 @@ import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
 import { ActionParameterInstance } from "../../../generated/entities/Entities";
-import ActionHero from "../../build_action/components/form-components/ActionHero";
+import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero";
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
@@ -88,14 +88,19 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             })
         }
     }
+    console.log(executeActionContext)
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 4}}>
             <Box>
-                <ActionHero
-                    Name={executeActionContext.ExistingModels.ActionDefinition?.UniqueName}
-                    Description={executeActionContext.ExistingModels.ActionDefinition?.Description}
-                    Author={executeActionContext.ExistingModels.ActionDefinition?.CreatedBy}
-                    readOnly={true}
+                <ActionDefinitionHero
+                    mode="READONLY"
+                    name={executeActionContext.ExistingModels.ActionDefinition?.UniqueName}
+                    description={executeActionContext.ExistingModels.ActionDefinition?.Description}
+                    createdBy={executeActionContext.ExistingModels.ActionDefinition?.CreatedBy}
+                    applicationId={executeActionContext.ExistingModels.ActionDefinition?.ApplicationId}
+                    group={executeActionContext.ExistingModels.ActionDefinition?.ActionGroup}
+                    lastUpdatedOn={executeActionContext.ExistingModels.ActionDefinition?.UpdatedOn}
+                    publishStatus={executeActionContext.ExistingModels.ActionDefinition?.PublishStatus}
                 />
             </Box>
             <Box>

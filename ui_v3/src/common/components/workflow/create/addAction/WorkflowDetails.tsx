@@ -1,38 +1,40 @@
-import { Card , Grid , Typography, Box, TextField, Button} from "@mui/material"
+import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material"
 import React from "react"
-import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
+import { BuildActionContext, SetBuildActionContext } from "../../../../../pages/build_action/context/BuildActionContext"
 
 export interface WorkflowDetailsProps {
     onContinue?: () => void
 }
 
 const WorkflowDetails = (props: WorkflowDetailsProps) => {
-    const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const actionContext = React.useContext(BuildActionContext)
+    const setActionContext = React.useContext(SetBuildActionContext)
     const [error, setError] = React.useState(true)
-    const [name, setName] = React.useState("")
-    const [description, setDescription] = React.useState("")
+    const [name, setName] = React.useState<string|undefined>()
+    const [description, setDescription] = React.useState<string|undefined>()
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const name = e.target.value
-        setName(name)
-        if(name === "") {
-            setError(true)
-            return;
-        }
-        setWorkflowContext({type: 'CHANGE_NAME', payload: {newName: name}})
-        setError(false)
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setActionContext({type: 'SetActionDefinitionName', payload: {newName: name}})
     }
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const description = e.target.value
-        setDescription(description)
-        setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: {newDescription: description}})
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setActionContext({type: 'SetActionDefinitionDescription', payload: {newDescription: description}})
     }
 
     const handleContinue = () => {
-        // setWorkflowContext({type: 'SET_WORKFLOW_DETAILS', payload: {actionName: name, description: description}})
         props?.onContinue?.()
     }
+
+    // Responsible for setting Error true if name is empty
+    React.useEffect(() => {
+        setError(name === "")
+    }, [name])
+
+    // Responsible for setting initial value of states from context
+    React.useEffect(() => {
+        setName(actionContext?.actionDefinitionWithTags?.actionDefinition?.UniqueName || "")
+        setDescription(actionContext?.actionDefinitionWithTags?.actionDefinition?.Description || "")
+    }, [])
 
     return (
         <Grid container rowSpacing={12}>
@@ -54,12 +56,12 @@ const WorkflowDetails = (props: WorkflowDetailsProps) => {
                     </Grid>
                     <Grid item xs={12}>
                         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <TextField value={name} error={error} label="Flow Name" sx={{minWidth: '30%'}} onChange={handleNameChange}></TextField>
+                            <TextField value={name} error={error} label="Flow Name" sx={{minWidth: '30%'}} onChange={(event) => setName(event.target.value)} onBlur={handleNameChange}></TextField>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>
                         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <TextField value={description} label="description" multiline={true} sx={{minWidth: '30%'}} onChange={handleDescriptionChange}></TextField>
+                            <TextField value={description} label="description" multiline={true} sx={{minWidth: '30%'}} onChange={(event) => {setDescription(event.target.value)}} onBlur={handleDescriptionChange}></TextField>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>

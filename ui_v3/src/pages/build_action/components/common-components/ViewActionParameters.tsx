@@ -34,7 +34,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
     }
 
     React.useEffect(() => {
-        console.log(paramsWithTag, selectedParameters)
         if(selectedParameters===undefined && !!paramsWithTag && !!paramsWithTag[0]){
             console.log(selectedParameters)
             onSelectParameterForEdit?.(paramsWithTag[0]!)

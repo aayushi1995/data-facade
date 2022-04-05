@@ -40,7 +40,6 @@ const ActionConfigComponent = () => {
         )
     }
 
-    console.log(buildActionContext.savingAction, buildActionContext.loadingActionForEdit)
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 1, minHeight: "100%"}} className="wa">

@@ -4,11 +4,11 @@ import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "r
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import NoData from "../../../common/components/NoData"
-import WorkflowHero from "../../../common/components/workflow-editor/WorkflowHero"
 import useCreateWorkflowActionInstanceMutation from "../../../common/components/workflow/execute/hooks/useCreateWorkflowActionInstanceMutation"
 import { useGetWorkflowChildInstances, useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
 import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
+import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
@@ -33,6 +33,8 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         setWorkflowContext({type: 'CHANGE_NAME', payload: {newName: data?.[0]?.ActionDefinition?.model?.DisplayName || "workflow"}})
         setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: {newDescription: data?.[0]?.ActionDefinition?.model?.Description || "NA"}})
         setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETERS', payload: data?.[0]?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions?.map(parameter => parameter?.model || {}) || []})
+        setWorkflowContext({type: 'SET_APPLICATION_ID', payload: data?.[0]?.ActionDefinition?.model?.ApplicationId })
+        setWorkflowContext({type: 'SET_ACTION_GROUP', payload: data?.[0]?.ActionDefinition?.model?.ActionGroup })
     }
 
     const handleInstances = (data: ActionInstanceWithParameters[]) => {
@@ -69,7 +71,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         return (
             <Box sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center'}}>
                 <Box sx={{flex: 1}}>
-                    <WorkflowHero readonly={true} Name={workflowContext.Name} Description={workflowContext.Description}/>
+                    <ActionDefinitionHero mode="READONLY" name={workflowContext.Name} description={workflowContext.Description} applicationId={workflowContext.ApplicationId} group={workflowContext.ActionGroup}/>
                 </Box>
                 <Box sx={{flex: 4, mb: 2}}>
                     <ParameterDefinitionConfigPlane parameterDefinitions={workflowContext.WorkflowParameters} parameterInstances={workflowContext.WorkflowParameterInstance || []} handleChange={handleParameterInstancesChange}/>

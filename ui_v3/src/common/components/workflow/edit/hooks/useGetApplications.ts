@@ -1,13 +1,21 @@
-import { useQuery } from "react-query"
+import { useQuery, UseQueryOptions } from "react-query"
 import { Fetcher } from "../../../../../generated/apis/api"
 import { Application } from "../../../../../generated/entities/Entities"
 
-const useGetApplications = (options: {filter: Application}): [Application[], boolean, object] => {
-    const {data, isLoading, error} = useQuery(["Application", "get"],
-        () => Fetcher.fetchData('GET', '/getApplications', options.filter)
+export interface UseGetApplicationsParams {
+    options?: UseQueryOptions<Application[], unknown>,
+    filter: Application
+}
+
+const useGetApplications = (params: UseGetApplicationsParams) => {
+    const query = useQuery(["Application", "get"],
+        () => Fetcher.fetchData('GET', '/getApplications', params.filter),
+        {
+            ...params?.options
+        }
     )
 
-    return [data || [], isLoading, error as object]
+    return query
 }
 
 export default useGetApplications

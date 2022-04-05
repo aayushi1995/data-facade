@@ -1,16 +1,17 @@
+import { Box, Button } from "@mui/material"
 import React from "react"
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
-import useGetWorkflowActionsForTable from "../../common/components/workflow/create/hooks/useGetWorkflowActionsForTable"
-import { WorkflowStagesWithActions } from "../../generated/interfaces/Interfaces"
-import { WorkflowContext, WorkflowContextProvider, SetWorkflowContext, WorkflowActionDefinition, WorkflowContextType } from "../applications/workflow/WorkflowContext"
-import { v4  as uuidv4 } from "uuid"
-import { Box, Button } from "@mui/material"
-import { WorkflowHeroWrapper } from "./BuildWorkflowHomePage"
-import { AddingActionView } from "../../common/components/workflow/create/addAction/AddingActionView"
-import { StagesWithActions } from "../../common/components/workflow/create/newStage/StagesWithActions"
-import WorkflowDetails from "../../common/components/workflow/create/addAction/WorkflowDetails"
-import useSaveWorkflowMutation from "../../common/components/workflow/create/hooks/useSaveWorkflowMutation"
+import { v4 as uuidv4 } from "uuid"
 import NoData from "../../common/components/NoData"
+import { AddingActionView } from "../../common/components/workflow/create/addAction/AddingActionView"
+import WorkflowDetails from "../../common/components/workflow/create/addAction/WorkflowDetails"
+import useGetWorkflowActionsForTable from "../../common/components/workflow/create/hooks/useGetWorkflowActionsForTable"
+import useSaveWorkflowMutation from "../../common/components/workflow/create/hooks/useSaveWorkflowMutation"
+import { StagesWithActions } from "../../common/components/workflow/create/newStage/StagesWithActions"
+import { WorkflowStagesWithActions } from "../../generated/interfaces/Interfaces"
+import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "../applications/workflow/WorkflowContext"
+import { ActionDefinitionHeroActionContextWrapper } from "../build_action/components/shared-components/ActionDefinitionHero"
+import { BuildActionContext, SetBuildActionContext } from "../build_action/context/BuildActionContext"
 
 
 const BuildTableWorkflow = ({match}: RouteComponentProps<{tableId: string}>) => {
@@ -19,6 +20,8 @@ const BuildTableWorkflow = ({match}: RouteComponentProps<{tableId: string}>) => 
     const [isWorkflowReady, setWorkflowReady] = React.useState<boolean>(false)
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const actionContext = React.useContext(BuildActionContext)
+    const setActionContext = React.useContext(SetBuildActionContext)
     const useSaveWorkflow = useSaveWorkflowMutation({mutationName: "Save Workflow"})
     const handleSuccess = (data: WorkflowStagesWithActions[]) => {
         if(data.length > 0) {
@@ -69,7 +72,7 @@ const BuildTableWorkflow = ({match}: RouteComponentProps<{tableId: string}>) => 
             ) : (
                 <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center'}}>
                     <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>
-                            <WorkflowHeroWrapper/>
+                            <ActionDefinitionHeroActionContextWrapper/>
                     </Box>
                     <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%'}}>
                         {workflowContext.currentSelectedStage ? (

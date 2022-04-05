@@ -1,17 +1,14 @@
-import React, {useContext} from 'react'
-import {Button, Box} from '@mui/material'
-import {useMutation} from 'react-query'
-import ColumnRangeChartVisualizer from '../../common/components/ColumnRangeChartVisualizer'
-import AppContext from '../../utils/AppContext'
-import labels from '../../labels/labels'
+import { Box, Button } from '@mui/material'
+import React, { useContext } from 'react'
+import { useMutation } from 'react-query'
+import LoadingIndicator from '../../common/components/LoadingIndicator'
 import TagHandler from '../../common/components/tag-handler/TagHandler'
-import SelectAction from '../../common/components/workflow/create/SelectAction/SelectAction'
-import { AddActionToWorkflowStage } from '../../common/components/workflow/create/addAction/AddActionToWorkflowStage'
-import { WorkflowContext, WorkflowContextProvider } from '../applications/workflow/WorkflowContext'
-import ViewSelectedAction from '../../common/components/workflow/create/ViewSelectedAction/ViewSelectedAction'
-import { StagesWithActions } from '../../common/components/workflow/create/newStage/StagesWithActions'
 import { AddingActionView } from '../../common/components/workflow/create/addAction/AddingActionView'
+import { StagesWithActions } from '../../common/components/workflow/create/newStage/StagesWithActions'
 import { makeWorkflowTemplate } from '../../common/components/workflow/create/util/MakeWorkflowTemplate'
+import labels from '../../labels/labels'
+import AppContext from '../../utils/AppContext'
+import { WorkflowContext } from '../applications/workflow/WorkflowContext'
 
 
 const endPoint = require("../../common/config/config").FDSEndpoint
@@ -21,7 +18,6 @@ const DevTestPage = () => {
     const appcontext = useContext(AppContext)
     const email = appcontext.userEmail
     const token = appcontext.token
-
     const bootstrapMutation = useMutation((job) => {
 
 
@@ -72,19 +68,14 @@ const DevTestPage = () => {
                 <Button onClick={handleBootstrap}>Bootstrap</Button>
             </Box>
             <Box>
+                {(nukeMutation.isLoading || bootstrapMutation.isLoading) && <LoadingIndicator/>}
+            </Box>
+            <Box>
                 <Button onClick={handleNuke}>Nuke</Button>
             </Box>
             <Box>
                 <TagHandler entityType={labels.entities.TABLE_PROPERTIES} entityId={""} allowAdd={true} allowDelete={true}/>
             </Box>
-            <WorkflowContextProvider>
-                <Test/>
-            </WorkflowContextProvider>   
-            {/* <Box>
-                <ViewSelectedAction
-                    actionDefinitionId="c18e6c3a-8d43-441e-bf63-263a191c7d22"
-                />
-            </Box> */}
         </Box>
     )
 }

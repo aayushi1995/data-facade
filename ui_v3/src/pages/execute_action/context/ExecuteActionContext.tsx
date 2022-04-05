@@ -1,18 +1,7 @@
-import { type } from "os";
-import React from "react"
-import { v4 as uuidv4 } from 'uuid'
-import { getAttributesFromInputType } from "../../../custom_enums/ActionParameterDefinitionInputMap";
-import { getLanguage } from "../../../custom_enums/SupportedRuntimeGroupToLanguage";
-import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
-import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
-import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat";
-import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
-import ActionParameterDefinitionInputType from "../../../enums/ActionParameterDefinitionInputType";
+import React from "react";
+import { v4 as uuidv4 } from 'uuid';
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import ActionParameterDefinitionType from "../../../enums/ActionParameterDefinitionType";
-import TemplateLanguage from "../../../enums/TemplateLanguage";
-import TemplateSupportedRuntimeGroup from "../../../enums/TemplateSupportedRuntimeGroup";
-import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ActionTemplate, Tag } from "../../../generated/entities/Entities";
+import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
 import { MutationContext } from "../hooks/useCreateActionInstance";
 import { getDefaultTemplateParameters } from "../util";
@@ -138,6 +127,7 @@ const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDeta
 const safeMergeState = (oldState: ExecuteActionContextState, actionDetail: ActionDefinitionDetail): ExecuteActionContextState => {
     const newActionParameterDefinitions = getDefaultTemplateParameters(actionDetail)
     const newActionParameterInstances = oldState.ToCreateModels.ActionParameterInstances.filter(api => newActionParameterDefinitions.find(apd => apd.Id===api.ActionParameterDefinitionId))
+    console.log(actionDetail)
     return {
         ...oldState,
         ExistingModels: {
