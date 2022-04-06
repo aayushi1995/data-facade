@@ -142,7 +142,7 @@ const TableRowExpanded = (props) => {
                         </Grid>
                         <Grid container item xs={6} lg={12}>
                             <EditTags RelatedEntityId={props.TableId}
-                                      RelatedEntityType={labels.entities.TABLE_PROPERTIES} scope={TagScope.TABLE}
+                                      RelatedEntityType={labels.entities.TABLE_PROPERTIES}
                                       label="Tags"/>
                         </Grid>
                         {/* {(data.ProviderInstanceName == "LocalDB") ? */}

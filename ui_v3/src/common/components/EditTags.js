@@ -21,7 +21,7 @@ const changeType = {
 }
 
 const EditTags = (props) => {
-    const tagScope = props.scope || "Column"
+    const tagScope = props.scope
     const [selectedTags, setSelectedTags] = React.useState([])
     const [availableTags, setAvailableTags] = React.useState([])
     const [dropDownState, setDropDownState] = React.useState({count: 0})

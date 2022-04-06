@@ -19,6 +19,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const history = useHistory()
+    const [isReady, setIsReady] = React.useState(false)
 
     const handleInstanceSaved = (data: any) => {
         history.push(`/application/workflow-execution/${data?.[0]?.Id}`)
@@ -26,8 +27,6 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
 
     const saveWorkflowMutation = useCreateWorkflowActionInstanceMutation(workflowContext, handleInstanceSaved)
     const workflowId = match.params.workflowId
-    
-    console.log(workflowContext)
     const handleTemplate = (data: ActionDefinitionDetail[]) => {
         setWorkflowContext({type: 'ADD_ACTION_TEMPLATE', payload: {template: data?.[0]?.ActionTemplatesWithParameters?.[0].model}})
         setWorkflowContext({type: 'CHANGE_NAME', payload: {newName: data?.[0]?.ActionDefinition?.model?.DisplayName || "workflow"}})
@@ -38,7 +37,6 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     }
 
     const handleInstances = (data: ActionInstanceWithParameters[]) => {
-        console.log("ACTION INSTANCES", data)
         data.forEach(actionInstanceWithParameters => {
             const workflowAction = {
                 Id: actionInstanceWithParameters.model?.Id || "id",
@@ -50,14 +48,24 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 DefinitionId: actionInstanceWithParameters.model?.DefinitionId || "definitionId",
                 Parameters: actionInstanceWithParameters.ParameterInstances      
             } as WorkflowActionDefinition
+            workflowContext.WorkflowParameters.forEach(globalParameter => {
+                const mappedGlobalParameter = workflowAction.Parameters?.find(parameter => parameter.GlobalParameterId === globalParameter.Id)
+                const parametersArray: ActionParameterInstance[] = []
+                if(!!mappedGlobalParameter) {
+                    parametersArray.push({TableId: mappedGlobalParameter.TableId, ParameterValue: mappedGlobalParameter.ParameterValue, ActionParameterDefinitionId: globalParameter.Id})
+                }
+                setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': parametersArray}})
+            })
             const stageId = workflowContext.stages[0].Id
             setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: stageId, Action: workflowAction}})
         }) 
+        setIsReady(true)
     }
 
     const handleParameterInstancesChange = (newGlobalParameterInstances: ActionParameterInstance[]) => {
         setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {parameterInstances: newGlobalParameterInstances}})
     }
+    console.log(workflowContext.WorkflowParameterInstance)
 
     const executeWorkflow = () => {
         saveWorkflowMutation.mutate({workflowId: workflowId, workflowName: workflowContext.Name})
@@ -66,7 +74,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const [workflowDefinition, error, loading] = useGetWorkflowDetails(workflowId, {enabled: workflowContext.Template === undefined, onSuccess: handleTemplate})
     const [workflowInstances, instancesError, instancesLoading] = useGetWorkflowChildInstances(workflowId, {enabled: ((workflowDefinition?.length || 0) > 0 && workflowContext.stages[0].Actions.length === 0), onSuccess: handleInstances})
 
-    if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0)
+    if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0 && isReady)
     {
         return (
             <Box sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center'}}>

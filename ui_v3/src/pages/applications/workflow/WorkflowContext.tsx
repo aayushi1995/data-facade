@@ -559,7 +559,8 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         ...actionDef,
                         Parameters: actionDef.Parameters.map(parameter => parameter.ActionParameterDefinitionId !== action.payload.parameterDefinitionId ? parameter : {
                             ...parameter,
-                            userInputRequired: action.payload.userInput
+                            userInputRequired: action.payload.userInput,
+                            SourceExecutionId: action.payload.userInput === "No" ? undefined : parameter.SourceExecutionId
                         })
                     })
                 })

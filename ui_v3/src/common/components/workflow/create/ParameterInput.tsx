@@ -80,7 +80,7 @@ export interface ColumnListParameterInput {
         parameterName: string,
         selectedColumnFilters: ColumnProperties[] | undefined,
         tableFilters: TableProperties[] | undefined,
-        onChange: (newColumnList?: ColumnProperties[]) => void
+        onChange?: (newColumnList?: ColumnProperties[]) => void
     }
 }
 
@@ -221,7 +221,7 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
                 limitTags={2}
                 filterSelectedOptions
                 onChange={(event, value, reason, details) => {
-                    onChange(value ?? undefined)
+                    onChange?.(value ?? undefined)
                 }}
             ></Autocomplete>
         </LoadingWrapper>

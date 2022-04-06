@@ -5,7 +5,6 @@ import EditWorkflowHomePage from '../applications/workflow/EditWorkflowHomePage'
 import ExecuteWorkflowHomePage from '../applications/workflow/ExecuteWorkflowHomePage';
 import ViewWorkflowExecutionHomePage from '../applications/workflow/ViewWorkflowExecutionHomePage';
 import BuildActionHomePage from '../build_action/BuildActionHomePage';
-import BuildTableWorkflowHomePage from '../build_workflow/BuildTableWorkflowHomePage';
 import BuildWorkflowHomePage from '../build_workflow/BuildWorkflowHomePage';
 import EditActionHomePage from '../edit_action/EditActionHomePage';
 import ExecuteActionHomePage from '../execute_action/ExecuteActionHomePage';
@@ -29,7 +28,6 @@ export const ApplicationHomePage = withRouter(function TableBrowserRoutes() {
             <Route path="/application/workflow-execution" component={ViewWorkflowExecutionHomePage}/>
             <Route path="/application/execute-action" component={ExecuteActionHomePage}/>
             <Route path="/application/edit-workflow" component={EditWorkflowHomePage}/>
-            <Route path="/application/build-table-workflow" component={BuildTableWorkflowHomePage}/>
             <Route path="/application/execute-instance" component={ExecuteInstanceHomePage}/>
             <Route path={`${match.path}/:applicationId`} component={ApplicationDetailView}></Route>
             <Route path="/application" component={AllApplicationView}/>

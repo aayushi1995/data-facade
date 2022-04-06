@@ -191,6 +191,16 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
                     })
                 }
             } as BooleanParameterInput
+        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
+            const parameterConfig = getCurrentParameterConfig()
+            return {
+                parameterType: "COLUMN_LIST",
+                inputProps: {
+                    parameterName: props.parameter.ParameterName || "NAME NA",
+                    selectedColumnFilters: parameterConfig?.ParameterValue?.split(',').map(name => ({UniqueName: name})) || [],
+                    tableFilters: [{Id: parameterConfig?.TableId}],
+                }
+            }
         } else {
             return {parameterType: undefined}
         }

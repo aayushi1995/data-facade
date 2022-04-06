@@ -46,7 +46,7 @@ const StatsTable = (props) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.statsData.map((row) => (
+                    {props.statsData?.map((row) => (
                         <StyledTableRow key={row.stat}>
                             <StyledTableCell>{row.stat}</StyledTableCell>
                             <StyledTableCell>{row.value}</StyledTableCell>

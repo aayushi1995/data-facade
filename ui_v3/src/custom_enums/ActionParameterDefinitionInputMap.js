@@ -37,6 +37,11 @@ const InputMap = {
             [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.RUN_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.PANDAS_DATAFRAME,
         },
+        [ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.PUT_AS_IS,
+            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.RUN_TIME,
+            [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
+        }
     },
     [TemplateLanguage.SQL]: {
         [ActionParameterDefinitionInputType.STRING]: {
