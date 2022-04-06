@@ -3,7 +3,7 @@ import { Fetcher } from "../../../../../generated/apis/api"
 import { Application } from "../../../../../generated/entities/Entities"
 
 export interface UseGetApplicationsParams {
-    options?: UseQueryOptions<Application[], unknown>,
+    options?: UseQueryOptions<Application[], unknown, Application[], string[]>,
     filter: Application
 }
 

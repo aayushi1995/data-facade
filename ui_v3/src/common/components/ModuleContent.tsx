@@ -11,6 +11,7 @@ import {
     DATA_SUB_TABS
 } from "./header/data/DataRoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
+import UploadTableDialogContent from "./UploadTableDialogContent";
 
 
 export const ModuleSubHeader = () => <Switch>{
