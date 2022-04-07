@@ -207,7 +207,7 @@ type SetActionGroupAction = {
 type SetActionDefinitionAction = {
     type: "SetActionDefinition",
     payload: {
-        newActionDefinition: ActionDefinition
+        newActionDefinition?: ActionDefinition
     }
 }
 

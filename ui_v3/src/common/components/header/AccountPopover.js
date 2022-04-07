@@ -1,9 +1,7 @@
-import React, {useRef, useState} from 'react';
-import {Avatar, Box, Button, ButtonBase, Divider, Popover, Typography} from '@mui/material';
-import {Link as RouterLink, useLocation} from "react-router-dom";
+import { Avatar, Box, ButtonBase, Divider, Popover, Typography } from '@mui/material';
+import React, { useRef, useState } from 'react';
 import Logout from "../../../pages/home/components/Logout";
-import {useAppBarProps} from "./DataFacadeAppBar";
-import {ThemeToggle} from "./ThemeToggle";
+import { useAppBarProps } from "./DataFacadeAppBar";
 
 const AccountPopover = () => {
     const anchorRef = useRef(null);

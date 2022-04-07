@@ -1,10 +1,9 @@
 
-import React from 'react'
-import { Accordion, AccordionSummary, Box, Card, AccordionDetails, IconButton, Typography, useTheme, Grid, Icon, SvgIcon} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SelectActionCard, { SelectActionCardProps } from './SelectActionCard';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, SvgIcon, Typography, useTheme } from '@mui/material';
+import React from 'react';
 import { ReactComponent as DefaultIcon } from "./Icon.svg";
-import { THEMES } from '../../../../data_manager/constants';
+import SelectActionCard, { SelectActionCardProps } from './SelectActionCard';
 
 export interface GroupDropDownProps {
     groupName: string,
@@ -15,7 +14,6 @@ export interface GroupDropDownProps {
 
 const GroupDropDown = (props: GroupDropDownProps) => {
     const theme = useTheme();
-    console.log(theme)
     return(
             <Accordion
                 sx={{

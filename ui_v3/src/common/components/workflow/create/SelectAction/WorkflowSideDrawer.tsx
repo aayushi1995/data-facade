@@ -1,13 +1,7 @@
-import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 import React from "react"
+import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 import CollapsibleDrawer from "../../../../../pages/build_action/components/form-components/CollapsibleDrawer"
 import SelectActionDrawer from "../../../common/SelectActionDrawer"
-import useActionDefinitionDetail from "../../../../../pages/build_action/hooks/useActionDefinitionDetail"
-import { ActionDefinitionDetail } from "../../../../../generated/interfaces/Interfaces"
-import useCopyAndSaveDefinition from "../hooks/useCopyAndSaveDefinition"
-import LoadingIndicator from "../../../LoadingIndicator"
-import { useHistory, useRouteMatch } from "react-router-dom"
-import ConfirmationDialog from "../../../ConfirmationDialog"
 
 
 
@@ -26,8 +20,6 @@ const WorkflowSideDrawer = (props: WorkflowSideDrawerProps) => {
     }
 
     const handleActionSelect = (actionId?: string) => {
-        console.log(actionId)
-        
         if(actionId !== undefined) {
             setSelectedActionId(actionId)
             window.open(`/application/edit-workflow/${actionId}`)

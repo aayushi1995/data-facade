@@ -16,16 +16,6 @@ const baseOptions = {
                 }
             }
         },
-        MuiDataGrid: {
-            styleOverrides: {
-                row: {
-                    cursor: "pointer"
-                },
-                root: {
-                    boxShadow: lightShadows[23]
-                }
-            }
-        },
         MuiAppBar: {
             styleOverrides: {
                 root: {
@@ -38,7 +28,41 @@ const baseOptions = {
                 root: {
                     textTransform: 'none'
                 }
-            }
+            },
+            variants: [
+                {
+                    props: {
+                        variant: "ModuleHeaderButton1"
+                    },
+                    style: {
+                        backgroundColor: '#000000',
+                        color: "#FFFFFF",
+                        borderRadius: '10px', 
+                        width: "250px",
+                        height: "50px",
+                        '&:hover': {
+                            backgroundColor: '#555555',
+                            color: "#FFFFFF",
+                        }
+                    }
+                },
+                {
+                    props: {
+                        variant: "ModuleHeaderButton2"
+                    },
+                    style: {
+                        background: "#A4CAF0",
+                        color: "#FFFFFF",
+                        borderRadius: '10px', 
+                        width: "250px",
+                        height: "50px",
+                        '&:hover': {
+                            backgroundColor: '#0BBAE0',
+                            color: "#FFFFFF",
+                        }
+                    }
+                }
+            ]
         },
         MuiCssBaseline: {
             styleOverrides: {

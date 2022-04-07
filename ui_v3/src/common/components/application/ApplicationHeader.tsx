@@ -1,8 +1,8 @@
-import { Box, Grid, Typography, Button, TextField, InputAdornment } from "@mui/material"
-import AddIcon from "@mui/icons-material/Add"
+import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from '@mui/icons-material/Search';
-import { useHistory, Link } from "react-router-dom";
-import UploadApplicationButton from "../UploadApplicationButton";
+import { Box, Button, Grid, InputAdornment, TextField } from "@mui/material";
+import { Link, useHistory } from "react-router-dom";
+import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig";
 
 export interface ApplicationHeaderProps {
     pageHeader: string
@@ -10,8 +10,7 @@ export interface ApplicationHeaderProps {
     fromApplicationDetail?: boolean,
     searchQuery?: string,
     setSearchQuery?: (e: string) => void
-    applicationId?: string,
-    handleDialogOpen?: () => void
+    applicationId?: string
 }
 
 const ApplicationHeader = (props: ApplicationHeaderProps) => {
@@ -27,18 +26,10 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
             <Grid container spacing={4}>
                 <Grid item xs={12} container>
                     <Grid item xs={8}>
-                        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                            <Typography variant="heroHeader" sx={{flex: 1}}>
-                                Application
-                            </Typography>
-                            <Typography variant="heroMeta" sx={{flex: 1}}>
-                                Create, Manage Applications from here
-                            </Typography>
-                        </Box>
                     </Grid>
                     <Grid item xs={4}>
                         <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2, minHeight: '80%'}}>
-                            {props.fromApplicationDetail ? (
+                            {props.fromApplicationDetail && (
                                 <>
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" to={{
                                     pathname: "/application/build-workflow",
@@ -49,7 +40,7 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                                     Create Workflow <AddIcon sx={{marginLeft: 2}}/>
                                 </Button>
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" to={{
-                                    pathname: "/application/build-action",
+                                    pathname: APPLICATION_BUILD_ACTION_ROUTE_ROUTE,
                                     state: props?.applicationId || "Id"
                                 }} 
                                 component={Link}
@@ -59,12 +50,6 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                                 <Button sx={{flex: 1, borderRadius: '10px'}} variant="contained" disabled>
                                     Export Application
                                 </Button>
-                                </>
-                            ) : (
-                                <>
-                                <Button sx={{flex: 1, borderRadius: '10px', bgcolor: 'black'}} variant="contained" onClick={() => props.handleDialogOpen?.()}>
-                                    APP Builder <AddIcon sx={{marginLeft: 2}}/></Button>
-                                <UploadApplicationButton/>
                                 </>
                             )}
                             

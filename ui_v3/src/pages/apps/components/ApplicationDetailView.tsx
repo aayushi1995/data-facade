@@ -1,12 +1,12 @@
-import React from "react"
-import { useRouteMatch, RouteComponentProps } from "react-router-dom"
-import ApplicationHeader from "../../../common/components/application/ApplicationHeader"
-import NoData from "../../../common/components/NoData"
-import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
 import { Box, Card, Tab, Tabs, Typography } from "@mui/material"
+import React from "react"
+import { RouteComponentProps } from "react-router-dom"
 import ApplicationHeroInfo from "../../../common/components/application-info-hero/ApplicationHeroInfo"
 import ApplicationActions from "../../../common/components/application/ApplicationActions"
+import ApplicationHeader from "../../../common/components/application/ApplicationHeader"
 import ApplicationWorkflows from "../../../common/components/application/ApplicationWorkflows"
+import NoData from "../../../common/components/NoData"
+import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
 
 interface MatchParams {
     applicationId: string
@@ -42,7 +42,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
     const applicationId = match.params.applicationId
 
     const [applicationDetailData, applicationDataError, applicationDetailLoading] = useGetApplicationDetails(applicationId)
-    if(applicationDetailData) {
+    if(!!applicationDetailData) {
         const application = applicationDetailData[0]
         return (
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>

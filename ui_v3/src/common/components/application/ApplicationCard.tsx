@@ -1,18 +1,17 @@
-import { Application } from "../../../generated/entities/Entities"
-import { Grid, Card, Box, Typography, IconButton, SpeedDial, SpeedDialAction } from "@mui/material"
-import appLogo from "../../../../src/images/Segmentation_application.png"
+import DeleteIcon from '@mui/icons-material/Delete'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import PeopleIcon from '@mui/icons-material/People'
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
+import ShareIcon from '@mui/icons-material/Share'
+import { Box, Card, IconButton, SpeedDial, SpeedDialAction, Typography } from "@mui/material"
+import React from "react"
+import { generatePath, useHistory, useRouteMatch } from "react-router-dom"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
 import PackageLogo from "../../../../src/images/package.svg"
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import DeleteIcon from '@mui/icons-material/Delete'
-import PeopleIcon from '@mui/icons-material/People';
 import UsageStatus from "../../../common/components/UsageStatus"
-import ShareIcon from '@mui/icons-material/Share';
-import { useHistory, useRouteMatch } from "react-router-dom"
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import ConfirmationDialog from "../ConfirmationDialog"
-import React from "react"
+import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 
 
@@ -55,7 +54,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     }
 
     const onApplicationSelect = () => {
-        history.push(`${match.url}/${props.application.ApplicationId || "id"}`)
+        history.push(generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, { applicationId: props.application.ApplicationId}))
     }
 
     const toggleMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>) => {

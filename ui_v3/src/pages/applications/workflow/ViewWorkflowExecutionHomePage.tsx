@@ -8,7 +8,8 @@ import { StagesWithActions } from "../../../common/components/workflow/create/ne
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
 import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
-import ActionDefinitionHero from '../../build_action/components/shared-components/ActionDefinitionHero'
+import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/components/shared-components/ActionDefinitionHero'
+import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from '../../build_action/context/BuildActionContext'
 import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
@@ -19,6 +20,10 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
     const workflowExecutionId = match.params.workflowExecutionId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+
+    const actionContext = React.useContext(BuildActionContext)
+    const setActionContext = React.useContext(SetBuildActionContext)
+    
     const [areChildActionsReady, setAreChildActionReady] = React.useState<boolean>(false)
     const [areActionsCompleted, setAreActionsCompleted] = React.useState<boolean>(false)
 
@@ -29,7 +34,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                 areActionsCompleted = false;
             }
         })
-        console.log(areActionsCompleted)
+        
         setAreActionsCompleted(areActionsCompleted)
     }
 
@@ -38,7 +43,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             if(areChildActionsReady === false) {
                 setWorkflowContext({type: 'DELETE_STAGE', payload: {stageId: workflowContext.stages[0].Id}})
             }
-            console.log(data)
+            
             var currentStageId = ""
             const totalChildExecutions = data?.[0]?.ChildExecutionsWithDefinitions?.length || 0
             const childExecutions = data?.[0]?.ChildExecutionsWithDefinitions
@@ -95,6 +100,10 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             setWorkflowContext({type: 'SET_APPLICATION_ID', payload: data?.[0]?.WorkflowDefinition?.ApplicationId })
             setWorkflowContext({type: 'SET_ACTION_GROUP', payload: data?.[0]?.WorkflowDefinition?.ActionGroup })
             setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: { newDescription: data?.[0]?.WorkflowDefinition?.Description||"NA" }})
+            setWorkflowContext({type: "SET_PUBLISHED_STATUS", payload: data?.[0]?.WorkflowDefinition?.PublishStatus })
+            
+            setActionContext({ type: "SetActionDefinition", payload: { newActionDefinition: data?.[0]?.WorkflowDefinition}})
+            
             setAreChildActionReady(true)   
             checkIfActionsCompleted(data || [])
         }
@@ -143,7 +152,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     </DialogContent>
                 </Dialog>
                 <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>
-                    <ActionDefinitionHero mode="READONLY" name={workflowContext.Name} description={workflowContext.Description} createdBy={workflowContext.Author} applicationId={workflowContext.ApplicationId} group={workflowContext.ActionGroup}/>
+                    <ActionDefinitionHeroActionContextWrapper mode="READONLY"/>
                 </Box>
                 <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%', mb: 4}}>
                     <StagesWithActions/>
@@ -157,9 +166,11 @@ export const ViewWorkflowExecutionHomePage = () => {
     const match = useRouteMatch()
     return (
         <WorkflowContextProvider>
-            <Switch>
-                <Route path={`${match.path}/:workflowExecutionId`} component={ViewWorkflowExecution}/>
-            </Switch>
+            <BuildActionContextProvider>
+                <Switch>
+                    <Route path={`${match.path}/:workflowExecutionId`} component={ViewWorkflowExecution}/>
+                </Switch>
+            </BuildActionContextProvider>
         </WorkflowContextProvider>
     )
 }

@@ -1,7 +1,6 @@
 import { Box } from "@mui/material"
 import React from "react"
 import { ActionDefinition } from "../../../../../generated/entities/Entities"
-import LoadingWrapper from "../../../LoadingWrapper"
 import GroupDropDown from "../GroupDropDown"
 import useFetchActionDefinitions from "../hooks/useFetchActionDefinitions"
 import { ActionDefinitionToAdd } from "../SelectAction/SelectAction"
@@ -38,8 +37,6 @@ const SelectFromGroups = (props: SelectFromGroups) => {
     React.useEffect(() => {
         handleSuccess(allActionDefinitionsData)
     }, [allActionDefinitionsData])
-
-    console.log(groupActions)
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'clip'}}>

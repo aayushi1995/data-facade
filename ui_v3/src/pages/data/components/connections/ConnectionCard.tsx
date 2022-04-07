@@ -1,17 +1,16 @@
-import {Link as RouterLink} from 'react-router-dom';
-import {BaseCard} from "../../../../common/components/basecard/BaseCard";
-import {Button, Divider, Stack, Typography, Box, alpha} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SyncIcon from "@mui/icons-material/Sync";
-import {ButtonIconWithToolTip} from "../../../../common/components/ButtonIconWithToolTip";
-import {DATA_RAW_ROUTE} from "../../../../common/components/header/data/DataRoutesConfig";
-import {ProviderInstance} from "../../../../generated/entities/Entities";
-import {useDeleteSelectedConnection} from "../../../configurations/hooks/useDeleteSelectedConnection";
-import {useTheme} from "@mui/styles";
-import {lightGreen} from "@mui/material/colors";
+import { alpha, Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { lightGreen } from "@mui/material/colors";
+import { useTheme } from "@mui/styles";
+import React, { ReactElement } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { BaseCard } from "../../../../common/components/basecard/BaseCard";
+import { ButtonIconWithToolTip } from "../../../../common/components/ButtonIconWithToolTip";
+import { DATA_RAW_ROUTE } from "../../../../common/components/header/data/DataRoutesConfig";
+import { ProviderInstance } from "../../../../generated/entities/Entities";
 import useSyncProviderInstance from '../../../configurations/components/hooks/useSyncProviderInstance';
-import React from 'react';
-import {ReactElement} from "react";
+import { useDeleteSelectedConnection } from "../../../configurations/hooks/useDeleteSelectedConnection";
 
 const NA = 'NA';
 
@@ -86,7 +85,6 @@ export const ConnectionCard = (props: ConnectionCardType) => {
     } })
     const deleteSelectedConnection = useDeleteSelectedConnection();
     const syncSelectedConnection = (connectionId?: string) => {
-        console.log(connectionId)
         syncyProviderMutation.mutate({
             providerInstanceId: connectionId,
             syncDepthConfig: {

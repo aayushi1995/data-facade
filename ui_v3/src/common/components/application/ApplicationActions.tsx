@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import React from "react"
+import React from "react";
 import { useQueryClient } from "react-query";
-import { ActionDetailsForApplication, ApplicationDetails } from "../../../generated/interfaces/Interfaces";
+import { ApplicationDetails } from "../../../generated/interfaces/Interfaces";
 import ApplicationActionCard from "./ApplicationActionCard";
 
 
@@ -21,7 +21,7 @@ const ApplicationActions = (props: ApplicationActionsProps) => {
 
     return (
         <Box sx={{overflowY: 'auto', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 1, p: 1}}>
-            {props.application?.actions?.map((action, index) => {
+            {(props.application?.actions || []).sort((a1, a2) => ((a2?.model?.CreatedOn||0) - (a1?.model?.CreatedOn||0)))?.map((action, index) => {
                 return (
                     <Box sx={{maxWidth: '100%', mt: 1}}>
                         <ApplicationActionCard action={action} handleDeleteAction={handleDeleteAction}/>

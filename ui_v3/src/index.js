@@ -1,19 +1,19 @@
+import { Auth0Provider } from "@auth0/auth0-react";
+import StyledEngineProvider from '@mui/material/StyledEngineProvider';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router} from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter as Router } from 'react-router-dom';
+import 'typeface-roboto';
+import App, { AppInternal } from './App';
+import { ModuleProvider } from "./common/components/header/data/ModuleContext";
+import { auth0ClientId } from './common/config/config';
+import { getConfig } from "./config";
+import { SettingsProvider } from "./data_manager/SettingsContext";
 import './index.css';
-import App, {AppInternal} from './App';
 import reportWebVitals from './reportWebVitals';
-import 'typeface-roboto'
-import {getConfig} from "./config";
-import {Auth0Provider} from "@auth0/auth0-react";
-import history from "./utils/history";
-import {QueryClient, QueryClientProvider} from 'react-query'
-import {auth0ClientId} from './common/config/config'
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import StyledEngineProvider from '@mui/material/StyledEngineProvider';
-import {SettingsProvider} from "./data_manager/SettingsContext";
-import {ModuleProvider} from "./common/components/header/data/ModuleContext";
+import history from "./utils/history";
 
 const onRedirectCallback = (appState) => {
     history.push(
@@ -36,19 +36,21 @@ const providerConfig = {
     onRedirectCallback,
 };
 
-export const RootComponent = ({children}) => <StyledEngineProvider><
-    ModuleProvider>
-    <Router>
-        <Auth0Provider {...providerConfig}>
-            <QueryClientProvider client={queryClient}>
-                <SettingsProvider>
-                    {children}
-                </SettingsProvider>
-            </QueryClientProvider>
-        </Auth0Provider>
-    </Router>
-</ModuleProvider>
-</StyledEngineProvider>;
+export const RootComponent = ({children}) => 
+    <StyledEngineProvider>
+        <ModuleProvider>
+            <Router>
+                <Auth0Provider {...providerConfig}>
+                    <QueryClientProvider client={queryClient}>
+                        <SettingsProvider>
+                            {children}
+                        </SettingsProvider>
+                    </QueryClientProvider>
+                </Auth0Provider>
+            </Router>
+        </ModuleProvider>
+    </StyledEngineProvider>;
+    
 ReactDOM.render(
     <RootComponent><App>{
         (props) => <AppInternal {...props}/>

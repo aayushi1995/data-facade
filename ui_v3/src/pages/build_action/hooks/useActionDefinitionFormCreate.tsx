@@ -34,7 +34,6 @@ const useActionDefinitionFormSave = (props: UseActionDefinitionFormCreateProps) 
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function, patchData: Function}
 
     const createMutation = useMutation((state: BuildActionContextState) => {
-        console.log(formCreateRequestBodyFromContextState(state))
             return fetchedDataManagerInstance.saveData(labels.entities.ActionDefinition, 
                 formCreateRequestBodyFromContextState(state)
             )

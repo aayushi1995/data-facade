@@ -28,8 +28,7 @@ export interface ActionDefinitionHeroProps {
 
 const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
     const applicationQuery = useGetApplications({ options: { }, filter: {} })
-    console.log(props?.applicationId, props?.group)
-    console.log((applicationQuery.data||[]).find(app => app.Id === props.applicationId), props?.group)
+
     return (
         <Card
             sx={{
@@ -48,7 +47,7 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                         <Box sx={{ display: "flex", flexDirection: "column", pl: 2, pt: 1, gap: 2}}>
                             <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start"}} className="header">
                                 <Box className="name">
-                                    <Tooltip title={props.mode==="READONLY" ? "Edit not permitted" : "Edit"}>
+                                    <Tooltip title={props.mode==="READONLY" ? "Edit not permitted" : "Edit"} placement="left">
                                         <TextField value={props.name} 
                                             variant="standard"
                                             fullWidth
@@ -62,6 +61,17 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                                     fontSize: "36px",
                                                     lineHeight: "116.7%",
                                                     color: "#253858",
+                                                    borderStyle: "solid",
+                                                    borderColor: "transparent",
+                                                    borderRadius: "10px",
+                                                    background: "#E5E5E5",
+                                                    ":hover": {
+                                                        ...(props.mode==="READONLY" ? {
+                                                            
+                                                        } : {
+                                                            background: "#E3E3E3"
+                                                        })
+                                                    }
                                                 },
                                                 disableUnderline: true,
                                                 readOnly: props?.mode==="READONLY"
@@ -180,12 +190,12 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                         </Box>
                                     </Box>
                                 </Box>
-                                <Box sx={{ml: 3, mb: 2, mt: 1, display: 'flex', gap: 3}} className="description">
-                                    <Tooltip title={props.mode==="READONLY" ? "Edit not permitted" : "Edit"}>
+                                <Box sx={{ml: 3, mb: 1, mt: 1, mr: 1, display: 'flex', gap: 3}} className="description">
+                                    <Tooltip title={props.mode==="READONLY" ? "Edit not permitted" : "Edit"} placement="right">
                                         <TextField value={props.description} 
                                             variant="standard" 
                                             multiline
-                                            minRows={4}
+                                            minRows={5}
                                             maxRows={6}
                                             placeholder={props.mode==="EDIT" ? "Enter Description Here" : "NA"}
                                             onChange={(event) => props?.onChangeHandlers?.onDescriptionChange?.(event.target.value)} 
@@ -197,7 +207,19 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                                     fontSize: "14px",
                                                     lineHeight: "143%",
                                                     letterSpacing: "0.15px",
-                                                    color: "rgba(66, 82, 110, 0.86)"
+                                                    color: "rgba(66, 82, 110, 0.86)",
+                                                    borderWidth: "2px",
+                                                    borderStyle: "solid",
+                                                    borderColor: "transparent",
+                                                    borderRadius: "10px",
+                                                    background: "#E5E5E5",
+                                                    ":hover": {
+                                                        ...(props.mode==="READONLY" ? {
+                                                            
+                                                        } : {
+                                                            background: "#E3E3E3"
+                                                        })
+                                                    }
                                                 },
                                                 disableUnderline: true,
                                                 readOnly: props?.mode==="READONLY"

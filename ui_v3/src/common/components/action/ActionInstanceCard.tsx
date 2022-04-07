@@ -1,20 +1,18 @@
-import { Application } from "../../../generated/entities/Entities"
-import { Grid, Card, Box, Typography, IconButton, Dialog, DialogContent } from "@mui/material"
-import appLogo from "../../../../src/images/Segmentation_application.png"
-import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PeopleIcon from '@mui/icons-material/People';
-import UsageStatus from "../UsageStatus"
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import ShareIcon from '@mui/icons-material/Share';
-import { useHistory, useRouteMatch } from "react-router-dom"
-import { ActionInstanceCardViewResponse } from "../../../generated/interfaces/Interfaces"
-import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
+import { Box, Card, Dialog, DialogContent, Grid, IconButton, Typography } from "@mui/material";
 import React from "react";
-import { useCreateExecution } from "../application/hooks/useCreateExecution";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png";
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
+import { ActionInstanceCardViewResponse } from "../../../generated/interfaces/Interfaces";
 import ViewActionExecution from "../../../pages/view_action_execution/VIewActionExecution";
+import { useCreateExecution } from "../application/hooks/useCreateExecution";
 import LoadingIndicator from "../LoadingIndicator";
+import UsageStatus from "../UsageStatus";
 
 
 interface ActionInstanceCardProps {
@@ -41,9 +39,6 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
 
     const actionExecutionMutation = useCreateExecution({
         mutationOptions: {
-            onSuccess: (data) => {
-                console.log(data)
-            },
             onMutate: () => {
                 setCreatingExecution(true)
                 setDialogState({isOpen: true})

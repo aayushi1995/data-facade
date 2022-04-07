@@ -1,45 +1,27 @@
-import React from 'react'
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from '@mui/icons-material/Close';
 import {
     Box,
     Button,
     Dialog,
     DialogContent,
-    DialogTitle,
-    Divider,
-    FormControl,
-    FormHelperText,
-    Grid,
-    IconButton,
-    List,
-    Tabs,
-    Tab,
-    ListItem,
-    MenuItem,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    Typography,
-    Fab,
-    Autocomplete,
-    TextField,
-    TableRow
-} from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import {useMutation} from 'react-query'
-
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from '@mui/icons-material/Close';
+    DialogTitle, Grid,
+    IconButton, Tab, Tabs, TextField, Typography
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { useMutation } from 'react-query';
+import labels from '../../labels/labels';
+import ApplicationInstallState from './../../custom_enums/ApplicationInstallState';
+import S3UploadState from './../../custom_enums/S3UploadState';
+import dataManagerInstance from './../../data_manager/data_manager';
+import ExternalStorageUploadRequestContentType from './../../enums/ExternalStorageUploadRequestContentType';
+import DisplaySelectedFilesDetail from './DisplaySelectedFilesDetail';
 
-import ExternalStorageUploadRequestContentType from './../../enums/ExternalStorageUploadRequestContentType'
-import S3UploadState from './../../custom_enums/S3UploadState'
-import ApplicationInstallState from './../../custom_enums/ApplicationInstallState'
 
-import DisplaySelectedFilesDetail from './DisplaySelectedFilesDetail'
 
-import dataManagerInstance from './../../data_manager/data_manager'
-import labels from '../../labels/labels'
+
 
 
 const useStyles = makeStyles(() => ({
@@ -131,7 +113,7 @@ const UploadApplicationButton = (props) => {
 
     return (
         <>
-            <Button onClick={handleDialogOpen} variant="contained" sx={{flex: 1, borderRadius: '10px', bgcolor: 'lightBlueDF.main'}}>
+            <Button onClick={handleDialogOpen} variant="ModuleHeaderButton2">
                 <AddIcon fontSize="small"/> Import Application
             </Button>
             <Dialog onClose={handleDialogClose} open={dialogState.isDialogOpen}

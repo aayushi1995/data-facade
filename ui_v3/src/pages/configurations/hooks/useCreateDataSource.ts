@@ -1,12 +1,12 @@
-import {useRouteMatch} from "react-router-dom";
 import React from "react";
-import {ConnectionsContext} from "../context/ConnectionsContext";
+import { useMutation } from "react-query";
+import { useRouteMatch } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import useStyles from "../../../css/configurations/CreateDataSourceRow";
-import {v4 as uuidv4} from "uuid";
-import dataManagerInstance, {useRetreiveData} from "../../../data_manager/data_manager";
+import dataManagerInstance, { useRetreiveData } from "../../../data_manager/data_manager";
+import { ProviderParameterInstance } from "../../../generated/entities/Entities";
 import labels from "../../../labels/labels";
-import {useMutation} from "react-query";
-import {ProviderParameterInstance} from "../../../generated/entities/Entities";
+import { ConnectionsContext } from "../context/ConnectionsContext";
 
 export function useCreateDataSource(selectedId: string | undefined, isUpdate: boolean, handleClose: Function | undefined) {
     const match = useRouteMatch();
@@ -117,7 +117,7 @@ export function useCreateDataSource(selectedId: string | undefined, isUpdate: bo
 
         handleCreateAndSyncDialogClose()
         handleCreate()
-        console.log(mutation)
+        
         if (mutation.isSuccess) {
             syncProviderInstance.mutate(
                 {

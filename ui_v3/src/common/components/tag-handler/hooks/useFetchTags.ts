@@ -1,11 +1,11 @@
 import React from 'react';
-import {v4 as uuidv4} from 'uuid'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { v4 as uuidv4 } from 'uuid';
+import TagGroups from '../../../../enums/TagGroups';
 import TagMapCreatedBy from '../../../../enums/TagMapCreatedBy';
 import { Tag, TagMap } from '../../../../generated/entities/Entities';
 import labels from '../../../../labels/labels';
-import dataManagerInstance, { useRetreiveData } from './../../../../data_manager/data_manager'
-import TagGroups from '../../../../enums/TagGroups';
+import dataManagerInstance from './../../../../data_manager/data_manager';
 import useFetchAvailableTags from './useFetchAvailableTags';
 
 export interface UseFetchTagsParams {
@@ -95,7 +95,6 @@ const useFetchTags = (params: UseFetchTagsParams): [string[], string[], boolean,
     },
     {
         onSuccess: (data: Tag[], variables, context) => {
-            console.log(data)
             queryClient.invalidateQueries([labels.entities.TAG, tagFilter])
             createTagMapMutation.mutate({
                 tagMapModel: {

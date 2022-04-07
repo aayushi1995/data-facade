@@ -24,7 +24,6 @@ const EditActionForm = (props: EditActionFormProps) => {
     const [showSelectedActionInfoDialog, setShowSelectedActionInfoDialog] = React.useState<boolean>(false)
 
     React.useEffect(() => {
-        console.log(props.actionDefinitionId)
         if(!!props.actionDefinitionId) {
             setActionContext({
                 type: "SetActionDefinitionToLoadId",

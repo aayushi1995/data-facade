@@ -1,5 +1,5 @@
-import {TabsType} from "../schema";
-import { DATA_SUB_TABS} from "./DataRoutesConfig";
+import { TabsType } from "../schema";
+import { DATA_SUB_TABS } from "./DataRoutesConfig";
 
 export const BLANK_STRING = '';
 export const APPLICATION_ROUTE = '/application';
@@ -19,8 +19,8 @@ export const tabs: TabsType = [
         id: 'APPLICATION',
         label: 'APPLICATION',
         href: APPLICATION_ROUTE,
-        title: BLANK_STRING,
-        subTitle: BLANK_STRING
+        title: "Application",
+        subTitle: "Create, Manage Applications from here"
     },
     {
         id: 'INSIGHTS',

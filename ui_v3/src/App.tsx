@@ -1,44 +1,33 @@
-import React, {ReactElement} from 'react'
-import {Redirect, Route, Router, Switch} from 'react-router-dom'
-import {SearchQueryProvider, TableBrowser} from './pages/table_browser/TableBrowser'
-import Customizations from './pages/customizations/Customizations'
-import Configurations from './pages/configurations/Configurations'
-import Alerts from './pages/alerts/Alerts'
-import DevTestPage from './pages/dev_test_page/DevTestPage'
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace"
+import { Box, CssBaseline, Grid, ThemeProvider } from "@mui/material"
+import React from 'react'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { Redirect, Route, Router, Switch } from 'react-router-dom'
+import ErrorBoundary from "./common/components/ErrorBoundry"
+import DashboardNavbar from "./common/components/header/DashboardNavbar"
+import { ModuleSwitcher } from "./common/components/header/ModuleSwitcher"
 import LoadingIndicator from './common/components/LoadingIndicator'
-import Home from './pages/home/Home'
-import TagHomePage from './pages/tag/TagHomePage'
-import ApplicationHomePage from './pages/apps/ApplicationHomePage'
-import BuildWorkflowHomePage from './pages/build_workflow/BuildWorkflowHomePage'
-import history from "./utils/history";
-import AppContext from "./utils/AppContext"
-import NotRegistered from './pages/home/NotRegistered'
-import {isNonProductionEnv} from './common/config/config'
-import {Users} from "./pages/users/Users";
-import {EULA} from "./pages/home/EULA";
-import {CssBaseline, Grid, ClassNameMap, ThemeProvider, Box} from "@mui/material";
-import {SideDrawer} from "./common/components/sideBar/SideDrawer";
+import { isNonProductionEnv } from './common/config/config'
+import Alerts from './pages/alerts/Alerts'
 import AutobookHomePage from './pages/applications/auto_book/AutobookHomePage'
-import {useAppInternal} from "./UseAppInternal";
-import ErrorBoundary from "./common/components/ErrorBoundry";
-import CustomApplicationsHomePage from "./pages/applications/custom-applications/CustomApplicationsHomePage";
-import {CreateActionPage} from "./pages/customizations/CreateActionPage";
-import {RunActionPage} from "./pages/customizations/RunActionPage";
+import { RunWorkflowHomePage } from './pages/applications/custom-applications/components/RunWorkflowHomePage'
+import CustomApplicationsHomePage from "./pages/applications/custom-applications/CustomApplicationsHomePage"
 import WorkflowEditorPage from './pages/applications/custom-applications/WorkflowEditorPage'
-import UploadTablePage from './pages/upload_table/UploadTablePage'
-import {ReactQueryDevtools} from 'react-query/devtools'
-import {RunWorkflowHomePage} from './pages/applications/custom-applications/components/RunWorkflowHomePage'
 import ViewWorkflowHomePage from './pages/applications/view-workflow/ViewWorkflowHomePage'
-import {ReactJSXElement} from "@emotion/react/types/jsx-namespace";
-import DashboardNavbar from "./common/components/header/DashboardNavbar";
-import {ModuleSwitcher} from "./common/components/header/ModuleSwitcher";
-import ExecuteWorkflowHomePage from './pages/applications/workflow/ExecuteWorkflowHomePage'
-import BuildActionHomePage from './pages/build_action/BuildActionHomePage'
-import ViewWorkflowExecutionHomePage from './pages/applications/workflow/ViewWorkflowExecutionHomePage'
-import ExecuteActionHomePage from './pages/execute_action/ExecuteActionHomePage'
-import DeclareModules from './css/theme/schema'
-import { UploadFilePage } from './common/components/data-raw/UploadFilePage'
-import { DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE } from './common/components/header/data/DataRoutesConfig'
+import Configurations from './pages/configurations/Configurations'
+import { CreateActionPage } from "./pages/customizations/CreateActionPage"
+import Customizations from './pages/customizations/Customizations'
+import { RunActionPage } from "./pages/customizations/RunActionPage"
+import DevTestPage from './pages/dev_test_page/DevTestPage'
+import { EULA } from "./pages/home/EULA"
+import Home from './pages/home/Home'
+import NotRegistered from './pages/home/NotRegistered'
+import { SearchQueryProvider, TableBrowser } from './pages/table_browser/TableBrowser'
+import TagHomePage from './pages/tag/TagHomePage'
+import { Users } from "./pages/users/Users"
+import { useAppInternal } from "./UseAppInternal"
+import AppContext from "./utils/AppContext"
+import history from "./utils/history"
 
 export const AppInternal = (props: { classes: any; userEmail: any; dummyData: any; dummyDataPending: any; activeLink: any; setActiveLink: any; isLoading: any; user: any }) => {
     const {
@@ -74,12 +63,15 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
         } else {
 
             return (
-                <Grid container
-                      style={{justifyContent: "flex-start"}}>
-                    <Box sx={{position: 'relative', display: 'flex', flex: 1}}>
+                <Grid container style={{justifyContent: "flex-start"}}>
+                    <Box sx={{position: 'relative', display: 'flex', flex: 1, width: "100%"}}>
                         <DashboardNavbar/>
-                        <Box sx={{position: 'relative', top: '64px', display: 'flex', flex: 1}}>
-                            <ModuleSwitcher/>
+                        <Box sx={{position: 'relative', top: '64px', display: 'flex', flex: 1, width: "100%"}}>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <ModuleSwitcher/>
+                                </Grid>
+                            </Grid>
                         </Box>
                     </Box>
                     <div className={classes.mainContainer}>
@@ -96,7 +88,6 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/testPage' component={DevTestPage}/>
                                     <Route path='/users' component={Users}/>
                                     <Route path='/tag' component={TagHomePage}/>
-                                    <Route path='/application' component={ApplicationHomePage}/>
                                     <Route path='/dashboard' component={TableBrowser}/>
                                     <Route path='/create-action' component={CreateActionPage}/>
                                     <Route path='/run-action' component={RunActionPage}/>
@@ -105,7 +96,6 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/workflow-editor' component={WorkflowEditorPage}/>
                                     <Route path='/run-workflow' component={RunWorkflowHomePage}/>
                                     <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
-                                    <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
                                     <Redirect exact from="/" to="/application"/>
                                 </Switch>
                             </Grid>

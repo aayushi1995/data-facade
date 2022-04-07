@@ -1,6 +1,7 @@
 import { Box, Button } from "@mui/material"
 import React from "react"
-import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
+import { generatePath, Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
+import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import NoData from "../../../common/components/NoData"
 import { AddingActionView } from "../../../common/components/workflow/create/addAction/AddingActionView"
 import useCopyAndSaveDefinition from "../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition"
@@ -88,19 +89,13 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 const applicationId = actionContext?.actionDefinitionWithTags?.actionDefinition?.ApplicationId
                 if(!!applicationId){
                     console.log("UPDATED")
-                    // history.push(`/application/${applicationId}`)
                 } else {
                     console.log("Action Context Application Id field is empty")
-                    history.push(`/application/${ApplicationID.DEFAULT_APPLICATION}`)
+                    history.push(generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, {applicationId: ApplicationID.DEFAULT_APPLICATION}))
                 }
             }
         })
     }
-
-    // React.useEffect(() => {
-    //     console.log("SAVING")
-    //     useContinuosWorkflowUpdate.mutate({workflowId: workflowId})
-    // }, [workflowContext])
 
     const handleRun = () => {
         history.push(`/application/execute-workflow/${workflowId}`)

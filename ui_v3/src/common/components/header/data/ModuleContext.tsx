@@ -1,35 +1,66 @@
-import React, {useReducer} from "react";
-import {TabType} from "../schema";
+import React, { useReducer } from "react";
+import { TabType } from "../schema";
 
-export type ModuleType = { isOpen: boolean, currentTab?: TabType };
-export const ModuleContext = React.createContext<ModuleType>(
-    {isOpen: true}
-)
-type ModuleCbType = (oldModule:ModuleType)=>ModuleType;
-export type ModuleSetContextType = (newState: ModuleType | ModuleCbType)=>null
-export const ModuleSetContext = React.createContext<ModuleSetContextType>(
-    (newState: ModuleType| ModuleCbType)=> null
-)
+// Module State Contract
+export type ModuleType = { tabsVisible: boolean, activeTab?: TabType };
+// Initial State for Module
+const initialState: ModuleType = {tabsVisible: true};
+// Context to provide Module State
+export const ModuleContext = React.createContext<ModuleType>(initialState)
 
-const initialState: ModuleType = {isOpen: true};
-type ModuleAction = {type: string, payload: ModuleType};
-const reducer = (state: ModuleType, action: ModuleAction)=>{
-    return {...state, ...action.payload};
+// Set Module Callback State Contract 
+export type SetModuleContextType = (args: ModuleAction) => void
+// Initial State for Set Module Callback
+const initialSetModuleState: SetModuleContextType = (args) => {}
+// Context to provide Set Module Callback
+export const SetModuleContext = React.createContext<SetModuleContextType>(initialSetModuleState)
+
+// Collection of Actions that can be performed on the Module State
+type ToggleTabsVisibilityAction = {
+    type: "ToggleTabsVisibility"
 }
+
+type SetActiveTabAction = {
+    type: "SetActiveTab",
+    payload: {
+        activeTab: TabType
+    }
+}
+
+type ModuleAction = ToggleTabsVisibilityAction | SetActiveTabAction
+
+// Reducer that returns updated Module State
+const reducer = (state: ModuleType, action: ModuleAction): ModuleType => {
+    switch(action.type) {
+        case "ToggleTabsVisibility": {
+            return {
+                ...state,
+                tabsVisible: !state.tabsVisible
+            }
+        }
+
+        case "SetActiveTab": {
+            return {
+                ...state,
+                activeTab: action.payload.activeTab
+            }
+        }
+        
+        default:
+            const impossibleAction: never = action
+            console.log("Unkown Action", impossibleAction)
+    }
+    return state;
+}
+
+// Component to Provide ModuleContext and SetModuleContext to children
 export const ModuleProvider = ({children}: { children: React.ReactElement }) => {
     const [moduleState, dispatch] = useReducer(reducer, initialState);
-    const setModuleState: ModuleSetContextType = ( arg )=>{
-        if('isOpen' in arg){
-            dispatch({type: 'SET_MODULE', payload: arg});
-        }else{
-            const newModuleState = arg(moduleState);
-            dispatch({type: 'TOGGLE_MODULE', payload: newModuleState});
-        }
-        return null;
-    }
+    const setModuleState: SetModuleContextType = (args: ModuleAction) => dispatch(args)
+
     return <ModuleContext.Provider value={moduleState}>
-        <ModuleSetContext.Provider value={setModuleState}>
+        <SetModuleContext.Provider value={setModuleState}>
             {children}
-        </ModuleSetContext.Provider>
+        </SetModuleContext.Provider>
     </ModuleContext.Provider>
 }

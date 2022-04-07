@@ -18,11 +18,10 @@ export function CreateConnectionButton() {
         history.push(DATA_CONNECTIONS_ROUTE);
     }
     return <>
-            <Button variant="contained"
+            <Button variant="ModuleHeaderButton1"
                     endIcon={<AddIcon sx={{fontSize: "small", backgroundColor: "secondary"}}/>}
                     title="Create Connection"
                     onClick={handleDialogOpen}
-                    sx={{borderRadius: '10px', bgcolor: 'black'}}
             >
                 Create Connection
             </Button>

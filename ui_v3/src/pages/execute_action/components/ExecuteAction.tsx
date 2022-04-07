@@ -71,7 +71,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         const request = constructCreateActionInstanceRequest(executeActionContext)
         createActionInstanceAsyncMutation.mutate(request, {
             onSuccess: () => {
-                console.log(data)
+                
             }
         })
     }
@@ -88,7 +88,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             })
         }
     }
-    console.log(executeActionContext)
+    
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 4}}>
             <Box>

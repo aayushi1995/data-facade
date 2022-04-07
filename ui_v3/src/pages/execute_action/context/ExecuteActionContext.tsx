@@ -127,7 +127,7 @@ const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDeta
 const safeMergeState = (oldState: ExecuteActionContextState, actionDetail: ActionDefinitionDetail): ExecuteActionContextState => {
     const newActionParameterDefinitions = getDefaultTemplateParameters(actionDetail)
     const newActionParameterInstances = oldState.ToCreateModels.ActionParameterInstances.filter(api => newActionParameterDefinitions.find(apd => apd.Id===api.ActionParameterDefinitionId))
-    console.log(actionDetail)
+
     return {
         ...oldState,
         ExistingModels: {

@@ -3,13 +3,12 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { Box, Grid, IconButton, useTheme } from "@mui/material";
-import { DataGrid, GridRenderCellParams, GridRowId, GridToolbarContainer, GridValueGetterParams } from "@mui/x-data-grid";
+import { DataGrid, GridCallbackDetails, GridCellParams, GridRowId, GridToolbarContainer, GridValueGetterParams, MuiEvent } from "@mui/x-data-grid";
 import React from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
 import { getInputTypeFromAttributesNew } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
 import TemplateLanguage from "../../../../enums/TemplateLanguage";
 import { ActionParameterDefinition, ActionTemplate, Tag } from "../../../../generated/entities/Entities";
-import PencilAltIcon from "../../../../icons/PencilAlt";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
 
 export interface ViewActionParametersProps {
@@ -35,7 +34,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
 
     React.useEffect(() => {
         if(selectedParameters===undefined && !!paramsWithTag && !!paramsWithTag[0]){
-            console.log(selectedParameters)
             onSelectParameterForEdit?.(paramsWithTag[0]!)
         }
     }, [paramsWithTag])
@@ -63,10 +61,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                     return parameter.DefaultParameterValue
                 }
             },
-            // {
-            //     field: "User Input Required",
-            //     headerName: "User Input Required"
-            // },
             {
                 field: "Tags",
                 headerName: "Tags",
@@ -85,26 +79,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 </Box>
             },
             {
-                field: "Actions",
-                headerName: "Actions",
-                width: 200,
-                renderCell: (props: GridRenderCellParams) => {
-                    const handleClick = (event:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-                        event.stopPropagation()
-                        onSelectParameterForEdit?.(props.row)
-                    }
-                    return (
-                        <Box sx={{display: "flex", flexDirection: "row"}}>
-                            <Box>
-                                <IconButton onClick={handleClick}>
-                                    <PencilAltIcon fontSize="small" />
-                                </IconButton>
-                            </Box>
-                        </Box>
-                    )
-                }
-            },
-            {
                 field: "Saved",
                 headerName: "Saved",
                 width: 100,
@@ -115,6 +89,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
         autoPageSize: true,
         rowsPerPageOptions: [5, 10, 15],
         checkboxSelection: true,
+        disableSelectionOnClick: true,
+        onCellClick: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => params.field!=="__check__" && props?.onSelectParameterForEdit?.(params.row),
         components: {
             Toolbar: () => {
                 return (
@@ -136,7 +112,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
 
     if(!!paramsWithTag && !!template) {
         return (
-            <Box style={{ height: 300, width: "100%" }}>
+            <Box style={{ height: "500px", width: "100%" }}>
                 <DataGrid {...getDatagridProps()}/> 
             </Box>
         )

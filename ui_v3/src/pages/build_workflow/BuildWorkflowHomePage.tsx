@@ -46,7 +46,6 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
         const definitionId = uuidv4()
         saveWorkflowMutation.mutate(({actionContext: actionContext, workflowContext: workflowContext, definitionId: definitionId}), {
             onSuccess: () => {
-                console.log("SUCCESS")
                 queryClient.invalidateQueries("Application")
                 setDialogOpen(false)
                 history.push(`/application/edit-workflow/${definitionId}`)

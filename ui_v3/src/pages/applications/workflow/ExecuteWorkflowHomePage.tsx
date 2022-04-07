@@ -65,7 +65,6 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const handleParameterInstancesChange = (newGlobalParameterInstances: ActionParameterInstance[]) => {
         setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {parameterInstances: newGlobalParameterInstances}})
     }
-    console.log(workflowContext.WorkflowParameterInstance)
 
     const executeWorkflow = () => {
         saveWorkflowMutation.mutate({workflowId: workflowId, workflowName: workflowContext.Name})

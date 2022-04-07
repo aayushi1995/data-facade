@@ -18,8 +18,6 @@ const BuildActionFromWorkflow = (props: BuildActionFromWorkflow) => {
         setCreatedActionId(actionDefinition.Id)
     }
 
-    console.log(createdActionId)
-
     return (  
         <Box>
            

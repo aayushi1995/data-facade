@@ -56,7 +56,7 @@ const ShowGlobalParameters = () => {
         rowsPerPageOptions: [5, 10, 15],
         disableSelectionOnClick: true
     }
-    console.log(dataGridProps)
+
     return (
         <DataGrid {...dataGridProps} sx={{minHeight: '400px'}}/>
     )

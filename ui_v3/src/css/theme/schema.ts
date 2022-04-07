@@ -43,6 +43,13 @@ declare module '@mui/material/Typography' {
     }
 }
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    ModuleHeaderButton1: true,
+    ModuleHeaderButton2: true
+  }
+}
+
 declare module "@mui/styles" {
   interface Palette {
     lightBrown: string;

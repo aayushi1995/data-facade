@@ -23,7 +23,7 @@ const SetActionParameters = () => {
     const viewActionParameterProps: ViewActionParametersProps = {
         template: activeTemplateWithParams?.template,
         paramsWithTag: activeTemplateWithParams?.parameterWithTags,
-        onSelectParameterForEdit: (selectedParam: {parameter: ActionParameterDefinition, tags: Tag[]}) => {console.log(selectedParam); setActiveParameter(selectedParam)},
+        onSelectParameterForEdit: (selectedParam: {parameter: ActionParameterDefinition, tags: Tag[]}) => setActiveParameter(selectedParam),
         onDeleteParameters: (deletedParams: ActionParameterDefinition[]) => setBuildActionContext({
             type: "RemoveActionParameterDefinitions",
             payload: {

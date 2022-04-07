@@ -1,10 +1,10 @@
-import {ModuleSwitcher} from './ModuleSwitcher';
-import {withDesign} from 'storybook-addon-designs'
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { withDesign } from 'storybook-addon-designs';
 import App from "../../../App";
-import {RootComponent} from "../../../index";
-import {ModuleSetContextType} from "./data/ModuleContext";
-import {useEffect} from "react";
-import {useHistory} from "react-router-dom";
+import { RootComponent } from "../../../index";
+import { SetModuleContextType } from "./data/ModuleContext";
+import { ModuleSwitcher } from './ModuleSwitcher';
 
 export default {
     component: ModuleSwitcher,
@@ -37,7 +37,7 @@ const Template = args => {
 }
 
 export const Default = Template.bind({});
-const handleTabChange: ModuleSetContextType = (module)=>{
+const handleTabChange: SetModuleContextType = (module)=>{
     return null;
 }
 

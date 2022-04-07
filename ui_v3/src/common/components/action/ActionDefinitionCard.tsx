@@ -7,13 +7,14 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { Box, Card, IconButton, SpeedDial, SpeedDialAction, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { useQueryClient } from "react-query";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { generatePath, useHistory, useRouteMatch } from "react-router-dom";
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionDefinitionPublishStatus from "../../../enums/ActionDefinitionPublishStatus";
 import ActionDefinitionVisibility from "../../../enums/ActionDefinitionVisibility";
 import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces";
 import useDeleteAction from "../application/hooks/useDeleteActions";
+import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE } from '../header/data/ApplicationRoutesConfig';
 import UsageStatus from "../UsageStatus";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 
@@ -51,14 +52,14 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
         handleMoreOptionsSpeedDialToggle()
     }
 
-    const handleCopyWorkflow = () => {
+    const handleCopyAction = () => {
         saveAndCopyWorkflow.mutate({actionDefinitionId: props.actionDefinition.DefinitionId!}, 
             {
                 onSuccess: (data) => {
                     if(props.actionDefinition.DefinitionActionType === ActionDefinitionActionType.WORKFLOW){
                         history.push(`/application/edit-workflow/${data?.[0]?.Id}`)
                     } else {
-                        history.push(`/application/edit-action/${data?.[0]?.Id}`)
+                        history.push(generatePath(APPLICATION_EDIT_ACTION_ROUTE_ROUTE, { ActionDefinitionId: data?.[0]?.Id }))
                     }
                 }
             }    
@@ -293,7 +294,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                         </Box> */}
                         <Tooltip title="Duplicate">
                             <IconButton>
-                                <ContentCopyIcon onClick={handleCopyWorkflow}/>
+                                <ContentCopyIcon onClick={handleCopyAction}/>
                             </IconButton>
                         </Tooltip>
                     </Box>

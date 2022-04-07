@@ -1,12 +1,6 @@
-import { IconButton, Menu, Typography, MenuItem, Select, Dialog, DialogTitle, DialogContent, Button, LinearProgress } from '@mui/material';
-import { Box } from '@mui/material';
-import AddIcon from "@mui/icons-material/Add"
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddRemoveIcon from "../../../../src/images/add_stage.svg"
+import { Box, IconButton, LinearProgress, Menu, MenuItem, TextField, Typography } from '@mui/material';
 import React from 'react';
-import { TextField } from '@mui/material';
-import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
+import AddRemoveIcon from "../../../../src/images/add_stage.svg";
 import ConfirmationDialog from '../../../common/components/ConfirmationDialog';
 import { SetWorkflowContext } from '../../../pages/applications/workflow/WorkflowContext';
 
@@ -70,7 +64,6 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
     }
 
     const handleDeleteStage = () => {
-        console.log(props.stageId)
         props?.handleDeleteStage?.(props.stageId)
         setIsDialogOpen(false)
     }

@@ -1,20 +1,20 @@
 //different for different leaf tab according to current active tab
-import AddIcon from "@mui/icons-material/Add";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { ReactChildren } from "react";
-import { Link as RouterLink, Route, Switch } from "react-router-dom";
-import ConfiguredDataSource from "../../pages/configurations/components/ConfiguredDataSource";
-import { CreateConnectionButton } from "../../pages/data/components/connections/CreateConnectionButton";
-import { TableBrowser } from "../../pages/table_browser/TableBrowser";
+import { Route, Switch } from "react-router-dom";
+import ApplicationContent from "../../pages/apps/ApplicationContent";
+import ApplicationHeader from "../../pages/apps/ApplicationHeader";
+import DataContent from "../../pages/data/DataContent";
+import DataHeader from "../../pages/data/DataHeader";
 import {
-    DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_RAW_ROUTE,
+    DATA_ROUTE,
     DATA_SUB_TABS
 } from "./header/data/DataRoutesConfig";
+import { APPLICATION_ROUTE } from "./header/data/RoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
-import UploadTableDialogContent from "./UploadTableDialogContent";
 
 
-export const ModuleSubHeader = () => <Switch>{
+export const SubHeader = () => <Switch>{
     DATA_SUB_TABS.map((tab) =>
         tab?.children?.map(({href}) => <Route
             path={href}>
@@ -23,51 +23,50 @@ export const ModuleSubHeader = () => <Switch>{
 </Switch>;
 
 //different for different leaf tab
-export const ModuleHeader = ({tab}: ModuleHeaderPropType) => {
+export const Header = ({tab}: ModuleHeaderPropType) => {
     const label = tab.label;
     const [title, subTitle] = [tab?.title || label, tab?.subTitle || label];
 
-    // TODO: hack here to remove headers
-    if (title === "APPLICATION") {
-        return <></>
-    }
-    return <Box
-        sx={{display: 'flex', flexDirection: 'column'}}>
-        <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: "space-between", mb: 3}}>
-            <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                <Typography variant="h5" fontWeight={600}>
-                    {title}
-                </Typography>
-                <Typography fontSize={12}>
-                    {subTitle}
-                </Typography>
+    return (
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Box sx={{display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: "space-between", mb: 3}}>
+                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                        <Typography variant="h5" fontWeight={600}>
+                            {title}
+                        </Typography>
+                        <Typography fontSize={12}>
+                            {subTitle}
+                        </Typography>
+                    </Box>
+                    <Box sx={{display: 'flex', gap: 2}}>
+                        
+                    </Box>
+                </Box>
             </Box>
-            <Box sx={{display: 'flex', gap: 2}}>
-                <CreateConnectionButton/>
-                <Button variant="contained" to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={RouterLink}
-                        title="Upload File"
-                        endIcon={<AddIcon sx={{fontSize: "small", backgroundColor: "secondary"}}/>}
-                        sx={{flex: 1, borderRadius: '10px', bgcolor: 'lightBlueDF.main'}}
-                >
-                    Upload File
-                </Button>
-            </Box>
+            <Switch>
+                <Route path={DATA_ROUTE} component={DataHeader}/>
+                <Route path={APPLICATION_ROUTE} component={ApplicationHeader}/>
+            </Switch>
         </Box>
-    </Box>
+        
+    )
+    
 }
 //different for different leaf tab
 export const MainContent = () => {
-    return <Box>
-        <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTableDialogContent}/>
-        <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
-        <Route path={DATA_RAW_ROUTE} component={TableBrowser}/>
-    </Box>
+    return (
+        <Switch>
+            <Route path={DATA_ROUTE} component={DataContent}/>
+            <Route path={APPLICATION_ROUTE} component={ApplicationContent}/>
+        </Switch>
+    )
 }
 
 export const ModuleContent = ({children}: { children: ReactChildren }) => {
     return <>{children}</>
 }
 
-ModuleContent.ModuleHeader = ModuleHeader;
-ModuleContent.ModuleSubHeader = ModuleSubHeader;
+ModuleContent.Header = Header;
+ModuleContent.SubHeader = SubHeader;
 ModuleContent.MainContent = MainContent;

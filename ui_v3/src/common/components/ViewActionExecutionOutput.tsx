@@ -24,9 +24,7 @@ const ViewActionExecutionOutput = (props: { executionId: string, presentationFor
                 fetchActionExeuctionParsedOutput.mutate({ Id: props.executionId })
             }
             case ActionDefinitionPresentationFormat.TIME_SERIES: {
-                fetchActionExecutionTimeSeriesParsedOutput.mutate( {Id: props.executionId}, {
-                    onSuccess: (data, errors) => console.log(data, errors)
-                } )
+                fetchActionExecutionTimeSeriesParsedOutput.mutate( {Id: props.executionId}, {} )
             }
         }
         

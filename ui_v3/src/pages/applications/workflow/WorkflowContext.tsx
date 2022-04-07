@@ -1,9 +1,7 @@
-import React from "react"
-import { v4 as uuidv4 } from 'uuid'
-import { NumberFormat } from "xlsx/types";
+import React from "react";
+import { v4 as uuidv4 } from 'uuid';
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate } from "../../../generated/entities/Entities";
-import { ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces";
 
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
@@ -423,7 +421,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
 
 
         case 'REORDER_ACTION': 
-            console.log(state)
             const filteredStage = state.stages.filter(stage => stage.Id === action.payload.stageId)
             if(filteredStage?.length > 0) {
                 var currentStage = {...filteredStage[0]}
@@ -435,7 +432,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         return stage
                     }
                 })
-                console.log({...state, stages: [...newStateStages]})
                 return filterValidDefaultValues({...state, stages: [...newStateStages]})
             } 
             return state
@@ -482,7 +478,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 endIndex: action.payload.endIndex
             }}
         case 'ADD_STAGE':
-            console.log(action)
             const newState = {...state}
             if(!!action.payload.previousStageId) {
                 const stageIndex = newState.stages.findIndex(stage => stage.Id === action.payload.previousStageId)
@@ -565,7 +560,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     })
                 })
             }
-            console.log(newState)
             return newState
         }
 
@@ -697,7 +691,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
 }
 
 const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextType => {
-    console.log(state)
     const x = {
         ...state,
         stages: state.stages.map(stage => { return {
@@ -711,7 +704,6 @@ const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextTy
             })
         }})
     }
-    console.log(x)
     return x
 }
 

@@ -1,9 +1,7 @@
-import { Autocomplete, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
-import { Box } from "@mui/material"
-import React from "react"
-import { ChangeEvent } from "react"
+import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import React, { ChangeEvent } from "react"
 import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
-import { UpstreamAction, WorkflowContextType } from "../../../../pages/applications/workflow/WorkflowContext"
+import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
 import LoadingWrapper from "../../LoadingWrapper"
 import useFetchColumnsForTables from "./hooks/useFetchColumnsForTables"
@@ -160,7 +158,6 @@ const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
                 />
             )}
             onChange={(event, value, reason, details) => {
-                    console.log(value)
                     onChange(value ?? undefined)
                 } 
             }

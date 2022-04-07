@@ -1,9 +1,9 @@
-import React from 'react'
-import {Link, useRouteMatch} from 'react-router-dom'
-
-import { makeStyles } from '@mui/styles'
-import {Box, Divider, Grid, IconButton} from '@mui/material'
 import TableChartIcon from '@mui/icons-material/TableChart'
+import { Box, Divider, Grid, IconButton } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import React from 'react'
+import { Link, useRouteMatch } from 'react-router-dom'
+
 
 const useStyles = makeStyles(() => ({
 
@@ -36,8 +36,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Row = (props) => {
-
-    console.log(props)
     const [click, setClick] = React.useState(false)
 
 

@@ -56,8 +56,6 @@ const ActionSummary = () => {
             })
         }
     }
-    
-    console.log(buildActionContext)
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 4}}>

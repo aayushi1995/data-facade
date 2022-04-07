@@ -38,7 +38,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     const selectedDefinition = workflowContext.currentSelectedAction || {actionId: "", actionIndex: -1}
     const [isBuildDialogOpen, setIsBuildDialogOpen] = React.useState(false)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
-    // console.log(workflowContext)
+
     const stageDetails = workflowContext.stages.filter(stage => stage.Id === props.stageId)?.[0]
 
     const handleDeleteAction = (actionId: string, actionIndex: number) => {
