@@ -546,7 +546,7 @@ const TableSchemaSelection = (props) => {
         if (!!parsedFileResult && !!columnProperties) {
             const tagRequest = {
                 name: tableProperties.tableName,
-                column_names: columnProperties.map(columnProps => columnProps.columnName),
+                column_names: parsedFileResult.columnNames,
                 data: parsedFileResult.data
             }
 
@@ -556,24 +556,26 @@ const TableSchemaSelection = (props) => {
                         const parsedData = JSON.parse(data)
 
                         setColumnProperties(oldProp => {
+                            let column_tags = parsedData["column_tags"]
+                            if (column_tags === undefined 
+                                || column_tags.length == 0)
+                                return oldProp
+
                             let newProp = [...oldProp]
-                            parsedData["ColumnTags"].forEach(columnTagProp => {
-                                const mostConfidentTag = {
-                                    tag: "NA",
-                                    confidence: -1
-                                }
+                            parsedData["column_tags"].forEach(columnTagProp => {
                                 const columnName = columnTagProp.column_name
-                                for (const [tag, confidence] of Object.entries(columnTagProp["column_tags"])) {
-                                    if (confidence > mostConfidentTag.confidence) {
-                                        mostConfidentTag.tag = tag
-                                        mostConfidentTag.confidence = confidence
-                                    }
+                                let tags_len = columnTagProp["column_tags"].length
+                                let tags = []
+                                for (var i=0; i < tags_len; i++){
+                                    let column_tag = columnTagProp["column_tags"][i]
+                                    tags.push({Name: column_tag})
                                 }
+                                
                                 newProp = newProp.map(col => {
                                     if (col["columnName"] === columnName) {
                                         return {
                                             ...col,
-                                            columnTags: [...col.columnTags, ...[{Name: mostConfidentTag.tag}]]
+                                            columnTags: [...col.columnTags, ...tags]
                                         }
                                     } else {
                                         return col
@@ -585,19 +587,19 @@ const TableSchemaSelection = (props) => {
                         })
 
                         setTableProperties(oldProp => {
-                            const mostConfidentTag = {
-                                tag: "NA",
-                                confidence: -1
-                            }
-                            for (const [tag, confidence] of Object.entries(parsedData["table_tags"])) {
-                                if (confidence > mostConfidentTag.confidence) {
-                                    mostConfidentTag.tag = tag
-                                    mostConfidentTag.confidence = confidence
-                                }
+                            let table_tags = parsedData["table_tags"]
+                            if (table_tags === undefined 
+                                || table_tags.length == 0)
+                                return oldProp
+                            let tags_len = table_tags.length
+                            let tags = []
+                            for (var i=0; i < tags_len; i++){
+                                let table_tag = table_tags[i]
+                                tags.push({Name: table_tag})
                             }
                             const newProp = {
                                 ...oldProp,
-                                tags: [...oldProp.tags, ...[{Name: mostConfidentTag.tag}]]
+                                tags: [...oldProp.tags, ...tags]
                             }
                             return newProp
                         })
