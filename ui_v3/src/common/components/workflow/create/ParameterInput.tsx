@@ -311,6 +311,8 @@ const IntInput = (props: IntParameterInput) => {
         const parameterValue = event.target.value
         if (parameterValue.match(/^-?\d+$/)) {
             setInput(parameterValue)
+        } else if(parameterValue==="") {
+            setInput("")
         }
     }
 
@@ -342,6 +344,8 @@ const FloatInput = (props: FloatParameterInput) => {
         const parameterValue = event.target.value
         if (isNumber(parameterValue)) {
             setInput(parameterValue)
+        } else if(parameterValue==="") {
+            setInput("")
         }
     }
 

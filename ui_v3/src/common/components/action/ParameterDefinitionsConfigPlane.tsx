@@ -1,8 +1,8 @@
-import { Grid, Card, Box } from "@mui/material";
+import { Box, Card, Grid } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
-import ParameterInput, { ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
+import ParameterInput, { ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
 
 
 interface ParameterDefinitionsConfigPlaneProps {
@@ -39,7 +39,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
 
     const getParameterDefinition = (parameterDefinitionId: string| undefined) => props.parameterDefinitions.find(apd => apd.Id===parameterDefinitionId)
 
-    const parameterDefinitions: ParameterInputProps[] = props.parameterDefinitions.map(parameterDefinition => {
+    const parameterDefinitions: ParameterInputProps[] = props.parameterDefinitions.sort((p1, p2) => ((p1?.ParameterName||"a") > (p2?.ParameterName||"b")) ? 1 : -1).map(parameterDefinition => {
         const existingParameterInstance = getExistingParameterInstance(parameterDefinition.Id || "na")
         const existingParameterValue = getExistingParameterValue(parameterDefinition.Id || "na")
         if(parameterDefinition.Tag === ActionParameterDefinitionTag.DATA || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME) {
