@@ -168,7 +168,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     
     if(stageDetails) {
         return (
-            <Box sx={{ display: 'flex', flex: 1}}>
+            <Box sx={{ display: 'flex', flex: 1, maxWidth: '100%'}}>
                 {isBuildDialogOpen ?
                     <BuildActionContextProvider>
                         <CreateActionWizardDialog
@@ -182,7 +182,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                     :
                     <></>
                 }
-                <Box sx={{ display: 'flex', alignContent: 'center', flex: 1, flexDirection: 'column'}}>
+                <Box sx={{ display: 'flex', alignContent: 'center', flex: 1, flexDirection: 'column', maxWidth: '100%'}}>
                     <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <Typography sx={{ flex: 1, fontWeight: 600, fontFamily: 'SF Pro Display' }}>
                             Selected Actions
