@@ -4,12 +4,20 @@
     */
     
 const ActionDefinitionActionGroups = {
-    DATA_CLEANSING: "Data Cleansing",
-    DATA_CHECKS: "Data Checks",
+    DATA_CLEANING: "CleanData",
+    DATA_CHECKS: "DataChecks",
     PREDICT: "Predict",
     STATISTICS: "Statistics",
-    TIME_SERIES_FORECAST: "Time Series Forecast",
-    PRE_PROCESSING: "Pre-processing"
+    TIME_SERIES_FORECAST: "TimeSeriesForecast",
+    PRE_PROCESSING: "PreProcessing",
+    HANDLE_MISSING: "HandleMissing",
+    ENCODE_CATEGORICAL: "EncodeCategorical",
+    FORMAT_STRING: "FormatString",
+    HANDLE_OUTLIERS: "HandleOutliers",
+    DATA_TRANSFORM: "DataTransform",
+    MANAGE_COLUMNS: "ManageColumns",
+    MANAGE_ROWS: "ManageRows",
+    DATA_PREPARATION: "DataPreparation"
 }
 
 export default ActionDefinitionActionGroups;

@@ -71,6 +71,12 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "GET", endpoint: "/getApplications", inputPayload: Entity.Application): Promise<Entity.Application[]>; 
 	
 	/**
+	Gives you the chart details returned by an execution
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getExecutionCharts", inputPayload: Entity.ActionExecution): Promise<CustomInterface.ChartWithData[]>; 
+	
+	/**
 	Gives you the the action definitions of the types that should be visible to the user.
 	*/
 	

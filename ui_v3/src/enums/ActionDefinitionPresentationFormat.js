@@ -13,7 +13,8 @@ const ActionDefinitionPresentationFormat = {
     ELEMENT_FREQUENCY: "element_frequency",
     DUMP_TEXT: "dump_text",
     NO_RESPONSE: "no_response",
-    OBJECT: "Object"
+    OBJECT: "Object",
+    VISUALISATION_JSON: "VisualisationJson"
 }
 
 export default ActionDefinitionPresentationFormat;
