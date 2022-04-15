@@ -8,6 +8,7 @@ export interface LoadingWrapperProps {
     children: React.ReactNode
 }
 const LoadingWrapper = (props: LoadingWrapperProps) => {
+    console.log(props)
     if(props.isLoading) {
         return <LoadingIndicator/>
     } else if(!!props.error) {

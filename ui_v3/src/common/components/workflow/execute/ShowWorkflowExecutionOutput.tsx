@@ -1,6 +1,7 @@
-import { Box, Grid, Typography, Divider } from "@mui/material"
+import { Box, Grid, Typography, Divider, Card } from "@mui/material"
 import React from "react"
 import { WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
+import ViewExecutionCharts from "../../../ViewExecutionCharts"
 import ViewActionExecutionOutput from "../../ViewActionExecutionOutput"
 
 
@@ -17,6 +18,10 @@ const ShowWorkflowExecutionOutput = () => {
                             </Typography>
                             <Divider/>
                             <ViewActionExecutionOutput executionId={actionExecution.Id} presentationFormat={actionExecution.PresentationFormat || "NA"}/>
+                            <Divider/>
+                            <Card>
+                                <ViewExecutionCharts executionId={actionExecution.Id}/>
+                            </Card>
                         </Box>
                     )
                 })

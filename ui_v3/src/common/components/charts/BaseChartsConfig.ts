@@ -2,23 +2,51 @@
 export type DataAxis = (number|string)[];
 type CategoryAxis = {
     data: DataAxis,
-    type: 'category' //Category axis, suitable for discrete category data, if data is there, assume its of type category
+    type: 'category' ,
+    name?: string//Category axis, suitable for discrete category data, if data is there, assume its of type category
 };
 type NonCategoryAxis = {
     type: 'value'//Numerical axis, suitable for continuous data.
     | 'time' //Time axis, suitable for continuous time series data.
     // Name list of all categories
     //['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    | 'log' // Log axis, suitable for log data.
+    | 'log', // Log axis, suitable for log data.
+    name?: string
 }
 
-type Series = {
-    type: 'bar',
-    data: DataAxis
+type SeriesBar = {
+    type: 'bar' 
+    data: DataAxis,
 }[];
 
+
+type SeriesScatter = {
+    type: 'scatter' 
+    data: DataAxis,
+}[];
+
+type SeriesLine = {
+    type: 'line' 
+    data: DataAxis,
+    smooth?: boolean
+}
+
+type SeriesPie = {
+    type: 'pie',
+    data: {value: number, name: string}[],
+    name?: string,
+    radius?: string[],
+    avoidLabelOverlap?: boolean,
+    itemStyle?: object,
+    label?: object,
+    emphasis?: object,
+    labelLine?: object
+
+}
+
+
 export type BaseChartsConfig = {
-    xAxis: (CategoryAxis|NonCategoryAxis)[],
-    yAxis: (CategoryAxis|NonCategoryAxis)[],
-    series: Series
+    xAxis?: (CategoryAxis|NonCategoryAxis)[],
+    yAxis?: (CategoryAxis|NonCategoryAxis)[],
+    series: SeriesScatter | SeriesPie | SeriesBar | SeriesLine
 }

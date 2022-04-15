@@ -7,6 +7,7 @@ import ViewActionExecutionOutput from "../../../common/components/ViewActionExec
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
 import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
+import ViewExecutionCharts from '../../../common/ViewExecutionCharts'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
 import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/components/shared-components/ActionDefinitionHero'
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from '../../build_action/context/BuildActionContext'
@@ -147,8 +148,9 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                         </IconButton>
                     </Grid>
                     <DialogTitle>Output preview</DialogTitle>
-                    <DialogContent sx={{overflow: 'auto', p: 1}}>
+                    <DialogContent sx={{overflow: 'auto', p: 1, display: 'flex', gap: 2, flexDirection: 'column'}}>
                         <ViewActionExecutionOutput executionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"} presentationFormat={workflowContext.actionExecutionIdForPreview?.presentationFormat || "NA"}/>
+                        <ViewExecutionCharts executionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"} />
                     </DialogContent>
                 </Dialog>
                 <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>

@@ -12,9 +12,10 @@
 }
 
 
-export interface ActionInstanceWithParameters {
-    model?: Entity.ActionInstance
-	ParameterInstances?: Entity.ActionParameterInstance[]
+export interface UpdateActionDefinitionWithTemplate {
+    filter?: Entity.ActionDefinition
+	newProperties?: Entity.ActionDefinition
+	ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
 }
 
 
@@ -24,16 +25,113 @@ export interface ActionDefinitionWithTags {
 }
 
 
+export interface CreateApplicationRequest {
+    model?: Entity.Application
+	tags?: Entity.Tag[]
+}
+
+
+export interface WorkflowDefinitionWithExecutionDetails {
+    ActionDefinition?: Entity.ActionDefinition
+	ActionExecution?: Entity.ActionExecution
+	stageId?: string
+	stageName?: string
+}
+
+
+export interface ActionInstanceCardViewResponse {
+    InstanceId?: string
+	InstanceName?: string
+	DefinitionId?: string
+	DefinitionName?: string
+	DefinitionActionType?: string
+	DefinitionDescription?: string
+	Status?: string
+	DefinitionCreatedBy?: string
+	DefinitionCreatedOn?: number
+	NumberOfUsers?: number
+}
+
+
+export interface ApplicationCardViewResponse {
+    ApplicationId?: string
+	ApplicationName?: string
+	ApplicationDescription?: string
+	ApplicationCreatedBy?: string
+	Status?: string
+	ApplicationCreatedOn?: number
+	NumberOfFlows?: number
+	NumberOfActions?: number
+	NumberOfDashboards?: number
+	NumberOfUsers?: number
+}
+
+
+export interface ActionDetailsForApplication {
+    model?: Entity.ActionDefinition
+	stagesOrParameters?: number
+	numberOfRuns?: number
+	numberOfWorkflowActions?: number
+	averageRunTime?: number
+}
+
+
+export interface ProviderInstanceDetails {
+    numberOfExecutions?: number
+	model?: Entity.ProviderInstance
+	numberOfTables?: number
+	lastSyncedOn?: number
+}
+
+
+export interface ChartWithData {
+    model?: Entity.Chart
+	chartData?: object
+}
+
+
+export interface ApplicationDetails {
+    numberOfActions?: number
+	numberOfFlows?: number
+	actions?: ActionDetailsForApplication[]
+	workflows?: ActionDetailsForApplication[]
+	model?: Entity.Application
+}
+
+
+export interface ActionExecutionIncludeDefinitionInstanceDetailsResponse {
+    ActionDefinition?: Entity.ActionDefinition
+	ActionInstance?: Entity.ActionInstance
+	ActionExecution?: Entity.ActionExecution
+	ActionParameterDefinitions?: Entity.ActionParameterDefinition[]
+	ActionParameterInstances?: Entity.ActionParameterInstance[]
+}
+
+
+export interface ActionInstanceDetails {
+    ActionDefinition?: Entity.ActionDefinition
+	ActionInstance?: Entity.ActionInstance
+	ActionParameterDefinition?: Entity.ActionParameterDefinition[]
+	ActionParameterInstance?: Entity.ActionParameterInstance[]
+}
+
+
+export interface CopyActionDefinitionPayload {
+    ExistingActionId?: string
+}
+
+
+export interface ActionTemplatesWithParameters {
+    model?: Entity.ActionTemplate
+	tags?: Entity.Tag[]
+	actionParameterDefinitions?: ActionParameterDefinitionWithTags[]
+}
+
+
 export interface WorkflowActionExecutions {
     WorkflowDefinition?: Entity.ActionDefinition
 	WorkflowExecution?: Entity.ActionExecution
 	ChildExecutionsWithDefinitions?: WorkflowDefinitionWithExecutionDetails[]
-}
-
-
-export interface ActionDefinitionDetail {
-    ActionDefinition?: ActionDefinitionWithTags
-	ActionTemplatesWithParameters?: ActionTemplatesWithParameters[]
 }
 
 
@@ -62,74 +160,15 @@ export interface TagDetails {
 }
 
 
-export interface ChartWithData {
-    model?: Entity.Chart
-	chartData?: object
-}
-
-
 export interface WorkflowStagesWithActions {
     Actions?: Entity.ActionDefinition[]
 	stageName?: string
 }
 
 
-export interface ActionInstanceCardViewResponse {
-    InstanceId?: string
-	InstanceName?: string
-	DefinitionId?: string
-	DefinitionName?: string
-	DefinitionActionType?: string
-	DefinitionDescription?: string
-	Status?: string
-	DefinitionCreatedBy?: string
-	DefinitionCreatedOn?: number
-	NumberOfUsers?: number
-}
-
-
-export interface ActionParameterDefinitionWithTags {
-    model?: Entity.ActionParameterDefinition
-	tags?: Entity.Tag[]
-}
-
-
-export interface WorkflowDefinitionWithExecutionDetails {
-    ActionDefinition?: Entity.ActionDefinition
-	ActionExecution?: Entity.ActionExecution
-	stageId?: string
-	stageName?: string
-}
-
-
-export interface ApplicationCardViewResponse {
-    ApplicationId?: string
-	ApplicationName?: string
-	ApplicationDescription?: string
-	ApplicationCreatedBy?: string
-	Status?: string
-	ApplicationCreatedOn?: number
-	NumberOfFlows?: number
-	NumberOfActions?: number
-	NumberOfDashboards?: number
-	NumberOfUsers?: number
-}
-
-
-export interface ActionDetailsForApplication {
-    model?: Entity.ActionDefinition
-	stagesOrParameters?: number
-	numberOfRuns?: number
-	numberOfWorkflowActions?: number
-	averageRunTime?: number
-}
-
-
-export interface ActionInstanceDetails {
-    ActionDefinition?: Entity.ActionDefinition
-	ActionInstance?: Entity.ActionInstance
-	ActionParameterDefinition?: Entity.ActionParameterDefinition[]
-	ActionParameterInstance?: Entity.ActionParameterInstance[]
+export interface ActionDefinitionDetail {
+    ActionDefinition?: ActionDefinitionWithTags
+	ActionTemplatesWithParameters?: ActionTemplatesWithParameters[]
 }
 
 
@@ -146,54 +185,15 @@ export interface ActionDefinitionCardViewResponse {
 }
 
 
-export interface UpdateActionDefinitionWithTemplate {
-    filter?: Entity.ActionDefinition
-	newProperties?: Entity.ActionDefinition
-	ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
+export interface ActionInstanceWithParameters {
+    model?: Entity.ActionInstance
+	ParameterInstances?: Entity.ActionParameterInstance[]
 }
 
 
-export interface CopyActionDefinitionPayload {
-    ExistingActionId?: string
-}
-
-
-export interface ProviderInstanceDetails {
-    numberOfExecutions?: number
-	model?: Entity.ProviderInstance
-	numberOfTables?: number
-	lastSyncedOn?: number
-}
-
-
-export interface CreateApplicationRequest {
-    model?: Entity.Application
+export interface ActionParameterDefinitionWithTags {
+    model?: Entity.ActionParameterDefinition
 	tags?: Entity.Tag[]
-}
-
-
-export interface ApplicationDetails {
-    numberOfActions?: number
-	numberOfFlows?: number
-	actions?: ActionDetailsForApplication[]
-	workflows?: ActionDetailsForApplication[]
-	model?: Entity.Application
-}
-
-
-export interface ActionExecutionIncludeDefinitionInstanceDetailsResponse {
-    ActionDefinition?: Entity.ActionDefinition
-	ActionInstance?: Entity.ActionInstance
-	ActionExecution?: Entity.ActionExecution
-	ActionParameterDefinitions?: Entity.ActionParameterDefinition[]
-	ActionParameterInstances?: Entity.ActionParameterInstance[]
-}
-
-
-export interface ActionTemplatesWithParameters {
-    model?: Entity.ActionTemplate
-	tags?: Entity.Tag[]
-	actionParameterDefinitions?: ActionParameterDefinitionWithTags[]
 }
 
 
