@@ -36,7 +36,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
         if(selectedParameters===undefined && !!paramsWithTag && !!paramsWithTag[0]){
             onSelectParameterForEdit?.(paramsWithTag[0]!)
         }
-    }, [paramsWithTag])
+    }, [])
     
     const getDatagridProps = () => ({
         columns: [

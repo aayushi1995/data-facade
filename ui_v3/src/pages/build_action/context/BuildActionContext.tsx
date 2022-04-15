@@ -733,15 +733,22 @@ const extractParameterNamesFromCode = (code?: string, language?: string) => {
                             j++
                         }
                         let parameter = ""
+                        let isDataTypeOrValue = false;
                         while (j < code.length && code.charAt(j) !== ')') {
                             if (code.charAt(j) !== ',' && code.charAt(j) !== ' ') {
-                                parameter = parameter + code.charAt(j)
+                                if(code.charAt(j) === ':' || code.charAt(j) === '=') {
+                                    isDataTypeOrValue = true;
+                                }
+                                if(!isDataTypeOrValue) {
+                                    parameter = parameter + code.charAt(j)
+                                }
                             }
                             if (code.charAt(j) === ',' || code.charAt(j + 1) === ')') {
                                 if (parameter.length !== 0) {
                                     parametersArray.push(parameter)
                                     parameter = ""
                                 }
+                                isDataTypeOrValue = false
                             }
                             j++
                         }
@@ -767,7 +774,7 @@ const extractParameterNamesFromCode = (code?: string, language?: string) => {
 }
 
 const getDefaultParameterDefinition = (parameterName: string, language?: string, templateId?: string, definitionId?: string): ActionContextActionParameterDefinitionWithTags => {
-    if (parameterName.search('table') >= 0) {
+    if (parameterName.search('table') >= 0 || parameterName === "df") {
         return {
             parameter: {
                 Id: uuidv4(),
