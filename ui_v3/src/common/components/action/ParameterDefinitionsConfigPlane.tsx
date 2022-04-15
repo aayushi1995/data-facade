@@ -83,7 +83,10 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 inputProps: {
                     parameterName: parameterDefinition.ParameterName || "parameterName",
                     selectedColumnFilter: {Id: existingParameterInstance?.ColumnId},
-                    tableFilters: tableFilters,
+                    filters: {
+                        tableFilters: tableFilters,
+                        parameterDefinitionId: parameterDefinition.Id!
+                    },
                     onChange: (newColumn?: ColumnProperties) => {
                         onParameterValueChange({
                             ...existingParameterInstance,
@@ -195,6 +198,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             }
         } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
             const tableFilters = props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
+            const parameterDefinitionId = parameterDefinition.Id!
             return {
                 parameterType: "COLUMN_LIST",
                 inputProps: {
@@ -210,7 +214,10 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     selectedColumnFilters: existingParameterValue?.split(',')?.map(name => {
                         return {UniqueName: name}
                     }) || [],
-                    tableFilters: tableFilters
+                    filters: {
+                        tableFilters: tableFilters,
+                        parameterDefinitionId: parameterDefinitionId
+                    }
                 }
             }
         } else {

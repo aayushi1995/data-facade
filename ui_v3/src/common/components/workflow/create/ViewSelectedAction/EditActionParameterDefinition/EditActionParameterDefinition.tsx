@@ -198,7 +198,10 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
                 inputProps: {
                     parameterName: props.parameter.ParameterName || "NAME NA",
                     selectedColumnFilters: parameterConfig?.ParameterValue?.split(',').map(name => ({UniqueName: name})) || [],
-                    tableFilters: [{Id: parameterConfig?.TableId}],
+                    filters: {
+                        tableFilters: [{Id: parameterConfig?.TableId}],
+                        parameterDefinitionId: props.parameter.Id!
+                    }
                 }
             }
         } else {

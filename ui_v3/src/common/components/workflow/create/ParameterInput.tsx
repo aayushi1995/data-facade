@@ -4,6 +4,7 @@ import { ColumnProperties, TableProperties } from "../../../../generated/entitie
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
 import LoadingWrapper from "../../LoadingWrapper"
+import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
 import useFetchColumnsForTables from "./hooks/useFetchColumnsForTables"
 
 
@@ -67,7 +68,10 @@ export interface ColumnParameterInput {
     inputProps: {
         parameterName: string,
         selectedColumnFilter: ColumnProperties | undefined,
-        tableFilters: TableProperties[] | undefined,
+        filters: {
+            tableFilters: TableProperties[] | undefined,
+            parameterDefinitionId: string
+        },
         onChange: (newColumn?: ColumnProperties) => void
     }
 }
@@ -77,7 +81,10 @@ export interface ColumnListParameterInput {
     inputProps: {
         parameterName: string,
         selectedColumnFilters: ColumnProperties[] | undefined,
-        tableFilters: TableProperties[] | undefined,
+        filters: {
+            tableFilters: TableProperties[] | undefined,
+            parameterDefinitionId: string
+        },
         onChange?: (newColumnList?: ColumnProperties[]) => void
     }
 }
@@ -192,8 +199,11 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
 }
 
 const ColumnListInput = (props: ColumnListParameterInput) => {
-    const {parameterName, selectedColumnFilters, tableFilters, onChange} = props.inputProps
-    const fetchTableQuery = useFetchColumnsForTables({tableFilters: tableFilters})
+    const {parameterName, selectedColumnFilters, filters, onChange} = props.inputProps
+    const fetchTableQuery = useFetchColumnsForTableAndTags({filters: {
+        tableFilters: filters.tableFilters,
+        parameterDefinitionId: filters.parameterDefinitionId
+    }})
 
     return (
         <LoadingWrapper
@@ -226,9 +236,11 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
 }
 
 const ColumnInput = (props: ColumnParameterInput) => {
-    const {parameterName, selectedColumnFilter, tableFilters, onChange} = props.inputProps
-    const fetchTableQuery  = useFetchColumnsForTables({ tableFilters: tableFilters})
-
+    const {parameterName, selectedColumnFilter, filters, onChange} = props.inputProps
+    const fetchTableQuery = useFetchColumnsForTableAndTags({filters: {
+        tableFilters: filters.tableFilters,
+        parameterDefinitionId: filters.parameterDefinitionId
+    }})
 
     return (
         <LoadingWrapper
