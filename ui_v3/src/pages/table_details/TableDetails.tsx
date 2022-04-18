@@ -1,0 +1,170 @@
+import { TabContext, TabPanel } from "@mui/lab";
+import { Box, Divider, Tab, Tabs } from "@mui/material";
+import React from "react";
+import { generatePath, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { DATA_COLUMN_VIEW, DATA_TABLE_TAB, DATA_TABLE_TAB_ACTION_INSTANCES, DATA_TABLE_TAB_CHECKS, DATA_TABLE_TAB_COLUMNS, DATA_TABLE_TAB_DATA_CLEAN_ACTIONS, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_INTERMEDIARY_TABLES, DATA_TABLE_TAB_QUICK_STATS, DATA_TABLE_TAB_QUICK_VIEW, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
+import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper";
+import useStyles from "../../css/table_details/TableDetails";
+import { useRetreiveData } from "../../data_manager/data_manager";
+import labels from "../../labels/labels";
+import ColumnDetails from "../column_details/ColumnDetails";
+import ActionInstances from "../customizations/components/ActionInstances";
+import TableRowExpanded from "../table_browser/components/TableRowExpanded";
+import Checks from "./components/Checks";
+import ColumnView from "./components/ColumnView";
+import DataCleanActions from "./components/DataCleanActions";
+import IntermediaryTables from "./components/IntermediaryTables";
+import QuickStatsNewTemp from "./components/QuickStatsNewTemp";
+import QuickView from "./components/QuickView";
+
+export const a11yProps = (index: number) => {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+};
+
+export const TABLE_SUMMARY = 0;
+export const TABLE_COLUMN_VIEW = 1;
+export const TABLE_QUICK_VIEW = 2;
+export const TABLE_QUICK_STATS = 3;
+export const TABLE_CHECKS = 4;
+export const TABLE_CLEAN_ACTIONS = 5;
+export const TABLE_ACTION_INSTANCES = 6;
+export const INTERMIDIARY_TABLES = 7;
+
+const URL_TAB_INFO = [
+  {
+    TabLabel: "Summary",
+    ViewName: DATA_TABLE_TAB_SUMMARY
+  },
+  {
+    TabLabel: "Columns",
+    ViewName: DATA_TABLE_TAB_COLUMNS
+  },
+  {
+    TabLabel: "Quick View",
+    ViewName: DATA_TABLE_TAB_QUICK_VIEW
+  },
+  {
+    TabLabel: "Quick Stats",
+    ViewName: DATA_TABLE_TAB_QUICK_STATS
+  },
+  {
+    TabLabel: "Checks",
+    ViewName: DATA_TABLE_TAB_CHECKS
+  },
+  {
+    TabLabel: "Data Clean Actions",
+    ViewName: DATA_TABLE_TAB_DATA_CLEAN_ACTIONS
+  },
+  {
+    TabLabel: "Action Instances",
+    ViewName: DATA_TABLE_TAB_ACTION_INSTANCES
+  },
+  {
+    TabLabel: "Intermediary Tables",
+    ViewName: DATA_TABLE_TAB_INTERMEDIARY_TABLES
+  }
+]
+
+interface MatchParams {
+  TableName: string,
+  ViewName: string
+}
+
+const TableDetailsView = () => {
+  const classes = useStyles();
+  const match = useRouteMatch<MatchParams>();
+  const history = useHistory()
+  const tabState = URL_TAB_INFO.find(info => info.ViewName === match.params.ViewName)?.ViewName!
+
+  const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
+    history.replace(generatePath(DATA_TABLE_TAB, { ...match.params, ViewName: newValue }))
+  };
+
+  const result = useRetreiveData(labels.entities.TableProperties, {
+    filter: {
+      UniqueName: match.params.TableName,
+    },
+    withTableDetail: true,
+  });
+
+  const data = result.data;
+
+  return (
+    <TabContext value={tabState}>
+      <React.Fragment>
+        <Box sx={{ display: "flex", flexDirection: "column"}}>
+          <Box className={classes.grid_root}>
+            <Tabs
+              indicatorColor="primary"
+              scrollButtons="auto"
+              textColor="primary"
+              variant="scrollable"
+              onChange={handleTabChange}
+              value={tabState}
+            >
+              {
+                URL_TAB_INFO.map((info, index) => <Tab key={info.ViewName} value={info.ViewName} label={info.TabLabel} {...a11yProps(index)} />)
+              }
+            </Tabs>
+            <Divider />
+          </Box>
+          <Box className={classes.grid_root}>
+            <ReactQueryWrapper {...result}>
+              {() => (
+                <Box sx={{ mt: 3 }}>
+                  <TabPanel value={DATA_TABLE_TAB_SUMMARY}>
+                    <TableRowExpanded
+                      table={data[0].TableProperties}
+                      TableId={data[0].TableProperties.Id}
+                      TableName={data[0].TableProperties.UniqueName}
+                      TableProviderInstanceId={
+                        data[0].TableProperties.ProviderInstanceID
+                      }
+                    />
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_COLUMNS}>
+                    <ColumnView tableData={data[0]} />
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_QUICK_VIEW}>
+                    <QuickView tableId={data[0].TableProperties.Id} />
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_QUICK_STATS}>
+                    <QuickStatsNewTemp tableId={data[0].TableProperties.Id} />
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_CHECKS}>
+                    <Checks tableId={data[0].TableProperties.Id} />
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_DATA_CLEAN_ACTIONS}>
+                    <DataCleanActions tableId={data[0].TableProperties.Id} />
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
+                    <ActionInstances tableId={data[0].TableProperties.Id} />
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_INTERMEDIARY_TABLES}>
+                      <IntermediaryTables table={data[0].TableProperties}/>
+                  </TabPanel>
+                </Box>
+              )}
+            </ReactQueryWrapper>
+          </Box>
+        </Box>
+      </React.Fragment>
+    </TabContext>
+  );
+};
+
+const TableDetails = () => {
+  const match = useRouteMatch();
+  return (
+    <Switch>
+      <Route path={DATA_COLUMN_VIEW} component={ColumnDetails}/>
+      <Redirect exact from={DATA_TABLE_VIEW} to={DATA_TABLE_TAB_DEFAULT}/>
+      <Route path={DATA_TABLE_TAB} component={TableDetailsView} />
+    </Switch>
+  );
+};
+
+export default TableDetails;

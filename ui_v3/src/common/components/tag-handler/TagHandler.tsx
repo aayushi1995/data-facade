@@ -1,8 +1,6 @@
-import { Autocomplete, Box, Button, Chip, TextField, createFilterOptions, Grid } from '@mui/material'
+import { Autocomplete, Box, Chip, createFilterOptions, Grid, TextField } from '@mui/material'
 import React from 'react'
-import TagScope from '../../../enums/TagScope'
 import { Tag } from '../../../generated/entities/Entities'
-import labels from '../../../labels/labels'
 import useFetchTags from './hooks/useFetchTags'
 
 export interface TagHandlerProps {
@@ -10,7 +8,8 @@ export interface TagHandlerProps {
     entityId: string,
     tagFilter: Tag,
     allowAdd: boolean,
-    allowDelete: boolean
+    allowDelete: boolean,
+    inputFieldLocation: "LEFT" | "RIGHT" | "TOP" | "BOTTOM"
 }
 
 const filter = createFilterOptions<string>()
@@ -27,9 +26,15 @@ const TagHandler = (props: TagHandlerProps) => {
     } else if(!!error) {
         return <>Error: {error}</>
     } else {
+
         return(
-            <Grid container spacing={1} sx={{overflowY: 'auto'}}>
-                {props.allowAdd && <Grid item xs={12} md={4} lg={2}>
+            <Grid container spacing={2} sx={{overflowY: 'auto'}} direction={ 
+                props.inputFieldLocation==="BOTTOM" ? "column-reverse" : 
+                props.inputFieldLocation==="TOP" ? "column" :
+                props.inputFieldLocation==="LEFT" ? "row" : "row-reverse"
+            }>
+                {props.allowAdd && 
+                <Grid item {...((props.inputFieldLocation==="TOP" || props.inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:4, lg:3} )}>
                     <Autocomplete
                         options={tagsNotSelectedButAvaialbleForEntity}
                         filterSelectedOptions
@@ -57,7 +62,7 @@ const TagHandler = (props: TagHandlerProps) => {
                         }}
                     />
                 </Grid>}
-                <Grid item {...(props.allowAdd ? {xs:12, md:8, lg:10} : {xs:12})}> 
+                <Grid item {...((props.inputFieldLocation==="TOP" || props.inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:8, lg:9} )}>
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%"}}>
                         {tagsSelectedForEntity.length > 0 ? 
                             tagsSelectedForEntity.map(tagName => 

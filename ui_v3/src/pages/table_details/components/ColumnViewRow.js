@@ -1,19 +1,20 @@
+import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material'
+import CloseIcon from '@mui/icons-material/Close'
+import { Box, Button, Collapse, Dialog, Divider, Grid, IconButton } from '@mui/material'
 import React from 'react'
-import {Link, useRouteMatch} from 'react-router-dom'
-import {Box, Button, Collapse, Dialog, Divider, Grid, IconButton} from '@mui/material'
-import {KeyboardArrowDown, KeyboardArrowRight} from '@mui/icons-material'
-import {useMutation} from 'react-query'
+import { useMutation } from 'react-query'
+import { generatePath, Link, useRouteMatch } from 'react-router-dom'
+import EditTags from '../../../common/components/EditTags'
+import { DATA_COLUMN_VIEW } from '../../../common/components/header/data/DataRoutesConfig'
+import CreateActionInstanceFormNew from './../../../common/components/CreateActionInstanceFormNew'
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
 import NoData from './../../../common/components/NoData'
-import ColumnIcon from './../../../images/column_icon.png'
-import StatsTable from './StatsTable'
-import CreateActionInstanceFormNew from './../../../common/components/CreateActionInstanceFormNew'
-import CloseIcon from '@mui/icons-material/Close';
-import labels from './../../../labels/labels'
-import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'
 import useStyles from './../../../css/table_details/ColumnViewRow'
-import EditTags from '../../../common/components/EditTags'
+import dataManagerInstance, { useRetreiveData } from './../../../data_manager/data_manager'
 import TagScope from './../../../enums/TagScope'
+import ColumnIcon from './../../../images/column_icon.png'
+import labels from './../../../labels/labels'
+import StatsTable from './StatsTable'
 
 
 const collectColumnLevelStats = (data) => {
@@ -291,7 +292,7 @@ const ColumnViewRow = (props) => {
                                     <Grid item xs={12} className={classes.show_details}>
 
                                         <Link to={{
-                                            pathname: match.url + "/" + props.data.UniqueName,
+                                            pathname: generatePath(DATA_COLUMN_VIEW, { ...match.params, ColumnName: props.data.UniqueName }),
                                             state: {
                                                 "columnId": props.data.Id
                                             }

@@ -1,21 +1,21 @@
-import {Link, useHistory, useRouteMatch} from 'react-router-dom'
-
-import {useMutation} from 'react-query'
-import CloseIcon from '@mui/icons-material/Close';
-import {Dialog, Grid, IconButton, Snackbar} from '@mui/material'
-import CreateActionInstanceFormNew from './../../../common/components/CreateActionInstanceFormNew'
-import './../../../css/table_browser/Row.css'
-import dataManagerInstance from './../../../data_manager/data_manager'
-import React from 'react';
-import labels from './../../../labels/labels';
-import {DataGrid} from "@mui/x-data-grid";
-import {makeStyles} from "@mui/styles";
-import SyncIcon from '@mui/icons-material/Sync';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import {TABLE_CHECKS} from "../../table_details/TableDetails";
-import {CustomToolbar} from "../../../common/components/CustomToolbar";
-import {Alert} from '../../../common/components/Alert';
-import {ButtonIconWithToolTip} from "../../../common/components/ButtonIconWithToolTip";
+import CloseIcon from '@mui/icons-material/Close';
+import SyncIcon from '@mui/icons-material/Sync';
+import { Dialog, Grid, IconButton, Snackbar } from '@mui/material';
+import { makeStyles } from "@mui/styles";
+import { DataGrid } from "@mui/x-data-grid";
+import React from 'react';
+import { useMutation } from 'react-query';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { Alert } from '../../../common/components/Alert';
+import { ButtonIconWithToolTip } from "../../../common/components/ButtonIconWithToolTip";
+import { CustomToolbar } from "../../../common/components/CustomToolbar";
+import { TABLE_CHECKS } from "../../table_details/TableDetails";
+import CreateActionInstanceFormNew from './../../../common/components/CreateActionInstanceFormNew';
+import './../../../css/table_browser/Row.css';
+import dataManagerInstance from './../../../data_manager/data_manager';
+import labels from './../../../labels/labels';
+
 
 const rowStyle = {};
 const cellStyle = {};
@@ -56,7 +56,7 @@ const DataSetsTable = (props) => {
             if (isDummyRow(cell)) {
                 return fullSyncedOn === undefined ? labels.TableBrowserRow.syncing : `Uploading ${new Date(value).toDateString()}`
             } else {
-                return fullSyncedOn === undefined ? labels.TableBrowserRow.syncing : `${new Date(value).toDateString()}`
+                return fullSyncedOn === undefined ? labels.TableBrowserRow.syncing : `${new Date(value).toString()}`
             }
         } else {
             return value;
@@ -75,7 +75,7 @@ const DataSetsTable = (props) => {
             headerName: "Last Synced Date",
             description: `Data set last synced on`,
             sortable: true,
-            flex: 0.5,
+            flex: 1,
             valueGetter: getLastFullSyncedOn,
             hide
         }, {

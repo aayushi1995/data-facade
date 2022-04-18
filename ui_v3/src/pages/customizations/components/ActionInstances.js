@@ -1,23 +1,23 @@
-import React, {useCallback, useEffect} from 'react';
-import {ActionInstanceDetails} from './ActionInstancesRow'
-import labels from './../../../labels/labels'
-import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'
-import {DataGrid} from "@mui/x-data-grid";
-import {Route, Switch, useHistory, useRouteMatch, withRouter} from "react-router-dom";
-import {useCustomizationToolBarButtons} from "../UseCustomizationToolBarButtons";
-import {CustomToolbar} from "../../../common/components/CustomToolbar";
-import {Box, Dialog, Grid, IconButton} from '@mui/material';
-import {v4 as uuidv4} from 'uuid';
-import {useMutation} from 'react-query'
-import LinearProgress from '@mui/material/LinearProgress';
-import QueryData from "../../../common/components/QueryData";
 import CloseIcon from '@mui/icons-material/Close';
-import {makeStyles} from "@mui/styles";
-import {WorkflowActionButtons} from "../../applications/custom-applications/components/WorkflowActionButtons";
-import {ACTION_EXECUTION_STATUS} from "../../applications/custom-applications/hooks/useRunActions";
-import {ReactQueryWrapper} from "../../../common/components/ReactQueryWrapper";
+import { Box, Dialog, Grid, IconButton } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
+import { makeStyles } from "@mui/styles";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { useCallback, useEffect } from 'react';
+import { useMutation } from 'react-query';
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
+import { CustomToolbar } from "../../../common/components/CustomToolbar";
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
-import {getActionExecutionParsedOutput} from './../../../data_manager/entity_data_handlers/action_execution_data'
+import QueryData from "../../../common/components/QueryData";
+import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
+import { WorkflowActionButtons } from "../../applications/custom-applications/components/WorkflowActionButtons";
+import { ACTION_EXECUTION_STATUS } from "../../applications/custom-applications/hooks/useRunActions";
+import { useCustomizationToolBarButtons } from "../UseCustomizationToolBarButtons";
+import dataManagerInstance, { useRetreiveData } from './../../../data_manager/data_manager';
+import { getActionExecutionParsedOutput } from './../../../data_manager/entity_data_handlers/action_execution_data';
+import labels from './../../../labels/labels';
+import { ActionInstanceDetails } from './ActionInstancesRow';
 
 
 const useStyles = makeStyles(() => ({
@@ -267,7 +267,7 @@ const ActionInstancesInternal = (props) => {
         );
 }
 
-const ActionInstances = withRouter(function ActionInstancesRoutes(props) {
+const ActionInstances = (props: { tableId: string }) => {
     const match = useRouteMatch();
     return (
         <Switch>
@@ -276,5 +276,6 @@ const ActionInstances = withRouter(function ActionInstancesRoutes(props) {
                    render={() => <ActionInstancesInternal tableId={props.tableId}/>}/>
         </Switch>
     )
-});
+};
+
 export default ActionInstances;

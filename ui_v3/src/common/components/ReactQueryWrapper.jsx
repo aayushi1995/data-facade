@@ -1,7 +1,7 @@
+import { Box } from "@mui/material";
+import ErrorBoundry from './ErrorBoundry';
 import LoadingIndicator from "./LoadingIndicator";
 import NoData from "./NoData";
-import ErrorBoundry from './ErrorBoundry';
-import {Box} from "@mui/material";
 
 const _ReactQueryWrapper = ({
     isLoading,

@@ -1,8 +1,8 @@
-import React from 'react'
-import { useRetreiveData } from "../../../data_manager/data_manager";
-import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
-import { CustomToolbar } from "../../../common/components/CustomToolbar";
 import { DataGrid } from "@mui/x-data-grid";
+import React from 'react';
+import { CustomToolbar } from "../../../common/components/CustomToolbar";
+import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
+import { useRetreiveData } from "../../../data_manager/data_manager";
 
 
 export const useActionExecution1000RowsQuery = (tableId: string) => useRetreiveData('ActionExecution',
@@ -13,7 +13,7 @@ export const useActionExecution1000RowsQuery = (tableId: string) => useRetreiveD
         TableQuickView: true
     }, { enabled: !!tableId });
 
-const QuickView = (props: { tableId: string; }) => {
+const QuickView = (props: { tableId: string }) => {
     const {
         isLoading: actionExecutionLoading,
         error: actionExecutionError,

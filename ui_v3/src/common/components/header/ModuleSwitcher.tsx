@@ -31,9 +31,14 @@ export function TabsContainer(props: TabsContainerType) {
 
     
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: isLevel0TabsContainer ? "space-between" : "center" }}>
+        <Box sx={{ 
+            display: "flex", 
+            flexDirection: "row", 
+            justifyContent: isLevel0TabsContainer ? "space-between" : "center",
+            backgroundColor: level === 0 ? "background.paper" : "background.default"
+         }}>
             { isLevel0TabsContainer && 
-                <Box>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <ButtonIconWithToolTip title="toggle"
                         Icon={() => <img src={ModuleSwitcherIcon}
                                         style={{transform: (moduleContext.tabsVisible ? '' : 'rotate(90deg)')}}
@@ -46,11 +51,7 @@ export function TabsContainer(props: TabsContainerType) {
                 </Box>
             }
             {  moduleContext.tabsVisible && 
-                <Box
-                    sx={{
-                        backgroundColor: level === 0 ? "background.paper" : "background.default"
-                    }}
-                >
+                <Box>
                     <Box>
                         <Tabs value={value}>
                             {tabs && tabs?.map(({label, href}) => {
@@ -63,7 +64,8 @@ export function TabsContainer(props: TabsContainerType) {
             }
             {isLevel0TabsContainer && 
                 <Box>
-                    <Box ref={anchorRef} onClick={() => setSettingPopOverVisible(true)}>
+                    <Box ref={anchorRef} onClick={() => setSettingPopOverVisible(true)} 
+                        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <ButtonIconWithToolTip 
                             title="settings" 
                             Icon={() => <img src={SettingsIcon} 

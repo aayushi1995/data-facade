@@ -1,16 +1,13 @@
+import { Autocomplete, Box, Button, TextField, Tooltip } from '@mui/material'
 import React from 'react'
-import {Link, useHistory} from 'react-router-dom'
-import {
-    Button, Tooltip, Box, Autocomplete, TextField
-} from '@mui/material'
-import labels from '../../labels/labels'
-import useCreateRuntimeWorkflow from './workflow/create/hooks/useCreateRuntimeWorkflow'
-import ActionDefinition from '../../generated/entities/Entities'
+import { useHistory } from 'react-router-dom'
 import ActionDefinitionActionGroups from '../../enums/ActionDefinitionActionGroups'
+import labels from '../../labels/labels'
 import LoadingIndicator from './LoadingIndicator'
+import useCreateRuntimeWorkflow from './workflow/create/hooks/useCreateRuntimeWorkflow'
 
 const RunWorkflowButton = (props) => {
-    const {tableMeta} = props
+    const {TableId} = props
     const history = useHistory()
     const [isLoading, setLoading] = React.useState(false)
     const [actionGroupsSelected, setSelectedActionGroups] = React.useState([])
@@ -30,7 +27,7 @@ const RunWorkflowButton = (props) => {
     )
     const handleClick = () => {
         createWorkflowForTable.mutate(
-            {tableId: tableMeta?.Id, actionGroups: actionGroupsSelected}
+            {tableId: TableId, actionGroups: actionGroupsSelected}
         )
     }
 

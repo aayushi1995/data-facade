@@ -99,7 +99,6 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                         <UsageStatus status={props.publishStatus}/>
                                     </Box>
                                 </Box>
-                                
                             </Box>
                         </Box>
                     </Grid>

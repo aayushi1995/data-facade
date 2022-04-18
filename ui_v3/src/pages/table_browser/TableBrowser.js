@@ -1,22 +1,21 @@
+import DeleteIcon from "@mui/icons-material/Delete"
+import SyncIcon from "@mui/icons-material/Sync"
+import { IconButton, Snackbar, Tooltip } from '@mui/material'
+import * as PropTypes from "prop-types"
 import React from 'react'
-import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom'
-import {IconButton, Snackbar, Tooltip} from '@mui/material'
-import DataSetsTable from './components/DataSetsTable'
-import Search from './../../common/components/Search'
+import { useMutation, useQueryClient } from 'react-query'
+import { Route, useRouteMatch, withRouter } from 'react-router-dom'
+import { Alert } from '../../common/components/Alert'
+import { actionInstanceFormDataNeeds } from "../../common/components/CreateActionInstanceFormNew"
+import { DATA_RAW_ROUTE, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig"
 import TableDetails from '../table_details/TableDetails'
 import LoadingIndicator from './../../common/components/LoadingIndicator'
-import {useMutation, useQueryClient} from 'react-query'
 import NoData from './../../common/components/NoData'
-import dataManagerInstance, {usePrefetchMultipleRetreiveData, useRetreiveData} from './../../data_manager/data_manager'
+import Search from './../../common/components/Search'
 import './../../css/table_browser/TableBrowser.css'
-import {actionInstanceFormDataNeeds} from "../../common/components/CreateActionInstanceFormNew";
-import labels from './../../labels/labels';
-import * as PropTypes from "prop-types";
-import SyncIcon from "@mui/icons-material/Sync";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {PageHeader} from "../../common/components/header/PageHeader";
-import { Alert } from '../../common/components/Alert';
-import {DATA_RAW_ROUTE} from "../../common/components/header/data/DataRoutesConfig";
+import dataManagerInstance, { usePrefetchMultipleRetreiveData, useRetreiveData } from './../../data_manager/data_manager'
+import labels from './../../labels/labels'
+import DataSetsTable from './components/DataSetsTable'
 
 const filterOptionsMap = {
 
@@ -224,11 +223,10 @@ const TableView = () => {
 }
 
 export const TableBrowser = withRouter(function TableBrowserRoutes() {
-    const match = useRouteMatch();
     return (
         <>
-            <Route exact path={match.path} component={TableView}/>
-            <Route exact path={`${match.path}/:tableUniqueName`} component={TableDetails}/>
+            <Route exact path={DATA_RAW_ROUTE} component={TableView}/>
+            <Route path={DATA_TABLE_VIEW} component={TableDetails}/>
         </>
     )
 });

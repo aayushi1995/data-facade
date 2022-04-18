@@ -1,7 +1,6 @@
-import {useTheme} from "@mui/material";
-import {IconButton, Tooltip} from "@mui/material";
+import { IconButton, Tooltip, useTheme } from "@mui/material";
+import { Box } from "@mui/system";
 import React from "react";
-import {Box} from "@mui/system";
 
 export const ButtonIconWithToolTip = ({
                                           backgroundColor = 'white',
@@ -19,15 +18,15 @@ export const ButtonIconWithToolTip = ({
             borderRadius: "100%",
             boxShadow: background? theme.shadows[22]: 'none'
         }}>
-        <IconButton
-            size="small"
-            onClick={onClick}
-            color="primary"
-            aria-label={title}
-            component="span"
-        >
-            <Icon sx={{height: "15px", width: "15px"}}/>
-        </IconButton>
+            <IconButton
+                size="small"
+                onClick={onClick}
+                color="primary"
+                aria-label={title}
+                component="span"
+            >
+                <Icon sx={{height: "15px", width: "15px"}}/>
+            </IconButton>
         </Box>
     </Tooltip>;
 }

@@ -1,16 +1,16 @@
+import { Box, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import React from "react";
-import {Box, Card, CardContent, Grid, TextField, Typography} from "@mui/material";
-import {ReactQueryWrapper} from "../../../../common/components/ReactQueryWrapper";
-import {Route, useHistory} from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
+import { DATA_CONNECTIONS_ROUTE } from "../../../../common/components/header/data/DataRoutesConfig";
+import { ReactQueryWrapper } from "../../../../common/components/ReactQueryWrapper";
 import CreateDataSourceRow from "../../../configurations/components/CreateDataSourceRow";
-import {useConnectionProviders} from "./hooks/useConnectionProviders";
 import {
     CHOOSE_CONNECTOR_ROUTE,
-    CHOOSE_CONNECTOR_SELECTED_ROUTE,
+    CHOOSE_CONNECTOR_SELECTED_ROUTE
 } from "./DataRoutesConstants";
-import {DATA_CONNECTIONS_ROUTE} from "../../../../common/components/header/data/DataRoutesConfig";
-import {iconProviderMap} from "./iconProviderMap";
-import {makeStyles} from "@mui/styles";
+import { useConnectionProviders } from "./hooks/useConnectionProviders";
+import { iconProviderMap } from "./iconProviderMap";
 
 
 const useStyles = makeStyles(() => ({
@@ -38,6 +38,7 @@ export type ProviderType = {
 export function ProviderIcon({ provider }: {provider?: ProviderType}) {
     const classes = useStyles();
     const providerUniqueName = provider?.ProviderDefinition?.UniqueName;
+    console.log(providerUniqueName)
     // ignoring because server should send ProviderType with only legit enum UniqueNames in its type
     // @ts-ignore
     const src = (providerUniqueName && (providerUniqueName in iconProviderMap))? iconProviderMap[providerUniqueName]: '';
