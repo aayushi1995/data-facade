@@ -1,12 +1,12 @@
+import CloseIcon from "@mui/icons-material/Close"
+import { Box, Container, Grid, IconButton, Link, TextField } from "@mui/material"
 import React from 'react'
+import { useHistory, useRouteMatch } from "react-router-dom"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
-import labels from './../../../labels/labels'
-import {useRetreiveData} from './../../../data_manager/data_manager'
 import useStyles from './../../../css/configurations/CreateDataSource'
-import {useHistory, useRouteMatch} from "react-router-dom";
-import CreateDataSourceRow from "./CreateDataSourceRow";
-import {Box, Container, Grid, IconButton, Link, TextField} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { useRetreiveData } from './../../../data_manager/data_manager'
+import labels from './../../../labels/labels'
+import CreateDataSourceRow from "./ProviderParameterInput"
 
 
 const filterOptionsMap = {

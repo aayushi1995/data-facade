@@ -1,8 +1,8 @@
-import {useMutation, useQueryClient} from "react-query";
+import { useContext } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import dataManagerInstance from "../../../data_manager/data_manager";
 import labels from "../../../labels/labels";
-import {useContext} from "react";
-import {ConnectionsContext, ConnectionsSetNotificationContext, ProviderInstanceKey} from "../context/ConnectionsContext";
+import { ConnectionSetNotificationContext, ConnectionStateContext, ProviderInstanceKey } from "../context/ConnectionsContext";
 
 
 
@@ -17,11 +17,11 @@ export const useDeleteSelectedConnection = () =>{
         })
         return config;
     });
-    const setNotificationState = useContext(ConnectionsSetNotificationContext);
-    const {providerInstanceDetailsQueryData} = useContext(ConnectionsContext);
+    const setNotificationState = useContext(ConnectionSetNotificationContext);
+    const connectionState = useContext(ConnectionStateContext);
     const queryClient = useQueryClient();
     const deleteSelectedEntities = (selectedConnectionId?: string) => {
-        const providerInstancesSelected = providerInstanceDetailsQueryData?.data?.find(connection=>connection?.model?.Id === selectedConnectionId);
+        const providerInstancesSelected = undefined
         if(providerInstancesSelected){
             // @ts-ignore
             deleteProviderInstanceMutation.mutate(providerInstancesSelected, {

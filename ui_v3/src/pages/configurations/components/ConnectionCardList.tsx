@@ -1,38 +1,43 @@
-import {Grid} from "@mui/material";
-import {ConnectionCard} from "../../data/components/connections/ConnectionCard";
+import { Grid } from "@mui/material";
 import React from "react";
-import {ConnectionsContext, ConnectionsSetContext} from "../context/ConnectionsContext";
-import {ReactQueryWrapper} from "../../../common/components/ReactQueryWrapper";
-import {ProviderIcon, ProviderType} from "../../data/components/connections/ConnectionDialogContent";
+import { useQuery } from "react-query";
+import { generatePath, useHistory } from "react-router";
+import { DATA_CONNECTION_DETAIL_ROUTE } from "../../../common/components/header/data/DataRoutesConfig";
+import LoadingWrapper from "../../../common/components/LoadingWrapper";
+import { Fetcher } from "../../../generated/apis/api";
+import labels from "../../../labels/labels";
+import { ConnectionCard } from "../../data/components/connections/ConnectionCard";
+import { ProviderIcon } from "../../data/components/connections/ConnectionDialogContent";
 
 export const ConnectionCardList = () => {
-    const {
-        selectedConnectionId,
-        providerInstanceDetailsQueryData,
-        ProvidersQueryData
-    } = React.useContext(ConnectionsContext);
-    const setSelectedConnectionId = React.useContext(ConnectionsSetContext);
-    const onClickConnectionCard = (selectedConnectionId: string) => setSelectedConnectionId({
-        selectedConnectionId
-    });
-    return <ReactQueryWrapper {...providerInstanceDetailsQueryData}>{()=><ReactQueryWrapper {...ProvidersQueryData}>{() =>
-        <Grid container gap={5}>{
-            providerInstanceDetailsQueryData?.data?.map(connection => {
-                const provider = ProvidersQueryData?.data?.find((d: ProviderType) => d?.ProviderDefinition?.Id === connection.model?.ProviderDefinitionId);
-                return <Grid item>
-                    <ConnectionCard
-                        Icon={<ProviderIcon provider={provider}/>}
-                        Name={connection.model?.Name}
-                        key={connection.model?.Id}
-                        LastSyncOn={connection.lastSyncedOn ? new Date(connection.lastSyncedOn)?.toString() : 'NA'}
-                        isSelected={connection.model?.Id === selectedConnectionId}
-                        onClick={onClickConnectionCard}
-                        ConnectionID={connection.model?.Id ?? ''}
-                        Actions={connection.numberOfExecutions}
-                        Tables={connection.numberOfTables}
-                    />
-                </Grid>
-            })
-        }
-        </Grid>}</ReactQueryWrapper>}</ReactQueryWrapper>
+    const providerCardQuery = useQuery([labels.entities.ProviderInstance, "Card"], () => Fetcher.fetchData("GET", "/providerCardView", { IsVisibleOnUI: true }))
+    const history = useHistory()
+    const onClickConnectionCard = (selectedConnectionId: string) => history.push(generatePath(DATA_CONNECTION_DETAIL_ROUTE, { ProviderInstanceId: selectedConnectionId }));
+
+    return (
+        <LoadingWrapper
+            isLoading={providerCardQuery.isLoading}
+            error={providerCardQuery.error}
+            data={providerCardQuery.data}
+        >
+            <Grid container gap={5}>{
+                providerCardQuery.data?.map(providerCardData => {
+                    return <Grid item>
+                        <ConnectionCard
+                            Icon={<ProviderIcon providerUniqueName={providerCardData?.ProviderDefinition?.UniqueName || "NA"}/>}
+                            Name={providerCardData?.ProviderInstance?.Name}
+                            key={providerCardData?.ProviderInstance?.Id}
+                            LastSyncOn={providerCardData?.ProviderInstanceStat?.LastSyncedOn ? new Date(providerCardData?.ProviderInstanceStat?.LastSyncedOn)?.toString() : 'NA'}
+                            isSelected={true}
+                            onClick={onClickConnectionCard}
+                            ConnectionID={providerCardData?.ProviderInstance?.Id ?? ''}
+                            Actions={providerCardData?.ProviderInstanceStat?.NumberOfExecutions}
+                            Tables={providerCardData?.ProviderInstanceStat?.NumberOfTables}
+                        />
+                    </Grid>
+                })
+            }
+            </Grid>
+        </LoadingWrapper>
+    )
 }

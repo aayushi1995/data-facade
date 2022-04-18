@@ -1,86 +1,284 @@
-import React, {useCallback, useMemo, useReducer, useState} from "react";
-import {useRetreiveData} from "../../../data_manager/data_manager";
+import { Alert, AlertColor, Snackbar } from "@mui/material";
+import React, { useReducer, useState } from "react";
+import { UseMutationResult, useQuery } from "react-query";
+import { useHistory } from "react-router";
+import { v4 as uuidv4 } from 'uuid';
+import { DATA_CONNECTIONS_ROUTE } from "../../../common/components/header/data/DataRoutesConfig";
+import { Fetcher } from "../../../generated/apis/api";
+import { ProviderParameterDefinition, ProviderParameterInstance } from "../../../generated/entities/Entities";
+import { ProviderDefinitionDetail, ProviderInformation } from "../../../generated/interfaces/Interfaces";
 import labels from "../../../labels/labels";
-import {Alert, Snackbar} from "@mui/material";
-import {AlertColor} from "@mui/material";
-import { useQuery, UseQueryResult} from "react-query";
-import {Fetcher} from "../../../generated/apis/api";
-import {ProviderInstanceDetails} from "../../../generated/interfaces/Interfaces";
-import * as CustomInterface from "../../../generated/interfaces/Interfaces";
-import {
-    ProviderDataType,
-    useConnectionProviders,
-    UseRetrieveData
-} from "../../data/components/connections/hooks/useConnectionProviders";
+import { useSaveDataSource } from "../hooks/useSaveDataSource";
 
-export type NotificationType = {open: boolean, message?: string, severity?: AlertColor};
-export type ConnectionsType = {
-    selectedConnectionId?: string,
-    providerInstanceDetailsQueryData?: UseQueryResult<ProviderInstanceDetails[]>,
-    providerHistoryAndParametersQueryData?:  UseQueryResult<CustomInterface.ProviderRunsHistoryAndParameters[] | undefined>,
-    ProvidersQueryData?:UseRetrieveData<ProviderDataType>,
+export type NotificationState = {open: boolean, message?: string, severity?: AlertColor};
+export type ConnectionStateMode = "CREATE" | "UPDATE"
+
+export type ConnectionState = {
+    mode: ConnectionStateMode,
+    ProviderDefinitionDetail?: ProviderDefinitionDetail,
+    ProviderInformation?: ProviderInformation
 };
-export const ConnectionsContext = React.createContext<ConnectionsType>(
-    {}
-)
-export type ConnectionsSetContextType = (newState: ConnectionsType) => null;
-export type ConnectionsSetNotificationContextType =  React.Dispatch<React.SetStateAction<NotificationType>>;
-export const ConnectionsSetContext = React.createContext<ConnectionsSetContextType>(
-    (newState: ConnectionsType) => null
-)
-export const ConnectionsSetNotificationContext = React.createContext<ConnectionsSetNotificationContextType>(value => {})
 
-const initialState: ConnectionsType = {};
-type ConnectionsAction = { type: string, payload: ConnectionsType };
-const reducer = (state: ConnectionsType, action: ConnectionsAction) => {
-    return {...state, ...action.payload};
+export type ConnectionQuery = {
+    saveMutation?: UseMutationResult<ProviderInformation, unknown, ConnectionState, unknown>
 }
+
+export const ConnectionStateContext = React.createContext<ConnectionState>({ mode: "CREATE" })
+export const ConnectionQueryContext = React.createContext<ConnectionQuery>({})
+
+export type ConnectionsSetState = (action: SetConnectionStateAction) => void;
+export type ConnectionsSetNotificationContextType =  React.Dispatch<React.SetStateAction<NotificationState>>;
+export const ConnectionSetStateContext = React.createContext<ConnectionsSetState>((action: SetConnectionStateAction) => null)
+export const ConnectionSetNotificationContext = React.createContext<ConnectionsSetNotificationContextType>(value => {})
+
+type SetModeAction = {
+    type: "SetMode",
+    payload: {
+        mode: ConnectionStateMode
+    }
+}
+
+type SetProviderDefinitionIdAction = {
+    type: "SetProviderDefinitionId",
+    payload: {
+        newProviderDefinitionId: string
+    }
+}
+
+type SetProviderInstanceIdAction = {
+    type: "SetProviderInstanceId",
+    payload: {
+        newProviderInstanceId: string
+    }
+}
+
+type SetProviderDefinitionAction = {
+    type: "SetProviderDefinition",
+    payload: {
+        providerDefinition: ProviderDefinitionDetail
+    }
+}
+
+type SetProviderInstanceAction = {
+    type: "SetProviderInstance",
+    payload: {
+        providerInstance: ProviderInformation
+    }
+}
+
+type SetProviderInstanceNameAction = {
+    type: "SetProviderInstanceName",
+    payload: {
+        newName?: string
+    }
+}
+
+type SetProviderParameterValueAction = {
+    type: "SetProviderParameterValue",
+    payload: {
+        newValue?: string,
+        parameterDefinitionId?: string
+    }
+}
+
+type SetConnectionStateAction = SetModeAction | 
+SetProviderDefinitionIdAction | 
+SetProviderInstanceIdAction | 
+SetProviderDefinitionAction | 
+SetProviderInstanceAction |
+SetProviderInstanceNameAction |
+SetProviderParameterValueAction
+
+const reducer = (state: ConnectionState, action: SetConnectionStateAction): ConnectionState => {
+    switch(action.type) {
+        case "SetMode": {
+            return {
+                ...state,
+                mode: action.payload.mode
+            }
+        }
+
+        case "SetProviderDefinitionId": {
+            return {
+                ...state,
+                ProviderInformation: {
+                    ProviderInstance: {
+                        model: {
+                            ProviderDefinitionId: action.payload.newProviderDefinitionId
+                        }
+                    }
+                }
+            }
+        }
+
+        case "SetProviderInstanceId": {
+            return {
+                ...state,
+                ProviderDefinitionDetail: undefined,
+                ProviderInformation: {
+                    ProviderInstance: {
+                        model: {
+                            Id: action.payload.newProviderInstanceId
+                        }
+                    }
+                }
+            }
+        }
+
+        case "SetProviderDefinition": {
+            return {
+                ...state,
+                ProviderDefinitionDetail: action.payload.providerDefinition,
+                ProviderInformation: {
+                    ...state?.ProviderInformation,
+                    ProviderParameterInstance: validateParams(action?.payload?.providerDefinition?.ProviderParameterDefinition, state?.ProviderInformation?.ProviderParameterInstance) 
+                }
+            }
+        }
+
+        case "SetProviderInstance": {
+            return {
+                ...state,
+                ProviderDefinitionDetail: undefined,
+                ProviderInformation: action.payload.providerInstance
+            }
+        }
+
+        case "SetProviderInstanceName": {
+            return {
+                ...state,
+                ProviderInformation: {
+                    ...state?.ProviderInformation,
+                    ProviderInstance: {
+                        ...state?.ProviderInformation?.ProviderInstance,
+                        model: {
+                            ...state?.ProviderInformation?.ProviderInstance?.model,
+                            Name: action.payload.newName
+                        }
+                    }
+                }
+            }
+        }
+
+        case "SetProviderParameterValue": {
+            return {
+                ...state,
+                ProviderInformation: {
+                    ...state?.ProviderInformation,
+                    ProviderParameterInstance: state?.ProviderInformation?.ProviderParameterInstance?.map(param => param?.ProviderParameterDefinitionId!==action.payload.parameterDefinitionId ? param : ({...param, ParameterValue: action?.payload?.newValue}))
+                }
+            }
+        }
+
+        default: {
+            return state
+            // const imposssibleAction: never = action
+            // console.log("Invalid Action", imposssibleAction)
+        }
+    }
+    return state
+}
+
+const formDefaultProviderParameterInstance = (paramDef: ProviderParameterDefinition) => {
+    const defaultParameter: ProviderParameterInstance = {
+        Id: uuidv4(),
+        ProviderParameterDefinitionId: paramDef.Id,
+        ParameterValue: "",
+        ParameterName: paramDef.ParameterName
+    }
+    return defaultParameter
+}
+
+const validateParams = (paramDefinitions?: ProviderParameterDefinition[], paramInstances?: ProviderParameterInstance[]): ProviderParameterInstance[] => {
+    if(!!paramDefinitions) {
+        const newParamInstances = paramDefinitions.map( paramDef => paramInstances?.find(paramInstance => paramInstance?.ProviderParameterDefinitionId === paramDef?.ProviderDefinitionId) || formDefaultProviderParameterInstance(paramDef) )
+        return newParamInstances || []
+    }
+    return paramInstances || []
+}
+
 export const ProviderInstanceKey = [labels.entities.ProviderInstance, {
     "filter": {},
     "onlyDataSource": true
 }];
-export const ConnectionsProvider = ({children}: { children: React.ReactElement }) => {
-    const [connectionsUserState, dispatch] = useReducer(reducer, initialState);
 
-    const setConnectionsState: ConnectionsSetContextType = (arg) => {
-        dispatch({type: 'SET_SELECTED_CARD_ID', payload: arg});
-        return null;
-    }
-    const [notificationState, setNotificationState] = useState<NotificationType>({open: false});
+export const ConnectionsProvider = ({children}: { children: React.ReactElement }) => {
+    const history = useHistory()
+    const formDefaultConnectionState: ConnectionState = { mode: "CREATE", ProviderInformation: { ProviderInstance: { model: {}, tags: [] }, ProviderParameterInstance: []} }
+
+    const [connectionState, dispatch] = useReducer(reducer, formDefaultConnectionState);
+
+    const providerInstanceId = connectionState?.ProviderInformation?.ProviderInstance?.model?.Id
+    const providerDefinitionId = connectionState?.ProviderInformation?.ProviderInstance?.model?.ProviderDefinitionId
+
+    const setConnectionsState: ConnectionsSetState = (arg: SetConnectionStateAction) => dispatch(arg)
+
+    const [notificationState, setNotificationState] = useState<NotificationState>({open: false});
     const handleNotificationClose = (event: any) => {
         setNotificationState({open: false});
     };
+    
+    const loadProviderInstance = useQuery(
+        [labels.entities.ProviderInstance, "Detail", providerInstanceId], 
+        () => Fetcher.fetchData("GET", "/getProviderInstance", { Id: providerInstanceId }).then(data => data?.[0]),
+        {
+            enabled: false,
+            onSuccess: (data) => setConnectionsState({ type: "SetProviderInstance", payload: { providerInstance: data } })
+        }
+    )
 
-    const providerInstanceDetailsQueryData = useQuery(["ProviderInstanceDetails"], ()=>{
-            return Fetcher.fetchData('GET', '/getProviderInstanceDetails', { IsVisibleOnUI: true });
-    });
+    const loadProviderDefinition = useQuery(
+        [labels.entities.ProviderDefinition, "Detail", providerDefinitionId],
+        () => Fetcher.fetchData("GET", "/providerDefinitionDetail", { Id: providerDefinitionId }).then(data => data?.[0]),
+        {
+            enabled: false,
+            onSuccess: (data) => setConnectionsState({ type: "SetProviderDefinition", payload: { providerDefinition: data }})
+        }
+    )
 
-    const selectedConnection = useMemo(()=>{
-        return providerInstanceDetailsQueryData.data?.find((connection)=>connection?.model?.Id === connectionsUserState.selectedConnectionId);
-    }, [connectionsUserState.selectedConnectionId]);
+    React.useEffect(() => {
+        if(connectionState.mode === "UPDATE" && !!providerInstanceId) {
+            loadProviderInstance.refetch()
+        }
+    }, [providerInstanceId, connectionState.mode])
 
-    const providerHistoryAndParametersQueryData = useQuery(["getProviderHistoryAndParameters", selectedConnection?.model?.Id], ()=>{
-        return selectedConnection?.model? Fetcher.fetchData('GET', '/getProviderHistoryAndParameters', selectedConnection.model): undefined;
-    }, {enabled: !!selectedConnection});
-    const {queryData: ProvidersQueryData} = useConnectionProviders();
+    React.useEffect(() => {
+        if(!!providerDefinitionId) {
+            loadProviderDefinition.refetch()
+        }
+    }, [providerDefinitionId])
 
-    const connectionsState = {
-        selectedConnectionId: connectionsUserState.selectedConnectionId,
-        providerInstanceDetailsQueryData,
-        providerHistoryAndParametersQueryData,
-        ProvidersQueryData
-    };
+    const saveMutation = useSaveDataSource({
+        options: {
+            onSuccess: (data, varibles, context) => {
+                if(connectionState.mode === "CREATE"){
+                    history.push(DATA_CONNECTIONS_ROUTE)
+                } else {
+                    loadProviderInstance.refetch()
+                }
+            }
+        },
+        mode: connectionState.mode
+    })
 
-    return <ConnectionsContext.Provider value={connectionsState}>
-        <ConnectionsSetContext.Provider value={setConnectionsState}>
-            <ConnectionsSetNotificationContext.Provider value={setNotificationState}>
-                <Snackbar open={notificationState.open} autoHideDuration={4000} onClose={handleNotificationClose}>
-                    <Alert onClose={handleNotificationClose} elevation={6} variant="filled" severity={notificationState.severity}>
-                        {notificationState.message}
-                    </Alert>
-                </Snackbar>
-                {children}
-            </ConnectionsSetNotificationContext.Provider>
-        </ConnectionsSetContext.Provider>
-    </ConnectionsContext.Provider>
+    const connectionQuery: ConnectionQuery = {
+        saveMutation: saveMutation
+    }
+
+    return (
+        <ConnectionQueryContext.Provider value={connectionQuery}>
+            <ConnectionStateContext.Provider value={connectionState}>
+                <ConnectionSetStateContext.Provider value={setConnectionsState}>
+                    <ConnectionSetNotificationContext.Provider value={setNotificationState}>
+                        <Snackbar open={notificationState.open} autoHideDuration={4000} onClose={handleNotificationClose}>
+                            <Alert onClose={handleNotificationClose} elevation={6} variant="filled" severity={notificationState.severity}>
+                                {notificationState.message}
+                            </Alert>
+                        </Snackbar>
+                        {children}
+                    </ConnectionSetNotificationContext.Provider>
+                </ConnectionSetStateContext.Provider>
+            </ConnectionStateContext.Provider>
+        </ConnectionQueryContext.Provider>
+    )
 }

@@ -26,7 +26,7 @@ export function CreateConnectionButton() {
                 Create Connection
             </Button>
             <Route path={CHOOSE_CONNECTOR_ROUTE}>
-                <Dialog onClose={handleDialogClose} open={dialogState} fullWidth={true}>
+                <Dialog onClose={handleDialogClose} open={dialogState} fullWidth={true} maxWidth="lg">
                     <DialogTitle id="simple-dialog-title">
                         <Grid container>
                             <Grid item xs={9}>
@@ -46,7 +46,7 @@ export function CreateConnectionButton() {
                             </Grid>
                         </Grid>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent sx={{ minHeight: "400px"}}>
                         <ConnectionDialogContent handleDialogClose={handleDialogClose}/>
                     </DialogContent>
                 </Dialog>

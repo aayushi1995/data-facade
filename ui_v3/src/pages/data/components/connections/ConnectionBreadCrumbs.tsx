@@ -1,23 +1,23 @@
-import * as React from 'react';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {Link as RouterLink} from 'react-router-dom';
-import {useConnectionProviders} from "./hooks/useConnectionProviders";
-import {CHOOSE_CONNECTOR_SELECTED_ROUTE, connectionsRoutes} from "./DataRoutesConstants";
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { ConnectionStateContext } from '../../../configurations/context/ConnectionsContext';
+import { CHOOSE_CONNECTOR_SELECTED_ROUTE, connectionsRoutes } from "./DataRoutesConstants";
 
 
 export const  ConnectionBreadCrumbs = () => {
-    const {currentProvider} = useConnectionProviders();
+    const connectionState = React.useContext(ConnectionStateContext)
     const crumbs = connectionsRoutes.reduce((a: typeof connectionsRoutes, r)=>{
         if(r.href === CHOOSE_CONNECTOR_SELECTED_ROUTE){
-            if(currentProvider !== undefined) {
+            if(connectionState?.ProviderDefinitionDetail !== undefined) {
                 a.push({
                     href: r.href,
                     label: r.labelCreator? r.labelCreator(
-                        currentProvider.ProviderDefinition.ProviderType,
-                        currentProvider.ProviderDefinition.UniqueName
+                        connectionState?.ProviderDefinitionDetail?.ProviderDefinition?.ProviderType,
+                        connectionState?.ProviderDefinitionDetail?.ProviderDefinition?.UniqueName
                     ): r.label
                 });
             }

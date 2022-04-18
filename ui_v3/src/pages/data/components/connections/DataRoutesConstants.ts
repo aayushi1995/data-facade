@@ -1,5 +1,5 @@
 export const CHOOSE_CONNECTOR_ROUTE = '/data/connections/choose';
-export const CHOOSE_CONNECTOR_SELECTED_ROUTE = '/data/connections/choose/:Id';
+export const CHOOSE_CONNECTOR_SELECTED_ROUTE = '/data/connections/choose/:ProviderDefinitionId';
 export const connectionsRoutes: {href: string, label: string, labelCreator?: (...args: any[])=>string}[] = [
     {
         href: '',

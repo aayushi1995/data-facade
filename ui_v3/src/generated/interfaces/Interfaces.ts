@@ -12,13 +12,6 @@
 }
 
 
-export interface UpdateActionDefinitionWithTemplate {
-    filter?: Entity.ActionDefinition
-	newProperties?: Entity.ActionDefinition
-	ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
-}
-
-
 export interface TagDetails {
     Id?: string
 	Name?: string
@@ -155,20 +148,6 @@ export interface UpdateActionDefinitionWithTemplate {
 	ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
 }
 
-
-export interface ChartWithData {
-    model?: Entity.Chart
-	chartData?: object
-}
-
-
-export interface ApplicationDetails {
-    numberOfActions?: number
-	numberOfFlows?: number
-	actions?: ActionDetailsForApplication[]
-	workflows?: ActionDetailsForApplication[]
-	model?: Entity.Application
-}
 
 export interface ActionDefinitionWithTags {
     model?: Entity.ActionDefinition
