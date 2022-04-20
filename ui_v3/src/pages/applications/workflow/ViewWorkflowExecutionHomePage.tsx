@@ -1,16 +1,18 @@
 import CloseIcon from '@mui/icons-material/Close'
-import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button } from "@mui/material"
 import React from "react"
 import { Route, RouteComponentProps, Switch, useRouteMatch } from "react-router-dom"
 import NoData from "../../../common/components/NoData"
 import ViewActionExecutionOutput from "../../../common/components/ViewActionExecutionOutput"
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
+import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
 import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
 import ViewExecutionCharts from '../../../common/ViewExecutionCharts'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
 import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/components/shared-components/ActionDefinitionHero'
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from '../../build_action/context/BuildActionContext'
+import ViewActionExecution from '../../view_action_execution/VIewActionExecution'
 import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
@@ -134,8 +136,11 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                             <CloseIcon/>
                         </IconButton>
                     </Grid>
-                    <DialogTitle>
+                    <DialogTitle sx={{display: 'flex', gap: 20, alignItems: 'center'}}>
                         Results
+                        <Box>
+                            <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
+                        </Box>
                     </DialogTitle>
                     <DialogContent sx={{overflow: 'auto', p: 1}}>
                         <ShowWorkflowExecutionOutput/>
@@ -149,8 +154,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     </Grid>
                     <DialogTitle>Output preview</DialogTitle>
                     <DialogContent sx={{overflow: 'auto', p: 1, display: 'flex', gap: 2, flexDirection: 'column'}}>
-                        <ViewActionExecutionOutput executionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"} presentationFormat={workflowContext.actionExecutionIdForPreview?.presentationFormat || "NA"}/>
-                        <ViewExecutionCharts executionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"} />
+                        <ViewActionExecution actionExecutionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"}/>
                     </DialogContent>
                 </Dialog>
                 <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>

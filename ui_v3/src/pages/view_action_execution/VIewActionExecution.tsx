@@ -115,7 +115,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                     )}
                 </DialogContent>
             </Dialog>
-            <Dialog open={dialogState} onClose={handleClose} fullWidth maxWidth="md">
+            <Dialog open={dialogState} onClose={handleClose} fullWidth maxWidth="xl">
                 <DialogContent>
                     <ViewActionExecutionOutput 
                         ActionDefinition={actionExecutionDetail.ActionDefinition!}
@@ -124,6 +124,11 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                     />
                 </DialogContent>
             </Dialog>
+            <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
+                <Typography variant="heroHeader">
+                    {actionExecutionDetail.ActionExecution?.ActionInstanceName}
+                </Typography>
+            </Box>
             <Box>
                 <ViewConfiguredParameters
                     parameterDefinitions={actionExecutionDetail?.ActionParameterDefinitions||[]}

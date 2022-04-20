@@ -26,7 +26,7 @@ export const tabs: TabsType = [
         id: 'INSIGHTS',
         label: 'INSIGHTS',
         href: INSIGHTS_ROUTE,
-        title: BLANK_STRING,
-        subTitle: BLANK_STRING
+        title: "Insights",
+        subTitle: "Create, Manage Insights from here"
     },
 ]

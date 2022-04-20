@@ -6,11 +6,12 @@ import ApplicationContent from "../../pages/apps/ApplicationContent";
 import ApplicationHeader from "../../pages/apps/ApplicationHeader";
 import DataContent from "../../pages/data/DataContent";
 import DataHeader from "../../pages/data/DataHeader";
+import { InsightsContent } from "../../pages/insights/InsightsContent";
 import {
     DATA_ROUTE,
     DATA_SUB_TABS
 } from "./header/data/DataRoutesConfig";
-import { APPLICATION_ROUTE } from "./header/data/RoutesConfig";
+import { APPLICATION_ROUTE, INSIGHTS_ROUTE } from "./header/data/RoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
 
 
@@ -59,6 +60,7 @@ export const MainContent = () => {
         <Switch>
             <Route path={DATA_ROUTE} component={DataContent}/>
             <Route path={APPLICATION_ROUTE} component={ApplicationContent}/>
+            <Route path={INSIGHTS_ROUTE} component={InsightsContent}/>
         </Switch>
     )
 }

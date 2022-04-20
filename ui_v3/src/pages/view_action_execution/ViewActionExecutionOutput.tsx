@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { CustomToolbar } from "../../common/components/CustomToolbar"
 import LoadingWrapper from "../../common/components/LoadingWrapper"
+import ViewExecutionCharts from "../../common/ViewExecutionCharts"
 import ActionDefinitionPresentationFormat from "../../enums/ActionDefinitionPresentationFormat"
 import { ActionDefinition, ActionExecution, ActionInstance } from "../../generated/entities/Entities"
 import { useActionExecutionParsedOutputNew } from "../execute_action/hooks/useActionExecutionParsedOutput"
@@ -14,7 +15,7 @@ export interface ViewActionExecutionOutputProps {
 
 const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     const { ActionExecution, ActionDefinition } = props
-    const actionExecutionParsedOutputQuery = useActionExecutionParsedOutputNew({ actionExecutionFilter: {Id: ActionExecution?.Id}, queryOptions: {}})
+    const actionExecutionParsedOutputQuery = useActionExecutionParsedOutputNew({ actionExecutionFilter: {Id: ActionExecution?.Id}, queryOptions: {staleTime: 1000}})
     
     const outputComponentToRender = (output?: any) => {
         switch(ActionDefinition.PresentationFormat) {
@@ -35,8 +36,12 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
             isLoading={actionExecutionParsedOutputQuery.isLoading}
             error={actionExecutionParsedOutputQuery.error}
         >
-            {outputComponentToRender(actionExecutionParsedOutputQuery.data?.Output)}
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                {outputComponentToRender(actionExecutionParsedOutputQuery.data?.Output)}
+                <ViewExecutionCharts executionId={props.ActionExecution.Id || "NA"}/>
+            </Box>
         </LoadingWrapper>
+        
     )
 }
 

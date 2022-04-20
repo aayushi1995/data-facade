@@ -1,8 +1,8 @@
 
 export type DataAxis = (number|string)[];
 type CategoryAxis = {
-    data: DataAxis,
-    type: 'category' ,
+    data?: DataAxis,
+    type?: 'category' ,
     name?: string//Category axis, suitable for discrete category data, if data is there, assume its of type category
 };
 type NonCategoryAxis = {
@@ -22,14 +22,15 @@ type SeriesBar = {
 
 type SeriesScatter = {
     type: 'scatter' 
-    data: DataAxis,
+    data: number[][],
+    symbolSize: number
 }[];
 
 type SeriesLine = {
     type: 'line' 
     data: DataAxis,
     smooth?: boolean
-}
+}[];
 
 type SeriesPie = {
     type: 'pie',
@@ -48,5 +49,5 @@ type SeriesPie = {
 export type BaseChartsConfig = {
     xAxis?: (CategoryAxis|NonCategoryAxis)[],
     yAxis?: (CategoryAxis|NonCategoryAxis)[],
-    series: SeriesScatter | SeriesPie | SeriesBar | SeriesLine
+    series: SeriesLine | SeriesScatter | SeriesPie | SeriesBar 
 }

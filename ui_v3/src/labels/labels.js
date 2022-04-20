@@ -46,7 +46,8 @@ const labels = {
         TAG_MAP: "TagMap",
         TABLE_PROPERTIES: "TableProperties",
         COLUMN_PROPERTIES: "ColumnProperties",
-        APPLICATION: "Application"
+        APPLICATION: "Application",
+        "Dashboard": "Dashboard"
     },
     "CreateCleaningTrigger": {
         "passed": "Cleanup Trigger Creation Successful",

@@ -7,10 +7,11 @@ import ViewActionExecutionOutput from "../../ViewActionExecutionOutput"
 
 const ShowWorkflowExecutionOutput = () => {
     const workflowContext = React.useContext(WorkflowContext)
+
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', gap: 4}}>
-            {workflowContext.stages.map(stage => {
-                return stage.Actions.map(actionExecution => {
+            {workflowContext.stages.slice(0).reverse().map(stage => {
+                return stage.Actions.slice(0).reverse().map(actionExecution => {
                     return (
                         <Box sx={{display: 'flex', gap: 2, flexDirection: 'column'}}>
                             <Typography sx={{display: 'flex', justifyContent: 'center'}}>
@@ -19,7 +20,7 @@ const ShowWorkflowExecutionOutput = () => {
                             <Divider/>
                             <ViewActionExecutionOutput executionId={actionExecution.Id} presentationFormat={actionExecution.PresentationFormat || "NA"}/>
                             <Divider/>
-                            <Card>
+                            <Card sx={{height: '100%', width: '100%'}}>
                                 <ViewExecutionCharts executionId={actionExecution.Id}/>
                             </Card>
                         </Box>

@@ -1,4 +1,5 @@
 import ChartType from "../../enums/ChartType";
+import { Chart } from "../../generated/entities/Entities";
 import { ChartWithData } from "../../generated/interfaces/Interfaces";
 import { BaseChartsConfig } from "../components/charts/BaseChartsConfig";
 import { EChartUISpecificConfig } from "../components/charts/Chart";
@@ -20,7 +21,27 @@ interface LineChartOptions {
     }
 }
 
-export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, name: string} => {
+interface ScatterChartOptions {
+    data: {
+        result: number[][],
+        x_name: string,
+        y_name: string
+    }
+}
+
+interface TwoDSegmentChartOptions {
+    data: {
+        x: (number|string)[],
+        series: {
+            name: string,
+            data: (number|string)[]
+        }[],
+        x_name: string
+        y_name: string
+    }
+}
+
+export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined=> {
     switch(chartData.model?.Type) {
         case ChartType.PIE:
             const chartOptions: EChartUISpecificConfig = {
@@ -34,7 +55,12 @@ export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithDa
                 legend: {
                     top: '5%',
                     left: 'center'
-                }
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
             }
             const chartDataOptions: BaseChartsConfig = {
                 series: {
@@ -68,25 +94,14 @@ export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithDa
             return {
                 uiConfig: chartOptions,
                 config: chartDataOptions,
-                name: chartData.model?.Name || "Name NA"
+                model: chartData.model
             }
-    }
-
-
-    // HARD CODING HERE. REMOVE BEFORE MERGE
-    return {
-        uiConfig: {},
-        config: {
-            series: {
-                type: 'pie',
-                data: [{name: 'hello', value: 100}]
-            }
-        },
-        name: "test"
+        default: 
+            return undefined
     }
 }
 
-export const formChartOptionsTwoDimenstion = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, name: string} => {
+export const formChartOptionsTwoDimenstion = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined => {
 
     switch(chartData.model?.Type) {
         case ChartType.LINE: {
@@ -94,17 +109,23 @@ export const formChartOptionsTwoDimenstion = (chartData: ChartWithData): {uiConf
                 tooltip: {
                     trigger: 'axis'
                 },
+                universalTransition: true,
                 title: {
                     show: true,
                     text: chartData.model?.Name
                 },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
             }
             const dataOptions: BaseChartsConfig = {
-                series: {
+                series: [{
                     type: 'line',
                     data: (chartData.chartData as LineChartOptions).data.y,
                     smooth: true
-                },
+                }],
                 xAxis: [{
                     type: 'category',
                     data: (chartData.chartData as LineChartOptions).data.x,
@@ -116,7 +137,7 @@ export const formChartOptionsTwoDimenstion = (chartData: ChartWithData): {uiConf
                 }]
             }
 
-            return {uiConfig: chartOptions, config: dataOptions, name: chartData.model.Name || "NAME NA"}
+            return {uiConfig: chartOptions, config: dataOptions,  model: chartData.model}
         }
 
         case ChartType.BAR: {
@@ -127,6 +148,11 @@ export const formChartOptionsTwoDimenstion = (chartData: ChartWithData): {uiConf
                 title: {
                     show: true,
                     text: chartData.model?.Name
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
                 },
             }
             const dataOptions: BaseChartsConfig = {
@@ -145,21 +171,112 @@ export const formChartOptionsTwoDimenstion = (chartData: ChartWithData): {uiConf
                 }]
             }
 
-            return {uiConfig: chartOptions, config: dataOptions, name: chartData.model.Name || "NAME NA"}
+            return {uiConfig: chartOptions, config: dataOptions,  model: chartData.model}
         }
 
 
         default: {
-            // HARD CODING HERE. REMOVE BEFORE MERGE
-            return {
-                uiConfig: {},
-                config: {
-                    series: {
-                        type: 'pie',
-                        data: [{name: 'hello', value: 100}]
+            return undefined;
+        }
+    }
+}
+
+export const formChartOptionsTwoDimenstionScatter = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined => {
+    switch(chartData.model?.Type) {
+        case ChartType.SCATTER: {
+            const chartOptions: EChartUISpecificConfig = {
+                tooltip: {
+                    trigger: 'item',
+                    showContent: true
+                },
+                title: {
+                    show: true,
+                    text: chartData.model?.Name
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
                     }
                 },
-                name: "test"
+                dataZoom:{
+                    
+                }
+            }
+            const chartDataCasted = chartData.chartData as ScatterChartOptions
+            const dataOptions: BaseChartsConfig = {
+                series: [{
+                    type: 'scatter',
+                    symbolSize: 5,
+                    data: chartDataCasted.data.result
+                }],
+                xAxis: [{
+                    name: chartDataCasted.data.x_name
+                }],
+                yAxis: [{
+                    name: chartDataCasted.data.y_name
+                }]
+            }
+
+            console.log(dataOptions)
+
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                model: chartData.model
+            }
+        }
+    }
+}
+
+export const formChartOptionsTwoDimensionWithSegments = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined => {
+    switch(chartData.model?.Type) {
+        case ChartType.SEGMENT: {
+            const castedChartData = chartData.chartData as TwoDSegmentChartOptions
+            const legends = castedChartData.data.series.map(legendWithData => legendWithData.name)
+            const chartOptions: EChartUISpecificConfig = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                title: {
+                    text: chartData.model?.Name,
+                    show: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                legend: {
+                    data: legends
+                },
+                grid: {
+                    containLabel: true
+                }
+            }
+
+            const dataOptions: BaseChartsConfig = {
+                xAxis: [{
+                    type: 'category',
+                    data: castedChartData.data.x,
+                    name: castedChartData.data.x_name
+                }],
+                yAxis: [{
+                    type: 'value',
+                    name: castedChartData.data.y_name
+                }],
+                series: castedChartData.data.series.map((series) => {
+                    return {
+                        data: series.data,
+                        name: series.name,
+                        type: 'line',
+                        smooth: true
+                    }
+                })
+            }
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                 model: chartData.model
             }
         }
     }
