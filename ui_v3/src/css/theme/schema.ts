@@ -11,7 +11,10 @@ declare module '@mui/styles' {
       wizardHeader: React.CSSProperties,
       wrapInHeader: React.CSSProperties,
       actionDefinitionSummaryStatValue: React.CSSProperties,
-      actionDefinitionSummaryStatLabel: React.CSSProperties
+      actionDefinitionSummaryStatLabel: React.CSSProperties,
+      tableStatLabel: React.CSSProperties,
+      tableStatValue: React.CSSProperties,
+      higlLevelInfoHeader: React.CSSProperties
     }
   
     // allow configuration using `createTheme`
@@ -25,7 +28,11 @@ declare module '@mui/styles' {
       wizardHeader?: React.CSSProperties,
       wrapInHeader?: React.CSSProperties,
       actionDefinitionSummaryStatValue?: React.CSSProperties,
-      actionDefinitionSummaryStatLabel?: React.CSSProperties
+      actionDefinitionSummaryStatLabel?: React.CSSProperties,
+      statText?: React.CSSProperties,
+      tableStatLabel?: React.CSSProperties,
+      tableStatValue?: React.CSSProperties,
+      higlLevelInfoHeader: React.CSSProperties
     }
 }
 declare module '@mui/material/Typography' {
@@ -38,8 +45,12 @@ declare module '@mui/material/Typography' {
         wizardText: true;
         wizardHeader: true,
         wrapInHeader: true,
-      actionDefinitionSummaryStatValue: true,
-      actionDefinitionSummaryStatLabel: true
+        actionDefinitionSummaryStatValue: true,
+        actionDefinitionSummaryStatLabel: true,
+        statText: true,
+        tableStatLabel: true,
+        tableStatValue: true,
+        higlLevelInfoHeader: true
     }
 }
 

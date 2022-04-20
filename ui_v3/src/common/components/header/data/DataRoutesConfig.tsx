@@ -10,11 +10,8 @@ export const DATA_TABLE_VIEW = `${DATA_RAW_ROUTE}/:TableName`
 export const DATA_TABLE_TAB = `${DATA_TABLE_VIEW}/View/:ViewName`
 
 export const DATA_TABLE_TAB_SUMMARY = "Summary"
-export const DATA_TABLE_TAB_COLUMNS = "Columns"
-export const DATA_TABLE_TAB_QUICK_VIEW = "QuickView"
-export const DATA_TABLE_TAB_QUICK_STATS = "QuickStats"
-export const DATA_TABLE_TAB_CHECKS = "Checks"
-export const DATA_TABLE_TAB_DATA_CLEAN_ACTIONS = "DataCleanActions"
+export const DATA_TABLE_TAB_TABLE_VIEW = "TableView"
+export const DATA_TABLE_TAB_COLUMN_VIEW = "ColumnView"
 export const DATA_TABLE_TAB_ACTION_INSTANCES = "ActionInstances"
 export const DATA_TABLE_TAB_INTERMEDIARY_TABLES = "IntermediaryTables"
 export const DATA_TABLE_TAB_DEFAULT = `${DATA_TABLE_VIEW}/View/${DATA_TABLE_TAB_SUMMARY}`

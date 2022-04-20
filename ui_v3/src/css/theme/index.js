@@ -265,6 +265,35 @@ const baseOptions = {
             lineHeight: "166%",
             letterSpacing: "0.814286px",
             color: "rgba(66, 82, 110, 0.86)"
+        },
+        statText: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 500,
+            fontSize: "14px",
+            lineHeight: "157%"
+        },
+        tableStatLabel: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "15px",
+            lineHeight: "266%",
+            color: "rgba(66, 82, 110, 0.86)"
+        },
+        tableStatValue: {
+            fontFamily: "'SF Pro Display'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "25px",
+            lineHeight: "133.4%"
+        },
+        higlLevelInfoHeader: {
+            fontFamily: "'Nunito'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "24px",
+            lineHeight: "24px"
         }
     }
 };

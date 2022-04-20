@@ -2,7 +2,7 @@ import { DataGridProps, GridColDef } from "@mui/x-data-grid";
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query";
 import dataManager from "../../../data_manager/data_manager";
 import { ColumnProperties } from "../../../generated/entities/Entities";
-import { ColumnInfo, TableView } from "../../../generated/interfaces/Interfaces";
+import { TableView } from "../../../generated/interfaces/Interfaces";
 import labels from "../../../labels/labels";
 import { TableOutputFormat, TablePreview } from "../../view_action_execution/ViewActionExecutionOutput";
 import { TableViewColumnHeader } from "./TableView";
@@ -24,9 +24,6 @@ export const useTableView = (params: {TableId?: string, options?: UseQueryOption
     return query
 }
 
-export interface DataGridColumn extends GridColDef {
-    columInfo?: ColumnInfo
-}
 export const formDataGridPropsFromResponse = (response?: TableView) => {
     if(!!response) {
         const tableData: TableOutputFormat = JSON.parse(response?.TableData?.Output || "{}")
@@ -38,18 +35,19 @@ export const formDataGridPropsFromResponse = (response?: TableView) => {
             field: columnInfo.ColumnProperties?.UniqueName!,
             disableColumnMenu: true,
             sortable: false,
-            renderHeader: (params) => <TableViewColumnHeader gridColumnHeaderParams={params} columnInfo={columnInfo}/>,
-            flex: 1
+            renderHeader: (params) => !!columnInfo?.ColumnProperties?.Id ? <TableViewColumnHeader ColumnId={columnInfo?.ColumnProperties?.Id}/> : <></>,
+            flex: 1,
+            minWidth: 200
         })) || []
 
         const dataGridProps: DataGridProps = {
             rows: rows,
             columns: columns,
             autoHeight: true,
-            headerHeight: "120px",
+            headerHeight: "140px",
             rowsPerPageOptions: [5, 10]
         }
-        console.log(rows, columns)
+        
         return dataGridProps
     } else {
         return {

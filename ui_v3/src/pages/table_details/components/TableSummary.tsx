@@ -1,11 +1,13 @@
 import { Avatar, Box, Card, Divider, Grid, TextField, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import LoadingWrapper from "../../../common/components/LoadingWrapper";
+import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import RunWorkflowButton from "../../../common/components/RunWorkflowButton";
 import TagHandler from "../../../common/components/tag-handler/TagHandler";
 import { lightShadows } from "../../../css/theme/shadows";
 import labels from "../../../labels/labels";
 import { ProviderIcon } from "../../data/components/connections/ConnectionDialogContent";
+import { useTableAndColumnStats } from "./ColumnInfoViewHooks";
 import { relativeTimeFromTimestamp, useProviderDefinitionForTable, useTable, useTableDescriptionMutation } from "./TableSummaryHooks";
 
 export type TableSummaryProps = {
@@ -16,27 +18,35 @@ const TableSummary = (props: TableSummaryProps) => {
     return (
         <Card sx={{ p: 3, borderRadius: 2, boxShadow: lightShadows[31]}}>
             <Grid container spacing={1}>
-                <Grid item xs={12} lg={6} sx={{ display: "flex", flexDirection: "row", gap: 1}}>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1}}>
-                        <Box>
-                            <TableDescriptionEditor TableId={props.TableId}/>
+                <Grid item xs={12} lg={6} sx={{ display: "flex", flexDirection: "column", gap: 1}}>
+                    <Box sx={{ display: "flex", flexDirection: "row"}}>
+                        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1}}>
+                            <Box>
+                                <TableDescriptionEditor TableId={props.TableId}/>
+                            </Box>
+                            <Box>
+                                <TableTagEditor TableId={props.TableId}/>
+                            </Box>
                         </Box>
-                        <Box>
-                            <TableTagEditor TableId={props.TableId}/>
+                        <Box sx={{ display: { xs: "none", lg: "block"}}}>
+                            <Divider orientation="vertical" sx={{ pl: 1 }}/>
                         </Box>
                     </Box>
-                    <Box sx={{ display: { xs: "none", sm: "block"}}}>
-                        <Divider orientation="vertical"/>
+                    <Box sx={{ display: { xs: "block", lg: "none"}}}>
+                        <Divider orientation="horizontal"/>
                     </Box>
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <Box>
-                        <TableHighLevelInfo TableId={props.TableId}/>
-                        <RunWorkflowButton TableId={props.TableId}/>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        <Box>
+                            <TableHighLevelInfo TableId={props.TableId}/>
+                        </Box>
+                        <Box>
+                            <RunWorkflowButton TableId={props.TableId}/>
+                        </Box>
                     </Box>
                 </Grid>
             </Grid>
-            
         </Card>
     )
 }
@@ -119,6 +129,7 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
                                     borderColor: "transparent",
                                     borderRadius: "10px",
                                     background: "#E5E5E5",
+                                    px: 1,
                                     ":hover": {
                                             background: "#E3E3E3"    
                                     }
@@ -156,7 +167,62 @@ const TableTagEditor = (props: TableTagEditorProps) => {
 type TableHighLevelInfoProps = { TableId?: string }
 
 const TableHighLevelInfo = (props: TableHighLevelInfoProps) => {
-    return <></>
+    const tableFullStats = useTableAndColumnStats({ TableId: props.TableId })
+    const stats = [{
+            Label: "RowCount",
+            Value: tableFullStats?.data?.TableStat?.RowCount
+        },
+        {
+            Label: "RowCount",
+            Value: tableFullStats?.data?.TableStat?.RowCount
+        },
+        {
+            Label: "RowCount",
+            Value: tableFullStats?.data?.TableStat?.RowCount
+        },
+        {
+            Label: "RowCount",
+            Value: tableFullStats?.data?.TableStat?.RowCount
+        },
+        {
+            Label: "RowCount",
+            Value: tableFullStats?.data?.TableStat?.RowCount
+        },
+        {
+            Label: "RowCount",
+            Value: tableFullStats?.data?.TableStat?.RowCount
+        },
+        {
+            Label: "RowCount",
+            Value: tableFullStats?.data?.TableStat?.RowCount
+        }
+    ]
+    return (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box>
+                <Typography variant="higlLevelInfoHeader"> High Level Info</Typography>
+            </Box>
+            <Box>
+                <ReactQueryWrapper
+                    isLoading={tableFullStats.isLoading}
+                    error={tableFullStats.error}
+                    data={tableFullStats.data}
+                    children={() => 
+                        <Grid container spacing={2}>
+                            {stats?.map(stat =>  
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                    <Card sx={{ px: 2, py: 1, borderRadius: 1}}>
+                                        <Box><Typography variant="tableStatLabel">{stat?.Label}</Typography></Box>
+                                        <Box><Typography variant="tableStatValue">{stat?.Value}</Typography></Box>
+                                    </Card>
+                                </Grid>
+                            )}
+                        </Grid>
+                    }
+                />
+            </Box>
+        </Box>
+    )
 }
 
 export default TableSummary;

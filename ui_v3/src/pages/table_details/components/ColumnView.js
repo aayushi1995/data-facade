@@ -1,9 +1,7 @@
+import { Box } from '@mui/material'
 import React from 'react'
-import {Grid} from '@mui/material'
-import SelectOption from './../../../common/components/SelectOption'
-import Search from './../../../common/components/Search'
-import ColumnViewRow from './ColumnViewRow'
 import useStyles from '../../../css/table_details/ColumnView'
+import ColumnInfoView from './ColumnInfoView'
 
 
 const filterOptionItems = [
@@ -41,47 +39,13 @@ const ColumnView = (props) => {
     const filterOptionHandler = (event) => {
         setFilterOption(event.target.value)
     }
-    const searchResults = (myData) => {
-        const filterKey = filterOptionsMap[filterOption]
-        return myData.filter(elem =>
-            elem[filterKey].toLowerCase().search(searchQuery.toLowerCase()) >= 0 || searchQuery === ""
-        )
-    }
-
-    React.useEffect(() => {
-
-        const toScroll = document.getElementById('tableDetailsColumnView-container')
-        toScroll.style.overflow = 'auto';
-        toScroll.style.maxHeight = `${window.innerHeight - toScroll.offsetTop - 20}px`;
-
-
-    }, [])
 
 
     return (
         <>
-
-            <Grid container spacing={0}>
-                <Grid item xs={2} className={classes.grid_root}>
-                    <SelectOption filterOptionHandler={filterOptionHandler} menuItems={filterOptionItems}/>
-                </Grid>
-                <Grid item xs={4}>
-                    <Search searchQueryHandler={searchQueryHandler}/>
-                </Grid>
-                <Grid item xs={1} container className={classes.button_container}>
-                    {/*<Button variant="outlined" disableElevation className={classes.button}>
-                            Clean
-                        </Button>*/}
-                </Grid>
-            </Grid>
-            <div id="tableDetailsColumnView-container">
-                <Grid item xs={12}>
-                    {searchResults(props.tableData.ColumnProperties).map((row, index) => (
-                        <ColumnViewRow data={row} key={row.Id} tableName={props.tableData.TableProperties.UniqueName}
-                                       providerId={props.tableData.ProviderInstance.Id}/>
-                    ))}
-                </Grid>
-            </div>
+            <Box>
+                <ColumnInfoView TableId={props.tableData.TableProperties.Id}/>
+            </Box>
         </>
     )
 }

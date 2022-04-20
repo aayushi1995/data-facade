@@ -2,7 +2,7 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Divider, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { generatePath, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
-import { DATA_COLUMN_VIEW, DATA_TABLE_TAB, DATA_TABLE_TAB_ACTION_INSTANCES, DATA_TABLE_TAB_CHECKS, DATA_TABLE_TAB_COLUMNS, DATA_TABLE_TAB_DATA_CLEAN_ACTIONS, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_INTERMEDIARY_TABLES, DATA_TABLE_TAB_QUICK_STATS, DATA_TABLE_TAB_QUICK_VIEW, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_COLUMN_VIEW, DATA_TABLE_TAB, DATA_TABLE_TAB_ACTION_INSTANCES, DATA_TABLE_TAB_COLUMN_VIEW, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_INTERMEDIARY_TABLES, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_TAB_TABLE_VIEW, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
 import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper";
 import useStyles from "../../css/table_details/TableDetails";
 import { useRetreiveData } from "../../data_manager/data_manager";
@@ -10,12 +10,9 @@ import labels from "../../labels/labels";
 import ColumnDetails from "../column_details/ColumnDetails";
 import ActionInstances from "../customizations/components/ActionInstances";
 import TableRowExpanded from "../table_browser/components/TableRowExpanded";
-import Checks from "./components/Checks";
 import ColumnView from "./components/ColumnView";
-import DataCleanActions from "./components/DataCleanActions";
 import IntermediaryTables from "./components/IntermediaryTables";
-import QuickStatsNewTemp from "./components/QuickStatsNewTemp";
-import QuickView from "./components/QuickView";
+import TableView from "./components/TableView";
 
 export const a11yProps = (index: number) => {
   return {
@@ -39,27 +36,15 @@ const URL_TAB_INFO = [
     ViewName: DATA_TABLE_TAB_SUMMARY
   },
   {
-    TabLabel: "Columns",
-    ViewName: DATA_TABLE_TAB_COLUMNS
+    TabLabel: "Table View",
+    ViewName: DATA_TABLE_TAB_TABLE_VIEW
   },
   {
-    TabLabel: "Quick View",
-    ViewName: DATA_TABLE_TAB_QUICK_VIEW
+    TabLabel: "Column View",
+    ViewName: DATA_TABLE_TAB_COLUMN_VIEW
   },
   {
-    TabLabel: "Quick Stats",
-    ViewName: DATA_TABLE_TAB_QUICK_STATS
-  },
-  {
-    TabLabel: "Checks",
-    ViewName: DATA_TABLE_TAB_CHECKS
-  },
-  {
-    TabLabel: "Data Clean Actions",
-    ViewName: DATA_TABLE_TAB_DATA_CLEAN_ACTIONS
-  },
-  {
-    TabLabel: "Action Instances",
+    TabLabel: "Action Instance",
     ViewName: DATA_TABLE_TAB_ACTION_INSTANCES
   },
   {
@@ -125,20 +110,11 @@ const TableDetailsView = () => {
                       }
                     />
                   </TabPanel>
-                  <TabPanel value={DATA_TABLE_TAB_COLUMNS}>
+                  <TabPanel value={DATA_TABLE_TAB_TABLE_VIEW}>
+                    <TableView TableId={data[0].TableProperties.Id}/>
+                  </TabPanel>
+                  <TabPanel value={DATA_TABLE_TAB_COLUMN_VIEW}>
                     <ColumnView tableData={data[0]} />
-                  </TabPanel>
-                  <TabPanel value={DATA_TABLE_TAB_QUICK_VIEW}>
-                    <QuickView tableId={data[0].TableProperties.Id} />
-                  </TabPanel>
-                  <TabPanel value={DATA_TABLE_TAB_QUICK_STATS}>
-                    <QuickStatsNewTemp tableId={data[0].TableProperties.Id} />
-                  </TabPanel>
-                  <TabPanel value={DATA_TABLE_TAB_CHECKS}>
-                    <Checks tableId={data[0].TableProperties.Id} />
-                  </TabPanel>
-                  <TabPanel value={DATA_TABLE_TAB_DATA_CLEAN_ACTIONS}>
-                    <DataCleanActions tableId={data[0].TableProperties.Id} />
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
                     <ActionInstances tableId={data[0].TableProperties.Id} />
