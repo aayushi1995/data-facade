@@ -2,6 +2,7 @@ import { Avatar, Box, ButtonBase, Divider, Popover, Typography } from '@mui/mate
 import React, { useRef, useState } from 'react';
 import Logout from "../../../pages/home/components/Logout";
 import { useAppBarProps } from "./DataFacadeAppBar";
+import { ThemeToggle } from './ThemeToggle';
 
 const AccountPopover = () => {
     const anchorRef = useRef(null);
@@ -62,6 +63,7 @@ const AccountPopover = () => {
                         >
                             {appcontext.workspaceName}
                         </Typography>
+                        <ThemeToggle/>
                     </Box>
                     <Divider/>
                     <Box>
