@@ -4,7 +4,7 @@
     */
     
 const ActionDefinitionActionGroups = {
-    DATA_CLEANING: "CleanData",
+    DATA_CLEANSING: "DataCleansing",
     DATA_CHECKS: "DataChecks",
     PREDICT: "Predict",
     STATISTICS: "Statistics",

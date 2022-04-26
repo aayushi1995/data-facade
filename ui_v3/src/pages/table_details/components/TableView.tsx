@@ -1,38 +1,69 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { Autocomplete, Box, Card, Chip, createFilterOptions, Divider, FormControl, Grid, IconButton, NativeSelect, Popover, TextField, Tooltip, Typography } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
+import { Autocomplete, Box, Card, Chip, createFilterOptions, Divider, FormControl, Grid, IconButton, InputAdornment, NativeSelect, Popover, TextField, Tooltip, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
-import ErrorBoundary from '../../../common/components/ErrorBoundry';
+import React, { ChangeEvent, useState } from "react";
 import LoadingWrapper from "../../../common/components/LoadingWrapper";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import useFetchTags from "../../../common/components/tag-handler/hooks/useFetchTags";
 import { lightShadows } from '../../../css/theme/shadows';
 import DatafacadeDatatype from "../../../enums/DatafacadeDatatype";
 import labels from "../../../labels/labels";
-import { formDataGridPropsFromResponse, useColumn, useColumnDataTypeMutation, useTableView } from "./TableViewHooks";
+import { formDataGridPropsFromResponse, isDataGridRenderPossible, useColumn, useColumnDataTypeMutation, useTableView } from "./TableViewHooks";
 
 const TableView = (props: {TableId?: string}) => {
     const tableViewQuery = useTableView({ TableId: props.TableId, options: {}})
+    const [searchQuery, setSearchQuery] = useState<string|undefined>("")
+    const handleSearchChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        setSearchQuery(event?.target.value)
+    }
+    
     return (
-        <Card sx={{borderRadius: 2, boxShadow: lightShadows[31]}}>
-            <ErrorBoundary>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
+            <Box>
+                <TextField variant="standard" 
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    placeholder="Search Columns"
+                    multiline={true}
+                    sx={{width: '40%', 
+                        background: '#E0E5EC',
+                        boxSizing: 'border-box', 
+                        boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
+                        backgroundBlendMode: 'soft-light, normal', 
+                        borderRadius: '26px',
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        minHeight: '50px'}}
+                    InputProps={{
+                        disableUnderline: true,
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon sx={{marginLeft: 1}}/>
+                            </InputAdornment>
+                        )
+                }}/>
+            </Box>
+            <Card sx={{borderRadius: 2, boxShadow: lightShadows[31]}}>
                 <Box>
-                    <LoadingWrapper
+                    <ReactQueryWrapper
                         isLoading={tableViewQuery.isLoading}
                         error={tableViewQuery.error}
                         data={tableViewQuery.data}
-                    >
-                        <DataGrid sx={{ 
-                            "& .MuiDataGrid-columnHeaderTitleContainerContent": { width: "100%" },
-                            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
-                        }}
-                            {...formDataGridPropsFromResponse(tableViewQuery.data)}  
-                        />
-                    </LoadingWrapper>
+                        children={() =>
+                            isDataGridRenderPossible(tableViewQuery.data) &&
+                                <DataGrid sx={{ 
+                                    "& .MuiDataGrid-columnHeaderTitleContainerContent": { width: "100%" },
+                                    "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                                }}
+                                    {...formDataGridPropsFromResponse(tableViewQuery.data, searchQuery)}  
+                                />
+                        }
+                    />
                 </Box>
-            </ErrorBoundary>
-        </Card>
+            </Card>
+        </Box>
     )
 }
 

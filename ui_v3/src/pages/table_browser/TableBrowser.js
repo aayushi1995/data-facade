@@ -4,11 +4,9 @@ import { IconButton, Snackbar, Tooltip } from '@mui/material'
 import * as PropTypes from "prop-types"
 import React from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { Route, useRouteMatch, withRouter } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
 import { Alert } from '../../common/components/Alert'
 import { actionInstanceFormDataNeeds } from "../../common/components/CreateActionInstanceFormNew"
-import { DATA_RAW_ROUTE, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig"
-import TableDetails from '../table_details/TableDetails'
 import LoadingIndicator from './../../common/components/LoadingIndicator'
 import NoData from './../../common/components/NoData'
 import Search from './../../common/components/Search'
@@ -18,7 +16,6 @@ import labels from './../../labels/labels'
 import DataSetsTable from './components/DataSetsTable'
 
 const filterOptionsMap = {
-
     "Table Name": "DisplayName",
     "Created By": "CreatedBy"
 }
@@ -222,11 +219,4 @@ const TableView = () => {
     }
 }
 
-export const TableBrowser = withRouter(function TableBrowserRoutes() {
-    return (
-        <>
-            <Route exact path={DATA_RAW_ROUTE} component={TableView}/>
-            <Route path={DATA_TABLE_VIEW} component={TableDetails}/>
-        </>
-    )
-});
+export default TableView

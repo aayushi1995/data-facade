@@ -1,24 +1,19 @@
-import React from "react"
-import LoadingIndicator from "../../../common/components/LoadingIndicator"
-import NoData from "../../../common/components/NoData"
-import dataManager, { useRetreiveData } from "../../../data_manager/data_manager"
-import { DataGrid } from "@mui/x-data-grid";
-import { CustomToolbar } from "../../../common/components/CustomToolbar";
-import { useCustomizationToolBarButtons } from "../../customizations/UseCustomizationToolBarButtons";
-import { Dialog, Grid, Link, Tooltip, TextField, Button, DialogContent } from "@mui/material"
-import { formTimeStampOrReturnDefault } from '../../jobs/components/JobsRowJobDetail'
-import { Box, IconButton } from "@mui/material";
-import PreviewIcon from "@mui/icons-material/Preview";
-import { makeStyles } from '@mui/styles'
-import QueryData from '../../../common/components/QueryData'
 import CloseIcon from '@mui/icons-material/Close';
+import PreviewIcon from "@mui/icons-material/Preview";
+import { Box, Dialog, DialogContent, Grid, IconButton, Link, Tooltip } from "@mui/material";
 import DialogTitle from '@mui/material/DialogTitle';
-import {v4 as uuidv4} from 'uuid'
+import { makeStyles } from '@mui/styles';
+import { DataGrid } from "@mui/x-data-grid";
+import React from "react";
 import { useMutation } from "react-query";
-import { useHistory } from "react-router-dom";
-import {getActionExecutionParsedOutput} from "../../../data_manager/entity_data_handlers/action_execution_data"
-import UploadTableDialogContent from "../../../common/components/UploadTableDialogContent";
+import { CustomToolbar } from "../../../common/components/CustomToolbar";
+import LoadingIndicator from "../../../common/components/LoadingIndicator";
+import NoData from "../../../common/components/NoData";
+import QueryData from '../../../common/components/QueryData';
 import S3UploadState from "../../../custom_enums/S3UploadState";
+import dataManager, { useRetreiveData } from "../../../data_manager/data_manager";
+import { getActionExecutionParsedOutput } from "../../../data_manager/entity_data_handlers/action_execution_data";
+import { formTimeStampOrReturnDefault } from '../../jobs/components/JobsRowJobDetail';
 import ConfigureTableMetadata from "../../upload_table/components/ConfigureTableMetadata";
 
 const columns = [
@@ -113,7 +108,7 @@ export const ImportTable = (props) => {
 const IntermediaryTables = (props) => {
     
     const classes = useStyles()
-    const tableId = props?.table?.Id
+    const tableId = props?.TableId
 
     const fetchS3PresignedDownloadUrl = useMutation(
         "GetS3PresignedDownloadUrl",

@@ -20,18 +20,18 @@ export const useAllColumns = (params: {TableId?: string, options?: UseQueryOptio
 }
 
 
-export const useTableAndColumnStats = (params: {TableId?: string, options?: UseQueryOptions<TableAndColumnStats, unknown, TableAndColumnStats, (string | undefined)[]>}) => {    
+export const useTableAndColumnStats = (params: {TableId?: string, entireAction?: boolean, options?: UseQueryOptions<TableAndColumnStats, unknown, TableAndColumnStats, (string | undefined)[]>}) => {    
     const fetchedDataManagerInstance = dataManager.getInstance as {retreiveData: Function}
     
-    const query = useQuery([labels.entities.TableProperties, params?.TableId, "TableAndColumnStats"], () => {
+    const query = useQuery([labels.entities.TableProperties, params?.TableId, "TableAndColumnStats", !!params?.entireAction ? "EntireAction": "OnlyOutput"], () => {
         return fetchedDataManagerInstance.retreiveData(labels.entities.TableProperties, {
             filter: {
                 Id: params?.TableId
             },
             "TableAndColumnStats": true
         }).then((actionExecutions: ActionExecution[]) => {
-            console.log(actionExecutions)
             const actionExecution = actionExecutions?.[0]
+            if(!!params?.entireAction) return actionExecution
             const output = JSON.parse(actionExecution?.Output||"")
             const value = output?.["value"]
             return value
@@ -42,7 +42,6 @@ export const useTableAndColumnStats = (params: {TableId?: string, options?: UseQ
     })
     return query
 }
-
 
 export type TableAndColumnStats = {
     ColumnInfoAndStats?: ColumnInfoAndStat[],

@@ -294,6 +294,22 @@ const baseOptions = {
             fontWeight: 400,
             fontSize: "24px",
             lineHeight: "24px"
+        },
+        tableBrowserContent: {
+            fontFamily: "'Rubik'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "14px",
+            lineHeight: "116.7%"
+        },
+        tableBrowserHealthCell: {
+            fontFamily: "'SF Pro Text'",
+            fontStyle: "normal",
+            fontWeight: 500,
+            fontSize: "14px",
+            lineHeight: "157%",
+            letterSpacing: "0.1px",
+            color: "rgba(66, 82, 110, 0.86)"
         }
     }
 };

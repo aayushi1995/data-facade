@@ -6,6 +6,7 @@
 const ActionExecutionStatus = {
     WAITING_FOR_UPSTREAM: "WaitingForUpstream",
     CREATED: "Created",
+    NOT_CREATED: "Not Created",
     STARTED: "Started",
     COMPLETED: "Completed",
     FAILED: "Failed",

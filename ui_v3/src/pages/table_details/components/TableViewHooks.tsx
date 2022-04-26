@@ -1,6 +1,7 @@
 import { DataGridProps, GridColDef } from "@mui/x-data-grid";
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query";
 import dataManager from "../../../data_manager/data_manager";
+import ActionExecutionStatus from "../../../enums/ActionExecutionStatus";
 import { ColumnProperties } from "../../../generated/entities/Entities";
 import { TableView } from "../../../generated/interfaces/Interfaces";
 import labels from "../../../labels/labels";
@@ -24,14 +25,14 @@ export const useTableView = (params: {TableId?: string, options?: UseQueryOption
     return query
 }
 
-export const formDataGridPropsFromResponse = (response?: TableView) => {
+export const formDataGridPropsFromResponse = (response?: TableView, searchQuery?: string) => {
     if(!!response) {
         const tableData: TableOutputFormat = JSON.parse(response?.TableData?.Output || "{}")
         const tablePreview: TablePreview = JSON.parse(tableData.preview)
 
         const rows = tablePreview.data?.map((row, i) => ({...row, id: i}))
 
-        const columns: GridColDef[] = response?.Columns?.filter(columnInfo => columnInfo?.ColumnProperties?.UniqueName!=="index")?.map(columnInfo => ({
+        const columns: GridColDef[] = response?.Columns?.filter(columnInfo => columnInfo?.ColumnProperties?.UniqueName!=="index" && columnInfo?.ColumnProperties?.UniqueName?.includes(searchQuery || ""))?.map(columnInfo => ({
             field: columnInfo.ColumnProperties?.UniqueName!,
             disableColumnMenu: true,
             sortable: false,
@@ -54,8 +55,11 @@ export const formDataGridPropsFromResponse = (response?: TableView) => {
             rows: [],
             columns: []
         }
-    }
-    
+    } 
+}
+
+export const isDataGridRenderPossible = (response?: TableView) => {
+    return true || !!response && response?.TableData?.Status===ActionExecutionStatus.COMPLETED
 }
 
 export type UseColumnDataTypeMutationVariables = {

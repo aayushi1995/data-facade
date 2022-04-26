@@ -14,7 +14,6 @@ export type ColumnGridViewProps = {
 const ColumnInfoView = (props: ColumnGridViewProps) => {
     const columnQuery = useAllColumns({ TableId: props.TableId})
     const tableFullStats = useTableAndColumnStats({ TableId: props.TableId })
-    console.log(tableFullStats)
     return (
         <ReactQueryWrapper
             isLoading={columnQuery?.isLoading}
@@ -56,7 +55,6 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
                 field: "Info",
                 width: 300,
                 renderCell: (params: GridRenderCellParams<any, ColumnStatViewProps, any>) => {
-                    console.log(params)
                     return !!(params.row?.column?.Id) ? <Box sx={{ py: 2, width: "100%" }}><Box sx={{ background: "#E8E8E8", height: "100%", width: "100%" }}><TableViewColumnHeader ColumnId={params.row?.column?.Id}/></Box></Box> : <></>
                 }
             },
@@ -64,7 +62,6 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
                 field: "Stats",
                 flex: 1,
                 renderCell: (params: GridRenderCellParams<any, ColumnStatViewProps, any>) => {
-                    console.log(params)
                     return !!(params.row?.column?.Id) ? <ColumnStatView column={params.row?.column} columnStat={params.row?.columnStat}/> : <></>
                 }
             }

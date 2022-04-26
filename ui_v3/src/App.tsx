@@ -22,7 +22,7 @@ import DevTestPage from './pages/dev_test_page/DevTestPage'
 import { EULA } from "./pages/home/EULA"
 import Home from './pages/home/Home'
 import NotRegistered from './pages/home/NotRegistered'
-import { SearchQueryProvider, TableBrowser } from './pages/table_browser/TableBrowser'
+import { SearchQueryProvider } from './pages/table_browser/TableBrowser'
 import TagHomePage from './pages/tag/TagHomePage'
 import { Users } from "./pages/users/Users"
 import { useAppInternal } from "./UseAppInternal"
@@ -79,8 +79,6 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                             <Grid item xs={12}>
                                 {isNonProductionEnv() && <EULA/>}
                                 <Switch>
-                                    <Route path='/tableBrowser' component={TableBrowser}/>
-                                    {/*<Route path='/qualityChecks' component={QualityChecks}></Route>*/}
                                     <Route path='/customizations' component={Customizations}/>
                                     {isNonProductionEnv() &&
                                     <Route path='/configurations' component={Configurations}/>}
@@ -88,7 +86,6 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/testPage' component={DevTestPage}/>
                                     <Route path='/users' component={Users}/>
                                     <Route path='/tag' component={TagHomePage}/>
-                                    <Route path='/dashboard' component={TableBrowser}/>
                                     <Route path='/create-action' component={CreateActionPage}/>
                                     <Route path='/run-action' component={RunActionPage}/>
                                     <Route path='/autobook/customers' component={AutobookHomePage}/>

@@ -44,7 +44,7 @@ const ColumnView = (props) => {
     return (
         <>
             <Box>
-                <ColumnInfoView TableId={props.tableData.TableProperties.Id}/>
+                <ColumnInfoView TableId={props.TableId}/>
             </Box>
         </>
     )

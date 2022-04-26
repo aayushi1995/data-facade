@@ -86,7 +86,7 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
                 <Box sx={{display: "flex", flexDirection: "row"}} className="data-author">
                     <Box sx={{mr: 1, display: "flex", alignItems: "center", justifyContent: "center"}}className="data-author-avatar">
                         <Avatar sx={{ cursor: "pointer", height: 40, width: 40, background: "transparent" }} alt={tableQuery.data?.Owner}>
-                            { !!providerForTableQuery.data && <ProviderIcon provider={{ ProviderDefinition: providerForTableQuery.data, ProviderParameterDefinition: [] }}/> }
+                            { !!providerForTableQuery.data && <ProviderIcon providerUniqueName={providerForTableQuery.data.UniqueName}/> }
                         </Avatar>
                     </Box>
                     <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-around"}} className="data-author-info">

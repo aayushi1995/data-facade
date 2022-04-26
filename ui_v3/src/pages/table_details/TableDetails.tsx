@@ -71,8 +71,7 @@ const TableDetailsView = () => {
   const result = useRetreiveData(labels.entities.TableProperties, {
     filter: {
       UniqueName: match.params.TableName,
-    },
-    withTableDetail: true,
+    }
   });
 
   const data = result.data;
@@ -102,25 +101,20 @@ const TableDetailsView = () => {
                 <Box sx={{ mt: 3 }}>
                   <TabPanel value={DATA_TABLE_TAB_SUMMARY}>
                     <TableRowExpanded
-                      table={data[0].TableProperties}
-                      TableId={data[0].TableProperties.Id}
-                      TableName={data[0].TableProperties.UniqueName}
-                      TableProviderInstanceId={
-                        data[0].TableProperties.ProviderInstanceID
-                      }
+                      TableId={data[0].Id}
                     />
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_TABLE_VIEW}>
-                    <TableView TableId={data[0].TableProperties.Id}/>
+                    <TableView TableId={data[0].Id}/>
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_COLUMN_VIEW}>
-                    <ColumnView tableData={data[0]} />
+                    <ColumnView TableId={data[0].Id} />
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
-                    <ActionInstances tableId={data[0].TableProperties.Id} />
+                    <ActionInstances TableId={data[0].Id} />
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_INTERMEDIARY_TABLES}>
-                      <IntermediaryTables table={data[0].TableProperties}/>
+                      <IntermediaryTables TableId={data[0].Id}/>
                   </TabPanel>
                 </Box>
               )}

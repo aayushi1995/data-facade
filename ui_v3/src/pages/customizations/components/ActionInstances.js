@@ -267,13 +267,13 @@ const ActionInstancesInternal = (props) => {
         );
 }
 
-const ActionInstances = (props: { tableId: string }) => {
+const ActionInstances = (props: { TableId: string }) => {
     const match = useRouteMatch();
     return (
         <Switch>
             <Route path={`/customizations/action-instances/:Id`} component={ActionInstanceDetails}/>
             <Route path={`${match.path}`}
-                   render={() => <ActionInstancesInternal tableId={props.tableId}/>}/>
+                   render={() => <ActionInstancesInternal tableId={props.TableId}/>}/>
         </Switch>
     )
 };
