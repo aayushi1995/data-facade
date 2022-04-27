@@ -1,5 +1,6 @@
-import { Box, Button, Card, Dialog, DialogContent, Typography, DialogTitle } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
 import React from "react";
+import ReactJson from 'react-json-view';
 import LoadingIndicator from "../../common/components/LoadingIndicator";
 import LoadingWrapper from "../../common/components/LoadingWrapper";
 import ProgressBar from "../../common/ProgressBar";
@@ -34,6 +35,8 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
             switch(actionExecutionDetailQuery.data?.ActionExecution?.Status) {
                 case ActionExecutionStatus.COMPLETED:
                     return <ViewCompletedActionExecution {...props}/>
+                case ActionExecutionStatus.FAILED:
+                    return <ViewFailedActionExecution {...props}/>
                 default:
                     return <>Action Execution Status: {actionExecutionDetailQuery.data?.ActionExecution?.Status}.</>
             }
@@ -53,9 +56,39 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
     )
 }
 
-const ViewExecutingActionExecution = (props: ResolvedActionExecutionProps) => {
+const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) => {
+    const { actionExecutionDetail } = props
+    const actionOutput = JSON.parse(actionExecutionDetail?.ActionExecution?.Output || "{}")
     return (
-        <></>
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2}}>
+            <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
+                <Typography variant="heroHeader">
+                    {actionExecutionDetail.ActionExecution?.ActionInstanceName}
+                </Typography>
+            </Box>
+            <Box>
+                <ViewConfiguredParameters
+                    parameterDefinitions={actionExecutionDetail?.ActionParameterDefinitions||[]}
+                    parameterInstances={actionExecutionDetail?.ActionParameterInstances||[]}
+                />
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Box>
+                    <Typography>
+                        Output
+                    </Typography>
+                </Box>
+                <Box>
+                    <Card sx={{
+                        p: 3,
+                        background: "#F4F5F7",
+                        boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)"
+                    }}>
+                        <ReactJson src={actionOutput} />
+                    </Card>
+                </Box>
+            </Box>
+        </Box>
     )
 }
 

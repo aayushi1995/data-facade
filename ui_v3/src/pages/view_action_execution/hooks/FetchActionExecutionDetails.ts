@@ -10,18 +10,11 @@ export interface FetchActionExecutionDetailsParams {
 
 const FetchActionExecutionDetails = (params: FetchActionExecutionDetailsParams) => {
     const { actionExecutionId, queryOptions } = params
-    
-    const isEnabled = () => {
-        if(!!params.actionExecutionId){
-            return queryOptions.enabled
-        }
-        return false;
-    }
 
     const query = useQuery(["ActionExecutionDetail", actionExecutionId], () => Fetcher.fetchData("GET", "/actionExecutionDetail", {Id: actionExecutionId}), 
     {
         ...queryOptions,
-        enabled: isEnabled()
+        enabled: (!!params.actionExecutionId) && queryOptions.enabled
     })
 
     return { 

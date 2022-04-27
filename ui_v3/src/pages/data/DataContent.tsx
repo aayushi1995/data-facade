@@ -11,7 +11,7 @@ const DataContent = () => {
             <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
             <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
             <Route path={DATA_TABLE_VIEW} component={TableDetails}/>
-            <Route exact path={DATA_RAW_ROUTE} component={AllTableView}/>
+            <Route path={DATA_RAW_ROUTE} component={AllTableView}/>
         </Switch>
     )
 }

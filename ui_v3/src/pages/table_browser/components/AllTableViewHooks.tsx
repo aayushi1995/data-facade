@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions } from "react-query"
 import dataManager from "../../../data_manager/data_manager"
-import { TableProperties } from "../../../generated/entities/Entities"
+import { ActionDefinition, TableProperties } from "../../../generated/entities/Entities"
 import { TableBrowserResponse, TableOOBActionStatus } from "../../../generated/interfaces/Interfaces"
 import labels from "../../../labels/labels"
 
@@ -13,9 +13,10 @@ export const useGetTables = (params: UseGetTablesParams) => {
         () => fetchedDataManager.retreiveData(labels.entities.TableProperties, {
             filter: {},
             TableBrowser: true
-        }, {
+        }),
+        {
             ...params.options
-        }) 
+        } 
     )
 
     return tableBrowserQuery;
@@ -28,14 +29,13 @@ export type UseGetTableOOBActionsStatusParams = {
 }
 export const useGetTableOOBActionsStatus = (params: UseGetTableOOBActionsStatusParams) => {
     const fetchedDataManager = dataManager.getInstance as { retreiveData: Function }
-    const isEnabled = !!params.tableId && params?.options?.enabled
     const tableBrowserQuery = useQuery<TableBrowserResponse[], unknown, TableOOBActionStatus, (string | undefined)[]>([labels.entities.TableProperties, "OOBActionStatus", params?.tableId], 
         () => fetchedDataManager.retreiveData(labels.entities.TableProperties, {
             filter: { Id: params?.tableId },
             OOBActionsStatus: true
         }, {
             ...params.options,
-            enabled: isEnabled
+            enabled: ( !!params.tableId ) && params?.options?.enabled
         }).then((data: TableOOBActionStatus[]) => data[0]) 
     )
 
@@ -98,4 +98,47 @@ export const useReSyncTables = (params: UseReSyncTablesParams) => {
     )
     
     return reSyncTablePropertiesMutation
+}
+
+export type UseGetTableModelParams = {
+    options: UseQueryOptions<TableProperties, unknown, TableProperties, (string | undefined)[]>,
+    tableName?: string
+}
+export const UseGetTableModel = (params: UseGetTableModelParams) => {
+    const fetchedDataManager = dataManager.getInstance as { retreiveData: Function }
+    const tableBrowserQuery = useQuery<TableProperties, unknown, TableProperties, (string | undefined)[]>([labels.entities.TableProperties, params?.tableName], 
+        () => fetchedDataManager.retreiveData(labels.entities.TableProperties, {
+            filter: {
+                UniqueName: params?.tableName
+            }
+        }).then((data: TableProperties[]) => data?.[0]),
+        {
+            ...params.options,
+            enabled: (!!params?.tableName) && (params?.options?.enabled)
+        }
+    )
+
+    return tableBrowserQuery;
+}
+
+
+export type UseActionDefinitionModelParams = {
+    options: UseQueryOptions<ActionDefinition, unknown, ActionDefinition, (string | undefined)[]>,
+    actionDefinitionId?: string
+}
+export const UseActionDefinitionModel = (params: UseActionDefinitionModelParams) => {
+    const fetchedDataManager = dataManager.getInstance as { retreiveData: Function }
+    const tableBrowserQuery = useQuery<ActionDefinition, unknown, ActionDefinition, (string | undefined)[]>([labels.entities.ActionDefinition, params?.actionDefinitionId], 
+        () => fetchedDataManager.retreiveData(labels.entities.ActionDefinition, {
+            filter: {
+                Id: params?.actionDefinitionId
+            }
+        }).then((data: ActionDefinition[]) => data?.[0]),
+        {
+            ...params.options,
+            enabled: (!!params?.actionDefinitionId) && (params?.options?.enabled)
+        }
+    )
+
+    return tableBrowserQuery;
 }

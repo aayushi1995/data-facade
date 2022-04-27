@@ -6,7 +6,8 @@ export const DATA_CONNECTION_DETAIL_ROUTE = `${DATA_CONNECTIONS_ROUTE}/detail/:P
 export const DATA_RAW_ROUTE = '/data/raw';
 export const DATA_DERIVED_ROUTE = '/data/derived';
 
-export const DATA_TABLE_VIEW = `${DATA_RAW_ROUTE}/:TableName`
+export const DATA_TABLE_VIEW = `${DATA_RAW_ROUTE}/table-detail/:TableName`
+export const DATA_TABLE_SYNC_ACTIONS = `${DATA_RAW_ROUTE}/:TableName/sync-action-status`
 export const DATA_TABLE_TAB = `${DATA_TABLE_VIEW}/View/:ViewName`
 
 export const DATA_TABLE_TAB_SUMMARY = "Summary"

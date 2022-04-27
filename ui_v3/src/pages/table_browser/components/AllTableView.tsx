@@ -1,17 +1,20 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Card, IconButton, InputAdornment, LinearProgress, TextField, Tooltip, Typography } from "@mui/material";
+import { AppBar, Box, Card, Dialog, DialogContent, IconButton, InputAdornment, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, DataGridProps, GridCellParams, GridRowParams } from "@mui/x-data-grid";
-import { ChangeEvent, useState } from 'react';
-import { generatePath, useHistory } from "react-router";
-import { DATA_TABLE_VIEW } from "../../../common/components/header/data/DataRoutesConfig";
+import React, { ChangeEvent, useState } from 'react';
+import { generatePath, Route, useHistory } from "react-router";
+import { DATA_RAW_ROUTE, DATA_TABLE_SYNC_ACTIONS, DATA_TABLE_VIEW } from "../../../common/components/header/data/DataRoutesConfig";
 import SyncingLogo from "../../../common/components/logos/SyncingLogo";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import { lightShadows } from "../../../css/theme/shadows";
 import ActionExecutionStatus from '../../../enums/ActionExecutionStatus';
 import { TableBrowserResponse, TableOOBActionStatus } from "../../../generated/interfaces/Interfaces";
 import { useTableAndColumnStats } from "../../table_details/components/ColumnInfoViewHooks";
+import SyncOOBActionExecutionStatus from '../SyncOOBActionStatus';
 import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
 import { ReactComponent as WeirdIcon } from "./../../../images/WeirdIcon.svg";
 import { useDeleteTables, useGetTableOOBActionsStatus, useGetTables, useReSyncTables } from "./AllTableViewHooks";
@@ -24,10 +27,16 @@ const AllTableView = (props: AllTableViewProps) => {
     const [searchQuery, setSearchQuery] = useState<string|undefined>("")
     const deleteTableMutation = useDeleteTables({ options: {} })
     const reSyncTablesMutation = useReSyncTables({ options: {} })
+    const [dialogProps, setDialogProps] = useState({ open: false, label: "All Tables" })
     const isMutating = deleteTableMutation.isLoading || reSyncTablesMutation.isLoading
+
     const handleSearchChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSearchQuery(event?.target.value)
     }
+
+    const handleDialogClose = () => setDialogProps(old => ({ ...old, open: false }))
+    const handleDialogOpen = () => setDialogProps(old => ({ ...old, open: true }))
+
     const dataGridProps: DataGridProps = {
         columns: [
             {
@@ -86,12 +95,11 @@ const AllTableView = (props: AllTableViewProps) => {
         ],
         rows: (tableQuery?.data?.map?.((x, index) => ({ ...x, id: index})) || []),
         sx: {
-            minHeight: "500px",
-            maxHeight: "700px",
             "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
         },
+        autoHeight: true,
         headerHeight: 70,
-        rowsPerPageOptions: [5, 10, 20, 50 ,100],
+        rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
         hideFooterSelectedRowCount: true,
         onRowClick: (params: GridRowParams<TableBrowserResponse>) => {
             const tableName = params?.row?.TableUniqueName
@@ -109,46 +117,80 @@ const AllTableView = (props: AllTableViewProps) => {
                     value: searchQuery
                 }
             ]
+        },
+        initialState: {
+            pagination: {
+                pageSize: 10
+            }
+        },
+        onCellClick: (params: GridCellParams<unknown, TableBrowserResponse, unknown>, event, details) => {
+            if(params.field === "Sync Status" && !!(params?.row?.TableUniqueName)) {
+                event.stopPropagation()
+                history.replace(generatePath(DATA_TABLE_SYNC_ACTIONS, { TableName: params?.row?.TableUniqueName }))
+            }
         }
     }
     
+    const closeSyncActionStatusDialog = () => {
+        history.replace(DATA_RAW_ROUTE)
+    }
+
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
-            <Box>
-                <TextField variant="standard" 
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    placeholder="Search Tables"
-                    multiline={true}
-                    sx={{width: '40%', 
-                        background: '#E0E5EC',
-                        boxSizing: 'border-box', 
-                        boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
-                        backgroundBlendMode: 'soft-light, normal', 
-                        borderRadius: '26px',
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        minHeight: '50px'}}
-                    InputProps={{
-                        disableUnderline: true,
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon sx={{marginLeft: 1}}/>
-                            </InputAdornment>
-                        )
-                }}/>
-            </Box>
-            <Card sx={{ borderRadius: 2, boxShadow: lightShadows[31]}}>
-                <ReactQueryWrapper
-                    isLoading={tableQuery.isLoading}
-                    error={tableQuery.error}
-                    data={tableQuery.data}
-                    children={() =>
-                        <DataGrid {...dataGridProps}/>
-                    }
-                />
-        </Card>
-       </Box>
+        <>
+            <WrapInDialog dialogProps={{ ...dialogProps, handleClose: handleDialogClose }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
+                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <Box sx={{ flex: 1 }}>
+                            <TextField variant="standard" 
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                placeholder="Search Tables"
+                                sx={{width: '40%', 
+                                    background: '#E0E5EC',
+                                    boxSizing: 'border-box', 
+                                    boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
+                                    backgroundBlendMode: 'soft-light, normal', 
+                                    borderRadius: '26px',
+                                    display: 'flex', 
+                                    justifyContent: 'center', 
+                                    minHeight: '50px'}}
+                                InputProps={{
+                                    disableUnderline: true,
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon sx={{marginLeft: 1}}/>
+                                        </InputAdornment>
+                                    )
+                            }}/>
+                        </Box>
+                        {!dialogProps.open &&
+                            <Box>
+                                <IconButton onClick={() => handleDialogOpen()}>
+                                    <FullscreenIcon/>
+                                </IconButton>
+                            </Box>
+                        }
+                    </Box>
+                    <Card sx={{ borderRadius: 2, boxShadow: lightShadows[31]}}>
+                        <ReactQueryWrapper
+                            isLoading={tableQuery.isLoading}
+                            error={tableQuery.error}
+                            data={tableQuery.data}
+                            children={() =>
+                                <DataGrid {...dataGridProps}/>
+                            }
+                        />
+                    </Card>
+                </Box>
+            </WrapInDialog>
+            <Route exact path={DATA_TABLE_SYNC_ACTIONS}>
+                <Dialog open={true} onClose={() => closeSyncActionStatusDialog()} maxWidth="lg" fullWidth>
+                    <DialogContent sx={{ height: "600px" }}>
+                        <SyncOOBActionExecutionStatus/>
+                    </DialogContent>
+                </Dialog>
+            </Route>
+        </>
     )
 }
 
@@ -236,6 +278,7 @@ const HealthCell = (props?: TableBrowserResponse) => {
 }
 
 const SyncStatusCell = (props?: TableBrowserResponse) => {
+    const history = useHistory()
     const oobActionsStatus = useGetTableOOBActionsStatus({ options: {}, tableId: props?.TableId })
     const allComplete = areAllOOBActionsCompleted(oobActionsStatus.data)
     const anyFailed = anyOOBActionFailed(oobActionsStatus.data)
@@ -253,22 +296,30 @@ const SyncStatusCell = (props?: TableBrowserResponse) => {
         else return <SyncingLogo height="24px" width="24px" color="#FA9705"/>
     }
 
+    const getTooltipText = () => {
+        if(allComplete) return "View Successful Out of Box Actions"
+        else if(anyFailed) return "View Failed Out of Box Actions"
+        else return "View Active Out of Box Actions"
+    }
+
     return (
         <ReactQueryWrapper
             isLoading={oobActionsStatus.isLoading}
             error={oobActionsStatus.error}
             data={oobActionsStatus.data}
             children={() => 
-                <Box sx={{ width: "100%", display: "flex", flexDirection: "row", gap: 1}}>
-                    <Box>
-                        {getIcon()}
+                <Tooltip title={getTooltipText()}>
+                    <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", alignItems: "center", gap: 1, cursor: "pointer" }}>
+                        <Box>
+                            {getIcon()}
+                        </Box>
+                        <Box>
+                            <Typography variant="tableBrowserContent">
+                                {getLabel()}
+                            </Typography>
+                        </Box>
                     </Box>
-                    <Box>
-                        <Typography variant="tableBrowserContent">
-                            {getLabel()}
-                        </Typography>
-                    </Box>
-                </Box>
+                </Tooltip>
             }
         />
     )
@@ -307,6 +358,41 @@ const TextCell = (props: { text?: string}) => {
     } else {
         return textComponent
     }
+}
+
+export const WrapInDialog = (props: { children: JSX.Element, dialogProps: { open: boolean, label?: string, handleClose: Function } }) => {
+    const { children, dialogProps } = props
+    let El = <></>;
+    if(dialogProps.open) {
+        El = (
+            <Dialog
+                fullScreen
+                open={dialogProps.open}
+                onClose={() => dialogProps.handleClose()}
+            >
+                <AppBar sx={{ position: 'relative', background: "#A6CEE3" }}>
+                    <Toolbar>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={() => dialogProps.handleClose()}
+                            aria-label="close"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography>{dialogProps?.label}</Typography>
+                    </Toolbar>
+                </AppBar>
+                <DialogContent sx={{ py: 2 }}>
+                    {props?.children}
+                </DialogContent>
+            </Dialog>
+        )
+    } else {
+        El = props?.children
+    }
+
+    return El;
 }
 
 const areAllOOBActionsCompleted = (response?: TableOOBActionStatus) => response?.OOBActionsStatus?.every((value, index, arr) => value.ActionExecutionStatus===ActionExecutionStatus.COMPLETED)
