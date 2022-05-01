@@ -2,6 +2,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button } from "@mui/material"
 import React from "react"
 import { Route, RouteComponentProps, Switch, useRouteMatch } from "react-router-dom"
+import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import NoData from "../../../common/components/NoData"
 import ViewActionExecutionOutput from "../../../common/components/ViewActionExecutionOutput"
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
@@ -124,7 +125,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
     const [workflowActionExecutionData, workflowActionExecutionError, workflowActionExecutionLoading] = useGetWorkflowStatus(workflowExecutionId, {enabled: (workflowContext.WorkflowExecutionStatus !== 'Completed' && workflowContext.WorkflowExecutionStatus !== 'Failed'), handleSuccess: handleRefreshQuery})
 
     if(!areChildActionsReady){
-        return <>Loading...</>
+        return <LoadingIndicator/>
     } else if(workflowActionExecutionError) {
         return <NoData/>
     } else {
@@ -162,6 +163,9 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                 </Box>
                 <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%', mb: 4}}>
                     <StagesWithActions/>
+                </Box>
+                <Box sx={{mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end', mr: 2}}>
+                    <Button variant="contained" color="primary" disabled={areActionsCompleted} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>
                 </Box>
             </Box>
         )

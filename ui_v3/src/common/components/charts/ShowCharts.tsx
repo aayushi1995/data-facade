@@ -4,7 +4,7 @@ import { lightShadows } from "../../../css/theme/shadows";
 import ChartGroups from "../../../enums/ChartGroups";
 import { Chart as ChartModel } from "../../../generated/entities/Entities";
 import { ChartWithData } from "../../../generated/interfaces/Interfaces";
-import { formChartOptionsSingleDimensionWithLables, formChartOptionsTwoDimensionWithSegments, formChartOptionsTwoDimenstion, formChartOptionsTwoDimenstionScatter } from "../../util/formChartOptions";
+import { formChartOptionsSingleDimensionWithLables, formChartOptionsTimeSeries, formChartOptionsTwoDimensionWithSegments, formChartOptionsTwoDimenstion, formChartOptionsTwoDimenstionScatter } from "../../util/formChartOptions";
 import LoadingIndicator from "../LoadingIndicator";
 import NoData from "../NoData";
 import { BaseChartsConfig } from "./BaseChartsConfig";
@@ -37,6 +37,9 @@ const ShowCharts = (props: ShowChartsProps) => {
                 
                 case ChartGroups.TWO_DIMENSION_WITH_SEGMENTS:
                     return formChartOptionsTwoDimensionWithSegments(chartData)
+                
+                case ChartGroups.TIME_SERIES:
+                    return formChartOptionsTimeSeries(chartData)
 
                 default: {
                     return undefined

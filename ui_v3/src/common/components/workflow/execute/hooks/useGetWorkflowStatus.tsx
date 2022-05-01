@@ -10,7 +10,7 @@ const useGetWorkflowStatus = (workflowExecutionId: string, options: {enabled: bo
                 return Fetcher.fetchData('GET', '/workflowActionExecutionsStatus', {Id: workflowExecutionId})
             }, 
             {
-                refetchInterval: 1000,
+                refetchInterval: 5000,
                 enabled: options.enabled,
                 onSuccess: (data: WorkflowActionExecutions[]) => {
                     options.handleSuccess(data)

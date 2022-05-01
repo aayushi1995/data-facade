@@ -29,6 +29,10 @@ type SeriesScatter = {
 type SeriesLine = {
     type: 'line' 
     data: DataAxis,
+    lineStyle?: {
+        color?: string,
+        type?: "dashed"
+    }
     smooth?: boolean
 }[];
 

@@ -1,16 +1,23 @@
-import { Autocomplete, Box, Button, TextField, Tooltip } from '@mui/material'
+import { Autocomplete, Box, Button, TextField, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import ActionDefinitionActionGroups from '../../enums/ActionDefinitionActionGroups'
+import AutoFlows from '../../enums/AutoFlows'
 import labels from '../../labels/labels'
 import LoadingIndicator from './LoadingIndicator'
+import { ReactQueryWrapper } from './ReactQueryWrapper'
 import useCreateRuntimeWorkflow from './workflow/create/hooks/useCreateRuntimeWorkflow'
+import useGetPossibleAutoFlows from './workflow/create/hooks/useGetPossibleAutoflow'
 
-const RunWorkflowButton = (props) => {
+const RunWorkflowButtons = (props) => {
     const {TableId} = props
+
+
     const history = useHistory()
     const [isLoading, setLoading] = React.useState(false)
-    const [actionGroupsSelected, setSelectedActionGroups] = React.useState([])
+
+    const getPossibleFlowsQuery = useGetPossibleAutoFlows({filter: {Id: TableId}})
+    const [possibleButtons, setPossibleButton] = React.useState()
     const createWorkflowForTable = useCreateRuntimeWorkflow(
         {
             mutationName: "CreateRuntimeWorkflow",
@@ -25,45 +32,53 @@ const RunWorkflowButton = (props) => {
             }
         }
     )
-    const handleClick = () => {
+
+    const handleClick = (actionGroup) => {
         createWorkflowForTable.mutate(
-            {tableId: TableId, actionGroups: actionGroupsSelected}
+            {tableId: TableId, actionGroups: actionGroup}
         )
     }
 
+    const getButtons = (data) => {
+        const possibleFlows = data?.[0]?.PossibleAutoFlow
+        const buttons = possibleFlows?.map(flow => {
+            if(flow == AutoFlows.TIME_SERIES_AUTO_FLOW) {
+                return <Button size="small" color="primary" variant="contained" onClick={() => handleClick(ActionDefinitionActionGroups.TIME_SERIES_FORECAST)}>Time Forecast Auto Flow</Button>
+            }
+        })
+        
+        if(!!buttons && buttons.length !== 0) {
+            setPossibleButton(buttons)
+        } else {
+            setPossibleButton([<Typography variant="heroMeta" sx={{fontSize: '15px', mt: 1}}>No Auto Flows Found. Check Table And Column Tags</Typography>])
+        }
+        console.log(buttons)
+    }
+
+    React.useEffect(() => {
+        getButtons(getPossibleFlowsQuery.data)
+    }, [getPossibleFlowsQuery.data]) 
+
     return (
-        <Box sx={{display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-            {isLoading ? (
-                <LoadingIndicator/>
-            ) : (
-                <Tooltip title={labels.RunWorkflowButton.runWorkflow}>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        onClick={handleClick}
-                        // to={{'pathname': `/application/build-table-workflow/${props?.tableMeta.Id}`}} 
-                        // component={Link}
-                        size="small"
-                    >
-                        Make Tag Based Workflow
-                    </Button>
-                </Tooltip>
-            )}
-            <Autocomplete
-                fullWidth
-                multiple
-                options={Object.entries(ActionDefinitionActionGroups).map(([groupKey, groupName]) => groupName)}
-                renderInput={(params) => <TextField {...params} label="Select Action Groups"/>}
-                value={actionGroupsSelected}
-                onChange={(event, value, reason, details) => {
-                    setSelectedActionGroups(value)
-                }}
-                filterSelectedOptions
-                limitTags={2}
-            ></Autocomplete>
-        </Box>
+        <ReactQueryWrapper 
+            isLoading={getPossibleFlowsQuery.isLoading}
+            data={possibleButtons}
+            error={getPossibleFlowsQuery.error}
+            children={() => 
+                <Box sx={{display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+                    {isLoading ? (
+                        <LoadingIndicator/>
+                    ) : (
+                        <Box sx={{display: 'flex', gap: 1,  justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+                            {possibleButtons}
+                        </Box>
+                    )}
+                </Box>
+            }
+        />
+        
     )
 }
 
 
-export default RunWorkflowButton;
+export default RunWorkflowButtons;

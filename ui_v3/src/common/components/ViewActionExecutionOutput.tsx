@@ -8,12 +8,12 @@ import JobsRowJobDetail from "../../pages/jobs/components/JobsRowJobDetail"
 import ColumnChartVisualizer from "./ColumnChartVisualizer"
 import NoData from "./NoData"
 import QueryData from "./QueryData"
+import { Box } from "@mui/material"
 
 
 
 const ViewActionExecutionOutput = (props: { executionId: string, presentationFormat: string }) => {
     const fetchActionExeuctionParsedOutput = useMutation(getActionExecutionParsedOutput)
-    const fetchActionExecutionTimeSeriesParsedOutput = useMutation(getActionExecutionParsedOutputForTimeSeries)
 
     React.useEffect(() => {
         switch(props.presentationFormat) {
@@ -23,15 +23,12 @@ const ViewActionExecutionOutput = (props: { executionId: string, presentationFor
             case ActionDefinitionPresentationFormat.OBJECT: {
                 fetchActionExeuctionParsedOutput.mutate({ Id: props.executionId })
             }
-            case ActionDefinitionPresentationFormat.TIME_SERIES: {
-                fetchActionExecutionTimeSeriesParsedOutput.mutate( {Id: props.executionId}, {} )
-            }
         }
         
     }, [props.executionId])
 
 
-    if (fetchActionExeuctionParsedOutput.isLoading || fetchActionExecutionTimeSeriesParsedOutput.isLoading) {
+    if (fetchActionExeuctionParsedOutput.isLoading) {
         return <>Loading...</>
     } else if(fetchActionExeuctionParsedOutput.data) {
         if(fetchActionExeuctionParsedOutput.data?.Status === 'Completed'){
@@ -39,13 +36,8 @@ const ViewActionExecutionOutput = (props: { executionId: string, presentationFor
         } else {
             return <JobsRowJobDetail ActionExecution={fetchActionExeuctionParsedOutput.data}/>
         }
-    } else if(fetchActionExecutionTimeSeriesParsedOutput.data) {
-        if(fetchActionExecutionTimeSeriesParsedOutput.data?.actionExecution?.Status === 'Completed'){
-            return <ColumnChartVisualizer options={fetchActionExecutionTimeSeriesParsedOutput.data?.defaultOptions}/>
-        } else {
-            return <JobsRowJobDetail ActionExecution={fetchActionExeuctionParsedOutput.data?.actionExecution}/>
-        }
-    } else {
+    } 
+    else {
         return <NoData/>
     }
 

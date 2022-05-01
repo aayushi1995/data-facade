@@ -1,3 +1,4 @@
+import { darken } from "@mui/system";
 import ChartType from "../../enums/ChartType";
 import { Chart } from "../../generated/entities/Entities";
 import { ChartWithData } from "../../generated/interfaces/Interfaces";
@@ -38,6 +39,17 @@ interface TwoDSegmentChartOptions {
         }[],
         x_name: string
         y_name: string
+    }
+}
+
+interface TimeSeriesChartData {
+    data: {
+        x: (number|string)[],
+        series: {
+            name: string,
+            data: (number|string)[]
+        }[],
+        forecasted_rows: number
     }
 }
 
@@ -278,6 +290,61 @@ export const formChartOptionsTwoDimensionWithSegments = (chartData: ChartWithDat
                 config: dataOptions,
                  model: chartData.model
             }
+        }
+    }
+}
+
+export const formChartOptionsTimeSeries = (chartData: ChartWithData) : {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined => {
+    switch(chartData?.model?.Type) {
+        case ChartType.TIME_SERIES: {
+            const castedChartData = chartData.chartData as TimeSeriesChartData
+
+            const legends = castedChartData.data.series.map(legendWithData => legendWithData.name)
+
+            const chartOptions: EChartUISpecificConfig = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                title: {
+                    text: chartData.model?.Name,
+                    show: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                legend: {
+                    data: legends
+                },
+                grid: {
+                    containLabel: true
+                }
+            }
+            const dataOptions: BaseChartsConfig = {
+                xAxis: [{
+                    type: 'category',
+                    data: castedChartData.data.x,
+                    name: "Timestamps"
+                }],
+                yAxis: [{
+                    type: 'value'
+                }],
+                series: castedChartData.data.series.map(series => {
+                    return {
+                        data: series.data,
+                        name: series.name,
+                        type: 'line',
+                        smooth: true
+                    }
+                })
+            }
+            
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                model: chartData.model
+            } 
         }
     }
 }

@@ -9,8 +9,10 @@ const ChartType = {
     PIE: "pie",
     SCATTER: "scatter",
     SEGMENT: "segment",
-    BAR: "bar"
+    BAR: "bar",
+    TIME_SERIES: "time_series"
 }
 
 export default ChartType;
 
+    

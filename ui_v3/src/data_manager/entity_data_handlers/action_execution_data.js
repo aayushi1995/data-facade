@@ -38,6 +38,7 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
         const actionExecutionOutput = JSON.parse(actionExecution.Output)
         console.log(actionExecutionOutput)
         const preview = actionExecutionOutput.preview
+        console.log(preview)
         
         return {
                 'defaultOptions': {
@@ -71,11 +72,6 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
                             },
                             threshold: null
                         }
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle'
                     },
                     series: preview.series.map(wholeData => {
                         return {
