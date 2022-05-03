@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import { Link as RouterLink, Route, Switch } from "react-router-dom";
-import { DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_RAW_ROUTE } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_ALL_TABLES_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE } from "../../common/components/header/data/DataRoutesConfig";
 import { CreateConnectionButton } from "./components/connections/CreateConnectionButton";
 
 const DataHeader = () => {
@@ -18,7 +18,7 @@ const DataHeader = () => {
                     </Button>
                 </Box>
             </Route>
-            <Route path={DATA_RAW_ROUTE} >
+            <Route path={DATA_ALL_TABLES_ROUTE} >
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center"}}>
                     <Button onClick={() => {}} variant="ModuleHeaderButton1"
                             title="Run AutoFlow"

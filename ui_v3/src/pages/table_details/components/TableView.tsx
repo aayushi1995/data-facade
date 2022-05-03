@@ -1,7 +1,7 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import SearchIcon from '@mui/icons-material/Search';
-import { Autocomplete, Box, Card, Chip, createFilterOptions, Divider, FormControl, Grid, IconButton, InputAdornment, NativeSelect, Popover, TextField, Tooltip, Typography } from "@mui/material";
+import { Autocomplete, Box, Card, Chip, createFilterOptions, Divider, FormControl, Grid, IconButton, InputAdornment, LinearProgress, NativeSelect, Popover, TextField, Tooltip, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from "react";
 import LoadingWrapper from "../../../common/components/LoadingWrapper";
@@ -10,6 +10,7 @@ import useFetchTags from "../../../common/components/tag-handler/hooks/useFetchT
 import { lightShadows } from '../../../css/theme/shadows';
 import DatafacadeDatatype from "../../../enums/DatafacadeDatatype";
 import labels from "../../../labels/labels";
+import { useTableAndColumnStats } from './ColumnInfoViewHooks';
 import { formDataGridPropsFromResponse, isDataGridRenderPossible, useColumn, useColumnDataTypeMutation, useTableView } from "./TableViewHooks";
 
 const TableView = (props: {TableId?: string}) => {
@@ -75,6 +76,7 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
     const { ColumnId } = props
     
     const columnQuery = useColumn({ ColumnId: ColumnId, options: {} })
+    const tableAndColumnStatsQuery = useTableAndColumnStats({ TableId: columnQuery?.data?.TableId })
     const coumnDatatypeMutation = useColumnDataTypeMutation({ options: {
         onSuccess: () => columnQuery.refetch()
     }})
@@ -144,6 +146,22 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
                     <Box sx={{ pb: 1 }}>
                         <ColumnHeaderTagSelector ColumnId={ColumnId}/>
                     </Box>
+                    <Box>
+                        <ReactQueryWrapper
+                            isLoading={tableAndColumnStatsQuery.isLoading}
+                            error={tableAndColumnStatsQuery.error}
+                            data={tableAndColumnStatsQuery.data}
+                            children={() => {
+                                const columnHealth = tableAndColumnStatsQuery?.data?.ColumnInfoAndStats?.find(columnInfo => columnInfo?.ColumnName === columnQuery?.data?.UniqueName)?.ColumnStat?.Health
+                                console.log(columnHealth)
+                                return (
+                                    <Tooltip title={!!columnHealth ? `${((columnHealth||0)*100).toFixed(2)} %` : "Fetching"}>
+                                        <LinearProgress variant={!!columnHealth ? "determinate" : "indeterminate"} value={(columnHealth||0)*100} color="success"/>
+                                    </Tooltip>
+                                )
+                            }}
+                        />
+                    </Box>
                 </Box>   
             }
         /> 
@@ -172,7 +190,7 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
     const [tagsSelectedForEntity, tagsNotSelectedButAvaialbleForEntity, isLoading, isMutating, error, addTag, createAndAddTag, deleteTag] = useFetchTags({
         entityType: labels.entities.ColumnProperties,
         entityId: props?.ColumnId!,
-        tagFilter: {}
+        tagFilter: { Scope: labels.entities.ColumnProperties }
     })
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {

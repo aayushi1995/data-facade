@@ -1,5 +1,5 @@
 import { Route, Switch } from "react-router-dom";
-import { DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_RAW_ROUTE, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_ALL_TABLES_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
 import ConfiguredDataSource from "../configurations/components/ConfiguredDataSource";
 import AllTableView from "../table_browser/components/AllTableView";
 import TableDetails from "../table_details/TableDetails";
@@ -11,7 +11,7 @@ const DataContent = () => {
             <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
             <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
             <Route path={DATA_TABLE_VIEW} component={TableDetails}/>
-            <Route path={DATA_RAW_ROUTE} component={AllTableView}/>
+            <Route path={DATA_ALL_TABLES_ROUTE} component={AllTableView}/>
         </Switch>
     )
 }

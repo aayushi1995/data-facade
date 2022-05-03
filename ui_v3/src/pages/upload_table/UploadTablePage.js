@@ -1,28 +1,17 @@
-import React from 'react'
-
-import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom';
-
 import {
-    Box,
-    Stepper,
-    Step,
-    StepLabel,
-    StepContent,
-    Button,
-    Typography,
-    Grid,
-    TextField,
-    Divider
+    Box, Button, Grid,
+    TextField
 } from '@mui/material';
-
-import SelectFileStep from './components/SelectFileStep'
-import SelectTableStep from './components/SelectTableStep'
-import ConfigureTableMetadata from './components/ConfigureTableMetadata'
-
-import UploadTableDialogContent from "../../common/components/UploadTableDialogContent";
-
-import UploadTableSteps from './../../custom_enums/UploadTableSteps'
+import React from 'react';
 import S3UploadState from './../../custom_enums/S3UploadState';
+import ConfigureTableMetadata from './components/ConfigureTableMetadata';
+import SelectFileStep from './components/SelectFileStep';
+import SelectTableStep from './components/SelectTableStep';
+
+
+
+
+
 
 
 export const UploadTablePage = (props) => {
@@ -59,7 +48,7 @@ export const UploadTablePage = (props) => {
     const changeHandler = (event) => {
         const file = event.target.files[0];
         if (file !== undefined) {
-            if (file.size > 40000000) {
+            if (file.size > 200000000) {
                 setUploadState(S3UploadState.SELECTED_FILE_TOO_LARGE);
             } else if(!(file.type === "text/csv" | file.type === "application/vnd.ms-excel" | file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
                 setUploadState(S3UploadState.SELECTED_FILE_NOT_CORRECT_FORMAT(file.type));

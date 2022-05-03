@@ -7,7 +7,7 @@ import { AppBar, Box, Card, Dialog, DialogContent, IconButton, InputAdornment, L
 import { DataGrid, DataGridProps, GridCellParams, GridRowParams } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from 'react';
 import { generatePath, Route, useHistory } from "react-router";
-import { DATA_RAW_ROUTE, DATA_TABLE_SYNC_ACTIONS, DATA_TABLE_VIEW } from "../../../common/components/header/data/DataRoutesConfig";
+import { DATA_ALL_TABLES_ROUTE, DATA_TABLE_SYNC_ACTIONS, DATA_TABLE_VIEW } from "../../../common/components/header/data/DataRoutesConfig";
 import SyncingLogo from "../../../common/components/logos/SyncingLogo";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import { lightShadows } from "../../../css/theme/shadows";
@@ -132,7 +132,7 @@ const AllTableView = (props: AllTableViewProps) => {
     }
     
     const closeSyncActionStatusDialog = () => {
-        history.replace(DATA_RAW_ROUTE)
+        history.replace(DATA_ALL_TABLES_ROUTE)
     }
 
     return (
@@ -241,11 +241,11 @@ const HealthCell = (props?: TableBrowserResponse) => {
     const tableFullStats = useTableAndColumnStats({ TableId: props?.TableId })
     const allComplete = areAllOOBActionsCompleted(oobActionsStatus.data)
     const anyFailed = anyOOBActionFailed(oobActionsStatus.data)
+    const health = tableFullStats?.data?.TableStat?.Health
 
     const formText = () => {
-        if(allComplete) {
-            const rowCount = tableFullStats?.data?.TableStat?.RowCount
-            return `${!!rowCount ? 88 : 30} %`
+        if(allComplete && !!health) {
+            return `${((health || 0)*100).toFixed(0)} %`
         }
         else if(anyFailed) {
             return "Health Data Unavaialble"
@@ -254,10 +254,8 @@ const HealthCell = (props?: TableBrowserResponse) => {
     }
 
     const formLinearProgressBar = () => {
-        if(allComplete) {
-            const rowCount = tableFullStats?.data?.TableStat?.RowCount
-            const health = !!rowCount ? 88 : 30
-            return <LinearProgress variant="determinate" value={health} color="success"/>
+        if(allComplete && !!health) {
+            return <LinearProgress variant="determinate" value={(health || 0)*100} color="success"/>
         }
         else if(anyFailed) {
             return <LinearProgress variant="determinate" value={0} color="error"/>

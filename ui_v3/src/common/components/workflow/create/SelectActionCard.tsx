@@ -1,10 +1,11 @@
 
-import React from 'react'
-import { Box, Card, Chip, Icon, IconButton, SvgIcon, Typography, useTheme} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DataCleansingIcon from "./../../../../images/Group 1545.svg"
-import { ActionDefinitionToAdd } from './SelectAction/SelectAction';
+import { Box, Card, Icon, IconButton, Typography, useTheme } from '@mui/material';
+import React from 'react';
+import labels from '../../../../labels/labels';
 import TagHandler from '../../tag-handler/TagHandler';
+import DataCleansingIcon from "./../../../../images/Group 1545.svg";
+import { ActionDefinitionToAdd } from './SelectAction/SelectAction';
 
 export interface SelectActionCardProps {
     actionId: string,
@@ -64,9 +65,10 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                             <TagHandler
                                 entityType={"ActionDefinition"}
                                 entityId={props.actionId}
-                                tagFilter={{}}
+                                tagFilter={{ Scope: labels.entities.ActionDefinition }}
                                 allowAdd={false}
                                 allowDelete={true}
+                                inputFieldLocation="TOP"
                             />
                         </Box>
                     }

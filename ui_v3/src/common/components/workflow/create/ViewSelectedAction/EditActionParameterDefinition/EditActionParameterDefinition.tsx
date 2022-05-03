@@ -1,21 +1,15 @@
 
-import React from 'react'
-import { Autocomplete, Box, Card, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, TextField, useTheme, createFilterOptions} from '@mui/material';
-import {Tabs, Tab, SelectChangeEvent} from "@mui/material"
-import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from '../../../../../../generated/entities/Entities';
-import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid';
-import { CustomToolbar } from '../../../../CustomToolbar';
+import { Autocomplete, Box, createFilterOptions, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, useTheme } from '@mui/material';
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { getInputTypeFromAttributesNew, InputMap } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
-import { TemplateWithParams } from '../hooks/UseViewAction';
-import TagHandler from '../../../../tag-handler/TagHandler';
-import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
-import { ParameterName } from 'storybook-addon-designs/esm/addon';
-import ActionParameterDefinitionTag from '../../../../../../enums/ActionParameterDefinitionTag';
-import ParameterInput, { BooleanParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
-import ActionParameterDefinitionType from '../../../../../../enums/ActionParameterDefinitionType';
 import ActionParameterDefinitionDatatype from '../../../../../../enums/ActionParameterDefinitionDatatype';
-import { v4 as uuidv4 } from 'uuid'
-import getParameterInputField from '../../ParameterInput';
+import ActionParameterDefinitionTag from '../../../../../../enums/ActionParameterDefinitionTag';
+import { ActionParameterDefinition, ActionTemplate, Tag } from '../../../../../../generated/entities/Entities';
+import labels from '../../../../../../labels/labels';
+import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
+import TagHandler from '../../../../tag-handler/TagHandler';
+import getParameterInputField, { BooleanParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
 
 
 export interface EditActionParameterDefinitionProps {
@@ -339,7 +333,7 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                             <MenuItem value={"Yes"}>Yes</MenuItem>
                             <MenuItem value={"No"}>No</MenuItem>
                         </Select>
-                    </FormControl>    
+                    </FormControl>
                 </Grid>
                 {userInputRequired === "No" ? (
                     <Grid item xs={12} md={4} lg={4}>
@@ -355,9 +349,10 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                     <TagHandler
                         entityType='ActionParameterDefinition'
                         entityId={props.parameter.Id!}
-                        tagFilter={{}}
+                        tagFilter={getTagFilterForParameter(props.parameter)}
                         allowAdd={true}
                         allowDelete={true}
+                        inputFieldLocation="TOP"
                     />
                 </Grid>
             </Grid>
@@ -368,7 +363,20 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
 }
 
 
-
+const getTagFilterForParameter: (parameter?: ActionParameterDefinition) => Tag = (parameter?: ActionParameterDefinition) => {
+    if(parameter?.Tag===ActionParameterDefinitionTag.TABLE_NAME || parameter?.Tag===ActionParameterDefinitionTag.DATA) {
+        return { Scope: labels.entities.TableProperties}
+    }
+    if(parameter?.Tag===ActionParameterDefinitionTag.COLUMN_NAME) {
+        return { Scope: labels.entities.ColumnProperties}
+    }
+    if(parameter?.Datatype===ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
+        return { Scope: labels.entities.ColumnProperties}
+    }
+    else {
+        return {}
+    }
+}
   
 
 

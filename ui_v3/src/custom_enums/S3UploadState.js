@@ -2,9 +2,9 @@ import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import DoneAllOutlinedIcon from '@mui/icons-material/DoneAllOutlined';
 import DoneOutlineOutlinedIcon from '@mui/icons-material/DoneOutlineOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import LoadingIndicator from '../common/components/LoadingIndicator'
+import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
+import LoadingIndicator from '../common/components/LoadingIndicator';
 
 const S3UploadState = {
     BUIDING_FILE_FOR_UPLOAD: {
@@ -99,7 +99,7 @@ const S3UploadState = {
         icon: <ThumbUpAltOutlinedIcon style={{fontSize: 45}}/>
     },
     SELECTED_FILE_TOO_LARGE: {
-        message: "Selected File Size exceeds 40 MB",
+        message: "Selected File Size exceeds 200 MB",
         colour: "#E99497",
         icon: <WarningOutlinedIcon style={{fontSize: 45}}/>
     },

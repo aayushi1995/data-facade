@@ -34,6 +34,7 @@ export const useTableAndColumnStats = (params: {TableId?: string, entireAction?:
             if(!!params?.entireAction) return actionExecution
             const output = JSON.parse(actionExecution?.Output||"")
             const value = output?.["value"]
+            console.log(value)
             return value
         })
     }, {
@@ -56,41 +57,53 @@ export type ColumnInfoAndStat = {
 export type ColumnStat = IntColumnStat | FloatColumnStat | StringColumnStat | BooleanColumnStat
 
 export type TableStat = {
-    RowCount?: number
+    RowCount?: number,
+    Health?: number,
+    IntColumnCount?: number,
+    FloatColumnCount?: number,
+    BoolColumnCount?: number,
+    StringColumnCount?: number,
 }
 
 export type IntColumnStat = {
     ColumnDatatype: string,
     Validity: ValidityStat,
-    MeanModeStDev: MeanModeStDevStat,
     ContentStat: RowContentStat,
-    QuartileStat: QuartileStat
+    Health: number,
+    MeanModeStDev: MeanModeStDevStat,
+    QuartileStat: QuartileStat,
+    Outlier: OutlierStat
 }
 
 export type FloatColumnStat = {
     ColumnDatatype: string,
     Validity: ValidityStat,
-    MeanModeStDev: MeanModeStDevStat,
     ContentStat: RowContentStat,
+    Health: number,
+    MeanModeStDev: MeanModeStDevStat,
     QuartileStat: QuartileStat
+    Outlier: OutlierStat
 }
 
 export type StringColumnStat = {
     ColumnDatatype: string,
     Validity: ValidityStat,
-    ContentStat: RowContentStat
+    ContentStat: RowContentStat,
+    Health: number,
 }
 
 export type BooleanColumnStat = {
     ColumnDatatype: string,
     Validity: ValidityStat,
-    ContentStat: RowContentStat
+    ContentStat: RowContentStat,
+    Health: number,
 }
 
 export type ValidityStat = {
-    ValidRows?: number,
-    InValidRows?: number,
-    EmptyRows?: number
+    ValidRowCount?: number,
+    InValidRowCount?: number,
+    EmptyRowCount?: number,
+    DuplicateRowCount?: number
 }
 
 export type MeanModeStDevStat = {
@@ -114,6 +127,9 @@ export type QuartileStat = {
     Maximum?: number
 }
 
+export type OutlierStat = {
+    OutlierRowCount?: number
+}
 
 export const getSafePercentage = (count?: number, total?: number) => {
     if( total === 0 || !!!total ) {

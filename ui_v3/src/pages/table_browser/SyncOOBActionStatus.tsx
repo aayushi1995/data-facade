@@ -4,7 +4,7 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { Box, Button, Divider, Grid, LinearProgress, MenuItem, MenuList, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useHistory, useRouteMatch } from "react-router"
-import { DATA_RAW_ROUTE } from '../../common/components/header/data/DataRoutesConfig'
+import { DATA_ALL_TABLES_ROUTE } from '../../common/components/header/data/DataRoutesConfig'
 import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper"
 import ActionExecutionStatus from "../../enums/ActionExecutionStatus"
 import { OOBActionStatus } from "../../generated/interfaces/Interfaces"
@@ -105,7 +105,7 @@ const SyncOOBActionExecutionStatus = () => {
                                         {deleteTableMutation.isLoading && <LinearProgress variant="indeterminate"/>}
                                     </Box>
                                     <Box>
-                                        <Button variant="outlined" onClick={() => history.replace(DATA_RAW_ROUTE)}>
+                                        <Button variant="outlined" onClick={() => history.replace(DATA_ALL_TABLES_ROUTE)}>
                                             Cancel
                                         </Button>
                                     </Box>

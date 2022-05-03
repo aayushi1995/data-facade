@@ -1,20 +1,19 @@
-import React from "react"
-import { Box, Card, Typography, Divider, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import EditIcon from '@mui/icons-material/Edit';
+import { Box, Card, Divider, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
+import React from "react";
+import { useQueryClient } from "react-query";
+import { useHistory } from "react-router-dom";
+import ExecuteImage from "../../../../src/images/Execute.png";
+import OptionIcon from "../../../../src/images/Options.png";
+import { lightShadows } from "../../../css/theme/shadows";
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import { ActionDetailsForApplication } from "../../../generated/interfaces/Interfaces";
+import labels from "../../../labels/labels";
 import NumberStat from "../NumberStat";
 import TagHandler from "../tag-handler/TagHandler";
-import ExecuteImage from "../../../../src/images/Execute.png"
-import EditIcon from '@mui/icons-material/Edit';
-import FavouriteIcon from "../../../../src/images/Favourite.png"
-import OptionIcon from "../../../../src/images/Options.png"
-import { useHistory } from "react-router-dom";
-import { lightShadows } from "../../../css/theme/shadows";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import useDeleteAction from "./hooks/useDeleteActions";
-import { useQueryClient } from "react-query";
-
 
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
@@ -171,7 +170,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                     TAGS
                             </Typography>
                             <Box p={1} sx={{overflowY: 'auto', maxHeight: '72px', width: '100%'}}>
-                                <TagHandler entityType="ActionDefinition" entityId={props.action?.model?.Id || "ID"} allowAdd={false} allowDelete={true} tagFilter={{}}/>
+                                <TagHandler entityType="ActionDefinition" entityId={props.action?.model?.Id || "ID"} allowAdd={false} allowDelete={true} tagFilter={{ Scope: labels.entities.ActionDefinition }} inputFieldLocation="TOP"/>
                             </Box>
                         </Box>
                     </Box>

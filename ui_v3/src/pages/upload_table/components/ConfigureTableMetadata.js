@@ -1,54 +1,30 @@
-import React from 'react';
-import Papa from 'papaparse';
-import {v4 as uuidv4} from 'uuid'
 import {
     Box,
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Divider,
-    FormControl,
-    FormHelperText,
-    Grid,
-    IconButton,
-    InputLabel,
+    Button, Divider,
+    FormControl, Grid, InputLabel,
     List,
-    ListItem,
-    Hidden,
-    MenuItem,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    Typography,
-    Fab,
-    Autocomplete,
-    TextField,
-    TableRow
-} from '@mui/material'
-import dataManagerInstance from './../../../data_manager/data_manager';
-import DeleteIcon from '@mui/icons-material/Delete';
-import S3UploadState from './../../../custom_enums/S3UploadState';
-import TagGroups from './../../../enums/TagGroups';
+    ListItem, MenuItem,
+    Select, TextField
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { DataGrid } from "@mui/x-data-grid";
+import Papa from 'papaparse';
+import React from 'react';
 import { useMutation } from 'react-query';
-import {Redirect, useRouteMatch} from 'react-router-dom';
 import { useHistory } from "react-router-dom";
-
-import labels from './../../../labels/labels';
-import ExternalStorageUploadRequestContentType from './../../../enums/ExternalStorageUploadRequestContentType'
+import { v4 as uuidv4 } from 'uuid';
 import SelectTags from './../../../common/components/SelectTags.js';
-import DisplaySelectedFilesDetail from './../../../common/components/DisplaySelectedFilesDetail'
-import SelectHeaderRowsButton from './SelectHeaderRowsButton'
-import {findHeaderRows} from './util'
+import './../../../css/table_browser/TableBrowser.css';
+import S3UploadState from './../../../custom_enums/S3UploadState';
+import dataManagerInstance from './../../../data_manager/data_manager';
+import ColumnDataType from './../../../enums/ColumnDataType';
+import ExternalStorageUploadRequestContentType from './../../../enums/ExternalStorageUploadRequestContentType';
+import TagGroups from './../../../enums/TagGroups';
+import TagScope from './../../../enums/TagScope';
+import SelectHeaderRowsButton from './SelectHeaderRowsButton';
+import { findHeaderRows } from './util';
 
-import { makeStyles } from '@mui/styles'
-import './../../../css/table_browser/TableBrowser.css'
-import CloseIcon from '@mui/icons-material/Close';
-import ColumnDataType from './../../../enums/ColumnDataType'
-import TagScope from './../../../enums/TagScope'
-import AddIcon from "@mui/icons-material/Add";
-import {DataGrid} from "@mui/x-data-grid";
+
 
 const useStyles = makeStyles(() => ({
     requiredTags: {
@@ -245,7 +221,6 @@ export const ConfigureTableMetadata = (props) => {
         // const fileName = selectedFileSchema.tableName + ".csv";
         // const newFile = new File([selectedFile], fileName, { type: selectedFile.type });
 
-        const redirect_path = 'http://localhost:3000/tableBrowser/'+selectedFileSchema.tableName
         fetchPresignedUrlMutation.mutate(
             { file: newFile, expirationDurationInMinutes: 5 },
             {

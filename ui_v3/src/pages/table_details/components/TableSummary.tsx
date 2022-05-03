@@ -154,7 +154,7 @@ const TableTagEditor = (props: TableTagEditorProps) => {
             <TagHandler
                 entityType={labels.entities.TableProperties}
                 entityId={props?.TableId!}
-                tagFilter={{}}
+                tagFilter={{ Scope: labels.entities.TableProperties }}
                 allowAdd={true}
                 allowDelete={true}
                 inputFieldLocation="BOTTOM"
@@ -168,33 +168,30 @@ type TableHighLevelInfoProps = { TableId?: string }
 
 const TableHighLevelInfo = (props: TableHighLevelInfoProps) => {
     const tableFullStats = useTableAndColumnStats({ TableId: props.TableId })
+    const health = tableFullStats?.data?.TableStat?.Health 
     const stats = [{
             Label: "RowCount",
             Value: tableFullStats?.data?.TableStat?.RowCount
         },
         {
-            Label: "RowCount",
-            Value: tableFullStats?.data?.TableStat?.RowCount
+            Label: "Int Columns",
+            Value: tableFullStats?.data?.TableStat?.IntColumnCount
         },
         {
-            Label: "RowCount",
-            Value: tableFullStats?.data?.TableStat?.RowCount
+            Label: "Float Columns",
+            Value: tableFullStats?.data?.TableStat?.FloatColumnCount
         },
         {
-            Label: "RowCount",
-            Value: tableFullStats?.data?.TableStat?.RowCount
+            Label: "Boolean Columns",
+            Value: tableFullStats?.data?.TableStat?.BoolColumnCount
         },
         {
-            Label: "RowCount",
-            Value: tableFullStats?.data?.TableStat?.RowCount
+            Label: "String Columns",
+            Value: tableFullStats?.data?.TableStat?.StringColumnCount
         },
         {
-            Label: "RowCount",
-            Value: tableFullStats?.data?.TableStat?.RowCount
-        },
-        {
-            Label: "RowCount",
-            Value: tableFullStats?.data?.TableStat?.RowCount
+            Label: "Health",
+            Value: `${((tableFullStats?.data?.TableStat?.Health || 0)*100).toFixed(0)} %`
         }
     ]
     return (

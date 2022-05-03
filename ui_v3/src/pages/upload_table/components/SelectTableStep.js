@@ -1,10 +1,9 @@
-import React from 'react'
-import { makeStyles } from '@mui/styles'
-import { 
-    Grid ,
-    Box
-} from "@mui/material"
-import {DataGrid} from "@mui/x-data-grid";
+import {
+    Box, Grid
+} from "@mui/material";
+import { makeStyles } from '@mui/styles';
+import { DataGrid } from "@mui/x-data-grid";
+import React from 'react';
 
 
 export const useStyles = makeStyles(() => ({
@@ -21,7 +20,7 @@ export const useStyles = makeStyles(() => ({
 const SelectTableStep = (props) => {
     const classes = useStyles();
     const [parsedTables, setParsedTables] = React.useState(props.Tables||[])
-    // If only one table can be aprsed then it is automatically sent to the next step
+    // If only one table can be parsed then it is automatically sent to the next step
     React.useEffect(() => {
         if(parsedTables.length === 1) {
             props.nextStep({

@@ -3,11 +3,11 @@ import { TabsType } from "../schema";
 export const DATA_ROUTE = '/data';
 export const DATA_CONNECTIONS_ROUTE = '/data/connections';
 export const DATA_CONNECTION_DETAIL_ROUTE = `${DATA_CONNECTIONS_ROUTE}/detail/:ProviderInstanceId`
-export const DATA_RAW_ROUTE = '/data/raw';
-export const DATA_DERIVED_ROUTE = '/data/derived';
+export const DATA_ALL_TABLES_ROUTE = '/data/all';
+export const DATA_CERTIFIED_ROUTE = '/data/certified';
 
-export const DATA_TABLE_VIEW = `${DATA_RAW_ROUTE}/table-detail/:TableName`
-export const DATA_TABLE_SYNC_ACTIONS = `${DATA_RAW_ROUTE}/:TableName/sync-action-status`
+export const DATA_TABLE_VIEW = `${DATA_ALL_TABLES_ROUTE}/table-detail/:TableName`
+export const DATA_TABLE_SYNC_ACTIONS = `${DATA_ALL_TABLES_ROUTE}/:TableName/sync-action-status`
 export const DATA_TABLE_TAB = `${DATA_TABLE_VIEW}/View/:ViewName`
 
 export const DATA_TABLE_TAB_SUMMARY = "Summary"
@@ -39,17 +39,17 @@ export const DATA_SUB_TABS: TabsType = [
         subTitle: "Create, Manage, Data connections and data from here",
     },
     {
-        id: 'Raw',
-        label: 'Raw',
-        href: DATA_RAW_ROUTE,
+        id: 'All Tables',
+        label: 'All Tables',
+        href: DATA_ALL_TABLES_ROUTE,
         title: "Ingested Tables",
         subTitle: "Create, Manage, Dataset from here"
     },
     {
-        id: 'Derived',
-        label: 'Derived',
-        href: DATA_DERIVED_ROUTE,
-        title: "Derived Tables",
+        id: 'Certified',
+        label: 'Certified',
+        href: DATA_CERTIFIED_ROUTE,
+        title: "Certified Tables",
         subTitle: BLANK_STRING
     }
 ];

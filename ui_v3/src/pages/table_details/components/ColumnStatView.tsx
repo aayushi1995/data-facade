@@ -130,25 +130,25 @@ const BooleanColumnStatView = (props: BooleanColumnStatViewProps) => {
 
 
 const ValidityStatView = (props?: ValidityStat) => {
-    const totalRows = (props?.EmptyRows||0) + (props?.InValidRows||0) + (props?.ValidRows||0)
+    const totalRows = (props?.EmptyRowCount||0) + (props?.InValidRowCount||0) + (props?.ValidRowCount||0)
 
     const rowTypes = [
         {
             Label: "Valid",
-            Value: props?.ValidRows,
-            PercentageValue: getSafePercentage(props?.ValidRows, totalRows),
+            Value: props?.ValidRowCount,
+            PercentageValue: getSafePercentage(props?.ValidRowCount, totalRows),
             Colour: "rgba(0, 170, 17, 1)"
         },
         {
             Label: "InValid",
-            Value: props?.InValidRows,
-            PercentageValue: getSafePercentage(props?.InValidRows, totalRows),
+            Value: props?.InValidRowCount,
+            PercentageValue: getSafePercentage(props?.InValidRowCount, totalRows),
             Colour: "rgba(255, 152, 0, 1)"
         },
         {
             Label: "Empty",
-            Value: props?.EmptyRows,
-            PercentageValue: getSafePercentage(props?.EmptyRows, totalRows),
+            Value: props?.EmptyRowCount,
+            PercentageValue: getSafePercentage(props?.EmptyRowCount, totalRows),
             Colour: "rgba(254, 38, 38, 1)"
         }
     ]

@@ -7,7 +7,7 @@ import React, { ReactElement } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { BaseCard } from "../../../../common/components/basecard/BaseCard";
 import { ButtonIconWithToolTip } from "../../../../common/components/ButtonIconWithToolTip";
-import { DATA_RAW_ROUTE } from "../../../../common/components/header/data/DataRoutesConfig";
+import { DATA_ALL_TABLES_ROUTE } from "../../../../common/components/header/data/DataRoutesConfig";
 import { ProviderInstance } from "../../../../generated/entities/Entities";
 import useSyncProviderInstance from '../../../configurations/components/hooks/useSyncProviderInstance';
 import { useDeleteSelectedConnection } from "../../../configurations/hooks/useDeleteSelectedConnection";
@@ -69,7 +69,7 @@ function ConnectionsPrimaryActionButtons(props: { Actions?: number, Tables?: num
             <Button variant="outlined" sx={buttonStyle}>
                 View Details
             </Button>
-            <Button variant={"contained"} sx={buttonStyle} component={RouterLink} to={DATA_RAW_ROUTE}>
+            <Button variant={"contained"} sx={buttonStyle} component={RouterLink} to={DATA_ALL_TABLES_ROUTE}>
                 View Tables
             </Button>
         </Stack>

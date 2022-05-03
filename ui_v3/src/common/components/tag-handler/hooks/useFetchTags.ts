@@ -88,8 +88,9 @@ const useFetchTags = (params: UseFetchTagsParams): [string[], string[], boolean,
                     TagGroup: TagGroups.GENERIC,
                     CreatedBy: TagMapCreatedBy.USER,
                     CreatedOn:Date.now(),
-                    ...config.tagModel,
-                    ...tagFilter
+                    ...tagFilter,
+                    ...config.tagModel
+                    
                 }
             })
     },
