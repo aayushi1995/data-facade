@@ -224,7 +224,8 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
             Id: id,
             ParameterName: paramterName,
             Datatype: props.parameter.Datatype,
-            Tag: props.parameter.Tag
+            Tag: props.parameter.Tag,
+            OptionSetValues: props.parameter.OptionSetValues
         }
         setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: newGlobalParamter}})
         mapToGlobalParameter(id)

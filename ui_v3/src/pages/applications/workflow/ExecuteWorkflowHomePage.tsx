@@ -54,6 +54,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 if(!!mappedGlobalParameter) {
                     parametersArray.push({TableId: mappedGlobalParameter.TableId, ParameterValue: mappedGlobalParameter.ParameterValue, ActionParameterDefinitionId: globalParameter.Id})
                 }
+                console.log(parametersArray)
                 setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': parametersArray}})
             })
             const stageId = workflowContext.stages[0].Id

@@ -26,14 +26,15 @@ type SeriesScatter = {
     symbolSize: number
 }[];
 
-type SeriesLine = {
+export type SeriesLine = {
     type: 'line' 
     data: DataAxis,
     lineStyle?: {
-        color?: string,
-        type?: "dashed"
+        type?: string
     }
-    smooth?: boolean
+    smooth?: boolean,
+    name?: string,
+    showSymbol?: boolean
 }[];
 
 type SeriesPie = {

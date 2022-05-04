@@ -57,7 +57,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                 while(i<totalChildExecutions && childExecutions?.[i]?.stageId === currentStageId) {
                     stageActions.push({
                         Id: childExecutions?.[i]?.ActionExecution?.Id || "executionId",
-                        ActionGroup: "DataCleansing",
+                        ActionGroup: childExecutions?.[i]?.ActionDefinition?.ActionGroup || "Action Group NA",
                         DisplayName: childExecutions?.[i]?.ActionDefinition?.DisplayName || "Name",
                         DefaultActionTemplateId: childExecutions?.[i]?.ActionDefinition?.DefaultActionTemplateId || "templateId",
                         Parameters: [],
@@ -165,7 +165,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     <StagesWithActions/>
                 </Box>
                 <Box sx={{mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end', mr: 2}}>
-                    <Button variant="contained" color="primary" disabled={areActionsCompleted} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>
+                    <Button variant="contained" color="primary" disabled={!areActionsCompleted} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>
                 </Box>
             </Box>
         )

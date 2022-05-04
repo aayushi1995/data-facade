@@ -33,17 +33,20 @@ const RunWorkflowButtons = (props) => {
         }
     )
 
-    const handleClick = (actionGroup) => {
+    const handleClick = (autoFlow) => {
         createWorkflowForTable.mutate(
-            {tableId: TableId, actionGroups: actionGroup}
+            {tableId: TableId, autoFlow: autoFlow}
         )
     }
 
     const getButtons = (data) => {
         const possibleFlows = data?.[0]?.PossibleAutoFlow
         const buttons = possibleFlows?.map(flow => {
-            if(flow == AutoFlows.TIME_SERIES_AUTO_FLOW) {
-                return <Button size="small" color="primary" variant="contained" onClick={() => handleClick(ActionDefinitionActionGroups.TIME_SERIES_FORECAST)}>Time Forecast Auto Flow</Button>
+            if(flow === AutoFlows.TIME_SERIES_AUTO_FLOW) {
+                return <Button size="small" color="primary" variant="contained" onClick={() => handleClick(AutoFlows.TIME_SERIES_AUTO_FLOW)}>Time Forecast Auto Flow</Button>
+            }
+            if(flow === AutoFlows.CLEANUP_AUTO_FLOW) {
+                return <Button size="small" color="primary" variant="contained" onClick={() => handleClick(AutoFlows.CLEANUP_AUTO_FLOW)}>Cleanup Auto Flow</Button>
             }
         })
         

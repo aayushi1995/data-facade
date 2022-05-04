@@ -2,7 +2,7 @@ import { darken } from "@mui/system";
 import ChartType from "../../enums/ChartType";
 import { Chart } from "../../generated/entities/Entities";
 import { ChartWithData } from "../../generated/interfaces/Interfaces";
-import { BaseChartsConfig } from "../components/charts/BaseChartsConfig";
+import { BaseChartsConfig, SeriesLine } from "../components/charts/BaseChartsConfig";
 import { EChartUISpecificConfig } from "../components/charts/Chart";
 
 
@@ -321,6 +321,26 @@ export const formChartOptionsTimeSeries = (chartData: ChartWithData) : {uiConfig
                     containLabel: true
                 }
             }
+            const series: SeriesLine = []
+            castedChartData.data.series.map(timeSeriesData => {
+                series.push({
+                    data: timeSeriesData.data.slice(0, castedChartData.data.series.length - castedChartData.data.forecasted_rows),
+                    name: timeSeriesData.name,
+                    type: 'line',
+                    smooth: true,
+                    showSymbol: false,
+                })
+                series.push({
+                    data: timeSeriesData.data,
+                    name: timeSeriesData.name,
+                    type: 'line',
+                    lineStyle: {
+                        type: 'dashed'
+                    },
+                    smooth: true,
+                    showSymbol: false,
+                })
+            })
             const dataOptions: BaseChartsConfig = {
                 xAxis: [{
                     type: 'category',
@@ -330,14 +350,7 @@ export const formChartOptionsTimeSeries = (chartData: ChartWithData) : {uiConfig
                 yAxis: [{
                     type: 'value'
                 }],
-                series: castedChartData.data.series.map(series => {
-                    return {
-                        data: series.data,
-                        name: series.name,
-                        type: 'line',
-                        smooth: true
-                    }
-                })
+                series: series
             }
             
             return {

@@ -4,7 +4,8 @@
     */
     
 const AutoFlows = {
-    TIME_SERIES_AUTO_FLOW: "TimeSeriesAutoFlow"
+    TIME_SERIES_AUTO_FLOW: "TimeSeriesAutoFlow",
+    CLEANUP_AUTO_FLOW: "CleanupAutoFlow"
 }
 
 export default AutoFlows;
