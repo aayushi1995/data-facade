@@ -5,13 +5,14 @@ import { TableBrowserResponse, TableOOBActionStatus } from "../../../generated/i
 import labels from "../../../labels/labels"
 
 export type UseGetTablesParams = {
-    options: UseQueryOptions<TableBrowserResponse[], unknown, TableBrowserResponse[], (string | undefined)[]> 
+    options: UseQueryOptions<TableBrowserResponse[], unknown, TableBrowserResponse[], any[]>,
+    tableFilter?: TableProperties
 }
 export const useGetTables = (params: UseGetTablesParams) => {
     const fetchedDataManager = dataManager.getInstance as { retreiveData: Function }
-    const tableBrowserQuery = useQuery<TableBrowserResponse[], unknown, TableBrowserResponse[], (string | undefined)[]>([labels.entities.TableProperties, "TableBrowser"], 
+    const tableBrowserQuery = useQuery<TableBrowserResponse[], unknown, TableBrowserResponse[], any[]>([labels.entities.TableProperties, "TableBrowser", params?.tableFilter], 
         () => fetchedDataManager.retreiveData(labels.entities.TableProperties, {
-            filter: {},
+            filter: params?.tableFilter || {},
             TableBrowser: true
         }),
         {

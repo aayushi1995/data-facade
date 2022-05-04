@@ -1,14 +1,18 @@
-import { Avatar, Box, Card, Divider, Grid, TextField, Tooltip, Typography } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import { Avatar, Box, Card, Divider, Grid, IconButton, TextField, Tooltip, Typography } from "@mui/material";
 import React from "react";
+import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import LoadingWrapper from "../../../common/components/LoadingWrapper";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import RunWorkflowButton from "../../../common/components/RunWorkflowButton";
 import TagHandler from "../../../common/components/tag-handler/TagHandler";
 import { lightShadows } from "../../../css/theme/shadows";
+import TablePropertiesCertificationStatus from '../../../enums/TablePropertiesCertificationStatus';
 import labels from "../../../labels/labels";
 import { ProviderIcon } from "../../data/components/connections/ConnectionDialogContent";
 import { useTableAndColumnStats } from "./ColumnInfoViewHooks";
-import { relativeTimeFromTimestamp, useProviderDefinitionForTable, useTable, useTableDescriptionMutation } from "./TableSummaryHooks";
+import { relativeTimeFromTimestamp, useProviderDefinitionForTable, useTable, useTableCertificationMutation, useTableDescriptionMutation } from "./TableSummaryHooks";
 
 export type TableSummaryProps = {
     TableId?: string
@@ -58,8 +62,10 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
     const tableQuery = useTable({ TableId: props?.TableId, options: {}})
     const providerForTableQuery = useProviderDefinitionForTable({TableId: props?.TableId, options: {}})
     const tableDescriptionUpdateMutation = useTableDescriptionMutation({ TableId: props?.TableId, options: {}})
+    const tableCertificationStatusUpdateMutation = useTableCertificationMutation({ TableId: props?.TableId, options: {}})
     const [description, setDescription] = React.useState<string| undefined>()
-
+    const isCertifiedTable = tableQuery?.data?.CertificationStatus === TablePropertiesCertificationStatus.CERTIFIED
+    
     React.useEffect(() => {
         if(!!tableQuery.data?.Description) {
             setDescription(tableQuery.data?.Description)
@@ -75,6 +81,17 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
             onSuccess: (data, variables, context) => tableQuery.refetch()
         })
     }
+
+    const toggleCertification = () => {
+        if(!!props?.TableId && !!tableQuery.data) {
+            tableCertificationStatusUpdateMutation.mutate({
+                TableId: props?.TableId,
+                NewCertificationStatus: isCertifiedTable ? TablePropertiesCertificationStatus.NOT_CERTIFIED : TablePropertiesCertificationStatus.CERTIFIED
+            })
+        }
+    }
+
+    console.log(tableQuery?.data)
 
     return (
         <LoadingWrapper
@@ -102,6 +119,30 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
                                 <span> | </span>
                                 <span>Updated <b>{relativeTimeFromTimestamp(tableQuery.data?.ModifiedOn)}</b></span>
                             </Typography>
+                        </Box>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", flex: 1 }}>
+                        <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <Typography>
+                                    {isCertifiedTable ? "Certified" : "Not Certified" }
+                                </Typography>
+                            </Box>
+                            <Tooltip title={ isCertifiedTable ? "Click to Remove Certification" : "Click to Certify Table" }>
+                                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    {tableCertificationStatusUpdateMutation.isLoading ?
+                                        <LoadingIndicator/>
+                                        :
+                                        <IconButton onClick={() => toggleCertification()} sx={{ backgroundColor: isCertifiedTable ? "#B4E197" : "#FF6B6B", color: "#ffffff", "&:hover": { color: "#000000" } }}>
+                                            {isCertifiedTable ?
+                                                <DoneOutlineIcon/>
+                                                :
+                                                <CloseIcon/>
+                                            }
+                                        </IconButton>
+                                    }
+                                </Box>
+                            </Tooltip>
                         </Box>
                     </Box>
                 </Box>

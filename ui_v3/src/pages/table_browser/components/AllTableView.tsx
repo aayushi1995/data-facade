@@ -12,6 +12,7 @@ import SyncingLogo from "../../../common/components/logos/SyncingLogo";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import { lightShadows } from "../../../css/theme/shadows";
 import ActionExecutionStatus from '../../../enums/ActionExecutionStatus';
+import { TableProperties } from '../../../generated/entities/Entities';
 import { TableBrowserResponse, TableOOBActionStatus } from "../../../generated/interfaces/Interfaces";
 import { useTableAndColumnStats } from "../../table_details/components/ColumnInfoViewHooks";
 import SyncOOBActionExecutionStatus from '../SyncOOBActionStatus';
@@ -19,11 +20,13 @@ import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
 import { ReactComponent as WeirdIcon } from "./../../../images/WeirdIcon.svg";
 import { useDeleteTables, useGetTableOOBActionsStatus, useGetTables, useReSyncTables } from "./AllTableViewHooks";
 
-export type AllTableViewProps = {}
+export type AllTableViewProps = {
+    tableFilter?: TableProperties
+}
 
 const AllTableView = (props: AllTableViewProps) => {
     const history = useHistory()
-    const tableQuery = useGetTables({ options: {}})
+    const tableQuery = useGetTables({ options: {}, tableFilter: props?.tableFilter})
     const [searchQuery, setSearchQuery] = useState<string|undefined>("")
     const deleteTableMutation = useDeleteTables({ options: {} })
     const reSyncTablesMutation = useReSyncTables({ options: {} })

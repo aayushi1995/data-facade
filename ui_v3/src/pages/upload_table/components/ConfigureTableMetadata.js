@@ -13,6 +13,7 @@ import React from 'react';
 import { useMutation } from 'react-query';
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
+import { DATA_ALL_TABLES_ROUTE } from '../../../common/components/header/data/DataRoutesConfig';
 import SelectTags from './../../../common/components/SelectTags.js';
 import './../../../css/table_browser/TableBrowser.css';
 import S3UploadState from './../../../custom_enums/S3UploadState';
@@ -242,7 +243,7 @@ export const ConfigureTableMetadata = (props) => {
                                         onSuccess: () => {
                                             props.setUploadState(S3UploadState.FDS_TABLE_FETCH_SUCCESS);
                                             enableUploadButton(4);
-                                            history.push("/data/raw")
+                                            history.push(DATA_ALL_TABLES_ROUTE)
                                         },
                                         onError: (err, variables, context) => {
                                             console.log(err, variables, context)

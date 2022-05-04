@@ -15,4 +15,3 @@ const ChartType = {
 
 export default ChartType;
 
-    

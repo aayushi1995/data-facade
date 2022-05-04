@@ -292,6 +292,7 @@ export interface TableProperties extends BaseEntity{
 	IsStale?: boolean
 	FullSyncedOn?: number
 	Location?: string
+	CertificationStatus?: string
 }
 
 

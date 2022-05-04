@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "react-query"
+import { useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions } from "react-query"
 import dataManager from "../../../data_manager/data_manager"
 import { ProviderDefinition, TableProperties } from "../../../generated/entities/Entities"
 import labels from "../../../labels/labels"
@@ -47,6 +47,29 @@ export const useTableDescriptionMutation = (params: { TableId?: string, options:
         }
     }).then((data: TableProperties[]) => data[0]), {
         ...params?.options
+    })
+
+    return mutation
+}
+
+type useTableCertificationMutationVariables = { TableId?: string, NewCertificationStatus?: string }
+
+export const useTableCertificationMutation = (params: { TableId?: string, options: UseMutationOptions<TableProperties, unknown, useTableCertificationMutationVariables, unknown>}) => {
+    const fetchedDataManager = dataManager.getInstance as { patchData: Function }
+    const queryClient = useQueryClient()
+    const mutation = useMutation((variables: useTableCertificationMutationVariables) => fetchedDataManager.patchData(labels.entities.TableProperties, {
+        filter: {
+            Id: variables?.TableId
+        },
+        newProperties: {
+            CertificationStatus: variables?.NewCertificationStatus
+        }
+    }).then((data: TableProperties[]) => data[0]), {
+        ...params?.options,
+        onSuccess: (data, variables, context) => {
+            queryClient.invalidateQueries([labels.entities.TableProperties, variables?.TableId])
+            params?.options?.onSuccess?.(data, variables, context)
+        }
     })
 
     return mutation
