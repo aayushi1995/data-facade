@@ -153,7 +153,6 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
                             data={tableAndColumnStatsQuery.data}
                             children={() => {
                                 const columnHealth = tableAndColumnStatsQuery?.data?.ColumnInfoAndStats?.find(columnInfo => columnInfo?.ColumnName === columnQuery?.data?.UniqueName)?.ColumnStat?.Health
-                                console.log(columnHealth)
                                 return (
                                     <Tooltip title={!!columnHealth ? `${((columnHealth||0)*100).toFixed(2)} %` : "Fetching"}>
                                         <LinearProgress variant={!!columnHealth ? "determinate" : "indeterminate"} value={(columnHealth||0)*100} color="success"/>
