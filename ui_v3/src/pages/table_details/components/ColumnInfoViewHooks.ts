@@ -34,7 +34,7 @@ export const useTableAndColumnStats = (params: {TableId?: string, entireAction?:
             if(!!params?.entireAction) return actionExecution
             const output = JSON.parse(actionExecution?.Output||"")
             const value = output?.["value"]
-            return value
+            return JSON.parse(value)
         }).catch((error: any) => {
             console.log(error, params?.TableId)
         })
