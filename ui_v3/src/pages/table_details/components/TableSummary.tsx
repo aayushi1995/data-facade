@@ -91,8 +91,6 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
         }
     }
 
-    console.log(tableQuery?.data)
-
     return (
         <LoadingWrapper
             isLoading={tableQuery.isLoading}
