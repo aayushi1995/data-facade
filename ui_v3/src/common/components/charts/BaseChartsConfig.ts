@@ -34,7 +34,10 @@ export type SeriesLine = {
     }
     smooth?: boolean,
     name?: string,
-    showSymbol?: boolean
+    showSymbol?: boolean,
+    tooltip?: {
+        show?: boolean
+    }
 }[];
 
 type SeriesPie = {

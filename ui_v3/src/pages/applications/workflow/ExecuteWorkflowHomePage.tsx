@@ -4,6 +4,7 @@ import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "r
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import NoData from "../../../common/components/NoData"
+import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import useCreateWorkflowActionInstanceMutation from "../../../common/components/workflow/execute/hooks/useCreateWorkflowActionInstanceMutation"
 import { useGetWorkflowChildInstances, useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
@@ -37,6 +38,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     }
 
     const handleInstances = (data: ActionInstanceWithParameters[]) => {
+        const parametersArray: ActionParameterInstance[] = []
         data.forEach(actionInstanceWithParameters => {
             const workflowAction = {
                 Id: actionInstanceWithParameters.model?.Id || "id",
@@ -48,18 +50,20 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 DefinitionId: actionInstanceWithParameters.model?.DefinitionId || "definitionId",
                 Parameters: actionInstanceWithParameters.ParameterInstances      
             } as WorkflowActionDefinition
+
             workflowContext.WorkflowParameters.forEach(globalParameter => {
                 const mappedGlobalParameter = workflowAction.Parameters?.find(parameter => parameter.GlobalParameterId === globalParameter.Id)
-                const parametersArray: ActionParameterInstance[] = []
+                console.log(mappedGlobalParameter)
                 if(!!mappedGlobalParameter) {
                     parametersArray.push({TableId: mappedGlobalParameter.TableId, ParameterValue: mappedGlobalParameter.ParameterValue, ActionParameterDefinitionId: globalParameter.Id})
                 }
-                console.log(parametersArray)
-                setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': parametersArray}})
             })
             const stageId = workflowContext.stages[0].Id
             setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: stageId, Action: workflowAction}})
         }) 
+        if(parametersArray.length > 0){
+            setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': parametersArray}})
+        }
         setIsReady(true)
     }
 
@@ -82,7 +86,10 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                     <ActionDefinitionHero mode="READONLY" name={workflowContext.Name} description={workflowContext.Description} applicationId={workflowContext.ApplicationId} group={workflowContext.ActionGroup}/>
                 </Box>
                 <Box sx={{flex: 4, mb: 2}}>
-                    <ParameterDefinitionConfigPlane parameterDefinitions={workflowContext.WorkflowParameters} parameterInstances={workflowContext.WorkflowParameterInstance || []} handleChange={handleParameterInstancesChange}/>
+                    <ReactQueryWrapper data={workflowContext.WorkflowParameterInstance} isLoading={instancesLoading} error={instancesError} children={
+                        () => <ParameterDefinitionConfigPlane parameterDefinitions={workflowContext.WorkflowParameters} parameterInstances={workflowContext.WorkflowParameterInstance || []} handleChange={handleParameterInstancesChange}/>
+                    }/>
+                    
                 </Box>
                 <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', mt: 5}}>
                     <Box sx={{flex: 1, maxWidth: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

@@ -112,7 +112,7 @@ const ShowCharts = (props: ShowChartsProps) => {
                 {chartDataOptions?.map(chart => {
                     if(!!chart) {
                         return (
-                            <Grid item xs={6} sx={{minHeight: '400px'}}>
+                            <Grid item xs={12} sx={{minHeight: '400px'}}>
                                 <Card sx={{height: '100%', width: '100%', boxShadow: lightShadows[27]}}>
                                     <ChartWithMetadata onChartTypeChange={onChartTypeChange} chart={chart} onChartNameChange={onChartNameChange} onChartDashboardChange={onChartDashboardChange}/>
                                 </Card>

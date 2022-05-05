@@ -324,11 +324,14 @@ export const formChartOptionsTimeSeries = (chartData: ChartWithData) : {uiConfig
             const series: SeriesLine = []
             castedChartData.data.series.map(timeSeriesData => {
                 series.push({
-                    data: timeSeriesData.data.slice(0, castedChartData.data.series.length - castedChartData.data.forecasted_rows),
+                    data: timeSeriesData.data.slice(0, castedChartData.data.x.length - castedChartData.data.forecasted_rows),
                     name: timeSeriesData.name,
                     type: 'line',
                     smooth: true,
                     showSymbol: false,
+                    tooltip: {
+                        show: false
+                    }
                 })
                 series.push({
                     data: timeSeriesData.data,

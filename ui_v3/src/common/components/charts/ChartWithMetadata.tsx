@@ -58,7 +58,7 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
             <Dialog open={dialogState} onClose={() => setDialogState(false)} maxWidth="xl" fullWidth>
                 <ViewActionExecution actionExecutionId={props.chart.model.ExecutionId}/>
             </Dialog>
-            <Box sx={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: 1, p: 2, alignItems: 'flex-end'}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: 1, p: 2}}>
                 <IconButton onClick={handleMenuOpenClick}>
                     <img src={OptionsIcon} alt="options" style={{transform: 'scale(2)'}}/>
                 </IconButton>
