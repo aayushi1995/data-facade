@@ -1,6 +1,7 @@
 import React from 'react';
-import {Chart, EChartUISpecificConfig} from '../Chart';
+import {Chart} from '../Chart';
 import {BaseChartsConfig, DataAxis} from "../BaseChartsConfig";
+import {EChartUISpecificConfig} from "../types/EChartUISpecificConfig";
 
 export const BarChart = ({
                              dataX,

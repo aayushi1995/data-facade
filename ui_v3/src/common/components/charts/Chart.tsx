@@ -2,8 +2,8 @@ import {BaseChartsConfig} from "./BaseChartsConfig";
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import {EChartsOption} from "echarts";
+import {EChartUISpecificConfig} from "./types/EChartUISpecificConfig";
 
-export type EChartUISpecificConfig = Omit<EChartsOption, 'xAxis'|'yAxis'|'series'>;
 export const Chart = ({config, uiConfig}: {
     config: BaseChartsConfig,
     uiConfig: EChartUISpecificConfig

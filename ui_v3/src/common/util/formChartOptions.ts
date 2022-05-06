@@ -3,7 +3,7 @@ import ChartType from "../../enums/ChartType";
 import { Chart } from "../../generated/entities/Entities";
 import { ChartWithData } from "../../generated/interfaces/Interfaces";
 import { BaseChartsConfig, SeriesLine } from "../components/charts/BaseChartsConfig";
-import { EChartUISpecificConfig } from "../components/charts/Chart";
+import {EChartUISpecificConfig} from "../components/charts/types/EChartUISpecificConfig";
 
 
 interface PieChartOptions {

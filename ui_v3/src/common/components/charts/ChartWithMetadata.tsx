@@ -1,7 +1,7 @@
 
 import { Grid, Box, Autocomplete, TextField, Button, IconButton, Popover, Dialog } from "@mui/material";
 import { BaseChartsConfig } from "./BaseChartsConfig";
-import { Chart, EChartUISpecificConfig } from "./Chart";
+import { Chart} from "./Chart";
 import { Chart as ChartModel } from "../../../generated/entities/Entities";
 import OptionsIcon from "../../../../src/images/more-horizontal.svg"
 import getChartTypeOptions from "../../util/getChartTypeOptions";
@@ -12,6 +12,7 @@ import TableIcon from "../../../../src/images/Table.svg"
 import ViewActionExecution from "../../../pages/view_action_execution/VIewActionExecution";
 import useGetDashboardDetails from "../../../pages/insights/hooks/useGetDashboardDetails";
 import LoadingWrapper from "../LoadingWrapper";
+import {EChartUISpecificConfig} from "./types/EChartUISpecificConfig";
 
 interface ChartWithMetadataProps {
     chart: {config: BaseChartsConfig, uiConfig: EChartUISpecificConfig, model: ChartModel},

@@ -6,7 +6,7 @@ import ChartGroups from "../enums/ChartGroups"
 import { Chart as ChartModel } from "../generated/entities/Entities"
 import { ChartWithData } from "../generated/interfaces/Interfaces"
 import { BaseChartsConfig } from "./components/charts/BaseChartsConfig"
-import { Chart, EChartUISpecificConfig } from "./components/charts/Chart"
+import { Chart} from "./components/charts/Chart"
 import ShowCharts from "./components/charts/ShowCharts"
 import LoadingWrapper from "./components/LoadingWrapper"
 import NoData from "./components/NoData"
@@ -14,6 +14,7 @@ import { ReactQueryWrapper } from "./components/ReactQueryWrapper"
 import { useGetExecutionCharts } from "./hooks/useGetExecutionCharts"
 import { formChartOptionsSingleDimensionWithLables, formChartOptionsTwoDimenstion, formChartOptionsTwoDimenstionScatter, formChartOptionsTwoDimensionWithSegments } from "./util/formChartOptions"
 import getChartTypeOptions from "./util/getChartTypeOptions"
+import {EChartUISpecificConfig} from "./components/charts/types/EChartUISpecificConfig";
 
 
 interface ViewExecutionChartsProps {
