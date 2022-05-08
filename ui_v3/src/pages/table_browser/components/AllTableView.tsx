@@ -247,7 +247,7 @@ const HealthCell = (props?: TableBrowserResponse) => {
     const health = tableFullStats?.data?.TableStat?.Health
 
     const formText = () => {
-        if(allComplete && !!health) {
+        if(allComplete && health !== undefined) {
             return `${((health || 0)*100).toFixed(0)} %`
         }
         else if(anyFailed) {
@@ -257,7 +257,7 @@ const HealthCell = (props?: TableBrowserResponse) => {
     }
 
     const formLinearProgressBar = () => {
-        if(allComplete && !!health) {
+        if(allComplete && health !== undefined) {
             return <LinearProgress variant="determinate" value={(health || 0)*100} color="success"/>
         }
         else if(anyFailed) {
