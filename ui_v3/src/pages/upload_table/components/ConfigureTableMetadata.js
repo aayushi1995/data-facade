@@ -402,6 +402,7 @@ const TableSchemaSelection = (props) => {
                 return {
                     columnName: formCloseValidObjectName(columnName),
                     columnDatatype: calculatedDataType,
+                    columnIndex: columnIndex,
                     columnTags: [],
                     isValid: true,
                     isDuplicate: false,

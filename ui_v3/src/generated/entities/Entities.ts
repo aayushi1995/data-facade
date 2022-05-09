@@ -355,6 +355,7 @@ export interface ColumnProperties extends BaseEntity{
 	IsStale?: boolean
 	ColumnType?: string
 	ColumnPattern?: string
+	ColumnIndex?: number
 }
 
 

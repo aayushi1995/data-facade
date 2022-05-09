@@ -32,7 +32,7 @@ export const formDataGridPropsFromResponse = (response?: TableView, searchQuery?
 
         const rows = tablePreview.data?.map((row, i) => ({...row, id: i}))
 
-        const columns: GridColDef[] = response?.Columns?.filter(columnInfo => columnInfo?.ColumnProperties?.UniqueName!=="index" && columnInfo?.ColumnProperties?.UniqueName?.includes(searchQuery || ""))?.map(columnInfo => ({
+        const columns: GridColDef[] = response?.Columns?.filter(columnInfo => columnInfo?.ColumnProperties?.UniqueName!=="index" && columnInfo?.ColumnProperties?.UniqueName?.includes(searchQuery || "")).sort((c1, c2) => (c1?.ColumnProperties?.ColumnIndex || 0) - (c2?.ColumnProperties?.ColumnIndex || 1))?.map(columnInfo => ({
             field: columnInfo.ColumnProperties?.UniqueName!,
             disableColumnMenu: true,
             sortable: false,
