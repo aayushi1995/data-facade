@@ -528,9 +528,7 @@ const TableSchemaSelection = (props) => {
 
             fetchTags.mutate(JSON.stringify(tagRequest),
                 {
-                    onSuccess: (data, variables, context) => {
-                        const parsedData = JSON.parse(data)
-
+                    onSuccess: (parsedData, variables, context) => {
                         setColumnProperties(oldProp => {
                             let column_tags = parsedData["column_tags"]
                             if (column_tags === undefined 

@@ -1,60 +1,65 @@
+import { Box } from "@mui/material";
 import React from "react";
-import { ConnectionStateContext } from "../context/ConnectionsContext";
+import { useRouteMatch } from "react-router-dom";
+import LoadingIndicator from "../../../common/components/LoadingIndicator";
+import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
+import { ConnectionQueryContext, ConnectionSetStateContext, ConnectionStateContext } from "../context/ConnectionsContext";
+import ProviderParameterInput, { ProviderParameterInputProps } from "./ProviderParameterInput";
+import UpdateProviderOptions from "./UpdateProviderOptions";
 
+type MatchParams = {
+    ProviderInstanceId: string
+}
 
 export const ConnectionDetails = () => {
-    const connectionState = React.useContext(ConnectionStateContext);
-    return <></>
-    // const details = providerHistoryAndParametersQueryData?.data?.[0];
-    // const theme = useTheme();
-    // const today = new Date();    
-    // const days = [...new Array(5)].map((_) => {
-    //     today.setDate(today.getDate() + 1);
-    //     return today.toString().slice(0, 10);
-    // });
+    const match = useRouteMatch<MatchParams>()
+    const connectionState = React.useContext(ConnectionStateContext)
+    const setConnectionState = React.useContext(ConnectionSetStateContext)
+    const connectionQuery = React.useContext(ConnectionQueryContext)
 
-    // return selectedConnectionId ? <Box sx={{
-    //     boxShadow: theme.shadows[20]
-    // }}>
-    //     <ReactQueryWrapper {...providerHistoryAndParametersQueryData} sx={{
-    //         minHeight: 500,
-    //         display: 'flex',
-    //         justifyContent: 'center',
-    //         alignItems: 'center'
-    //     }}>
-    //         {() => <Stack direction={"row"} sx={{p: 2}} gap={2}>
-    //             <Stack direction={"column"} flex={1}>
-    //                 <CreateDataSourceRow
-    //                     isUpdate
-    //                     selectedId={selectedConnectionId}
-    //                     handleClose={() => {
-    //                     }}/>
-    //             </Stack>
-    //             <Box sx={{m: 2}}>
-    //                 <Divider orientation="vertical" sx={{height: "100%"}}/>
-    //             </Box>
-    //             <Stack direction={"column"} flex={2} gap={4} mt={3}>
-    //                 <Typography variant={'body1'}>
-    //                     Number of actions run per day
-    //                 </Typography>
-    //                 <BarChart
-    //                     dataX = {days}
-    //                     dataY = {details?.history || []}
-    //                 />
-    //                 <Stack direction={"row"}>
-    //                     <Paper sx={{p: 2}}>
-    //                         <Stack direction='column' gap={2}>
-    //                             <Typography>
-    //                                 Number of failed actions
-    //                             </Typography>
-    //                             <Typography variant="h5">
-    //                                 {details?.failedActions}
-    //                             </Typography>
-    //                         </Stack>
-    //                     </Paper>
-    //                 </Stack>
-    //             </Stack>
-    //         </Stack>}
-    //     </ReactQueryWrapper>
-    // </Box> : null;
+    React.useEffect(() => {
+        setConnectionState({ type: "SetMode", payload: { mode: "UPDATE" }})
+    }, [])
+
+    React.useEffect(() => {
+        setConnectionState({ type: "SetProviderInstanceId", payload: { newProviderInstanceId: match.params.ProviderInstanceId } })
+    }, [match.params.ProviderInstanceId])
+
+    return (
+        <ReactQueryWrapper
+            isLoading={connectionQuery?.loadProviderDefinitionQuery?.isLoading}
+            error={connectionQuery?.loadProviderDefinitionQuery?.error}
+            data={connectionQuery?.loadProviderDefinitionQuery?.data}
+            children={() => 
+                <ReactQueryWrapper
+                    isLoading={connectionQuery?.loadProviderInstanceQuery?.isLoading}
+                    error={connectionQuery?.loadProviderInstanceQuery?.error}
+                    data={connectionQuery?.loadProviderInstanceQuery?.data}
+                    children={() => {
+                        if(!!connectionState?.ProviderInformation && !!connectionState?.ProviderDefinitionDetail) {
+                            const paramInputProps: ProviderParameterInputProps = {
+                                ProviderDefinition: connectionState.ProviderDefinitionDetail,
+                                ProviderInstance: connectionState.ProviderInformation,
+                                onParameterValueChange: (parameterDefinitionId?: string, parameterValue?: string) => setConnectionState({ type: "SetProviderParameterValue", payload: { parameterDefinitionId: parameterDefinitionId, newValue: parameterValue }}),
+                                onProviderInstanceNameChange: (newName?: string) => setConnectionState({ type: "SetProviderInstanceName", payload: { newName: newName }}),
+                                onCreate: () => {}
+                            }
+                            return (
+                                <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                                    <Box sx={{ height: "100%" }}>
+                                        <ProviderParameterInput {...paramInputProps}/>
+                                    </Box>
+                                    <Box>
+                                        <UpdateProviderOptions/>
+                                    </Box>
+                                </Box>
+                            )
+                        } else {
+                            return <LoadingIndicator/>
+                        }
+                    }}
+                />
+            }
+        />
+    )
 }

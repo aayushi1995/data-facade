@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import { ProviderDefinitionDetail, ProviderInformation } from '../../../generated/interfaces/Interfaces';
 import { ConnectionSetStateContext, ConnectionStateContext } from '../context/ConnectionsContext';
 
-type ProviderParameterInputProps = { 
+export type ProviderParameterInputProps = { 
     ProviderDefinition?: ProviderDefinitionDetail,
     ProviderInstance?: ProviderInformation,
     onParameterValueChange?: ( parameterDefinitionId?: string, parameterValue?: string ) => void,
@@ -21,7 +21,7 @@ const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
                 </Grid>
                 {props?.ProviderInstance?.ProviderParameterInstance?.map(paramInstance => {
                     const paramDef = props?.ProviderDefinition?.ProviderParameterDefinition?.find(paramDef => paramInstance?.ProviderParameterDefinitionId === paramDef?.Id)
-                    if(!!paramDef && paramDef?.FilledBy==="User") {
+                    if(!!paramDef) {
                         return (
                             <Grid item xs={12}>
                                 <TextField sx={{ height: "100%" }} fullWidth variant="outlined" label={paramDef?.ParameterName} value={paramInstance?.ParameterValue} required onChange={(event) => props?.onParameterValueChange?.(paramDef?.Id, event.target.value)}/>

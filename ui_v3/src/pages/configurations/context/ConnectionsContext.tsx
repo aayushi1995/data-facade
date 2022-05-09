@@ -1,6 +1,6 @@
 import { Alert, AlertColor, Snackbar } from "@mui/material";
 import React, { useReducer, useState } from "react";
-import { UseMutationResult, useQuery } from "react-query";
+import { UseMutationResult, useQuery, UseQueryResult } from "react-query";
 import { useHistory } from "react-router";
 import { v4 as uuidv4 } from 'uuid';
 import { DATA_CONNECTIONS_ROUTE } from "../../../common/components/header/data/DataRoutesConfig";
@@ -20,7 +20,9 @@ export type ConnectionState = {
 };
 
 export type ConnectionQuery = {
-    saveMutation?: UseMutationResult<ProviderInformation, unknown, ConnectionState, unknown>
+    saveMutation?: UseMutationResult<ProviderInformation, unknown, ConnectionState, unknown>,
+    loadProviderInstanceQuery?: UseQueryResult<ProviderInformation, unknown>,
+    loadProviderDefinitionQuery?: UseQueryResult<ProviderDefinitionDetail, unknown>
 }
 
 export const ConnectionStateContext = React.createContext<ConnectionState>({ mode: "CREATE" })
@@ -172,8 +174,6 @@ const reducer = (state: ConnectionState, action: SetConnectionStateAction): Conn
 
         default: {
             return state
-            // const imposssibleAction: never = action
-            // console.log("Invalid Action", imposssibleAction)
         }
     }
     return state
@@ -191,7 +191,7 @@ const formDefaultProviderParameterInstance = (paramDef: ProviderParameterDefinit
 
 const validateParams = (paramDefinitions?: ProviderParameterDefinition[], paramInstances?: ProviderParameterInstance[]): ProviderParameterInstance[] => {
     if(!!paramDefinitions) {
-        const newParamInstances = paramDefinitions.map( paramDef => paramInstances?.find(paramInstance => paramInstance?.ProviderParameterDefinitionId === paramDef?.ProviderDefinitionId) || formDefaultProviderParameterInstance(paramDef) )
+        const newParamInstances = paramDefinitions.map( paramDef => paramInstances?.find(paramInstance => paramInstance?.ProviderParameterDefinitionId === paramDef?.Id) || formDefaultProviderParameterInstance(paramDef) )
         return newParamInstances || []
     }
     return paramInstances || []
@@ -210,7 +210,7 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
 
     const providerInstanceId = connectionState?.ProviderInformation?.ProviderInstance?.model?.Id
     const providerDefinitionId = connectionState?.ProviderInformation?.ProviderInstance?.model?.ProviderDefinitionId
-
+    
     const setConnectionsState: ConnectionsSetState = (arg: SetConnectionStateAction) => dispatch(arg)
 
     const [notificationState, setNotificationState] = useState<NotificationState>({open: false});
@@ -235,18 +235,20 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
             onSuccess: (data) => setConnectionsState({ type: "SetProviderDefinition", payload: { providerDefinition: data }})
         }
     )
-
+    console.log(connectionState)
     React.useEffect(() => {
+        console.log("NEW PROVIDER INSTANCE", providerInstanceId)
         if(connectionState.mode === "UPDATE" && !!providerInstanceId) {
             loadProviderInstance.refetch()
         }
     }, [providerInstanceId, connectionState.mode])
 
     React.useEffect(() => {
-        if(!!providerDefinitionId) {
+        console.log("NEW PROVIDER DEFINITION", providerDefinitionId)
+        if(!!providerDefinitionId && !!!connectionState?.ProviderDefinitionDetail) {
             loadProviderDefinition.refetch()
         }
-    }, [providerDefinitionId])
+    }, [providerDefinitionId, connectionState?.ProviderDefinitionDetail])
 
     const saveMutation = useSaveDataSource({
         options: {
@@ -262,7 +264,9 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
     })
 
     const connectionQuery: ConnectionQuery = {
-        saveMutation: saveMutation
+        saveMutation: saveMutation,
+        loadProviderInstanceQuery: loadProviderInstance,
+        loadProviderDefinitionQuery: loadProviderDefinition
     }
 
     return (
