@@ -11,6 +11,7 @@ import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "../../g
 import ViewConfiguredParameters from "../execute_action/components/ViewConfiguredParameters";
 import useActionExecutionParsedOutput from "../execute_action/hooks/useActionExecutionParsedOutput";
 import ConfigureTableMetadata from "../upload_table/components/ConfigureTableMetadata";
+import DownloadAndDisplayLogs from "./DownloadAndDisplyaLogs";
 import FetchActionExecutionDetails from "./hooks/FetchActionExecutionDetails";
 import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOutputFromS3";
 import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput";
@@ -199,6 +200,10 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                                     Export Results
                                 </Button>
                             </Box>
+                            <Box>
+                                <DownloadAndDisplayLogs actionExecution={actionExecutionDetail.ActionExecution || {}}/>
+                            </Box>
+                            
                         </Box>
                     </Box>
                 </Card>

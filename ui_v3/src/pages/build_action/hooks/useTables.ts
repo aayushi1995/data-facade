@@ -6,11 +6,13 @@ import dataManagerInstance, { useRetreiveData } from '../../../data_manager/data
 
 
 export interface UseTablesProps {
-    tableFilter: TableProperties
+    tableFilter: TableProperties,
+    parameterId?: string
+    filterForParameterTags?: boolean
 }
 
 const useTables: (props: UseTablesProps) => {tables: TableProperties[]|undefined, loading: boolean, error: any} = (props: UseTablesProps) => {
-    const {tableFilter} = props
+    const {tableFilter, parameterId, filterForParameterTags} = props
     // const [loading, setLoading] = React.useState(true)
     // const [error, setError] = React.useState()
 
@@ -19,7 +21,9 @@ const useTables: (props: UseTablesProps) => {tables: TableProperties[]|undefined
     
     const {data: tables, isLoading: isTableLoading, error: tableError} = useQuery([labels.entities.TABLE_PROPERTIES, tableFilter], () => {
             return fetchedDataManagerInstance.retreiveData(labels.entities.TABLE_PROPERTIES, {
-                    filter: tableFilter
+                    filter: tableFilter,
+                    FilterForParameterTags: filterForParameterTags || false,
+                    withParameterId: parameterId
             })
         }
     )

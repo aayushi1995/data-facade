@@ -21,8 +21,10 @@ const ActionDefinitionActionType = {
     WORKFLOW: "Workflow",
     ML_TRAIN: "MLTrain",
     ML_PREDICT: "MLPredict",
-    SYNC_ACTION_EXECUTION_OUTPUT: "SyncActionExecutionOutput"
+    SYNC_ACTION_EXECUTION_OUTPUT: "SyncActionExecutionOutput",
+    AUTO_FLOW: "AutoFlow"
 }
 
 export default ActionDefinitionActionType;
 
+    

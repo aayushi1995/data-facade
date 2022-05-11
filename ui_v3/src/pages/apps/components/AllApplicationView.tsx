@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import React from "react"
 import ApplicationHeader from "../../../common/components/application/ApplicationHeader"
+import AllActionDefinitionsView from '../../../common/components/application/rows/AllActionDefinitionsView'
 import OrgActionDefinitions from "../../../common/components/application/rows/OrgActionDefinitions"
 import OrgActionInstances from "../../../common/components/application/rows/OrgActionInstances"
 import PinnedActionDefinitions from "../../../common/components/application/rows/PinnedActionDefinitions"
@@ -26,23 +27,27 @@ const AllApplicationView = () => {
     const rows: AllApplicationViewRow[] = [
         {
             component: (props) => <PreBuiltApplications {...props}/>,
-            label: "Prebuilt Apps"
+            label: "Applications"
         },
         {
             component: (props) => <PinnedActionDefinitions {...props}/>,
-            label: "My Action Definitions"
+            label: "Pinned Actions"
         },
-        {
-            component: (props) => <PinnedActionInstances {...props}/>,
-            label: "My Action Instances"
-        },
+        // {
+        //     component: (props) => <PinnedActionInstances {...props}/>,
+        //     label: "My Action Instances"
+        // },
         {
             component: (props) => <OrgActionDefinitions {...props}/>,
-            label: "Org Action Definitions"
+            label: "Public Actions"
         },
+        // {
+        //     component: (props) => <OrgActionInstances {...props}/>,
+        //     label: "Org Action Instances"
+        // },
         {
-            component: (props) => <OrgActionInstances {...props}/>,
-            label: "Org Action Definitions"
+            component: (props) => <AllActionDefinitionsView {...props}/>,
+            label: "All Action Definitions"
         }
     ]
 

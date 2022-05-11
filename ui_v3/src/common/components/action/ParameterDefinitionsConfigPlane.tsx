@@ -38,9 +38,27 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         return parameterInstance
     }
 
+    const getSortedParameters = () => {
+        const sortedByName = props.parameterDefinitions.sort((p1, p2) => ((p1?.ParameterName||"a") > (p2.ParameterName||"b")) ? 1 : -1)
+        const tableParameters: ActionParameterDefinition[] = []
+        const columnParameters: ActionParameterDefinition[] = []
+        const restParameters: ActionParameterDefinition[] = []
+
+        sortedByName.forEach(parameter => {
+            if(parameter.Tag === ActionParameterDefinitionTag.DATA || parameter.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
+                tableParameters.push(parameter)
+            } else if(parameter.Tag === ActionParameterDefinitionTag.COLUMN_NAME || parameter.Tag === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
+                columnParameters.push(parameter)
+            } else {
+                restParameters.push(parameter)
+            }
+        })
+        return tableParameters.concat(columnParameters, restParameters)
+    }
+
     const getParameterDefinition = (parameterDefinitionId: string| undefined) => props.parameterDefinitions.find(apd => apd.Id===parameterDefinitionId)
 
-    const parameterDefinitions: ParameterInputProps[] = props.parameterDefinitions.sort((p1, p2) => ((p1?.ParameterName||"a") > (p2?.ParameterName||"b")) ? 1 : -1).map(parameterDefinition => {
+    const parameterDefinitions: ParameterInputProps[] = getSortedParameters().map(parameterDefinition => {
         const existingParameterInstance = getExistingParameterInstance(parameterDefinition.Id || "na")
         const existingParameterValue = getExistingParameterValue(parameterDefinition.Id || "na")
         if(parameterDefinition.Tag === ActionParameterDefinitionTag.DATA || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME) {
@@ -57,7 +75,8 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         }
                         onParameterValueChange(newParameterInstance)
                     },
-                    selectedTableFilter: {Id: existingParameterInstance?.TableId}
+                    selectedTableFilter: {Id: existingParameterInstance?.TableId},
+                    parameterDefinitionId: parameterDefinition.Id
                 }
             } as TableParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {

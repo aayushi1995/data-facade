@@ -1,7 +1,8 @@
 import { Box, Button, Dialog, DialogContent } from "@mui/material";
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import { ActionParameterInstance } from "../../../generated/entities/Entities";
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero";
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
@@ -35,6 +36,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
     const executeActionContext = React.useContext(ExecuteActionContext)
 
     const [resultActionExecutionId, setResultActionExecutionId] = React.useState<string|undefined>()
+    const history = useHistory()
 
     const [dialogState, setDialogState] = React.useState<{isOpen: boolean}>({isOpen: false})
 
@@ -88,6 +90,18 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             })
         }
     }
+
+    const handleCreateWorkflow = () => {
+        if(!!data && !!data[0]){
+            const request = constructCreateActionInstanceRequest(executeActionContext)
+            createActionInstanceSyncMutation.mutate(request, {
+                onSuccess: (data) => {
+                    const autoFlowId = data?.[0]?.Id
+                    history.push(`/application/edit-workflow/${autoFlowId}`)
+                }
+            })
+        }
+    }
     
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 4}}>
@@ -117,9 +131,16 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                 />
             </Box>
             <Box sx={{width: "100%"}}>
-                <Button onClick={handleSyncCreate} variant="contained" sx={{width: "100%"}}>
-                    GET PREDICTION / RUN
-                </Button>
+                {executeActionContext.ExistingModels.ActionDefinition.ActionType === ActionDefinitionActionType.AUTO_FLOW ? (
+                    <Button onClick={handleCreateWorkflow} variant="contained" sx={{width: "100%"}}>
+                        Create Auto Flow
+                    </Button>
+                ) : (
+                    <Button onClick={handleSyncCreate} variant="contained" sx={{width: "100%"}}>
+                        GET PREDICTION / RUN
+                    </Button>
+                )}
+                
             </Box>
             <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
                 <DialogContent>

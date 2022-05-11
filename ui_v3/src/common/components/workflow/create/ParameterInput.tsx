@@ -59,7 +59,8 @@ export interface TableParameterInput {
     inputProps: {
         parameterName: string,
         selectedTableFilter: TableProperties | undefined,
-        onChange: (newTable?: TableProperties) => void
+        onChange: (newTable?: TableProperties) => void,
+        parameterDefinitionId?: string
     }
 }
 
@@ -205,6 +206,10 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
         parameterDefinitionId: filters.parameterDefinitionId
     }})
 
+    React.useEffect(() => {
+        onChange?.(fetchTableQuery.data)
+    }, [fetchTableQuery.data])
+
     return (
         <LoadingWrapper
             {...fetchTableQuery}
@@ -215,7 +220,7 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
                 fullWidth
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName || "Un-named column"}
                 groupBy={(column) => column.TableName || "Table NA"}
-                value={fetchTableQuery.data!?.filter(column => props.inputProps.selectedColumnFilters?.find(selectedColumn => selectedColumn.Id === column.Id || (selectedColumn.Id === undefined && selectedColumn.UniqueName === column.UniqueName) ) !== undefined)}
+                value={fetchTableQuery.data!?.filter(column => props.inputProps.selectedColumnFilters?.find(selectedColumn => selectedColumn?.Id === column.Id || (selectedColumn.Id === undefined && selectedColumn?.UniqueName === column.UniqueName) ) !== undefined)}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -241,9 +246,21 @@ const ColumnInput = (props: ColumnParameterInput) => {
         tableFilters: filters.tableFilters,
         parameterDefinitionId: filters.parameterDefinitionId
     }})
+    console.log(selectedColumnFilter)
 
+    React.useEffect(() => {
+        console.log(fetchTableQuery.data)
+        const index = Math.floor(Math.random() * (fetchTableQuery.data?.length || 0))
+        onChange(fetchTableQuery.data?.[index])
+    }, [fetchTableQuery.data])
+
+    const getValue = () => {
+        const selectedColumn = fetchTableQuery.data?.find(column => column?.Id === selectedColumnFilter?.Id)
+        return selectedColumn 
+    }
+ 
     return (
-        <LoadingWrapper
+        <LoadingWrapper 
         isLoading={fetchTableQuery.isLoading}
         error={fetchTableQuery.error}
         data={fetchTableQuery.data}
@@ -252,7 +269,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
                 options={fetchTableQuery.data!}
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName!}
                 groupBy={(column) => column.TableName||"Table NA"}
-                value={fetchTableQuery.data!?.find(column => column.Id===selectedColumnFilter?.Id || ((selectedColumnFilter?.Id === undefined) && column.UniqueName===selectedColumnFilter?.UniqueName))}
+                value={getValue()}
                 filterSelectedOptions
                 fullWidth
                 selectOnFocus
@@ -393,8 +410,8 @@ const BooleanInput = (props: BooleanParameterInput) => {
 
 const TableInput = (props: TableParameterInput) => {
     // TODO: Instead of selected table name, get selected table id
-    const {parameterName, selectedTableFilter, onChange} = props.inputProps
-    const {tables, loading, error}  = useTables({tableFilter: {}})
+    const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
+    const {tables, loading, error}  = useTables({tableFilter: {}, filterForParameterTags: true, parameterId: parameterDefinitionId})
     return (
         <LoadingWrapper
         isLoading={loading}
