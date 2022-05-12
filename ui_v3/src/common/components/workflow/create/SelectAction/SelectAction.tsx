@@ -1,12 +1,9 @@
 
-import React from 'react'
-import { Box, Card, Chip, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@mui/material';
-import {Tabs, Tab} from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
-import { ReactComponent as DefaultIcon } from "../Icon.svg";
-import GroupDropDown from '../GroupDropDown';
-import SelectFromAllActions from '../SelectFromAllActions';
+import { Box, InputAdornment, Tab, Tabs, TextField, Typography, useTheme } from '@mui/material';
+import React from 'react';
 import SelectFromGroups from '../addAction/SelectFromGroups';
+import SelectFromAllActions from '../SelectFromAllActions';
 
 export interface ActionDefinitionToAdd {
     Id: string,
@@ -50,33 +47,36 @@ const SelectAction = (props: SelectActionProps) => {
     const theme = useTheme();
     const [activeTab, setActiveTab] = React.useState(0)
     const [actionDefinitionNameSearchQuery, setActionDefinitionNameSearchQuery] = React.useState<string>("")
+    const tabs = [
+        {
+            label: "All Actions",
+            value: 0
+        }, 
+        {
+            label: "Groups",
+            value: 1
+        }
+    ]
 
     return(
             <Box sx={{display: "flex", gap: 1, flexDirection: "column"}}>
                 <Box>
                     <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
-                        <Tab label="All Actions" value={0} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
-                        <Tab label="Groups" value={1} sx={{
-                              fontFamily: "SF Pro Text",
-                              fontStyle: "normal",
-                              fontWeight: 600,
-                              fontSize: "14px",
-                              lineHeight: "24px",
-                              display: "flex",
-                              alignItems: "center",
-                              textAlign: "center",
-                              opacity: 0.7
-                        }}/>
+                        {
+                            tabs.map(tab => 
+                                <Tab label={tab.label} value={tab.value} sx={{
+                                    fontFamily: "SF Pro Text",
+                                    fontStyle: "normal",
+                                    fontWeight: 600,
+                                    fontSize: "14px",
+                                    lineHeight: "24px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    textAlign: "center",
+                                    opacity: 0.7
+                              }}/>
+                            )
+                        }
                     </Tabs>
                 </Box>
                 <Box>

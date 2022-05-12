@@ -1,6 +1,4 @@
-import CloseIcon from '@mui/icons-material/Close';
-import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import { Avatar, Box, Card, Divider, Grid, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import { Avatar, Box, Card, Divider, Grid, SvgIcon, TextField, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import LoadingWrapper from "../../../common/components/LoadingWrapper";
@@ -11,6 +9,8 @@ import { lightShadows } from "../../../css/theme/shadows";
 import TablePropertiesCertificationStatus from '../../../enums/TablePropertiesCertificationStatus';
 import labels from "../../../labels/labels";
 import { ProviderIcon } from "../../data/components/connections/ConnectionDialogContent";
+import { ReactComponent as CertifiedIcon } from "./../../../images/Certified.svg";
+import { ReactComponent as NotCertifiedIcon } from "./../../../images/NotCertified.svg";
 import { useTableAndColumnStats } from "./ColumnInfoViewHooks";
 import { relativeTimeFromTimestamp, useProviderDefinitionForTable, useTable, useTableCertificationMutation, useTableDescriptionMutation } from "./TableSummaryHooks";
 
@@ -123,23 +123,22 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", flex: 1 }}>
                         <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
-                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <Typography>
-                                    {isCertifiedTable ? "Certified" : "Not Certified" }
-                                </Typography>
-                            </Box>
                             <Tooltip title={ isCertifiedTable ? "Click to Remove Certification" : "Click to Certify Table" }>
                                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                     {tableCertificationStatusUpdateMutation.isLoading ?
                                         <LoadingIndicator/>
                                         :
-                                        <IconButton onClick={() => toggleCertification()} sx={{ backgroundColor: isCertifiedTable ? "#B4E197" : "#FF6B6B", color: "#ffffff", "&:hover": { color: "#000000" } }}>
+                                        <Box onClick={() => toggleCertification()} sx={{ cursor: "pointer", height: "56px", width: "40px" }}>
                                             {isCertifiedTable ?
-                                                <DoneOutlineIcon/>
+                                                <SvgIcon sx={{ height: "inherit", width: "inherit" }} viewBox="">
+                                                    <CertifiedIcon/>
+                                                </SvgIcon>
                                                 :
-                                                <CloseIcon/>
+                                                <SvgIcon sx={{ height: "inherit", width: "inherit" }} viewBox="">
+                                                    <NotCertifiedIcon/>
+                                                </SvgIcon>
                                             }
-                                        </IconButton>
+                                        </Box>
                                     }
                                 </Box>
                             </Tooltip>

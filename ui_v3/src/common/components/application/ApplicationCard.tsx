@@ -3,12 +3,13 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import PeopleIcon from '@mui/icons-material/People'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import ShareIcon from '@mui/icons-material/Share'
-import { Box, Card, IconButton, SpeedDial, SpeedDialAction, Typography } from "@mui/material"
+import { Box, Card, IconButton, SpeedDial, SpeedDialAction, Tooltip, Typography } from "@mui/material"
 import React from "react"
 import { generatePath, useHistory, useRouteMatch } from "react-router-dom"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
 import PackageLogo from "../../../../src/images/package.svg"
 import UsageStatus from "../../../common/components/UsageStatus"
+import { lightShadows } from '../../../css/theme/shadows'
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import ConfirmationDialog from "../ConfirmationDialog"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
@@ -213,7 +214,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                             height: "60px",
                                             borderRadius: "50%",
                                             background: "#A4CAF0",
-                                            boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)",
+                                            boxShadow: lightShadows[32],
                                             display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center"
@@ -232,59 +233,76 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                         </Box>
                         <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
                             <Box>
-                                <IconButton sx={{
-                                    height: "42px",
-                                    width: "42px",
-                                    background: "#A4CAF0",
-                                    boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
-                                }} onClick={onFavorite}>
-                                    <FavoriteIcon/>
-                                </IconButton>
-                            </Box>
-                            <Box>
-                                <SpeedDial
-                                    ariaLabel={props.application.ApplicationId||""}
-                                    direction="down"
-                                    sx={{ 
-                                        height: "42px", 
+                                <Tooltip title="Add to Favorites">
+                                    <IconButton sx={{
+                                        height: "42px",
                                         width: "42px",
-                                    }}
-                                    FabProps={{
-                                        sx: {
-                                            minHeight: "42px", 
-                                            width: "42px",
-                                            background: "#A4CAF0",
-                                            boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
+                                        background: "#A4CAF0",
+                                        boxShadow: lightShadows[32],
+                                        "&:hover": {
+                                            background: "#0AA1DD",
+                                            color: "#FFFFFF"
                                         }
-                                    }}  
-                                    open={moreOptionsSpeedDialState.isOpen}
-                                    onClick = {toggleMoreOptionsSpeedDial}
-                                    icon={<PlaylistAddIcon/>}
-                                >
-                                    <SpeedDialAction
-                                        key="Delete"
-                                        icon={
-                                            <DeleteIcon />
-                                        }
-                                        tooltipTitle="Delete"
-                                        onClick={promptDeleteApplication}
-                                        sx={{
-                                            height: "42px",
-                                            width: "42px",
-                                            background: "#F4F4F4"
-                                        }}
-                                    />
-                                </SpeedDial>
+                                    }} onClick={onFavorite}>
+                                        <FavoriteIcon/>
+                                    </IconButton>
+                                </Tooltip>
                             </Box>
                             <Box>
-                                <IconButton sx={{
-                                    height: "42px",
-                                    width: "42px",
-                                    background: "#A4CAF0",
-                                    boxShadow: "-2px -4px 6px rgba(233, 242, 251, 0.5), 2px 4px 10px rgba(80, 153, 226, 0.5)"
-                                }} onClick={onShare}>
-                                    <ShareIcon/>
-                                </IconButton>
+                                <Tooltip title="More Options">
+                                    <SpeedDial
+                                        ariaLabel={props.application.ApplicationId||""}
+                                        direction="down"
+                                        sx={{ 
+                                            height: "42px", 
+                                            width: "42px",
+                                        }}
+                                        FabProps={{
+                                            sx: {
+                                                minHeight: "42px", 
+                                                width: "42px",
+                                                background: "#A4CAF0",
+                                                boxShadow: lightShadows[32],
+                                                "&:hover": {
+                                                    background: "#0AA1DD"
+                                                }
+                                            }
+                                        }}  
+                                        open={moreOptionsSpeedDialState.isOpen}
+                                        onClick = {toggleMoreOptionsSpeedDial}
+                                        icon={<PlaylistAddIcon/>}
+                                    >
+                                        <SpeedDialAction
+                                            key="Delete"
+                                            icon={
+                                                <DeleteIcon />
+                                            }
+                                            tooltipTitle="Delete"
+                                            onClick={promptDeleteApplication}
+                                            sx={{
+                                                height: "42px",
+                                                width: "42px",
+                                                background: "#F4F4F4"
+                                            }}
+                                        />
+                                    </SpeedDial>
+                                </Tooltip>
+                            </Box>
+                            <Box>
+                                <Tooltip title="Share">
+                                    <IconButton sx={{
+                                        height: "42px",
+                                        width: "42px",
+                                        background: "#A4CAF0",
+                                        boxShadow: lightShadows[32],
+                                        "&:hover": {
+                                            background: "#0AA1DD",
+                                            color: "#FFFFFF"
+                                        }
+                                    }} onClick={onShare}>
+                                        <ShareIcon/>
+                                    </IconButton>
+                                </Tooltip>
                             </Box>
                         </Box>
                     </Box>

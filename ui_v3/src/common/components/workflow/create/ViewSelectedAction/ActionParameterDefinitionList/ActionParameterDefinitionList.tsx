@@ -1,17 +1,12 @@
-import React, { SyntheticEvent } from 'react'
-import { Box, Card, Chip, Grid, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@mui/material';
-import {Tabs, Tab} from "@mui/material"
-import SearchIcon from '@mui/icons-material/Search';
-import PencilAltIcon from "../../../../../../icons/PencilAlt"
-import DeleteIcon from "@mui/icons-material/Delete"
-import { ActionParameterDefinition, Tag } from '../../../../../../generated/entities/Entities';
-import { DataGrid, GridRowId, GridRowParams, GridSelectionModel, GridToolbarContainer, MuiEvent } from '@mui/x-data-grid';
-import { CustomToolbar } from '../../../../CustomToolbar';
-import { TemplateWithParams } from '../hooks/UseViewAction';
-import TagHandler from '../../../../tag-handler/TagHandler';
-import { getInputTypeFromAttributesNew, InputMap } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
-import { template } from '@babel/core';
+import { Box, IconButton, useTheme } from '@mui/material';
+import { DataGrid, GridRowId, GridRowParams, MuiEvent } from '@mui/x-data-grid';
+import React, { SyntheticEvent } from 'react';
+import { getInputTypeFromAttributesNew } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
 import TemplateLanguage from '../../../../../../enums/TemplateLanguage';
+import { ActionParameterDefinition } from '../../../../../../generated/entities/Entities';
+import PencilAltIcon from "../../../../../../icons/PencilAlt";
+import TagHandler from '../../../../tag-handler/TagHandler';
+import { TemplateWithParams } from '../hooks/UseViewAction';
 
 
 export interface ActionParameterDefinitionListProps {

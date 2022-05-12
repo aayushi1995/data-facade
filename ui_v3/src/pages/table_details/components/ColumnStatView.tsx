@@ -231,7 +231,7 @@ const MeanModeStDevStatView = (props: MeanModeStDevStat) => {
                     <Box sx={{ width: "50px", mr: 2}}>
                         <Typography variant="statText">{row.Label}</Typography>
                     </Box>
-                    <Box sx={{ width: "40px"}}>
+                    <Box sx={{ width: "100px"}}>
                         <Typography variant="statText">{limitDecimal(row.Value)}</Typography>
                     </Box>
                 </Box>

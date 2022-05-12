@@ -35,8 +35,8 @@ export const DATA_SUB_TABS: TabsType = [
         id: 'Connections',
         label: 'Connections',
         href: DATA_CONNECTIONS_ROUTE,
-        title: "Extenal Connections",
-        subTitle: "Create, Manage, Data connections and data from here",
+        title: "Connections",
+        subTitle: "Create and manage your data connections here",
     },
     {
         id: 'All Tables',
@@ -50,7 +50,7 @@ export const DATA_SUB_TABS: TabsType = [
         label: 'Certified',
         href: DATA_CERTIFIED_ROUTE,
         title: "Certified Tables",
-        subTitle: BLANK_STRING
+        subTitle: "Your collection of gold standard data"
     }
 ];
 

@@ -103,9 +103,9 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 </Box>
             </Box>
         )
-    } else if(loading || instancesLoading){
+    } else if(loading || instancesLoading || !isReady){
         return <LoadingIndicator/>
-    } else if(instancesError || error){
+    } else if(!!instancesError || !!error){
         return <>Fetching Instances Error...</>
     } else {
         return <NoData/>
