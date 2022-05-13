@@ -1,7 +1,9 @@
-import React from 'react';
-import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
-import { APPLICATION_ROUTE } from '../../common/components/header/data/RoutesConfig';
+import { findTab } from '../../common/components/header/data/DataRoutesConfig';
+import { APPLICATION_ROUTE, TOP_TAB_ROUTES } from '../../common/components/header/data/RoutesConfig';
+import { SetModuleContextState } from '../../common/components/ModuleContext';
 import ExecuteInstanceHomePage from '../applications/execute-instance/ExecuteInstanceHomePage';
 import EditWorkflowHomePage from '../applications/workflow/EditWorkflowHomePage';
 import ExecuteWorkflowHomePage from '../applications/workflow/ExecuteWorkflowHomePage';
@@ -17,7 +19,19 @@ import ApplicationDetailView from './components/ApplicationDetailView';
 
 
 export const ApplicationContent = withRouter(function TableBrowserRoutes() {
-    const match = useRouteMatch()
+    const setModuleContext = useContext(SetModuleContextState)
+    useEffect(() => {
+        const tab = findTab(TOP_TAB_ROUTES, APPLICATION_ROUTE)
+        setModuleContext({
+            type: "SetHeader",
+            payload: {
+                newHeader: {
+                    Title: tab?.title,
+                    SubTitle: tab?.subTitle
+                }
+            }
+        })
+    }, [])
 
     return (
         <Switch>

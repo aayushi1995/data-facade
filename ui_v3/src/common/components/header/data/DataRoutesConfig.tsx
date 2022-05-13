@@ -54,3 +54,7 @@ export const DATA_SUB_TABS: TabsType = [
     }
 ];
 
+export const findTab = (tabs: TabsType, toMatchUrl: string) => {
+    return tabs.find( tab => tab.href === toMatchUrl)
+}
+

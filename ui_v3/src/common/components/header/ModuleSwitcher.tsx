@@ -4,7 +4,7 @@ import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { ButtonIconWithToolTip } from "../ButtonIconWithToolTip";
 import { ModuleContent } from "../ModuleContent";
 import { ModuleContext, SetModuleContext } from "./data/ModuleContext";
-import { tabs } from "./data/RoutesConfig";
+import { TOP_TAB_ROUTES } from "./data/RoutesConfig";
 import ModuleSwitcherIcon from './images/module-switcher.svg';
 import SettingsIcon from './images/settings.svg';
 import { TabsContainerType, TabsTreePropType } from "./schema";
@@ -168,7 +168,7 @@ export const ModuleSwitcher = () => {
     return(
         <TabsTree 
             pathname={pathname} 
-            tabs={tabs} 
+            tabs={TOP_TAB_ROUTES} 
             level={0}
         />
     )

@@ -13,6 +13,7 @@ import {
 } from "./header/data/DataRoutesConfig";
 import { APPLICATION_ROUTE, INSIGHTS_ROUTE } from "./header/data/RoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
+import { ModuleContextState } from "./ModuleContext";
 
 
 export const SubHeader = () => <Switch>{
@@ -25,8 +26,10 @@ export const SubHeader = () => <Switch>{
 
 //different for different leaf tab
 export const Header = ({tab}: ModuleHeaderPropType) => {
-    const label = tab.label;
-    const [title, subTitle] = [tab?.title || label, tab?.subTitle || label];
+    const moduleState = React.useContext(ModuleContextState)
+
+    const title = moduleState?.Header?.Title || ""
+    const subTitle = moduleState?.Header?.SubTitle || ""
 
     return (
         <Box sx={{ display: "flex", flexDirection: "row" }}>

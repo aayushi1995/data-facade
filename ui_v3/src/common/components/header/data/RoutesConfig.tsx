@@ -5,7 +5,7 @@ export const BLANK_STRING = '';
 export const APPLICATION_ROUTE = '/application';
 export const INSIGHTS_ROUTE = '/insights';
 
-export const tabs: TabsType = [
+export const TOP_TAB_ROUTES: TabsType = [
     {
         id: 'DATA',
         label: 'DATA',

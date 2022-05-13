@@ -326,19 +326,21 @@ const SyncStatusCell = (props?: TableBrowserResponse) => {
     )
 }
 
-const LastSyncedCell = (props?: TableBrowserResponse) => {
-    const getDateString = (timestamp?: number) => {
-        const dateFormatter = new Intl.DateTimeFormat([], {year: "numeric", month: "long", day: "numeric", weekday: "short",hour: "numeric", minute: "numeric", second: "numeric", hour12: true})
+export const formDateText = (timestamp?: number) => {
+    const dateFormatter = new Intl.DateTimeFormat([], {year: "numeric", month: "long", day: "numeric", weekday: "short",hour: "numeric", minute: "numeric", second: "numeric", hour12: true})
         
-        if(timestamp!==undefined){
-            return dateFormatter.format(new Date(timestamp))
-        } else {
-            return ""
-        }
+    if(timestamp!==undefined){
+        return dateFormatter.format(new Date(timestamp))
+    } else {
+        return ""
     }
+}
+
+const LastSyncedCell = (props?: TableBrowserResponse) => {
+    const dateString = formDateText(props?.TableLastSyncedOn)
 
     if( props?.TableLastSyncedOn ) {
-        return <TextCell text={getDateString(props?.TableLastSyncedOn)}/>
+        return <TextCell text={dateString}/>
     } else {
         return <></>
     }

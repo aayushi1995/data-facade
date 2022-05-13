@@ -7,6 +7,7 @@ import ErrorBoundary from "./common/components/ErrorBoundry"
 import DashboardNavbar from "./common/components/header/DashboardNavbar"
 import { ModuleSwitcher } from "./common/components/header/ModuleSwitcher"
 import LoadingIndicator from './common/components/LoadingIndicator'
+import ModuleContextStateProvider from "./common/components/ModuleContext"
 import { isNonProductionEnv } from './common/config/config'
 import Alerts from './pages/alerts/Alerts'
 import AutobookHomePage from './pages/applications/auto_book/AutobookHomePage'
@@ -69,7 +70,9 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                         <Box sx={{position: 'relative', top: '64px', display: 'flex', flex: 1, width: "100%"}}>
                             <Grid container>
                                 <Grid item xs={12}>
-                                    <ModuleSwitcher/>
+                                    <ModuleContextStateProvider>
+                                        <ModuleSwitcher/>
+                                    </ModuleContextStateProvider>
                                 </Grid>
                             </Grid>
                         </Box>
