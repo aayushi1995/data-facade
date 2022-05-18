@@ -1,11 +1,11 @@
-import React, {useContext} from 'react'
-import {Grid} from '@mui/material'
-import SelectOption from './../../../common/components/SelectOption'
-import Search from './../../../common/components/Search'
-import QuickStatsRow from './QuickStatsRow'
-import {useQuery} from 'react-query'
+import { Grid } from '@mui/material'
+import React, { useContext } from 'react'
+import { useQuery } from 'react-query'
+import AppContext from "../../../utils/AppContext"
 import LoadingIndicator from './../../../common/components/LoadingIndicator'
-import AppContext from "../../../utils/AppContext";
+import Search from './../../../common/components/Search'
+import SelectOption from './../../../common/components/SelectOption'
+import QuickStatsRow from './QuickStatsRow'
 
 const endPoint = require("../../../common/config/config").FDSEndpoint
 
@@ -62,7 +62,6 @@ const QuickStats = (props) => {
 
     const searchResults = (myData) => {
         const filterKey = filterOptionsMap[filterOption]
-        console.log(filterKey)
         return myData.filter(elem =>
             elem["ActionInstance"][filterKey].toLowerCase().search(searchQuery.toLowerCase()) >= 0 || searchQuery === ""
         )

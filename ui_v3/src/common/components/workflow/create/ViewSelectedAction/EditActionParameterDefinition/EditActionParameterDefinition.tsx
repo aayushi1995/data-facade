@@ -52,7 +52,6 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             
             const getCurrentValue = () => {
                 const parameterConfig = getCurrentParameterConfig()
-                // console.log(parameterConfig)
                 return allUpstreams.find((upstream, index) => parameterConfig?.SourceExecutionId?.actionId===upstream.actionId && parameterConfig?.SourceExecutionId?.actionIndex===upstream.actionIndex)
             }
     
@@ -232,7 +231,6 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
     }
 
     const mapToGlobalParameter = (workflowParameterId: string) => {
-        console.log(workflowParameterId)
         setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER', 
                             payload: {stageId: props.stageId, globalParameterId: workflowParameterId, parameterDefinitionId: props.parameter.Id || "ID", actionIndex: props.actionIndex, parameterName: props.parameter.ParameterName || "parameterName"}})
     }
@@ -260,7 +258,6 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
                 onChange={(event, value, reason, details) => {
                     if(!!value) {
                         if(value?.ParameterName?.includes('Create Global Parameter:')) {
-                            console.log("new parameter")
                             addAndMapGlobalParameter(value)
                         } else {
                             mapToGlobalParameter(value.Id || "ID")

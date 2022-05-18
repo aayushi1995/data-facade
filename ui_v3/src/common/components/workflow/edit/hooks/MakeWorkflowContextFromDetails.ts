@@ -1,7 +1,7 @@
+import { v4 as uuidv4 } from "uuid"
 import { ActionDefinition, ActionParameterDefinition, ActionTemplate } from "../../../../../generated/entities/Entities"
 import { WorkflowTemplateType } from "../../../../../pages/applications/workflow/EditWorkflowHomePage"
 import { UpstreamAction, WorkflowActionDefinition, WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext"
-import {v4 as uuidv4} from "uuid"
 
 
 interface MakeWorkflowContextPropsFromDetailsProps {
@@ -52,14 +52,12 @@ const MakeWorkflowContextFromDetail = (props: MakeWorkflowContextPropsFromDetail
             }
             const parameterMappings = workflowActions[i].ParameterValues
             const parameters = Object.entries(parameterMappings).map(([parameterDefinitionId, parameterInstance]) => {
-                console.log(parameterInstance)
                 const actionParameter = {
                     ...parameterInstance,
                     ActionParameterDefinitionId: parameterDefinitionId,
                     userInputRequired: parameterInstance.GlobalParameterId ? "Yes" : "No",
                     SourceExecutionId: upstreamMapping[parameterInstance?.SourceExecutionId]
                 }
-                console.log(actionParameter)
                 return actionParameter
             })
             stageActions.push({

@@ -1,6 +1,7 @@
 import { Box, Button, Card, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
 import React from "react";
 import ReactJson from 'react-json-view';
+import { useQueryClient } from "react-query";
 import LoadingIndicator from "../../common/components/LoadingIndicator";
 import LoadingWrapper from "../../common/components/LoadingWrapper";
 import ProgressBar from "../../common/ProgressBar";
@@ -27,8 +28,20 @@ interface ResolvedActionExecutionProps {
 
 const ViewActionExecution = (props: ViewActionExecutionProps) => {
     const { actionExecutionId } = props
+    const queryClient = useQueryClient()
     const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: actionExecutionId, queryOptions: {}})
     
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            const actionStatus = actionExecutionDetailQuery.data?.ActionExecution?.Status
+            if(!(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED)) {
+                queryClient.invalidateQueries(["ActionExecutionDetail", actionExecutionId])
+            }
+        }, 4000)
+
+        return () => clearInterval(interval)
+    }, [])
+
     const getToRenderComponent = () => {
         const data = actionExecutionDetailQuery?.data
         if(!!data){
@@ -150,7 +163,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                 </DialogContent>
             </Dialog>
             <Dialog open={dialogState} onClose={handleClose} fullWidth maxWidth="xl">
-                <DialogContent>
+                <DialogContent sx={{ height: "800px"}}>
                     <ViewActionExecutionOutput 
                         ActionDefinition={actionExecutionDetail.ActionDefinition!}
                         ActionInstance={actionExecutionDetail.ActionInstance!}

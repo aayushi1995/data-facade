@@ -1,9 +1,8 @@
-import { darken } from "@mui/system";
 import ChartType from "../../enums/ChartType";
 import { Chart } from "../../generated/entities/Entities";
 import { ChartWithData } from "../../generated/interfaces/Interfaces";
 import { BaseChartsConfig, SeriesLine } from "../components/charts/BaseChartsConfig";
-import {EChartUISpecificConfig} from "../components/charts/types/EChartUISpecificConfig";
+import { EChartUISpecificConfig } from "../components/charts/types/EChartUISpecificConfig";
 
 
 interface PieChartOptions {
@@ -102,7 +101,7 @@ export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithDa
                     data: (chartData.chartData as PieChartOptions).data.result
                 }
             }
-            console.log("here")
+
             return {
                 uiConfig: chartOptions,
                 config: chartDataOptions,
@@ -228,8 +227,6 @@ export const formChartOptionsTwoDimenstionScatter = (chartData: ChartWithData): 
                     name: chartDataCasted.data.y_name
                 }]
             }
-
-            console.log(dataOptions)
 
             return {
                 uiConfig: chartOptions,

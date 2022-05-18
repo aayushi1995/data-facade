@@ -17,7 +17,8 @@ const ActionDefinitionActionGroups = {
     DATA_TRANSFORM: "DataTransform",
     MANAGE_COLUMNS: "ManageColumns",
     MANAGE_ROWS: "ManageRows",
-    DATA_PREPARATION: "DataPreparation"
+    DATA_PREPARATION: "DataPreparation",
+    SYSTEM_ACTION: "SystemAction"
 }
 
 export default ActionDefinitionActionGroups;

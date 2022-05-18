@@ -1,11 +1,9 @@
-import { Box, Card, Grid, IconButton, DialogTitle, Dialog, Tooltip } from "@mui/material"
-import React, { ReactElement } from "react"
+import { Box, Card, Grid, IconButton, Tooltip } from "@mui/material"
+import React from "react"
+import slideNext from "../../../../../../src/images/new_frame.png"
 import WorkflowStagesWrapper from "../../../../../application/common/workflowStages/WorkflowStagesWrapper"
 import WorkflowActionContainer from "../../../../../pages/applications/workflow/WorkflowActionContainer"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
-import { lightShadows } from "../../../../../../src/css/theme/shadows"
-import slideNext from "../../../../../../src/images/new_frame.png"
-import BuildActionFromWorkflow from "../addAction/BuildActionFromWorkflow"
 
 export const StagesWithActions = () => {
     const workflowContext = React.useContext(WorkflowContext)
@@ -17,7 +15,6 @@ export const StagesWithActions = () => {
     const currentStages = workflowContext.currentStageView === undefined ? workflowContext.stages.slice(0, 4) : workflowContext.stages.slice(workflowContext.currentStageView.startIndex, workflowContext.currentStageView.endIndex)
 
     const stages = currentStages.map(stage => {
-        // console.log(stage)
         return {
             stageId: stage.Id,
             stageName: stage.Name,

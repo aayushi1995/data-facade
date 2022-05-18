@@ -6,7 +6,6 @@ import { makeStyles } from '@mui/styles';
 import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
 import { useMutation } from "react-query";
-import { CustomToolbar } from "../../../common/components/CustomToolbar";
 import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import NoData from "../../../common/components/NoData";
 import QueryData from '../../../common/components/QueryData';
@@ -216,17 +215,23 @@ const IntermediaryTables = (props) => {
                         columns={columns} rows={actionExecutions}
                         autoHeight
                         autoPageSize
-                        rowsPerPageOptions={[20]}
                         checkboxSelection
                         disableSelectionOnClick
-                        components={{
-                            Toolbar: CustomToolbar()
-                        }}
                         componentsProps={{
                             setDataDialogOpen: setDataDialogOpen,
                             setQueryData: setQueryData,
                             setFetching: setFetchingActionexecutionOutput,
                             handleImportTable: handleImportTable
+                        }}
+                        sx={{
+                            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                        }}
+                        headerHeight={70}
+                        rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+                        initialState={{
+                            pagination: {
+                                pageSize: 10
+                            }
                         }}
                     ></DataGrid>
                 </Grid>

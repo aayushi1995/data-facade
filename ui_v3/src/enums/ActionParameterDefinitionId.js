@@ -9,7 +9,9 @@ const ActionParameterDefinitionId = {
     S3_PROVIDER_INSTANCE_ID: "14",
     FILE_UPLOAD_PATH: "15",
     SYNC_EXECUTION_OUTPUT_TABLE_NAME: "22",
-    SYNC_EXECUTION_OUTPUT_EXECUTION_ID: "21"
+    SYNC_EXECUTION_OUTPUT_EXECUTION_ID: "21",
+    CREATE_AUTO_FLOW_TYPE: "24",
+    CREATE_AUTO_FLOW_TABLE: "25"
 }
 
 export default ActionParameterDefinitionId;

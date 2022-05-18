@@ -14,7 +14,6 @@ interface ParameterDefinitionsConfigPlaneProps {
 
 const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneProps) => {
 
-    console.log(props)
     const onParameterValueChange = (event: ActionParameterInstance) => {
         const checkIfExists = props.parameterInstances.find(parameterInstance => parameterInstance.ActionParameterDefinitionId === event.ActionParameterDefinitionId)
         const newParameterInstances = checkIfExists !== undefined ? (props.parameterInstances.map(parameterInstance => {

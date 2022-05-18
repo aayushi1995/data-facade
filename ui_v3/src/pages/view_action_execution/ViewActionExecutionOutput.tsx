@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material"
+import { Box, Divider, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
+import ReactJson from "react-json-view"
 import { CustomToolbar } from "../../common/components/CustomToolbar"
 import LoadingWrapper from "../../common/components/LoadingWrapper"
 import ViewExecutionCharts from "../../common/ViewExecutionCharts"
@@ -36,7 +37,7 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
             isLoading={actionExecutionParsedOutputQuery.isLoading}
             error={actionExecutionParsedOutputQuery.error}
         >
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, height: "100%"}}>
                 {outputComponentToRender(actionExecutionParsedOutputQuery.data?.Output)}
                 <ViewExecutionCharts executionId={props.ActionExecution.Id || "NA"}/>
             </Box>
@@ -95,11 +96,73 @@ export interface ViewActionExecutionSingleValueOutputProps {
 }
 
 const ViewActionExecutionSingleValueOutput = (props: ViewActionExecutionSingleValueOutputProps) => {
+    const value = props.SingleValueOutput.value
+
+    function isJSON(str: string) {
+        try {
+            return (JSON.parse(str) && !!str);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    const getContent = () => {
+        switch(typeof value) {
+            case "string": {
+                if(isJSON(value)) {
+                    return(
+                        <ReactJson src={JSON.parse(value)} />
+                    )
+                } else {
+                    return (
+                        <Typography variant="body1" sx={{ textAlign: "center" }}>
+                            {value}
+                        </Typography>
+                    )
+                }
+            }
+
+            case "boolean": {
+                return (
+                    <Typography variant="body1" sx={{ textAlign: "center" }}>
+                        {value}
+                    </Typography>
+                )
+            }
+            
+            case "number": {
+                return (
+                    <Typography variant="body1" sx={{ textAlign: "center" }}>
+                        {value}
+                    </Typography>
+                )
+            }
+
+            case "object": {
+                return (
+                    <ReactJson src={value} />
+                )
+            }
+
+            default: {
+                return (
+                    <>OUTPUT FORMAT NOT SPECIFIED</>
+                )
+            }
+        }
+    }
+
     return (
-        <Box m={3}>
-            <Typography variant="h3" sx={{ textAlign: "center" }}>
-                {props.SingleValueOutput.value}
-            </Typography>
+        <Box sx={{ px: 2, display: "flex", flexDirection: "column", gap: 2, maxHeight: "100%" }}>
+            <Box>
+                <Typography variant="h3">
+                    Action Execution Output
+                </Typography>
+            </Box>
+            <Divider orientation="horizontal"/>
+            <Box sx={{ height: "100%", overflowY: "auto"}}>
+                {getContent()}
+            </Box>
         </Box>
     )
 }

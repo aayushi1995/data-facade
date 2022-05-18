@@ -5,7 +5,6 @@ import { UpstreamAction } from "../../../../pages/applications/workflow/Workflow
 import useTables from "../../../../pages/build_action/hooks/useTables"
 import LoadingWrapper from "../../LoadingWrapper"
 import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
-import useFetchColumnsForTables from "./hooks/useFetchColumnsForTables"
 
 
 export interface UpstreamActionParameterInput {
@@ -246,10 +245,8 @@ const ColumnInput = (props: ColumnParameterInput) => {
         tableFilters: filters.tableFilters,
         parameterDefinitionId: filters.parameterDefinitionId
     }})
-    console.log(selectedColumnFilter)
 
     React.useEffect(() => {
-        console.log(fetchTableQuery.data)
         const index = Math.floor(Math.random() * (fetchTableQuery.data?.length || 0))
         onChange(fetchTableQuery.data?.[index])
     }, [fetchTableQuery.data])

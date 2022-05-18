@@ -59,7 +59,7 @@ export const UploadTablePage = (props) => {
                         uploadFile: file
                     }
                 })
-                setUploadState(S3UploadState.SELECTED_FILE_OK);
+                setUploadState(S3UploadState.SELECTED_FILE_OK(file.name, file.size));
             }
         }
     };
@@ -83,7 +83,7 @@ export const UploadTablePage = (props) => {
                 </Grid> }
                 <Grid container item xs={12}>
                     <Grid item xs={5}>
-                        <Button variant="contained" component="label" classes={{ root: "select-all" }}>
+                        <Button sx={{ display: "none"}}>
                             Select File
                             <input ref={uploadButtonRef} type="file" accept={".csv,.xlsx"} hidden onChange={changeHandler} onClick={(event) => {event.target.value=''}}/>
                         </Button>

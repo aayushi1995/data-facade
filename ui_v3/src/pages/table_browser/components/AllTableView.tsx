@@ -81,7 +81,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 field: "TableLastSyncedOn",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <LastSyncedCell {...params.row}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <TimestampCell timestamp={params.row?.TableLastSyncedOn}/>
             },
             {
                 field: "Health",
@@ -107,7 +107,8 @@ const AllTableView = (props: AllTableViewProps) => {
         onRowClick: (params: GridRowParams<TableBrowserResponse>) => {
             const tableName = params?.row?.TableUniqueName
             const tableId = params?.row?.TableId
-            if(!!tableName && !!tableId) { 
+            const tableDetail = tableQuery?.data?.find( table => table.TableId === tableId)
+            if(!!tableName && !!tableId && !!tableDetail) { 
                 history.push(generatePath(DATA_TABLE_VIEW, { TableName: tableName }))
             }
         },
@@ -245,10 +246,11 @@ const HealthCell = (props?: TableBrowserResponse) => {
     const allComplete = areAllOOBActionsCompleted(oobActionsStatus.data)
     const anyFailed = anyOOBActionFailed(oobActionsStatus.data)
     const health = tableFullStats?.data?.TableStat?.Health
+    const scaledHealth = ((health || 0)*100)
 
     const formText = () => {
         if(allComplete && health !== undefined) {
-            return `${((health || 0)*100).toFixed(0)} %`
+            return `${scaledHealth.toFixed(0)} %`
         }
         else if(anyFailed) {
             return "Health Data Unavaialble"
@@ -256,9 +258,12 @@ const HealthCell = (props?: TableBrowserResponse) => {
         else return "Updating Health Data"
     }
 
+    const barColor = `hsl(${scaledHealth * 1.2},100%,50%)`;
+    const color = `hsl(${scaledHealth * 1.2},100%,75%)`;
+
     const formLinearProgressBar = () => {
         if(allComplete && health !== undefined) {
-            return <LinearProgress variant="determinate" value={(health || 0)*100} color="success"/>
+            return <LinearProgress variant="determinate" value={(health || 0)*100} sx={{ "& .MuiLinearProgress-bar": { backgroundColor: `${barColor} ! important` }, ".MuiLinearProgress-root": { backgroundColor: `${color} ! important` } }}/>
         }
         else if(anyFailed) {
             return <LinearProgress variant="determinate" value={0} color="error"/>
@@ -336,17 +341,18 @@ export const formDateText = (timestamp?: number) => {
     }
 }
 
-const LastSyncedCell = (props?: TableBrowserResponse) => {
-    const dateString = formDateText(props?.TableLastSyncedOn)
+export const TimestampCell = (props: {timestamp?: number}) => {
+    const { timestamp } = props
+    const dateString = formDateText(timestamp)
 
-    if( props?.TableLastSyncedOn ) {
+    if( timestamp ) {
         return <TextCell text={dateString}/>
     } else {
         return <></>
     }
 }
 
-const TextCell = (props: { text?: string}) => {
+export const TextCell = (props: { text?: string}) => {
         
     const textComponent = <Typography variant="tableBrowserContent">
                             {props?.text}

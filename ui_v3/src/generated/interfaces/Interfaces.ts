@@ -70,6 +70,14 @@ export interface ActionInstanceCardViewResponse {
 }
 
 
+export interface ApplicationRunsByMe {
+    ApplicationModel?: Entity.Application
+	ActionDefinitions?: Entity.ActionDefinition[]
+	ActionInstances?: Entity.ActionInstance[]
+	ActionExecutions?: Entity.ActionExecution[]
+}
+
+
 export interface ActionDefinitionDetail {
     ActionDefinition?: ActionDefinitionWithTags
 	ActionTemplatesWithParameters?: ActionTemplatesWithParameters[]

@@ -7,7 +7,6 @@ import React, { useCallback, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
-import { CustomToolbar } from "../../../common/components/CustomToolbar";
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import QueryData from "../../../common/components/QueryData";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
@@ -240,26 +239,31 @@ const ActionInstancesInternal = (props) => {
                         </Grid>
                     </Dialog>
                     <DataGrid columns={columns} rows={dataGridRows}
-                              autoHeight
-                              autoPageSize
-                              checkboxSelection
-                              disableSelectionOnClick
-                              pageSize={10}
-                              rowsPerPageOptions={[10]}
-                              components={{
-                                  Toolbar: CustomToolbar(customizationsToolBarButtons)
-                              }}
-                              componentsProps={{
-                                  setQueryData: setQueryData,
-                                  setDialogOpen: setIsDataDialogOpen,
-                                  handleActionInstancesAfterDelete: handleActionInstancesAfterDelete,
-                                  setFetching: setFetchingActionexecutionOutput
-                              }}
-                              onCellClick={(params) => {
-                                  if (params?.colDef?.field !== 'RunAndDelete') {
-                                      history.push(`/customizations/action-instances/${params.row.id}`)
-                                  }
-                              }}
+                        autoHeight
+                        autoPageSize
+                        checkboxSelection
+                        disableSelectionOnClick
+                        componentsProps={{
+                            setQueryData: setQueryData,
+                            setDialogOpen: setIsDataDialogOpen,
+                            handleActionInstancesAfterDelete: handleActionInstancesAfterDelete,
+                            setFetching: setFetchingActionexecutionOutput
+                        }}
+                        onCellClick={(params) => {
+                            if (params?.colDef?.field !== 'RunAndDelete') {
+                                history.push(`/customizations/action-instances/${params.row.id}`)
+                            }
+                        }}
+                        sx={{
+                            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                        }}
+                        headerHeight={70}
+                        rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+                        initialState={{
+                            pagination: {
+                                pageSize: 10
+                            }
+                        }}
                     />
 
                 </Grid>}

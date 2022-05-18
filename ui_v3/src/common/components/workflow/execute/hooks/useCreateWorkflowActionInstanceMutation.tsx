@@ -1,11 +1,9 @@
-import React from "react"
 import { useMutation } from "react-query"
-import { ActionExecution, ActionInstance } from "../../../../../generated/entities/Entities"
+import { v4 as uuidv4 } from 'uuid'
+import { ActionInstance } from "../../../../../generated/entities/Entities"
 import { ActionInstanceWithParameters } from "../../../../../generated/interfaces/Interfaces"
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext"
 import dataManagerInstance from './../../../../../data_manager/data_manager'
-import { v4 as uuidv4 } from 'uuid';
-
 const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContextType, handleOnSuccess: (data: any) => void) => {
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
 
@@ -30,8 +28,6 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
             })
         } as ActionInstanceWithParameters
     })
-
-    console.log(workflowInstancesWithParameterInstances)
 
     return useMutation(
         "CreateWorkflowInstance",

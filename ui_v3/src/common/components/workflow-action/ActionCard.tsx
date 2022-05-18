@@ -1,17 +1,15 @@
+import { Box, Card, Icon, IconButton, Typography } from "@mui/material"
+import LinearProgress from '@mui/material/LinearProgress'
+import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
+import { styled } from '@mui/styles'
+import { SystemStyleObject } from "@mui/system"
 import React from "react"
-import { Card, Box, IconButton, Icon } from "@mui/material"
 import { lightShadows } from '../../../../src/css/theme/shadows'
-import selectGrid from '../../../../src/images/select_icon.png'
 import dataCleansing from '../../../../src/images/data_cleansing.png'
-import { Typography } from "@mui/material"
 import closeIcon from '../../../../src/images/delete_workflow_action.png'
-import { createTheme, SystemStyleObject } from "@mui/system"
-import {useTheme} from "@mui/material";
-import LinearProgress from '@mui/material/LinearProgress';
-import viewResultIcon from '../../../../src/images/ViewResult.png'
+import selectGrid from '../../../../src/images/select_icon.png'
 import viewErrorIcon from '../../../../src/images/ShowErrorLogs.png'
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { styled } from '@mui/styles';
+import viewResultIcon from '../../../../src/images/ViewResult.png'
 
 
 export interface ActionCardProps {
@@ -142,13 +140,15 @@ const ActionCard = (props: ActionCardProps) => {
                     </Box>
                     <Box>
                         <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                            <IconButton onClick={(e: any) => {
-                                e.stopPropagation?.()
-                                props.deleteButtonAction(props.actionId, props.index)}}>
-                                <Icon>
-                                    <img src={closeIcon} alt='remove'/>
-                                </Icon>
-                            </IconButton>
+                            {!!!props.executionStaus &&
+                                <IconButton onClick={(e: any) => {
+                                    e.stopPropagation?.()
+                                    props.deleteButtonAction(props.actionId, props.index)}}>
+                                    <Icon>
+                                        <img src={closeIcon} alt='remove'/>
+                                    </Icon>
+                                </IconButton>
+                            }
                             {props.executionStaus === "Completed" ? (
                                 <IconButton sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} onClick={(e: any) => {
                                     e.stopPropagation?.()

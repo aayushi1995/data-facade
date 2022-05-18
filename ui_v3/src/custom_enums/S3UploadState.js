@@ -93,10 +93,25 @@ const S3UploadState = {
         }
         
     },
-    SELECTED_FILE_OK: {
-        message: "File Selected",
-        colour: "#B3E283",
-        icon: <ThumbUpAltOutlinedIcon style={{fontSize: 45}}/>
+    SELECTED_FILE_OK: (fileName, fileSize) => {
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+        
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+        
+        const formattedFileSize = formatBytes(fileSize)
+        return {
+            message: `${fileName}  ( ${formattedFileSize} )  Selected`,
+            colour: "#B3E283",
+            icon: <ThumbUpAltOutlinedIcon style={{fontSize: 45}}/>
+        }
     },
     SELECTED_FILE_TOO_LARGE: {
         message: "Selected File Size exceeds 200 MB",

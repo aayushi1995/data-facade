@@ -235,7 +235,7 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
             onSuccess: (data) => setConnectionsState({ type: "SetProviderDefinition", payload: { providerDefinition: data }})
         }
     )
-    console.log(connectionState)
+        
     React.useEffect(() => {
         console.log("NEW PROVIDER INSTANCE", providerInstanceId)
         if(connectionState.mode === "UPDATE" && !!providerInstanceId) {

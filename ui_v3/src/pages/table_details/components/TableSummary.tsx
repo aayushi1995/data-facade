@@ -19,6 +19,9 @@ export type TableSummaryProps = {
 }
 
 const TableSummary = (props: TableSummaryProps) => {
+    const tableFullStats = useTableAndColumnStats({ TableId: props.TableId })
+    const health = tableFullStats?.data?.TableStat?.Health 
+
     return (
         <Card sx={{ p: 3, borderRadius: 2, boxShadow: lightShadows[31]}}>
             <Grid container spacing={1}>
@@ -45,9 +48,11 @@ const TableSummary = (props: TableSummaryProps) => {
                         <Box>
                             <TableHighLevelInfo TableId={props.TableId}/>
                         </Box>
-                        <Box>
-                            <RunWorkflowButton TableId={props.TableId}/>
-                        </Box>
+                        {!!health &&
+                            <Box>
+                                <RunWorkflowButton TableId={props.TableId}/>
+                            </Box>
+                        }
                     </Box>
                 </Grid>
             </Grid>
@@ -90,8 +95,6 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
             })
         }
     }
-
-    console.log(tableQuery?.data)
 
     return (
         <LoadingWrapper

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
-import { DATA_ALL_TABLES_ROUTE, DATA_CERTIFIED_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_SUB_TABS, DATA_TABLE_VIEW, findTab } from "../../common/components/header/data/DataRoutesConfig";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { DATA_ALL_TABLES_ROUTE, DATA_CERTIFIED_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_SUB_TABS, DATA_TABLE_VIEW, findTab } from "../../common/components/header/data/DataRoutesConfig";
 import { SetModuleContextState } from "../../common/components/ModuleContext";
 import TablePropertiesCertificationStatus from "../../enums/TablePropertiesCertificationStatus";
 import ConfiguredDataSource from "../configurations/components/ConfiguredDataSource";
@@ -11,6 +11,7 @@ import UploadTablePage from "../upload_table/UploadTablePage";
 const DataContent = () => {
     return (
         <Switch>
+            <Redirect exact from={DATA_CONNECTIONS_UPLOAD_ROUTE} to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE}/>
             <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
             <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
             <Route path={DATA_TABLE_VIEW} component={TableDetails}/>

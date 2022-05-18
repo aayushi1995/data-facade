@@ -7,6 +7,7 @@ import ApplicationHeader from "../../../common/components/application/Applicatio
 import ApplicationWorkflows from "../../../common/components/application/ApplicationWorkflows"
 import NoData from "../../../common/components/NoData"
 import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
+import ApplicationRunsByMe from "./ApplicationRunsByMe"
 
 interface MatchParams {
     applicationId: string
@@ -92,6 +93,11 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                     <TabPanel value={tabValue} index={1}>
                         <Box mt={1}>
                             <ApplicationActions application={application}/>
+                        </Box>
+                    </TabPanel>
+                    <TabPanel value={tabValue} index={2}>
+                        <Box mt={1}>
+                            <ApplicationRunsByMe application={application?.model}/>
                         </Box>
                     </TabPanel>
                 </Box>

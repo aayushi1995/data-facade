@@ -53,7 +53,6 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
 
             workflowContext.WorkflowParameters.forEach(globalParameter => {
                 const mappedGlobalParameter = workflowAction.Parameters?.find(parameter => parameter.GlobalParameterId === globalParameter.Id)
-                console.log(mappedGlobalParameter)
                 if(!!mappedGlobalParameter) {
                     parametersArray.push({TableId: mappedGlobalParameter.TableId, ParameterValue: mappedGlobalParameter.ParameterValue, ActionParameterDefinitionId: globalParameter.Id})
                 }

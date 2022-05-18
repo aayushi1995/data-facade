@@ -1,6 +1,6 @@
 import {
     Box,
-    Button, Divider,
+    Button, Card, Divider,
     FormControl, Grid, InputLabel,
     List,
     ListItem, MenuItem,
@@ -14,6 +14,7 @@ import { useMutation } from 'react-query';
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import { DATA_ALL_TABLES_ROUTE } from '../../../common/components/header/data/DataRoutesConfig';
+import VirtualTagHandler from '../../../common/components/tag-handler/VirtualTagHandler';
 import SelectTags from './../../../common/components/SelectTags.js';
 import './../../../css/table_browser/TableBrowser.css';
 import S3UploadState from './../../../custom_enums/S3UploadState';
@@ -51,11 +52,6 @@ const useStyles = makeStyles(() => ({
     columnSchemaDefault: {
         // background: "#DBFCFE"
     },
-    columnPropertiesList: {
-        height: 600,
-        overflow: 'auto',
-        width: "100%",
-    },
     selectEmpty: {},
     disabledButton: {
         background: "#classes"
@@ -70,14 +66,6 @@ const useStyles = makeStyles(() => ({
         height: 600,
         overflow: 'auto',
         width: '100%'
-    },
-    TableNameTextField: {
-        height: 75,
-    },
-    ColumnSearchTextField: {
-    },
-    TagDropDown: {
-        maxHeight: 75
     }
 }))
 
@@ -316,17 +304,7 @@ export const ConfigureTableMetadata = (props) => {
                         </Grid>
                     </Box>
                 </Grid>}
-                {/* <Grid container item xs={12}>
-                    <DisplaySelectedFilesDetail selectedFile={selectedFile} />
-                </Grid> */}
-            {/* {selectedFile &&
-            <Grid container item xs={6}>
-                <TableRequiredTagSelection enableUploadButton={enableUploadButton}
-                                           disableUploadButton={disableUploadButton}
-                                           selectedFileSchema={selectedFileSchema}
-                                           setSelectedFileSchema={setSelectedFileSchema}/>
-            </Grid>
-            } */}
+
             <Grid container item xs={12}>
                 <TableSchemaSelection selectedFile={selectedFile}
                     setSelectedFileColumnSchema={setSelectedFileColumnSchema}
@@ -532,12 +510,10 @@ const TableSchemaSelection = (props) => {
                     onSuccess: (parsedData, variables, context) => {
                         setColumnProperties(oldProp => {
                             let column_tags = parsedData["column_tags"]
-                            if (column_tags === undefined 
-                                || column_tags.length == 0)
-                                return oldProp
-
+                            if (column_tags === undefined || column_tags.length == 0) return oldProp
+                            
                             let newProp = [...oldProp]
-                            parsedData["column_tags"].forEach(columnTagProp => {
+                            column_tags.forEach(columnTagProp => {
                                 const columnName = columnTagProp.column_name
                                 let tags_len = columnTagProp["column_tags"].length
                                 let tags = []
@@ -630,30 +606,41 @@ const TableSchemaSelection = (props) => {
     }
 
     return (
-        <Grid container spacing={2}>
-            <Grid container item xs={4} alignItems="center">
-                <Grid item xs={8} className={classes.ColumnSearchTextField}>
-                    <TextField
-                        label="Search Column"
-                        value={columnSearchQuery}
-                        onChange={(event) => {
-                            setColumnSearchQuery(event.target.value)
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
-                </Grid>
-                <Grid item xs={12}>
-                    <List className={classes.columnPropertiesList}>
+        <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", boxSizing: "box-sizing", gap: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 1 }}>
+                    <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "300px" }}>
+                        <TextField
+                            fullWidth
+                            label="Search Column"
+                            value={columnSearchQuery}
+                            onChange={(event) => {
+                                setColumnSearchQuery(event.target.value)
+                            }}
+                        />
+                    </Box>
+                    <Box>
+                        <Divider orientation='vertical'/>
+                    </Box>
+                    <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", flex: 1 }}>
+                        <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
+                    </Box>
+                </Box>
+                <Box>
+                    <Divider orientation='horizontal'/>
+                </Box>
+                <Box>
+                    <List sx={{ height: 600, overflow: 'auto', width: "100%" }}>
                         {schemaDataSelector}
                     </List>
-                </Grid>
-            </Grid>
-            <Grid container item xs={8} spacing={1} alignContent="flex-start">
-                <Grid container item xs={12} alignItems="flex-start">
-                    <Grid item xs={4} className={classes.TableNameTextField}>
+                </Box>
+            </Box>
+            <Divider orientation='vertical'/>
+            <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: "row", gap: 1, width: "100%" }}>
+                    <Box sx={{ width: "300px" }}>
                         <TextField
+                            fullWidth
                             value={tableProperties.tableName}
                             error={tableProperties.tableName && !tableProperties.isValid}
                             label={tableProperties.tableName && whyTableNameNotValid()}
@@ -661,14 +648,21 @@ const TableSchemaSelection = (props) => {
                                 setTableName(event.target.value)
                             }}
                         />
-                    </Grid>
-                    <Grid item xs={8} className={classes.TagDropDown}>
-                        <SelectTags setTags={handleTableTagChange}
-                                    tagOptionFilter={{Scope: TagScope.TABLE}} label="Tags"
-                                    selectedTags={tableProperties.tags}/>
-                    </Grid>
-                </Grid>
-                <Grid container item xs={12}>
+                    </Box>
+                    <Divider orientation='vertical'/>
+                    <Box sx={{ flex: 1 }}>
+                        <VirtualTagHandler
+                            selectedTags={tableProperties.tags}
+                            onSelectedTagsChange={handleTableTagChange}
+                            tagFilter={{Scope: TagScope.TABLE}}
+                            allowAdd={true}
+                            allowDelete={true}
+                            inputFieldLocation="LEFT"
+                        />
+                    </Box>
+                </Box>
+                <Divider orientation='horizontal'/>
+                <Box>
                     <TablePreview 
                         selectedFile={props.selectedFile}
                         dataStartsFromRow={parsedFileResult.dataStartsFromRow}
@@ -676,9 +670,9 @@ const TableSchemaSelection = (props) => {
                         tableName={tableProperties?.tableName}
                         data={parsedFileResult.data}
                     />
-                </Grid>
-            </Grid>
-        </Grid>
+                </Box>
+            </Box>
+        </Box>
     )
 }
 
@@ -781,37 +775,50 @@ const ColumnPropertiesSelector = (props) => {
     }
 
     return (
-        <Grid container spacing={0}>
-            <Grid container item xs={12} spacing={1} direction="row">
-                <Grid item xs={7}>
-                    <TextField value={props.columnProperty.columnName} error={!isColumnFieldValid()}
-                               label={whyColumnFieldNotValid()} onChange={handleColumnNameChange} fullWidth/>
-                </Grid>
-                <Grid item sm={2} sx={{ display: {xs: 'none', sm: 'none', md: 'none', lg: 'none', xl: 'block'}}}/>
-                <Grid container item xs={5} xl={3} alignItems="centerc">
-                    <FormControl className={classes.formControl}>
-                        <InputLabel>Datatype</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-helper-label"
-                            id="demo-simple-select-helper"
-                            label="Datatype"
-                            value={props.columnProperty.columnDatatype}
-                            onChange={handleColumnDataTypeChange}
-                        >
-                            <MenuItem value={ColumnDataType.INT}>Integer</MenuItem>
-                            <MenuItem value={ColumnDataType.STRING}>String</MenuItem>
-                            <MenuItem value={ColumnDataType.BOOLEAN}>Boolean</MenuItem>
-                            <MenuItem value={ColumnDataType.FLOAT}>Float</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-            </Grid>
-            <Grid item xs={12}>
-                <SelectTags setTags={handleColumnTagChange}
-                            tagOptionFilter={{Scope: TagScope.COLUMN}} label="Tags"
-                            selectedTags={props.columnProperty.columnTags}/>
-            </Grid>
-        </Grid>
+        <Card sx={{
+            borderRadius: 2, 
+            px: 1,
+            py: 2, 
+            boxSizing: "content-box",
+            border: "0.439891px solid #FFFFFF",
+            width: "100%"
+        }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
+                <Box sx={{ display: "flex", flexDirection: "row", gap: 1, width: "100%" }}>
+                    <Box sx={{ width: "300px" }}>
+                        <TextField value={props.columnProperty.columnName} error={!isColumnFieldValid()}
+                                label={whyColumnFieldNotValid()} onChange={handleColumnNameChange} fullWidth/>
+                    </Box>
+                    <Box sx={{ display: "flex", flex: 1 }}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel>Datatype</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-helper-label"
+                                id="demo-simple-select-helper"
+                                label="Datatype"
+                                value={props.columnProperty.columnDatatype}
+                                onChange={handleColumnDataTypeChange}
+                            >
+                                <MenuItem value={ColumnDataType.INT}>Integer</MenuItem>
+                                <MenuItem value={ColumnDataType.STRING}>String</MenuItem>
+                                <MenuItem value={ColumnDataType.BOOLEAN}>Boolean</MenuItem>
+                                <MenuItem value={ColumnDataType.FLOAT}>Float</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </Box>
+                <Box>
+                    <VirtualTagHandler
+                        selectedTags={props.columnProperty.columnTags}
+                        onSelectedTagsChange={handleColumnTagChange}
+                        tagFilter={{Scope: TagScope.COLUMN}}
+                        allowAdd={true}
+                        allowDelete={true}
+                        inputFieldLocation="LEFT"
+                    />
+                </Box>
+            </Box>
+        </Card>
     )
 }
 

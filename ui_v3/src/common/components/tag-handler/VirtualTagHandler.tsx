@@ -1,4 +1,4 @@
-import { Grid, Autocomplete, Box, Chip, TextField, createFilterOptions } from "@mui/material";
+import { Autocomplete, Box, Chip, createFilterOptions, Grid, TextField } from "@mui/material";
 import { Tag } from "../../../generated/entities/Entities";
 import useCreateTag from "./hooks/createTag";
 import useFetchAvailableTags from "./hooks/useFetchAvailableTags";
@@ -9,14 +9,13 @@ export interface VirtualTagHandlerProps {
     tagFilter: Tag,
     allowAdd: boolean,
     allowDelete: boolean,
-    orientation: "VERTICAL" | "HORIZONTAL",
-    direction: "REVERSE" | "DEFAULT"
+    inputFieldLocation: "LEFT" | "RIGHT" | "TOP" | "BOTTOM"
 }
 
 const filter = createFilterOptions<Tag>()
 
 const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
-    const {selectedTags, onSelectedTagsChange, tagFilter, allowAdd, allowDelete, orientation, direction} = props
+    const {selectedTags, onSelectedTagsChange, tagFilter, allowAdd, allowDelete, inputFieldLocation} = props
     const {data, error, isLoading} = useFetchAvailableTags({tagFilter})
     const createTagMutation = useCreateTag({
         tagFilter: props.tagFilter,
@@ -39,8 +38,12 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
         const selectedTagsId: string[] = selectedTags.map(tag => tag.Id!)
         const availableTagsForEntity = (data as Tag[]).filter(availableTag => !selectedTagsId.includes(availableTag.Id!))
         return(
-            <Grid container spacing={5} direction={direction==="DEFAULT" ? "row" : "column-reverse"}>
-                {props.allowAdd && <Grid item {...(orientation==="VERTICAL" ? {xs:12} : {xs:12, md:4, lg:3})}>
+            <Grid container spacing={2} sx={{overflowY: 'auto'}} direction={ 
+                inputFieldLocation==="BOTTOM" ? "column-reverse" : 
+                inputFieldLocation==="TOP" ? "column" :
+                inputFieldLocation==="LEFT" ? "row" : "row-reverse"
+            }>
+                {props.allowAdd && <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:4, lg:3} )}>
                     <Autocomplete
                         options={availableTagsForEntity}
                         getOptionLabel={tag => tag.Name!}
@@ -73,7 +76,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                         renderInput={(params) => <TextField {...params} label="Add Tag"/>}
                     />
                 </Grid>}
-                <Grid item {...(orientation==="VERTICAL" ? {xs:12} : {xs:12, md:8, lg:9})}> 
+                <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:8, lg:9} )}>
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%"}}>
                         {selectedTags.length > 0 ? 
                             selectedTags.map(tag => 
