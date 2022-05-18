@@ -11,7 +11,7 @@ import {
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import labels from '../../labels/labels';
 import ApplicationInstallState from './../../custom_enums/ApplicationInstallState';
 import S3UploadState from './../../custom_enums/S3UploadState';
@@ -157,6 +157,7 @@ const UploadApplicationButton = (props) => {
 
 const BuildApplicationDialogContent = (props) => {
     const classes = useStyles()
+    const queryClient = useQueryClient()
     const [selectedFile, setSelectedFile] = React.useState();
     const [applicationConfig, setApplicationConfig] = React.useState({Name: ""})
     const [uploadState, setUploadState] = React.useState(S3UploadState.NO_FILE_SELECTED)
@@ -262,6 +263,7 @@ const BuildApplicationDialogContent = (props) => {
                                         onSuccess: (parsedApplicationData, parsedApplicationVariables, parsedApplicationContext) => {
                                             setApplicationInstallationKey(parsedApplicationData["parsedApplicationStoragePath"])
                                             setUploadState(S3UploadState.APPLICATION_PARSED)
+                                            queryClient.invalidateQueries(["Applications", "All", "PreBuilt", "CardView"])
                                             enableUploadButton(4)
                                         },
                                         onError: (errorData, errorContext, errorVariables) => {

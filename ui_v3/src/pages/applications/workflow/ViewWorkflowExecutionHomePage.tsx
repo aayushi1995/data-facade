@@ -30,6 +30,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
     
     const [areChildActionsReady, setAreChildActionReady] = React.useState<boolean>(false)
     const [areActionsCompleted, setAreActionsCompleted] = React.useState<boolean>(false)
+    const [resultsAvailable, setResultsAvailable] = React.useState<boolean>(false)
 
     const checkIfActionsCompleted = (data: WorkflowActionExecutions[]) => {
         var areActionsCompleted = true
@@ -110,6 +111,10 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             
             setAreChildActionReady(true)   
             checkIfActionsCompleted(data || [])
+
+            if(data?.[0]?.WorkflowExecution?.Status === "Completed" || data?.[0]?.WorkflowExecution?.Status === "Failed") {
+                setResultsAvailable(true)
+            }
         }
         
     }
@@ -165,7 +170,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     <StagesWithActions/>
                 </Box>
                 <Box sx={{mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end', mr: 2}}>
-                    <Button variant="contained" color="primary" disabled={!areActionsCompleted} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>
+                    <Button variant="contained" color="primary" disabled={!resultsAvailable} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>
                 </Box>
             </Box>
         )
