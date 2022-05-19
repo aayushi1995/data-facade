@@ -88,7 +88,7 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
         rowsPerPageOptions: [4, 10, 15, 50, 100],
         initialState: {
             pagination: {
-                pageSize: 4
+                pageSize: 50
             }
         },
         filterModel: { 

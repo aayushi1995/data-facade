@@ -3,7 +3,6 @@ import React from "react"
 import { RouteComponentProps } from "react-router-dom"
 import ApplicationHeroInfo from "../../../common/components/application-info-hero/ApplicationHeroInfo"
 import ApplicationActions from "../../../common/components/application/ApplicationActions"
-import ApplicationHeader from "../../../common/components/application/ApplicationHeader"
 import ApplicationWorkflows from "../../../common/components/application/ApplicationWorkflows"
 import NoData from "../../../common/components/NoData"
 import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
@@ -47,9 +46,6 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
         const application = applicationDetailData[0]
         return (
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
-                <Box sx={{flex: 1}}>
-                    <ApplicationHeader pageHeader="Application Details" subHeading="Create, Manage Applications from here" fromApplicationDetail={true} applicationId={application.model?.Id}/>
-                </Box>
                 <Box sx={{flex: 1}}>
                     <Card sx={{background: 'background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
                             backgroundBlendMode: 'soft-light, normal',

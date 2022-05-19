@@ -250,7 +250,7 @@ const HealthCell = (props?: TableBrowserResponse) => {
 
     const formText = () => {
         if(allComplete && health !== undefined) {
-            return `${scaledHealth.toFixed(0)} %`
+            return `${Math.floor(scaledHealth)} %`
         }
         else if(anyFailed) {
             return "Health Data Unavaialble"

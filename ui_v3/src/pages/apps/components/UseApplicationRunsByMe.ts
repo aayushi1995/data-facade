@@ -1,11 +1,10 @@
-import React from "react"
 import { useQuery, UseQueryResult } from "react-query"
 import { generatePath, useHistory } from "react-router"
 import { useCreateExecution } from "../../../common/components/application/hooks/useCreateExecution"
 import { ACTION_EXECUTION_ROUTE, WORKFLOW_EXECUTION_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import dataManager from "../../../data_manager/data_manager"
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType"
-import { ActionExecution, Application } from "../../../generated/entities/Entities"
+import { Application } from "../../../generated/entities/Entities"
 import { ApplicationRunsByMe } from "../../../generated/interfaces/Interfaces"
 import labels from "../../../labels/labels"
 
@@ -14,14 +13,11 @@ export type ApplicationRunsByMeHookParams = {
 }
 
 export type ApplicationRunsByMeHookFields = {
-    runs: ActionExecution[],
+    fetchDataQuery: UseQueryResult<Run[]>,
     displayActionOutput: (executionId?: string) => void,
     displayWorkflowOutput: (executionid?: string) => void,
     reRunWorkflow: (actionInstanceId?: string) => void,
-    reRunAction: (actionInstanceId?: string) => void,
-    dialogOpen?: boolean,
-    closeDialog: () => void,
-    selectedActionExecutionIdForDialog?: string
+    reRunAction: (actionInstanceId?: string) => void
 }
 
 export type Run = {
@@ -43,13 +39,13 @@ const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {
     const history = useHistory()
     const pluginTrigger = "RUNS_BY_ME"
     const fetchedDataManagerInstance = dataManager.getInstance as { retreiveData: Function }
-    const fetchDataQuery: UseQueryResult<ApplicationRunsByMe> = useQuery([labels.entities.APPLICATION, pluginTrigger, application?.Id],
+    const fetchDataQuery: UseQueryResult<Run[]> = useQuery([labels.entities.APPLICATION, pluginTrigger, application?.Id],
         () => fetchedDataManagerInstance.retreiveData(labels.entities.APPLICATION, {
                 filter: {
                     Id: application?.Id
                 },
                 [pluginTrigger]: true
-            }).then((data: ApplicationRunsByMe[]) => data[0] ),
+            }).then((data: ApplicationRunsByMe[]) => data[0] ).then((data: ApplicationRunsByMe) => formRuns(data)),
         {
             enabled: !!application?.Id
         }
@@ -100,21 +96,6 @@ const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {
         return result
     }
 
-    const [dialogOpen, setDialogOpen] = React.useState<boolean>(false)
-    const [selectedExecutionId, setSelectedExecutionId] = React.useState<string|undefined>()
-    React.useEffect(() => {
-        if(!!selectedExecutionId) {
-            setDialogOpen(true)
-        }
-    }, [selectedExecutionId])
-
-    const [runs, setRuns] = React.useState<Run[]>([])
-    React.useEffect(() => {
-        if(!!fetchDataQuery?.data){
-            setRuns(formRuns(fetchDataQuery?.data))
-        }
-    }, [fetchDataQuery?.data])
-
     const displayActionOutput = (executionId?: string) => {
         if(!!executionId) {
             history.push(generatePath(ACTION_EXECUTION_ROUTE, { ActionExecutionId: executionId}))
@@ -141,14 +122,11 @@ const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {
     }
     
     return { 
-        runs, 
+        fetchDataQuery, 
         displayActionOutput, 
         displayWorkflowOutput, 
         reRunWorkflow, 
-        reRunAction,
-        dialogOpen: dialogOpen,
-        closeDialog: () => setDialogOpen(false),
-        selectedActionExecutionIdForDialog: selectedExecutionId
+        reRunAction
     }
 }
 

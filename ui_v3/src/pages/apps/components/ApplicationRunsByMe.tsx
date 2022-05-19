@@ -1,5 +1,6 @@
 import { Box } from "@mui/material"
 import { DataGrid, DataGridProps, GridCellParams, GridValueGetterParams } from "@mui/x-data-grid"
+import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import { Application } from "../../../generated/entities/Entities"
 import { TextCell, TimestampCell } from "../../table_browser/components/AllTableView"
 import useApplicationRunsByMe, { Run } from "./UseApplicationRunsByMe"
@@ -10,10 +11,10 @@ export type ApplicationRunsByMeProps = {
 
 const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
     const {application} = props
-    const { runs, displayActionOutput, displayWorkflowOutput, reRunWorkflow, reRunAction, dialogOpen, closeDialog, selectedActionExecutionIdForDialog } = useApplicationRunsByMe({ application: application })
+    const { fetchDataQuery, displayActionOutput, displayWorkflowOutput, reRunWorkflow, reRunAction } = useApplicationRunsByMe({ application: application })
     
     const datagridProps: DataGridProps = {
-        rows: runs,
+        rows: fetchDataQuery?.data || [],
         columns: [
             {
                 field: "ActionDefinitionActionType",
@@ -84,7 +85,6 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
         headerHeight: 70,
         rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
         hideFooterSelectedRowCount: true,
-        disableColumnFilter: true,
         initialState: {
             pagination: {
                 pageSize: 50
@@ -106,11 +106,18 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
             }
         }
     }
-
+    console.log(fetchDataQuery?.data)
     return (
         <Box>
             <Box>
-                <DataGrid {...datagridProps}/>
+                <ReactQueryWrapper
+                    isLoading={fetchDataQuery?.isLoading}
+                    error={fetchDataQuery.error}
+                    data={fetchDataQuery.data}
+                    children={() => 
+                        <DataGrid {...datagridProps} />
+                    }
+                />
             </Box>
         </Box>    
     )

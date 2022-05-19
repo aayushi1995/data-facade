@@ -789,6 +789,9 @@ const ColumnPropertiesSelector = (props) => {
                         <TextField value={props.columnProperty.columnName} error={!isColumnFieldValid()}
                                 label={whyColumnFieldNotValid()} onChange={handleColumnNameChange} fullWidth/>
                     </Box>
+                    <Box>
+                        <Divider orientation='vertical'/>
+                    </Box>
                     <Box sx={{ display: "flex", flex: 1 }}>
                         <FormControl className={classes.formControl}>
                             <InputLabel>Datatype</InputLabel>
@@ -807,6 +810,7 @@ const ColumnPropertiesSelector = (props) => {
                         </FormControl>
                     </Box>
                 </Box>
+                <Divider orientation='horizontal'/>
                 <Box>
                     <VirtualTagHandler
                         selectedTags={props.columnProperty.columnTags}
@@ -814,7 +818,7 @@ const ColumnPropertiesSelector = (props) => {
                         tagFilter={{Scope: TagScope.COLUMN}}
                         allowAdd={true}
                         allowDelete={true}
-                        inputFieldLocation="LEFT"
+                        inputFieldLocation="TOP"
                     />
                 </Box>
             </Box>

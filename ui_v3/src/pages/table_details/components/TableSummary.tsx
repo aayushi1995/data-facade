@@ -234,7 +234,7 @@ const TableHighLevelInfo = (props: TableHighLevelInfoProps) => {
         },
         {
             Label: "Health",
-            Value: `${((tableFullStats?.data?.TableStat?.Health || 0)*100).toFixed(0)} %`
+            Value: `${((tableFullStats?.data?.TableStat?.Health || 0)*100).toFixed(2)} %`
         }
     ]
     return (
@@ -251,7 +251,7 @@ const TableHighLevelInfo = (props: TableHighLevelInfoProps) => {
                         <Grid container spacing={2}>
                             {stats?.map(stat =>  
                                 <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <Card sx={{ px: 2, py: 1, borderRadius: 1}}>
+                                    <Card sx={{ px: 2, py: 1, borderRadius: 1, height: "100%"}}>
                                         <Box><Typography variant="tableStatLabel">{stat?.Label}</Typography></Box>
                                         <Box><Typography variant="tableStatValue">{stat?.Value}</Typography></Box>
                                     </Card>
