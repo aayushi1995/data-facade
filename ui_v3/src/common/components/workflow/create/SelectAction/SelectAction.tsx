@@ -2,13 +2,17 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, InputAdornment, Tab, Tabs, TextField, Typography, useTheme } from '@mui/material';
 import React from 'react';
+import { ActionParameterInstance } from '../../../../../generated/entities/Entities';
+import { WorkflowActionParameters } from '../../../../../pages/applications/workflow/WorkflowContext';
 import SelectFromGroups from '../addAction/SelectFromGroups';
 import SelectFromAllActions from '../SelectFromAllActions';
 
 export interface ActionDefinitionToAdd {
     Id: string,
     DisplayName: string
-    DefaultTemplateId: string
+    DefaultTemplateId: string,
+    ActionGroup?: string,
+    Parameters?: WorkflowActionParameters[]
 }
 
 export interface SelectActionProps {

@@ -9,7 +9,7 @@ export interface SelectFromAllActionsProps {
 }
 
 const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
-    const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError] = useFetchActionDefinitions({})
+    const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError] = useFetchActionDefinitions({filter: {IsVisibleOnUI: true}})
 
     if(allActionDefinitionsIsLoading) {
         return <>Loading...</>
@@ -18,14 +18,16 @@ const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
     } else {
         return(
             <Grid container spacing={1}>
-                {allActionDefinitionsData.filter(actionDefinition => actionDefinition.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
+                {allActionDefinitionsData.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
                     <Grid item xs={12} md={6} lg={4}>
                         <SelectActionCard
-                            actionId={actionDefinition.Id||"NA"}
-                            actionName={actionDefinition.UniqueName||"NAME NA"}
-                            actionDescription={actionDefinition.Description||"DESCRIPTION NA"}
+                            actionId={actionDefinition?.ActionDefinition?.model?.Id||"NA"}
+                            actionName={actionDefinition?.ActionDefinition?.model?.UniqueName||"NAME NA"}
+                            actionDescription={actionDefinition?.ActionDefinition?.model?.Description||"DESCRIPTION NA"}
                             onAddAction={props.onAddAction}
-                            defaultTemplateId={actionDefinition.DefaultActionTemplateId||"TEMPLATE NA"}
+                            defaultTemplateId={actionDefinition?.ActionDefinition?.model?.DefaultActionTemplateId||"TEMPLATE NA"}
+                            actionGroup={actionDefinition?.ActionDefinition?.model?.ActionGroup}
+                            parameters={actionDefinition?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions}
                         />
                     </Grid>)}
             </Grid>

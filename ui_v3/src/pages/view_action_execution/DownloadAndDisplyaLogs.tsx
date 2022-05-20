@@ -16,7 +16,7 @@ const DownloadAndDisplayLogs = (props: DownloadAndDisplayLogsProps) => {
     const logsReady = Boolean(logs)
     const logsLocation = props.actionExecution.ExecutionLogs
     const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionLogs(logsLocation || "NA", 5)
-    const downloadExecutionOutputFromS3 = useDownloadExecutionOutputFromS3()
+    const {downloadExecutionOutputFromS3} = useDownloadExecutionOutputFromS3()
 
     const reader = new FileReader()
 

@@ -78,25 +78,22 @@ export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithDa
                     name: (chartData.chartData as PieChartOptions).data.name,
                     type: 'pie',
                     radius: ['40%', '70%'],
-                    avoidLabelOverlap: false,
                     itemStyle: {
                         borderRadius: 10,
                         borderColor: '#fff',
                         borderWidth: 2
                     },
-                    label: {
-                        show: false,
-                        position: 'center'
-                    },
                     emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        },
                         label: {
-                        show: true,
-                        fontSize: '40',
-                        fontWeight: 'bold'
+                            show: true,
+                            fontSize: '40',
+                            fontWeight: 'bold'
                         }
-                    },
-                    labelLine: {
-                        show: false
                     },
                     data: (chartData.chartData as PieChartOptions).data.result
                 }

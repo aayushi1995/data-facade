@@ -7,21 +7,23 @@ const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-na
 
 export type UpstreamAction = {stageId: string, stageName: string, actionName: string, actionId: string, actionIndex: number}
 
+export type WorkflowActionParameters = {
+    ActionParameterDefinitionId: string,
+    ParameterValue?: string,
+    SourceExecutionId?: UpstreamAction,
+    TableId?: string,
+    ColumnId?: string,
+    userInputRequired?: "Yes" | "No",
+    GlobalParameterId?: string,
+    ParameterName?: string
+}
+
 export type WorkflowActionDefinition = {
     Id: string,
     ActionGroup: string,
     DisplayName: string,
     DefaultActionTemplateId: string,
-    Parameters: {
-        ActionParameterDefinitionId: string,
-        ParameterValue?: string,
-        SourceExecutionId?: UpstreamAction,
-        TableId?: string,
-        ColumnId?: string,
-        userInputRequired?: "Yes" | "No",
-        GlobalParameterId?: string,
-        ParameterName?: string
-    }[],
+    Parameters: WorkflowActionParameters[],
     TemplateId?: string,
     DefinitionId?: string,
     Name?: string,
@@ -62,7 +64,8 @@ export type WorkflowContextType = {
     ActionGroup?: string,
     PublishStatus?: string,
     UpdatedOn?: number,
-    CreatedOn?: number
+    CreatedOn?: number,
+    ErrorState?: boolean
 }
 
 const defaultWorkflowContext: WorkflowContextType = {
@@ -358,6 +361,18 @@ type SetActionGroup = {
     payload?: string
 }
 
+type DeleteGlobalParameter = {
+    type: 'DELETE_GLOBAL_PARAMETER',
+    payload: {
+        parameterId: string
+    }
+}
+
+type SetErrorState = {
+    type: 'SET_ERROR_STATE',
+    payload: boolean
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -388,7 +403,9 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetSideDrawerState |
                              SetPinnedToDashboard |
                              SetPublishedStatus | 
-                             SetActionGroup
+                             SetActionGroup |
+                             DeleteGlobalParameter |
+                             SetErrorState
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -684,6 +701,37 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         case 'SET_ACTION_GROUP': {
             return {...state, ActionGroup: action.payload}
         }
+        
+        case 'DELETE_GLOBAL_PARAMETER': {
+            return {
+                ...state,
+                WorkflowParameters: state.WorkflowParameters.filter(parameter => parameter.Id !== action.payload.parameterId),
+                stages: state.stages.map(stage => ({
+                    ...stage,
+                    Actions: stage.Actions.map(stageAction => ({
+                        ...stageAction,
+                        Parameters: stageAction.Parameters.map((parameter) => {
+                            if(parameter.GlobalParameterId === action.payload.parameterId) {
+                                return {
+                                    ...parameter,
+                                    GlobalParameterId: undefined,
+                                    userInputRequired: "No"
+                                }
+                            } else {
+                                return parameter
+                            }
+                        })
+                    }))
+                }))
+            }
+        }
+
+        case 'SET_ERROR_STATE': {
+            return {
+                ...state,
+                ErrorState: action.payload
+            }
+        }
 
         default:
             return state
@@ -698,7 +746,10 @@ const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextTy
             Actions: stage.Actions.map((action, index) => { 
                 const newActions = {
                     ...action,
-                    Parameters: action.Parameters.filter(parameter => parameter?.SourceExecutionId === undefined || parameter?.SourceExecutionId?.actionId === stage.Actions?.[parameter.SourceExecutionId?.actionIndex]?.Id)
+                    Parameters: action.Parameters.map(parameter => parameter?.SourceExecutionId === undefined || parameter?.SourceExecutionId?.actionId === stage.Actions?.[parameter.SourceExecutionId?.actionIndex]?.Id ? parameter : {
+                        ...parameter,
+                        SourceExecutionId: undefined
+                    })
                 }
                 return newActions
             })

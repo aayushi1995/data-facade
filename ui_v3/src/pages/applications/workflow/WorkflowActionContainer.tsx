@@ -246,8 +246,8 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                 <Typography sx={{ fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px', fontWeight: '500px' }}>
                                     Select Action to add here
                                 </Typography>
-                                <IconButton sx={{ flex: 1, background: "#F8F8F8",  boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={handleAddAction}>
-                                    <img src={addActionIcon} alt="add action" style={{height: '100%', width: '100%', transform: 'scale(1.2)'}}/>
+                                <IconButton sx={{ flex: 1, background: "#F8F8F8"}} onClick={handleAddAction}>
+                                    <img src={addActionIcon} alt="add action" style={{height: '100%', width: '100%'}}/>
                                 </IconButton>
                             </Box>
                             <Box py={0.5} />

@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material"
+import { Box, Button, Dialog, DialogTitle, DialogContent, Typography } from "@mui/material"
 import React from "react"
 import { generatePath, Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
@@ -9,12 +9,14 @@ import WorkflowSideDrawer from "../../../common/components/workflow/create/Selec
 import WorkflowTabs from "../../../common/components/workflow/create/WorkflowTabs"
 import MakeWorkflowContextFromDetail from "../../../common/components/workflow/edit/hooks/MakeWorkflowContextFromDetails"
 import { useUpdateWorkflow } from "../../../common/components/workflow/edit/hooks/useUpdateWorkflow"
+import useValidateWorkflow from "../../../common/components/workflow/edit/hooks/useValidateWorkflow"
 import { useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
 import ApplicationID from "../../../enums/ApplicationID"
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces"
 import { ActionDefinitionHeroActionContextWrapper } from "../../build_action/components/shared-components/ActionDefinitionHero"
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from "../../build_action/context/BuildActionContext"
 import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
+import ErrorIcon from '@mui/icons-material/Error';
 
 
 interface MatchParams {
@@ -32,7 +34,6 @@ export interface WorkflowTemplateType {
 
 const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const [initialWorkflow, setInitialWorkflow] = React.useState<WorkflowContextType|undefined>()
-
     const duplicateFlow = useCopyAndSaveDefinition({mutationName: "CopyWorkflow"})
     const history = useHistory()
     const workflowId = match.params.workflowId
@@ -41,6 +42,10 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const actionContext = React.useContext(BuildActionContext)
     const setActionContext = React.useContext(SetBuildActionContext)
     const [isWorkflowFetched, setIsWorkflowFetched] = React.useState(false)
+    const [errorDialogState, setErrorDialogState] = React.useState(false)
+
+    const {isError, errorMessage} = useValidateWorkflow(workflowContext, initialWorkflow !== undefined)
+
     // TODO: Check with Shishir if things to be sent to backend should be sent at time of .mutate() call or reference should be passed right at time of mutation declaration.
     const useWorkflowUpdate = useUpdateWorkflow("UpdateWorkflow", workflowContext, actionContext)
     const useContinuosWorkflowUpdate = useUpdateWorkflow("ContinuosUpdate", workflowContext, actionContext)
@@ -58,6 +63,10 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         handleSetContexts(workflowContextObject)
         setInitialWorkflow(workflowContextObject)
     }
+
+    React.useEffect(() => {
+        setWorkflowContext({type: 'SET_ERROR_STATE', payload: isError})
+    }, [isError])
 
     const [workflowDetails, error, isLoading] = useGetWorkflowDetails(workflowId, {enabled: !isWorkflowFetched, onSuccess: handleSuccess})
     
@@ -82,19 +91,23 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     }
     
     const handleUpdate = () => {
-        useWorkflowUpdate.mutate({
-            workflowId: workflowId
-        },{
-            onSuccess: () => {
-                const applicationId = actionContext?.actionDefinitionWithTags?.actionDefinition?.ApplicationId
-                if(!!applicationId){
-                    console.log("UPDATED")
-                } else {
-                    console.log("Action Context Application Id field is empty")
-                    history.push(generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, {applicationId: ApplicationID.DEFAULT_APPLICATION}))
+        if(!isError) {
+            useWorkflowUpdate.mutate({
+                workflowId: workflowId
+            },{
+                onSuccess: () => {
+                    const applicationId = actionContext?.actionDefinitionWithTags?.actionDefinition?.ApplicationId
+                    if(!!applicationId){
+                        console.log("UPDATED")
+                    } else {
+                        console.log("Action Context Application Id field is empty")
+                        history.push(generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, {applicationId: ApplicationID.DEFAULT_APPLICATION}))
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            setErrorDialogState(true)
+        }
     }
 
     const handleRun = () => {
@@ -112,9 +125,26 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         )
     }
 
+    const handleErrorDialogClose = () => {
+        setErrorDialogState(false)
+    }
+
     if(isWorkflowFetched && !useWorkflowUpdate.isLoading) {
         return (
             <Box sx={{display: 'flex', gap: 1, flexDirection: 'row', width: '100%', height: '100%', overflowY: 'clip'}}>
+                <Dialog open={errorDialogState} onClose={handleErrorDialogClose} fullWidth maxWidth="sm">
+                    <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>
+                        <ErrorIcon/>
+                    </DialogTitle>
+                    <DialogContent sx={{mt: 1, display: 'flex', justifyContent: 'center', gap: 2, flexDirection: 'column'}}>
+                        <Box sx={{display: 'flex', gap: 2, flexDirection: 'column'}}>
+                            {errorMessage.slice(-5).map(message => {
+                                return <Typography variant="heroMeta" sx={{fontSize: '15px'}}>{message}</Typography>
+                            })}
+                        </Box>
+                        <Button onClick={handleErrorDialogClose}>Okay</Button>
+                    </DialogContent>
+                </Dialog>
                 <Box sx={{maxHeight: '100%', py: 2}}>
                 <WorkflowSideDrawer/>
                 </Box>

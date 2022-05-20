@@ -69,8 +69,8 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         const firstActionTemplate = action.ActionTemplatesWithParameters[0]
         const selectedActionTemplate = defaultActionTemplate || firstActionTemplate
         const selectedActionTemplateModel = selectedActionTemplate?.model
-        const selectedActionParams = selectedActionTemplate.actionParameterDefinitions
-        if(!selectedParameterForEdit) {
+        const selectedActionParams = selectedActionTemplate?.actionParameterDefinitions
+        if(!selectedParameterForEdit && !!selectedActionParams) {
             setSelectedParameterForEdit(selectedActionParams?.[0]?.model)
         }
         return (

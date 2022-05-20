@@ -2,6 +2,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Card, Icon, IconButton, Typography, useTheme } from '@mui/material';
 import React from 'react';
+import { ActionParameterDefinitionWithTags } from '../../../../generated/interfaces/Interfaces';
 import labels from '../../../../labels/labels';
 import TagHandler from '../../tag-handler/TagHandler';
 import DataCleansingIcon from "./../../../../images/Group 1545.svg";
@@ -14,6 +15,8 @@ export interface SelectActionCardProps {
     groupName?: string,
     defaultTemplateId: string,
     showTags?: boolean,
+    actionGroup?: string,
+    parameters?: ActionParameterDefinitionWithTags[]
     onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void
 }
 
@@ -24,7 +27,13 @@ const SelectActionCard = (props: SelectActionCardProps) => {
         props.onAddAction({
             Id: props.actionId,
             DisplayName: props.actionName,
-            DefaultTemplateId: props.defaultTemplateId
+            DefaultTemplateId: props.defaultTemplateId,
+            ActionGroup: props.actionGroup,
+            Parameters: props.parameters?.map(parameter => ({
+                ActionParameterDefinitionId: parameter.model?.Id!,
+                userInputRequired: "Yes",
+                ParameterName: parameter.model?.ParameterName
+            }))
         })
     }
 

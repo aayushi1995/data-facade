@@ -1,45 +1,57 @@
 import { useMutation } from "react-query";
+import dataManager from "../../../../../data_manager/data_manager";
 import { Fetcher } from "../../../../../generated/apis/api";
 import { ActionDefinition } from "../../../../../generated/entities/Entities";
 import { ActionTemplatesWithParameters, UpdateActionDefinitionWithTemplate } from "../../../../../generated/interfaces/Interfaces";
+import labels from "../../../../../labels/labels";
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext";
 import { BuildActionContextState } from "../../../../../pages/build_action/context/BuildActionContext";
+import { ActionDefinitionFormPayload } from "../../../../../pages/build_action/hooks/useActionDefinitionFormCreate";
 import { makeWorkflowTemplate } from "../../create/util/MakeWorkflowTemplate";
 
 
 export const useUpdateWorkflow = (mutationName: string, workflowContext: WorkflowContextType, actionContext: BuildActionContextState) => {
     const actionTemplateText = makeWorkflowTemplate(workflowContext)
+    const fetchedDataManagerInstance = dataManager.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function, patchData: Function}
 
     return useMutation(
         mutationName,
         (options: {workflowId: string}) => {
-            const filter = {
-                Id: options.workflowId
-            }
-            const newActionDefinitionProperties: ActionDefinition = {
-                ...actionContext?.actionDefinitionWithTags?.actionDefinition
-            }
-            const actionTemplateWithParameters: ActionTemplatesWithParameters = {
-                model: {
-                   Id: workflowContext.Template?.Id,
-                   Text: actionTemplateText
+
+            const updatedWorkflow: ActionDefinitionFormPayload = {
+                ActionDefinition: {
+                    model: {...actionContext?.actionDefinitionWithTags?.actionDefinition, Id: options.workflowId},
+                    tags: []
                 },
-                tags: [],
-                actionParameterDefinitions: workflowContext.WorkflowParameters.map(parameter => {
-                    return {
-                        model: parameter,
-                        tags: []
+                ActionTemplatesWithParameters: [
+                    {
+                        model: {
+                           ...workflowContext.Template,
+                           Text: actionTemplateText,
+                        },
+                        tags: [],
+                        actionParameterDefinitions: workflowContext.WorkflowParameters.map(parameter => {
+                            return {
+                                model: {
+                                    ...parameter,
+                                    ActionDefinitionId: options.workflowId,
+                                    TemplateId: workflowContext.Template?.Id
+                                },
+                                tags: []
+                            }
+                        })
                     }
-                })
+                ]
             }
 
-            const payload: UpdateActionDefinitionWithTemplate = {
-                filter: filter,
-                newProperties: newActionDefinitionProperties,
-                ActionTemplateWithParameters: [actionTemplateWithParameters]
+            const payload = {
+                UpdatedAction: updatedWorkflow,
+                ActionDefinitionForm: true
             }
 
-            return Fetcher.fetchData('PATCH', '/updateActionDefinitionWithTemplateAndParameters', payload)
+            return fetchedDataManagerInstance.patchData(labels.entities.ActionDefinition, {
+                ...payload
+            })
         }
     )
 }

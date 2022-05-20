@@ -116,7 +116,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
 
     const useActionExecutionParsedOutputQuery = useActionExecutionParsedOutput({ actionExecutionFilter: {Id: actionExecutionDetail?.ActionExecution?.Id}, queryOptions: {}})
     const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionOutput(actionExecutionDetail.ActionExecution?.OutputFilePath || "NA", 5)
-    const downloadExecutionOutputFromS3 = useDownloadExecutionOutputFromS3()
+    const {downloadExecutionOutputFromS3, download} = useDownloadExecutionOutputFromS3()
 
     const viewResult = () => {
         useActionExecutionParsedOutputQuery.refetch()
@@ -148,6 +148,24 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
         Label: "Execution Completed Successfully"
     }
 
+    const handleDownloadResult = () => {
+        useGetPresignedDowloadUrl.mutate(
+            (undefined),
+            {
+                onSuccess: (data, varaibles, context) => {
+                    const s3Data = data as {requestUrl: string, headers: any}
+                    downloadExecutionOutputFromS3.mutate(
+                        ({requestUrl: s3Data.requestUrl as string, headers: s3Data.headers}), {
+                            onSuccess: (data, variables, context) => {
+                                download(data as Blob, props.actionExecutionDetail.ActionInstance?.Name + ".csv" || "DataFacadeOutput")
+                            }
+                        }
+                    )
+                }
+            }
+        )
+    }
+
     return (
         <Box>
             <Dialog open={importTableDialog} onClose={() => {setImportTableDialog(false); setFileFetched(false)}} fullWidth maxWidth="xl">
@@ -156,7 +174,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                 </DialogTitle>
                 <DialogContent>
                     {fileFetched ? (
-                        <ConfigureTableMetadata file={new File([downloadExecutionOutputFromS3.data as Blob], `${actionExecutionDetail.ActionExecution?.ActionInstanceName || "Execution"}.csv`)} uploadState={S3UploadState.FILE_BUILT_FOR_UPLOAD} currentEnabled={5} setUploadState={() => {return}}/>
+                        <ConfigureTableMetadata file={new File([downloadExecutionOutputFromS3.data as Blob], `Table.csv`)} uploadState={S3UploadState.FILE_BUILT_FOR_UPLOAD} currentEnabled={5} setUploadState={() => {return}}/>
                     ) : (
                         <LoadingIndicator/>
                     )}
@@ -204,9 +222,14 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                                 </Button>
                             </Box>
                             <Box>
-                                <Button variant="contained" disabled>
-                                    Download File
-                                </Button>
+                                {downloadExecutionOutputFromS3.isLoading ? (
+                                    <LoadingIndicator/>
+                                ) : (
+                                    <Button variant="contained" onClick={handleDownloadResult}>
+                                        Download File
+                                    </Button>
+                                )}
+                                
                             </Box>
                             <Box>
                                 <Button variant="contained" disabled={actionExecutionDetail.ActionDefinition?.PresentationFormat !== ActionDefinitionPresentationFormat.TABLE_VALUE} onClick={handleExportResults}>

@@ -1,12 +1,23 @@
-import { DataGrid } from "@mui/x-data-grid"
+import { DataGrid, DataGridProps, GridCellParams, GridRowParams } from "@mui/x-data-grid"
 import React from "react"
-import { WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
+import { SetWorkflowContext, WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
+import { TextCell } from "../../../../pages/table_browser/components/AllTableView"
+import { Box, Tooltip, IconButton } from "@mui/material"
+import { ReactComponent as DeleteIcon } from "./../../../../../src/images/DeleteIcon.svg";
 
+interface GlobalParametersRow {
+    GlobalParameterName: string,
+    MappedActionLevelParameters: string,
+    InputType: string,
+    DataType: string,
+    id: string,
+    options: string
+}
 
 const ShowGlobalParameters = () => {
     const workflowContext = React.useContext(WorkflowContext)
 
-    const getRows = () => {
+    const getRows = () : GlobalParametersRow[] => {
         return workflowContext.WorkflowParameters.map(globalParameter => {
             const details: {stageName: string, actionName: string, parameterName: string}[] = []
             workflowContext.stages.forEach(stage => {
@@ -27,40 +38,93 @@ const ShowGlobalParameters = () => {
                 "MappedActionLevelParameters": details.map(detail => detail.stageName + " | " + detail.actionName + " | " + detail.parameterName).join(', '),
                 "InputType": globalParameter.Tag || "NA",
                 "DataType": globalParameter.Datatype || "NA",
-                "id": globalParameter.Id || "id"
+                "id": globalParameter.Id || "id",
+                "options": globalParameter.OptionSetValues || "NA"
             }
         })
     }
 
-    const dataGridProps = {
+    const dataGridProps: DataGridProps = {
         columns: [
             {
                 field: "GlobalParameterName",
-                headerName: "Global Parameter Name"
+                headerName: "Global Parameter Name",
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <TextCell {...{text: params.row.GlobalParameterName}} />,
+                flex: 2
             },
             {
                 field: "MappedActionLevelParameters",
-                headerName: "Mapped Parameter"
+                headerName: "Mapped Parameter",
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <TextCell {...{text: params.row.MappedActionLevelParameters}} />,
+                flex: 2
             },
             {
                 field: "InputType",
-                headerName: "Input Type"
+                headerName: "Input Type",
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <TextCell {...{text: params.row.InputType}} />,
+                flex: 1
             },
             {
                 field: "DataType",
-                headerName: "Data Type"
+                headerName: "Data Type",
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <TextCell {...{text: params.row.DataType}} /> ,
+                flex: 1
+            },
+            {
+                field: "options",
+                headerName: "Options",
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <TextCell {...{text: params.row.options}} /> ,
+                flex: 1
+            },
+            {
+                field: "Action",
+                flex: 1,
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <DeleteCell {...params.row}/>
             }
         ].map(column => { return {...column, width: column.field.length*20}}),
         rows: getRows(),
-        autoPageSize: true,
-        rowsPerPageOptions: [5, 10, 15],
-        disableSelectionOnClick: true
+        rowsPerPageOptions: [5, 10, 15, 20, 50],
+        disableSelectionOnClick: true,
+        hideFooterSelectedRowCount: true,
+        sx: {
+            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+        },
+        autoHeight: true,
+        headerHeight: 70,
+        initialState: {
+            pagination: {
+                pageSize: 20
+            }
+        },
     }
 
     return (
-        <DataGrid {...dataGridProps} sx={{minHeight: '400px'}}/>
+        <DataGrid {...dataGridProps}/>
     )
     
+}
+
+const DeleteCell = (props: GlobalParametersRow) => {
+    const setWorkflowContext = React.useContext(SetWorkflowContext)
+
+    const deleteParameter = (parameterId: string) => {
+        setWorkflowContext({
+            type: 'DELETE_GLOBAL_PARAMETER',
+            payload: {
+                parameterId: parameterId
+            }
+        })
+    }
+
+    return (
+        <Box>
+            <Tooltip title="Delete">
+                <IconButton sx={{ width: "40px", height: "40px" }} onClick={ (event) => {event.stopPropagation(); deleteParameter(props?.id)} }>
+                    <DeleteIcon/>
+                </IconButton>
+            </Tooltip>
+        </Box>
+    )
 }
 
 export default ShowGlobalParameters

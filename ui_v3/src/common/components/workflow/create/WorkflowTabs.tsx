@@ -1,10 +1,13 @@
 import { Box, Button, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
 import ActionDefinitionPublishStatus from "../../../../enums/ActionDefinitionPublishStatus";
+import { WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext";
 import { BuildActionContext } from "../../../../pages/build_action/context/BuildActionContext";
 import { StagesWithActions } from "./newStage/StagesWithActions";
 import ShowGlobalParameters from "./ShowGlobalParameters";
 import WorkflowSummary from "./WorkflowSummary";
+import ErrorIcon from '@mui/icons-material/Error';
+import DoneIcon from '@mui/icons-material/Done';
 
 
 interface TabPanelProps {
@@ -43,6 +46,7 @@ export interface WorfkflowTabsProps {
 const WorkflowTabs = (props: WorfkflowTabsProps) => {
     const [tabValue, setTableValue] = React.useState(0)
     const actionContext = React.useContext(BuildActionContext)
+    const workflowContext = React.useContext(WorkflowContext)
 
     return (
         <Box >
@@ -116,6 +120,9 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
                     }} onClick={() => props?.onDuplicate?.()}>
                         Duplicate
                     </Button>
+                    <Box sx={{ display: "flex", alignItems: "center", px: 2 }}>
+                        {workflowContext.ErrorState ? <ErrorIcon sx={{transform: "scale(1.5)"}}/> : <DoneIcon sx={{ transform: "scale(1.5)"  }}/> }
+                    </Box>
                 </Box>
             </Box>
             <Box>

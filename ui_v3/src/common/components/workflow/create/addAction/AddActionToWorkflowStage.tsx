@@ -22,13 +22,13 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
     }
 
     const addActionHandler = (actionDefinition: ActionDefinitionToAdd) => {
+        console.log(actionDefinition)
         const newWorkflowAction: WorkflowActionDefinition = {
             DisplayName: actionDefinition.DisplayName,
             Id: actionDefinition.Id,
             DefaultActionTemplateId: actionDefinition.DefaultTemplateId,
-            Parameters: [],
-            // TODO: Add action group back once it's ready from backend     
-            ActionGroup: "Yet to define"
+            Parameters: actionDefinition.Parameters || [],  
+            ActionGroup: actionDefinition.ActionGroup || ""
         }
 
         setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: props.stageId, Action: newWorkflowAction}})
