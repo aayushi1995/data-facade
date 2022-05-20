@@ -147,7 +147,6 @@ export interface TableBrowserResponse {
 	TableId?: string
 	TableCreatedBy?: string
 	TableLastSyncedOn?: number
-	TableHealth?: TableHealth
 	ProviderInstanceName?: string
 	ProviderInstanceId?: string
 	ProviderDefinitionName?: string
@@ -210,11 +209,6 @@ export interface ColumnInfo {
 export interface WorkflowStagesWithActions {
     Actions?: Entity.ActionDefinition[]
 	stageName?: string
-}
-
-
-export interface TableHealth {
-    Health?: number
 }
 
 

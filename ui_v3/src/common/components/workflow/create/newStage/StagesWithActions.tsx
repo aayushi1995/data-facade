@@ -65,18 +65,21 @@ export const StagesWithActions = () => {
 
     }
 
+    const isPreviousPossible = (workflowContext?.currentStageView?.startIndex || -1) >= 0
+    const isNextPossible = (workflowContext?.currentStageView?.endIndex || workflowContext.stages.length) < workflowContext.stages.length
+
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', maxWidth: 'inherit'}}>
             <Box sx={{ display: 'flex', flexDirection: "row-reverse", width: "100%"}}>
                 <Box>
                     <Tooltip title="Previous">
-                        <IconButton onClick={handleSlidePrev}>
-                            <img src={slideNext} alt="previos" style={{transform: 'rotate(180deg)'}}/>
+                        <IconButton onClick={handleSlidePrev}  disabled={!isPreviousPossible}>
+                            <img src={slideNext} alt="previos" style={{transform: 'rotate(180deg)', opacity: isPreviousPossible ? 1 : 0.2}}/>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Next">
-                        <IconButton onClick={handleSlideNext}>
-                            <img src={slideNext} alt="next"/>
+                        <IconButton onClick={handleSlideNext} disabled={!isNextPossible}>
+                            <img src={slideNext} alt="next" style={{opacity: isNextPossible ? 1 : 0.2}}/>
                         </IconButton>
                     </Tooltip>
                 </Box>

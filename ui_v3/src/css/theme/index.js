@@ -51,13 +51,13 @@ const baseOptions = {
                         variant: "ModuleHeaderButton2"
                     },
                     style: {
-                        background: "#A4CAF0",
+                        background: "#42C2FF",
                         color: "#FFFFFF",
                         borderRadius: '10px', 
                         width: "250px",
                         height: "50px",
                         '&:hover': {
-                            backgroundColor: '#0BBAE0',
+                            backgroundColor: '#0AA1DD',
                             color: "#FFFFFF",
                         }
                     }

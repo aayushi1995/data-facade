@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Box, Card, Dialog, DialogContent, IconButton, InputAdornment, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
-import { DataGrid, DataGridProps, GridCellParams, GridRowParams } from "@mui/x-data-grid";
+import { DataGrid, DataGridProps, GridCellParams, GridRowParams, GridValueGetterParams } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from 'react';
 import { generatePath, Route, useHistory } from "react-router";
 import { DATA_ALL_TABLES_ROUTE, DATA_TABLE_SYNC_ACTIONS, DATA_TABLE_VIEW } from "../../../common/components/header/data/DataRoutesConfig";
@@ -17,12 +17,13 @@ import { TableBrowserResponse, TableOOBActionStatus } from "../../../generated/i
 import { useTableAndColumnStats } from "../../table_details/components/ColumnInfoViewHooks";
 import SyncOOBActionExecutionStatus from '../SyncOOBActionStatus';
 import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
-import { ReactComponent as WeirdIcon } from "./../../../images/WeirdIcon.svg";
 import { useDeleteTables, useGetTableOOBActionsStatus, useGetTables, useReSyncTables } from "./AllTableViewHooks";
 
 export type AllTableViewProps = {
     tableFilter?: TableProperties
 }
+
+type TableBrowserResponseAndCalculatedInfo = TableBrowserResponse & { Health?: number, SuccessfulSync?: boolean }
 
 const AllTableView = (props: AllTableViewProps) => {
     const history = useHistory()
@@ -33,6 +34,25 @@ const AllTableView = (props: AllTableViewProps) => {
     const [dialogProps, setDialogProps] = useState({ open: false, label: "All Tables" })
     const isMutating = deleteTableMutation.isLoading || reSyncTablesMutation.isLoading
 
+    const [rows, setRows] = React.useState<TableBrowserResponseAndCalculatedInfo[]>([])
+    React.useEffect(() => {
+        if(!!tableQuery.data){
+            setRows(tableQuery.data)
+        }
+    }, [tableQuery.data])
+    const setHealth = (tableId?: string, health?: number) => {
+        const oldHealth = rows?.find(row => row?.TableId===tableId)?.Health
+        if(oldHealth !== health) {
+            setRows((oldRows) => oldRows?.map(row => row?.TableId!==tableId ? row : {...row, Health: health }))
+        }
+    }
+    const setSyncStaus = (tableId?: string, successfulSync?: boolean) => {
+        const oldSuccessfulSync = rows?.find(row => row?.TableId===tableId)?.SuccessfulSync
+        if(oldSuccessfulSync !== successfulSync) {
+            setRows((oldRows) => oldRows?.map(row => row?.TableId!==tableId ? row : {...row, SuccessfulSync: successfulSync }))
+        }
+    }
+    
     const handleSearchChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSearchQuery(event?.target.value)
     }
@@ -47,56 +67,58 @@ const AllTableView = (props: AllTableViewProps) => {
                 field: "TableUniqueName",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <TextCell text={params.row.TableUniqueName}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.TableUniqueName}/>
             },
             {
                 headerName: "Data Source",
                 field: "ProviderDefinitionName",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <TextCell text={params.row.ProviderDefinitionName}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.ProviderDefinitionName}/>
             },
             {
                 headerName: "Connection Name",
                 field: "ProviderInstanceName",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <TextCell text={params.row.ProviderInstanceName}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.ProviderInstanceName}/>
             },
             {
                 headerName: "CreatedBy",
                 field: "TableCreatedBy",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <TextCell text={params.row.TableCreatedBy}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.TableCreatedBy}/>
             },
             {
                 field: "Sync Status",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <SyncStatusCell {...params.row}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <SyncStatusCell TableId={params.row?.TableId} setSyncStaus={setSyncStaus}/>
             },
             {
                 headerName: "Last Synced On",
                 field: "TableLastSyncedOn",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <TimestampCell timestamp={params.row?.TableLastSyncedOn}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TimestampCell timestamp={params.row?.TableLastSyncedOn}/>
             },
             {
                 field: "Health",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <HealthCell {...params.row}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <HealthCell TableId={params.row?.TableId} setHealth={setHealth}/>,
+                type: "number",
+                valueGetter: (params: GridValueGetterParams<any, TableBrowserResponseAndCalculatedInfo>) => params.row?.Health
             },
             {
                 field: "Action",
                 flex: 1,
-                minWidth: 150,
-                renderCell: (params: GridCellParams<any, TableBrowserResponse, any>) => <ActionCell {...params.row}/>
+                minWidth: 100,
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <ActionCell {...params.row}/>
             }
         ],
-        rows: (tableQuery?.data?.map?.((x, index) => ({ ...x, id: index})) || []),
+        rows: (rows.map?.((x, index) => ({ ...x, id: index})) || []),
         sx: {
             "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
         },
@@ -104,15 +126,15 @@ const AllTableView = (props: AllTableViewProps) => {
         headerHeight: 70,
         rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
         hideFooterSelectedRowCount: true,
-        onRowClick: (params: GridRowParams<TableBrowserResponse>) => {
+        onRowClick: (params: GridRowParams<TableBrowserResponseAndCalculatedInfo>) => {
             const tableName = params?.row?.TableUniqueName
             const tableId = params?.row?.TableId
+            const syncSuccessfully = params?.row?.SuccessfulSync
             const tableDetail = tableQuery?.data?.find( table => table.TableId === tableId)
-            if(!!tableName && !!tableId && !!tableDetail) { 
+            if(!!tableName && !!tableId && !!tableDetail && syncSuccessfully===true) { 
                 history.push(generatePath(DATA_TABLE_VIEW, { TableName: tableName }))
             }
         },
-        disableColumnFilter: true,
         filterModel: {
             items: [
                 {
@@ -127,7 +149,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 pageSize: 10
             }
         },
-        onCellClick: (params: GridCellParams<unknown, TableBrowserResponse, unknown>, event, details) => {
+        onCellClick: (params: GridCellParams<unknown, TableBrowserResponseAndCalculatedInfo, unknown>, event, details) => {
             if(params.field === "Sync Status" && !!(params?.row?.TableUniqueName)) {
                 event.stopPropagation()
                 history.replace(generatePath(DATA_TABLE_SYNC_ACTIONS, { TableName: params?.row?.TableUniqueName }))
@@ -198,7 +220,7 @@ const AllTableView = (props: AllTableViewProps) => {
     )
 }
 
-const ActionCell = (props?: TableBrowserResponse) => {
+const ActionCell = (props?: TableBrowserResponseAndCalculatedInfo) => {
     const deleteTableMutation = useDeleteTables({ options: {}, tableId: props?.TableId })
     const reSyncTablesMutation = useReSyncTables({ options: {}, tableId: props?.TableId })
 
@@ -212,14 +234,6 @@ const ActionCell = (props?: TableBrowserResponse) => {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "row", gap: 1, justifyContent: "space-around", width: "100%" }}>
-            <Box>
-                <Tooltip title="Don't Know">
-                    <IconButton sx={{ width: "40px", height: "40px" }} onClick={ (event) => {event.stopPropagation(); console.log("New Button")} }>
-                        <WeirdIcon/>
-                    </IconButton>
-                </Tooltip>
-                {false && <LinearProgress variant="indeterminate"/>}
-            </Box>
             <Box>
                 <Tooltip title="ReSync">
                     <IconButton sx={{ width: "40px", height: "40px" }} onClick={ (event) => {event.stopPropagation(); reSyncTable(props?.TableId)} }>
@@ -240,7 +254,7 @@ const ActionCell = (props?: TableBrowserResponse) => {
     )
 }
 
-const HealthCell = (props?: TableBrowserResponse) => {
+const HealthCell = (props?: { TableId?: string, setHealth: Function }) => {
     const oobActionsStatus = useGetTableOOBActionsStatus({ options: {}, tableId: props?.TableId })
     const tableFullStats = useTableAndColumnStats({ TableId: props?.TableId })
     const allComplete = areAllOOBActionsCompleted(oobActionsStatus.data)
@@ -250,6 +264,7 @@ const HealthCell = (props?: TableBrowserResponse) => {
 
     const formText = () => {
         if(allComplete && health !== undefined) {
+            props?.setHealth(props?.TableId, scaledHealth)
             return `${Math.floor(scaledHealth)} %`
         }
         else if(anyFailed) {
@@ -283,7 +298,7 @@ const HealthCell = (props?: TableBrowserResponse) => {
     )
 }
 
-const SyncStatusCell = (props?: TableBrowserResponse) => {
+const SyncStatusCell = (props?: { TableId?: string, setSyncStaus: Function}) => {
     const history = useHistory()
     const oobActionsStatus = useGetTableOOBActionsStatus({ options: {}, tableId: props?.TableId })
     const allComplete = areAllOOBActionsCompleted(oobActionsStatus.data)
@@ -291,15 +306,40 @@ const SyncStatusCell = (props?: TableBrowserResponse) => {
 
 
     const getLabel = () => {
-        if(allComplete) return "Sync Complete"
-        else if(anyFailed) return "Sync Failed"
-        else return "Syncing"
+        if(allComplete) {
+            props?.setSyncStaus(props?.TableId, true)
+            return "Sync Complete"
+        }
+        else if(anyFailed) {
+            props?.setSyncStaus(props?.TableId, false)
+            return "Sync Failed"
+        }
+        else {
+            props?.setSyncStaus(props?.TableId, false)
+            return "Syncing"
+        }
     }
 
     const getIcon = () => {
         if(allComplete) return <CheckCircleIcon height="24px" width="24px" sx={{ color: "#00AA11" }}/>
         else if(anyFailed) return <CancelIcon height="24px" width="24px" sx={{ color: "#FF0000" }}/>
-        else return <SyncingLogo height="24px" width="24px" color="#FA9705"/>
+        else return (
+            <Box sx={{
+                animation: "spin 2s linear infinite",
+                "@keyframes spin": {
+                  "0%": {
+                    transform: "rotate(360deg)",
+                  },
+                  "100%": {
+                    transform: "rotate(0deg)",
+                  },
+                },
+                height: "24px", 
+                width: "24px"
+              }}>
+                 <SyncingLogo height="24px" width="24px" color="#FA9705"/>
+            </Box>
+        )
     }
 
     const getTooltipText = () => {
@@ -316,7 +356,7 @@ const SyncStatusCell = (props?: TableBrowserResponse) => {
             children={() => 
                 <Tooltip title={getTooltipText()}>
                     <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", alignItems: "center", gap: 1, cursor: "pointer" }}>
-                        <Box>
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                             {getIcon()}
                         </Box>
                         <Box>

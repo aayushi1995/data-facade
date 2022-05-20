@@ -184,7 +184,8 @@ const formDefaultProviderParameterInstance = (paramDef: ProviderParameterDefinit
         Id: uuidv4(),
         ProviderParameterDefinitionId: paramDef.Id,
         ParameterValue: "",
-        ParameterName: paramDef.ParameterName
+        ParameterName: paramDef.ParameterName,
+        Protected: paramDef.Protected
     }
     return defaultParameter
 }

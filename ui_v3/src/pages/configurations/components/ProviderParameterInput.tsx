@@ -1,4 +1,4 @@
-import { Box, Grid, TextField } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { ProviderDefinitionDetail, ProviderInformation } from '../../../generated/interfaces/Interfaces';
@@ -13,25 +13,37 @@ export type ProviderParameterInputProps = {
 };
 
 const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
+    const [showHidden, setShowHidden] = React.useState(false)
+
     return (
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Grid container spacing={2} sx={{ py: 2 }}>
-                <Grid item xs={12}>
+        <Box>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <Box>
                     <TextField sx={{ height: "100%" }} fullWidth variant="outlined" label="Instance name" required value={props?.ProviderInstance?.ProviderInstance?.model?.Name} onChange={(event) => props?.onProviderInstanceNameChange?.(event.target.value)}/>
-                </Grid>
+                </Box>
                 {props?.ProviderInstance?.ProviderParameterInstance?.map(paramInstance => {
                     const paramDef = props?.ProviderDefinition?.ProviderParameterDefinition?.find(paramDef => paramInstance?.ProviderParameterDefinitionId === paramDef?.Id)
+                    const hidden = (paramDef?.Protected || false) && (!showHidden)
                     if(!!paramDef) {
                         return (
-                            <Grid item xs={12}>
-                                <TextField sx={{ height: "100%" }} fullWidth variant="outlined" label={paramDef?.ParameterName} value={paramInstance?.ParameterValue} required onChange={(event) => props?.onParameterValueChange?.(paramDef?.Id, event.target.value)}/>
-                            </Grid>
+                            <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
+                                <Box sx={{ display: "flex", flex: 1 }}>
+                                    <TextField sx={{ height: "100%" }} fullWidth variant="outlined" type={hidden ? "password" : undefined} label={paramDef?.ParameterName} value={paramInstance?.ParameterValue} required onChange={(event) => props?.onParameterValueChange?.(paramDef?.Id, event.target.value)}/>
+                                </Box>
+                            </Box>
                         )
                     } else {
                         return <></>
                     }
                 })}
-            </Grid>
+            </Box>
+            <Box>
+                <FormControlLabel label="Show Hidden"
+                    control={
+                        <Checkbox checked={showHidden} onChange={(event) => setShowHidden(event.target.checked)}/>
+                    }
+                />
+            </Box>
         </Box>
     )
 }

@@ -303,6 +303,7 @@ export interface ProviderParameterDefinition extends BaseEntity{
 	ProviderDefinitionId?: string
 	ParameterName?: string
 	FilledBy?: string
+	Protected?: boolean
 	Datatype?: string
 }
 
@@ -369,6 +370,7 @@ export interface ProviderParameterInstance extends BaseEntity{
 	ParameterValue?: string
 	FilledBy?: string
 	Datatype?: string
+	Protected?: boolean
 	CreatedOn?: number
 	ModifiedOn?: number
 }
