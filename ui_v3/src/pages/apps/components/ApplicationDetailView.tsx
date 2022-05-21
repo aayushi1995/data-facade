@@ -96,6 +96,11 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                             <ApplicationRunsByMe application={application?.model}/>
                         </Box>
                     </TabPanel>
+                    <TabPanel value={tabValue} index={3}>
+                        <Box mt={1}>
+                            <ApplicationRunsByMe application={application?.model}/>
+                        </Box>
+                    </TabPanel>
                 </Box>
             </Box>
 
