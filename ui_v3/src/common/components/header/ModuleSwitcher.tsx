@@ -31,11 +31,14 @@ export function TabsContainer(props: TabsContainerType) {
 
     
     return (
-        <Box sx={{ 
-            display: "flex", 
-            flexDirection: "row", 
+        <Box sx={{
+            display: "flex",
+            flexDirection: "row",
             justifyContent: isLevel0TabsContainer ? "space-between" : "center",
-            backgroundColor: level === 0 ? "background.paper" : "background.default"
+            height: 50,
+            position: level === 0 && !moduleContext.tabsVisible ? 'absolute': 'relative',
+            width: '100%',
+            backgroundColor: level === 0 && moduleContext.tabsVisible ? "background.paper" : "background.default"
          }}>
             { isLevel0TabsContainer && 
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -63,9 +66,8 @@ export function TabsContainer(props: TabsContainerType) {
                 </Box>
             }
             {isLevel0TabsContainer && 
-                <Box>
-                    <Box ref={anchorRef} onClick={() => setSettingPopOverVisible(true)} 
-                        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Box ref={anchorRef} onClick={() => setSettingPopOverVisible(true)} >
                         <ButtonIconWithToolTip 
                             title="settings" 
                             Icon={() => <img src={SettingsIcon} 
