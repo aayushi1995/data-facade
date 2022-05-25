@@ -66,15 +66,14 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 headerName: "Tags",
                 width: 300,
                 renderCell: (params: any) => 
-                <Box sx={{overflowY: "auto"}}>
+                <Box sx={{overflowY: "auto", width: '100%'}}>
                     <VirtualTagHandler
                         tagFilter={{}}
                         allowAdd={false}
                         allowDelete={false}
                         selectedTags={params.row.tags}
                         onSelectedTagsChange={() => {}}
-                        orientation="VERTICAL"
-                        direction="DEFAULT"
+                        inputFieldLocation="RIGHT"
                     />
                 </Box>
             },

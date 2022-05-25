@@ -94,6 +94,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
             <Box>
                 <Card onClick={onApplicationSelect} sx={{
                     width: "350px", 
+                    height: "186px",
                     borderRadius: 2, 
                     p: 2, 
                     boxSizing: "content-box",
@@ -117,7 +118,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     {application.ApplicationName}
                                 </Typography>
                             </Box>
-                            <Box>
+                            <Box sx={{textOverflow: 'ellipsis', overflow: 'hidden', maxHeight: "70px"}}>
                                 <Typography sx={{
                                     fontFamily: "SF Pro Display",
                                     fontStyle: "normal",
@@ -125,7 +126,6 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     fontSize: "11px",
                                     lineHeight: "133.4%",
                                     display: "flex",
-                                    alignItems: "center"
                                 }}>
                                     {application.ApplicationDescription}
                                 </Typography>

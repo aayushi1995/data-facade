@@ -58,6 +58,7 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
                     tagFilter={{}}
                     allowAdd={false}
                     allowDelete={true}
+                    inputFieldLocation="RIGHT"
                 />   
             },
             {

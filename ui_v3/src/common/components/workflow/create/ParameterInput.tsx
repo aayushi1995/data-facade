@@ -9,6 +9,7 @@ import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTa
 
 export interface UpstreamActionParameterInput {
     parameterType: "UPSTREAM_ACTION",
+    parameterId?: string
     inputProps: {
         upstreamActions: UpstreamAction[],
         selectedAction: UpstreamAction,
@@ -19,6 +20,7 @@ export interface UpstreamActionParameterInput {
 
 export interface StringParameterInput {
     parameterType: "STRING",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         value: string | undefined,
@@ -28,6 +30,7 @@ export interface StringParameterInput {
 
 export interface IntParameterInput {
     parameterType: "INT",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         value: string | undefined,
@@ -37,6 +40,7 @@ export interface IntParameterInput {
 
 export interface FloatParameterInput {
     parameterType: "FLOAT",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         value: string | undefined,
@@ -46,6 +50,7 @@ export interface FloatParameterInput {
 
 export interface BooleanParameterInput {
     parameterType: "BOOLEAN",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         value: string | undefined,
@@ -55,6 +60,7 @@ export interface BooleanParameterInput {
 
 export interface TableParameterInput {
     parameterType: "TABLE",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         selectedTableFilter: TableProperties | undefined,
@@ -65,6 +71,7 @@ export interface TableParameterInput {
 
 export interface ColumnParameterInput {
     parameterType: "COLUMN",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         selectedColumnFilter: ColumnProperties | undefined,
@@ -78,6 +85,7 @@ export interface ColumnParameterInput {
 
 export interface ColumnListParameterInput {
     parameterType: "COLUMN_LIST",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         selectedColumnFilters: ColumnProperties[] | undefined,
@@ -91,6 +99,7 @@ export interface ColumnListParameterInput {
 
 export interface OptionSetStringParameterInput {
     parameterType: "OPTION_SET_SINGLE",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         availableOptions: {name: string}[],
@@ -101,6 +110,7 @@ export interface OptionSetStringParameterInput {
 
 export interface OptionSetMultipleParameterInput {
     parameterType: "OPTION_SET_MULTIPLE",
+    parameterId?: string
     inputProps: {
         parameterName: string,
         availableOptions: {name: string}[],
@@ -111,6 +121,7 @@ export interface OptionSetMultipleParameterInput {
 
 export interface NAInput {
     parameterType: undefined
+    parameterId?: string
 }
 
 

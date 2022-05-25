@@ -77,7 +77,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         <Box>
             <Box>
                 <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
-                    <Tab label="Code" value={0} sx={{
+                    <Tab label="Parameters" value={0} sx={{
                             fontFamily: "SF Pro Text",
                             fontStyle: "normal",
                             fontWeight: 600,
@@ -88,7 +88,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                             textAlign: "center",
                             opacity: 0.7
                     }}/>
-                    <Tab label="Parameters" value={1} sx={{
+                    <Tab label="Code" value={1} sx={{
                             fontFamily: "SF Pro Text",
                             fontStyle: "normal",
                             fontWeight: 600,
@@ -102,7 +102,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                 </Tabs>
             </Box>
             <Box sx={{pt: 2}}>
-                <TabPanel value={activeTab} index={0}>
+                <TabPanel value={activeTab} index={1}>
                     <Box>
                         <CodeEditor
                             code={selectedActionTemplateModel?.Text}
@@ -112,7 +112,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                         />
                     </Box>
                 </TabPanel>
-                <TabPanel value={activeTab} index={1}>
+                <TabPanel value={activeTab} index={0}>
                     <Card
                         sx={{
                             borderRadius: 1,

@@ -1,8 +1,10 @@
-import { Box, Card, Grid } from "@mui/material";
+import { Box, Card, Grid, Tooltip, Icon } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
 import ParameterInput, { ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import InfoIcon from "../../../../src/images/info.svg"
 
 
 interface ParameterDefinitionsConfigPlaneProps {
@@ -49,6 +51,11 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         return parameterInstance
     }
 
+    const getParameterDescription = (parameterId: string) => {
+        const parameterDefinition = props.parameterDefinitions.find(parameter => parameter.Id === parameterId)
+        return parameterDefinition?.Description || parameterDefinition?.DisplayName || parameterDefinition?.ParameterName
+    }
+
     const getSortedParameters = () => {
         const sortedByName = props.parameterDefinitions.sort((p1, p2) => ((p1?.ParameterName||"a") > (p2.ParameterName||"b")) ? 1 : -1)
         const tableParameters: ActionParameterDefinition[] = []
@@ -75,8 +82,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         if(parameterDefinition.Tag === ActionParameterDefinitionTag.DATA || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME) {
             return {
                 parameterType: "TABLE",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     onChange: (selectedTable?: TableProperties) => {
                         const newParameterInstance: ActionParameterInstance = {
                             TableId: selectedTable?.Id,
@@ -93,8 +101,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             return {
                 parameterType: "TABLE",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     onChange: (selectedTable?: TableProperties) => {
                         const newParameterInstance: ActionParameterInstance = {
                             TableId: selectedTable?.Id,
@@ -112,8 +121,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             return {
                 parameterType: "COLUMN",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     selectedColumnFilter: {Id: existingParameterInstance?.ColumnId},
                     filters: {
                         tableFilters: uniqueTableFilters,
@@ -133,9 +143,10 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const allOptions = parameterDefinition.OptionSetValues?.split(',')
             return {
                 parameterType: "OPTION_SET_SINGLE",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
                     availableOptions: allOptions?.map(option => ({'name': option})) || [],
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     selectedOptions: {name: existingParameterValue || ""},
                     onChange: (newOptions?: {name: string}) => {
                         const newValue = newOptions?.name
@@ -152,9 +163,10 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const selectedOptions = existingParameterValue?.split(',')?.map(option => ({name: option}))
             return {
                 parameterType: 'OPTION_SET_MULTIPLE',
+                parameterId: parameterDefinition.Id,
                 inputProps: {
                     availableOptions: allOptions?.map(option => ({'name': option})) || [],
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     selectedOptions: selectedOptions,
                     onChange: (newOption?: {name: string}[]) => {
                         const optionList = newOption?.map(option => option.name)
@@ -171,8 +183,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES) {
             return {
                 parameterType: "STRING",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
@@ -186,8 +199,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.INT) {
             return {
                 parameterType: "INT",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
@@ -201,8 +215,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
             return {
                 parameterType: "FLOAT",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
@@ -216,8 +231,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.BOOLEAN) {
             return {
                 parameterType: "BOOLEAN",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     onChange: (parameterValue: string) => {
                         const newParameterInstance: ActionParameterInstance = {
                             ParameterValue: parameterValue,
@@ -234,8 +250,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const parameterDefinitionId = parameterDefinition.Id!
             return {
                 parameterType: "COLUMN_LIST",
+                parameterId: parameterDefinition.Id,
                 inputProps: {
-                    parameterName: parameterDefinition.ParameterName || "parameterName",
+                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     onChange: (newColumns?: ColumnProperties[]) => {
                         const names = newColumns?.map(column => column.UniqueName) || []
                         const newParameterInstance: ActionParameterInstance = {
@@ -255,7 +272,8 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             }
         } else {
             return {
-                parameterType: undefined
+                parameterType: undefined,
+                parameterId: parameterDefinition.Id,
             }
         }
     })
@@ -270,8 +288,15 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         return (
                             <Grid item xs={4}>
                                 <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                    <ParameterInput {...parameter}/>
+
+                                        <ParameterInput {...parameter}/>
+                                        <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', ml: 1}}>
+                                            <Tooltip title={getParameterDescription(parameter.parameterId || "ID NA") || "No Description"} placement="top">
+                                                <img src={InfoIcon} alt="Info"/>
+                                            </Tooltip>
+                                        </Box>
                                 </Box>
+                                
                             </Grid>
                         )
                     })}

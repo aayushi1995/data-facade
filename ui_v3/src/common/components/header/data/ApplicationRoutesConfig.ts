@@ -6,4 +6,5 @@ export const APPLICATION_EDIT_ACTION_ROUTE_ROUTE = `${APPLICATION_ROUTE}/edit-ac
 export const APPLICATION_BUILD_ACTION_ROUTE_ROUTE = `${APPLICATION_ROUTE}/build-action`
 export const WORKFLOW_EXECUTION_ROUTE = `/application/workflow-execution/:WorkflowExecutionId`
 export const ACTION_EXECUTION_ROUTE = `${APPLICATION_ROUTE}/action-execution/:ActionExecutionId`
+export const EXECUTE_INSTANCE_ROUTE = `${APPLICATION_ROUTE}/execute-instance/:actionInstanceId`
 export const WORKFLOW_EDIT_ROUTE = `${APPLICATION_ROUTE}/edit-workflow/:WorkflowId`

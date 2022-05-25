@@ -31,6 +31,7 @@ export type WorkflowActionDefinition = {
     ExecutionStartedOn?: number,
     ExecutionCompletedOn?: number,
     PresentationFormat?: string,
+    ErrorInParametersConfigured?: string[]
 }
 
 export type WorkflowContextType = {
@@ -373,6 +374,11 @@ type SetErrorState = {
     payload: boolean
 }
 
+type ValidateState = {
+    type: 'VALIDATE',
+    payload: WorkflowContextType
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -405,7 +411,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetPublishedStatus | 
                              SetActionGroup |
                              DeleteGlobalParameter |
-                             SetErrorState
+                             SetErrorState |
+                             ValidateState
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -418,17 +425,19 @@ export const SetWorkflowContext = React.createContext<SetWorkflowContextType>(
 const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowContextType => {
     // add logic here
     switch(action.type){
-        case 'ADD_ACTION': 
-            return {
+        case 'ADD_ACTION': {
+            const newState = {
                 ...state,
                 stages: state.stages.map(stage => stage.Id!==action.payload.stageId ? stage : {
                     ...stage,
                     Actions: [...stage.Actions, action.payload.Action]
                 })
             }
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
+        }
         
-        case 'DELETE_ACTION':
-            return filterValidDefaultValues({
+        case 'DELETE_ACTION': {
+            const newState = filterValidDefaultValues({
                 ...state,
                 stages: state.stages.map(stage => stage.Id!==action.payload.stageId ? stage : {
                     ...stage,
@@ -436,6 +445,8 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 })
             })
 
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
+        }
 
         case 'REORDER_ACTION': 
             const filteredStage = state.stages.filter(stage => stage.Id === action.payload.stageId)
@@ -449,12 +460,13 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         return stage
                     }
                 })
-                return filterValidDefaultValues({...state, stages: [...newStateStages]})
+                const newState = filterValidDefaultValues({...state, stages: [...newStateStages]})
+                return reducer(newState, {type: 'VALIDATE', payload: newState})
             } 
             return state
         
         case "ASSIGN_DEFAULT_VALUE": {
-            return {
+            const newState: WorkflowContextType = {
                 ...state,
                 stages: state.stages.map(stage => stage.Id!==action.payload.stageId ? stage : {
                         ...stage,
@@ -476,10 +488,11 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         })
                     })
             }
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
             
-        case "CLEAR_DEFAULT_VALUE": 
-            return {
+        case "CLEAR_DEFAULT_VALUE": {
+            const newState = {
                 ...state,
                 stages: state.stages.map(stage => stage.Id!==action.payload.stageId ? stage : {
                         ...stage,
@@ -489,11 +502,16 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         })
                     })
             }
-        case 'SET_STAGES_IN_VIEW':
-            return {...state, currentStageView: {
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
+        }
+        case 'SET_STAGES_IN_VIEW': {
+            const newState = {...state, currentStageView: {
                 startIndex: action.payload.startIndex,
                 endIndex: action.payload.endIndex
             }}
+
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
+        }
         case 'ADD_STAGE':
             const newState = {...state}
             if(!!action.payload.previousStageId) {
@@ -502,11 +520,12 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             } else {
                 newState.stages.push(action.payload)
             }
-            return {...newState}
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
 
         case 'DELETE_STAGE': {
             const newStages = state.stages.filter(stage => stage.Id !== action.payload.stageId)
-            return {...state, stages: [...newStages]}
+            const newState = {...state, stages: [...newStages]}
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
         case 'STAGE_NAME_CHANGE': {
             const newStages = state.stages.map(stage => {
@@ -518,7 +537,8 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 }
             })
 
-            return {...state, stages: [...newStages]}
+            const newState = {...state, stages: [...newStages]}
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
         case 'CHANGE_CURRENT_SELECTED_STAGE': {
             return {...state, currentSelectedStage: action.payload.stageId}
@@ -551,7 +571,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     ...state,
                     stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage: {
                         ...stage,
-                        Actions: stage.Actions.map((actionDef, index) => (actionDef.Id !== action.payload.actionDefinitionId && index !== action.payload.actionIndex) ? actionDef: {
+                        Actions: stage.Actions.map((actionDef, index) => (index !== action.payload.actionIndex) ? actionDef: {
                             ...actionDef,
                             Parameters: [...actionDef.Parameters, {
                                 ActionParameterDefinitionId: action.payload.parameterDefinitionId,
@@ -561,13 +581,13 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     })
                 }
 
-                return newState
+                return reducer(newState, {type: 'VALIDATE', payload: newState})
             }
             const newState = {
                 ...state,
                 stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage: {
                     ...stage,
-                    Actions: stage.Actions.map((actionDef, index) => (actionDef.Id !== action.payload.actionDefinitionId && index !== action.payload.actionIndex) ? actionDef: {
+                    Actions: stage.Actions.map((actionDef, index) => (index !== action.payload.actionIndex) ? actionDef: {
                         ...actionDef,
                         Parameters: actionDef.Parameters.map(parameter => parameter.ActionParameterDefinitionId !== action.payload.parameterDefinitionId ? parameter : {
                             ...parameter,
@@ -577,18 +597,19 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     })
                 })
             }
-            return newState
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
 
         case 'ADD_WORKFLOW_PARAMETER': {
-            return {
+            const newState = {
                 ...state,
                 WorkflowParameters: [...state.WorkflowParameters, action.payload.parameter]
             }
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
         
         case 'MAP_PARAMETER_TO_GLOBAL_PARAMETER': {
-            return {
+            const newState = {
                 ...state,
                 stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage: {
                     ...stage,
@@ -602,6 +623,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     })
                 })
             }
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
 
         case 'ADD_ACTION_TEMPLATE': {
@@ -612,10 +634,11 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         }
 
         case 'ADD_WORKFLOW_PARAMETERS': {
-            return {
+            const newState = {
                 ...state,
                 WorkflowParameters: action.payload
             }
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
 
         case 'CHANGE_WORKFLOW_PARAMETER_INSTANCES': {
@@ -679,7 +702,8 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         }
 
         case 'SET_ENTIRE_CONTEXT': {
-            return {...action.payload}
+            const newState = {...action.payload}
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
 
         case 'SET_SELECTED_ACTION': {
@@ -703,7 +727,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         }
         
         case 'DELETE_GLOBAL_PARAMETER': {
-            return {
+            const newState: WorkflowContextType = {
                 ...state,
                 WorkflowParameters: state.WorkflowParameters.filter(parameter => parameter.Id !== action.payload.parameterId),
                 stages: state.stages.map(stage => ({
@@ -724,6 +748,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     }))
                 }))
             }
+            return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
 
         case 'SET_ERROR_STATE': {
@@ -731,6 +756,29 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 ...state,
                 ErrorState: action.payload
             }
+        }
+
+        case 'VALIDATE': {
+            console.log(state, action.payload)
+            const errorMessages = extractErrorMessages(action.payload)
+            console.log(errorMessages)
+            const newState: WorkflowContextType = {
+                ...state,
+                stages: state.stages.map(stage => {
+                    return {
+                        ...stage,
+                        Actions: stage.Actions.map((action, index) => {
+                            const errorMessagesForAction = errorMessages.filter(message => message.stageId === stage.Id && message.actionIndex === index)
+                            return {
+                                ...action,
+                                ErrorInParametersConfigured: errorMessagesForAction?.map(message => message.message)
+                            }
+                        })
+                    }
+                })
+            }
+
+            return newState
         }
 
         default:
@@ -756,6 +804,42 @@ const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextTy
         }})
     }
     return x
+}
+
+function extractErrorMessages(state: WorkflowContextType) {
+    const errorMessages: {actionIndex: number, stageId: string, message: string}[] = []
+
+    state.stages.forEach(stage => {
+        stage.Actions.forEach((action, actionIndex) => {
+            action.Parameters.forEach((parameter, index) => {
+                if(parameter.userInputRequired === "No") {
+                    if(parameter.ParameterValue === undefined && parameter.SourceExecutionId === undefined) {
+                        const errorMessage = `${parameter.ParameterName} in Action ${action.DisplayName} of Stage ${stage.Name} does not have default value`
+                        errorMessages.push(
+                            {
+                                stageId: stage.Id,
+                                actionIndex: actionIndex,
+                                message: errorMessage
+                            }
+                        )
+                    }
+                } else if(parameter.userInputRequired === "Yes") {
+                    if(parameter.GlobalParameterId === undefined) {
+                        const errorMessage = `${parameter.ParameterName} in Action ${action.DisplayName} of Stage ${stage.Name} does not have associated Global Parameter`
+                        errorMessages.push(
+                            {
+                                stageId: stage.Id,
+                                actionIndex: actionIndex,
+                                message: errorMessage
+                            }
+                        )
+                    }
+                }
+            })
+        })
+    })
+
+    return errorMessages
 }
 
 export function findIfParameterPresent(state: WorkflowContextType, stageId: string, actionIndex: number, parameterDefinitionId: string) {

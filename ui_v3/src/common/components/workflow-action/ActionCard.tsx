@@ -24,7 +24,8 @@ export interface ActionCardProps {
     percentageCompleted?: number
     isCardSelected?: boolean,
     runTime?: number,
-    stageId?: string
+    stageId?: string,
+    errorMessages?: string[]
     deleteButtonAction: (actionId: string, actionNumber: number) => void
     onActionSelect?: (actionId: string, actionIndex: number) => void
     handlePreviewOutput: (executionId: string) => void
@@ -77,10 +78,11 @@ const ActionCard = (props: ActionCardProps) => {
     }
 
     const tooltipTitle = (props?.executionStaus === 'Completed' || props?.executionStaus === 'Failed') ? props.runTime : "";
+    const border: string | undefined = (props?.executionStaus !== undefined  ? undefined : (props.errorMessages || []).length === 0 ? '0.75px solid #00AA11' : '0.75px solid #DC2430' )
 
     return (
         <HtmlTooltip title={
-            (props.executionStaus === 'Completed' || props.executionStaus === 'Faield') ? (
+            (props.executionStaus === 'Completed' || props.executionStaus === 'Failed') ? (
                 <React.Fragment>
                     <Box sx={{height: '50px', minWidth:'120px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                         <Typography>
@@ -97,7 +99,8 @@ const ActionCard = (props: ActionCardProps) => {
                 maxWidth: '100%',
                 overflowX: 'auto',
                 boxShadow: '-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05);',
-                background: '#F8F8F8'
+                background: '#F8F8F8',
+                border: border
                 }} onClick={handleClick}
             >
                 <Box sx={{

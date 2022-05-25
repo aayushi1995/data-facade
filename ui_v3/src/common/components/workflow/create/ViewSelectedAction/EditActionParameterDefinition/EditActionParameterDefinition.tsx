@@ -87,7 +87,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             return {
                 parameterType: "OPTION_SET_SINGLE",
                 inputProps: {
-                    parameterName: props.parameter.ParameterName || "parameter name NA",
+                    parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "parameter name NA",
                     availableOptions: props.parameter.OptionSetValues?.split(',')?.map(option => ({name: option})) || [],
                     selectedOptions: {name: parameterConfig?.ParameterValue || ""},
                     onChange: (newOption?: {name: string}) => {
@@ -109,7 +109,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             return {
                 parameterType: "OPTION_SET_MULTIPLE",
                 inputProps: {
-                    parameterName: props.parameter.ParameterName || "parameter Name NA",
+                    parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "parameter Name NA",
                     availableOptions: props.parameter.OptionSetValues?.split(',')?.map(option => ({name: option})) || [],
                     selectedOptions: parameterConfig?.ParameterValue?.split(',')?.map(selected => ({name: selected})),
                     onChange: (newOptions?: {name: string}[]) => {
@@ -132,7 +132,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             return {
                 parameterType: "STRING",
                 inputProps: {
-                    parameterName: props.parameter.ParameterName,
+                    parameterName: props.parameter.DisplayName || props.parameter.ParameterName,
                     value: parameterConfig?.ParameterValue,
                     onChange: (newValue: string) => setWorkflowState({
                         type: "ASSIGN_DEFAULT_VALUE",
@@ -151,7 +151,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             return {
                 parameterType: "INT",
                 inputProps: {
-                    parameterName: props.parameter.ParameterName,
+                    parameterName: props.parameter.DisplayName || props.parameter.ParameterName,
                     value: parameterConfig?.ParameterValue,
                     onChange: (newValue: string) => setWorkflowState({
                         type: "ASSIGN_DEFAULT_VALUE",
@@ -170,7 +170,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             return {
                 parameterType: "BOOLEAN",
                 inputProps: {
-                    parameterName: props.parameter.ParameterName,
+                    parameterName: props.parameter.DisplayName || props.parameter.ParameterName,
                     value: parameterConfig?.ParameterValue,
                     onChange: (newValue: string) => setWorkflowState({
                         type: "ASSIGN_DEFAULT_VALUE",
@@ -189,7 +189,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
             return {
                 parameterType: "COLUMN_LIST",
                 inputProps: {
-                    parameterName: props.parameter.ParameterName || "NAME NA",
+                    parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "NAME NA",
                     selectedColumnFilters: parameterConfig?.ParameterValue?.split(',').map(name => ({UniqueName: name})) || [],
                     filters: {
                         tableFilters: [{Id: parameterConfig?.TableId}],
@@ -232,7 +232,7 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
 
     const mapToGlobalParameter = (workflowParameterId: string) => {
         setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER', 
-                            payload: {stageId: props.stageId, globalParameterId: workflowParameterId, parameterDefinitionId: props.parameter.Id || "ID", actionIndex: props.actionIndex, parameterName: props.parameter.ParameterName || "parameterName"}})
+                            payload: {stageId: props.stageId, globalParameterId: workflowParameterId, parameterDefinitionId: props.parameter.Id || "ID", actionIndex: props.actionIndex, parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "parameterName"}})
     }
 
     return (
@@ -295,7 +295,7 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                         <InputLabel htmlFor="component-outlined">Type Parameter Name</InputLabel>
                         <OutlinedInput
                             id="component-outlined"
-                            value={props.parameter.ParameterName}
+                            value={props.parameter.DisplayName || props.parameter.ParameterName}
                             onChange={handleParameterNameChange}
                             label="Type Parameter Name"
                         />

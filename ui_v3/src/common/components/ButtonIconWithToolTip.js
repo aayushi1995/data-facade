@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import React from "react";
 
 export const ButtonIconWithToolTip = ({
+                                        size = "small",
                                           backgroundColor = 'white',
                                           title, onClick = () => {
     }, Icon, background= true
@@ -19,7 +20,7 @@ export const ButtonIconWithToolTip = ({
             boxShadow: background? theme.shadows[22]: 'none'
         }}>
             <IconButton
-                size="small"
+                size={size}
                 onClick={onClick}
                 color="primary"
                 aria-label={title}

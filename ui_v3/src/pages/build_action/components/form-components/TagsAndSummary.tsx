@@ -28,8 +28,7 @@ const TagsAndSummary = () => {
                 }
             })
         },
-        orientation: "VERTICAL",
-        direction: "DEFAULT"
+        inputFieldLocation: "RIGHT"
     }
 
     return (

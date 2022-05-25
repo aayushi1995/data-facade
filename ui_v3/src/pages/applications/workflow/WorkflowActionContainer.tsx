@@ -104,7 +104,8 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             deleteButtonAction: handleDeleteAction,
             onActionSelect: onActionSelect,
             executionStaus: action.ExecutionStatus,
-            runTime: runTime
+            runTime: runTime,
+            errorMessages: action.ErrorInParametersConfigured
         }
         if(selectedDefinition.actionIndex === index && selectedDefinition.actionId === action.Id) {
             return {

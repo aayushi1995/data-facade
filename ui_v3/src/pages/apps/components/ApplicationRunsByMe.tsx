@@ -1,5 +1,7 @@
 import { Box } from "@mui/material"
 import { DataGrid, DataGridProps, GridCellParams, GridValueGetterParams } from "@mui/x-data-grid"
+import { generatePath, useHistory } from "react-router"
+import { EXECUTE_INSTANCE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import { Application } from "../../../generated/entities/Entities"
 import { TextCell, TimestampCell } from "../../table_browser/components/AllTableView"
@@ -12,7 +14,8 @@ export type ApplicationRunsByMeProps = {
 const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
     const {application} = props
     const { fetchDataQuery, displayActionOutput, displayWorkflowOutput, reRunWorkflow, reRunAction } = useApplicationRunsByMe({ application: application })
-    
+    const history = useHistory()
+
     const datagridProps: DataGridProps = {
         rows: fetchDataQuery?.data || [],
         columns: [
@@ -95,7 +98,8 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 if(params?.row?.isWorkflow) {
                     reRunWorkflow(params?.row?.ActionInstanceId)                    
                 } else {
-                    reRunAction(params?.row?.ActionInstanceId)
+                    history.push(generatePath(EXECUTE_INSTANCE_ROUTE, {actionInstanceId: params?.row?.ActionInstanceId}))
+                    // reRunAction(params?.row?.ActionInstanceId)
                 }
             } else if(params?.colDef?.field === "Result") {
                 if(params?.row?.isWorkflow) {
