@@ -449,7 +449,7 @@ const TableInput = (props: TableParameterInput) => {
 const NoInput = () => {
     return (
         <Box>
-            Input Field NA
+            <TextField disabled value="Default Value not valid for this type of parameter" fullWidth/>
         </Box>
     )
 }

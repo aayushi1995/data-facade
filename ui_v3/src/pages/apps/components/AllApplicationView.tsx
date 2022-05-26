@@ -29,25 +29,25 @@ const AllApplicationView = () => {
             component: (props) => <PreBuiltApplications {...props}/>,
             label: "Applications"
         },
-        {
-            component: (props) => <PinnedActionDefinitions {...props}/>,
-            label: "Pinned Actions"
-        },
+        // {
+        //     component: (props) => <PinnedActionDefinitions {...props}/>,
+        //     label: "Pinned Actions"
+        // },
         // {
         //     component: (props) => <PinnedActionInstances {...props}/>,
         //     label: "My Action Instances"
         // },
-        {
-            component: (props) => <OrgActionDefinitions {...props}/>,
-            label: "Public Actions"
-        },
+        // {
+        //     component: (props) => <OrgActionDefinitions {...props}/>,
+        //     label: "Public Actions"
+        // },
         // {
         //     component: (props) => <OrgActionInstances {...props}/>,
         //     label: "Org Action Instances"
         // },
         {
             component: (props) => <AllActionDefinitionsView {...props}/>,
-            label: "All Action Definitions"
+            label: ""
         }
     ]
 

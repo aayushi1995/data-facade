@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 import { ActionDefinition } from "../../../../generated/entities/Entities"
 import { ActionDefinitionCardViewResponse } from "../../../../generated/interfaces/Interfaces"
 import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
@@ -22,9 +22,11 @@ const AllActionDefinitionsView = (props: AllApplicationRowProps) => {
                 return show
             })
             .map(actionDefinition => 
-                <Box sx={{ height: '100%', p: 2}}  key={actionDefinition.DefinitionId}>
-                    <ActionDefinitionCard actionDefinition={actionDefinition}/>
-                </Box>
+                <Grid item xs={3}>
+                    <Box sx={{ height: '100%', p: 2}}  key={actionDefinition.DefinitionId}>
+                        <ActionDefinitionCard actionDefinition={actionDefinition}/>
+                    </Box>
+                </Grid>
             )
     }
 
@@ -34,7 +36,9 @@ const AllActionDefinitionsView = (props: AllApplicationRowProps) => {
             data={data}
             error={error}
             children={() => 
-                renderCards(data || [])
+                <Grid container spacing={1}>
+                    {renderCards(data || [])}
+                </Grid>
             }
         />
     )

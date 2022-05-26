@@ -23,14 +23,34 @@ const EditActionParameter = (props: EditActionParameterProps) => {
     const {onParameterEdit, onTagsChange, onParameterTypeEdit, template, paramWithTag, allParamsWithTags} = props
 
     const [paramName, setParamName] = React.useState<string|undefined>()
+    const [paramDisplayName, setParamDisplayName] = React.useState<string|undefined>()
+    const [parameterDescription, setParameterDescription] = React.useState<string|undefined>()
     React.useEffect(() => {
         setParamName(paramWithTag?.parameter?.ParameterName)
     }, [paramWithTag?.parameter?.ParameterName])
+    React.useEffect(() => {
+        setParameterDescription(paramWithTag?.parameter?.Description)
+    }, [paramWithTag?.parameter?.Description])
+    React.useEffect(() => {
+        setParamDisplayName(paramWithTag?.parameter?.DisplayName)
+    }, [paramWithTag?.parameter?.DisplayName])
 
     const handleParameterNameChange = () => {
         onParameterEdit({
             ...paramWithTag?.parameter,
             ParameterName: paramName
+        })
+    }
+    const handleParameterDisplayNameChange = () => {
+        onParameterEdit({
+            ...paramWithTag?.parameter,
+            DisplayName: paramDisplayName
+        })
+    }
+    const handleParameterDescriptionChange = () => {
+        onParameterEdit({
+            ...paramWithTag?.parameter,
+            Description: parameterDescription
         })
     }
     const handleParameterTypeChange = (event: SelectChangeEvent<string>) => {
@@ -48,7 +68,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
         const attributeValue = getInputTypeFromAttributesNew(template.Language, parameter.Tag, parameter.Type, parameter.Datatype)
         return(
             <Grid container spacing={3}>
-                <Grid item xs={12} md={8} lg={6}>
+                <Grid item xs={12} md={4} lg={3}>
                     <FormControl sx={{width: "100%"}}>
                         <InputLabel htmlFor="component-outlined">Type Parameter Name</InputLabel>
                         <OutlinedInput
@@ -60,7 +80,19 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         />
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} md={4} lg={4}>
+                <Grid item xs={12} md={4} lg={3}>
+                    <FormControl sx={{width: "100%"}}>
+                        <InputLabel htmlFor="component-outlined">Parameter Display Name(Optional)</InputLabel>
+                        <OutlinedInput
+                            id="component-outlined"
+                            value={paramDisplayName}
+                            onChange={(event) => setParamDisplayName(event.target.value)}
+                            onBlur={() => handleParameterDisplayNameChange()}
+                            label="Parameter Display Name(Optional)"
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={4} lg={3}>
                     <FormControl sx={{width: "100%"}}>
                         <InputLabel htmlFor="component-outlined">Type</InputLabel>
                         <Select
@@ -93,7 +125,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                     </FormControl>    
                 </Grid>
                 <Grid item xs={12} md={4} lg={4}>
-                    <DefaultValueSelector parameter={parameter} allParameters={allParameters}/>
+                    <DefaultValueSelector parameter={{...parameter, ParameterName: `Default Value for ${parameter.ParameterName}`}} allParameters={allParameters}/>
                 </Grid>
                 <Grid item xs={12} md={8} lg={8}>
                     <VirtualTagHandler
@@ -102,9 +134,21 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         allowAdd={true}
                         allowDelete={true}
                         onSelectedTagsChange={(newTags: Tag[]) => {onTagsChange(newTags)}}
-                        orientation="HORIZONTAL"
-                        direction="DEFAULT"
+                        inputFieldLocation="LEFT"
                     />
+                </Grid>
+                <Grid item xs={12} md={8} lg={8} minHeight={100}>
+                    <FormControl sx={{width: "100%"}}>
+                        <InputLabel htmlFor="component-outlined">Parameter Description</InputLabel>
+                        <OutlinedInput
+                            sx={{minHeight: '100px'}}
+                            multiline
+                            value={parameterDescription}
+                            onChange={(event) => setParameterDescription(event.target.value)}
+                            onBlur={() => handleParameterDescriptionChange()}
+                            label="Parameter Description"
+                        />
+                    </FormControl>
                 </Grid>
                 {attributeValue === "String" || attributeValue === "Integer" || attributeValue === "Decimal" ? (
                     <Grid item xs={6}>
