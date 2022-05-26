@@ -1,7 +1,9 @@
-import { Box, Typography } from "@mui/material"
-import DatafacadeDatatype from "../../../enums/DatafacadeDatatype"
-import { ColumnProperties } from "../../../generated/entities/Entities"
-import { BooleanColumnStat, ColumnStat, FloatColumnStat, getSafePercentage, IntColumnStat, limitDecimal, MeanModeStDevStat, QuartileStat, RowContentStat, StringColumnStat, ValidityStat } from "./ColumnInfoViewHooks"
+import { Box, Dialog, DialogContent, Typography } from "@mui/material";
+import ReactECharts, { EChartsReactProps } from 'echarts-for-react';
+import React from "react";
+import DatafacadeDatatype from "../../../enums/DatafacadeDatatype";
+import { ColumnProperties } from "../../../generated/entities/Entities";
+import { BooleanColumnStat, ColumnStat, FloatColumnStat, getSafePercentage, IntColumnStat, limitDecimal, MeanModeStDevStat, MostFrequentStat, QuartileStat, RowContentStat, StringColumnStat, ValidityStat } from "./ColumnInfoViewHooks";
 
 export type ColumnStatViewProps = {
     column?: ColumnProperties,
@@ -38,7 +40,7 @@ export const ColumnStatView = (props: ColumnStatViewProps) => {
     }
 
     return (
-        <Box sx={{ px: 2, overflowX: "auto" }}>
+        <Box sx={{ px: 2, overflowX: "auto", width: "100%" }}>
             {columnStatComponent()}
         </Box>
     )   
@@ -97,7 +99,7 @@ type StringColumnStatViewProps = {
 }
 const StringColumnStatView = (props: StringColumnStatViewProps) => {
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box>
                     <ValidityStatView {...props.stat?.Validity}/>
@@ -105,6 +107,9 @@ const StringColumnStatView = (props: StringColumnStatViewProps) => {
                 <Box>
                     <RowContentStatView {...props.stat?.ContentStat}/>
                 </Box>
+            </Box>
+            <Box sx={{ flex: 1 }}>
+                <MostFrequentStatView {...props.stat?.MostFrequent}/>
             </Box>
         </Box>
     )
@@ -232,7 +237,7 @@ const MeanModeStDevStatView = (props: MeanModeStDevStat) => {
                         <Typography variant="statText">{row.Label}</Typography>
                     </Box>
                     <Box sx={{ width: "100px"}}>
-                        <Typography variant="statText">{limitDecimal(row.Value)}</Typography>
+                        <Typography variant="statText">{limitDecimal(row?.Value)}</Typography>
                     </Box>
                 </Box>
             )}
@@ -286,5 +291,85 @@ const QuartileStatView = (props: QuartileStat) => {
             </Box>
         </Box>
         
+    )
+}
+
+const MostFrequentStatView = (props?: MostFrequentStat) => {
+    const commonProps: EChartsReactProps = {
+        option: {
+            dataset: {
+                source: props?.ElementWithCount
+            },
+            xAxis: {
+                type: "category",
+                axisLabel: { interval: 0, rotate: 30 }
+            },
+            yAxis: {},
+            series: {
+                type: "bar",
+                encode: { x: "Element", y: "Frequency" }
+            }
+        }
+    }
+    const expandedViewProps: EChartsReactProps  = {
+        ...commonProps,
+        option: {
+            ...commonProps.option,
+            title: {
+                text: "Most Frequent Elements"
+            }
+        },
+        style: {
+            maxHeight: "600px"
+        }
+    }
+
+    const compressedViewProps: EChartsReactProps = {
+        ...commonProps,
+        option: {
+            ...commonProps.option,
+            xAxis: {
+                ...commonProps.option.xAxis,
+                axisLabel: { interval: 0 }
+            },
+            grid: {
+                top: "10px",
+                right: "5px",
+                bottom: "25px"
+            }
+        },
+        style: {
+            maxHeight: "150px"
+        }
+    }
+
+    return (
+        <Box sx={{ maxWidth: "300px" }}>
+            <SmartChart expandedViewProps={expandedViewProps} compressedViewProps={compressedViewProps}/>
+        </Box>
+    )
+}
+
+const SmartChart = (props: {compressedViewProps: EChartsReactProps, expandedViewProps: EChartsReactProps}) => {
+    const [dialogOpen, setDialogOpen] = React.useState<boolean>(false)
+
+    const openDialog = () => {
+        setDialogOpen(true)
+    }
+    const closeDialog = () => {
+        setDialogOpen(false)
+    }
+
+    return (
+        <>
+            <Box className="RITESH" onClick={() => openDialog()}>
+                <ReactECharts {...props.compressedViewProps}/>
+            </Box>
+            <Dialog open={dialogOpen} onClose={() => closeDialog()} fullWidth maxWidth="xl">
+                <DialogContent sx={{ maxHeight: "800px"}}>
+                    <ReactECharts {...props.expandedViewProps}/>
+                </DialogContent>
+            </Dialog>
+        </>
     )
 }

@@ -91,6 +91,7 @@ export type StringColumnStat = {
     Validity: ValidityStat,
     ContentStat: RowContentStat,
     Health: number,
+    MostFrequent: MostFrequentStat
 }
 
 export type BooleanColumnStat = {
@@ -118,6 +119,13 @@ export type RowContentStat = {
     MostCommonValue?: any,
     MostCommonValueCount?: number,
     TotalValues?: number
+}
+
+export type MostFrequentStat = {
+    ElementWithCount?: {
+        Element?: string,
+        Frequency?: number
+    }[]
 }
 
 export type QuartileStat = {

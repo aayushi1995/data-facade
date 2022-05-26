@@ -1,8 +1,8 @@
-import {BaseChartsConfig} from "./BaseChartsConfig";
-import React from 'react';
+import { EChartsOption } from "echarts";
 import ReactECharts from 'echarts-for-react';
-import {EChartsOption} from "echarts";
-import {EChartUISpecificConfig} from "./types/EChartUISpecificConfig";
+import React from 'react';
+import { BaseChartsConfig } from "./BaseChartsConfig";
+import { EChartUISpecificConfig } from "./types/EChartUISpecificConfig";
 
 export const Chart = ({config, uiConfig}: {
     config: BaseChartsConfig,
@@ -12,5 +12,6 @@ export const Chart = ({config, uiConfig}: {
         ...config,
         ...uiConfig
     };
-    return <ReactECharts option={eChartOptions} style={{minHeight: '500px', minWidth: '500px'}}/>;
+    
+    return <ReactECharts style={{minHeight: '500px', minWidth: '500px'}} option={eChartOptions}/>;
 }
