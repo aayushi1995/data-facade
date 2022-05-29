@@ -1,5 +1,5 @@
 import { FormControlLabel, FormGroup } from "@mui/material";
-import { Box, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Checkbox, Autocomplete, TextField, createFilterOptions } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Checkbox, Autocomplete, TextField, createFilterOptions, Radio } from "@mui/material";
 import React from "react";
 import { ChangeEvent } from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
@@ -67,8 +67,8 @@ const EditActionParameter = (props: EditActionParameterProps) => {
         const allParameters = allParamsWithTags?.map(param => param.parameter)
         const attributeValue = getInputTypeFromAttributesNew(template.Language, parameter.Tag, parameter.Type, parameter.Datatype)
         return(
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={4} lg={3}>
+            <Grid container spacing={1}>
+                <Grid item xs={12} md={4} lg={2}>
                     <FormControl sx={{width: "100%"}}>
                         <InputLabel htmlFor="component-outlined">Type Parameter Name</InputLabel>
                         <OutlinedInput
@@ -80,7 +80,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         />
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={2}>
                     <FormControl sx={{width: "100%"}}>
                         <InputLabel htmlFor="component-outlined">Parameter Display Name(Optional)</InputLabel>
                         <OutlinedInput
@@ -92,7 +92,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         />
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={4} lg={2}>
                     <FormControl sx={{width: "100%"}}>
                         <InputLabel htmlFor="component-outlined">Type</InputLabel>
                         <Select
@@ -108,7 +108,21 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12} md={4} lg={2}>
+                <Grid item xs={12} lg={6} sm={12} md={6}>
+                    <FormControl sx={{width: "100%"}}>
+                        <InputLabel htmlFor="component-outlined">Parameter Description</InputLabel>
+                        <OutlinedInput
+                            sx={{minHeight: '100px', display: 'flex', alignItems: 'flex-start'}}
+                            multiline
+                            value={parameterDescription}
+                            onChange={(event) => setParameterDescription(event.target.value)}
+                            onBlur={() => handleParameterDescriptionChange()}
+                            label="Parameter Description"
+                            
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={4} lg={2} sx={{width: '100%'}}>
                     <FormControl sx={{width: "100%"}}>
                         <InputLabel htmlFor="component-outlined">User Input Required</InputLabel>
                         <Select
@@ -127,7 +141,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                 <Grid item xs={12} md={4} lg={4}>
                     <DefaultValueSelector parameter={{...parameter, ParameterName: `Default Value for ${parameter.ParameterName}`}} allParameters={allParameters}/>
                 </Grid>
-                <Grid item xs={12} md={8} lg={8}>
+                <Grid item xs={12} md={8} lg={6}>
                     <VirtualTagHandler
                         selectedTags={tags}
                         tagFilter={{}}
@@ -137,21 +151,8 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         inputFieldLocation="LEFT"
                     />
                 </Grid>
-                <Grid item xs={12} md={8} lg={8} minHeight={100}>
-                    <FormControl sx={{width: "100%"}}>
-                        <InputLabel htmlFor="component-outlined">Parameter Description</InputLabel>
-                        <OutlinedInput
-                            sx={{minHeight: '100px'}}
-                            multiline
-                            value={parameterDescription}
-                            onChange={(event) => setParameterDescription(event.target.value)}
-                            onBlur={() => handleParameterDescriptionChange()}
-                            label="Parameter Description"
-                        />
-                    </FormControl>
-                </Grid>
                 {attributeValue === "String" || attributeValue === "Integer" || attributeValue === "Decimal" ? (
-                    <Grid item xs={6}>
+                    <Grid item xs={12} mt={2}>
                         <OptionSetSelector parameter={parameter} onParameterEdit={onParameterEdit}/>
                     </Grid>
                 ) : (
@@ -301,6 +302,7 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
     }
 
     const handleOptionSingleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(event)
         if(event.target.checked || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE) {
             props.onParameterEdit({
                 ...props.parameter,
@@ -332,7 +334,7 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
 
     return (
         <Box sx={{display: 'flex', gap: 1}}>
-           <FormGroup>
+           <FormGroup row={true} sx={{display: 'webkit', minWidth: '400px'}}>
                 <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE} onChange={handleOptionSingleChange}/>} label="Option Set Single"/>
                 <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE} onChange={handleOptionMultipleChange} />} label="Option Set Multiple"/>
             </FormGroup>

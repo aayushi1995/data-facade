@@ -74,6 +74,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                         selectedTags={params.row.tags}
                         onSelectedTagsChange={() => {}}
                         inputFieldLocation="RIGHT"
+                        numberOfTagsToDisplay={1}
                     />
                 </Box>
             },

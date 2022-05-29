@@ -278,8 +278,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                 width: "42px",
                                 background: "#F4F4F4",
                                 boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
-                            }}>
-                                <EditIcon onClick={handleEdit}/>
+                            }} onClick={handleEdit}>
+                                <EditIcon/>
                             </IconButton>
                         </Box>
                         {/* <Box>

@@ -97,7 +97,7 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
                 <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
                     <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", flex: 1}}>
                         <Box sx={{ px: 2 }}>
-                            <Tooltip title={columnQuery?.data?.UniqueName}>
+                            <Tooltip title={columnQuery?.data?.UniqueName || ""}>
                                 <Typography sx={{
                                     fontFamily: "'Open Sans'",
                                     fontStyle: "normal",

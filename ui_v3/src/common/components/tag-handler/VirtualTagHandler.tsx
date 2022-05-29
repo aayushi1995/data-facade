@@ -9,7 +9,8 @@ export interface VirtualTagHandlerProps {
     tagFilter: Tag,
     allowAdd: boolean,
     allowDelete: boolean,
-    inputFieldLocation: "LEFT" | "RIGHT" | "TOP" | "BOTTOM"
+    inputFieldLocation: "LEFT" | "RIGHT" | "TOP" | "BOTTOM",
+    numberOfTagsToDisplay?: number
 }
 
 const filter = createFilterOptions<Tag>()
@@ -78,28 +79,60 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                 </Grid>}
                 <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:8, lg:9} )}>
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%"}}>
+
                         {selectedTags.length > 0 ? 
-                            selectedTags.map(tag => 
-                                <Box>
-                                    <Chip variant="outlined" color="primary" size="small" 
-                                        label={tag.Name} 
-                                        onDelete={props.allowDelete ? (() => {onSelectedTagsChange?.(selectedTags.filter(selectedTag => selectedTag.Name!==tag.Name))}) : undefined}
-                                        sx={{
-                                            fontFamily: "SF Pro Text",
-                                            fontStyle: "normal",
-                                            fontWeight: "normal",
-                                            fontSize: "13px",
-                                            lineHeight: "24px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            letterSpacing: "0.073125px",
-                                            color: "#253858",
-                                            pt: 2,
-                                            pb: 2
-                                        }}
-                                    />
-                                </Box>)
-                            
+                            (
+                                <>
+                                {selectedTags.map((tag, index) => {
+                                    if(!((!!props.numberOfTagsToDisplay && index < props.numberOfTagsToDisplay) || !props.numberOfTagsToDisplay)) {
+                                        return
+                                    }
+                                    return <Box>
+                                        {(!!props.numberOfTagsToDisplay && index < props.numberOfTagsToDisplay) || !props.numberOfTagsToDisplay ? (
+                                            <Chip variant="outlined" color="primary" size="small" 
+                                            label={tag.Name} 
+                                            onDelete={props.allowDelete ? (() => {onSelectedTagsChange?.(selectedTags.filter(selectedTag => selectedTag.Name!==tag.Name))}) : undefined}
+                                            sx={{
+                                                fontFamily: "SF Pro Text",
+                                                fontStyle: "normal",
+                                                fontWeight: "normal",
+                                                fontSize: "13px",
+                                                lineHeight: "24px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                letterSpacing: "0.073125px",
+                                                color: "#253858",
+                                                pt: 2,
+                                                pb: 2
+                                            }}
+                                        />
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </Box>})}
+                                {!!props.numberOfTagsToDisplay && selectedTags.length > props.numberOfTagsToDisplay ? (
+                                    <Box>
+                                        <Chip variant="outlined" color="primary" size="small" 
+                                            label={"+" + String(selectedTags.length - props.numberOfTagsToDisplay)} 
+                                            sx={{
+                                                fontFamily: "SF Pro Text",
+                                                fontStyle: "normal",
+                                                fontWeight: "normal",
+                                                fontSize: "13px",
+                                                lineHeight: "24px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                letterSpacing: "0.073125px",
+                                                color: "#253858",
+                                                pt: 2,
+                                                pb: 2
+                                            }}
+                                        />
+                                    </Box>
+                                ) : (<></>)}
+                                
+                                </>
+                            )
                             :
                                 <Box>
                                     <Chip variant="outlined" color="primary" size="small" 

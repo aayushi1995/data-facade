@@ -68,7 +68,7 @@ const AllApplicationView = () => {
                                 {row.label}
                             </Typography>
                         </Box>
-                        <Box sx={{ display: "flex", flexDirection: "row", overflowX: 'auto', p: 2, pt: 0 }}>
+                        <Box sx={{ display: "flex", flexDirection: "row", overflowX: 'auto', p: 2, pt: 0, minWidth: '100%' }}>
                             {row.component(rowProp)}
                         </Box>
                     </Box>    
