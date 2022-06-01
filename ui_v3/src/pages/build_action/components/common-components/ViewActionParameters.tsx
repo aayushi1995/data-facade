@@ -66,7 +66,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 headerName: "Tags",
                 width: 300,
                 renderCell: (params: any) => 
-                <Box sx={{overflowY: "auto", width: '100%'}}>
+                <Box sx={{overflowY: "auto", width: '100%', overflowX: 'auto'}}>
                     <VirtualTagHandler
                         tagFilter={{}}
                         allowAdd={false}

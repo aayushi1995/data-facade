@@ -1,15 +1,16 @@
 
 import React from 'react'
-import { Box, Card, Chip, IconButton, InputAdornment, SvgIcon, TextField, Typography, useTheme} from '@mui/material';
+import { Box, Card, Chip, FormControlLabel, FormGroup, Switch, Typography, useTheme, Dialog, DialogTitle, DialogContent, IconButton, Grid} from '@mui/material';
 import {Tabs, Tab} from "@mui/material"
-import SearchIcon from '@mui/icons-material/Search';
-import { ReactComponent as DefaultIcon } from "../Icon.svg";
-import GroupDropDown from '../GroupDropDown';
+import CloseIcon from "../../../../../../src/images/close.svg"
 import { ActionParameterDefinition, ActionTemplate } from '../../../../../generated/entities/Entities';
 import ActionParameterDefinitionList from './ActionParameterDefinitionList/ActionParameterDefinitionList';
 import EditActionParameterDefinition from './EditActionParameterDefinition/EditActionParameterDefinition';
 import CodeEditor from '../../../CodeEditor';
 import useViewAction, { ActionDetail } from './hooks/UseViewAction';
+import { SetWorkflowContext } from '../../../../../pages/applications/workflow/WorkflowContext';
+import { ConfigureParametersContextProvider } from '../../context/ConfigureParametersContext';
+import ConfigureActionParameters from '../addAction/ConfigureActionParameters';
 
 export interface ViewSelectedActionProps {
     actionDefinitionId: string
@@ -45,8 +46,9 @@ function TabPanel(props: TabPanelProps) {
 
 const ViewSelectedAction = (props: ViewSelectedActionProps) => {
     const theme = useTheme();
-
+    const setWorkflowContext = React.useContext(SetWorkflowContext)
     const [activeTab, setActiveTab] = React.useState(0)
+    const [guideEnabled, setGuideEnabled] = React.useState(false)
     const [selectedParameterForEdit, setSelectedParameterForEdit] = React.useState<ActionParameterDefinition|undefined>()
 
     const {isLoading, error, data} = useViewAction({actionDefinitionId: props.actionDefinitionId, expectUniqueResult: true})
@@ -54,6 +56,22 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
     const onParameterSelectForEdit = (actionParameter: ActionParameterDefinition) => setSelectedParameterForEdit(actionParameter)
     const deleteParametersWithIds = (actionParameterIds: string[]) => console.log("Deleting", actionParameterIds)
     const onCodeChange = (newCode: string) => console.log(newCode)
+
+    const toggleGuideEnabled = () => {
+        if(guideEnabled) {
+            setGuideEnabled(false)
+        } else {
+            setWorkflowContext({
+                type: 'SET_LATEST_ACTION_ADDED',
+                payload: {
+                    stageId: props.stageId,
+                    actionId: props.actionDefinitionId,
+                    actionIndex: props.actionDefinitionIndex
+                }
+            })
+            setGuideEnabled(true)
+        }
+    }
 
     React.useEffect(() => {
         setSelectedParameterForEdit(undefined)
@@ -65,7 +83,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         return <>{error}</>
     } else {
         const action = data as ActionDetail
-        const defaultActionTemplate = action.ActionTemplatesWithParameters.find(template => template.model.Id === action.ActionDefinition.DefaultActionTemplateId)
+        const defaultActionTemplate = action.ActionTemplatesWithParameters.find(template => template.model.Id === action.ActionDefinition.model.DefaultActionTemplateId)
         const firstActionTemplate = action.ActionTemplatesWithParameters[0]
         const selectedActionTemplate = defaultActionTemplate || firstActionTemplate
         const selectedActionTemplateModel = selectedActionTemplate?.model
@@ -75,7 +93,36 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         }
         return (
         <Box>
-            <Box>
+            <Dialog open={guideEnabled} fullWidth maxWidth="xl" >
+                <DialogTitle sx={{display: 'flex', justifyContent: 'center',background: "#66748A", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
+                    <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
+                        <Typography variant="heroHeader" sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 500,
+                            fontSize: "18px",
+                            lineHeight: "160%",
+                            letterSpacing: "0.15px",
+                            color: "#F8F8F8"}}
+                        >
+                            Action Configurator
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6} style={{display: 'flex', justifyContent: 'flex-end'}} onClick={toggleGuideEnabled}>
+                        <IconButton aria-label="close" >
+                            <img src={CloseIcon} alt="close"/>
+                        </IconButton>
+                    </Grid>
+                    
+                </DialogTitle>
+                <DialogContent sx={{minHeight: '500px', mt: 2}}>
+                    <ConfigureParametersContextProvider>
+                        <ConfigureActionParameters handleDialogClose={toggleGuideEnabled}/>
+                    </ConfigureParametersContextProvider>
+                </DialogContent>
+            </Dialog>
+            <Box sx={{display: 'flex', gap: 3}}>
+                <Box>
                 <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
                     <Tab label="Parameters" value={0} sx={{
                             fontFamily: "SF Pro Text",
@@ -100,7 +147,19 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                             opacity: 0.7
                     }}/>
                 </Tabs>
+                </Box>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', alignItems: 'center'}}>
+                    <FormGroup>
+                        <FormControlLabel control={
+                            <Switch 
+                                checked={guideEnabled}
+                                onClick={toggleGuideEnabled}
+                            />} 
+                            label="Guide Enabled" />
+                    </FormGroup>
+                </Box>
             </Box>
+            
             <Box sx={{pt: 2}}>
                 <TabPanel value={activeTab} index={1}>
                     <Box>

@@ -39,7 +39,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
         const selectedTagsId: string[] = selectedTags.map(tag => tag.Id!)
         const availableTagsForEntity = (data as Tag[]).filter(availableTag => !selectedTagsId.includes(availableTag.Id!))
         return(
-            <Grid container spacing={2} sx={{overflowY: 'auto'}} direction={ 
+            <Grid container spacing={2} sx={{overflowY: 'auto', overflowX: 'auto'}} direction={ 
                 inputFieldLocation==="BOTTOM" ? "column-reverse" : 
                 inputFieldLocation==="TOP" ? "column" :
                 inputFieldLocation==="LEFT" ? "row" : "row-reverse"

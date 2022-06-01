@@ -8,38 +8,27 @@ import TemplateLanguage from '../enums/TemplateLanguage.js'
 const InputMap = {
     [TemplateLanguage.PYTHON]: {
         [ActionParameterDefinitionInputType.STRING]: {
-            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
-            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.COMPILE_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING,
         },
         [ActionParameterDefinitionInputType.BOOLEAN]: {
-            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
-            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.COMPILE_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.BOOLEAN,
         },
         [ActionParameterDefinitionInputType.INTEGER]: {
-            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
-            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.COMPILE_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.INT,
         },
         [ActionParameterDefinitionInputType.DECIMAL]: {
-            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
-            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.COMPILE_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.FLOAT,
         },
         [ActionParameterDefinitionInputType.COLUMN_NAME]: {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.COLUMN_NAME,
-            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.COMPILE_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING,
         },
         [ActionParameterDefinitionInputType.TABLE_NAME]: {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.DATA,
-            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.RUN_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.PANDAS_DATAFRAME,
         },
         [ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST]: {
             [ActionParameterDefinitionAttribute.TAG]: undefined,
-            [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.RUN_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
         }
     },

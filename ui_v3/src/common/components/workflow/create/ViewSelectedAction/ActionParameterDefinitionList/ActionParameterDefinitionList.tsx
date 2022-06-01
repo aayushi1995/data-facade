@@ -60,26 +60,6 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
                     allowDelete={true}
                     inputFieldLocation="RIGHT"
                 />   
-            },
-            {
-                field: "Actions",
-                headerName: "Actions",
-                width: 200,
-                renderCell: (props: any) => {
-                    const handleClick = (event:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-                        event.stopPropagation()
-                        props.api.componentsProps.onParameterSelectForEdit(props.row)
-                    }
-                    return (
-                        <Box sx={{display: "flex", flexDirection: "row"}}>
-                            <Box>
-                                <IconButton onClick={handleClick}>
-                                    <PencilAltIcon fontSize="small" />
-                                </IconButton>
-                            </Box>
-                        </Box>
-                    )
-                }
             }
         ].map(col => {return {width: 20*col.field.length, ...col}}),
         rows: (props?.templateWithParams?.actionParameterDefinitions || []).map(param => {

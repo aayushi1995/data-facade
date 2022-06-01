@@ -1,15 +1,17 @@
 
-import { Autocomplete, Box, createFilterOptions, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, useTheme } from '@mui/material';
+import { Autocomplete, Box, createFilterOptions, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, useTheme, Icon, Typography } from '@mui/material';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { getInputTypeFromAttributesNew, InputMap } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
 import ActionParameterDefinitionDatatype from '../../../../../../enums/ActionParameterDefinitionDatatype';
 import ActionParameterDefinitionTag from '../../../../../../enums/ActionParameterDefinitionTag';
-import { ActionParameterDefinition, ActionTemplate, Tag } from '../../../../../../generated/entities/Entities';
+import { ActionParameterDefinition, ActionTemplate, ColumnProperties, Tag } from '../../../../../../generated/entities/Entities';
 import labels from '../../../../../../labels/labels';
 import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
 import TagHandler from '../../../../tag-handler/TagHandler';
+import { HtmlTooltip } from '../../../../workflow-action/ActionCard';
 import getParameterInputField, { BooleanParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
+import InfoIcon from "../../../../../../../src/images/info.svg"
 
 
 export interface EditActionParameterDefinitionProps {
@@ -194,7 +196,41 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
                     filters: {
                         tableFilters: [{Id: parameterConfig?.TableId}],
                         parameterDefinitionId: props.parameter.Id!
+                    },
+                    onChange: (newValue: ColumnProperties[] | undefined) => {
+                        const names = newValue?.map(column => column.UniqueName) || []
+                        const value = names.join(',')
+                        setWorkflowState({
+                            type: 'ASSIGN_DEFAULT_VALUE',
+                            payload: {
+                                stageId: props.stageId,
+                                actionDefinitionId: props.parameter.ActionDefinitionId!,
+                                actionIndex: props.actionIndex,
+                                actionParameterDefinitionId: props.parameter.Id!,
+                                parameterValue: value
+                            }
+                        })
+
                     }
+                }
+            }
+        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
+            const parameterConfig = getCurrentParameterConfig()
+            return {
+                parameterType: "FLOAT",
+                inputProps: {
+                    parameterName: props.parameter.DisplayName || props.parameter.ParameterName!,
+                    value: parameterConfig?.ParameterValue,
+                    onChange: (newValue: string) => setWorkflowState({
+                        type: "ASSIGN_DEFAULT_VALUE",
+                        payload: {
+                            stageId: props.stageId,
+                            actionDefinitionId: props.parameter.ActionDefinitionId!,
+                            actionIndex: props.actionIndex,
+                            actionParameterDefinitionId: props.parameter.Id!,
+                            parameterValue: newValue
+                        }
+                    })
                 }
             }
         } else {
@@ -236,7 +272,7 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
     }
 
     return (
-        <Box>
+        <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
             <Autocomplete
                 options={availableParameters}
                 value={currentGlobalParameter}
@@ -247,7 +283,7 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys
-                renderInput={(params) => <TextField label="Select Parameter" {...params}/>}
+                renderInput={(params) => <TextField label="Select Global Parameter" {...params}/>}
                 filterOptions={(options, params) => {
                     const filtered = filter(options, params);
                     if(params.inputValue !== '') {
@@ -265,6 +301,39 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
                     }
                 }}
             />
+            <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
+                <React.Fragment>
+                    <Box p={1} sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '300px'}}>
+                        <Typography sx={{
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            fontSize: "16px",
+                            lineHeight: "175%",
+                            letterSpacing: "0.15px",
+                            color: "#253858"
+                        }}>
+                            Global Parameters
+                        </Typography>
+                        <Typography sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 400,
+                            fontSize: "14px",
+                            lineHeight: "143%",
+                            letterSpacing: "0.15px",
+                            color: "rgba(66, 82, 110, 0.86)"
+                        }}>
+                            Parameter Display name
+When the ‘user input’ is selected as ‘Yes’, then the user needs to specify a display name (or label), the value of which shall be assigned by the user during flow execution.
+Parameter name has to be defined by the userExample of  parameter name: ‘ProductDataTable’Best practice: Do not use special characters like “”, %,*,$,^,(), to define parameter name 
+                        </Typography>
+                    </Box>
+                </React.Fragment>
+            }>
+                <Icon sx={{display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'center'}}>
+                    <img src={InfoIcon} />
+                </Icon>
+            </HtmlTooltip>
         </Box>
     )
 }
@@ -290,6 +359,55 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
     if(!!props.parameter) {
         return(
             <Grid container spacing={3}>
+                <Grid item xs={12} md={4} lg={2}>
+                    <Box sx={{width: '100%', display: 'flex', gap: 1, alignItems: 'center'}}>
+                        <FormControl sx={{width: '100%'}}>
+                            <InputLabel htmlFor="component-outlined">User Input Required</InputLabel>
+                            <Select
+                                variant="outlined"
+                                value={userInputRequired}
+                                fullWidth
+                                onChange={handleUserInputRequiredChange}
+                                label="User Input Required"
+                                disabled={props.parameter.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST}
+                            >
+                                <MenuItem value={"Yes"}>Yes</MenuItem>
+                                <MenuItem value={"No"}>No</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
+                            <React.Fragment>
+                                <Box p={1} sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '300px'}}>
+                                    <Typography sx={{
+                                        fontStyle: "normal",
+                                        fontWeight: 700,
+                                        fontSize: "16px",
+                                        lineHeight: "175%",
+                                        letterSpacing: "0.15px",
+                                        color: "#253858"
+                                    }}>
+                                        User Input Required
+                                    </Typography>
+                                    <Typography sx={{
+                                        fontFamily: "'SF Pro Text'",
+                                        fontStyle: "normal",
+                                        fontWeight: 400,
+                                        fontSize: "14px",
+                                        lineHeight: "143%",
+                                        letterSpacing: "0.15px",
+                                        color: "rgba(66, 82, 110, 0.86)"
+                                    }}>
+                                        User input for the parameter can be yes or no. If ‘Yes’ is selected, then the user needs to create a display name (label) for the input that the user will enter when running the flow. If ‘No’ is selected, then the user can choose any of the upstream actions which returns a ‘table’ as output or give a default value.
+                                    </Typography>
+                                </Box>
+                            </React.Fragment>
+                        }>
+                            <Icon sx={{display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'center'}}>
+                                <img src={InfoIcon} />
+                            </Icon>
+                        </HtmlTooltip>
+                    </Box>
+                </Grid>
                 <Grid item xs={12} md={8} lg={6}>
                     <FormControl sx={{width: "100%"}}>
                         <InputLabel htmlFor="component-outlined">Type Parameter Name</InputLabel>
@@ -297,6 +415,7 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                             id="component-outlined"
                             value={props.parameter.DisplayName || props.parameter.ParameterName}
                             onChange={handleParameterNameChange}
+                            disabled
                             label="Type Parameter Name"
                         />
                     </FormControl>
@@ -315,21 +434,6 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                             {Object.keys(InputMap[props.template.Language!]).map((inputType) => {
                                 return <MenuItem value={inputType}>{inputType}</MenuItem>
                             })}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={4} lg={2}>
-                    <FormControl sx={{width: "100%"}}>
-                        <InputLabel htmlFor="component-outlined">User Input Required</InputLabel>
-                        <Select
-                            variant="outlined"
-                            value={userInputRequired}
-                            fullWidth
-                            onChange={handleUserInputRequiredChange}
-                            label="User Input Required"
-                        >
-                            <MenuItem value={"Yes"}>Yes</MenuItem>
-                            <MenuItem value={"No"}>No</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>

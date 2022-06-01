@@ -32,13 +32,13 @@ export interface ActionCardProps {
     handleActionClick?: (actionId: string, actionIndex: number, stageId: string) => void
 }
 
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }}/>
   ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: '#F9F9F9',
+      backgroundColor: '#F5F9FF',
       color: 'rgba(0, 0, 0, 0.87)',
-      maxWidth: 220,
+      maxWidth: 300,
       borderRadius: '8px 8px 8px 8px',
     },
   }));

@@ -1,6 +1,7 @@
 import { Box } from "@mui/material"
 import { truncate } from "node:fs/promises"
 import React from "react"
+import ActionDefinitionActionType from "../../../../../enums/ActionDefinitionActionType"
 import { ActionDefinition } from "../../../../../generated/entities/Entities"
 import { ActionDefinitionDetail } from "../../../../../generated/interfaces/Interfaces"
 import GroupDropDown from "../GroupDropDown"
@@ -18,7 +19,8 @@ const SelectFromGroups = (props: SelectFromGroups) => {
     const [groupActions, setGroupActions] = React.useState<{[key: string]: SelectActionCardProps[]}>({})
     const handleSuccess = (data: ActionDefinitionDetail[]) => {
         let newActions: {[key: string]: SelectActionCardProps[]} = {}
-        data.forEach(actionDefinition => {
+        const filteredActionDefinitions = data.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.WORKFLOW && actionDefinition.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.AUTO_FLOW)
+        filteredActionDefinitions.forEach(actionDefinition => {
             if(!!actionDefinition?.ActionDefinition?.model?.ActionGroup) {
                 const existingActions = newActions?.[actionDefinition?.ActionDefinition?.model?.ActionGroup] || []
                 existingActions.push({
@@ -27,7 +29,8 @@ const SelectFromGroups = (props: SelectFromGroups) => {
                     actionDescription: actionDefinition?.ActionDefinition?.model?.Description || "NA",
                     defaultTemplateId: actionDefinition?.ActionDefinition?.model?.DefaultActionTemplateId || "NA",
                     onAddAction: props.onAddAction,
-                    parameters: actionDefinition?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions
+                    parameters: actionDefinition?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions,
+                    actionGroup: actionDefinition?.ActionDefinition?.model?.ActionGroup
                 })
                 newActions[actionDefinition?.ActionDefinition?.model?.ActionGroup] = existingActions
             }

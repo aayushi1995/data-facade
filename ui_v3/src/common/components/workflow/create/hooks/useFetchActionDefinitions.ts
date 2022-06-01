@@ -17,7 +17,7 @@ const useFetchActionDefinitions = (params: UseFetchActionDefinitionsProps): [Act
         () => {
             return Fetcher.fetchData('GET', '/getActionDefinitionDetails', params.filter || {})
         }, {
-            staleTime: 60*1000,
+            staleTime: 60*10*1000,
             onSuccess: (data) => {
                 params.handleSuccess?.(data)
             }

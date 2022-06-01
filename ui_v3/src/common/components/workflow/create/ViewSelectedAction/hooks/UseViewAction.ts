@@ -7,7 +7,8 @@ import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from
 
 export interface UseViewActionParams{
     actionDefinitionId: string,
-    expectUniqueResult: boolean
+    expectUniqueResult: boolean,
+    handleSuccess?: (data: ActionDetail | ActionDetail[]) => void
 }
 
 export interface TemplateWithParams {
@@ -19,8 +20,13 @@ export interface TemplateWithParams {
     }[]
 }
 
+export interface ActionDefinitionWithTags {
+    model: ActionDefinition,
+    tags: Tag[]
+}
+
 export interface ActionDetail {
-    ActionDefinition: ActionDefinition,
+    ActionDefinition: ActionDefinitionWithTags,
     ActionTemplatesWithParameters: TemplateWithParams[]
 }
 
@@ -29,7 +35,7 @@ type ActionDetailWithDefaultTemplate = ActionDetail & {DefaultActionTemplateWith
 export interface ViewActionResult {
     isLoading: boolean,
     error: object,
-    data: ActionDetail | ActionDetail[] | undefined
+    data: ActionDetail | ActionDetail[] | undefined,
 }
 
 function useViewAction(params: UseViewActionParams): ViewActionResult {
@@ -46,6 +52,9 @@ function useViewAction(params: UseViewActionParams): ViewActionResult {
                 },
                 ActionDefinitionDetailGet: true
             })
+        },
+        {
+            onSuccess: (data) => params.handleSuccess?.(validateDataAndSelectUnique(data) || [])
         })
     
     return {

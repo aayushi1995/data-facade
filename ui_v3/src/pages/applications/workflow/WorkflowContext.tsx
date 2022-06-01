@@ -66,7 +66,12 @@ export type WorkflowContextType = {
     PublishStatus?: string,
     UpdatedOn?: number,
     CreatedOn?: number,
-    ErrorState?: boolean
+    ErrorState?: boolean,
+    LatestActionAdded?: {
+        actionId: string,
+        stageId: string,
+        actionIndex: number
+    }
 }
 
 const defaultWorkflowContext: WorkflowContextType = {
@@ -379,6 +384,15 @@ type ValidateState = {
     payload: WorkflowContextType
 }
 
+type SetLatestActionAdded = {
+    type: 'SET_LATEST_ACTION_ADDED',
+    payload: {
+        stageId: string,
+        actionId: string,
+        actionIndex: number
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -412,7 +426,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetActionGroup |
                              DeleteGlobalParameter |
                              SetErrorState |
-                             ValidateState
+                             ValidateState |
+                             SetLatestActionAdded
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -433,7 +448,11 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     Actions: [...stage.Actions, action.payload.Action]
                 })
             }
-            return reducer(newState, {type: 'VALIDATE', payload: newState})
+            return reducer(reducer(newState, {type: 'VALIDATE', payload: newState}), {type: 'SET_LATEST_ACTION_ADDED', payload: {
+                actionId: action.payload.Action.Id,
+                stageId: action.payload.stageId,
+                actionIndex: state.stages.find(stage => stage.Id === action.payload.stageId)?.Actions?.length || 0
+            }})
         }
         
         case 'DELETE_ACTION': {
@@ -759,7 +778,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         }
 
         case 'VALIDATE': {
-            console.log(state, action.payload)
             const errorMessages = extractErrorMessages(action.payload)
             console.log(errorMessages)
             const newState: WorkflowContextType = {
@@ -781,9 +799,30 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return newState
         }
 
+        case 'SET_LATEST_ACTION_ADDED': {
+            return {
+                ...state,
+                LatestActionAdded: action.payload
+            }
+        }
+
         default:
             return state
     }
+}
+
+const findAction = (stageId: string, actionIndex: number, actionId: string, workflowContext: WorkflowContextType) => {
+    var found = false
+    workflowContext.stages.forEach(stage => {
+        if(stage.Id === stageId) {
+            console.log(stage.Actions)
+            console.log(actionIndex, actionId)
+            found = stage.Actions?.[actionIndex]?.Id === actionId
+            return
+        }
+    })
+
+    return found
 }
 
 const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextType => {
@@ -794,7 +833,7 @@ const filterValidDefaultValues = (state: WorkflowContextType): WorkflowContextTy
             Actions: stage.Actions.map((action, index) => { 
                 const newActions = {
                     ...action,
-                    Parameters: action.Parameters.map(parameter => parameter?.SourceExecutionId === undefined || parameter?.SourceExecutionId?.actionId === stage.Actions?.[parameter.SourceExecutionId?.actionIndex]?.Id ? parameter : {
+                    Parameters: action.Parameters.map(parameter => parameter?.SourceExecutionId === undefined || findAction(parameter?.SourceExecutionId?.stageId || "stage", parameter?.SourceExecutionId?.actionIndex || 0, parameter?.SourceExecutionId?.actionId || "actionId", state) ? parameter : {
                         ...parameter,
                         SourceExecutionId: undefined
                     })
@@ -843,7 +882,7 @@ function extractErrorMessages(state: WorkflowContextType) {
 }
 
 export function findIfParameterPresent(state: WorkflowContextType, stageId: string, actionIndex: number, parameterDefinitionId: string) {
-    return state.stages.filter(stage => stage.Id === stageId)[0].Actions.filter((action, index) => index === actionIndex)[0]?.Parameters.find(parameter => parameter.ActionParameterDefinitionId === parameterDefinitionId)
+    return state.stages.filter(stage => stage.Id === stageId)?.[0]?.Actions?.filter((action, index) => index === actionIndex)?.[0]?.Parameters?.find(parameter => parameter?.ActionParameterDefinitionId === parameterDefinitionId)
 }
 
 export const WorkflowContextProvider = ({children}: {children: React.ReactElement}) => {

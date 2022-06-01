@@ -1,4 +1,5 @@
 import { Grid } from "@mui/material";
+import ActionDefinitionActionType from "../../../../enums/ActionDefinitionActionType";
 import useFetchActionDefinitions from "./hooks/useFetchActionDefinitions";
 import { ActionDefinitionToAdd } from "./SelectAction/SelectAction";
 import SelectActionCard from "./SelectActionCard";
@@ -16,10 +17,11 @@ const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
     } else if(!!allActionDefinitionsError) {
         return <>{allActionDefinitionsError}</>
     } else {
+        const filteredActionDefinitions = allActionDefinitionsData.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.WORKFLOW && actionDefinition.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.AUTO_FLOW)
         return(
             <Grid container spacing={1}>
-                {allActionDefinitionsData.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
-                    <Grid item xs={12} md={6} lg={4}>
+                {filteredActionDefinitions.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
+                    <Grid item xs={12} md={6} lg={6} xl={4} sm={12}>
                         <SelectActionCard
                             actionId={actionDefinition?.ActionDefinition?.model?.Id||"NA"}
                             actionName={actionDefinition?.ActionDefinition?.model?.UniqueName||"NAME NA"}

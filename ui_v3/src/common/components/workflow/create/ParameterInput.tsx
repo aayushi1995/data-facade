@@ -1,10 +1,12 @@
-import { Autocomplete, Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import { Autocomplete, Box, FormControl, Icon, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import React, { ChangeEvent } from "react"
 import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
 import LoadingWrapper from "../../LoadingWrapper"
+import { HtmlTooltip } from "../../workflow-action/ActionCard"
 import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
+import InfoIcon from "../../../../../src/images/info.svg"
 
 
 export interface UpstreamActionParameterInput {
@@ -297,24 +299,57 @@ const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
     const {upstreamActions, selectedAction, onChange, onClear} = props.inputProps
     const formLabel = (upstream: UpstreamAction) => `${upstream.stageName} | ${upstream.actionName} (${upstream.actionIndex+1})`
     return (
-        <Autocomplete
-            options={upstreamActions}
-            getOptionLabel={formLabel}
-            value={selectedAction}
-            renderInput={(params) => <TextField {...params} label="Select Upstream Action" />}
-            onChange={(event, value, reason, details) => {
-                if(reason==="selectOption" && !!value){
-                    onChange(value)
-                } else if(reason==="clear"){
-                    onClear()
-                }
-            }}
-            filterSelectedOptions
-            fullWidth
-            selectOnFocus
-            clearOnBlur
-            handleHomeEndKeys
-        />
+        <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+            <Autocomplete
+                options={upstreamActions}
+                getOptionLabel={formLabel}
+                value={selectedAction}
+                renderInput={(params) => <TextField {...params} label="Select Upstream Action" />}
+                onChange={(event, value, reason, details) => {
+                    if(reason==="selectOption" && !!value){
+                        onChange(value)
+                    } else if(reason==="clear"){
+                        onClear()
+                    }
+                }}
+                filterSelectedOptions
+                fullWidth
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+            />
+            <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
+                <React.Fragment>
+                    <Box p={1} sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '300px'}}>
+                        <Typography sx={{
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            fontSize: "16px",
+                            lineHeight: "175%",
+                            letterSpacing: "0.15px",
+                            color: "#253858"
+                        }}>
+                            Upstream Action
+                        </Typography>
+                        <Typography sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 400,
+                            fontSize: "14px",
+                            lineHeight: "143%",
+                            letterSpacing: "0.15px",
+                            color: "rgba(66, 82, 110, 0.86)"
+                        }}>
+When ‘user input’ is selected as ‘No’, then the user shall be required to select the output of any of the upstream actions which returns a table.  DF shall provide the user with an array of appropriate upstream actions to choose from. 
+                        </Typography>
+                    </Box>
+                </React.Fragment>
+            }>
+                <Icon sx={{display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'center'}}>
+                    <img src={InfoIcon} />
+                </Icon>
+            </HtmlTooltip>
+        </Box>
     )
 }
 
