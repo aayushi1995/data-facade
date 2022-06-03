@@ -29,12 +29,17 @@ interface ResolvedActionExecutionProps {
 const ViewActionExecution = (props: ViewActionExecutionProps) => {
     const { actionExecutionId } = props
     const queryClient = useQueryClient()
+    const [executionCompleted, setExecutionCompleted] = React.useState(false)
+
+
     const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: actionExecutionId, queryOptions: {}})
     
     React.useEffect(() => {
         const interval = setInterval(() => {
             const actionStatus = actionExecutionDetailQuery.data?.ActionExecution?.Status
+            console.log("Interval")
             if(!(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED)) {
+                console.log(actionStatus)
                 queryClient.invalidateQueries(["ActionExecutionDetail", actionExecutionId])
             }
         }, 4000)
@@ -111,6 +116,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
     const [dialogState, setDialogState] = React.useState(false)
     const [importTableDialog, setImportTableDialog] = React.useState(false)
     const [fileFetched, setFileFetched] = React.useState(false)
+    const [outputFile, setOutputFile] = React.useState<File | undefined>()
     const handleClose = () => setDialogState(false)
     const handleOpen = () => setDialogState(true)
 
@@ -134,6 +140,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                         ({requestUrl: s3Data.requestUrl as string, headers: s3Data.headers}),
                         {
                             onSuccess: (data, variables, context) => {
+                                setOutputFile(new File([data as Blob], `Table.csv`))
                                 setFileFetched(true)
                             }
                         }
@@ -165,7 +172,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
             }
         )
     }
-
+    console.log("Re-rendering")
     return (
         <Box>
             <Dialog open={importTableDialog} onClose={() => {setImportTableDialog(false); setFileFetched(false)}} fullWidth maxWidth="xl">
@@ -174,7 +181,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                 </DialogTitle>
                 <DialogContent>
                     {fileFetched ? (
-                        <ConfigureTableMetadata file={new File([downloadExecutionOutputFromS3.data as Blob], `Table.csv`)} uploadState={S3UploadState.FILE_BUILT_FOR_UPLOAD} currentEnabled={5} setUploadState={() => {return}}/>
+                        <ConfigureTableMetadata file={outputFile} uploadState={S3UploadState.FILE_BUILT_FOR_UPLOAD} currentEnabled={5} setUploadState={() => {return}}/>
                     ) : (
                         <LoadingIndicator/>
                     )}

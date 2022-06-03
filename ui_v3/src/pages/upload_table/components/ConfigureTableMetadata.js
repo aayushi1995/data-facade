@@ -498,7 +498,7 @@ const TableSchemaSelection = (props) => {
 
     // Responsible for fetching Tags from Prediction Service
     React.useEffect(() => {
-        if (!!parsedFileResult && !!columnProperties) {
+        if (!!parsedFileResult && !!columnProperties && !fetchTags.data) {
             const tagRequest = {
                 name: tableProperties.tableName,
                 column_names: parsedFileResult.columnNames,

@@ -6,6 +6,7 @@ import TemplateLanguage from '../../../../../../enums/TemplateLanguage';
 import { ActionParameterDefinition } from '../../../../../../generated/entities/Entities';
 import PencilAltIcon from "../../../../../../icons/PencilAlt";
 import TagHandler from '../../../../tag-handler/TagHandler';
+import VirtualTagHandler from '../../../../tag-handler/VirtualTagHandler';
 import { TemplateWithParams } from '../hooks/UseViewAction';
 
 
@@ -51,7 +52,7 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
             {
                 field: "Tags",
                 headerName: "Tags",
-                width: 200,
+                width: 400,
                 renderCell: (props: any) => <TagHandler
                     entityType="ActionParameterDefinition"
                     entityId={props.row.id}
@@ -59,6 +60,7 @@ const ActionParameterDefinitionList = (props: ActionParameterDefinitionListProps
                     allowAdd={false}
                     allowDelete={true}
                     inputFieldLocation="RIGHT"
+                    maxNumberOfTags={1}
                 />   
             }
         ].map(col => {return {width: 20*col.field.length, ...col}}),

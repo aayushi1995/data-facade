@@ -9,7 +9,8 @@ export interface TagHandlerProps {
     tagFilter: Tag,
     allowAdd: boolean,
     allowDelete: boolean,
-    inputFieldLocation: "LEFT" | "RIGHT" | "TOP" | "BOTTOM"
+    inputFieldLocation: "LEFT" | "RIGHT" | "TOP" | "BOTTOM",
+    maxNumberOfTags?: number
 }
 
 const filter = createFilterOptions<string>()
@@ -65,26 +66,51 @@ const TagHandler = (props: TagHandlerProps) => {
                 <Grid item {...((props.inputFieldLocation==="TOP" || props.inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:8, lg:9} )}>
                     <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%"}}>
                         {tagsSelectedForEntity.length > 0 ? 
-                            tagsSelectedForEntity.map(tagName => 
-                                <Box>
-                                    <Chip variant="outlined" color="primary" size="small" 
-                                        label={tagName} 
-                                        onDelete={props.allowDelete ? (() => {deleteTag(tagName)}) : undefined}
-                                        sx={{
-                                            fontFamily: "SF Pro Text",
-                                            fontStyle: "normal",
-                                            fontWeight: "normal",
-                                            fontSize: "13px",
-                                            lineHeight: "24px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            letterSpacing: "0.073125px",
-                                            color: "#253858",
-                                            pt: 2,
-                                            pb: 2
-                                        }}
-                                    />
-                                </Box>)
+                            tagsSelectedForEntity.map((tagName, index) => {
+                                if(!props.maxNumberOfTags || (!!props.maxNumberOfTags && index < props.maxNumberOfTags)) {
+                                    return <Box>
+                                        <Chip variant="outlined" color="primary" size="small" 
+                                            label={tagName} 
+                                            onDelete={props.allowDelete ? (() => {deleteTag(tagName)}) : undefined}
+                                            sx={{
+                                                fontFamily: "SF Pro Text",
+                                                fontStyle: "normal",
+                                                fontWeight: "normal",
+                                                fontSize: "13px",
+                                                lineHeight: "24px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                letterSpacing: "0.073125px",
+                                                color: "#253858",
+                                                pt: 2,
+                                                pb: 2
+                                            }}
+                                        />
+                                    </Box>
+                                } else if(!!props.maxNumberOfTags && index === props.maxNumberOfTags) {
+                                    return (
+                                        <Box>
+                                            <Chip variant="outlined" color="primary" size="small" 
+                                                label={"+" + String(tagsSelectedForEntity.length - props.maxNumberOfTags)} 
+                                                onDelete={props.allowDelete ? (() => {deleteTag(tagName)}) : undefined}
+                                                sx={{
+                                                    fontFamily: "SF Pro Text",
+                                                    fontStyle: "normal",
+                                                    fontWeight: "normal",
+                                                    fontSize: "13px",
+                                                    lineHeight: "24px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    letterSpacing: "0.073125px",
+                                                    color: "#253858",
+                                                    pt: 2,
+                                                    pb: 2
+                                                }}
+                                            />
+                                        </Box>
+                                    )
+                                }
+                            }) 
                             
                             :
                                 <Box>
