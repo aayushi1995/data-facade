@@ -106,6 +106,9 @@ const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) => {
                         <ReactJson src={actionOutput} />
                     </Card>
                 </Box>
+                <Box>
+                        <DownloadAndDisplayLogs actionExecution={actionExecutionDetail.ActionExecution || {}}/>
+                </Box>
             </Box>
         </Box>
     )
@@ -245,8 +248,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                             </Box>
                             <Box>
                                 <DownloadAndDisplayLogs actionExecution={actionExecutionDetail.ActionExecution || {}}/>
-                            </Box>
-                            
+                            </Box>                         
                         </Box>
                     </Box>
                 </Card>
