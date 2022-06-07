@@ -16,7 +16,7 @@ const useCreateRuntimeWorkflow = (props: CreateRuntimeWorkflowProps) => {
 
     return useMutation(
         props.mutationName,
-        (params: {tableId: string, autoFlow: string}) => {
+        (params: {tableId: string, autoFlow: string, actionGroups?: string[]}) => {
             return fetchedDataManager.retreiveData(
                 labels.entities.TableProperties,
                 {
@@ -24,7 +24,8 @@ const useCreateRuntimeWorkflow = (props: CreateRuntimeWorkflowProps) => {
                         Id: params.tableId
                     },
                     "makeWorkflowForTable": true,
-                    "AutoFlow": params.autoFlow
+                    "AutoFlow": params.autoFlow,
+                    "ActionGroups": params.actionGroups
                 }
             )
         }, {

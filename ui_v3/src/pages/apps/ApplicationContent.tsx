@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
+import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPPLICATION_CREATE_AUTO_FLOW } from '../../common/components/header/data/ApplicationRoutesConfig';
 import { findTab } from '../../common/components/header/data/DataRoutesConfig';
 import { APPLICATION_ROUTE, TOP_TAB_ROUTES } from '../../common/components/header/data/RoutesConfig';
 import { SetModuleContextState } from '../../common/components/ModuleContext';
@@ -9,6 +9,7 @@ import EditWorkflowHomePage from '../applications/workflow/EditWorkflowHomePage'
 import ExecuteWorkflowHomePage from '../applications/workflow/ExecuteWorkflowHomePage';
 import ViewWorkflowExecutionHomePage from '../applications/workflow/ViewWorkflowExecutionHomePage';
 import BuildActionHomePage from '../build_action/BuildActionHomePage';
+import BuildAutoFlow from '../build_auto_flow/BuildAutoFlow';
 import BuildWorkflowHomePage from '../build_workflow/BuildWorkflowHomePage';
 import EditActionHomePage from '../edit_action/EditActionHomePage';
 import ExecuteActionHomePage from '../execute_action/ExecuteActionHomePage';
@@ -48,6 +49,7 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
             <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route>
             <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}></Route>
             <Route path={ACTION_EXECUTION_ROUTE} component={ActionExecutionHomePage}/>
+            <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
             <Route path={APPLICATION_ROUTE} component={AllApplicationView}/>
         </Switch>
     )

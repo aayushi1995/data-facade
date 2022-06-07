@@ -27,25 +27,6 @@ const useTables: (props: UseTablesProps) => {tables: TableProperties[]|undefined
             })
         }
     )
-    // const {data: providers, isLoading: isProviderLoading, error: providerError} = useQuery([labels.entities.ProviderInstance, providerFilter], () => {
-    //         return fetchedDataManagerInstance.retreiveData(labels.entities.ProviderInstance, {
-    //             filter: providerFilter
-    //         })
-    //     }
-    // )
-
-    // React.useEffect(() => {
-    //     setLoading(isTableLoading||isProviderLoading)
-    // }, [isTableLoading, isProviderLoading])
-    
-    // React.useEffect(() => {
-    //     if(!!tableError){
-    //         setError(tableError as any)
-    //     }
-    //     if(!!providerError){
-    //         setError(providerError as any)
-    //     }
-    // }, [tableError, providerError])
 
     return {
         tables: (tables as TableProperties[]| undefined),

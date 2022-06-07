@@ -8,3 +8,4 @@ export const WORKFLOW_EXECUTION_ROUTE = `/application/workflow-execution/:Workfl
 export const ACTION_EXECUTION_ROUTE = `${APPLICATION_ROUTE}/action-execution/:ActionExecutionId`
 export const EXECUTE_INSTANCE_ROUTE = `${APPLICATION_ROUTE}/execute-instance/:actionInstanceId`
 export const WORKFLOW_EDIT_ROUTE = `${APPLICATION_ROUTE}/edit-workflow/:WorkflowId`
+export const APPPLICATION_CREATE_AUTO_FLOW = `${APPLICATION_ROUTE}/create-autoFlow`
