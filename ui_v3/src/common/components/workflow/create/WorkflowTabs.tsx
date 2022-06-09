@@ -106,10 +106,11 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
                     }}>
                         Save
                     </Button>
-                    <Button variant="contained" disabled sx={{ 
+                    <Button variant="contained"
+                        onClick={() => props?.onRun?.()}
+                        sx={{ 
                         minWidth: "150px",
                         borderRadius: "64px",
-                        background: "#F178B6"
                     }}>
                         Test
                     </Button>

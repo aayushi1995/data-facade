@@ -24,6 +24,7 @@ const ActionConfigComponent = () => {
     }
 
     const OnRunAction = () => {
+        onActionSave()
         const actionId = buildActionContext?.lastSavedActionDefinition?.Id
         if(!!actionId) {
             history.push(`/application/execute-action/${actionId}`)
@@ -99,10 +100,9 @@ const ActionConfigComponent = () => {
                     }}>
                         Save
                     </Button>
-                    <Button variant="contained" disabled sx={{ 
+                    <Button variant="contained" onClick={OnRunAction} sx={{ 
                         minWidth: "150px",
                         borderRadius: "64px",
-                        background: "#F178B6"
                     }}>
                         Test
                     </Button>
