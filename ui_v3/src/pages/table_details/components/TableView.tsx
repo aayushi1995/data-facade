@@ -209,7 +209,7 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
             const tag = <Chip variant="outlined" color="primary" size="small"
                             label={tagName}
                             onDelete={index<tagCount ? () => deleteTag(tagName) : undefined}
-                            sx={{...chipStyle, maxWidth: chipMaxWidth }}
+                            sx={{...chipStyle, maxWidth: chipMaxWidth }} key={`${index}-tag-chip`}
                         />
             return <Tooltip title={tagName}>{tag}</Tooltip>
         })

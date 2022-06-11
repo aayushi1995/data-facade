@@ -160,8 +160,8 @@ const ValidityStatView = (props?: ValidityStat) => {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            {rowTypes.map( row => 
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
+            {rowTypes.map( (row, index) => 
+                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }} key={`${index}-validity`}>
                     <Box sx={{ width: "20px"}}>
                         <Box sx={{ height: "2px", width: "10px", background: row.Colour}}/>
                     </Box>
@@ -196,8 +196,8 @@ const RowContentStatView = (props?: RowContentStat) => {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {rowTypes.map( row => 
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }}>
+            {rowTypes.map( (row, index) => 
+                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }} key={`${index}-row-content-stat`}>
                     <Box sx={{ width: "100px", mr: 2}}>
                         <Typography variant="statText">{row.Label}</Typography>
                     </Box>
