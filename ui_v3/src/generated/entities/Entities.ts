@@ -79,6 +79,7 @@
 	 UploadExecutionData?: boolean
 	 PinnedToDashboard?: boolean
 	 Visibility?: string
+	 ResultTableName?: string
  }
  
  
@@ -304,6 +305,7 @@
 	 OptionSetValues?: string
 	 Description?: string
 	 DisplayName?: string
+	 Config?: string
  }
  
  

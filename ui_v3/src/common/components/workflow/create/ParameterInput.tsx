@@ -455,6 +455,11 @@ const TableInput = (props: TableParameterInput) => {
     // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
     const {tables, loading, error}  = useTables({tableFilter: {}, filterForParameterTags: true, parameterId: parameterDefinitionId})
+    React.useEffect(() => {
+        if(!!selectedTableFilter && !!tables) {
+            onChange(tables?.find(table => table.Id === selectedTableFilter?.Id))
+        }
+    }, [tables])
     return (
         <LoadingWrapper
         isLoading={loading}

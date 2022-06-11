@@ -1,4 +1,4 @@
-import { Box, Card, Icon, IconButton, Typography } from "@mui/material"
+import { Box, Card, Icon, IconButton, Typography, TextField } from "@mui/material"
 import LinearProgress from '@mui/material/LinearProgress'
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
 import { styled } from '@mui/styles'
@@ -30,6 +30,7 @@ export interface ActionCardProps {
     onActionSelect?: (actionId: string, actionIndex: number) => void
     handlePreviewOutput: (executionId: string) => void
     handleActionClick?: (actionId: string, actionIndex: number, stageId: string) => void
+    handleActionNameChange?: (actionId: string, actionIndex: number, stageId: string, name: string) => void
 }
 
 export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -53,6 +54,8 @@ const ActionCard = (props: ActionCardProps) => {
         boxSizing: 'border-box',
         backgroundBlendMode: 'soft-light, normal'
     }
+    const [isNameBeingEdited, setIsNameBeingEdited] = React.useState(false)
+
     var background = "#F8F8F8"
     switch(props.executionStaus){
         case 'WaitingForUpstream': 
@@ -79,6 +82,17 @@ const ActionCard = (props: ActionCardProps) => {
 
     const tooltipTitle = (props?.executionStaus === 'Completed' || props?.executionStaus === 'Failed') ? props.runTime : "";
     const border: string | undefined = (props?.executionStaus !== undefined  ? undefined : (props.errorMessages || []).length === 0 ? '0.75px solid #00AA11' : '0.75px solid #DC2430' )
+
+    const handleNameClick = (e: React.MouseEvent<HTMLInputElement>) => {
+        e.stopPropagation()
+        setIsNameBeingEdited(true)
+    }
+
+    const handleActionNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(!!e.target?.value && e.target?.value?.length) {
+            props.handleActionNameChange?.(props.actionId, props.index, props.stageId || "stageId", e.target.value)
+        }
+    } 
 
     return (
         <HtmlTooltip title={
@@ -112,7 +126,7 @@ const ActionCard = (props: ActionCardProps) => {
                     }}>
                     <Box sx={{flex: 2, display: 'flex', flexDirection: 'row', p: 2, justifyContent: 'flex-start', gap: 1}}>
                         <Box sx={{ display: 'flex', alignItems: 'center'}} {...props.dragHandleProps}>
-                            <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '12px', width: 'auto', alignItems: 'center'}} >
+                            <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '12px', width: 'auto', alignItems: 'center', cursor: 'pointer'}} >
                                 <img src={selectGrid} alt="select" ></img>
                             </Box>
                         </Box>
@@ -123,9 +137,14 @@ const ActionCard = (props: ActionCardProps) => {
                         </Box>
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', cursor: 'pointer'}} onClick={handleActionClick}>
                             <Box sx={{flex: 1}}>
-                                <Typography variant="actionCardHeader" sx={{overflowX: 'clip'}}>
-                                    {props.actionName}
-                                </Typography>
+                                {isNameBeingEdited ? (
+                                    <TextField autoFocus value={props.actionName} onBlur={(e) => {if(props.actionName !== ""){setIsNameBeingEdited(false)}}} variant="standard" sx={{maxHeight: '24px'}} onChange={handleActionNameChange}/>
+                                ) : (
+                                    <Typography variant="actionCardHeader" sx={{overflowX: 'clip'}} onClick={handleNameClick}>
+                                        {props.actionName}
+                                    </Typography>
+                                )}
+                                
                             </Box>
                             {props.displayRowsEffected ? (
                                 <Box>

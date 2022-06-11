@@ -1,5 +1,6 @@
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
@@ -21,7 +22,11 @@ type ExecuteActionContextState = {
         ActionInstance: ActionInstance,
         ActionParameterInstances: ActionParameterInstance[],
     },
-    creatingModels: boolean
+    creatingModels: boolean,
+    currentStep: number,
+    startDate?: Date,
+    email?: string,
+    slack?: string
 }
 
 const defaultExecuteActionContext: () => ExecuteActionContextState = () => {
@@ -34,7 +39,10 @@ const defaultExecuteActionContext: () => ExecuteActionContextState = () => {
             ActionInstance: {},
             ActionParameterInstances: []
         },
-        creatingModels: false
+        creatingModels: false,
+        currentStep: 0,
+        slack: 'C01NSTT6AA3',
+        email: userSettingsSingleton.userEmail,
     }
 }
 
@@ -59,6 +67,13 @@ export type SetActionParameterInstancesAction = {
     }
 }
 
+export type SetActionInstance = {
+    type: "SetActionInstance",
+    payload: {
+        newActionInstance: ActionInstance
+    }
+}
+
 export type CreatingModelsAction = {
     type: "CreatingModels"
 }
@@ -67,8 +82,43 @@ export type CreatingModelsOverAction = {
     type: "CreatingModelsOver"
 }
 
+export type GoNextStep = {
+    type: "GoToNextStep"
+}
 
-export type ExecuteActionAction = SetFromActionDefinitionDetailAction | SetActionParameterInstancesAction | CreatingModelsAction | CreatingModelsOverAction
+export type GoToThisStep = {
+    type: "GoToThisStep",
+    payload: number
+}
+
+export type SetStartDate = {
+    type: "SetStartDate",
+    payload: Date
+}
+
+export type SetSlackAndEmail = {
+    type: "SetSlackAndEmail",
+    payload: {
+        slack?: string,
+        email?: string
+    }
+}
+
+export type SetWriteBackTableName = {
+    type: "SetWriteBackTableName",
+    payload?: string
+}
+
+export type ExecuteActionAction = SetFromActionDefinitionDetailAction 
+                                | SetActionParameterInstancesAction 
+                                | CreatingModelsAction 
+                                | CreatingModelsOverAction 
+                                | GoNextStep 
+                                | GoToThisStep 
+                                | SetActionInstance 
+                                | SetStartDate 
+                                | SetSlackAndEmail
+                                | SetWriteBackTableName
 
 
 
@@ -101,6 +151,55 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
                 ...state,
                 creatingModels: false
             }
+        
+        case "GoToNextStep": 
+            const nextStep = state.currentStep + 1
+            return {
+                ...state,
+                currentStep: nextStep
+            }
+
+        case "GoToThisStep":
+            return {
+                ...state,
+                currentStep: action.payload
+            }
+        
+        case "SetActionInstance": 
+            return {
+                ...state,
+                ToCreateModels: {
+                    ...state.ToCreateModels,
+                    ActionInstance: action.payload.newActionInstance
+                }
+            }
+        
+        case 'SetStartDate': 
+            return {
+                ...state,
+                startDate: action.payload
+            }
+        
+        case 'SetSlackAndEmail': {
+            return {
+                ...state,
+                slack: action.payload.slack,
+                email: action.payload.email
+            }
+        }
+
+        case 'SetWriteBackTableName': {
+            return {
+                ...state,
+                ToCreateModels: {
+                    ...state.ToCreateModels,
+                    ActionInstance: {
+                        ...state.ToCreateModels.ActionInstance,
+                        ResultTableName: action.payload
+                    }
+                }
+            }
+        }
 
         default:
             const neverAction = action
@@ -119,7 +218,11 @@ const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDeta
             ActionInstance: {},
             ActionParameterInstances: []
         },
-        creatingModels: false
+        creatingModels: false,
+        currentStep: 0,
+        slack: 'C01NSTT6AA3',
+        email: userSettingsSingleton.userEmail,
+
     } as ExecuteActionContextState
 }
 
@@ -156,6 +259,7 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
     
 
     const actionInstance: ActionInstance = {
+        ...ActionInstance,
         Id: uuidv4(),
         Name: ActionDefinition.DisplayName,
         DisplayName: ActionDefinition.DisplayName,
@@ -173,9 +277,13 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
 
     const request: MutationContext = {
         actionInstance: actionInstance,
-        actionParameterInstances: apis
+        actionParameterInstances: apis,
+        executionScheduledDate: state.startDate?.getTime().toString(),
+        slack: state.slack,
+        email: state.email
     }
 
+    console.log(request)
     return request;
 }
 

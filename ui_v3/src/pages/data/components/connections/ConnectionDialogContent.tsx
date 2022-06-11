@@ -24,14 +24,14 @@ const useStyles = makeStyles(() => ({
 }))
 
 
-export function ProviderIcon({ providerUniqueName }: {providerUniqueName?: string}) {
+export function ProviderIcon({ providerUniqueName, height }: {providerUniqueName?: string, height?: number}) {
     const classes = useStyles();
     // ignoring because server should send ProviderType with only legit enum UniqueNames in its type
     // @ts-ignore
     const src = (providerUniqueName && (providerUniqueName in iconProviderMap))? iconProviderMap[providerUniqueName]: '';
     return src? <img src={src}
                 className={classes.img}
-                height={50}
+                height={height || 50}
                 alt={providerUniqueName}
     />: null;
 }

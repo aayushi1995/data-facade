@@ -1,19 +1,22 @@
-import { Box, Button, Dialog, DialogContent } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, Step, StepButton, Stepper, Grid, Snackbar } from "@mui/material";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
-import { ActionParameterInstance } from "../../../generated/entities/Entities";
+import { ActionInstance, ActionParameterInstance } from "../../../generated/entities/Entities";
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero";
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
+import ConfigureActionRecurring from "./ConfigureActionRecurring";
+import ConfigureSlackAndEmail from "./ConfigureSlackAndEmail";
 import ViewConfiguredParameters from "./ViewConfiguredParameters";
 
 interface MatchParams {
     actionDefinitionId: string
 }
+
 
 const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
     const actionDefinitionId = match.params.actionDefinitionId
@@ -22,6 +25,9 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         asyncOptions: {
             onMutate: () => {
                 setDialogState({isOpen: true})
+            },
+            onSettled: () => {
+                setDialogState({isOpen: false})
             }
         },
         syncOptions: {
@@ -34,11 +40,12 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
 
     const setExecuteActionContext = React.useContext(SetExecuteActionContext)
     const executeActionContext = React.useContext(ExecuteActionContext)
-
+    
     const [resultActionExecutionId, setResultActionExecutionId] = React.useState<string|undefined>()
     const history = useHistory()
 
     const [dialogState, setDialogState] = React.useState<{isOpen: boolean}>({isOpen: false})
+    const [snackbarState, setSnackbarState] = React.useState(false)
 
     const handleChange = (newActionParameterInstances: ActionParameterInstance[]) => {
         setExecuteActionContext({
@@ -73,21 +80,25 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         const request = constructCreateActionInstanceRequest(executeActionContext)
         createActionInstanceAsyncMutation.mutate(request, {
             onSuccess: () => {
-                
+                setSnackbarState(true)
             }
         })
     }
 
     const handleSyncCreate = () => {
         if(!!data && !!data[0]){
-            const request = constructCreateActionInstanceRequest(executeActionContext)
-            createActionInstanceSyncMutation.mutate(request, {
-                onSuccess: (data) => {
-                    const execution = data[0]
-                    setResultActionExecutionId(execution.Id)
-                   
-                }
-            })
+            if(executeActionContext.ToCreateModels.ActionInstance.IsRecurring) {
+                handleAsyncCreate()
+            } else {
+                const request = constructCreateActionInstanceRequest(executeActionContext)
+                createActionInstanceSyncMutation.mutate(request, {
+                    onSuccess: (data) => {
+                        const execution = data[0]
+                        setResultActionExecutionId(execution.Id)
+                    
+                    }
+                })
+            }
         }
     }
 
@@ -102,6 +113,69 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             })
         }
     }
+
+    const handleRecurringChange = (actionInstance: ActionInstance) => {
+        setExecuteActionContext({
+            type: "SetActionInstance",
+            payload: {
+                newActionInstance: actionInstance
+            }
+        })
+    }
+
+    const handleGoNext = () => {
+        setExecuteActionContext({
+            type: "GoToNextStep"
+        })
+    }
+
+    const handleGoToStep = (index: number) => {
+        setExecuteActionContext({
+            type: 'GoToThisStep',
+            payload: index
+        })
+    }
+
+    const changeStartDate = (date: Date) => {
+        setExecuteActionContext({
+            type: 'SetStartDate',
+            payload: date
+        })
+    }
+
+    const handleSlackAndEmailChange = (slack?: string, email?: string) => {
+        setExecuteActionContext({
+            type: 'SetSlackAndEmail',
+            payload: {
+                slack: slack,
+                email: email
+            }
+        })
+    }
+
+    const handleWriteBackTableNameChange = (tableName: string) => {
+        setExecuteActionContext({
+            type: 'SetWriteBackTableName',
+            payload: tableName
+        })
+    }
+
+    const StepNumberToComponent = [
+        {
+            component: <ParameterDefinitionsConfigPlane 
+                            parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                            parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                            handleChange={handleChange}
+                        />
+        },
+        {
+            component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>
+        },
+        {
+            component: <ConfigureActionRecurring actionInstance = {executeActionContext.ToCreateModels.ActionInstance} handleRecurringChange={handleRecurringChange} startDate={executeActionContext.startDate || new Date(Date.now())} handleStartDateChange={changeStartDate}/>
+        }
+    ]
+
     
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 4}}>
@@ -117,12 +191,23 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                     publishStatus={executeActionContext.ExistingModels.ActionDefinition?.PublishStatus}
                 />
             </Box>
+            <Grid container>
+                <Grid item xs={4} />
+                <Grid item xs= {4} >
+                    <Stepper nonLinear activeStep={executeActionContext.currentStep}>
+                        {StepNumberToComponent.map((component, index) => (
+                            <Step key={index}>
+                                <StepButton onClick={() => handleGoToStep(index)}>
+                                    step {index+1}/{StepNumberToComponent.length}
+                                </StepButton>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Grid>
+            </Grid>
             <Box>
-                <ParameterDefinitionsConfigPlane
-                    parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                    parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                    handleChange={handleChange}
-                />
+                
+                {StepNumberToComponent[executeActionContext.currentStep].component}
             </Box>
             <Box>
                 <ViewConfiguredParameters
@@ -136,9 +221,18 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                         Create Auto Flow
                     </Button>
                 ) : (
-                    <Button onClick={handleSyncCreate} variant="contained" sx={{width: "100%"}}>
-                        GET PREDICTION / RUN
-                    </Button>
+                    <Box>
+                        {executeActionContext.currentStep === 2 ? (
+                            <Button onClick={handleSyncCreate} variant="contained" sx={{width: "100%"}}>
+                                GET PREDICTION / RUN
+                            </Button>
+                        ) : (
+                            <Button onClick={handleGoNext} variant="contained" sx={{width: "100%"}}>
+                                NEXT
+                            </Button>
+                        )}
+                        
+                    </Box>
                 )}
                 
             </Box>
@@ -147,6 +241,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                     <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
                 </DialogContent>
             </Dialog>
+            <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/>
         </Box>
     )
 }

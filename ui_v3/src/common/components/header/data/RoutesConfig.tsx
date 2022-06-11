@@ -1,4 +1,5 @@
 import { TabsType } from "../schema";
+import { APPLICATION_SUB_TABS } from "./ApplicationRoutesConfig";
 import { DATA_ALL_TABLES_ROUTE, DATA_SUB_TABS } from "./DataRoutesConfig";
 
 export const BLANK_STRING = '';
@@ -18,8 +19,9 @@ export const TOP_TAB_ROUTES: TabsType = [
         id: 'APPLICATION',
         label: 'APPLICATION',
         href: APPLICATION_ROUTE,
-        title: "Application",
-        subTitle: "Create, Manage Applications from here"
+        title: BLANK_STRING,
+        subTitle: BLANK_STRING,
+        children: APPLICATION_SUB_TABS
     },
     {
         id: 'INSIGHTS',

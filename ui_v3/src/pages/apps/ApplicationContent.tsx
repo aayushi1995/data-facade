@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPPLICATION_CREATE_AUTO_FLOW } from '../../common/components/header/data/ApplicationRoutesConfig';
+import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_ROUTE_ALL, APPLICATION_SUB_TABS, APPPLICATION_CREATE_AUTO_FLOW, SCHEDULED_JOBS_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
 import { findTab } from '../../common/components/header/data/DataRoutesConfig';
 import { APPLICATION_ROUTE, TOP_TAB_ROUTES } from '../../common/components/header/data/RoutesConfig';
 import { SetModuleContextState } from '../../common/components/ModuleContext';
@@ -18,22 +18,11 @@ import ActionExecutionHomePage from './components/ActionExecutionHomePage';
 import AllApplicationView from './components/AllApplicationView';
 import ApplicationCreationWizardDialog from './components/ApplicationCreationWizardDialog';
 import ApplicationDetailView from './components/ApplicationDetailView';
+import ScheduledJobsView from './components/ScheduledJobsView';
 
 
 export const ApplicationContent = withRouter(function TableBrowserRoutes() {
     const setModuleContext = useContext(SetModuleContextState)
-    useEffect(() => {
-        const tab = findTab(TOP_TAB_ROUTES, APPLICATION_ROUTE)
-        setModuleContext({
-            type: "SetHeader",
-            payload: {
-                newHeader: {
-                    Title: tab?.title,
-                    SubTitle: tab?.subTitle
-                }
-            }
-        })
-    }, [])
 
     return (
         <Switch>
@@ -50,9 +39,48 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
             <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}></Route>
             <Route path={ACTION_EXECUTION_ROUTE} component={ActionExecutionHomePage}/>
             <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
-            <Route path={APPLICATION_ROUTE} component={AllApplicationView}/>
+            <Route path={SCHEDULED_JOBS_ROUTE} component={ScheduledJobsWrapper} />
+            <Route path={APPLICATION_ROUTE} component={AllApplicationViewWrapper}/>
         </Switch>
     )
 });
+
+export const AllApplicationViewWrapper = () => {
+    const setModuleContext = useContext(SetModuleContextState)
+    useEffect(() => {
+        const tab = findTab(APPLICATION_SUB_TABS, APPLICATION_ROUTE)
+        console.log(tab)
+        setModuleContext({
+            type: "SetHeader",
+            payload: {
+                newHeader: {
+                    Title: tab?.title,
+                    SubTitle: tab?.subTitle
+                }
+            }
+        })
+    }, [])
+
+    return <AllApplicationView/>
+}
+
+export const ScheduledJobsWrapper = () => {
+    const setModuleContext = useContext(SetModuleContextState)
+    useEffect(() => {
+        const tab = findTab(APPLICATION_SUB_TABS, SCHEDULED_JOBS_ROUTE)
+        console.log(tab)
+        setModuleContext({
+            type: "SetHeader",
+            payload: {
+                newHeader: {
+                    Title: tab?.title,
+                    SubTitle: tab?.subTitle
+                }
+            }
+        })
+    }, [])
+
+    return <ScheduledJobsView /> 
+}
 
 export default ApplicationContent;

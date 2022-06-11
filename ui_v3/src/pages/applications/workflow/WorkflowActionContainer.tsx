@@ -86,6 +86,18 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
         })
     }
 
+    const handleActionNameChange = (actionId: string, actionIndex: number, stageId: string, newName: string) => {
+        setWorkflowContext({
+            type: 'CHANGE_ACTION_NAME',
+            payload: {
+                actionId: actionId,
+                actionIndex: actionIndex,
+                stageId: stageId,
+                newName: newName
+            }
+        })
+    }
+
     const handlePreviewOutput = (executionId: string) => {
         const presentationFormat = stageDetails.Actions.filter((action, index) => action.Id == executionId)?.[0]?.PresentationFormat
         setWorkflowContext({type: 'SET_EXECUTION_FOR_PREVIEW', payload: {executionId: executionId, presentationFormat: presentationFormat}})
@@ -217,7 +229,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                                                 <li {..._provided.draggableProps} ref={_provided.innerRef}>
                                                                     <Box px={3}>
                                                                     <ActionCard
-                                                                        {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput, handleActionClick: handleActionClick, stageId: props.stageId }}
+                                                                        {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput, handleActionClick: handleActionClick, stageId: props.stageId, handleActionNameChange: handleActionNameChange }}
                                                                     />
                                                                     </Box>
                                                                 </li>

@@ -393,6 +393,16 @@ type SetLatestActionAdded = {
     }
 }
 
+type ChangeActionName = {
+    type: 'CHANGE_ACTION_NAME',
+    payload: {
+        actionId: string,
+        actionIndex: number,
+        stageId: string,
+        newName: string
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -427,7 +437,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              DeleteGlobalParameter |
                              SetErrorState |
                              ValidateState |
-                             SetLatestActionAdded
+                             SetLatestActionAdded |
+                             ChangeActionName
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -806,6 +817,19 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             }
         }
 
+        case 'CHANGE_ACTION_NAME': {
+            return {
+                ...state,
+                stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage : {
+                    ...stage,
+                    Actions: stage.Actions.map((stageAction, index) => index !== action.payload.actionIndex ? stageAction : {
+                        ...stageAction,
+                        DisplayName: action.payload.newName
+                    })
+                })
+            }
+        }
+
         default:
             return state
     }
@@ -850,7 +874,7 @@ function extractErrorMessages(state: WorkflowContextType) {
 
     state.stages.forEach(stage => {
         stage.Actions.forEach((action, actionIndex) => {
-            action.Parameters.forEach((parameter, index) => {
+            action?.Parameters?.forEach((parameter, index) => {
                 if(parameter.userInputRequired === "No") {
                     if(parameter.ParameterValue === undefined && parameter.SourceExecutionId === undefined) {
                         const errorMessage = `${parameter.ParameterName} in Action ${action.DisplayName} of Stage ${stage.Name} does not have default value`
