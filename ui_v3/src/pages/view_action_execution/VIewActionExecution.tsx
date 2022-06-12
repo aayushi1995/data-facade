@@ -35,6 +35,13 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
         enabled: !executionTerminal
     }})
     
+    const handleMoreInfoClick = () => {
+        const actionExecutionId = actionExecutionDetailQuery.data?.ActionExecution?.Id
+        if(actionExecutionId !== undefined) {
+            window.open(`/application/jobs/${actionExecutionId}`)
+        }
+    }
+
     React.useEffect(() => {
         const actionStatus = actionExecutionDetailQuery.data?.ActionExecution?.Status
         if(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED) {
@@ -63,7 +70,14 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
                 isLoading={actionExecutionDetailQuery.isLoading}
                 error={actionExecutionDetailQuery.error}
             >
-                {getToRenderComponent()}
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                    <Box>
+                    {getToRenderComponent()}
+                    </Box>
+                    <Box>
+                        <Button variant="contained" onClick={handleMoreInfoClick}>More Info</Button>
+                    </Box>
+                </Box>
             </LoadingWrapper>
         </Box>
         
@@ -265,16 +279,19 @@ const ViewActionExecutionInNonTerminalState = (props: ResolvedActionExecutionPro
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2, p: 2 }}>
-            <Box>
-                <LoadingIndicator/>
-            </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2 }}>
             <Box>
                 <>Action Execution Status: {props?.actionExecutionDetail?.ActionExecution?.Status}</>
             </Box>
-            <Box>
-                <>{formTimeElapsed()}</>
+            <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                <Box>
+                    <LoadingIndicator/>
+                </Box>
+                <Box>
+                    <>{formTimeElapsed()}</>
+                </Box>
             </Box>
+            
         </Box>
     )
 }
