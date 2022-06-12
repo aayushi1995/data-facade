@@ -29,23 +29,18 @@ interface ResolvedActionExecutionProps {
 const ViewActionExecution = (props: ViewActionExecutionProps) => {
     const { actionExecutionId } = props
     const queryClient = useQueryClient()
-    const [executionCompleted, setExecutionCompleted] = React.useState(false)
+    const [executionTerminal, setExecutionTerminal] = React.useState(false)
 
-
-    const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: actionExecutionId, queryOptions: {}})
+    const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: actionExecutionId, queryOptions: {
+        enabled: !executionTerminal
+    }})
     
     React.useEffect(() => {
-        const interval = setInterval(() => {
-            const actionStatus = actionExecutionDetailQuery.data?.ActionExecution?.Status
-            console.log("Interval")
-            if(!(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED)) {
-                console.log(actionStatus)
-                queryClient.invalidateQueries(["ActionExecutionDetail", actionExecutionId])
-            }
-        }, 4000)
-
-        return () => clearInterval(interval)
-    }, [])
+        const actionStatus = actionExecutionDetailQuery.data?.ActionExecution?.Status
+        if(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED) {
+            setExecutionTerminal(true)
+        }
+    }, [actionExecutionDetailQuery.data])
 
     const getToRenderComponent = () => {
         const data = actionExecutionDetailQuery?.data
@@ -57,7 +52,7 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
                 case ActionExecutionStatus.FAILED:
                     return <ViewFailedActionExecution {...props}/>
                 default:
-                    return <>Action Execution Status: {actionExecutionDetailQuery.data?.ActionExecution?.Status}.</>
+                    return <ViewActionExecutionInNonTerminalState {...props}/>
             }
         }
     }
@@ -175,7 +170,7 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
             }
         )
     }
-    console.log("Re-rendering")
+    
     return (
         <Box>
             <Dialog open={importTableDialog} onClose={() => {setImportTableDialog(false); setFileFetched(false)}} fullWidth maxWidth="xl">
@@ -252,6 +247,33 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                         </Box>
                     </Box>
                 </Card>
+            </Box>
+        </Box>
+    )
+}
+
+const ViewActionExecutionInNonTerminalState = (props: ResolvedActionExecutionProps) => {
+
+    const formTimeElapsed = () => {
+        const startTime = props?.actionExecutionDetail?.ActionExecution?.ExecutionStartedOn
+        if(startTime === undefined) {
+            return "Time Elapsed: NA"
+        } else {
+            const elapsedTime = Date.now() - startTime
+            return `Time Elapsed: ${(elapsedTime/1000).toFixed(2)} s`
+        }
+    }
+
+    return (
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 2, p: 2 }}>
+            <Box>
+                <LoadingIndicator/>
+            </Box>
+            <Box>
+                <>Action Execution Status: {props?.actionExecutionDetail?.ActionExecution?.Status}</>
+            </Box>
+            <Box>
+                <>{formTimeElapsed()}</>
             </Box>
         </Box>
     )

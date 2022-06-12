@@ -1,16 +1,16 @@
 import { useMutation, UseMutationOptions, UseMutationResult } from "react-query"
 import { getActionExecutionParsedOutput } from "../../../data_manager/entity_data_handlers/action_execution_data"
-import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
 import { ActionExecution, ActionInstance, ActionParameterInstance } from "../../../generated/entities/Entities"
 import labels from "../../../labels/labels"
-import dataManagerInstance, { useRetreiveData } from './../../../data_manager/data_manager'
+import dataManagerInstance from './../../../data_manager/data_manager'
 
 export interface MutationContext {
     actionInstance: ActionInstance,
     actionParameterInstances: ActionParameterInstance[],
     executionScheduledDate?: string,
     slack?: string,
-    email?: string
+    email?: string,
+    actionExecutionToBeCreatedId?: string
 }
 
 export interface UseCreateActionInstanceParams {
@@ -32,13 +32,14 @@ const useCreateActionInstance = (params: UseCreateActionInstanceParams): UseCrea
 
     const fetchActionExeuctionParsedOutputMutation = useMutation((actionExecutionFilter: ActionExecution) => getActionExecutionParsedOutput(actionExecutionFilter), {...fetchParsedOutputOptions})
     const createActionInstanceAsyncMutation = useMutation((config: MutationContext) => fetchedDataManagerInstance.saveData(labels.entities.ActionInstance, {
-        entityProperties: config.actionInstance,
-        ActionParameterInstanceEntityProperties: config.actionParameterInstances,
-        slack: config.slack,  // TODO: Remove hard coding of slack ID
-        email: config.email,
-        withActionParameterInstance: true,
-        executionScheduledDate: config.executionScheduledDate,
-    }), {...asyncOptions})
+            entityProperties: config.actionInstance,
+            ActionParameterInstanceEntityProperties: config.actionParameterInstances,
+            slack: config.slack,  // TODO: Remove hard coding of slack ID
+            email: config.email,
+            withActionParameterInstance: true,
+            executionScheduledDate: config.executionScheduledDate,
+            withExecutionId: config?.actionExecutionToBeCreatedId
+        }), {...asyncOptions})
     
     
     const createActionInstanceSyncMutation = useMutation((config: MutationContext) => fetchedDataManagerInstance.saveData(labels.entities.ActionInstance, {

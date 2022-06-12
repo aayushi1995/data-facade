@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogContent, Step, StepButton, Stepper, Grid, Snackbar } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, Grid, Snackbar, Step, StepButton, Stepper } from "@mui/material";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
@@ -25,9 +25,6 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         asyncOptions: {
             onMutate: () => {
                 setDialogState({isOpen: true})
-            },
-            onSettled: () => {
-                setDialogState({isOpen: false})
             }
         },
         syncOptions: {
@@ -81,6 +78,12 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         createActionInstanceAsyncMutation.mutate(request, {
             onSuccess: () => {
                 setSnackbarState(true)
+                console.log(request?.actionExecutionToBeCreatedId)
+                if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
+                    setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
+                } else {
+                    setDialogState({isOpen: false})
+                }
             }
         })
     }
@@ -223,7 +226,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                 ) : (
                     <Box>
                         {executeActionContext.currentStep === 2 ? (
-                            <Button onClick={handleSyncCreate} variant="contained" sx={{width: "100%"}}>
+                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}}>
                                 GET PREDICTION / RUN
                             </Button>
                         ) : (

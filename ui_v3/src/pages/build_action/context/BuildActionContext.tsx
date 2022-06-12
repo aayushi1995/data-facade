@@ -768,7 +768,7 @@ const extractParameterNamesFromCode = (code?: string, language?: string) => {
                 }
             }
         }
-        return parametersArray;
+        return [...new Set(parametersArray)];
     }
     return []
 }

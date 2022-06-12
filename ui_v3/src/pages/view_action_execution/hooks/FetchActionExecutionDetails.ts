@@ -14,7 +14,8 @@ const FetchActionExecutionDetails = (params: FetchActionExecutionDetailsParams) 
     const query = useQuery(["ActionExecutionDetail", actionExecutionId], () => Fetcher.fetchData("GET", "/actionExecutionDetail", {Id: actionExecutionId}), 
     {
         ...queryOptions,
-        enabled: (!!params.actionExecutionId) && queryOptions.enabled
+        enabled: (!!params.actionExecutionId) && queryOptions.enabled,
+        refetchInterval: 4000
     })
 
     return { 
