@@ -1,4 +1,4 @@
-import { Box, Card, Grid, IconButton, Tooltip } from "@mui/material"
+import { Box, Card, Grid, IconButton, Tooltip, Typography } from "@mui/material"
 import React from "react"
 import slideNext from "../../../../../../src/images/new_frame.png"
 import WorkflowStagesWrapper from "../../../../../application/common/workflowStages/WorkflowStagesWrapper"
@@ -8,10 +8,18 @@ import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from ".
 export const StagesWithActions = () => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const [initialTime, setInitialTime] = React.useState((new Date(Date.now()).getTime()))
     if(workflowContext.currentStageView === undefined) {
         setWorkflowContext({type: 'SET_STAGES_IN_VIEW', payload: {startIndex: 0, endIndex: 4}})
     }
 
+    const increaseTime = () => {
+        setInitialTime(time => time + 1000)
+    }
+
+    React.useEffect(() => {
+        setInterval(increaseTime, 1000)
+    }, [])
     const currentStages = workflowContext.currentStageView === undefined ? workflowContext.stages.slice(0, 4) : workflowContext.stages.slice(workflowContext.currentStageView.startIndex, workflowContext.currentStageView.endIndex)
 
     const stages = currentStages.map(stage => {
@@ -67,23 +75,36 @@ export const StagesWithActions = () => {
 
     const isPreviousPossible = (workflowContext?.currentStageView?.startIndex || -1) >= 0
     const isNextPossible = (workflowContext?.currentStageView?.endIndex || workflowContext.stages.length) < workflowContext.stages.length
+    const lastStage = ((workflowContext?.currentStageView?.endIndex || workflowContext.stages.length) < workflowContext.stages.length ? (workflowContext?.currentStageView?.endIndex || workflowContext.stages.length) : workflowContext.stages.length)
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', maxWidth: 'inherit'}}>
-            <Box sx={{ display: 'flex', flexDirection: "row-reverse", width: "100%"}}>
-                <Box>
+            <Grid container direction="row-reverse" sx={{width: "100%"}}>
+                <Grid item xs={2} sx={{display: 'flex', justifyContent: 'flex-end'}}>
                     <Tooltip title="Previous">
                         <IconButton onClick={handleSlidePrev}  disabled={!isPreviousPossible}>
                             <img src={slideNext} alt="previos" style={{transform: 'rotate(180deg)', opacity: isPreviousPossible ? 1 : 0.2}}/>
                         </IconButton>
                     </Tooltip>
+                    <Typography variant="heroMeta" sx={{display: 'flex', alignItems: 'center'}}>
+                        Stage {(workflowContext?.currentStageView?.startIndex || 0) + 1}-{lastStage} / {workflowContext.stages.length}
+                    </Typography>
                     <Tooltip title="Next">
                         <IconButton onClick={handleSlideNext} disabled={!isNextPossible}>
                             <img src={slideNext} alt="next" style={{opacity: isNextPossible ? 1 : 0.2}}/>
                         </IconButton>
                     </Tooltip>
-                </Box>
-            </Box>
+                </Grid>
+                <Grid item xs={10} sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
+                    {workflowContext.WorkflowExecutionStartedOn ? (
+                        <Typography variant="heroMeta" >
+                            <span><b>{Math.round(((workflowContext.WorkflowExecutionCompletedOn || initialTime) - workflowContext.WorkflowExecutionStartedOn)/1000)}</b> sec</span>
+                        </Typography>
+                    ) : (
+                        <></>
+                    )}
+                </Grid>
+            </Grid>
             <Box sx={{flex: 1, minHeight: '100px', minWidth: '300px'}}>
                 <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
                 onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length}></WorkflowStagesWrapper>

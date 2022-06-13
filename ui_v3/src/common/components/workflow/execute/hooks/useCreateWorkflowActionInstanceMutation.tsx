@@ -9,14 +9,6 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
     let actionInstanceProvider: string | undefined = undefined
     const workflowInstancesWithParameterInstances = workflowContext.stages[0].Actions.map(action => {
         return {
-            model: {
-                Id: action.Id,
-                TemplateId: action.TemplateId,
-                DefinitionId: action.DefinitionId,
-                Name: action.Name,
-                DisplayName: action.Name,
-                RenderTemplate: true
-            },
             ParameterInstances: action.Parameters?.map((childParameterInstance) => {
                 const apdId = childParameterInstance.ActionParameterDefinitionId
                 const globalParameterInstance = workflowContext.WorkflowParameterInstance?.find(globalParameter => globalParameter.ActionParameterDefinitionId === childParameterInstance.GlobalParameterId)
@@ -28,7 +20,17 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
                     ...globalParameterInstance,
                     ActionParameterDefinitionId: apdId
                 }
-            })
+            }),
+            model: {
+                Id: action.Id,
+                TemplateId: action.TemplateId,
+                DefinitionId: action.DefinitionId,
+                Name: action.Name,
+                DisplayName: action.Name,
+                RenderTemplate: true,
+                ProviderInstanceId: actionInstanceProvider
+            },
+            
         } as ActionInstanceWithParameters
     })
     return useMutation(

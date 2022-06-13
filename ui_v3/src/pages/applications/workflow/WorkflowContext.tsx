@@ -71,7 +71,9 @@ export type WorkflowContextType = {
         actionId: string,
         stageId: string,
         actionIndex: number
-    }
+    },
+    WorkflowExecutionStartedOn?: number,
+    WorkflowExecutionCompletedOn?: number
 }
 
 const defaultWorkflowContext: WorkflowContextType = {
@@ -403,6 +405,16 @@ type ChangeActionName = {
     }
 }
 
+type SetWorkflowExecutionStartedOn = {
+    type: 'SET_WORKFLOW_EXECUTION_STARTED_ON',
+    payload: number
+}
+
+type SetWorkflowExecutionCompleted = {
+    type: 'SET_WORKFLOW_EXECUTION_COMPLETED_ON',
+    payload: number
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -438,7 +450,9 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetErrorState |
                              ValidateState |
                              SetLatestActionAdded |
-                             ChangeActionName
+                             ChangeActionName |
+                             SetWorkflowExecutionStartedOn |
+                             SetWorkflowExecutionCompleted
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -722,12 +736,18 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         }
 
         case 'CHANGE_STAGE_PERCENTAGE': {
+            const cp = state.currentStageView
+            const stageView = action.payload.percentage !== 100 ? state.currentStageView : state.stages.findIndex(stage => stage.Id === action.payload.stageId) === ((state.currentStageView?.endIndex || 4) - 1) ? {
+                startIndex: cp?.endIndex === state.stages.length ? cp.startIndex || 0 : (cp?.startIndex|| 0) + 1,
+                endIndex: cp?.endIndex === state.stages.length ? cp.endIndex || state.stages.length : (cp?.endIndex || 4)    + 1
+            } : state.currentStageView
             return {
                 ...state,
                 stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage : {
                     ...stage,
                     Percentage: action.payload.percentage
-                })
+                }),
+                currentStageView: stageView
             }
         }
 
@@ -827,6 +847,20 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         DisplayName: action.payload.newName
                     })
                 })
+            }
+        }
+
+        case 'SET_WORKFLOW_EXECUTION_STARTED_ON': {
+            return {
+                ...state,
+                WorkflowExecutionStartedOn: action.payload
+            }
+        }
+
+        case 'SET_WORKFLOW_EXECUTION_COMPLETED_ON': {
+            return {
+                ...state,
+                WorkflowExecutionCompletedOn: action.payload
             }
         }
 

@@ -216,7 +216,10 @@ const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDeta
         },
         ToCreateModels: {
             ActionInstance: {},
-            ActionParameterInstances: []
+            ActionParameterInstances: getDefaultTemplateParameters(actionDetail).map(apd => ({
+                ActionParameterDefinitionId: apd.Id,
+                ParameterValue: apd.DefaultParameterValue
+            }))
         },
         creatingModels: false,
         currentStep: 0,

@@ -16,7 +16,6 @@ export const CustomToolbar = (children) => () => {
                     <GridToolbarColumnsButton/>
                     <GridToolbarFilterButton/>
                     <GridToolbarDensitySelector/>
-                    <GridToolbarExport/>
                 </Grid>
                 <Grid item>
                     {children ? children : null}

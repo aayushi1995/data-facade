@@ -48,7 +48,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             if(areChildActionsReady === false) {
                 setWorkflowContext({type: 'DELETE_STAGE', payload: {stageId: workflowContext.stages[0].Id}})
             }
-            
+            const workflowExecutionStartedOn = data?.[0]?.WorkflowExecution?.ExecutionStartedOn || (new Date(Date.now()).getTime())
             var currentStageId = ""
             const totalChildExecutions = data?.[0]?.ChildExecutionsWithDefinitions?.length || 0
             const childExecutions = data?.[0]?.ChildExecutionsWithDefinitions
@@ -106,6 +106,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             setWorkflowContext({type: 'SET_ACTION_GROUP', payload: data?.[0]?.WorkflowDefinition?.ActionGroup })
             setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: { newDescription: data?.[0]?.WorkflowDefinition?.Description||"NA" }})
             setWorkflowContext({type: "SET_PUBLISHED_STATUS", payload: data?.[0]?.WorkflowDefinition?.PublishStatus })
+            setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_STARTED_ON', payload: workflowExecutionStartedOn})
             
             setActionContext({ type: "SetActionDefinition", payload: { newActionDefinition: data?.[0]?.WorkflowDefinition}})
             
@@ -114,6 +115,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
 
             if(data?.[0]?.WorkflowExecution?.Status === "Completed" || data?.[0]?.WorkflowExecution?.Status === "Failed") {
                 setResultsAvailable(true)
+                setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_COMPLETED_ON', payload: data?.[0]?.WorkflowExecution?.ExecutionCompletedOn || (new Date(Date.now()).getTime())})
             }
         }
         

@@ -140,7 +140,6 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             component: <ConfigureActionRecurring actionInstance = {recurrenceConfig.actionInstance} handleRecurringChange={handleRecurringChange} startDate={recurrenceConfig.startDate} handleStartDateChange={changeStartDate}/>
         }
     ]
-
     if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0 && isReady)
     {
         return (

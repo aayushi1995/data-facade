@@ -6,7 +6,7 @@ import labels from '../../../../../labels/labels'
 
 export const useGetWorkflowDetails = (workflowId: string, options: {enabled: boolean, onSuccess: (data: ActionDefinitionDetail[]) => void}): [ActionDefinitionDetail[] | undefined, any, boolean] => {
 
-    const {data: workflowTemplate, error: workflowTemplateError, isLoading: workflowTemplateLoading} = useQuery([labels.entities.ActionTemplate, "Workflow", workflowId],
+    const {data: workflowTemplate, error: workflowTemplateError, isLoading: workflowTemplateLoading} = useQuery([],
         () => {
             return Fetcher.fetchData('GET', '/getActionDefinitionDetails', {Id: workflowId})
         },
