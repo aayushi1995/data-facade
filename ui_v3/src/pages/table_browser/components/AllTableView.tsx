@@ -67,7 +67,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 field: "TableUniqueName",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.TableUniqueName}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.TableSchemaName ? params.row.TableSchemaName + "." + params.row.TableUniqueName : params.row.TableUniqueName} />
             },
             {
                 headerName: "Data Source",

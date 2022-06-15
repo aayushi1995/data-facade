@@ -16,7 +16,8 @@ export interface WorkflowStageProps {
     numberOfActions?: number,
     totalRunTime?: string,
     selectedStageId?: string,
-    fromAddActions?: boolean
+    fromAddActions?: boolean,
+    allowEdit?: boolean
     handleDeleteStage?: (event: string) => void
     handleAddStage?: (stageId?: string) => void
     setSelectedStage?: (stageId: string) => void
@@ -31,7 +32,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
 
     const handleAddDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation()
-        if(props.fromAddActions !== true) {
+        if(props.fromAddActions !== true && props.allowEdit !== false) {
             setMenuAnchor(event.currentTarget)
         }
     }
@@ -119,7 +120,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                                 fontWeight: 700,
                             }}
                             onClick = {() => {
-                                if(props.selectedStageId===undefined || props.selectedStageId === props.stageId) {
+                                if((props.selectedStageId===undefined || props.selectedStageId === props.stageId) && props.allowEdit !== false) {
                                     setIsNameBeingEdited(true)
                                 }
                             }}

@@ -16,7 +16,8 @@ export interface WorkflowStagesWrapperProps {
     selectedStage?: {
         stageId: string,
         stageName: string
-    }
+    },
+    allowEdit?: boolean
     stages: {
         stageId: string
         stageName: string
@@ -88,6 +89,7 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
                             <WorkflowStage {...
                                 {...stage, 
                                 selectedStageId: props.selectedStage?.stageId, 
+                                allowEdit: props.allowEdit,
                                 handleDeleteStage: handleDeleteStage,
                                 handleAddStage: handleAddStage, 
                                 fromAddActions: props.fromAddActionsView,

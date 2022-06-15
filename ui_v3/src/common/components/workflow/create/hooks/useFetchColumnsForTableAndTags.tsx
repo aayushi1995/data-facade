@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from 'react-query';
 import { ActionDefinition, ColumnProperties, TableProperties } from '../../../../../generated/entities/Entities';
+import { FilteredColumnsResponse } from '../../../../../generated/interfaces/Interfaces';
 import labels from '../../../../../labels/labels';
 import dataManagerInstance, { useRetreiveData } from './../../../../../data_manager/data_manager'
 
@@ -8,7 +9,7 @@ export interface UseFetchColumnsForTablesProps {
         tableFilters?: TableProperties[],
         parameterDefinitionId: string
     },
-    queryOptions?: UseQueryOptions<ColumnProperties[], unknown, ColumnProperties[],[string, undefined | TableProperties[], string]>
+    queryOptions?: UseQueryOptions<FilteredColumnsResponse[], unknown, FilteredColumnsResponse[],[string, undefined | TableProperties[], string]>
 }
 
 const useFetchColumnsForTableAndTags = (params: UseFetchColumnsForTablesProps) => {

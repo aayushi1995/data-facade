@@ -857,7 +857,7 @@ const formActionPropertiesForLoadTableIntoLocal = (fdsResponse, selectedFile, fi
 
 const isValidObjectName = (name) => {
     if (name !== undefined) {
-        return !(name.includes(`"`) || name.length === 0)
+        return !(name.includes(`"`) || name.length === 0 || name.includes(' '))
     } else {
         return false;
     }

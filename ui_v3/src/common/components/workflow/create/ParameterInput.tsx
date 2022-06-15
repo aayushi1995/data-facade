@@ -219,7 +219,9 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
     }})
 
     React.useEffect(() => {
-        onChange?.(fetchTableQuery.data)
+        if(fetchTableQuery?.data?.[0]?.FilteredBasedOnTags) {
+            onChange?.(fetchTableQuery.data?.[0]?.Columns)
+        }
     }, [fetchTableQuery.data])
 
     return (
@@ -227,12 +229,12 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
             {...fetchTableQuery}
         >
             <Autocomplete
-                options={fetchTableQuery.data || []}
+                options={fetchTableQuery.data?.[0]?.Columns || []}
                 multiple={true}
                 fullWidth
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName || "Un-named column"}
                 groupBy={(column) => column.TableName || "Table NA"}
-                value={fetchTableQuery.data!?.filter(column => props.inputProps.selectedColumnFilters?.find(selectedColumn => selectedColumn?.Id === column.Id || (selectedColumn.Id === undefined && selectedColumn?.UniqueName === column.UniqueName) ) !== undefined)}
+                value={fetchTableQuery.data?.[0]?.Columns?.filter(column => props.inputProps.selectedColumnFilters?.find(selectedColumn => selectedColumn?.Id === column.Id || (selectedColumn.Id === undefined && selectedColumn?.UniqueName === column.UniqueName) ) !== undefined)}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -260,12 +262,17 @@ const ColumnInput = (props: ColumnParameterInput) => {
     }})
 
     React.useEffect(() => {
-        const index = Math.floor(Math.random() * (fetchTableQuery.data?.length || 0))
-        onChange(fetchTableQuery.data?.[index])
+        if(!!fetchTableQuery.data) {
+            const index = Math.floor(Math.random() * (fetchTableQuery.data?.[0]?.Columns?.length || 0))
+            console.log(index, fetchTableQuery.data?.[0]?.FilteredBasedOnTags)
+            if(fetchTableQuery.data?.[0]?.FilteredBasedOnTags) {
+                onChange(fetchTableQuery.data?.[0]?.Columns?.[index])
+            }
+        }
     }, [fetchTableQuery.data])
 
     const getValue = () => {
-        const selectedColumn = fetchTableQuery.data?.find(column => column?.Id === selectedColumnFilter?.Id)
+        const selectedColumn = fetchTableQuery.data?.[0]?.Columns?.find(column => column?.Id === selectedColumnFilter?.Id)
         return selectedColumn 
     }
  
@@ -276,7 +283,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
         data={fetchTableQuery.data}
         >
             <Autocomplete
-                options={fetchTableQuery.data!}
+                options={fetchTableQuery.data?.[0]?.Columns!}
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName!}
                 groupBy={(column) => column.TableName||"Table NA"}
                 value={getValue()}

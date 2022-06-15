@@ -2,6 +2,7 @@ import { Box, Button, Grid, Step, StepButton, Stepper, Snackbar } from "@mui/mat
 import React from "react"
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
+import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import NoData from "../../../common/components/NoData"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
@@ -36,6 +37,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const handleInstanceSaved = (data: any) => {
         if(recurrenceConfig.actionInstance.IsRecurring) {
             setSnackbarState(true)
+            history.push(SCHEDULED_JOBS_ROUTE)
         } else {
             history.push(`/application/workflow-execution/${data?.[0]?.Id}`)
         }

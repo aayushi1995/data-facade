@@ -49,9 +49,6 @@ const _Jobs = (props) => {
 
     return (
         <React.Fragment>
-            <Grid item xs={12}>
-                <PageHeader path={match.path} url={match.url}/>
-            </Grid>
             <Grid container spacing={2} style={{marginTop: 0, marginBottom: 0}}>
                 <Grid item xs={12} style={{
                     marginBottom: 5

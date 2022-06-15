@@ -93,6 +93,12 @@ export interface ActionDetailsForApplication {
 }
 
 
+export interface FilteredColumnsResponse {
+    Columns?: Entity.ColumnProperties[]
+	FilteredBasedOnTags?: boolean
+}
+
+
 export interface ProviderInformation {
     ProviderInstance?: ProviderInstanceWithTags
 	ProviderParameterInstance?: Entity.ProviderParameterInstance[]
@@ -216,6 +222,7 @@ export interface TableBrowserResponse {
 	ProviderInstanceId?: string
 	ProviderDefinitionName?: string
 	ProviderDefinitionId?: string
+	TableSchemaName?: string
 }
 
 

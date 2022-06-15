@@ -139,7 +139,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                     </FormControl>    
                 </Grid>
                 <Grid item xs={12} md={4} lg={4}>
-                    <DefaultValueSelector parameter={{...parameter, ParameterName: `Default Value for ${parameter.ParameterName}`}} allParameters={allParameters}/>
+                    <DefaultValueSelector parameter={{...parameter }} allParameters={allParameters}/>
                 </Grid>
                 <Grid item xs={12} md={8} lg={6}>
                     <VirtualTagHandler
@@ -173,7 +173,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allP
             return {
                 parameterType: "TABLE",
                 inputProps: {
-                    parameterName: parameter.ParameterName,
+                    parameterName: `Default Value for ${parameter.ParameterName}`,
                     selectedTableFilter: {UniqueName: parameter.DefaultParameterValue},
                     onChange: (newTable?: TableProperties) => setBuildActionContext({
                         type: "SetParameterDetails",
@@ -209,7 +209,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allP
             return {
                 parameterType: "STRING",
                 inputProps: {
-                    parameterName: parameter.ParameterName,
+                    parameterName: `Default Value for ${parameter.ParameterName}`,
                     value: parameter?.DefaultParameterValue,
                     onChange: (newValue: string) => setBuildActionContext({
                         type: "SetParameterDetails",
@@ -226,7 +226,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allP
             return {
                 parameterType: "INT",
                 inputProps: {
-                    parameterName: parameter.ParameterName,
+                    parameterName: `Default Value for ${parameter.ParameterName}`,
                     value: parameter?.DefaultParameterValue,
                     onChange: (newValue: string) => setBuildActionContext({
                         type: "SetParameterDetails",
@@ -243,7 +243,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allP
             return {
                 parameterType: "BOOLEAN",
                 inputProps: {
-                    parameterName: parameter.ParameterName,
+                    parameterName: `Default Value for ${parameter.ParameterName}`,
                     value: parameter?.DefaultParameterValue,
                     onChange: (newValue: string) => setBuildActionContext({
                         type: "SetParameterDetails",
@@ -260,7 +260,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allP
             return {
                 parameterType: "FLOAT",
                 inputProps: {
-                    parameterName: parameter.ParameterName,
+                    parameterName: `Default Value for ${parameter.ParameterName}`,
                     value: parameter?.DefaultParameterValue,
                     onChange: (newValue: string) => setBuildActionContext({
                         type: "SetParameterDetails",

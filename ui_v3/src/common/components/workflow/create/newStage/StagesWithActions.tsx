@@ -8,6 +8,7 @@ import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from ".
 export const StagesWithActions = () => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const workflowExecuting = workflowContext.WorkflowExecutionStatus ? true : false
     const [initialTime, setInitialTime] = React.useState((new Date(Date.now()).getTime()))
     if(workflowContext.currentStageView === undefined) {
         setWorkflowContext({type: 'SET_STAGES_IN_VIEW', payload: {startIndex: 0, endIndex: 4}})
@@ -107,7 +108,7 @@ export const StagesWithActions = () => {
             </Grid>
             <Box sx={{flex: 1, minHeight: '100px', minWidth: '300px'}}>
                 <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
-                onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length}></WorkflowStagesWrapper>
+                onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} allowEdit={!workflowExecuting}></WorkflowStagesWrapper>
             </Box>
             <Box sx={{flex: 1, display: 'flex', mt: 1, p: 1, flexDirection: 'row', gap: 1}}>
                 {/* <Card sx={{display: 'flex', boxShadow: lightShadows[27], flexDirection: 'column', p: 1, flex: 1}}> */}

@@ -59,6 +59,8 @@ const ActionSummary = () => {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 4}}>
+            {/* 
+            TODO: Disabling action Type. Defaulting to Profiling. Keeping commented code in case this needs to be re-enabled 
             <Box>
                 <FormControl variant="outlined" fullWidth>
                     <InputLabel>Action Type</InputLabel>
@@ -75,7 +77,7 @@ const ActionSummary = () => {
                         })}
                     </Select>
                 </FormControl>
-            </Box>
+            </Box> */}
             <Box>
                 <FormControl variant="outlined" fullWidth>
                     <InputLabel>Select your Scripting Language</InputLabel>

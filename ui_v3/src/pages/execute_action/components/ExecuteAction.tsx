@@ -2,6 +2,7 @@ import { Box, Button, Dialog, DialogContent, Grid, Snackbar, Step, StepButton, S
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
+import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import { ActionInstance, ActionParameterInstance } from "../../../generated/entities/Entities";
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero";
@@ -83,6 +84,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                     setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
                 } else {
                     setDialogState({isOpen: false})
+                    history.push(SCHEDULED_JOBS_ROUTE)
                 }
             }
         })

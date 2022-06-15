@@ -179,12 +179,6 @@ const JobsRowJobDetail = (props) => {
 
     return (
         <>
-            {
-                props.hideHeader? null: <Grid item xs={12}>
-                    <PageHeader path={match.path} url={match.url} pageHeading={ActionExecutionData?.ActionInstanceName}/>
-                </Grid>
-
-            }
             <Grid container>
                 <Grid item xs={6}>
                     <DisplayData {...displayData}/>
