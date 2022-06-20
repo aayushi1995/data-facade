@@ -31,7 +31,9 @@ export type WorkflowActionDefinition = {
     ExecutionStartedOn?: number,
     ExecutionCompletedOn?: number,
     PresentationFormat?: string,
-    ErrorInParametersConfigured?: string[]
+    ErrorInParametersConfigured?: string[],
+    ResultTableName?: string,
+    ResultSchemaName?: string
 }
 
 export type WorkflowContextType = {

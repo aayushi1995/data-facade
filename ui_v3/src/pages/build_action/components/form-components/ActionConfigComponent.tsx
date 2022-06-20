@@ -41,6 +41,17 @@ const ActionConfigComponent = () => {
         )
     }
 
+    const onTestAction = () => {
+        useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
+            onSuccess: () => {
+                const actionId = buildActionContext?.lastSavedActionDefinition?.Id
+                if(!!actionId) {
+                    history.push({pathname: `/application/execute-action/${actionId}`, state: 'fromTest'})
+                }
+            }
+        })
+    }
+
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 1, minHeight: "100%"}} className="wa">
@@ -100,7 +111,7 @@ const ActionConfigComponent = () => {
                     }}>
                         Save
                     </Button>
-                    <Button variant="contained" onClick={OnRunAction} sx={{ 
+                    <Button variant="contained" onClick={onTestAction} sx={{ 
                         minWidth: "150px",
                         borderRadius: "64px",
                     }}>

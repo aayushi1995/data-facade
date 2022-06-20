@@ -176,10 +176,16 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         {
             component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>
         },
-        {
-            component: <ConfigureActionRecurring actionInstance = {executeActionContext.ToCreateModels.ActionInstance} handleRecurringChange={handleRecurringChange} startDate={executeActionContext.startDate || new Date(Date.now())} handleStartDateChange={changeStartDate}/>
-        }
+        
     ]
+
+    if(history.location.state !== 'fromTest') {
+        StepNumberToComponent.push(
+            {
+                component: <ConfigureActionRecurring actionInstance = {executeActionContext.ToCreateModels.ActionInstance} handleRecurringChange={handleRecurringChange} startDate={executeActionContext.startDate || new Date(Date.now())} handleStartDateChange={changeStartDate}/>
+            }
+        )
+    }
 
     
     return (
@@ -227,7 +233,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                     </Button>
                 ) : (
                     <Box>
-                        {executeActionContext.currentStep === 2 ? (
+                        {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
                             <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}}>
                                 GET PREDICTION / RUN
                             </Button>

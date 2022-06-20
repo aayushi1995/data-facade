@@ -28,7 +28,9 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
                 Name: action.Name,
                 DisplayName: action.Name,
                 RenderTemplate: true,
-                ProviderInstanceId: actionInstanceProvider
+                ProviderInstanceId: actionInstanceProvider,
+                ResultTableName: action.ResultTableName,
+                ResultSchemaName: action.ResultSchemaName
             },
             
         } as ActionInstanceWithParameters

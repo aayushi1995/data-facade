@@ -110,6 +110,18 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         }
     }
 
+    const handleTest = () => {
+        if(!isError) {
+            useWorkflowUpdate.mutate({
+                workflowId: workflowId
+            }, {
+                onSuccess: () => history.push({pathname: `/application/execute-workflow/${workflowId}`, state: 'fromTest'})
+            })
+        } else {
+            setErrorDialogState(true)
+        }
+    }
+
     const handleRun = () => {
         if(!isError) {
             useWorkflowUpdate.mutate({
@@ -169,6 +181,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                                 onDuplicate={handleDuplicate}
                                 onRun={handleRun}
                                 onSave={handleUpdate}
+                                onTest={handleTest}
                             />
                         )}
                     </Box> 

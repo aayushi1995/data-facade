@@ -80,6 +80,7 @@
 	 PinnedToDashboard?: boolean
 	 Visibility?: string
 	 ResultTableName?: string
+	 ResultSchemaName?: string
  }
  
  

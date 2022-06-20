@@ -40,7 +40,7 @@ export interface WorfkflowTabsProps {
     onRun?: () => void,
     onSave?: () => void,
     onDuplicate?: () => void,
-    onTest?: () => void
+    onTest?: () => void,
 }
 
 const WorkflowTabs = (props: WorfkflowTabsProps) => {
@@ -107,7 +107,7 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
                         Save
                     </Button>
                     <Button variant="contained"
-                        onClick={() => props?.onRun?.()}
+                        onClick={() => props?.onTest?.()}
                         sx={{ 
                         minWidth: "150px",
                         borderRadius: "64px",

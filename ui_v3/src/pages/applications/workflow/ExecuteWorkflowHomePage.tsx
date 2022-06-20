@@ -65,7 +65,9 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 DefaultActionTemplateId: actionInstanceWithParameters.model?.TemplateId || "templateId",
                 TemplateId: actionInstanceWithParameters.model?.TemplateId || "templateId",
                 DefinitionId: actionInstanceWithParameters.model?.DefinitionId || "definitionId",
-                Parameters: actionInstanceWithParameters.ParameterInstances      
+                Parameters: actionInstanceWithParameters.ParameterInstances,
+                ResultTableName: actionInstanceWithParameters.model?.ResultTableName,
+                ResultSchemaName: actionInstanceWithParameters.model?.ResultSchemaName
             } as WorkflowActionDefinition
 
             workflowContext.WorkflowParameters.forEach(globalParameter => {
@@ -138,10 +140,16 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         {
             component: <ConfigureSlackAndEmail parameterInstances={workflowContext.WorkflowParameterInstance || []} slack={recurrenceConfig.slack} email={recurrenceConfig.email} handleEmailAndSlackChange={handleEmailAndSlackChange}/>,
         },
-        {
-            component: <ConfigureActionRecurring actionInstance = {recurrenceConfig.actionInstance} handleRecurringChange={handleRecurringChange} startDate={recurrenceConfig.startDate} handleStartDateChange={changeStartDate}/>
-        }
+        
     ]
+
+    if(history.location.state !== 'fromTest') {
+        IndexToComponent.push(
+            {
+                component: <ConfigureActionRecurring actionInstance = {recurrenceConfig.actionInstance} handleRecurringChange={handleRecurringChange} startDate={recurrenceConfig.startDate} handleStartDateChange={changeStartDate}/>
+            }
+        )
+    }
     if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0 && isReady)
     {
         return (

@@ -29,7 +29,7 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
     const getCurrentParameterConfig = () => workflowState.stages.find(stage => stage.Id===props.stageId)?.Actions[props.actionIndex]?.Parameters.find(parameter => parameter.ActionParameterDefinitionId===props.parameter.Id)
 
     const formParameterInputProps = (): ParameterInputProps => {
-        if(parameter.Tag === ActionParameterDefinitionTag.DATA) {
+        if(parameter.Tag === ActionParameterDefinitionTag.DATA || parameter.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             const allUpstreams: UpstreamAction[] = []
             
             for(let i = 0; i<workflowState.stages.length; i+=1){
