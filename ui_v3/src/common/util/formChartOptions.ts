@@ -52,6 +52,38 @@ interface TimeSeriesChartData {
     }
 }
 
+interface GaugeSingelValueData {
+    data: {
+        value: number,
+        minimum: number,
+        maximum: number,
+        threshold_1: number,
+        threshold_2: number
+    }
+}
+
+interface StackedHistogramData {
+    data: {
+        x_name: string,
+        x_values: (string | number)[],
+        series: {
+            name: string,
+            data: (string|number)[]
+        }[]
+    }
+}
+
+interface HeatMapDataframeData {
+    data: {
+        y_values: (string | number)[],
+        y_name: string,
+        heat_map_data: ((string|number)[])[],
+        x_labels: string[],
+        min_value: number,
+        max_value: number
+    }
+}
+
 export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined=> {
     switch(chartData.model?.Type) {
         case ChartType.PIE:
@@ -285,6 +317,52 @@ export const formChartOptionsTwoDimensionWithSegments = (chartData: ChartWithDat
                  model: chartData.model
             }
         }
+        case ChartType.RADIAL_POLAR_CHART: {
+            const castedChartData = chartData.chartData as TwoDSegmentChartOptions
+            const legends = castedChartData.data.series.map(legendWithData => legendWithData.name)
+            const chartOptions: EChartUISpecificConfig = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                radiusAxis: {},
+                polar: {},
+                legend: {
+                    show: true,
+                    data: legends
+                },
+                title: {
+                    text: chartData.model?.Name,
+                    show: true
+                },
+                angleAxis: {
+                    type: 'category',
+                    data: castedChartData.data.x,   
+                },
+                toolbox: {
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                }
+            }
+            const dataOptions: BaseChartsConfig = {
+                series: castedChartData.data.series.map((series) => {
+                    return {
+                        data: series.data,
+                        name: series.name,
+                        type: 'line',
+                        smooth: true,
+                        coordinateSystem: 'polar'
+                    }
+                })
+            }
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                model: chartData.model
+            }
+        }
     }
 }
 
@@ -355,6 +433,270 @@ export const formChartOptionsTimeSeries = (chartData: ChartWithData) : {uiConfig
                 config: dataOptions,
                 model: chartData.model
             } 
+        }
+    }
+}
+
+export const formChartOptionsSingleValue = (chartData: ChartWithData) : {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined => {
+    switch(chartData?.model?.Type) {
+        case ChartType.SINGLE_VALUE_GAUGE: {
+            const castedChartData = chartData.chartData as GaugeSingelValueData
+
+            const chartOptions: EChartUISpecificConfig = {
+                title: {
+                    text: chartData?.model?.Name,
+                    show: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+            }
+            const dataOptions: BaseChartsConfig = {
+                series: [{
+                    type: 'gauge',
+                    min: castedChartData?.data?.minimum,
+                    max: castedChartData?.data?.maximum,
+                    axisLine: {
+                        lineStyle: {
+                            width: 18,
+                            color: [
+                                [castedChartData?.data?.threshold_1, '#67e0e3'],
+                                [castedChartData?.data?.threshold_2, '#37a2da'],
+                                [1, '#fd666d']
+                            ]
+                        },
+                        
+                    },
+
+                    pointer: {
+                        itemStyle: {
+                          color: 'auto'
+                        }
+                      },
+                      axisTick: {
+                        show: false
+                      },
+                      splitLine: {
+                        length: 15,
+                        lineStyle: {
+                          width: 2,
+                          color: '#999'
+                        }
+                      },
+                      axisLabel: {
+                        distance: 25,
+                        color: 'auto',
+                        fontSize: 20
+                      },
+                      title: {
+                        show: false
+                      },
+                      detail: {
+                        valueAnimation: true,
+                        fontSize: 80,
+                        offsetCenter: [0, '70%'],
+                        color: 'auto'
+                      },
+                      data: [
+                        {
+                          value: castedChartData?.data?.value
+                        }
+                      ]
+                }]
+            }
+
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                model: chartData.model
+            } 
+        }
+    }
+}
+
+export const formChartOptionsStackedHistogram = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined => {
+    switch(chartData?.model?.Type) {
+        case ChartType.STACKED_HISTOGRAM: {
+            const castedChartData = chartData?.chartData as StackedHistogramData
+
+            const chartOptions: EChartUISpecificConfig = {
+                title: {
+                    text: chartData?.model?.Name,
+                    show: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                      // Use axis to trigger tooltip
+                      type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                    }
+                },
+                legend: {},
+                grid: {
+                    containLabel: true
+                }
+            }
+
+            const dataOptions: BaseChartsConfig = {
+                xAxis: [{
+                    type: 'category',
+                    name: chartData?.model?.Name,
+                    data: castedChartData.data.x_values
+                }],
+                yAxis: [{
+                    type: 'value'
+                }],
+                series: castedChartData.data.series.map(barConfig => {
+                    return {
+                        name: barConfig.name,
+                        type: 'bar',
+                        stack: 'total',
+                        data: barConfig.data,
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                    }
+                })
+            }
+            console.log(dataOptions)
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                model: chartData?.model
+            }
+        }
+
+        case ChartType.CLUBBED_HISTOGRAM: {
+            const castedChartData = chartData?.chartData as StackedHistogramData
+
+            const chartOptions: EChartUISpecificConfig = {
+                title: {
+                    text: chartData?.model?.Name,
+                    show: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                      // Use axis to trigger tooltip
+                      type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                    }
+                },
+                legend: {},
+                grid: {
+                    containLabel: true
+                }
+            }
+
+            const dataOptions: BaseChartsConfig = {
+                xAxis: [{
+                    type: 'category',
+                    name: chartData?.model?.Name,
+                    data: castedChartData.data.x_values
+                }],
+                yAxis: [{
+                    type: 'value'
+                }],
+                series: castedChartData.data.series.map(barConfig => {
+                    return {
+                        name: barConfig.name,
+                        type: 'bar',
+                        barGap: 0,
+                        stack: undefined,
+                        data: barConfig.data,
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                    }
+                })
+            }
+            console.log(dataOptions)
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                model: chartData?.model
+            }
+        }
+    }
+}
+
+export const formChartOptionsHeatMap = (chartWithData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig, model: Chart} | undefined => {
+
+    switch(chartWithData?.model?.Type) {
+        case ChartType.HEAT_MAP_DATAFRAME: {
+            const castedChartData = chartWithData?.chartData as HeatMapDataframeData
+
+            const chartOptions: EChartUISpecificConfig = {
+                tooltip: {
+                    position: 'top'
+                },
+                visualMap: {
+                    min: castedChartData.data.min_value,
+                    max: castedChartData.data.max_value,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '15%'
+                },
+                grid: {
+                    height: '50%',
+                    top: '10%'
+                  },
+            }
+
+            const dataOptions: BaseChartsConfig = {
+                xAxis: [{
+                    type: 'category',
+                    data: castedChartData.data.x_labels,
+                    splitArea: {
+                        show: true
+                    }
+                }],
+                yAxis: [{
+                    type: 'category',
+                    data: castedChartData.data.y_values,
+                    name: castedChartData.data.y_name,
+                    splitArea: {
+                        show: true
+                    }
+                }],
+                series: [{
+                    type: 'heatmap',
+                    data: castedChartData.data.heat_map_data,
+                    label: {
+                        show: true
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            }
+
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+                model: chartWithData?.model
+            }
         }
     }
 }

@@ -2,7 +2,10 @@ import React, {useCallback} from "react";
 import {ChartWithData} from "../../../../generated/interfaces/Interfaces";
 import ChartGroups from "../../../../enums/ChartGroups";
 import {
+    formChartOptionsHeatMap,
     formChartOptionsSingleDimensionWithLables,
+    formChartOptionsSingleValue,
+    formChartOptionsStackedHistogram,
     formChartOptionsTimeSeries,
     formChartOptionsTwoDimensionWithSegments,
     formChartOptionsTwoDimenstion,
@@ -10,6 +13,7 @@ import {
 } from "../../../util/formChartOptions";
 import {ShowChartsProps} from "../types/ShowChartsProps";
 import {UseChartsStateType} from "../types/useChartsStateType";
+import { ca } from "date-fns/locale";
 
 export function useShowCharts(props: ShowChartsProps) {
     const [chartDataOptions, setChartDataOptions] = React.useState<UseChartsStateType>()
@@ -32,6 +36,15 @@ export function useShowCharts(props: ShowChartsProps) {
 
                 case ChartGroups.TIME_SERIES:
                     return formChartOptionsTimeSeries(chartData)
+                
+                case ChartGroups.SINGLE_VALUE:
+                    return formChartOptionsSingleValue(chartData)
+                
+                case ChartGroups.STACKED_HISTOGRAM:
+                    return formChartOptionsStackedHistogram(chartData)
+                
+                case ChartGroups.HEAT_MAP:
+                    return formChartOptionsHeatMap(chartData)
 
                 default: {
                     return undefined

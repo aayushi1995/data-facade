@@ -60,7 +60,7 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
                 <ViewActionExecution actionExecutionId={props.chart.model.ExecutionId}/>
             </Dialog>
             <Box sx={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: 1, p: 2}}>
-                <IconButton onClick={handleMenuOpenClick}>
+                <IconButton onClick={handleMenuOpenClick} sx={{display: 'flex', justifyContent: 'flex-start', width: '10%'}}>
                     <img src={OptionsIcon} alt="options" style={{transform: 'scale(2)'}}/>
                 </IconButton>
                 <Chart {...props.chart}/>

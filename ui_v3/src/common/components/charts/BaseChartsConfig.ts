@@ -3,7 +3,8 @@ export type DataAxis = (number|string)[];
 type CategoryAxis = {
     data?: DataAxis,
     type?: 'category' ,
-    name?: string//Category axis, suitable for discrete category data, if data is there, assume its of type category
+    name?: string, //Category axis, suitable for discrete category data, if data is there, assume its of type category
+    splitArea?: {}
 };
 type NonCategoryAxis = {
     type: 'value'//Numerical axis, suitable for continuous data.
@@ -17,6 +18,7 @@ type NonCategoryAxis = {
 type SeriesBar = {
     type: 'bar' 
     data: DataAxis,
+    stack?: string
 }[];
 
 
@@ -53,9 +55,34 @@ type SeriesPie = {
 
 }
 
+type SeriesGaugeSingleValue = {
+    type: 'gauge',
+    min?: number,
+    max?: number,
+    axisLine: {
+
+    },
+    pointer: {
+
+    },
+    axisTick: {},
+    axisLabel: {},
+    splitLine: {},
+    title: {},
+    detail: {},
+    data: {}[]
+}[]
+
+type SeriesHeatMap = {
+    type: 'heatmap',
+    data: ((number|string)[])[],
+    label?: {},
+    emphasis?: {}
+}[]
+
 
 export type BaseChartsConfig = {
     xAxis?: (CategoryAxis|NonCategoryAxis)[],
     yAxis?: (CategoryAxis|NonCategoryAxis)[],
-    series: SeriesLine | SeriesScatter | SeriesPie | SeriesBar 
+    series: SeriesLine | SeriesScatter | SeriesPie | SeriesBar | SeriesGaugeSingleValue | SeriesHeatMap
 }
