@@ -24,7 +24,7 @@ const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
                 {props?.ProviderInstance?.ProviderParameterInstance?.map(paramInstance => {
                     const paramDef = props?.ProviderDefinition?.ProviderParameterDefinition?.find(paramDef => paramInstance?.ProviderParameterDefinitionId === paramDef?.Id)
                     const hidden = (paramDef?.Protected || false) && (!showHidden)
-                    if(!!paramDef) {
+                    if(!!paramDef && paramDef?.FilledBy!=="FDS") {
                         return (
                             <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
                                 <Box sx={{ display: "flex", flex: 1 }}>
