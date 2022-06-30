@@ -45,7 +45,7 @@ const SelectFromGroups = (props: SelectFromGroups) => {
     }, [allActionDefinitionsData])
 
     return (
-        <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'clip'}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'auto', maxHeight: '550px'}}>
             {Object.entries(groupActions)?.map(([actionGroup, actionDefinitions]) => {
                 return (
                     <Box sx={{width: '100%'}}>

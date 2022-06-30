@@ -79,8 +79,8 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
                     </ConfigureParametersContextProvider>
                 </DialogContent>
             </Dialog>
-            <Grid container spacing={1} sx={{height: "auto", p: 1}}>
-                <Grid item xs={3} sx={{ p: 3}}>
+            <Grid container spacing={1} sx={{maxHeight: "700px", p: 1}}>
+                <Grid item xs={3} sx={{ p: 3, maxHeight: '600px'}}>
                     <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px', background: '#F5F9FF'}}>
                         <WorkflowActionContainer
                             stageId={props.stageId}

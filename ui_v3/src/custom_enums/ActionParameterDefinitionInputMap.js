@@ -8,15 +8,19 @@ import TemplateLanguage from '../enums/TemplateLanguage.js'
 const InputMap = {
     [TemplateLanguage.PYTHON]: {
         [ActionParameterDefinitionInputType.STRING]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING,
         },
         [ActionParameterDefinitionInputType.BOOLEAN]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.BOOLEAN,
         },
         [ActionParameterDefinitionInputType.INTEGER]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.INT,
         },
         [ActionParameterDefinitionInputType.DECIMAL]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.FLOAT,
         },
         [ActionParameterDefinitionInputType.COLUMN_NAME]: {
@@ -28,7 +32,7 @@ const InputMap = {
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.PANDAS_DATAFRAME,
         },
         [ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST]: {
-            [ActionParameterDefinitionAttribute.TAG]: undefined,
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
         }
     },
@@ -69,7 +73,7 @@ const InputMap = {
 const getInputTypeFromAttributes = (language, tag, type, datatype) => {
     if (language in InputMap) {
         for (const [key, value] of Object.entries(InputMap[language])) {
-            if (value[ActionParameterDefinitionAttribute.TAG] === tag & value[ActionParameterDefinitionAttribute.TYPE] === type & value[ActionParameterDefinitionAttribute.DATATYPE] === datatype) {
+            if (value[ActionParameterDefinitionAttribute.TAG] === tag &  value[ActionParameterDefinitionAttribute.DATATYPE] === datatype) {
                 return key;
             }
         }
