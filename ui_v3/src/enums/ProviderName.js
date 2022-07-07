@@ -14,7 +14,8 @@ const ProviderName = {
     POSTGRESQL: "PostgreSql",
     LAMBDA: "AWS-Lambda",
     SAGEMAKER: "Sagemaker",
-    SALESFORCE: "Salesforce"
+    SALESFORCE: "Salesforce",
+    DBT_REPO: "DBTRepo"
 }
 
 export default ProviderName;

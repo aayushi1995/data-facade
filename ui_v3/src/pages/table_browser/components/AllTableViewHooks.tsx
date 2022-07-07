@@ -1,8 +1,10 @@
-import { useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions } from "react-query"
+import { useEffect } from "react"
+import { useMutation, UseMutationOptions, useQueries, useQuery, useQueryClient, UseQueryOptions } from "react-query"
 import dataManager from "../../../data_manager/data_manager"
-import { ActionDefinition, TableProperties } from "../../../generated/entities/Entities"
+import { ActionDefinition, ActionExecution, TableProperties } from "../../../generated/entities/Entities"
 import { TableBrowserResponse, TableOOBActionStatus } from "../../../generated/interfaces/Interfaces"
 import labels from "../../../labels/labels"
+import { TableAndColumnStats } from "../../table_details/components/ColumnInfoViewHooks"
 
 export type UseGetTablesParams = {
     options: UseQueryOptions<TableBrowserResponse[], unknown, TableBrowserResponse[], any[]>,
@@ -142,4 +144,87 @@ export const UseActionDefinitionModel = (params: UseActionDefinitionModelParams)
     )
 
     return tableBrowserQuery;
+}
+
+export type AllTableViewTableData = {
+    Table: TableBrowserResponse,
+    TableOOBActionsStatus: TableOOBActionStatus,
+    TableStats: TableAndColumnStats
+}
+
+export type useAllTableViewParams = {
+    tableFilter?: TableProperties
+}
+
+export const useAllTableView = (params: useAllTableViewParams) => {
+    const fetchedDataManager = dataManager.getInstance as { retreiveData: Function }
+    const tableBrowserQuery = useQuery<TableBrowserResponse[], unknown, TableBrowserResponse[], any[]>([labels.entities.TableProperties, "TableBrowser", params?.tableFilter], 
+        () => fetchedDataManager.retreiveData(labels.entities.TableProperties, {
+            filter: params?.tableFilter || {},
+            TableBrowser: true
+        }, {
+            staleTime: 4000
+        })
+    )
+
+    const tables = tableBrowserQuery.data || []
+
+    const tableOOBActionsStatusQueries = useQueries(tables?.map(table => {
+        return {
+            queryKey: [labels.entities.TableProperties, "OOBActionStatus", table?.TableId],
+            queryFn: () => fetchedDataManager.retreiveData(labels.entities.TableProperties, {
+                filter: { Id: table?.TableId },
+                OOBActionsStatus: true
+            }, {
+                staleTime: 4000,
+                enabled: tableBrowserQuery.data !== undefined
+            }).then((data: TableOOBActionStatus[]) => data[0])
+        }
+    }))
+
+    const tableStatQueries = useQueries(tables?.map(table => {
+        return {
+            queryKey: [labels.entities.TableProperties, table?.TableId, "TableAndColumnStats", "OnlyOutput"],
+            queryFn: fetchedDataManager.retreiveData(labels.entities.TableProperties, {
+                filter: {
+                    Id: table?.TableId
+                },
+                "TableAndColumnStats": true
+            }, {
+                staleTime: 4000,
+                enabled: tableBrowserQuery.data !== undefined
+            }).then((actionExecutions: ActionExecution[]) => {
+                const actionExecution = actionExecutions?.[0]
+                const output = JSON.parse(actionExecution?.Output||"")
+                const value = output?.["value"]
+                return JSON.parse(value)
+            }).catch((error: any) => {
+                console.log(error, table?.TableId)
+            })
+        }
+    }))
+
+    useEffect(() => {
+        console.log(tableBrowserQuery, "TableBrowserQuery" )
+    }, [ tableBrowserQuery ])
+
+    useEffect(() => {
+        console.log( tableOOBActionsStatusQueries?.map(query => query.status), "TableOOBQuery" )
+    }, [ tableOOBActionsStatusQueries ])
+
+    useEffect(() => {
+        console.log( tableStatQueries?.map(query => query.status), "TableStatQuery" )
+    }, [ tableStatQueries ])
+
+    const tableData: AllTableViewTableData[] = tables?.map((table, index) => ({
+        Table: table,
+        TableOOBActionsStatus: tableOOBActionsStatusQueries[index]?.data as TableOOBActionStatus,
+        TableStats: tableStatQueries[index]?.data as TableAndColumnStats
+    }))
+
+    return {
+        isLoading: tableBrowserQuery.isLoading || tableOOBActionsStatusQueries.some(query => query.isLoading) || tableStatQueries.some(query => query.isLoading),
+        error: tableBrowserQuery.error || tableOOBActionsStatusQueries.some(query => query.error) || tableStatQueries.some(query => query.error),
+        data: tableData
+    }
 }

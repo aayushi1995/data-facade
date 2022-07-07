@@ -49,6 +49,10 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
         }
     }, [actionExecutionDetailQuery.data])
 
+    React.useEffect(() => {
+        setExecutionTerminal(false)
+    }, [actionExecutionId])
+
     const getToRenderComponent = () => {
         const data = actionExecutionDetailQuery?.data
         if(!!data){

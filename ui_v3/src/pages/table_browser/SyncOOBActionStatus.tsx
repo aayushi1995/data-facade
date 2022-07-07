@@ -7,10 +7,10 @@ import { useHistory, useRouteMatch } from "react-router"
 import { DATA_ALL_TABLES_ROUTE } from '../../common/components/header/data/DataRoutesConfig'
 import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper"
 import ActionExecutionStatus from "../../enums/ActionExecutionStatus"
-import { OOBActionStatus } from "../../generated/interfaces/Interfaces"
+import { OOBActionStatus, TablePropertiesInfo } from "../../generated/interfaces/Interfaces"
 import ViewActionExecution from "../view_action_execution/VIewActionExecution"
 import SyncingLogo from "./../../common/components/logos/SyncingLogo"
-import { UseActionDefinitionModel, useDeleteTables, UseGetTableModel, useGetTableOOBActionsStatus, useReSyncTables } from "./components/AllTableViewHooks"
+import { UseActionDefinitionModel, useDeleteTables, UseGetTableModel, useReSyncTables } from "./components/AllTableViewHooks"
 
 const SyncOOBActionExecutionStatus = () => { 
     const match = useRouteMatch<{ TableName: string }>()
@@ -19,10 +19,11 @@ const SyncOOBActionExecutionStatus = () => {
     const tableModelQuery = UseGetTableModel({ options: {}, tableName: tableName })
     const deleteTableMutation = useDeleteTables({ options: {}, tableId: tableModelQuery?.data?.Id })
     const reSyncTablesMutation = useReSyncTables({ options: {}, tableId: tableModelQuery?.data?.Id })
-    const oobActionsStatus = useGetTableOOBActionsStatus({ options: {}, tableId: tableModelQuery?.data?.Id })
+   
     const [selectedADId, setSelectedADId] = useState<string | undefined>()
-    const aEIdForSelectedADId = oobActionsStatus?.data?.OOBActionsStatus?.find?.(oobAction => oobAction?.ActionDefinitionId === selectedADId)?.ActionExecutionId
-
+    const tableInfo = JSON.parse(tableModelQuery?.data?.Info || "{}") as TablePropertiesInfo
+    const aEIdForSelectedADId = tableInfo?.SyncOOBActionStatus?.find?.(oobAction => oobAction?.ActionDefinitionId === selectedADId)?.ActionExecutionId
+    
     const deleteTable = () => {
         if(!!tableModelQuery?.data?.Id)
         deleteTableMutation.mutate([tableModelQuery?.data?.Id])
@@ -34,9 +35,9 @@ const SyncOOBActionExecutionStatus = () => {
     }
 
     useEffect(() => {
-        const firstADId = oobActionsStatus?.data?.OOBActionsStatus?.[0]?.ActionDefinitionId
+        const firstADId = tableInfo?.SyncOOBActionStatus?.[0]?.ActionDefinitionId
         !!firstADId && setSelectedADId(firstADId)
-    }, [oobActionsStatus?.data])
+    }, [tableModelQuery?.data])
 
     return (
         <ReactQueryWrapper
@@ -45,9 +46,9 @@ const SyncOOBActionExecutionStatus = () => {
             data={tableModelQuery.data}
             children={() => 
                 <ReactQueryWrapper
-                    isLoading={oobActionsStatus.isLoading}
-                    error={oobActionsStatus.error}
-                    data={oobActionsStatus.data}
+                    isLoading={tableModelQuery.isLoading}
+                    error={tableModelQuery.error}
+                    data={tableModelQuery.data}
                     children={() => 
                         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", gap: 1 }}>
                             <Grid container sx={{ flex: 1, maxHeight: "100%", overflowY: "auto" }}>
@@ -63,7 +64,7 @@ const SyncOOBActionExecutionStatus = () => {
                                         </Box>
                                         <Box>
                                             <MenuList>
-                                                {oobActionsStatus?.data?.OOBActionsStatus?.map?.(oobAction => 
+                                                {tableInfo.SyncOOBActionStatus?.map?.(oobAction => 
                                                     <MenuItem selected={selectedADId === oobAction?.ActionDefinitionId} onClick={() => setSelectedADId(oobAction?.ActionDefinitionId)} sx={{ px: 0 }}>
                                                         <ActionMenuItem {...oobAction}/>
                                                     </MenuItem>,

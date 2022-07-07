@@ -11,7 +11,8 @@ const TemplateSupportedRuntimeGroup = {
     COMMON: "common",
     JSON: "json",
     SAGEMAKER: "sagemaker",
-    SALESFORCE_OBJECT_QUERY_LANGUAGE: "soql"
+    SALESFORCE_OBJECT_QUERY_LANGUAGE: "soql",
+    NO_TEMPLATE: "no_template"
 }
 
 export default TemplateSupportedRuntimeGroup;

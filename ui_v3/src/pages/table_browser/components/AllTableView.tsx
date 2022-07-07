@@ -11,19 +11,18 @@ import { DATA_ALL_TABLES_ROUTE, DATA_TABLE_SYNC_ACTIONS, DATA_TABLE_VIEW } from 
 import SyncingLogo from "../../../common/components/logos/SyncingLogo";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import { lightShadows } from "../../../css/theme/shadows";
-import ActionExecutionStatus from '../../../enums/ActionExecutionStatus';
+import TablePropertiesSyncStatus from '../../../enums/TablePropertiesSyncStatus';
 import { TableProperties } from '../../../generated/entities/Entities';
-import { TableBrowserResponse, TableOOBActionStatus } from "../../../generated/interfaces/Interfaces";
-import { useTableAndColumnStats } from "../../table_details/components/ColumnInfoViewHooks";
+import { TableBrowserResponse, TablePropertiesInfo } from "../../../generated/interfaces/Interfaces";
 import SyncOOBActionExecutionStatus from '../SyncOOBActionStatus';
 import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
-import { useDeleteTables, useGetTableOOBActionsStatus, useGetTables, useReSyncTables } from "./AllTableViewHooks";
+import { useDeleteTables, useGetTables, useReSyncTables } from "./AllTableViewHooks";
 
 export type AllTableViewProps = {
     tableFilter?: TableProperties
 }
 
-type TableBrowserResponseAndCalculatedInfo = TableBrowserResponse & { Health?: number, SuccessfulSync?: boolean }
+type TableBrowserResponseAndCalculatedInfo = TableBrowserResponse & { Health?: number, SyncStatus?: string }
 
 const AllTableView = (props: AllTableViewProps) => {
     const history = useHistory()
@@ -37,21 +36,19 @@ const AllTableView = (props: AllTableViewProps) => {
     const [rows, setRows] = React.useState<TableBrowserResponseAndCalculatedInfo[]>([])
     React.useEffect(() => {
         if(!!tableQuery.data){
-            setRows(tableQuery.data)
+            setRows(
+                tableQuery.data?.map(tableData => {
+                    const tableInfo = JSON.parse(tableData?.TableInfo || "{}") as TablePropertiesInfo
+                    console.log(tableInfo)
+                    return {
+                        ...tableData,
+                        Health: tableInfo?.Health,
+                        SyncStatus: tableInfo?.SyncStatus
+                    }
+                })
+            )
         }
     }, [tableQuery.data])
-    const setHealth = (tableId?: string, health?: number) => {
-        const oldHealth = rows?.find(row => row?.TableId===tableId)?.Health
-        if(oldHealth !== health) {
-            setRows((oldRows) => oldRows?.map(row => row?.TableId!==tableId ? row : {...row, Health: health }))
-        }
-    }
-    const setSyncStaus = (tableId?: string, successfulSync?: boolean) => {
-        const oldSuccessfulSync = rows?.find(row => row?.TableId===tableId)?.SuccessfulSync
-        if(oldSuccessfulSync !== successfulSync) {
-            setRows((oldRows) => oldRows?.map(row => row?.TableId!==tableId ? row : {...row, SuccessfulSync: successfulSync }))
-        }
-    }
     
     const handleSearchChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSearchQuery(event?.target.value)
@@ -94,7 +91,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 field: "Sync Status",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <SyncStatusCell TableId={params.row?.TableId} setSyncStaus={setSyncStaus}/>
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <SyncStatusCell SyncStatus={params.row?.SyncStatus}/>
             },
             {
                 headerName: "Last Synced On",
@@ -107,7 +104,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 field: "Health",
                 flex: 1,
                 minWidth: 200,
-                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <HealthCell TableId={params.row?.TableId} setHealth={setHealth}/>,
+                renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <HealthCell Health={params.row?.Health} SyncStatus={params.row?.SyncStatus}/>,
                 type: "number",
                 valueGetter: (params: GridValueGetterParams<any, TableBrowserResponseAndCalculatedInfo>) => params.row?.Health
             },
@@ -129,7 +126,7 @@ const AllTableView = (props: AllTableViewProps) => {
         onRowClick: (params: GridRowParams<TableBrowserResponseAndCalculatedInfo>) => {
             const tableName = params?.row?.TableUniqueName
             const tableId = params?.row?.TableId
-            const syncSuccessfully = params?.row?.SuccessfulSync
+            const syncSuccessfully = params?.row?.SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE
             const tableDetail = tableQuery?.data?.find( table => table.TableId === tableId)
             if(!!tableName && !!tableId && !!tableDetail && syncSuccessfully===true) { 
                 history.push(generatePath(DATA_TABLE_VIEW, { TableName: tableName }))
@@ -254,20 +251,16 @@ const ActionCell = (props?: TableBrowserResponseAndCalculatedInfo) => {
     )
 }
 
-const HealthCell = (props?: { TableId?: string, setHealth: Function }) => {
-    const oobActionsStatus = useGetTableOOBActionsStatus({ options: {}, tableId: props?.TableId })
-    const tableFullStats = useTableAndColumnStats({ TableId: props?.TableId })
-    const allComplete = areAllOOBActionsCompleted(oobActionsStatus.data)
-    const anyFailed = anyOOBActionFailed(oobActionsStatus.data)
-    const health = tableFullStats?.data?.TableStat?.Health
+const HealthCell = (props?: { Health?: number, SyncStatus?: string }) => {
+    const health = props?.Health
+    const SyncStatus = props?.SyncStatus
     const scaledHealth = ((health || 0)*100)
 
     const formText = () => {
-        if(allComplete && health !== undefined) {
-            props?.setHealth(props?.TableId, scaledHealth)
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE && health !== undefined) {
             return `${Math.floor(scaledHealth)} %`
         }
-        else if(anyFailed) {
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) {
             return "Health Data Unavaialble"
         }
         else return "Updating Health Data"
@@ -277,10 +270,10 @@ const HealthCell = (props?: { TableId?: string, setHealth: Function }) => {
     const color = `hsl(${scaledHealth * 1.2},100%,75%)`;
 
     const formLinearProgressBar = () => {
-        if(allComplete && health !== undefined) {
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE && health !== undefined) {
             return <LinearProgress variant="determinate" value={(health || 0)*100} sx={{ "& .MuiLinearProgress-bar": { backgroundColor: `${barColor} ! important` }, ".MuiLinearProgress-root": { backgroundColor: `${color} ! important` } }}/>
         }
-        else if(anyFailed) {
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) {
             return <LinearProgress variant="determinate" value={0} color="error"/>
         }
         else return <LinearProgress variant="indeterminate" color="info"/>
@@ -298,31 +291,14 @@ const HealthCell = (props?: { TableId?: string, setHealth: Function }) => {
     )
 }
 
-const SyncStatusCell = (props?: { TableId?: string, setSyncStaus: Function}) => {
+const SyncStatusCell = (props?: { SyncStatus?: string }) => {
     const history = useHistory()
-    const oobActionsStatus = useGetTableOOBActionsStatus({ options: {}, tableId: props?.TableId })
-    const allComplete = areAllOOBActionsCompleted(oobActionsStatus.data)
-    const anyFailed = anyOOBActionFailed(oobActionsStatus.data)
-
-
-    const getLabel = () => {
-        if(allComplete) {
-            props?.setSyncStaus(props?.TableId, true)
-            return "Sync Complete"
-        }
-        else if(anyFailed) {
-            props?.setSyncStaus(props?.TableId, false)
-            return "Sync Failed"
-        }
-        else {
-            props?.setSyncStaus(props?.TableId, false)
-            return "Syncing"
-        }
-    }
+    const SyncStatus = props?.SyncStatus
+    const getLabel = () => SyncStatus
 
     const getIcon = () => {
-        if(allComplete) return <CheckCircleIcon height="24px" width="24px" sx={{ color: "#00AA11" }}/>
-        else if(anyFailed) return <CancelIcon height="24px" width="24px" sx={{ color: "#FF0000" }}/>
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return <CheckCircleIcon height="24px" width="24px" sx={{ color: "#00AA11" }}/>
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return <CancelIcon height="24px" width="24px" sx={{ color: "#FF0000" }}/>
         else return (
             <Box sx={{
                 animation: "spin 2s linear infinite",
@@ -343,31 +319,24 @@ const SyncStatusCell = (props?: { TableId?: string, setSyncStaus: Function}) => 
     }
 
     const getTooltipText = () => {
-        if(allComplete) return "View Successful Out of Box Actions"
-        else if(anyFailed) return "View Failed Out of Box Actions"
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return "View Successful Out of Box Actions"
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return "View Failed Out of Box Actions"
         else return "View Active Out of Box Actions"
     }
 
     return (
-        <ReactQueryWrapper
-            isLoading={oobActionsStatus.isLoading}
-            error={oobActionsStatus.error}
-            data={oobActionsStatus.data}
-            children={() => 
-                <Tooltip title={getTooltipText()}>
-                    <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", alignItems: "center", gap: 1, cursor: "pointer" }}>
-                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            {getIcon()}
-                        </Box>
-                        <Box>
-                            <Typography variant="tableBrowserContent">
-                                {getLabel()}
-                            </Typography>
-                        </Box>
-                    </Box>
-                </Tooltip>
-            }
-        />
+        <Tooltip title={getTooltipText()}>
+            <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", alignItems: "center", gap: 1, cursor: "pointer" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    {getIcon()}
+                </Box>
+                <Box>
+                    <Typography variant="tableBrowserContent">
+                        {getLabel()}
+                    </Typography>
+                </Box>
+            </Box>
+        </Tooltip>
     )
 }
 
@@ -443,8 +412,5 @@ export const WrapInDialog = (props: { children: JSX.Element, dialogProps: { open
 
     return El;
 }
-
-const areAllOOBActionsCompleted = (response?: TableOOBActionStatus) => response?.OOBActionsStatus?.every((value, index, arr) => value.ActionExecutionStatus===ActionExecutionStatus.COMPLETED)
-const anyOOBActionFailed = (response?: TableOOBActionStatus) => response?.OOBActionsStatus?.some((value, index, arr) => value.ActionExecutionStatus===ActionExecutionStatus.FAILED)
 
 export default AllTableView;
