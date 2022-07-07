@@ -8,7 +8,12 @@ export interface SyncProviderinstanceConfig {
         providerSyncAction: boolean,
         SyncDepth: "Tables" | "TablesAndColumns",
     },
-    recurrenceConfig: Object
+    withExecutionId?: string
+    recurrenceConfig: {
+        recurrent?: boolean,
+        Interval?: number,
+        CopyActionInstanceIdInConfig?: boolean
+    }
 }
 export interface UseSyncProviderInstanceParams {
     mutationOptions: UseMutationOptions<unknown, unknown, SyncProviderinstanceConfig>
@@ -22,7 +27,8 @@ const useSyncProviderInstance = (params: UseSyncProviderInstanceParams) => {
                 Id: config.providerInstanceId
             },
             ...config.syncDepthConfig,
-            ...config.recurrenceConfig
+            ...config.recurrenceConfig,
+            withExecutionId: config.withExecutionId
         }), {
             ...params.mutationOptions
         }

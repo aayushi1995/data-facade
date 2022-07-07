@@ -19,7 +19,8 @@ import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
 import { useDeleteTables, useGetTables, useReSyncTables } from "./AllTableViewHooks";
 
 export type AllTableViewProps = {
-    tableFilter?: TableProperties
+    tableFilter?: TableProperties,
+    disableCellClick?: boolean
 }
 
 type TableBrowserResponseAndCalculatedInfo = TableBrowserResponse & { Health?: number, SyncStatus?: string }
@@ -147,7 +148,7 @@ const AllTableView = (props: AllTableViewProps) => {
             }
         },
         onCellClick: (params: GridCellParams<unknown, TableBrowserResponseAndCalculatedInfo, unknown>, event, details) => {
-            if(params.field === "Sync Status" && !!(params?.row?.TableUniqueName)) {
+            if(params.field === "Sync Status" && !!(params?.row?.TableUniqueName) && !props.disableCellClick) {
                 event.stopPropagation()
                 history.replace(generatePath(DATA_TABLE_SYNC_ACTIONS, { TableName: params?.row?.TableUniqueName }))
             }
@@ -357,7 +358,7 @@ export const TimestampCell = (props: {timestamp?: number}) => {
     if( timestamp ) {
         return <TextCell text={dateString}/>
     } else {
-        return <></>
+        return <TextCell text='NA'/>
     }
 }
 

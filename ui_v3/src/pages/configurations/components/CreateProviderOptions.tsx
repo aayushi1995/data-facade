@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/material";
 import React from "react";
+import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import { ConnectionQueryContext, ConnectionStateContext } from "../context/ConnectionsContext";
 
 const CreateProviderOptions = () => {
@@ -25,7 +26,12 @@ const CreateProviderOptions = () => {
                     <Button variant="contained" disabled>Sync</Button>
                 </Box>
                 <Box>
-                    <Button variant="outlined" onClick={() => onCreate()}>Create</Button>
+                    {connectionQuery.saveMutation?.isLoading ? (
+                        <LoadingIndicator/>
+                    ) : (
+                        <Button variant="outlined" onClick={() => onCreate()}>Create and Connect</Button>
+                    )}
+                    
                 </Box>
             </Box>
         </Box>

@@ -1,65 +1,81 @@
-import { Box } from "@mui/material";
+import { TabContext, TabPanel } from "@mui/lab";
+import { generatePath, useHistory, useRouteMatch } from "react-router";
+import { DATA_CONNECTION_DETAIL_TAB, DATA_CONNECTION_DETAIL_TAB_LOGS, DATA_CONNECTION_DETAIL_TAB_OVERVIEW, DATA_CONNECTION_DETAIL_TAB_SETUP } from "../../../common/components/header/data/DataRoutesConfig";
+import { Box, Tab, Tabs } from "@mui/material"
+import ConnectionOverview from "./ConnectionOverview";
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
-import LoadingIndicator from "../../../common/components/LoadingIndicator";
-import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
-import { ConnectionQueryContext, ConnectionSetStateContext, ConnectionStateContext } from "../context/ConnectionsContext";
-import ProviderParameterInput, { ProviderParameterInputProps } from "./ProviderParameterInput";
-import UpdateProviderOptions from "./UpdateProviderOptions";
+import { SetModuleContextState } from "../../../common/components/ModuleContext";
+import ConnectionDetailsSetup from "./ConnectionDetailsSetup";
 
-type MatchParams = {
-    ProviderInstanceId: string
+
+export const a11yProps = (index: number) => {
+    return {
+        id: `simple-tab-${index}`,
+        "aria-controls": `simple-tabpanel-${index}`,
+    };
+};
+
+const CONNECTION_DETAILS_TABS = [
+    {
+        Label: "Overview",
+        View: DATA_CONNECTION_DETAIL_TAB_OVERVIEW
+    },
+    {
+        Label: "Setup",
+        View: DATA_CONNECTION_DETAIL_TAB_SETUP
+    },
+    {
+        Label: "Log",
+        View: DATA_CONNECTION_DETAIL_TAB_LOGS
+    }
+]
+
+interface MatchParams {
+    ViewName?: string,
+    ProviderInstanceId?: string
 }
 
-export const ConnectionDetails = () => {
+const ConnectionDetails = () => {
     const match = useRouteMatch<MatchParams>()
-    const connectionState = React.useContext(ConnectionStateContext)
-    const setConnectionState = React.useContext(ConnectionSetStateContext)
-    const connectionQuery = React.useContext(ConnectionQueryContext)
+    const history = useHistory()
+    const tabState = CONNECTION_DETAILS_TABS.find(info => info.View === match.params.ViewName)?.View!
 
-    React.useEffect(() => {
-        setConnectionState({ type: "SetMode", payload: { mode: "UPDATE" }})
-    }, [])
-
-    React.useEffect(() => {
-        setConnectionState({ type: "SetProviderInstanceId", payload: { newProviderInstanceId: match.params.ProviderInstanceId } })
-    }, [match.params.ProviderInstanceId])
+    const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
+        history.replace(generatePath(DATA_CONNECTION_DETAIL_TAB, {
+            ProviderInstanceId: match.params.ProviderInstanceId,
+            ViewName: newValue
+        }))
+    }
 
     return (
-        <ReactQueryWrapper
-            isLoading={connectionQuery?.loadProviderDefinitionQuery?.isLoading}
-            error={connectionQuery?.loadProviderDefinitionQuery?.error}
-            data={connectionQuery?.loadProviderDefinitionQuery?.data}
-            children={() => 
-                <ReactQueryWrapper
-                    isLoading={connectionQuery?.loadProviderInstanceQuery?.isLoading}
-                    error={connectionQuery?.loadProviderInstanceQuery?.error}
-                    data={connectionQuery?.loadProviderInstanceQuery?.data}
-                    children={() => {
-                        if(!!connectionState?.ProviderInformation && !!connectionState?.ProviderDefinitionDetail) {
-                            const paramInputProps: ProviderParameterInputProps = {
-                                ProviderDefinition: connectionState.ProviderDefinitionDetail,
-                                ProviderInstance: connectionState.ProviderInformation,
-                                onParameterValueChange: (parameterDefinitionId?: string, parameterValue?: string) => setConnectionState({ type: "SetProviderParameterValue", payload: { parameterDefinitionId: parameterDefinitionId, newValue: parameterValue }}),
-                                onProviderInstanceNameChange: (newName?: string) => setConnectionState({ type: "SetProviderInstanceName", payload: { newName: newName }}),
-                                onCreate: () => {}
-                            }
-                            return (
-                                <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                    <Box sx={{ height: "100%" }}>
-                                        <ProviderParameterInput {...paramInputProps}/>
-                                    </Box>
-                                    <Box>
-                                        <UpdateProviderOptions/>
-                                    </Box>
-                                </Box>
-                            )
-                        } else {
-                            return <LoadingIndicator/>
-                        }
-                    }}
-                />
-            }
-        />
+        <TabContext value={tabState}>
+            <Box sx={{display: 'flex', flexDirection: 'column', minHeight: '100%', minWidth: '100%'}}>
+                <Tabs
+                    indicatorColor="primary"
+                    scrollButtons="auto"
+                    textColor="primary"
+                    variant="scrollable"
+                    onChange={handleTabChange}
+                    value={tabState}
+                >
+                    {CONNECTION_DETAILS_TABS.map((tab, index) => (
+                        <Tab key={tab.View} value={tab.View} label={tab.Label} {...a11yProps(index)} />
+                    ))}
+                </Tabs>
+                <Box sx={{minWidth: '100%', minHeight: '100%'}}>
+                    <TabPanel tabIndex={0} value={DATA_CONNECTION_DETAIL_TAB_OVERVIEW} sx={{minWidth: '100%'}}>
+                        <ConnectionOverview ProviderInstanceId={match.params.ProviderInstanceId || 'NA'}/>
+                    </TabPanel>
+                    <TabPanel value={DATA_CONNECTION_DETAIL_TAB_SETUP}>
+                        <ConnectionDetailsSetup ProviderInstanceId={match.params.ProviderInstanceId || 'NA'}/>
+                    </TabPanel>
+                </Box>
+            </Box>
+        </TabContext>
     )
 }
+
+
+export default ConnectionDetails
+
+

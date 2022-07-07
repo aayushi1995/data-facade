@@ -88,7 +88,7 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
     )
 }
 
-const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) => {
+export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) => {
     const { actionExecutionDetail } = props
     const actionOutput = JSON.parse(actionExecutionDetail?.ActionExecution?.Output || "{}")
     return (
@@ -114,7 +114,8 @@ const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) => {
                     <Card sx={{
                         p: 3,
                         background: "#F4F5F7",
-                        boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)"
+                        boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)",
+                        overflowX: 'auto'
                     }}>
                         <ReactJson src={actionOutput} />
                     </Card>

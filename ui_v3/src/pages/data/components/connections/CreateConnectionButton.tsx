@@ -26,20 +26,10 @@ export function CreateConnectionButton() {
                 Create Connection
             </Button>
             <Route path={CHOOSE_CONNECTOR_ROUTE}>
-                <Dialog onClose={handleDialogClose} open={dialogState} fullWidth={true} maxWidth="lg">
+                <Dialog onClose={handleDialogClose} open={dialogState} fullWidth={true} maxWidth="xl">
                     <DialogTitle id="simple-dialog-title">
                         <Grid container>
-                            <Grid item xs={9}>
-                                <Box mx={1} py={0}>
-                                    <Route exact path={CHOOSE_CONNECTOR_ROUTE}>
-                                        <ConnectionBreadCrumbs/>
-                                    </Route>
-                                    <Route exact path={CHOOSE_CONNECTOR_SELECTED_ROUTE}>
-                                        <ConnectionBreadCrumbs/>
-                                    </Route>
-                                </Box>
-                            </Grid>
-                            <Grid item xs={3} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
                                 <IconButton aria-label="close" onClick={handleDialogClose}>
                                     <CloseIcon/>
                                 </IconButton>

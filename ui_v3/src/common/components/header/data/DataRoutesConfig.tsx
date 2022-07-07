@@ -3,6 +3,11 @@ import { TabsType } from "../schema";
 export const DATA_ROUTE = '/data';
 export const DATA_CONNECTIONS_ROUTE = '/data/connections';
 export const DATA_CONNECTION_DETAIL_ROUTE = `${DATA_CONNECTIONS_ROUTE}/detail/:ProviderInstanceId`
+export const DATA_CONNECTION_DETAIL_TAB_OVERVIEW = 'Overview'
+export const DATA_CONNECTION_DETAIL_TAB_SETUP = 'Setup'
+export const DATA_CONNECTION_DETAIL_TAB_LOGS = 'Logs'
+export const DATA_CONNECTION_DETAIL_TAB = `${DATA_CONNECTION_DETAIL_ROUTE}/View/:ViewName`
+export const DATA_CONNECTION_DETAIL_DEFAULT_TAB = `${DATA_CONNECTION_DETAIL_ROUTE}/View/${DATA_CONNECTION_DETAIL_TAB_OVERVIEW}`
 export const DATA_ALL_TABLES_ROUTE = '/data/all';
 export const DATA_CERTIFIED_ROUTE = '/data/certified';
 

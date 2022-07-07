@@ -31,7 +31,8 @@ export function ProviderIcon({ providerUniqueName, height }: {providerUniqueName
     const src = (providerUniqueName && (providerUniqueName in iconProviderMap))? iconProviderMap[providerUniqueName]: '';
     return src? <img src={src}
                 className={classes.img}
-                height={height || 50}
+                height={height || 65}
+                width={130}
                 alt={providerUniqueName}
     />: null;
 }

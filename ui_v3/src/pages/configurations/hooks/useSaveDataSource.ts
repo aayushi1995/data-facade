@@ -72,6 +72,7 @@ const formCreateRequestBodyFromContextState = (state: ConnectionState) => {
     return {
         entityProperties: {},
         CreateProviderInstanceForm: true,
+        RecurrenceInterval: state.RecurrenceInterval ? state.RecurrenceInterval*60 : undefined,
         ...entityToCreate
     }
 }
@@ -92,6 +93,7 @@ const formUpdateRequestBodyFromContextState = (state: ConnectionState) => {
 
     return {
         UpdateProviderInstanceForm: true,
-        ...updatedProvider
+        ...updatedProvider,
+        interval: state.RecurrenceInterval ? state.RecurrenceInterval * 60 : undefined
     }
 }

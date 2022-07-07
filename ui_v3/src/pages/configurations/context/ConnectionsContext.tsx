@@ -8,6 +8,7 @@ import { Fetcher } from "../../../generated/apis/api";
 import { ProviderParameterDefinition, ProviderParameterInstance } from "../../../generated/entities/Entities";
 import { ProviderDefinitionDetail, ProviderInformation } from "../../../generated/interfaces/Interfaces";
 import labels from "../../../labels/labels";
+import { ProviderInstanceConfig } from "../components/ConnectionsDataGrid";
 import { useSaveDataSource } from "../hooks/useSaveDataSource";
 
 export type NotificationState = {open: boolean, message?: string, severity?: AlertColor};
@@ -16,7 +17,8 @@ export type ConnectionStateMode = "CREATE" | "UPDATE"
 export type ConnectionState = {
     mode: ConnectionStateMode,
     ProviderDefinitionDetail?: ProviderDefinitionDetail,
-    ProviderInformation?: ProviderInformation
+    ProviderInformation?: ProviderInformation,
+    RecurrenceInterval?: number
 };
 
 export type ConnectionQuery = {
@@ -83,13 +85,21 @@ type SetProviderParameterValueAction = {
     }
 }
 
+type SetRecurrenceInterval = {
+    type: "SetRecurrenceInterval",
+    payload: {
+        recurrenceInterval: number
+    }
+}
+
 type SetConnectionStateAction = SetModeAction | 
 SetProviderDefinitionIdAction | 
 SetProviderInstanceIdAction | 
 SetProviderDefinitionAction | 
 SetProviderInstanceAction |
 SetProviderInstanceNameAction |
-SetProviderParameterValueAction
+SetProviderParameterValueAction |
+SetRecurrenceInterval
 
 const reducer = (state: ConnectionState, action: SetConnectionStateAction): ConnectionState => {
     switch(action.type) {
@@ -114,17 +124,20 @@ const reducer = (state: ConnectionState, action: SetConnectionStateAction): Conn
         }
 
         case "SetProviderInstanceId": {
-            return {
-                ...state,
-                ProviderDefinitionDetail: undefined,
-                ProviderInformation: {
-                    ProviderInstance: {
-                        model: {
-                            Id: action.payload.newProviderInstanceId
+            if(action.payload.newProviderInstanceId !== state.ProviderInformation?.ProviderInstance?.model?.Id) {
+                return {
+                    ...state,
+                    ProviderDefinitionDetail: undefined,
+                    ProviderInformation: {
+                        ProviderInstance: {
+                            model: {
+                                Id: action.payload.newProviderInstanceId
+                            }
                         }
                     }
                 }
-            }
+            } 
+            return state
         }
 
         case "SetProviderDefinition": {
@@ -172,6 +185,13 @@ const reducer = (state: ConnectionState, action: SetConnectionStateAction): Conn
             }
         }
 
+        case "SetRecurrenceInterval": {
+            return {
+                ...state,
+                RecurrenceInterval: action.payload.recurrenceInterval > 0 ? action.payload.recurrenceInterval : undefined
+            }
+        }
+
         default: {
             return state
         }
@@ -211,6 +231,8 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
 
     const providerInstanceId = connectionState?.ProviderInformation?.ProviderInstance?.model?.Id
     const providerDefinitionId = connectionState?.ProviderInformation?.ProviderInstance?.model?.ProviderDefinitionId
+    const syncActionInstanceId = connectionState?.ProviderInformation?.ProviderInstance?.model?.Config ? (JSON.parse(connectionState?.ProviderInformation?.ProviderInstance?.model?.Config) as ProviderInstanceConfig).SyncActionInstanceId : undefined
+
     
     const setConnectionsState: ConnectionsSetState = (arg: SetConnectionStateAction) => dispatch(arg)
 
@@ -236,6 +258,15 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
             onSuccess: (data) => setConnectionsState({ type: "SetProviderDefinition", payload: { providerDefinition: data }})
         }
     )
+
+    const getSyncActionInstance = useQuery(
+        [labels.entities.ActionInstance, "Sync", syncActionInstanceId],
+        () => Fetcher.fetchData("GET", "/getActionInstances", {Id: syncActionInstanceId}).then(data => data?.[0]),
+        {
+            enabled: false,
+            onSuccess: (data) => setConnectionsState({type: "SetRecurrenceInterval", payload: {recurrenceInterval: (data?.RecurrenceIntervalInSecs || 0)/60}})
+        }
+    )
         
     React.useEffect(() => {
         console.log("NEW PROVIDER INSTANCE", providerInstanceId)
@@ -245,8 +276,17 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
     }, [providerInstanceId, connectionState.mode])
 
     React.useEffect(() => {
+        console.log("NEW SYNC ACTION INSTANCE ID", syncActionInstanceId)
+        if(connectionState.mode === 'UPDATE' && !!syncActionInstanceId) {
+            getSyncActionInstance.refetch()
+        } else if(connectionState.mode === 'UPDATE' && !syncActionInstanceId) {
+            setConnectionsState({type: "SetRecurrenceInterval", payload: {recurrenceInterval: 0}})
+        }
+    }, [syncActionInstanceId])
+
+    React.useEffect(() => {
         console.log("NEW PROVIDER DEFINITION", providerDefinitionId)
-        if(!!providerDefinitionId && !!!connectionState?.ProviderDefinitionDetail) {
+        if(!!providerDefinitionId) {
             loadProviderDefinition.refetch()
         }
     }, [providerDefinitionId, connectionState?.ProviderDefinitionDetail])
