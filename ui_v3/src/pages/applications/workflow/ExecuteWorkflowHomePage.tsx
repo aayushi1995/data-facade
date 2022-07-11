@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Step, StepButton, Stepper, Snackbar } from "@mui/material"
+import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper } from "@mui/material"
 import React from "react"
 import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
@@ -9,11 +9,14 @@ import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import useCreateWorkflowActionInstanceMutation from "../../../common/components/workflow/execute/hooks/useCreateWorkflowActionInstanceMutation"
 import { useGetWorkflowChildInstances, useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
-import { ActionInstance, ActionParameterInstance } from "../../../generated/entities/Entities"
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype"
+import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag"
+import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../../../generated/entities/Entities"
 import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero"
 import ConfigureActionRecurring from "../../execute_action/components/ConfigureActionRecurring"
 import ConfigureSlackAndEmail from "../../execute_action/components/ConfigureSlackAndEmail"
+import SelectProviderInstance from "../../execute_action/components/SelectProviderInstance"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
@@ -42,6 +45,9 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             history.push(`/application/workflow-execution/${data?.[0]?.Id}`)
         }
     }
+
+    const tableTypeParameterExists = workflowContext.WorkflowParameters?.some(apd => apd.Tag === ActionParameterDefinitionTag.TABLE_NAME)
+    const pandasDataframeParameterExists = workflowContext.WorkflowParameters?.some(apd => apd.Tag === ActionParameterDefinitionTag.DATA && apd.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME)
 
     const saveWorkflowMutation = useCreateWorkflowActionInstanceMutation(workflowContext, handleInstanceSaved)
     const workflowId = match.params.workflowId
@@ -135,13 +141,42 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
 
     const IndexToComponent = [
         {
-            component: <ParameterDefinitionConfigPlane parameterDefinitions={workflowContext.WorkflowParameters} parameterInstances={workflowContext.WorkflowParameterInstance || []} handleChange={handleParameterInstancesChange} />
+            component: <ParameterDefinitionConfigPlane 
+                parameterDefinitions={workflowContext.WorkflowParameters} 
+                parameterInstances={workflowContext.WorkflowParameterInstance || []} 
+                parameterAdditionalConfigs={workflowContext.WorkflowParameterAdditionalConfigs}
+                handleChange={handleParameterInstancesChange}
+            />
         },
         {
             component: <ConfigureSlackAndEmail parameterInstances={workflowContext.WorkflowParameterInstance || []} slack={recurrenceConfig.slack} email={recurrenceConfig.email} handleEmailAndSlackChange={handleEmailAndSlackChange}/>,
         },
         
     ]
+
+    if((!tableTypeParameterExists)&&(!pandasDataframeParameterExists)) {
+        IndexToComponent.unshift({
+            component:  
+                <Card sx={{
+                    background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8', 
+                    border: '2px solid rgba(255, 255, 255, 0.4)',
+                    boxShadow: '-5px -5px 10px #E3E6F0, 5px 5px 10px #A6ABBD', 
+                    borderRadius: '10px', backgroundBlendMode: 'soft-light, normal', minWidth: '100%', minHeight: '100%', 
+                    justifyContent: 'center', alignItems: 'center', display: 'flex', p: 2}}
+                >
+                    <Grid container>
+                        <Grid item xs={0} md={3} lg={4}/>
+                        <Grid item xs={12} md={6} lg={4}>
+                            <SelectProviderInstance
+                                selectedProviderInstance={workflowContext.SelectedProviderInstance}
+                                onProviderInstanceChange={(newProviderInstance?: ProviderInstance) => setWorkflowContext({ type: "SET_SELECTED_PROVIDER_INSTANCE", payload: { newProviderInstance: newProviderInstance } })}
+                            />
+                        </Grid>
+                        <Grid item xs={0} md={3} lg={4}/>
+                    </Grid>
+                </Card>
+        })
+    }
 
     if(history.location.state !== 'fromTest') {
         IndexToComponent.push(

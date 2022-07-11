@@ -6,13 +6,13 @@ import { WorkflowContextType } from "../../../../../pages/applications/workflow/
 import dataManagerInstance from './../../../../../data_manager/data_manager'
 const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContextType, handleOnSuccess: (data: any) => void) => {
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
-    let actionInstanceProvider: string | undefined = undefined
+    let actionInstanceProvider: string | undefined = workflowContext.SelectedProviderInstance?.Id
     const workflowInstancesWithParameterInstances = workflowContext.stages[0].Actions.map(action => {
         return {
             ParameterInstances: action.Parameters?.map((childParameterInstance) => {
                 const apdId = childParameterInstance.ActionParameterDefinitionId
                 const globalParameterInstance = workflowContext.WorkflowParameterInstance?.find(globalParameter => globalParameter.ActionParameterDefinitionId === childParameterInstance.GlobalParameterId)
-                if(!!globalParameterInstance?.ProviderInstanceId) {
+                if(!actionInstanceProvider && !!globalParameterInstance?.ProviderInstanceId) {
                     actionInstanceProvider = globalParameterInstance.ProviderInstanceId
                 }
                 return {

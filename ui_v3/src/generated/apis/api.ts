@@ -53,6 +53,18 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "POST", endpoint: "/createProviderInstance", inputPayload: Entity.ProviderInstance): Promise<Entity.ProviderInstance>; 
 	
 	/**
+	Returns Provider Definition on which actions can be configured
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/filterProviderDefinitionByActionRunnable", inputPayload: Entity.ProviderDefinition): Promise<Entity.ProviderDefinition[]>; 
+	
+	/**
+	Returns Provider Instance on which actions can be configured
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/filterProviderInstanceByActionRunnable", inputPayload: Entity.ProviderInstance): Promise<Entity.ProviderInstance[]>; 
+	
+	/**
 	Gives you the details of an action definition. Details include the definition tags, it's template and parameters all with their respective tags
 	*/
 	

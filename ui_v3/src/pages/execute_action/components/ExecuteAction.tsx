@@ -1,10 +1,12 @@
-import { Box, Button, Dialog, DialogContent, Grid, Snackbar, Step, StepButton, Stepper } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogContent, Grid, Snackbar, Step, StepButton, Stepper } from "@mui/material";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
 import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
-import { ActionInstance, ActionParameterInstance } from "../../../generated/entities/Entities";
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
+import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
+import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../../../generated/entities/Entities";
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero";
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
@@ -12,6 +14,7 @@ import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteA
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
 import ConfigureActionRecurring from "./ConfigureActionRecurring";
 import ConfigureSlackAndEmail from "./ConfigureSlackAndEmail";
+import SelectProviderInstance from "./SelectProviderInstance";
 import ViewConfiguredParameters from "./ViewConfiguredParameters";
 
 interface MatchParams {
@@ -44,6 +47,9 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
 
     const [dialogState, setDialogState] = React.useState<{isOpen: boolean}>({isOpen: false})
     const [snackbarState, setSnackbarState] = React.useState(false)
+
+    const tableTypeParameterExists = executeActionContext.ExistingModels.ActionParameterDefinitions?.some(apd => apd.Tag === ActionParameterDefinitionTag.TABLE_NAME)
+    const pandasDataframeParameterExists = executeActionContext.ExistingModels.ActionParameterDefinitions?.some(apd => apd.Tag === ActionParameterDefinitionTag.DATA && apd.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME)
 
     const handleChange = (newActionParameterInstances: ActionParameterInstance[]) => {
         setExecuteActionContext({
@@ -79,7 +85,6 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         createActionInstanceAsyncMutation.mutate(request, {
             onSuccess: () => {
                 setSnackbarState(true)
-                console.log(request?.actionExecutionToBeCreatedId)
                 if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
                     setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
                 } else {
@@ -167,17 +172,50 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
 
     const StepNumberToComponent = [
         {
-            component: <ParameterDefinitionsConfigPlane 
-                            parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                            parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                            handleChange={handleChange}
-                        />
+            component: 
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <Box>
+                    <ParameterDefinitionsConfigPlane 
+                        parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                        parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                        parameterAdditionalConfigs={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
+                        handleChange={handleChange}
+                    />
+                </Box>
+            </Box>
         },
         {
             component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>
         },
         
     ]
+
+    if((!tableTypeParameterExists)&&(!pandasDataframeParameterExists)) {
+        StepNumberToComponent.unshift({
+            component:  
+                <Card sx={{
+                    background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8', 
+                    border: '2px solid rgba(255, 255, 255, 0.4)',
+                    boxShadow: '-5px -5px 10px #E3E6F0, 5px 5px 10px #A6ABBD', 
+                    borderRadius: '10px', backgroundBlendMode: 'soft-light, normal', minWidth: '100%', minHeight: '100%', 
+                    justifyContent: 'center', alignItems: 'center', display: 'flex', p: 2}}
+                >
+                    <Grid container>
+                        <Grid item xs={0} md={3} lg={4}/>
+                        <Grid item xs={12} md={6} lg={4}>
+                            <SelectProviderInstance 
+                                selectedProviderInstance={executeActionContext.ExistingModels.SelectedProviderInstance}
+                                onProviderInstanceChange={(newProviderInstance?: ProviderInstance) => {
+                                    console.log(newProviderInstance)
+                                    setExecuteActionContext({ type: "SetProviderInstance", payload: { newProviderInstance: newProviderInstance } })
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={0} md={3} lg={4}/>
+                    </Grid>
+                </Card>
+        })
+    }
 
     if(history.location.state !== 'fromTest') {
         StepNumberToComponent.push(
@@ -217,7 +255,6 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                 </Grid>
             </Grid>
             <Box>
-                
                 {StepNumberToComponent[executeActionContext.currentStep].component}
             </Box>
             <Box>

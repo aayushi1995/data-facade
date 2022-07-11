@@ -1,15 +1,23 @@
-import { Box, Card, Grid, Tooltip, Icon } from "@mui/material";
+import { Box, Card, Grid, Tooltip, Typography } from "@mui/material";
+import InfoIcon from "../../../../src/images/info.svg";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
 import ParameterInput, { ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import InfoIcon from "../../../../src/images/info.svg"
 
+
+export type ActionParameterTableAdditionalConfig = {
+    type: "Table",
+    parameterDefinitionId?: string,
+    availableTablesFilter?: TableProperties
+}
+
+export type ActionParameterAdditionalConfig = ActionParameterTableAdditionalConfig
 
 interface ParameterDefinitionsConfigPlaneProps {
     parameterDefinitions: ActionParameterDefinition[],
     parameterInstances: ActionParameterInstance[],
+    parameterAdditionalConfigs?: ActionParameterAdditionalConfig[],
     handleChange: (parameterInstances: ActionParameterInstance[]) => void
 }
 
@@ -51,6 +59,11 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         return parameterInstance
     }
 
+    const getparameterAdditionalConfig = (parameterDefinitionId: string) => {
+        const parameterAdditionalConfig = props?.parameterAdditionalConfigs?.find(parameterAddtionalConfig => parameterAddtionalConfig.parameterDefinitionId === parameterDefinitionId)
+        return parameterAdditionalConfig
+    }
+
     const getParameterDescription = (parameterId: string) => {
         const parameterDefinition = props.parameterDefinitions.find(parameter => parameter.Id === parameterId)
         return parameterDefinition?.Description || parameterDefinition?.DisplayName || parameterDefinition?.ParameterName
@@ -74,12 +87,13 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         return tableParameters.concat(columnParameters, restParameters)
     }
 
-    const getParameterDefinition = (parameterDefinitionId: string| undefined) => props.parameterDefinitions.find(apd => apd.Id===parameterDefinitionId)
-
     const parameterDefinitions: ParameterInputProps[] = getSortedParameters().map(parameterDefinition => {
         const existingParameterInstance = getExistingParameterInstance(parameterDefinition.Id || "na")
+        const parameterAdditionalConfig = getparameterAdditionalConfig(parameterDefinition.Id || "na")
         const existingParameterValue = getExistingParameterValue(parameterDefinition.Id || "na")
+
         if(parameterDefinition.Tag === ActionParameterDefinitionTag.DATA || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME) {
+            const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
             return {
                 parameterType: "TABLE",
                 parameterId: parameterDefinition.Id,
@@ -95,10 +109,12 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         onParameterValueChange(newParameterInstance)
                     },
                     selectedTableFilter: {Id: existingParameterInstance?.TableId},
+                    availableTablesFilter: addtionalConfig?.availableTablesFilter,
                     parameterDefinitionId: parameterDefinition.Id
                 }
             } as TableParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
+            const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
             return {
                 parameterType: "TABLE",
                 parameterId: parameterDefinition.Id,
@@ -113,7 +129,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         }
                         onParameterValueChange(newParameterInstance)
                     },
-                    selectedTableFilter: {Id: existingParameterInstance?.TableId}
+                    selectedTableFilter: {Id: existingParameterInstance?.TableId},
+                    availableTablesFilter: addtionalConfig?.availableTablesFilter,
+                    parameterDefinitionId: parameterDefinition.Id
                 }
             } as TableParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
@@ -284,11 +302,15 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         boxShadow: '-5px -5px 10px #E3E6F0, 5px 5px 10px #A6ABBD', borderRadius: '10px', backgroundBlendMode: 'soft-light, normal', minWidth: '100%', minHeight: '100%'
         , justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
                 <Grid container spacing = {5} sx={{p: 2}}>
+                    {parameterDefinitions.length === 0 && 
+                        <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                            <Typography> No Parameters Present</Typography>
+                        </Grid>
+                    }
                     {parameterDefinitions.map((parameter) => {
                         return (
                             <Grid item xs={4}>
                                 <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-
                                         <ParameterInput {...parameter}/>
                                         <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', ml: 1}}>
                                             <Tooltip title={getParameterDescription(parameter.parameterId || "ID NA") || "No Description"} placement="top">

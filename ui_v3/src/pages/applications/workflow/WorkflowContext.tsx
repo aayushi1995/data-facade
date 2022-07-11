@@ -1,7 +1,10 @@
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/action/ParameterDefinitionsConfigPlane";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
-import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate } from "../../../generated/entities/Entities";
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
+import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
+import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate, ProviderInstance } from "../../../generated/entities/Entities";
 
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
@@ -49,6 +52,7 @@ export type WorkflowContextType = {
     }
     WorkflowParameterInstance?: ActionParameterInstance[]
     WorkflowParameters: ActionParameterDefinition[]
+    WorkflowParameterAdditionalConfigs?: ActionParameterAdditionalConfig[]
     currentSelectedStage?: string,
     currentSelectedAction?: {actionId: string, actionIndex: number}
     Name: string,
@@ -75,7 +79,8 @@ export type WorkflowContextType = {
         actionIndex: number
     },
     WorkflowExecutionStartedOn?: number,
-    WorkflowExecutionCompletedOn?: number
+    WorkflowExecutionCompletedOn?: number,
+    SelectedProviderInstance?: ProviderInstance
 }
 
 const defaultWorkflowContext: WorkflowContextType = {
@@ -417,6 +422,20 @@ type SetWorkflowExecutionCompleted = {
     payload: number
 }
 
+type SetSelectedProviderInstance = {
+    type: "SET_SELECTED_PROVIDER_INSTANCE",
+    payload: {
+        newProviderInstance?: ProviderInstance
+    }
+}
+
+type SetWorkflowParameterAdditionalConfig = {
+    type: "SET_WORKFLOW_PARAMETER_ADDITIONAL_CONFIG",
+    payload: {
+        parameterAdditionalConfig: ActionParameterAdditionalConfig
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -454,7 +473,9 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetLatestActionAdded |
                              ChangeActionName |
                              SetWorkflowExecutionStartedOn |
-                             SetWorkflowExecutionCompleted
+                             SetWorkflowExecutionCompleted |
+                             SetSelectedProviderInstance |
+                             SetWorkflowParameterAdditionalConfig
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -863,6 +884,33 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return {
                 ...state,
                 WorkflowExecutionCompletedOn: action.payload
+            }
+        }
+
+        case "SET_SELECTED_PROVIDER_INSTANCE": {
+            const newParamAddConfs: ActionParameterTableAdditionalConfig[] = state.WorkflowParameters.filter(param => param.Tag===ActionParameterDefinitionTag.TABLE_NAME || param.Datatype===ActionParameterDefinitionDatatype.PANDAS_DATAFRAME
+                ).map(param => ({
+                    parameterDefinitionId: param.Id,
+                    availableTablesFilter: {
+                        ProviderInstanceID: action.payload?.newProviderInstance?.Id
+                    }
+                } as ActionParameterTableAdditionalConfig))
+                
+            const finalState = newParamAddConfs.reduce((prevValue, currValue) => reducer(prevValue, { type: "SET_WORKFLOW_PARAMETER_ADDITIONAL_CONFIG", payload: { parameterAdditionalConfig: currValue }}), state)
+            
+            return {
+                ...finalState,
+                SelectedProviderInstance: action.payload.newProviderInstance
+            }
+        }
+
+        case "SET_WORKFLOW_PARAMETER_ADDITIONAL_CONFIG": {
+            const filtered = (state.WorkflowParameterAdditionalConfigs || []).filter(addConf => addConf?.parameterDefinitionId !== action?.payload?.parameterAdditionalConfig?.parameterDefinitionId)
+            const newParamAddConfs = [...filtered, action.payload.parameterAdditionalConfig]
+
+            return {
+                ...state,
+                WorkflowParameterAdditionalConfigs: newParamAddConfs
             }
         }
 

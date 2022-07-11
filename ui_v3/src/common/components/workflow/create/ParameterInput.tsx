@@ -1,12 +1,12 @@
 import { Autocomplete, Box, FormControl, Icon, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import React, { ChangeEvent } from "react"
+import InfoIcon from "../../../../../src/images/info.svg"
 import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
 import LoadingWrapper from "../../LoadingWrapper"
 import { HtmlTooltip } from "../../workflow-action/ActionCard"
 import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
-import InfoIcon from "../../../../../src/images/info.svg"
 
 
 export interface UpstreamActionParameterInput {
@@ -66,6 +66,7 @@ export interface TableParameterInput {
     inputProps: {
         parameterName: string,
         selectedTableFilter: TableProperties | undefined,
+        availableTablesFilter: TableProperties | undefined,
         onChange: (newTable?: TableProperties) => void,
         parameterDefinitionId?: string
     }
@@ -461,7 +462,7 @@ const BooleanInput = (props: BooleanParameterInput) => {
 const TableInput = (props: TableParameterInput) => {
     // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
-    const {tables, loading, error}  = useTables({tableFilter: {}, filterForParameterTags: true, parameterId: parameterDefinitionId})
+    const {tables, loading, error}  = useTables({tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId})
     React.useEffect(() => {
         if(!!selectedTableFilter && !!tables) {
             onChange(tables?.find(table => table.Id === selectedTableFilter?.Id))

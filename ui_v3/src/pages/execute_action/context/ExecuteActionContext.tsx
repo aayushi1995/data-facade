@@ -1,8 +1,10 @@
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/action/ParameterDefinitionsConfigPlane";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, Tag } from "../../../generated/entities/Entities";
+import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ProviderInstance, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
 import { MutationContext } from "../hooks/useCreateActionInstance";
 import { getDefaultTemplateParameters } from "../util";
@@ -16,7 +18,9 @@ type ActionParameterDefinitionWithTags = {
 type ExecuteActionContextState = {
     ExistingModels: {
         ActionDefinition: ActionDefinition,
-        ActionParameterDefinitions: ActionParameterDefinition[],    
+        ActionParameterDefinitions: ActionParameterDefinition[],
+        SelectedProviderInstance?: ProviderInstance,
+        ParameterAdditionalConfig?: ActionParameterAdditionalConfig[]
     },
     ToCreateModels: {
         ActionInstance: ActionInstance,
@@ -109,6 +113,20 @@ export type SetWriteBackTableName = {
     payload?: string
 }
 
+export type SetProviderInstance = {
+    type: "SetProviderInstance",
+    payload?: {
+        newProviderInstance?: ProviderInstance
+    }
+}
+
+export type SetParameterAdditionalConfig = {
+    type: "SetParameterAdditionalConfig",
+    payload: {
+        parameterAdditionalConfig: ActionParameterAdditionalConfig
+    }
+}
+
 export type ExecuteActionAction = SetFromActionDefinitionDetailAction 
                                 | SetActionParameterInstancesAction 
                                 | CreatingModelsAction 
@@ -119,6 +137,8 @@ export type ExecuteActionAction = SetFromActionDefinitionDetailAction
                                 | SetStartDate 
                                 | SetSlackAndEmail
                                 | SetWriteBackTableName
+                                | SetProviderInstance
+                                | SetParameterAdditionalConfig
 
 
 
@@ -201,6 +221,39 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
             }
         }
 
+        case "SetProviderInstance": {
+            const newParamAddConfs: ActionParameterTableAdditionalConfig[] = state.ExistingModels.ActionParameterDefinitions.filter(param => param.Tag===ActionParameterDefinitionTag.TABLE_NAME || param.Datatype===ActionParameterDefinitionDatatype.PANDAS_DATAFRAME
+            ).map(param => ({
+                parameterDefinitionId: param.Id,
+                availableTablesFilter: {
+                    ProviderInstanceID: action.payload?.newProviderInstance?.Id
+                }
+            } as ActionParameterTableAdditionalConfig))
+            
+            const finalState = newParamAddConfs.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue }}), state)
+            
+            return {
+                ...finalState,
+                ExistingModels: {
+                    ...finalState.ExistingModels,
+                    SelectedProviderInstance: action.payload?.newProviderInstance
+                }
+            }
+        }
+
+        case "SetParameterAdditionalConfig": {
+            const filtered = (state.ExistingModels.ParameterAdditionalConfig || []).filter(addConf => addConf?.parameterDefinitionId !== action?.payload?.parameterAdditionalConfig?.parameterDefinitionId)
+            const newParamAddConfs = [...filtered, action.payload.parameterAdditionalConfig]
+
+            return {
+                ...state,
+                ExistingModels: {
+                    ...state.ExistingModels,
+                    ParameterAdditionalConfig: newParamAddConfs
+                }
+            }
+        }
+
         default:
             const neverAction = action
             console.log(`Action: ${neverAction} does not match any action`)
@@ -255,10 +308,16 @@ const safeMergeState = (oldState: ExecuteActionContextState, actionDetail: Actio
 }
 
 export const constructCreateActionInstanceRequest = (state: ExecuteActionContextState) => {
-    const {ActionDefinition, ActionParameterDefinitions} = state.ExistingModels
+    const {ActionDefinition, ActionParameterDefinitions, SelectedProviderInstance} = state.ExistingModels
     const {ActionInstance, ActionParameterInstances} = state.ToCreateModels
     const tableParameterId: string|undefined = ActionParameterDefinitions?.find(apd => apd?.Tag===ActionParameterDefinitionTag.TABLE_NAME)?.Id
-    const providerInstanceId: string|undefined = ActionParameterInstances.find(api => api.ActionParameterDefinitionId===tableParameterId)?.ProviderInstanceId
+    const getProviderInstanceId: () => string|undefined = () => {
+        console.log(SelectedProviderInstance)
+        if(SelectedProviderInstance !== undefined){
+            return SelectedProviderInstance.Id
+        }
+        return ActionParameterInstances.find(api => api.ActionParameterDefinitionId===tableParameterId)?.ProviderInstanceId
+    }
     
 
     const actionInstance: ActionInstance = {
@@ -268,7 +327,7 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
         DisplayName: ActionDefinition.DisplayName,
         DefinitionId: ActionDefinition?.Id,
         TemplateId: ActionDefinition?.DefaultActionTemplateId,
-        ProviderInstanceId: providerInstanceId,
+        ProviderInstanceId: getProviderInstanceId(),
         ActionType: ActionDefinition?.ActionType
     }
 
