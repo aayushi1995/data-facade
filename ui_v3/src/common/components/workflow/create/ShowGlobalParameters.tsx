@@ -1,9 +1,11 @@
-import { DataGrid, DataGridProps, GridCellParams, GridRowParams } from "@mui/x-data-grid"
+import { Box, IconButton, Tooltip } from "@mui/material"
+import { DataGrid, DataGridProps, GridCellParams } from "@mui/x-data-grid"
 import React from "react"
+import { ActionParameterDefinition } from "../../../../generated/entities/Entities"
 import { SetWorkflowContext, WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
+import { DefaultValueSelector } from "../../../../pages/build_action/components/common-components/EditActionParameter"
 import { TextCell } from "../../../../pages/table_browser/components/AllTableView"
-import { Box, Tooltip, IconButton } from "@mui/material"
-import { ReactComponent as DeleteIcon } from "./../../../../../src/images/DeleteIcon.svg";
+import { ReactComponent as DeleteIcon } from "./../../../../../src/images/DeleteIcon.svg"
 
 interface GlobalParametersRow {
     GlobalParameterName: string,
@@ -11,11 +13,13 @@ interface GlobalParametersRow {
     InputType: string,
     DataType: string,
     id: string,
-    options: string
+    options: string,
+    Parameter: ActionParameterDefinition
 }
 
 const ShowGlobalParameters = () => {
     const workflowContext = React.useContext(WorkflowContext)
+    const setWorkflowContext = React.useContext(SetWorkflowContext)
 
     const getRows = () : GlobalParametersRow[] => {
         return workflowContext.WorkflowParameters.map(globalParameter => {
@@ -33,13 +37,17 @@ const ShowGlobalParameters = () => {
                     })
                 })
             })
+
+            console.log(globalParameter)
+
             return {
                 "GlobalParameterName": globalParameter.ParameterName || "NA",
                 "MappedActionLevelParameters": details.map(detail => detail.stageName + " | " + detail.actionName + " | " + detail.parameterName).join(', '),
                 "InputType": globalParameter.Tag || "NA",
                 "DataType": globalParameter.Datatype || "NA",
                 "id": globalParameter.Id || "id",
-                "options": globalParameter.OptionSetValues || "NA"
+                "options": globalParameter.OptionSetValues || "NA",
+                Parameter: globalParameter
             }
         })
     }
@@ -51,6 +59,18 @@ const ShowGlobalParameters = () => {
                 headerName: "Global Parameter Name",
                 renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <TextCell {...{text: params.row.GlobalParameterName}} />,
                 flex: 2
+            },
+            {
+                field: "DefaultValue",
+                headerName: "Default Value",
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <DefaultValueSelector
+                                                                                            allParameters={workflowContext.WorkflowParameters}
+                                                                                            parameter={params.row.Parameter}
+                                                                                            onDefaultValueChange={(newParamConfig: ActionParameterDefinition) => {
+                                                                                                setWorkflowContext({type: "SetWorkflowGlobalParameter", payload: {newParamConfig: newParamConfig}})
+                                                                                            }}
+                                                                                        />,
+                flex: 2,
             },
             {
                 field: "MappedActionLevelParameters",
@@ -125,6 +145,12 @@ const DeleteCell = (props: GlobalParametersRow) => {
             </Tooltip>
         </Box>
     )
+}
+
+type DefaultValueCellProps = {
+    parameter: ActionParameterDefinition,
+    allParameters: ActionParameterDefinition[],
+    onParameterDefaultValueChange: Function
 }
 
 export default ShowGlobalParameters

@@ -170,6 +170,8 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         })
     }
 
+    console.log(executeActionContext)
+
     const StepNumberToComponent = [
         {
             component: 
@@ -206,7 +208,6 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                             <SelectProviderInstance 
                                 selectedProviderInstance={executeActionContext.ExistingModels.SelectedProviderInstance}
                                 onProviderInstanceChange={(newProviderInstance?: ProviderInstance) => {
-                                    console.log(newProviderInstance)
                                     setExecuteActionContext({ type: "SetProviderInstance", payload: { newProviderInstance: newProviderInstance } })
                                 }}
                             />

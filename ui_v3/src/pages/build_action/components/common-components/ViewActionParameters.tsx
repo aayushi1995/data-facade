@@ -8,7 +8,8 @@ import React from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
 import { getInputTypeFromAttributesNew } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
 import TemplateLanguage from "../../../../enums/TemplateLanguage";
-import { ActionParameterDefinition, ActionTemplate, Tag } from "../../../../generated/entities/Entities";
+import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate, Tag } from "../../../../generated/entities/Entities";
+import { safelyParseJSON } from "../../../execute_action/util";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
 
 export interface ViewActionParametersProps {
@@ -58,7 +59,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 headerName: "Default Value",
                 valueGetter: (params: GridValueGetterParams) => {
                     const parameter: ActionParameterDefinition = params.row.parameter
-                    return parameter.DefaultParameterValue
+                    const defaultValue = safelyParseJSON(parameter.DefaultParameterValue) as ActionParameterInstance
+                    return defaultValue?.ParameterValue
                 }
             },
             {

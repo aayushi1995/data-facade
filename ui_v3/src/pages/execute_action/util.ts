@@ -1,8 +1,5 @@
-import ActionParameterDefinitionTag from "../../enums/ActionParameterDefinitionTag"
-import {v4 as uuidv4} from 'uuid'
-import { ActionInstance, ActionParameterDefinition, ActionParameterInstance } from "../../generated/entities/Entities"
-import { ActionDefinitionDetail, ActionParameterDefinitionWithTags, ActionTemplatesWithParameters } from "../../generated/interfaces/Interfaces"
-import { MutationContext } from "./hooks/useCreateActionInstance"
+import { ActionParameterDefinition } from "../../generated/entities/Entities"
+import { ActionDefinitionDetail, ActionTemplatesWithParameters } from "../../generated/interfaces/Interfaces"
 
 export const getDefaultTemplateId: (action: ActionDefinitionDetail) => string|undefined = (action: ActionDefinitionDetail) => {
     return action.ActionDefinition?.model?.DefaultActionTemplateId
@@ -16,4 +13,12 @@ export const getDefaultTemplateModel: (action: ActionDefinitionDetail) => Action
 export const getDefaultTemplateParameters: (action: ActionDefinitionDetail) => ActionParameterDefinition[] = (action: ActionDefinitionDetail) => {
     const defaultTemplateWithParams: ActionTemplatesWithParameters|undefined = getDefaultTemplateModel(action)
     return (defaultTemplateWithParams?.actionParameterDefinitions||[]).map(apd => apd.model!)
+}
+
+export const safelyParseJSON = (json?: string) => {
+    try {
+        return JSON.parse(json || "{}")
+    } catch (e) {
+        return {}
+    }   
 }

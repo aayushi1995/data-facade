@@ -1,13 +1,14 @@
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/action/ParameterDefinitionsConfigPlane";
+import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/action/ParameterDefinitionsConfigPlane";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ProviderInstance, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import { ActionParameterDefinitionConfig } from "../../build_action/components/common-components/EditActionParameter";
 import { MutationContext } from "../hooks/useCreateActionInstance";
-import { getDefaultTemplateParameters } from "../util";
+import { getDefaultTemplateParameters, safelyParseJSON } from "../util";
 
 // Execute Action Context State
 type ActionParameterDefinitionWithTags = {
@@ -152,10 +153,13 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
             }
 
         case "SetActionParameterInstances":
+            const newParameterAdditionalConfigs = formColumnAdditionalConfigs(action.payload.newActionParameterInstances, state.ExistingModels.ActionParameterDefinitions)
+            const newState = newParameterAdditionalConfigs?.filter(conf => !!conf)?.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue! }}), state)
+
             return {
-                ...state,
+                ...newState,
                 ToCreateModels: {
-                    ...state.ToCreateModels,
+                    ...newState.ToCreateModels,
                     ActionParameterInstances: action.payload.newActionParameterInstances
                 }
             }
@@ -261,18 +265,70 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
     }
 }
 
+const formColumnAdditionalConfigs = (actionParameterInstances: ActionParameterInstance[], actionParameterDefinitions: ActionParameterDefinition[]) => {
+    const columnParamDefsWithParent = actionParameterDefinitions
+        ?.filter?.(apd => apd?.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
+        ?.filter(apd => {
+            const config = safelyParseJSON(apd?.Config) as ActionParameterDefinitionConfig
+            return config?.ParentParameterDefinitionId !== undefined
+        })
+
+
+    const columnAdditionalConfig = columnParamDefsWithParent?.map(colParamDef => {
+        const colParamDefConfig = safelyParseJSON(colParamDef?.Config) as ActionParameterDefinitionConfig
+        const parentParamDef = actionParameterDefinitions?.find(apd => apd?.Id === colParamDefConfig?.ParentParameterDefinitionId)
+        const parentParamInstance = actionParameterInstances?.find(api => api.ActionParameterDefinitionId === parentParamDef?.Id)
+
+
+        if(parentParamInstance?.TableId !== undefined){
+            const columnAdditionalConfig: ActionParameterColumnAdditionalConfig = {
+                parameterDefinitionId: colParamDef?.Id,
+                parentTableId: parentParamInstance?.TableId,
+                type: "Column"
+            } 
+            return columnAdditionalConfig
+        } else {
+            return undefined
+        }
+    })?.filter(config => config !== undefined)
+    
+
+    return columnAdditionalConfig
+}
+
 const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDetail) => {
+    const newActionParameterDefinitions = getDefaultTemplateParameters(actionDetail)
+    // const columnAdditionalConfig = newActionParameterDefinitions
+    //     ?.filter(ap => ap.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
+    //     ?.filter(ap => { 
+    //         const config = safelyParseJSON(ap.Config) as ActionParameterDefinitionConfig;
+    //         return config?.ParentParameterDefinitionId!==undefined
+    //     })
+    //     ?.map(ap => {
+    //         const config = safelyParseJSON(ap.Config) as ActionParameterDefinitionConfig
+    //         const columnAdditionalConfig: ActionParameterColumnAdditionalConfig = {
+    //             type: "Column",
+    //             parameterDefinitionId: ap?.Id,
+    //             parentTableId: config?.ParentParameterDefinitionId
+    //         }
+    //         return columnAdditionalConfig
+    //     })
+
     return {
         ExistingModels: {
             ActionDefinition: (actionDetail?.ActionDefinition?.model || {}),
-            ActionParameterDefinitions: getDefaultTemplateParameters(actionDetail)
+            ActionParameterDefinitions: newActionParameterDefinitions,
+            ParameterAdditionalConfig: []
         },
         ToCreateModels: {
             ActionInstance: {},
-            ActionParameterInstances: getDefaultTemplateParameters(actionDetail).map(apd => ({
-                ActionParameterDefinitionId: apd.Id,
-                ParameterValue: apd.DefaultParameterValue
-            }))
+            ActionParameterInstances: newActionParameterDefinitions.map(apd => {
+                const defaultActionParameterInstance = JSON.parse( apd.DefaultParameterValue || "{}")  
+                return {
+                    ActionParameterDefinitionId: apd.Id,
+                    ...defaultActionParameterInstance
+                }
+            })
         },
         creatingModels: false,
         currentStep: 0,
@@ -312,7 +368,6 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
     const {ActionInstance, ActionParameterInstances} = state.ToCreateModels
     const tableParameterId: string|undefined = ActionParameterDefinitions?.find(apd => apd?.Tag===ActionParameterDefinitionTag.TABLE_NAME)?.Id
     const getProviderInstanceId: () => string|undefined = () => {
-        console.log(SelectedProviderInstance)
         if(SelectedProviderInstance !== undefined){
             return SelectedProviderInstance.Id
         }
@@ -346,7 +401,6 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
         actionExecutionToBeCreatedId: uuidv4()
     }
 
-    console.log(request)
     return request;
 }
 

@@ -6,13 +6,19 @@ import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, T
 import ParameterInput, { ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
 
 
+export type ActionParameterColumnAdditionalConfig = {
+    type: "Column",
+    parameterDefinitionId?: string,
+    parentTableId?: string
+}
+
 export type ActionParameterTableAdditionalConfig = {
     type: "Table",
     parameterDefinitionId?: string,
     availableTablesFilter?: TableProperties
 }
 
-export type ActionParameterAdditionalConfig = ActionParameterTableAdditionalConfig
+export type ActionParameterAdditionalConfig = ActionParameterTableAdditionalConfig | ActionParameterColumnAdditionalConfig
 
 interface ParameterDefinitionsConfigPlaneProps {
     parameterDefinitions: ActionParameterDefinition[],
@@ -135,8 +141,10 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 }
             } as TableParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
-            const tableFilters = props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
+            const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
+            const tableFilters = addtionalConfig?.parentTableId !== undefined ? [{ Id: addtionalConfig?.parentTableId } as TableProperties] : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
             const uniqueTableFilters = getUniqueFilters(tableFilters)
+            console.log(addtionalConfig, tableFilters, uniqueTableFilters)
             return {
                 parameterType: "COLUMN",
                 parameterId: parameterDefinition.Id,

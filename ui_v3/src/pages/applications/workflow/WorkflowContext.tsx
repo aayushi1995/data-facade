@@ -436,6 +436,13 @@ type SetWorkflowParameterAdditionalConfig = {
     }
 }
 
+type SetWorkflowGlobalParameter = {
+    type: "SetWorkflowGlobalParameter",
+    payload: {
+        newParamConfig: ActionParameterDefinition
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -475,7 +482,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetWorkflowExecutionStartedOn |
                              SetWorkflowExecutionCompleted |
                              SetSelectedProviderInstance |
-                             SetWorkflowParameterAdditionalConfig
+                             SetWorkflowParameterAdditionalConfig |
+                             SetWorkflowGlobalParameter
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -911,6 +919,13 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return {
                 ...state,
                 WorkflowParameterAdditionalConfigs: newParamAddConfs
+            }
+        }
+        
+        case "SetWorkflowGlobalParameter": {
+            return {
+                ...state,
+                WorkflowParameters: state.WorkflowParameters.map(ap => ap.Id!==action.payload.newParamConfig.Id ? ap : ({...ap, ...action.payload.newParamConfig}))
             }
         }
 

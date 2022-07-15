@@ -17,6 +17,7 @@ import ActionDefinitionHero from "../../build_action/components/shared-component
 import ConfigureActionRecurring from "../../execute_action/components/ConfigureActionRecurring"
 import ConfigureSlackAndEmail from "../../execute_action/components/ConfigureSlackAndEmail"
 import SelectProviderInstance from "../../execute_action/components/SelectProviderInstance"
+import { safelyParseJSON } from "../../execute_action/util"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
@@ -75,13 +76,20 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 ResultTableName: actionInstanceWithParameters.model?.ResultTableName,
                 ResultSchemaName: actionInstanceWithParameters.model?.ResultSchemaName
             } as WorkflowActionDefinition
-
+            
             workflowContext.WorkflowParameters.forEach(globalParameter => {
                 const mappedGlobalParameter = workflowAction.Parameters?.find(parameter => parameter.GlobalParameterId === globalParameter.Id)
+                const defaultParameterInstance = safelyParseJSON(globalParameter?.DefaultParameterValue) as ActionParameterInstance
                 if(!!mappedGlobalParameter) {
-                    parametersArray.push({TableId: mappedGlobalParameter.TableId, ParameterValue: mappedGlobalParameter.ParameterValue, ActionParameterDefinitionId: globalParameter.Id})
+                    parametersArray.push({
+                        ...defaultParameterInstance,
+                        TableId: mappedGlobalParameter.TableId || defaultParameterInstance?.TableId, 
+                        ParameterValue: mappedGlobalParameter.ParameterValue || defaultParameterInstance?.ParameterValue, 
+                        ActionParameterDefinitionId: globalParameter.Id
+                    })
                 }
             })
+
             const stageId = workflowContext.stages[0].Id
             setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: stageId, Action: workflowAction}})
         }) 
