@@ -297,7 +297,7 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
     const handleChange = (newOptions: string[]) => {
         const newOption = newOptions.find(option => option.includes("Create Option:"))
         if(!!newOption) {
-            const optionName = newOption.substring(14)
+            const optionName = newOption.substring(15)
             const exisitingOpts = props.parameter.OptionSetValues?.split(',') || []
             exisitingOpts.push(optionName)
             props.onParameterEdit({

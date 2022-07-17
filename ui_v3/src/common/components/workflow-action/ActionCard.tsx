@@ -70,11 +70,14 @@ const ActionCard = (props: ActionCardProps) => {
     } 
 
     const handleClick = (e: any) => {
+        if(!!props.executionStaus && props.executionStaus !== 'Completed') {
+            return;
+        }
         props.onActionSelect?.(props.actionId, props.index)
     }
 
     const handleActionClick = () => {
-        if(props.executionStaus !== undefined) {
+        if(!!props.executionStaus && props.executionStaus !== 'Completed') {
             return;
         }
         props.handleActionClick?.(props.actionId, props.index, props.stageId || "stageID")
@@ -84,8 +87,10 @@ const ActionCard = (props: ActionCardProps) => {
     const border: string | undefined = (props?.executionStaus !== undefined  ? undefined : (props.errorMessages || []).length === 0 ? '0.75px solid #00AA11' : '0.75px solid #DC2430' )
 
     const handleNameClick = (e: React.MouseEvent<HTMLInputElement>) => {
-        e.stopPropagation()
-        setIsNameBeingEdited(true)
+        if(!props.executionStaus) {
+            e.stopPropagation()
+            setIsNameBeingEdited(true)
+        }
     }
 
     const handleActionNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

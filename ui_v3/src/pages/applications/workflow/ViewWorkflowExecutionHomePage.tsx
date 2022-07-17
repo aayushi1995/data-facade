@@ -9,6 +9,7 @@ import { StagesWithActions } from "../../../common/components/workflow/create/ne
 import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
 import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
+import ViewWorkflowStageResults from '../../../common/components/workflow/execute/ViewWorkflowStageResults'
 import ViewExecutionCharts from '../../../common/ViewExecutionCharts'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
 import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/components/shared-components/ActionDefinitionHero'
@@ -107,6 +108,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: { newDescription: data?.[0]?.WorkflowDefinition?.Description||"NA" }})
             setWorkflowContext({type: "SET_PUBLISHED_STATUS", payload: data?.[0]?.WorkflowDefinition?.PublishStatus })
             setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_STARTED_ON', payload: workflowExecutionStartedOn})
+            setWorkflowContext({type: 'SET_MODE', payload: 'EXECUTING'})
             
             setActionContext({ type: "SetActionDefinition", payload: { newActionDefinition: data?.[0]?.WorkflowDefinition}})
             
@@ -169,7 +171,12 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     <ActionDefinitionHeroActionContextWrapper mode="READONLY"/>
                 </Box>
                 <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%', mb: 4}}>
-                    <StagesWithActions/>
+                    {workflowContext.currentSelectedStage ? (
+                        <ViewWorkflowStageResults />
+                    ) : (
+                        <StagesWithActions/>
+                    )}
+                    
                 </Box>
                 <Box sx={{mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end', mr: 2}}>
                     <Button variant="contained" color="primary" disabled={!resultsAvailable} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>

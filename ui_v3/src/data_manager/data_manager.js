@@ -81,7 +81,7 @@ const dummyDataHeader = function (token) {
         }
     }
 }
-const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDurationInMinutes, contentType, token) {
+const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDurationInMinutes, contentType, uploadPath, token) {
     return {
         method: 'POST',
         headers: {
@@ -94,7 +94,8 @@ const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDur
             expirationDurationInMinutes: expirationDurationInMinutes,
             provider: "S3",
             operation:"UploadPreSignedURL",
-            content: contentType
+            content: contentType,
+            absolutePath: uploadPath
         })
     }
 }
@@ -263,12 +264,12 @@ dataManager.getInstance.dummyData = async function (email, token) {
     return fn
 }
 
-dataManager.getInstance.s3PresignedUploadUrlRequest = async function (file, expirationDurationInMinutes, contentType) {
+dataManager.getInstance.s3PresignedUploadUrlRequest = async function (file, expirationDurationInMinutes, contentType, uploadPath=undefined) {
     if (!isValidUserSettings()) {
         return;
     }
     console.log(file.name, expirationDurationInMinutes)
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedUploadUrlRequestHeader(file.name, expirationDurationInMinutes, contentType, userSettingsSingleton.token))
+    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedUploadUrlRequestHeader(file.name, expirationDurationInMinutes, contentType, uploadPath, userSettingsSingleton.token))
     return response.json()
 }
 

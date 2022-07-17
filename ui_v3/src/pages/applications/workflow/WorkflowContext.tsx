@@ -40,6 +40,7 @@ export type WorkflowActionDefinition = {
 }
 
 export type WorkflowContextType = {
+    mode: "EDIT" | "EXECUTING" | "EXECUTE"
     stages: {
         Id: string, 
         Name: string,
@@ -95,7 +96,8 @@ const defaultWorkflowContext: WorkflowContextType = {
     Name: "",
     Description: "",
     Author: userSettingsSingleton.userEmail,
-    draggingAllowed: true
+    draggingAllowed: true,
+    mode: "EDIT"
 }
 
 export const WorkflowContext = React.createContext<WorkflowContextType>(defaultWorkflowContext) 
@@ -442,6 +444,20 @@ type SetWorkflowGlobalParameter = {
         newParamConfig: ActionParameterDefinition
     }
 }
+type SetMode = {
+    type: 'SET_MODE',
+    payload: "EDIT" | "EXECUTING" | "EXECUTE"
+}
+
+type GoToNextStage = {
+    type: 'GO_TO_NEXT_STAGE',
+    payload: {}
+}
+
+type GoToPreviousStage = {
+    type: 'GO_TO_PREV_STAGE',
+    payload: {}
+}
 
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
@@ -483,7 +499,10 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetWorkflowExecutionCompleted |
                              SetSelectedProviderInstance |
                              SetWorkflowParameterAdditionalConfig |
-                             SetWorkflowGlobalParameter
+                             SetWorkflowGlobalParameter |
+                             SetMode |
+                             GoToNextStage | 
+                             GoToPreviousStage
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -926,6 +945,33 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return {
                 ...state,
                 WorkflowParameters: state.WorkflowParameters.map(ap => ap.Id!==action.payload.newParamConfig.Id ? ap : ({...ap, ...action.payload.newParamConfig}))
+            }
+        }
+        
+        case 'SET_MODE': {
+            return {
+                ...state,
+                mode: action.payload
+            }
+        }
+
+        case 'GO_TO_NEXT_STAGE': {
+            const currentIndex = state.stages.findIndex(stage => stage.Id === state.currentSelectedStage)
+            const newStage = state.stages[(currentIndex || 0) + 1]
+
+            return {
+                ...state,
+                currentSelectedStage: newStage?.Id
+            }
+        }
+
+        case 'GO_TO_PREV_STAGE': {
+            const currentIndex = state.stages.findIndex(stage => stage.Id === state.currentSelectedStage)
+            const newStage = state.stages[(currentIndex || 1) - 1]
+
+            return {
+                ...state,
+                currentSelectedStage: newStage?.Id
             }
         }
 

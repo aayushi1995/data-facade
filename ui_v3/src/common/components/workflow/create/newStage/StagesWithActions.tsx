@@ -8,7 +8,7 @@ import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from ".
 export const StagesWithActions = () => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
-    const workflowExecuting = workflowContext.WorkflowExecutionStatus ? true : false
+    const workflowExecuting = workflowContext.mode === 'EXECUTING'
     const [initialTime, setInitialTime] = React.useState((new Date(Date.now()).getTime()))
     if(workflowContext.currentStageView === undefined) {
         setWorkflowContext({type: 'SET_STAGES_IN_VIEW', payload: {startIndex: 0, endIndex: 4}})

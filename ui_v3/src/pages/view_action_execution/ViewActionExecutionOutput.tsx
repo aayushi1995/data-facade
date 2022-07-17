@@ -11,15 +11,17 @@ import { useActionExecutionParsedOutputNew } from "../execute_action/hooks/useAc
 export interface ViewActionExecutionOutputProps {
     ActionExecution: ActionExecution,
     ActionInstance: ActionInstance,
-    ActionDefinition: ActionDefinition
+    ActionDefinition: ActionDefinition,
+    showCharts?: boolean
 } 
 
 const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     const { ActionExecution, ActionDefinition } = props
     const actionExecutionParsedOutputQuery = useActionExecutionParsedOutputNew({ actionExecutionFilter: {Id: ActionExecution?.Id}, queryOptions: {staleTime: 1000}})
-    
+    const showCharts = props.showCharts === undefined ? true : false
+
     const outputComponentToRender = (output?: any) => {
-        switch(ActionDefinition.PresentationFormat) {
+        switch(ActionDefinition?.PresentationFormat || "NA") {
             case ActionDefinitionPresentationFormat.TABLE_VALUE:
                 return <ViewActionExecutionTableOutput TableOutput={output as TableOutputFormat}/>
             case ActionDefinitionPresentationFormat.OBJECT:
@@ -27,7 +29,7 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
             case ActionDefinitionPresentationFormat.SINGLE_VALUE:
                 return <ViewActionExecutionSingleValueOutput SingleValueOutput={output as SingleValueOutputFormat}/>
             default:
-                return <>Not Supported Format: {ActionDefinition.PresentationFormat}</>
+                return <>Not Supported Format: {ActionDefinition?.PresentationFormat}</>
         }
     }
 
@@ -39,7 +41,11 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
         >
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, height: "100%"}}>
                 {outputComponentToRender(actionExecutionParsedOutputQuery.data?.Output)}
-                <ViewExecutionCharts executionId={props.ActionExecution.Id || "NA"}/>
+                {showCharts ? (
+                    <ViewExecutionCharts executionId={props.ActionExecution.Id || "NA"}/>
+                ) : (
+                    <></>
+                )}
             </Box>
         </LoadingWrapper>
         
@@ -72,11 +78,15 @@ export interface ViewActionExecutionTableOutputProps {
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
     const { TableOutput } = props
     const preview: TablePreview = JSON.parse(TableOutput.preview)
-    const dataGridColumns = (preview?.schema?.fields || []).map(f => {return {...f, field: f.name, headerName: f.name}}).filter(col => col.field!=='datafacadeindex')
+    const dataGridColumns = (preview?.schema?.fields || []).map(f => {return {...f, field: f.name, headerName: f.name, flex: 1, minWidth: 200}}).filter(col => col.field!=='datafacadeindex')
     const dataGridRows = (preview?.data || []).map((row, index) => ({...row, id: row?.Id||index}))
     if(!!TableOutput) {
         return (
             <DataGrid 
+                headerHeight={70}
+                sx={{
+                    "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                }}
                 autoHeight 
                 columns={dataGridColumns} 
                 rows={dataGridRows}

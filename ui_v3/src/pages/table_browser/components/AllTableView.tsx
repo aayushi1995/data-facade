@@ -4,9 +4,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Box, Card, Dialog, DialogContent, IconButton, InputAdornment, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, DataGridProps, GridCellParams, GridRowParams, GridValueGetterParams } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from 'react';
 import { generatePath, Route, useHistory } from "react-router";
+import { JsxElement } from 'typescript';
 import { DATA_ALL_TABLES_ROUTE, DATA_TABLE_SYNC_ACTIONS, DATA_TABLE_VIEW } from "../../../common/components/header/data/DataRoutesConfig";
 import SyncingLogo from "../../../common/components/logos/SyncingLogo";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
@@ -379,7 +381,7 @@ export const TextCell = (props: { text?: string}) => {
     }
 }
 
-export const WrapInDialog = (props: { children: JSX.Element, dialogProps: { open: boolean, label?: string, handleClose: Function } }) => {
+export const WrapInDialog = (props: { children: JSX.Element, dialogProps: { open: boolean, label?: string, handleClose: Function, TransitionComponent?: React.JSXElementConstructor<TransitionProps & { children: React.ReactElement<any, any> }> } }) => {
     const { children, dialogProps } = props
     let El = <></>;
     if(dialogProps.open) {
@@ -388,6 +390,7 @@ export const WrapInDialog = (props: { children: JSX.Element, dialogProps: { open
                 fullScreen
                 open={dialogProps.open}
                 onClose={() => dialogProps.handleClose()}
+                TransitionComponent={dialogProps.TransitionComponent}
             >
                 <AppBar sx={{ position: 'relative', background: "#A6CEE3" }}>
                     <Toolbar>

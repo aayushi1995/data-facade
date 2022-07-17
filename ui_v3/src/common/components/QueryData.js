@@ -27,6 +27,10 @@ const QueryData = (props) => {
             components={{
                 Toolbar: CustomToolbar([])
             }}
+            headerHeight={70}
+            sx={{
+                "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+            }}
             ></DataGrid>) :
             //TODO: if output is table then only show table, else show chart
             (<Typography>

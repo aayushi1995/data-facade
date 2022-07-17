@@ -29,7 +29,8 @@ export interface WorkflowStagesWrapperProps {
         percentageCompleted?: number
     }[]
     onAddStage?: (e: {Id: string, Name: string, Actions: WorkflowActionDefinition[]}, stageId?: string) => void
-    onDeleteStage?: (stageId: string) => void
+    onDeleteStage?: (stageId: string) => void,
+    percentageWidth?: string
 }
 
 const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
@@ -81,7 +82,7 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
                 <TransitionGroup style={{display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden', height: "100%"}}>
                     {workflowStages.map((stage: WorkflowStageProps, index: number) => 
                         <Collapse key={stage.stageId} sx={{ 
-                            width: (props.selectedStage?.stageId===stage.stageId || props.selectedStage?.stageId===undefined) ? "24.5%": "10%", 
+                            width: props.percentageWidth ? props.percentageWidth: (props.selectedStage?.stageId===stage.stageId || props.selectedStage?.stageId===undefined) ? "24.5%": "10%", 
                             height: "100%", 
                             "& .MuiCollapse-wrapper": { height: "100%"}, 
                             "& .MuiCollapse-wrapperInner": { height: "100%"}
