@@ -11,6 +11,7 @@ import TemplateLanguage from "../../../../enums/TemplateLanguage";
 import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate, Tag } from "../../../../generated/entities/Entities";
 import { safelyParseJSON } from "../../../execute_action/util";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
+import { ActionParameterDefinitionConfig } from "./EditActionParameter";
 
 export interface ViewActionParametersProps {
     template?: ActionTemplate,
@@ -39,12 +40,14 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
         }
     }, [])
     
+    const datagridRows = paramsWithTag!.map(p => ({...p, id: p.parameter.Id}))
     const getDatagridProps = () => ({
         columns: [
             {
                 field: "ParameterName",
                 headerName: "Parameter Name",
-                valueGetter: (params: GridValueGetterParams) => params.row.parameter.ParameterName
+                valueGetter: (params: GridValueGetterParams) => params.row.parameter.ParameterName,
+                flex: 5
             },
             {
                 field: "InputType",
@@ -52,7 +55,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 valueGetter: (params: GridValueGetterParams) => {
                     const parameter = params.row.parameter
                     return getInputTypeFromAttributesNew(props.template?.Language || TemplateLanguage.SQL, parameter.Tag, parameter.Type, parameter.Datatype)
-                }
+                },
+                flex: 3
             },
             {
                 field: "DefaultValue",
@@ -61,12 +65,13 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                     const parameter: ActionParameterDefinition = params.row.parameter
                     const defaultValue = safelyParseJSON(parameter.DefaultParameterValue) as ActionParameterInstance
                     return defaultValue?.ParameterValue
-                }
+                },
+                flex: 5
             },
             {
                 field: "Tags",
                 headerName: "Tags",
-                width: 300,
+                flex: 6,
                 renderCell: (params: any) => 
                 <Box sx={{overflowY: "auto", width: '100%', overflowX: 'auto'}}>
                     <VirtualTagHandler
@@ -81,15 +86,34 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 </Box>
             },
             {
+                field: "Parent",
+                headerName: "Parent",
+                flex: 5,
+                renderCell: (params: GridCellParams<any, ActionContextActionParameterDefinitionWithTags, any>) => {
+                    const parameterDefinition = params?.row?.parameter
+                    const config = safelyParseJSON(parameterDefinition?.Config) as ActionParameterDefinitionConfig
+                    const parentParameterDefinitionId = config?.ParentParameterDefinitionId
+
+                    const parentParameterDefinition = datagridRows.find(param => param?.parameter?.Id === parentParameterDefinitionId)
+                    const parentParameterDefinitionName = parentParameterDefinition?.parameter?.ParameterName || "Not Configured"
+                    return <>{parentParameterDefinitionName}</>
+                }
+            },
+            {
                 field: "Saved",
                 headerName: "Saved",
-                width: 100,
+                flex: 2,
                 valueGetter: (params: GridValueGetterParams) => params.row.existsInDB
             }
         ].map(col => {return {width: 20*col.field.length, ...col}}),
-        rows: paramsWithTag!.map(p => ({...p, id: p.parameter.Id})),
+        rows: datagridRows,
         autoPageSize: true,
-        rowsPerPageOptions: [5, 10, 15],
+        rowsPerPageOptions: [5, 10, 20],
+        initialState: {
+            pagination: {
+                pageSize: 10
+            }
+        },
         checkboxSelection: true,
         disableSelectionOnClick: true,
         onCellClick: (params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => params.field!=="__check__" && props?.onSelectParameterForEdit?.(params.row),

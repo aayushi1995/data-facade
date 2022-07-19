@@ -1,6 +1,6 @@
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/action/ParameterDefinitionsConfigPlane";
+import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
@@ -918,9 +918,9 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             const newParamAddConfs: ActionParameterTableAdditionalConfig[] = state.WorkflowParameters.filter(param => param.Tag===ActionParameterDefinitionTag.TABLE_NAME || param.Datatype===ActionParameterDefinitionDatatype.PANDAS_DATAFRAME
                 ).map(param => ({
                     parameterDefinitionId: param.Id,
-                    availableTablesFilter: {
+                    availableTablesFilter: [{
                         ProviderInstanceID: action.payload?.newProviderInstance?.Id
-                    }
+                    }]
                 } as ActionParameterTableAdditionalConfig))
                 
             const finalState = newParamAddConfs.reduce((prevValue, currValue) => reducer(prevValue, { type: "SET_WORKFLOW_PARAMETER_ADDITIONAL_CONFIG", payload: { parameterAdditionalConfig: currValue }}), state)

@@ -1,16 +1,17 @@
 import { Autocomplete, Box, Checkbox, createFilterOptions, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from "@mui/material";
 import React from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
-import getParameterInputField, { BooleanParameterInput, FloatParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../common/components/workflow/create/ParameterInput";
+import { ActionParameterAdditionalConfig } from "../../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType, getInputTypeFromAttributesNew, InputMap } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
-import ActionParameterDefinitionDatatype from "../../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../../enums/ActionParameterDefinitionTag";
-import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate, TableProperties, Tag } from "../../../../generated/entities/Entities";
+import { ActionParameterDefinition, ActionTemplate, Tag } from "../../../../generated/entities/Entities";
 import { safelyParseJSON } from "../../../execute_action/util";
+import DefaultValueInput from "./parameter_input/DefaultValueInput";
 
 export type EditActionParameterProps = {
     template: ActionTemplate,
     paramWithTag?: {parameter: ActionParameterDefinition, tags: Tag[]},
+    additionalConfig?: ActionParameterAdditionalConfig,
     allParamsWithTags?: {parameter: ActionParameterDefinition, tags: Tag[]}[] | undefined,
     onTagsChange: (newTags: Tag[]) => void,
     onParameterEdit: (newParameter: ActionParameterDefinition) => void,
@@ -18,7 +19,7 @@ export type EditActionParameterProps = {
 }
 
 const EditActionParameter = (props: EditActionParameterProps) => {
-    const {onParameterEdit, onTagsChange, onParameterTypeEdit, template, paramWithTag, allParamsWithTags} = props
+    const {onParameterEdit, onTagsChange, onParameterTypeEdit, template, paramWithTag, allParamsWithTags, additionalConfig} = props
     const [paramName, setParamName] = React.useState<string|undefined>()
     const [paramDisplayName, setParamDisplayName] = React.useState<string|undefined>()
     const [parameterDescription, setParameterDescription] = React.useState<string|undefined>()
@@ -157,7 +158,17 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                     </FormControl>    
                 </Grid>
                 <Grid item xs={12} md={4} lg={4}>
-                    <DefaultValueSelector parameter={{...parameter }} allParameters={allParameters} onDefaultValueChange={onDefaultValueChange}/>
+                    <DefaultValueInput
+                        actionParameterDefinition={parameter}
+                        actionParameterDefinitionAdditionalConfig={additionalConfig}
+                        onDefaultValueChange={(newDefaultValue?: string) => {
+                            const newActionParameterDefinition: ActionParameterDefinition = {
+                                ...parameter,
+                                DefaultParameterValue: newDefaultValue
+                            }
+                            onDefaultValueChange(newActionParameterDefinition)
+                        }}
+                    />
                 </Grid>
                 <Grid item xs={12} md={8} lg={6}>
                     <VirtualTagHandler
@@ -169,10 +180,10 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                         inputFieldLocation="LEFT"
                     />
                 </Grid>
-                <Grid xs={12} md={8} lg={4}>
+                <Grid xs={12} md={8} lg={4} py={2}>
                     {
                         isColumnParam && 
-                            <ConfigureParentTag allParamDefs={allParameters} currentParamDef={parameter} onParameterEdit={onParameterEdit}/>
+                            <ConfigureParentParameter allParamDefs={allParameters} currentParamDef={parameter} onParameterEdit={onParameterEdit}/>
                     }
                 </Grid>
                 {attributeValue === "String" || attributeValue === "Integer" || attributeValue === "Decimal" ? (
@@ -187,108 +198,6 @@ const EditActionParameter = (props: EditActionParameterProps) => {
     } else {
         return <></>
     }
-}
-
-export const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, allParameters: ActionParameterDefinition[]|undefined, onDefaultValueChange: (newParam: ActionParameterDefinition) => void }) => {
-    const {parameter, allParameters, onDefaultValueChange} = props
-    const defaultParameterInstance = safelyParseJSON(parameter.DefaultParameterValue) as ActionParameterInstance
-    const formParameterInputProps: () => ParameterInputProps = () => {
-        if(parameter.Tag === ActionParameterDefinitionTag.DATA || parameter.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
-            return {
-                parameterType: "TABLE",
-                inputProps: {
-                    parameterName: `Default Value for ${parameter.ParameterName}`,
-                    selectedTableFilter: {Id: defaultParameterInstance.TableId},
-                    onChange: (newTable?: TableProperties) => onDefaultValueChange({
-                                ...parameter,
-                                DefaultParameterValue: JSON.stringify({
-                                    ParameterValue: newTable?.UniqueName,
-                                    TableId: newTable?.Id,
-                                    ProviderInstanceId: newTable?.ProviderInstanceID
-                                })
-                            })
-                }
-            } as TableParameterInput
-        // } else if(parameter.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
-        //     const tableFilters = allParameters?.filter(param => param?.Tag===ActionParameterDefinitionTag.TABLE_NAME && (!!param?.DefaultParameterValue)).map(param => ({UniqueName: param.DefaultParameterValue} as TableProperties))
-        //     return {
-        //         parameterType: "COLUMN",
-        //         inputProps: {
-        //             parameterName: parameter.ParameterName,
-        //             selectedColumnFilter: {UniqueName: parameter.DefaultParameterValue},
-        //             tableFilters: tableFilters,
-        //             onChange: (newColumn?: ColumnProperties) => setBuildActionContext({
-        //                 type: "SetParameterDetails",
-        //                 payload: {
-        //                     newParamConfig: {
-        //                         ...parameter,
-        //                         DefaultParameterValue: newColumn?.UniqueName
-        //                     }
-        //                 }
-        //             })
-        //         }
-        //     } as ColumnParameterInput
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.STRING) {
-            return {
-                parameterType: "STRING",
-                inputProps: {
-                    parameterName: `Default Value for ${parameter.ParameterName}`,
-                    value: parameter?.DefaultParameterValue,
-                    onChange: (newValue: string) => onDefaultValueChange({
-                                ...parameter,
-                                DefaultParameterValue: JSON.stringify({
-                                    ParameterValue: newValue
-                                })
-                            })
-                }
-            } as StringParameterInput
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.INT) {
-            return {
-                parameterType: "INT",
-                inputProps: {
-                    parameterName: `Default Value for ${parameter.ParameterName}`,
-                    value: parameter?.DefaultParameterValue,
-                    onChange: (newValue: string) => onDefaultValueChange({
-                                ...parameter,
-                                DefaultParameterValue: JSON.stringify({
-                                    ParameterValue: newValue
-                                })
-                            })
-                }
-            } as IntParameterInput
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.BOOLEAN) {
-            return {
-                parameterType: "BOOLEAN",
-                inputProps: {
-                    parameterName: `Default Value for ${parameter.ParameterName}`,
-                    value: parameter?.DefaultParameterValue,
-                    onChange: (newValue: string) => onDefaultValueChange({
-                                ...parameter,
-                                DefaultParameterValue: JSON.stringify({
-                                    ParameterValue: newValue
-                                })
-                    })
-                }
-            } as BooleanParameterInput
-        } else if(parameter.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
-            return {
-                parameterType: "FLOAT",
-                inputProps: {
-                    parameterName: `Default Value for ${parameter.ParameterName}`,
-                    value: parameter?.DefaultParameterValue,
-                    onChange: (newValue: string) => onDefaultValueChange({
-                                ...parameter,
-                                DefaultParameterValue: JSON.stringify({
-                                    ParameterValue: newValue
-                                })
-                            })
-                }
-            } as FloatParameterInput
-        } else {
-            return {parameterType: undefined}
-        }
-    }
-   return getParameterInputField(formParameterInputProps())
 }
 
 const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void}) => {
@@ -313,7 +222,6 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
     }
 
     const handleOptionSingleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event)
         if(event.target.checked || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE) {
             props.onParameterEdit({
                 ...props.parameter,
@@ -391,20 +299,25 @@ export type ConfigureParentParamProps = {
     onParameterEdit?: (editedParam: ActionParameterDefinition) => void
 }
 
-export const ConfigureParentTag = (props: ConfigureParentParamProps) => {
+export const ConfigureParentParameter = (props: ConfigureParentParamProps) => {
     const tableParams = props?.allParamDefs?.filter(parameter => parameter?.Tag===ActionParameterDefinitionTag.TABLE_NAME || parameter?.Tag===ActionParameterDefinitionTag.DATA) || []
     const paramConfig = safelyParseJSON(props?.currentParamDef?.Config) as ActionParameterDefinitionConfig
-    const onParentTagSelection = (selectedParameter?: ActionParameterDefinition) => {
-        const newConfig: ActionParameterDefinitionConfig = {
-            ...paramConfig,
-            ParentParameterDefinitionId: selectedParameter?.Id,
-            ParentRelationshipName: selectedParameter===undefined ? undefined : "TableColumn"
-        }
-
-        props?.onParameterEdit?.({
-            ...props?.currentParamDef,
-            Config: JSON.stringify(newConfig)
-        })
+    const onParentParameterSelection = (selectedParameter?: ActionParameterDefinition) => {
+        if(selectedParameter === undefined) {
+            props?.onParameterEdit?.({
+                ...props?.currentParamDef,
+                Config: JSON.stringify({})
+            })
+        } else {
+            props?.onParameterEdit?.({
+                ...props?.currentParamDef,
+                Config: JSON.stringify({
+                    ...paramConfig,
+                    ParentParameterDefinitionId: selectedParameter?.Id,
+                    ParentRelationshipName: selectedParameter===undefined ? undefined : "TableColumn"
+                })
+            })
+        }        
     }
 
     return (
@@ -418,7 +331,7 @@ export const ConfigureParentTag = (props: ConfigureParentParamProps) => {
             fullWidth
             value={tableParams.find(param => param.Id === paramConfig?.ParentParameterDefinitionId)}
             onChange={(event, value, reason, details) => {
-                onParentTagSelection(value === null ? undefined : value)
+                onParentParameterSelection(value === null ? undefined : value)
             }}
             renderInput={(params) => <TextField {...params} label="Parent Parameter"/>}
         />

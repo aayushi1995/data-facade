@@ -8,7 +8,6 @@ import ViewActionParameters, { ViewActionParametersProps } from "./ViewActionPar
 const SetActionParameters = () => {
     const buildActionContext = useContext(BuildActionContext)
     const setBuildActionContext = useContext(SetBuildActionContext)
-
     const [activeParameter, setActiveParameter] = React.useState<{parameter: ActionParameterDefinition, tags: Tag[]}|undefined>()
     
     const activeTemplateWithParams = buildActionContext.actionTemplateWithParams.find(at => at.template.Id===buildActionContext.activeTemplateId)
@@ -42,6 +41,7 @@ const SetActionParameters = () => {
     const editActionParameterProps: EditActionParameterProps = {
         template: activeTemplateWithParams?.template!,
         paramWithTag: activeTemplateWithParams?.parameterWithTags.find(param => param.parameter.Id===activeParameter?.parameter?.Id),
+        additionalConfig: activeTemplateWithParams?.parameterAdditionalConfig?.find?.(addConf => addConf.parameterDefinitionId === activeParameter?.parameter?.Id),
         allParamsWithTags: activeTemplateWithParams?.parameterWithTags,
         onParameterEdit: (newParameter: ActionParameterDefinition) => setBuildActionContext({
             type: "SetParameterDetails",
@@ -63,7 +63,7 @@ const SetActionParameters = () => {
             }
         }),
     }
-    
+    console.log(buildActionContext)
     return (
         <Grid container>
             <Grid item xs={12}>

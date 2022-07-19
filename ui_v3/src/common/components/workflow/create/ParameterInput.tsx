@@ -141,6 +141,21 @@ export type ParameterInputProps = UpstreamActionParameterInput
                                 | OptionSetMultipleParameterInput
 
 
+export type ActionParameterColumnAdditionalConfig = {
+    type: "Column",
+    parameterDefinitionId?: string,
+    availableTablesFilter?: TableProperties[]
+}
+
+export type ActionParameterTableAdditionalConfig = {
+    type: "Table",
+    parameterDefinitionId?: string,
+    availableTablesFilter?: TableProperties[]
+}
+
+export type ActionParameterAdditionalConfig = ActionParameterTableAdditionalConfig | ActionParameterColumnAdditionalConfig
+
+
 const getParameterInputField = (props: ParameterInputProps) => {
     switch(props?.parameterType) {
         case "UPSTREAM_ACTION": return <UpstreamActionInput {...props}/>
@@ -257,25 +272,34 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
 
 const ColumnInput = (props: ColumnParameterInput) => {
     const {parameterName, selectedColumnFilter, filters, onChange} = props.inputProps
-    const fetchTableQuery = useFetchColumnsForTableAndTags({filters: {
-        tableFilters: filters.tableFilters,
-        parameterDefinitionId: filters.parameterDefinitionId
-    }})
+    const fetchTableQuery = useFetchColumnsForTableAndTags({
+        filters: {
+            tableFilters: filters.tableFilters,
+            parameterDefinitionId: filters.parameterDefinitionId
+        },
+        queryOptions: {
+            enabled: filters?.tableFilters!==undefined
+        }
+    })
+    
+    const getSelectedColumn = () => {
+        const selectedColumn = fetchTableQuery?.data?.[0]?.Columns?.find?.(col => col?.Id === selectedColumnFilter?.Id)
+        return selectedColumn 
+    }
 
     React.useEffect(() => {
         if(!!fetchTableQuery.data) {
-            const index = Math.floor(Math.random() * (fetchTableQuery.data?.[0]?.Columns?.length || 0))
-            console.log(index, fetchTableQuery.data?.[0]?.FilteredBasedOnTags)
-            if(fetchTableQuery.data?.[0]?.FilteredBasedOnTags) {
-                onChange(fetchTableQuery.data?.[0]?.Columns?.[index])
+            const selectedColumn = getSelectedColumn()
+            if(selectedColumn===undefined) {
+                const index = 0
+                if(fetchTableQuery.data?.[0]?.FilteredBasedOnTags) {
+                    onChange(fetchTableQuery.data?.[0]?.Columns?.[index])
+                }
+            } else {
+                onChange(selectedColumn)
             }
         }
     }, [fetchTableQuery.data])
-
-    const getValue = () => {
-        const selectedColumn = fetchTableQuery.data?.[0]?.Columns?.find(column => column?.Id === selectedColumnFilter?.Id)
-        return selectedColumn 
-    }
  
     return (
         <LoadingWrapper 
@@ -287,7 +311,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
                 options={fetchTableQuery.data?.[0]?.Columns!}
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName!}
                 groupBy={(column) => column.TableName||"Table NA"}
-                value={getValue()}
+                value={getSelectedColumn()}
                 filterSelectedOptions
                 fullWidth
                 selectOnFocus
@@ -298,8 +322,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
                 }}
                 renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
             />
-        </LoadingWrapper>
-        
+        </LoadingWrapper>   
     )
 }
 
@@ -392,7 +415,7 @@ const IntInput = (props: IntParameterInput) => {
         if (parameterValue.match(/^-?\d+$/)) {
             setInput(parameterValue)
         } else if(parameterValue==="") {
-            setInput("")
+            setInput(undefined)
         }
     }
 
@@ -417,7 +440,7 @@ const FloatInput = (props: FloatParameterInput) => {
     const isNumber = (str: string): boolean => {
         if (typeof str != "string") return false // we only process strings!
         // could also coerce to string: str = ""+str
-        return !isNaN(parseFloat(str))
+        return !isNaN(str)
     }
     
     const onValueChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -425,7 +448,7 @@ const FloatInput = (props: FloatParameterInput) => {
         if (isNumber(parameterValue)) {
             setInput(parameterValue)
         } else if(parameterValue==="") {
-            setInput("")
+            setInput(undefined)
         }
     }
 
@@ -463,11 +486,28 @@ const TableInput = (props: TableParameterInput) => {
     // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
     const {tables, loading, error}  = useTables({tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId})
+    
+    const getSelectedTable = () => {
+        return tables?.find(table => table?.Id === selectedTableFilter?.Id)
+    }
+
+    const getAnyTable = () => tables?.[0]
+
     React.useEffect(() => {
-        if(!!selectedTableFilter && !!tables) {
-            onChange(tables?.find(table => table.Id === selectedTableFilter?.Id))
+        if(tables !== undefined) {
+            if(selectedTableFilter !== undefined){
+                const selectedTable = getSelectedTable()
+                if(selectedTable !== undefined) {
+                    onChange(selectedTable)
+                } else {
+                    onChange(getAnyTable())
+                }
+            } else {
+                onChange(getAnyTable())
+            }
         }
     }, [tables])
+    
     return (
         <LoadingWrapper
         isLoading={loading}

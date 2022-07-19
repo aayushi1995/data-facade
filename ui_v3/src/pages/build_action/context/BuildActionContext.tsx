@@ -1,6 +1,7 @@
 import React from "react";
 import { UseMutationResult, useQueryClient } from "react-query";
 import { v4 as uuidv4 } from 'uuid';
+import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType } from "../../../custom_enums/ActionParameterDefinitionInputMap";
 import { getLanguage } from "../../../custom_enums/SupportedRuntimeGroupToLanguage";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
@@ -8,11 +9,15 @@ import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionP
 import ActionDefinitionPublishStatus from "../../../enums/ActionDefinitionPublishStatus";
 import ActionDefinitionQueryLanguage from "../../../enums/ActionDefinitionQueryLanguage";
 import ActionDefinitionVisibility from "../../../enums/ActionDefinitionVisibility";
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionInputType from "../../../enums/ActionParameterDefinitionInputType";
+import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import TemplateLanguage from "../../../enums/TemplateLanguage";
 import TemplateSupportedRuntimeGroup from "../../../enums/TemplateSupportedRuntimeGroup";
-import { ActionDefinition, ActionParameterDefinition, ActionTemplate, Tag } from "../../../generated/entities/Entities";
+import { ActionDefinition, ActionParameterDefinition, ActionParameterInstance, ActionTemplate, TableProperties, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import { safelyParseJSON } from "../../execute_action/util";
+import { ActionParameterDefinitionConfig } from "../components/common-components/EditActionParameter";
 import useActionDefinitionDetail from "../hooks/useActionDefinitionDetail";
 import useActionDefinitionFormSave, { ActionDefinitionFormPayload } from "../hooks/useActionDefinitionFormCreate";
 
@@ -33,7 +38,8 @@ export type BuildActionContextState = {
     },
     actionTemplateWithParams: {
         template: ActionTemplate,
-        parameterWithTags: ActionContextActionParameterDefinitionWithTags[]
+        parameterWithTags: ActionContextActionParameterDefinitionWithTags[],
+        parameterAdditionalConfig?: ActionParameterAdditionalConfig[]
     }[],
     activeTemplateId?: string,
     lastSavedActionDefinition?: ActionDefinition,
@@ -97,7 +103,8 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
                     SupportedRuntimeGroup: TemplateSupportedRuntimeGroup.PYTHON,
                     Text: "def execute(self, df): # FILL IN CODE"
                 },
-                parameterWithTags: []
+                parameterWithTags: [],
+                parameterAdditionalConfig: []
             }
         ],
         activeTemplateId: actionTemplateId,
@@ -320,6 +327,10 @@ type InferParametersAction = {
     type: "InferParameters"
 }
 
+type FormAdditionalConfigAction = {
+    type: "FormAdditionalConfig"
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -351,7 +362,8 @@ SaveActionDefinitionSettledAction |
 LoadActionForEditMutatingAction |
 LoadActionForEditSettledAction |
 SetActionDefinitionToLoadIdAction |
-InferParametersAction
+InferParametersAction |
+FormAdditionalConfigAction
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -507,17 +519,19 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
         }
 
         case "SetParameterDetails": {
-            return {
+            console.log(action)
+            const oldState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => at.template.Id!==action.payload.newParamConfig.TemplateId ? at : {
                     ...at,
                     parameterWithTags: at.parameterWithTags.map(apwt => apwt.parameter.Id!==action.payload.newParamConfig.Id ? apwt : ({...apwt, parameter: { ...apwt.parameter, ...action.payload.newParamConfig}}))
                 })
             }
+            return reducer(oldState, {type: "FormAdditionalConfig"})
         }
         
         case "SetParameterType": {
-            return {
+            const oldState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => ({
                     ...at, 
@@ -531,28 +545,32 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                     })
                 }))
             }
+            return reducer(oldState, {type: "FormAdditionalConfig"})
         }
 
         case "AddActionParameterDefinition": {
-            return {
+            const oldState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => at.template.Id!==action.payload.templateId ? at : {...at, parameterWithTags: [...at.parameterWithTags, getDefaultParameterWithTags(state.actionDefinitionWithTags.actionDefinition.Id!, at.template.Id!)]})
             }
+            return reducer(oldState, {type: "FormAdditionalConfig"})
         }
 
         case "RemoveActionParameterDefinitions": {
             const toRemoveIds = action.payload.actionParameterDefinitions.map(param => param.Id)
-            return {
+            const oldState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => ({...at, parameterWithTags: at.parameterWithTags.filter(apwt => !toRemoveIds.includes(apwt.parameter.Id))}))
             }
+            return reducer(oldState, {type: "FormAdditionalConfig"})
         }
 
         case "ResetActionParameterDefinitionsAction": {
-            return {
+            const oldState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => at.template.Id!==action.payload.templateId ? at : {...at, parameterWithTags: []})
             }
+            return reducer(oldState, {type: "FormAdditionalConfig"})
         }
 
         case "SetActionParameterDefintionTags": {
@@ -596,15 +614,18 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 activeTemplateId: activeTemplateId,
                 sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!
             } as BuildActionContextState
-
-            if(state.mode==="CREATE") {
-                const x = assignActiveTemplateId(refreshContextIds(newState))
-                return x
-            } else if(state.mode==="UPDATE") {
-                return assignActiveTemplateId(newState)
-            } else {
-                return assignActiveTemplateId(newState)
-            }
+        
+            const finalState = (state.mode==="CREATE") ? 
+                assignActiveTemplateId(refreshContextIds(newState))
+                : 
+                (
+                    (state.mode==="UPDATE") ? 
+                        assignActiveTemplateId(newState)
+                        : 
+                        assignActiveTemplateId(newState)
+                )
+            
+            return reducer(finalState, {type: "FormAdditionalConfig"})
         }
 
         case "SetApplicationId": {
@@ -714,11 +735,127 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
+        case "FormAdditionalConfig": {
+            const newTemplateWithParams = state?.actionTemplateWithParams?.map(at => {
+                const parameters = validateColumnParameters(at?.parameterWithTags?.map(apwt => apwt?.parameter))
+                const additionalConfs = [
+                    ...formAdditionalConfForColumnParameters(parameters)
+                ]
+
+                return {
+                    ...at,
+                    parameterWithTags: parameters.map(param => {
+                        const currentParameterWithTags= at?.parameterWithTags?.find(apwt => apwt?.parameter?.Id === param?.Id)
+                        return {
+                            ...currentParameterWithTags,
+                            parameter: param
+                        } as ActionContextActionParameterDefinitionWithTags
+                    }),
+                    parameterAdditionalConfig: additionalConfs
+                }
+            })
+
+            return {
+                ...state,
+                actionTemplateWithParams: newTemplateWithParams
+            }
+        }
+
         default:
             const neverAction: never = action
             console.log(`Action: ${neverAction} does not match any action`)
             return state
     }
+}
+
+const validateColumnParameters = (parameters: ActionParameterDefinition[]) => {
+    // Validate Parent Parameter In Config For Column Parameters
+    const newParameters1 = parameters?.map?.(param => {
+        const config = safelyParseJSON(param?.Config) as ActionParameterDefinitionConfig
+        const parentParameterDefinitionId = config?.ParentParameterDefinitionId
+        const isColumnTypeParameter = param?.Tag === ActionParameterDefinitionTag?.COLUMN_NAME
+        const doesParentParameterExist = parameters?.find(oldParam => oldParam?.Id === parentParameterDefinitionId)
+
+        return {
+            ...param,
+            Config: (isColumnTypeParameter && doesParentParameterExist) ? param?.Config : "{}"
+        }
+    })
+
+    // Validate Default Value For Column Parameters
+    const newParameters2 = newParameters1?.map?.(param => {
+        const isColumnTypeParameter = param?.Tag === ActionParameterDefinitionTag?.COLUMN_NAME
+        const defaultParameterInstance = safelyParseJSON(param?.DefaultParameterValue) as ActionParameterInstance
+        const defaultColumnTableId = defaultParameterInstance?.TableId
+
+        const someTableParametersHasThisAsDefaultTableId = newParameters1
+            ?.filter(oldParam => oldParam.Tag===ActionParameterDefinitionTag.TABLE_NAME || oldParam.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME || oldParam.Tag===ActionParameterDefinitionTag.DATA)
+            ?.some(oldParam => {
+                const oldParamDefaultParamterInstance = safelyParseJSON(oldParam?.DefaultParameterValue) as ActionParameterInstance
+                return oldParamDefaultParamterInstance?.TableId===defaultColumnTableId
+        })
+        return {
+            ...param,
+            DefaultParameterValue: (isColumnTypeParameter && !someTableParametersHasThisAsDefaultTableId) ? "{}" : param.DefaultParameterValue 
+        }
+    })
+
+    return newParameters2;
+}
+
+const formAdditionalConfForColumnParameters = (parameters: ActionParameterDefinition[]) => {
+    const tableParameters = parameters?.filter(param => param.Tag===ActionParameterDefinitionTag.TABLE_NAME || param.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME || param.Tag===ActionParameterDefinitionTag.DATA)
+    const availableTablesFilterDefault = tableParameters?.map(tableParam =>{
+        const defaultValue = safelyParseJSON(tableParam?.DefaultParameterValue) as ActionParameterInstance
+        const tableId = defaultValue?.TableId
+        if(!!tableId) {
+            return {
+                Id: tableId
+            } as TableProperties
+        } else {
+            return undefined
+        }
+    })?.filter(x => x!==undefined)
+
+    const additionalConfForColumns = parameters?.filter(param => param.Tag===ActionParameterDefinitionTag.COLUMN_NAME)?.map(columnParam => {
+        const parameterConfig = safelyParseJSON(columnParam?.Config) as ActionParameterDefinitionConfig
+        if(parameterConfig?.ParentParameterDefinitionId !== undefined) {
+            const tableParam = tableParameters?.find(tableParameters => tableParameters?.Id === parameterConfig?.ParentParameterDefinitionId)
+            if(tableParam!==undefined) {
+                const tableParamDefaultParameterInstance = safelyParseJSON(tableParam?.DefaultParameterValue) as ActionParameterInstance
+                if(tableParamDefaultParameterInstance?.TableId!==undefined){
+                    const tableFilter: TableProperties = {
+                        Id: tableParamDefaultParameterInstance?.TableId
+                    }
+                    return {
+                        type: "Column",
+                        parameterDefinitionId: columnParam?.Id,
+                        availableTablesFilter: [tableFilter]
+                    } as ActionParameterColumnAdditionalConfig
+                } else {
+                    return {
+                        type: "Column",
+                        parameterDefinitionId: columnParam?.Id,
+                        availableTablesFilter: []
+                    } as ActionParameterColumnAdditionalConfig
+                }
+            } else {
+                return {
+                    type: "Column",
+                    parameterDefinitionId: columnParam?.Id,
+                    availableTablesFilter: availableTablesFilterDefault
+                } as ActionParameterColumnAdditionalConfig
+            }
+        } else {
+            return {
+                type: "Column",
+                parameterDefinitionId: columnParam?.Id,
+                availableTablesFilter: availableTablesFilterDefault
+            } as ActionParameterColumnAdditionalConfig
+        }
+    })
+
+    return additionalConfForColumns
 }
 
 const extractParameterNamesFromCode = (code?: string, language?: string) => {

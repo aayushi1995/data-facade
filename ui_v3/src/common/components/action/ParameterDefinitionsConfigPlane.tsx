@@ -3,22 +3,10 @@ import InfoIcon from "../../../../src/images/info.svg";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
-import ParameterInput, { ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
+import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
 
 
-export type ActionParameterColumnAdditionalConfig = {
-    type: "Column",
-    parameterDefinitionId?: string,
-    parentTableId?: string
-}
 
-export type ActionParameterTableAdditionalConfig = {
-    type: "Table",
-    parameterDefinitionId?: string,
-    availableTablesFilter?: TableProperties
-}
-
-export type ActionParameterAdditionalConfig = ActionParameterTableAdditionalConfig | ActionParameterColumnAdditionalConfig
 
 interface ParameterDefinitionsConfigPlaneProps {
     parameterDefinitions: ActionParameterDefinition[],
@@ -142,7 +130,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             } as TableParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
-            const tableFilters = addtionalConfig?.parentTableId !== undefined ? [{ Id: addtionalConfig?.parentTableId } as TableProperties] : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
+            const tableFilters = addtionalConfig?.availableTablesFilter !== undefined ? addtionalConfig?.availableTablesFilter : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             console.log(addtionalConfig, tableFilters, uniqueTableFilters)
             return {

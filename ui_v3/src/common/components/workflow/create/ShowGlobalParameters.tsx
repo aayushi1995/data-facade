@@ -3,7 +3,7 @@ import { DataGrid, DataGridProps, GridCellParams } from "@mui/x-data-grid"
 import React from "react"
 import { ActionParameterDefinition } from "../../../../generated/entities/Entities"
 import { SetWorkflowContext, WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
-import { DefaultValueSelector } from "../../../../pages/build_action/components/common-components/EditActionParameter"
+import { DefaultValueInputFromAllParameters } from "../../../../pages/build_action/components/common-components/parameter_input/DefaultValueInput"
 import { TextCell } from "../../../../pages/table_browser/components/AllTableView"
 import { ReactComponent as DeleteIcon } from "./../../../../../src/images/DeleteIcon.svg"
 
@@ -63,12 +63,18 @@ const ShowGlobalParameters = () => {
             {
                 field: "DefaultValue",
                 headerName: "Default Value",
-                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <DefaultValueSelector
-                                                                                            allParameters={workflowContext.WorkflowParameters}
-                                                                                            parameter={params.row.Parameter}
-                                                                                            onDefaultValueChange={(newParamConfig: ActionParameterDefinition) => {
-                                                                                                setWorkflowContext({type: "SetWorkflowGlobalParameter", payload: {newParamConfig: newParamConfig}})
+                renderCell: (params: GridCellParams<any, GlobalParametersRow, any>) => <DefaultValueInputFromAllParameters
+                                                                                            activeParameterDefinitionId={params.row.Parameter?.Id}
+                                                                                            parameterDefinitions={workflowContext.WorkflowParameters}
+                                                                                            parameterAdditionalConfigs={workflowContext.WorkflowParameterAdditionalConfigs}
+                                                                                            onDefaultValueChange={(newDefaultValue?: string) => {
+                                                                                                const newParamDef: ActionParameterDefinition = {
+                                                                                                    Id: params.row.Parameter?.Id,
+                                                                                                    DefaultParameterValue: newDefaultValue
+                                                                                                }
+                                                                                                setWorkflowContext({type: "SetWorkflowGlobalParameter", payload: { newParamConfig: newParamDef }})
                                                                                             }}
+                                                                                            
                                                                                         />,
                 flex: 2,
             },
@@ -145,12 +151,6 @@ const DeleteCell = (props: GlobalParametersRow) => {
             </Tooltip>
         </Box>
     )
-}
-
-type DefaultValueCellProps = {
-    parameter: ActionParameterDefinition,
-    allParameters: ActionParameterDefinition[],
-    onParameterDefaultValueChange: Function
 }
 
 export default ShowGlobalParameters

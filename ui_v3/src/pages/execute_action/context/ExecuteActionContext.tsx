@@ -1,10 +1,10 @@
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/action/ParameterDefinitionsConfigPlane";
+import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ProviderInstance, Tag } from "../../../generated/entities/Entities";
+import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ProviderInstance, TableProperties, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
 import { ActionParameterDefinitionConfig } from "../../build_action/components/common-components/EditActionParameter";
 import { MutationContext } from "../hooks/useCreateActionInstance";
@@ -128,6 +128,10 @@ export type SetParameterAdditionalConfig = {
     }
 }
 
+export type FormAdditionalConfig = {
+    type: "FormAdditionalConfig"
+}
+
 export type ExecuteActionAction = SetFromActionDefinitionDetailAction 
                                 | SetActionParameterInstancesAction 
                                 | CreatingModelsAction 
@@ -140,6 +144,7 @@ export type ExecuteActionAction = SetFromActionDefinitionDetailAction
                                 | SetWriteBackTableName
                                 | SetProviderInstance
                                 | SetParameterAdditionalConfig
+                                | FormAdditionalConfig
 
 
 
@@ -154,15 +159,17 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
 
         case "SetActionParameterInstances":
             const newParameterAdditionalConfigs = formColumnAdditionalConfigs(action.payload.newActionParameterInstances, state.ExistingModels.ActionParameterDefinitions)
-            const newState = newParameterAdditionalConfigs?.filter(conf => !!conf)?.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue! }}), state)
+            const modifiedState = newParameterAdditionalConfigs?.filter(conf => !!conf)?.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue! }}), state)
 
-            return {
-                ...newState,
+            const newState = {
+                ...modifiedState,
                 ToCreateModels: {
-                    ...newState.ToCreateModels,
+                    ...modifiedState.ToCreateModels,
                     ActionParameterInstances: action.payload.newActionParameterInstances
                 }
             }
+
+            return reducer(newState, { type: "FormAdditionalConfig" })
         
         case "CreatingModels":
             return {
@@ -226,23 +233,15 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
         }
 
         case "SetProviderInstance": {
-            const newParamAddConfs: ActionParameterTableAdditionalConfig[] = state.ExistingModels.ActionParameterDefinitions.filter(param => param.Tag===ActionParameterDefinitionTag.TABLE_NAME || param.Datatype===ActionParameterDefinitionDatatype.PANDAS_DATAFRAME
-            ).map(param => ({
-                parameterDefinitionId: param.Id,
-                availableTablesFilter: {
-                    ProviderInstanceID: action.payload?.newProviderInstance?.Id
-                }
-            } as ActionParameterTableAdditionalConfig))
-            
-            const finalState = newParamAddConfs.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue }}), state)
-            
-            return {
-                ...finalState,
+            const newState = {
+                ...state,
                 ExistingModels: {
-                    ...finalState.ExistingModels,
+                    ...state.ExistingModels,
                     SelectedProviderInstance: action.payload?.newProviderInstance
                 }
             }
+            
+            return reducer(newState, { type: "FormAdditionalConfig" })
         }
 
         case "SetParameterAdditionalConfig": {
@@ -256,6 +255,61 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
                     ParameterAdditionalConfig: newParamAddConfs
                 }
             }
+        }
+
+        case "FormAdditionalConfig": {
+            // Form Column Additional Confs
+            const tableParameterInstances = state?.ToCreateModels?.ActionParameterInstances?.filter(api => {
+                const apd = state?.ExistingModels?.ActionParameterDefinitions?.find?.(apd => apd?.Id === api?.ActionParameterDefinitionId)
+                return apd?.Tag===ActionParameterDefinitionTag.TABLE_NAME || apd?.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME || apd?.Tag===ActionParameterDefinitionTag.DATA
+            })
+
+            const allTablesFilter = tableParameterInstances
+                ?.filter(tpi => tpi?.TableId!==undefined)
+                ?.map(tpi => ({ Id: tpi?.TableId } as TableProperties) )
+
+            const additionalConfForColumnParameters = state?.ExistingModels?.ActionParameterDefinitions
+                ?.filter(apd => apd?.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
+                ?.map(columnParamDef => {
+                    const config = safelyParseJSON(columnParamDef?.Config) as ActionParameterDefinitionConfig
+                    const parentParameterDefinition = state?.ExistingModels?.ActionParameterDefinitions?.find(apd => apd?.Id===config?.ParentParameterDefinitionId)
+                    const parentParameterInstance = state?.ToCreateModels?.ActionParameterInstances?.find(api => api?.ActionParameterDefinitionId===parentParameterDefinition?.Id)
+                    if(parentParameterDefinition!==undefined){
+                        if(parentParameterInstance?.TableId!==undefined) {
+                            return {
+                                parameterDefinitionId: columnParamDef?.Id,
+                                availableTablesFilter: [{ Id: parentParameterInstance?.TableId } as TableProperties]
+                            } as ActionParameterColumnAdditionalConfig
+                        } else {
+                            return {
+                                parameterDefinitionId: columnParamDef?.Id,
+                                availableTablesFilter: [] as TableProperties[]
+                            } as ActionParameterColumnAdditionalConfig
+                        }
+                    } else {
+                        return {
+                            parameterDefinitionId: columnParamDef?.Id,
+                            availableTablesFilter: allTablesFilter
+                        } as ActionParameterColumnAdditionalConfig
+                    }
+                })
+            
+
+            const additionalConfsForTableParameters: ActionParameterTableAdditionalConfig[] = state?.ExistingModels?.SelectedProviderInstance!==undefined ? 
+                state.ExistingModels.ActionParameterDefinitions.filter(param => param.Tag===ActionParameterDefinitionTag.TABLE_NAME || param.Datatype===ActionParameterDefinitionDatatype.PANDAS_DATAFRAME)
+                    .map(param => ({
+                        parameterDefinitionId: param.Id,
+                        availableTablesFilter: [{
+                            ProviderInstanceID: state?.ExistingModels?.SelectedProviderInstance
+                        }]
+                    } as ActionParameterTableAdditionalConfig))
+                :
+                []
+            
+            const newParamAddConfs = [...additionalConfsForTableParameters, ...additionalConfForColumnParameters]
+            const finalState = newParamAddConfs.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue }}), state)
+
+            return finalState
         }
 
         default:
