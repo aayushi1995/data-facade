@@ -1,4 +1,5 @@
-import { Box, Button, Dialog, DialogTitle, DialogContent, Typography } from "@mui/material"
+import ErrorIcon from '@mui/icons-material/Error'
+import { Box, Button, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material"
 import React from "react"
 import { generatePath, Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
@@ -16,7 +17,6 @@ import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces
 import { ActionDefinitionHeroActionContextWrapper } from "../../build_action/components/shared-components/ActionDefinitionHero"
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from "../../build_action/context/BuildActionContext"
 import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
-import ErrorIcon from '@mui/icons-material/Error';
 
 
 interface MatchParams {
@@ -43,7 +43,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const setActionContext = React.useContext(SetBuildActionContext)
     const [isWorkflowFetched, setIsWorkflowFetched] = React.useState(false)
     const [errorDialogState, setErrorDialogState] = React.useState(false)
-
+    console.log(workflowContext)
     const {isError, errorMessage} = useValidateWorkflow(workflowContext, initialWorkflow !== undefined)
 
     // TODO: Check with Shishir if things to be sent to backend should be sent at time of .mutate() call or reference should be passed right at time of mutation declaration.

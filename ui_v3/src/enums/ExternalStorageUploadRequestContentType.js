@@ -7,7 +7,8 @@ const ExternalStorageUploadRequestContentType = {
     TABLE: "Table",
     RAW_APPLICATION: "ApplicationRaw",
     PROCESSED_APPLICATION: "ApplicationProcessed",
-    JOB_OUTPUT: "JobOutput"
+    JOB_OUTPUT: "JobOutput",
+    CHART_DATA: "ChartData"
 }
 
 export default ExternalStorageUploadRequestContentType;

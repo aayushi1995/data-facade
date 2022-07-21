@@ -1,13 +1,12 @@
-import { Box, Card, Grid, Dialog, DialogTitle, DialogContent, IconButton, Typography } from "@mui/material"
-import { Divider } from "@mui/material"
-import CloseIcon from "../../../../../../src/images/close.svg"
+import { Box, Card, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from "@mui/material"
 import React from "react"
+import CloseIcon from "../../../../../../src/images/close.svg"
 import { lightShadows } from '../../../../../css/theme/shadows'
 import WorkflowActionContainer from "../../../../../pages/applications/workflow/WorkflowActionContainer"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
+import { ConfigureParametersContextProvider } from "../../context/ConfigureParametersContext"
 import SelectAction, { ActionDefinitionToAdd } from "../SelectAction/SelectAction"
 import ViewSelectedAction from "../ViewSelectedAction/ViewSelectedAction"
-import { ConfigureParametersContextProvider } from "../../context/ConfigureParametersContext"
 import ConfigureActionParameters from "./ConfigureActionParameters"
 
 
@@ -26,13 +25,13 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
     }
 
     const addActionHandler = (actionDefinition: ActionDefinitionToAdd) => {
-        console.log(actionDefinition)
         const newWorkflowAction: WorkflowActionDefinition = {
             DisplayName: actionDefinition.DisplayName,
             Id: actionDefinition.Id,
             DefaultActionTemplateId: actionDefinition.DefaultTemplateId,
             Parameters: actionDefinition.Parameters || [],  
-            ActionGroup: actionDefinition.ActionGroup || ""
+            ActionGroup: actionDefinition.ActionGroup || "",
+            ParameterAdditionalConfigs: actionDefinition?.ParameterAdditionalConfigs
         }
 
         setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: props.stageId, Action: newWorkflowAction}})

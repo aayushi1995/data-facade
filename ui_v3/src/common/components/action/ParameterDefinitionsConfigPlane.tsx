@@ -31,18 +31,6 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         props.handleChange(newParameterInstances)
     }
 
-    const getUniqueFilters = (tableFilters: TableProperties[]) => {
-        let tableIds: {[Id: string]: TableProperties} = {}
-        const uniqueTableFilters: TableProperties[] = []
-        tableFilters.forEach(table => {
-            if(tableIds[table.Id!] === undefined) {
-                tableIds[table.Id!] = table
-                uniqueTableFilters.push(table)
-            }
-        })
-        return uniqueTableFilters
-    }
-
     const getExistingParameterValue = (parameterId: string) => {
         const parameterInstance = props.parameterInstances.find(parameterInstance => parameterInstance.ActionParameterDefinitionId === parameterId)
         return parameterInstance?.ParameterValue
@@ -132,7 +120,6 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
             const tableFilters = addtionalConfig?.availableTablesFilter !== undefined ? addtionalConfig?.availableTablesFilter : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
             const uniqueTableFilters = getUniqueFilters(tableFilters)
-            console.log(addtionalConfig, tableFilters, uniqueTableFilters)
             return {
                 parameterType: "COLUMN",
                 parameterId: parameterDefinition.Id,
@@ -259,9 +246,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 }
             }
         } else if(parameterDefinition.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
-            const tableFilters = props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
-            const uniqueTableFilters: TableProperties[] = getUniqueFilters(tableFilters)
-            const parameterDefinitionId = parameterDefinition.Id!
+            const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
+            const tableFilters = addtionalConfig?.availableTablesFilter !== undefined ? addtionalConfig?.availableTablesFilter : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
+            const uniqueTableFilters = getUniqueFilters(tableFilters)
             return {
                 parameterType: "COLUMN_LIST",
                 parameterId: parameterDefinition.Id,
@@ -280,7 +267,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     }) || [],
                     filters: {
                         tableFilters: uniqueTableFilters,
-                        parameterDefinitionId: parameterDefinitionId
+                        parameterDefinitionId: parameterDefinition?.Id
                     }
                 }
             }
@@ -322,6 +309,18 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             </Card>
         </Box>
     )
+}
+
+export const getUniqueFilters = (tableFilters: TableProperties[]) => {
+    let tableIds: {[Id: string]: TableProperties} = {}
+    const uniqueTableFilters: TableProperties[] = []
+    tableFilters.forEach(table => {
+        if(tableIds[table.Id!] === undefined) {
+            tableIds[table.Id!] = table
+            uniqueTableFilters.push(table)
+        }
+    })
+    return uniqueTableFilters
 }
 
 export default ParameterDefinitionsConfigPlane

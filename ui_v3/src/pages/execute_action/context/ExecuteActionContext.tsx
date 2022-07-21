@@ -267,9 +267,10 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
             const allTablesFilter = tableParameterInstances
                 ?.filter(tpi => tpi?.TableId!==undefined)
                 ?.map(tpi => ({ Id: tpi?.TableId } as TableProperties) )
+                
 
             const additionalConfForColumnParameters = state?.ExistingModels?.ActionParameterDefinitions
-                ?.filter(apd => apd?.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
+                ?.filter(apd => apd?.Tag === ActionParameterDefinitionTag.COLUMN_NAME || apd?.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST)
                 ?.map(columnParamDef => {
                     const config = safelyParseJSON(columnParamDef?.Config) as ActionParameterDefinitionConfig
                     const parentParameterDefinition = state?.ExistingModels?.ActionParameterDefinitions?.find(apd => apd?.Id===config?.ParentParameterDefinitionId)
@@ -307,6 +308,7 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
                 []
             
             const newParamAddConfs = [...additionalConfsForTableParameters, ...additionalConfForColumnParameters]
+            console.log(newParamAddConfs)
             const finalState = newParamAddConfs.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue }}), state)
 
             return finalState

@@ -1,15 +1,14 @@
 
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Card, Icon, IconButton, Typography, useTheme, Tooltip, Dialog, DialogTitle, DialogContent, Grid } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close'
-import React from 'react';
+import { Box, Card, Icon, IconButton, Tooltip, Typography, useTheme } from '@mui/material';
+import { ActionParameterInstance } from '../../../../generated/entities/Entities';
 import { ActionParameterDefinitionWithTags } from '../../../../generated/interfaces/Interfaces';
 import labels from '../../../../labels/labels';
+import { safelyParseJSON } from '../../../../pages/execute_action/util';
 import TagHandler from '../../tag-handler/TagHandler';
 import DataCleansingIcon from "./../../../../images/Group 1545.svg";
+import { ActionParameterAdditionalConfig } from './ParameterInput';
 import { ActionDefinitionToAdd } from './SelectAction/SelectAction';
-import ConfigureActionParameters from './addAction/ConfigureActionParameters';
-import { ConfigureParametersContextProvider } from '../context/ConfigureParametersContext';
 
 export interface SelectActionCardProps {
     actionId: string,
@@ -20,25 +19,44 @@ export interface SelectActionCardProps {
     showTags?: boolean,
     actionGroup?: string,
     parameters?: ActionParameterDefinitionWithTags[]
-    onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void,
+    onAddAction: (actionDefinitionDetail: ActionDefinitionToAdd) => void
 }
 
 
 const SelectActionCard = (props: SelectActionCardProps) => {
     const theme = useTheme();
     const handleAdd = () => {
-        props.onAddAction({
+        const newAction: ActionDefinitionToAdd = {
             Id: props.actionId,
             DisplayName: props.actionName,
             DefaultTemplateId: props.defaultTemplateId,
             ActionGroup: props.actionGroup,
-            Parameters: props.parameters?.map(parameter => ({
-                ActionParameterDefinitionId: parameter.model?.Id!,
-                userInputRequired: "Yes",
-                ParameterName: parameter.model?.ParameterName
-            }))
-        })
-
+            Parameters: props.parameters?.map(parameter => {
+                const defaultParameterInstance = safelyParseJSON(parameter?.model?.DefaultParameterValue) as ActionParameterInstance
+                const config = safelyParseJSON(parameter?.model?.Config) as ActionParameterAdditionalConfig
+                return {
+                    ActionParameterDefinitionId: parameter.model?.Id!,
+                    userInputRequired: defaultParameterInstance?.ParameterValue===undefined ? "Yes" : "No",
+                    ParameterName: parameter.model?.ParameterName,
+                    ...defaultParameterInstance,
+                    SourceExecutionId: undefined
+                }
+            }),
+            ParameterAdditionalConfigs: props.parameters?.reduce((oldConfigs: Object, parameter: ActionParameterDefinitionWithTags) => {
+                const defaultParameterInstance = safelyParseJSON(parameter?.model?.DefaultParameterValue) as ActionParameterInstance
+                const config = safelyParseJSON(parameter?.model?.Config) as ActionParameterAdditionalConfig
+                if(config!==undefined){
+                    const newConfigs = {
+                        ...oldConfigs, 
+                        [parameter?.model?.Id || "NA"]: config
+                    }
+                    return newConfigs
+                } else {
+                    return oldConfigs
+                }
+            }, {})
+        }
+        props.onAddAction(newAction)
     }
 
     return(

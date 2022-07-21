@@ -1,4 +1,5 @@
-import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, BooleanParameterInput, ColumnParameterInput, FloatParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../../common/components/workflow/create/ParameterInput"
+import { getUniqueFilters } from "../../../../../common/components/action/ParameterDefinitionsConfigPlane"
+import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, FloatParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../../common/components/workflow/create/ParameterInput"
 import ActionParameterDefinitionDatatype from "../../../../../enums/ActionParameterDefinitionDatatype"
 import ActionParameterDefinitionTag from "../../../../../enums/ActionParameterDefinitionTag"
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../../../generated/entities/Entities"
@@ -36,17 +37,6 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
         } else if(actionParameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
             const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
             const tableFilters = addtionalConfig?.availableTablesFilter || []
-            const getUniqueFilters = (tableFilters: TableProperties[]) => {
-                let tableIds: {[Id: string]: TableProperties} = {}
-                const uniqueTableFilters: TableProperties[] = []
-                tableFilters.forEach(table => {
-                    if(tableIds[table.Id!] === undefined) {
-                        tableIds[table.Id!] = table
-                        uniqueTableFilters.push(table)
-                    }
-                })
-                return uniqueTableFilters
-            }
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             
             return {
@@ -109,6 +99,32 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                             })
                 }
             } as FloatParameterInput
+        } else if(actionParameterDefinition.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
+            const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
+            const tableFilters = addtionalConfig?.availableTablesFilter || []
+            const uniqueTableFilters = getUniqueFilters(tableFilters)
+            
+            return {
+                parameterType: "COLUMN_LIST",
+                parameterId: actionParameterDefinition.Id,
+                inputProps: {
+                    parameterName: actionParameterDefinition.DisplayName || actionParameterDefinition.ParameterName || "parameterName",
+                    onChange: (newColumns?: ColumnProperties[]) => {
+                        const names = newColumns?.map(column => column.UniqueName) || []
+                        console.log(names)
+                        updateDefaultActionParameterInstance({
+                            ParameterValue: names.join(',')
+                        })
+                    },
+                    selectedColumnFilters: defaultActionParameterInstance?.ParameterValue?.split(',')?.map(name => {
+                        return { UniqueName: name }
+                    }) || [],
+                    filters: {
+                        tableFilters: uniqueTableFilters,
+                        parameterDefinitionId: actionParameterDefinition?.Id
+                    }
+                }
+            } as ColumnListParameterInput
         } else {
             return {parameterType: undefined}
         }

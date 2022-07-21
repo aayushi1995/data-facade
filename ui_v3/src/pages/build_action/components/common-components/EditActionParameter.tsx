@@ -3,6 +3,7 @@ import React from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
 import { ActionParameterAdditionalConfig } from "../../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType, getInputTypeFromAttributesNew, InputMap } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
+import ActionParameterDefinitionDatatype from "../../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionTemplate, Tag } from "../../../../generated/entities/Entities";
 import { safelyParseJSON } from "../../../execute_action/util";
@@ -64,22 +65,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
         onParameterEdit(newParameterConfig)
     }
 
-    const isColumnParam = paramWithTag?.parameter?.Tag===ActionParameterDefinitionTag.COLUMN_NAME
-
-    const onParentTableTagChange = (parentParameterDefinition: ActionParameterDefinition) => {
-        const parameterConfig = safelyParseJSON(paramWithTag?.parameter?.Config) as ActionParameterDefinitionConfig
-        const newParameterConfig: ActionParameterDefinitionConfig = {
-            ...parameterConfig,
-            ParentRelationshipName: "TableColumn",
-            ParentParameterDefinitionId: parentParameterDefinition?.Id,
-            ParentRelationshipConfig: {}
-        }
-        
-        onParameterEdit({
-            ...paramWithTag?.parameter,
-            Config: JSON.stringify(newParameterConfig)
-        })
-    }
+    const isParentConfigurable = paramWithTag?.parameter?.Tag===ActionParameterDefinitionTag.COLUMN_NAME || paramWithTag?.parameter?.Datatype===ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST
 
     if(!!paramWithTag) {
         const {parameter, tags} = paramWithTag
@@ -182,7 +168,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                 </Grid>
                 <Grid xs={12} md={8} lg={4} py={2}>
                     {
-                        isColumnParam && 
+                        isParentConfigurable && 
                             <ConfigureParentParameter allParamDefs={allParameters} currentParamDef={parameter} onParameterEdit={onParameterEdit}/>
                     }
                 </Grid>
@@ -303,6 +289,7 @@ export const ConfigureParentParameter = (props: ConfigureParentParamProps) => {
     const tableParams = props?.allParamDefs?.filter(parameter => parameter?.Tag===ActionParameterDefinitionTag.TABLE_NAME || parameter?.Tag===ActionParameterDefinitionTag.DATA) || []
     const paramConfig = safelyParseJSON(props?.currentParamDef?.Config) as ActionParameterDefinitionConfig
     const onParentParameterSelection = (selectedParameter?: ActionParameterDefinition) => {
+        console.log(selectedParameter)
         if(selectedParameter === undefined) {
             props?.onParameterEdit?.({
                 ...props?.currentParamDef,

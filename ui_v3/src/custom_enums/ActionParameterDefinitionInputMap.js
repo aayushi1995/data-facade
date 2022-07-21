@@ -1,8 +1,8 @@
+import ActionParameterDefinitionAttribute from '../enums/ActionParameterDefinitionAttribute.js'
 import ActionParameterDefinitionDatatype from '../enums/ActionParameterDefinitionDatatype.js'
+import ActionParameterDefinitionInputType from '../enums/ActionParameterDefinitionInputType.js'
 import ActionParameterDefinitionTag from '../enums/ActionParameterDefinitionTag.js'
 import ActionParameterDefinitionType from '../enums/ActionParameterDefinitionType.js'
-import ActionParameterDefinitionAttribute from '../enums/ActionParameterDefinitionAttribute.js'
-import ActionParameterDefinitionInputType from '../enums/ActionParameterDefinitionInputType.js'
 import TemplateLanguage from '../enums/TemplateLanguage.js'
 
 const InputMap = {
@@ -31,7 +31,7 @@ const InputMap = {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.DATA,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.PANDAS_DATAFRAME,
         },
-        [ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST]: {
+        [ActionParameterDefinitionInputType.COLUMN_LIST]: {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
         }
@@ -104,4 +104,4 @@ export {
     getAttributesFromInputType,
     getInputTypeFromAttributes,
     getInputTypeFromAttributesNew
-};
+}

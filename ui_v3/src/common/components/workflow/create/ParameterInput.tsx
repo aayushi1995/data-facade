@@ -15,8 +15,9 @@ export interface UpstreamActionParameterInput {
     inputProps: {
         upstreamActions: UpstreamAction[],
         selectedAction: UpstreamAction,
-        onChange: Function,
-        onClear: Function
+        selectedTableFilter: TableProperties,
+        availableTablesFilter: TableProperties,
+        onChange: Function
     }
 }
 
@@ -234,6 +235,7 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
         parameterDefinitionId: filters.parameterDefinitionId
     }})
 
+
     React.useEffect(() => {
         if(fetchTableQuery?.data?.[0]?.FilteredBasedOnTags) {
             onChange?.(fetchTableQuery.data?.[0]?.Columns)
@@ -326,61 +328,91 @@ const ColumnInput = (props: ColumnParameterInput) => {
     )
 }
 
+type TableOption = {
+    value: TableProperties,
+    type: "TableProperties"
+}
+type UpstreamActionOption = {
+    value: UpstreamAction,
+    type: "UpstreamAction"
+}
+export type AutoCompleteOption = TableOption | UpstreamActionOption
+
 const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
-    const {upstreamActions, selectedAction, onChange, onClear} = props.inputProps
+    const {upstreamActions, selectedAction, selectedTableFilter, availableTablesFilter, onChange} = props.inputProps
+    const {tables, loading, error}  = useTables({ tableFilter: availableTablesFilter || {} })
+    
+    const autoCompleteOptions: AutoCompleteOption[] = [
+        ...upstreamActions.map(upstreamAction => ({value: upstreamAction, type: "UpstreamAction"} as AutoCompleteOption)),
+        ...(tables?.map(table => ({ value: table, type: "TableProperties" } as AutoCompleteOption)) || [])
+    ]
     const formLabel = (upstream: UpstreamAction) => `${upstream.stageName} | ${upstream.actionName} (${upstream.actionIndex+1})`
+    const selectedOption = autoCompleteOptions.find(option => (option.type==="TableProperties" && option.value?.Id===selectedTableFilter?.Id) || (option.type==="UpstreamAction" && option.value===selectedAction))
+    React.useEffect(() => {
+        if(selectedOption===undefined && !!tables) {
+            handleOptionSelect(autoCompleteOptions?.[0])
+        }
+    }, [autoCompleteOptions])
+
+    const handleOptionSelect = (value?: AutoCompleteOption) => {
+        onChange(value)
+    }
+    
     return (
-        <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
-            <Autocomplete
-                options={upstreamActions}
-                getOptionLabel={formLabel}
-                value={selectedAction}
-                renderInput={(params) => <TextField {...params} label="Select Upstream Action" />}
-                onChange={(event, value, reason, details) => {
-                    if(reason==="selectOption" && !!value){
-                        onChange(value)
-                    } else if(reason==="clear"){
-                        onClear()
-                    }
-                }}
-                filterSelectedOptions
-                fullWidth
-                selectOnFocus
-                clearOnBlur
-                handleHomeEndKeys
-            />
-            <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
-                <React.Fragment>
-                    <Box p={1} sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '300px'}}>
-                        <Typography sx={{
-                            fontStyle: "normal",
-                            fontWeight: 700,
-                            fontSize: "16px",
-                            lineHeight: "175%",
-                            letterSpacing: "0.15px",
-                            color: "#253858"
-                        }}>
-                            Upstream Action
-                        </Typography>
-                        <Typography sx={{
-                            fontFamily: "'SF Pro Text'",
-                            fontStyle: "normal",
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            lineHeight: "143%",
-                            letterSpacing: "0.15px",
-                            color: "rgba(66, 82, 110, 0.86)"
-                        }}>
-When ‘user input’ is selected as ‘No’, then the user shall be required to select the output of any of the upstream actions which returns a table.  DF shall provide the user with an array of appropriate upstream actions to choose from. 
-                        </Typography>
-                    </Box>
-                </React.Fragment>
-            }>
-                <Icon sx={{display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'center'}}>
-                    <img src={InfoIcon} />
-                </Icon>
-            </HtmlTooltip>
-        </Box>
+        <LoadingWrapper
+        isLoading={loading}
+        error={error}
+        data={tables}
+        >
+            <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+                <Autocomplete
+                    options={autoCompleteOptions}
+                    getOptionLabel={(option: AutoCompleteOption) => option.type==="UpstreamAction" ? formLabel(option.value) : (option.value?.UniqueName || "NA")}
+                    groupBy={(option: AutoCompleteOption) => option.type}
+                    value={selectedOption}
+                    filterSelectedOptions
+                    fullWidth
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    onChange={(event, value, reason, details) => {
+                        handleOptionSelect(value || undefined)
+                    }}
+                    renderInput={(params) => <TextField {...params} label={"Select Upstream/Table"}/>}
+                />
+                <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
+                    <React.Fragment>
+                        <Box p={1} sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '300px'}}>
+                            <Typography sx={{
+                                fontStyle: "normal",
+                                fontWeight: 700,
+                                fontSize: "16px",
+                                lineHeight: "175%",
+                                letterSpacing: "0.15px",
+                                color: "#253858"
+                            }}>
+                                Upstream Action
+                            </Typography>
+                            <Typography sx={{
+                                fontFamily: "'SF Pro Text'",
+                                fontStyle: "normal",
+                                fontWeight: 400,
+                                fontSize: "14px",
+                                lineHeight: "143%",
+                                letterSpacing: "0.15px",
+                                color: "rgba(66, 82, 110, 0.86)"
+                            }}>
+    When ‘user input’ is selected as ‘No’, then the user shall be required to select the output of any of the upstream actions which returns a table.  DF will provide the user with an array of appropriate upstream actions to choose from. 
+                            </Typography>
+                        </Box>
+                    </React.Fragment>
+                }>
+                    <Icon sx={{display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'center'}}>
+                        <img src={InfoIcon} />
+                    </Icon>
+                </HtmlTooltip>
+            </Box>
+        </LoadingWrapper>
     )
 }
 

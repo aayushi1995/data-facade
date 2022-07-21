@@ -519,7 +519,6 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
         }
 
         case "SetParameterDetails": {
-            console.log(action)
             const oldState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => at.template.Id!==action.payload.newParamConfig.TemplateId ? at : {
@@ -773,7 +772,7 @@ const validateColumnParameters = (parameters: ActionParameterDefinition[]) => {
     const newParameters1 = parameters?.map?.(param => {
         const config = safelyParseJSON(param?.Config) as ActionParameterDefinitionConfig
         const parentParameterDefinitionId = config?.ParentParameterDefinitionId
-        const isColumnTypeParameter = param?.Tag === ActionParameterDefinitionTag?.COLUMN_NAME
+        const isColumnTypeParameter = param?.Tag === ActionParameterDefinitionTag?.COLUMN_NAME || param?.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST
         const doesParentParameterExist = parameters?.find(oldParam => oldParam?.Id === parentParameterDefinitionId)
 
         return {
@@ -817,26 +816,34 @@ const formAdditionalConfForColumnParameters = (parameters: ActionParameterDefini
         }
     })?.filter(x => x!==undefined)
 
-    const additionalConfForColumns = parameters?.filter(param => param.Tag===ActionParameterDefinitionTag.COLUMN_NAME)?.map(columnParam => {
-        const parameterConfig = safelyParseJSON(columnParam?.Config) as ActionParameterDefinitionConfig
-        if(parameterConfig?.ParentParameterDefinitionId !== undefined) {
-            const tableParam = tableParameters?.find(tableParameters => tableParameters?.Id === parameterConfig?.ParentParameterDefinitionId)
-            if(tableParam!==undefined) {
-                const tableParamDefaultParameterInstance = safelyParseJSON(tableParam?.DefaultParameterValue) as ActionParameterInstance
-                if(tableParamDefaultParameterInstance?.TableId!==undefined){
-                    const tableFilter: TableProperties = {
-                        Id: tableParamDefaultParameterInstance?.TableId
+    const additionalConfForColumns = parameters?.filter(param => param.Tag===ActionParameterDefinitionTag.COLUMN_NAME || param.Datatype===ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST)
+        ?.map(columnParam => {
+            const parameterConfig = safelyParseJSON(columnParam?.Config) as ActionParameterDefinitionConfig
+            if(parameterConfig?.ParentParameterDefinitionId !== undefined) {
+                const tableParam = tableParameters?.find(tableParameters => tableParameters?.Id === parameterConfig?.ParentParameterDefinitionId)
+                if(tableParam!==undefined) {
+                    const tableParamDefaultParameterInstance = safelyParseJSON(tableParam?.DefaultParameterValue) as ActionParameterInstance
+                    if(tableParamDefaultParameterInstance?.TableId!==undefined){
+                        const tableFilter: TableProperties = {
+                            Id: tableParamDefaultParameterInstance?.TableId
+                        }
+                        return {
+                            type: "Column",
+                            parameterDefinitionId: columnParam?.Id,
+                            availableTablesFilter: [tableFilter]
+                        } as ActionParameterColumnAdditionalConfig
+                    } else {
+                        return {
+                            type: "Column",
+                            parameterDefinitionId: columnParam?.Id,
+                            availableTablesFilter: []
+                        } as ActionParameterColumnAdditionalConfig
                     }
-                    return {
-                        type: "Column",
-                        parameterDefinitionId: columnParam?.Id,
-                        availableTablesFilter: [tableFilter]
-                    } as ActionParameterColumnAdditionalConfig
                 } else {
                     return {
                         type: "Column",
                         parameterDefinitionId: columnParam?.Id,
-                        availableTablesFilter: []
+                        availableTablesFilter: availableTablesFilterDefault
                     } as ActionParameterColumnAdditionalConfig
                 }
             } else {
@@ -846,14 +853,8 @@ const formAdditionalConfForColumnParameters = (parameters: ActionParameterDefini
                     availableTablesFilter: availableTablesFilterDefault
                 } as ActionParameterColumnAdditionalConfig
             }
-        } else {
-            return {
-                type: "Column",
-                parameterDefinitionId: columnParam?.Id,
-                availableTablesFilter: availableTablesFilterDefault
-            } as ActionParameterColumnAdditionalConfig
         }
-    })
+    )
 
     return additionalConfForColumns
 }

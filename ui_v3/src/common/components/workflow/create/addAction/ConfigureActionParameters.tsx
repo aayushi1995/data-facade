@@ -1,8 +1,6 @@
-import { Box, Card, Typography, Button, Stepper, Step, StepButton } from "@mui/material"
+import { Box, Button, Card, Step, StepButton, Stepper } from "@mui/material"
 import React from "react"
-import { ActionParameterDefinition } from "../../../../../generated/entities/Entities"
-import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
-import { actionInstanceFormDataNeeds } from "../../../CreateActionInstanceFormNew"
+import { WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 import { ReactQueryWrapper } from "../../../ReactQueryWrapper"
 import { ConfigureParametersContext, SetParametersConfigContext } from "../../context/ConfigureParametersContext"
 import useViewAction, { ActionDetail } from "../ViewSelectedAction/hooks/UseViewAction"
@@ -30,6 +28,7 @@ const ConfigureActionParameters = (props: ConfigureActionParameterProps) => {
     const workflowContext = React.useContext(WorkflowContext)
     const configureParametersContext = React.useContext(ConfigureParametersContext)
     const setParametersConfigContext = React.useContext(SetParametersConfigContext)
+
     const {actionId, stageId, actionIndex} = workflowContext.LatestActionAdded || {actionId: "ID NA", stageId: "stageId", actionIndex: 0}
 
     const {isLoading, error, data} = useViewAction({actionDefinitionId: actionId || "ID NA", expectUniqueResult: true})
@@ -87,7 +86,7 @@ const ConfigureActionParameters = (props: ConfigureActionParameterProps) => {
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                         {configureParametersContext.interractiveConfigure ? (
                             <Stepper nonLinear activeStep={configureParametersContext.currentParameterIndex || 0} sx={{p: 3}}>
-                                {configureParametersContext.parameters.map((parameter, index) => (
+                                {configureParametersContext?.parameters?.map((parameter, index) => (
                                     <Step key={parameter.model.DisplayName}>
                                         <StepButton onClick={() => handleSelectParameter(index)}>
                                             {parameter.model.DisplayName || parameter.model.ParameterName || "Name NA"}
@@ -114,7 +113,7 @@ const ConfigureActionParameters = (props: ConfigureActionParameterProps) => {
                             
                             {configureParametersContext.interractiveConfigure ? (
                                 <>
-                                {(configureParametersContext.parameters?.length || 0) - 1 > (configureParametersContext?.currentParameterIndex || 0) ? (
+                                {(configureParametersContext?.parameters?.length || 0) - 1 > (configureParametersContext?.currentParameterIndex || 0) ? (
                                     <Button variant="contained" onClick={handleNextParameter}>Next</Button>
                                 ) : (
                                     <Button variant="contained" onClick={props.handleDialogClose}>Save</Button>

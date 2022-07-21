@@ -1,17 +1,20 @@
 
-import { Autocomplete, Box, createFilterOptions, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, useTheme, Icon, Typography } from '@mui/material';
+import { Autocomplete, Box, createFilterOptions, FormControl, Grid, Icon, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import InfoIcon from "../../../../../../../src/images/info.svg";
 import { getInputTypeFromAttributesNew, InputMap } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
 import ActionParameterDefinitionDatatype from '../../../../../../enums/ActionParameterDefinitionDatatype';
 import ActionParameterDefinitionTag from '../../../../../../enums/ActionParameterDefinitionTag';
-import { ActionParameterDefinition, ActionTemplate, ColumnProperties, Tag } from '../../../../../../generated/entities/Entities';
+import { ActionParameterDefinition, ActionTemplate, ColumnProperties, TableProperties, Tag } from '../../../../../../generated/entities/Entities';
 import labels from '../../../../../../labels/labels';
-import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
+import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowActionParameters, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
+import { ActionParameterDefinitionConfig } from '../../../../../../pages/build_action/components/common-components/EditActionParameter';
+import { safelyParseJSON } from '../../../../../../pages/execute_action/util';
+import { getUniqueFilters } from '../../../../action/ParameterDefinitionsConfigPlane';
 import TagHandler from '../../../../tag-handler/TagHandler';
 import { HtmlTooltip } from '../../../../workflow-action/ActionCard';
-import getParameterInputField, { BooleanParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
-import InfoIcon from "../../../../../../../src/images/info.svg"
+import getParameterInputField, { AutoCompleteOption, BooleanParameterInput, ColumnParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
 
 
 export interface EditActionParameterDefinitionProps {
@@ -21,7 +24,7 @@ export interface EditActionParameterDefinitionProps {
     actionIndex: number
 }
 
-const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, actionIndex: number, stageId: string}) => {
+const DefaultValueSelector = (props: {parametersInstances: WorkflowActionParameters[] , parameter: ActionParameterDefinition, actionIndex: number, stageId: string}) => {
     const {parameter} = props
     const workflowState = React.useContext(WorkflowContext)
     const setWorkflowState = React.useContext(SetWorkflowContext)
@@ -62,28 +65,83 @@ const DefaultValueSelector = (props: {parameter: ActionParameterDefinition, acti
                 inputProps: {
                     upstreamActions: allUpstreams,
                     selectedAction: getCurrentValue(),
-                    onChange: (newUpstreamAction: UpstreamAction | undefined) => setWorkflowState({
+                    onChange: (selectedOption?: AutoCompleteOption) => {
+                        if(selectedOption?.type==="UpstreamAction") {
+                            setWorkflowState({
+                                type: "ASSIGN_DEFAULT_VALUE",
+                                payload: {
+                                    stageId: props.stageId,
+                                    actionDefinitionId: props.parameter.ActionDefinitionId!,
+                                    actionIndex: props.actionIndex,
+                                    actionParameterDefinitionId: props.parameter.Id!,
+                                    sourceExecutionId: selectedOption.value,
+                                    parameterValue: undefined,
+                                    tableId: undefined,
+                                    columnId: undefined
+                                }
+                            })
+                        } else if(selectedOption?.type==="TableProperties") {
+                            setWorkflowState({
+                                type: "ASSIGN_DEFAULT_VALUE",
+                                payload: {
+                                    stageId: props.stageId,
+                                    actionDefinitionId: props.parameter.ActionDefinitionId!,
+                                    actionIndex: props.actionIndex,
+                                    actionParameterDefinitionId: props.parameter.Id!,
+                                    parameterValue: selectedOption?.value?.UniqueName,
+                                    tableId: selectedOption?.value?.Id,
+                                    sourceExecutionId: undefined
+                                }
+                            })
+                        } else {
+                            setWorkflowState({
+                                type: "CLEAR_DEFAULT_VALUE",
+                                payload: {
+                                    stageId: props.stageId,
+                                    actionDefinitionId: props.parameter.ActionDefinitionId!,
+                                    actionIndex: props.actionIndex,
+                                    actionParameterDefinitionId: props.parameter.Id!,
+                                }
+                            })
+                        }
+                    },
+                    selectedTableFilter: { Id: getCurrentParameterConfig()?.TableId},
+                    availableTablesFilter: {}
+                }
+            } as UpstreamActionParameterInput
+        } else if(parameter.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
+            const addtionalConfig = safelyParseJSON(parameter?.Config) as (undefined | ActionParameterDefinitionConfig)
+            const parentTableId = props?.parametersInstances?.find(paramInstance => paramInstance?.ActionParameterDefinitionId === addtionalConfig?.ParentParameterDefinitionId)?.TableId
+            const tableFilters = parentTableId!==undefined ? 
+                [{Id: parentTableId} as TableProperties]
+                :
+                props?.parametersInstances?.filter(paramInstance => paramInstance?.GlobalParameterId===undefined && paramInstance?.TableId!==undefined)?.map(paramInstance => ({ Id: paramInstance?.TableId } as TableProperties))
+            const uniqueTableFilters = getUniqueFilters(tableFilters)
+            const selectedColumnId = props?.parametersInstances?.find(paramInstance => paramInstance?.ActionParameterDefinitionId === parameter?.Id)?.ColumnId
+
+            return {
+                parameterType: "COLUMN",
+                inputProps: {
+                    parameterName: parameter.ParameterName,
+                    selectedColumnFilter: { Id: selectedColumnId } as ColumnProperties,
+                    filters: {
+                        tableFilters: uniqueTableFilters,
+                        parameterDefinitionId: parameter?.Id
+                    },
+                    onChange: (newColumn?: ColumnProperties) => setWorkflowState({
                         type: "ASSIGN_DEFAULT_VALUE",
                         payload: {
                             stageId: props.stageId,
                             actionDefinitionId: props.parameter.ActionDefinitionId!,
                             actionIndex: props.actionIndex,
                             actionParameterDefinitionId: props.parameter.Id!,
-                            sourceExecutionId: newUpstreamAction,
-                            parameterValue: undefined
-                        }
-                    }),
-                    onClear: () => setWorkflowState({
-                        type: "CLEAR_DEFAULT_VALUE",
-                        payload: {
-                            stageId: props.stageId,
-                            actionDefinitionId: props.parameter.ActionDefinitionId!,
-                            actionIndex: props.actionIndex,
-                            actionParameterDefinitionId: props.parameter.Id!,
+                            parameterValue: newColumn?.UniqueName,
+                            tableId: newColumn?.TableId,
+                            columnId: newColumn?.Id
                         }
                     })
                 }
-            } as UpstreamActionParameterInput
+            } as ColumnParameterInput 
         } else if(parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
             const parameterConfig = getCurrentParameterConfig()
             return {
@@ -268,7 +326,14 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
 
     const mapToGlobalParameter = (workflowParameterId: string) => {
         setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER', 
-                            payload: {stageId: props.stageId, globalParameterId: workflowParameterId, parameterDefinitionId: props.parameter.Id || "ID", actionIndex: props.actionIndex, parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "parameterName"}})
+                            payload: {
+                                stageId: props.stageId, 
+                                globalParameterId: workflowParameterId, 
+                                parameterDefinitionId: props.parameter.Id || "ID", 
+                                actionIndex: props.actionIndex, 
+                                parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "parameterName"
+                            }
+                        })
     }
 
     return (
@@ -355,6 +420,7 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
             userInput: e.target.value === "Yes" ? "Yes" : "No"
         }})    
     }
+    const parameterInstancesForGivenAction = workflowContext?.stages.find(stage => stage?.Id===props?.stageId)?.Actions?.[props?.actionIndex]?.Parameters || []
 
     if(!!props.parameter) {
         return(
@@ -439,7 +505,7 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                 </Grid>
                 {userInputRequired === "No" ? (
                     <Grid item xs={12} md={4} lg={4}>
-                        <DefaultValueSelector parameter={props.parameter} actionIndex={props.actionIndex} stageId={props.stageId}/>
+                        <DefaultValueSelector parametersInstances={parameterInstancesForGivenAction} parameter={props.parameter} actionIndex={props.actionIndex} stageId={props.stageId}/>
                     </Grid>
                 ) : (
                     <Grid item xs={12} md={4} lg={4}>

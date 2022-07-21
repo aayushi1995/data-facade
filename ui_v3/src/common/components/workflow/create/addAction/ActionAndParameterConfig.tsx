@@ -1,10 +1,9 @@
-import { Box, Typography, Divider, Grid, Avatar } from "@mui/material"
+import { Avatar, Box, Divider, Grid, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import React from "react"
 import { getInputTypeFromAttributesNew } from "../../../../../custom_enums/ActionParameterDefinitionInputMap"
 import ActionParameterDefinitionDatatype from "../../../../../enums/ActionParameterDefinitionDatatype"
 import ActionParameterDefinitionInputType from "../../../../../enums/ActionParameterDefinitionInputType"
-import ActionParameterDefinitionTag from "../../../../../enums/ActionParameterDefinitionTag"
 import { ConfigureParametersContext } from "../../context/ConfigureParametersContext"
 
 interface ActionAndParameterConfigProps {
@@ -41,15 +40,14 @@ const getTypeDescription = (key: string) => {
 
 const ActionAndParameterConfig = (props: ActionAndParameterConfigProps) => {
     const configureParametersContext = React.useContext(ConfigureParametersContext)
-    const parameter = configureParametersContext.parameters?.[configureParametersContext.currentParameterIndex || 0]
+    const parameter = configureParametersContext?.parameters?.[configureParametersContext.currentParameterIndex || 0]
 
     const formRows = () => {
-        const rows = configureParametersContext.parameters.map(parameter => ({
+        const rows = configureParametersContext?.parameters?.map(parameter => ({
             ParameterName: parameter.model.DisplayName || parameter.model.ParameterName!,
             id: parameter.model.Id!,
             InputType: getInputTypeFromAttributesNew(configureParametersContext.selectedActionTemplate?.Language || "python", parameter?.model?.Tag, parameter?.model?.Type, parameter?.model?.Datatype)
         }))
-        console.log(rows)
         return rows
     } 
     
@@ -120,7 +118,7 @@ const ActionAndParameterConfig = (props: ActionAndParameterConfigProps) => {
                                 color: "rgba(66, 82, 110, 0.86)"}}
                             >
                                 <span>Parameters : </span>
-                                <span><b>{configureParametersContext.parameters?.length || 0}</b></span>
+                                <span><b>{configureParametersContext?.parameters?.length || 0}</b></span>
                             </Typography>
                             <Typography sx={{  fontFamily: "'SF Pro Text'",
                                 fontStyle: "normal",

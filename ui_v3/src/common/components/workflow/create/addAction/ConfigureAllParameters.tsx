@@ -1,10 +1,9 @@
-import { ActionDetail } from "../ViewSelectedAction/hooks/UseViewAction"
+import { Box, Card } from "@mui/material"
 import React from "react"
-import { ConfigureParametersContext, SetParametersConfigContext } from "../../context/ConfigureParametersContext"
 import { ActionParameterDefinition } from "../../../../../generated/entities/Entities"
-import {Card, Box} from "@mui/material"
-import EditActionParameterDefinition from "../ViewSelectedAction/EditActionParameterDefinition/EditActionParameterDefinition"
+import { ConfigureParametersContext, SetParametersConfigContext } from "../../context/ConfigureParametersContext"
 import ActionParameterDefinitionList from "../ViewSelectedAction/ActionParameterDefinitionList/ActionParameterDefinitionList"
+import EditActionParameterDefinition from "../ViewSelectedAction/EditActionParameterDefinition/EditActionParameterDefinition"
 
 
 const ConfigureAllParameters = () => {
@@ -18,16 +17,7 @@ const ConfigureAllParameters = () => {
     const selectedActionTemplate = defaultActionTemplate || firstActionTemplate
     const selectedActionTemplateModel = selectedActionTemplate?.model
     const selectedActionParams = selectedActionTemplate?.actionParameterDefinitions
-    if(!configureParametersContext.parameters?.length) {
-        setParametersConfigContext({
-            type: 'SET_PARAMETERS',
-            payload: selectedActionParams
-        })
-        setParametersConfigContext({
-            type: 'SET_ACTION_TEMPLATE',
-            payload: selectedActionTemplateModel
-        })
-    }
+
     if(!selectedParameterForEdit && !!selectedActionParams) {
         setSelectedParameterForEdit(selectedActionParams?.[0]?.model)
     }

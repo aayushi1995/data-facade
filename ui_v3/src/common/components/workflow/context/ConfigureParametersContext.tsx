@@ -12,7 +12,7 @@ export interface ConfigureParametersContextType {
     interractiveConfigure?: boolean,
     wizardIndex: number,
     currentParameterIndex?: number,
-    parameters: {model: ActionParameterDefinition, tags: Tag[]}[],
+    parameters?: {model: ActionParameterDefinition, tags: Tag[]}[],
     workflowDetails?: {
         stageId: string,
         actionId: string,
@@ -33,8 +33,8 @@ const defaultConfigureParametersState: ConfigureParametersContextType = {
         },
         ActionTemplatesWithParameters: []
     },
-    interractiveConfigure: false,
-    wizardIndex: 0,
+    interractiveConfigure: true,
+    wizardIndex: 1,
     parameters: [],
     currentParameterIndex: 0
 }
@@ -122,7 +122,7 @@ const reducer = (state: ConfigureParametersContextType, action: ConfigureParamet
         case 'SET_PARAMETERS': {
             return {
                 ...state,
-                parameters: action.payload
+                parameters: action.payload || []
             }
         }
         case 'SET_WORKFLOW_DETAILS': {
@@ -148,21 +148,12 @@ const reducer = (state: ConfigureParametersContextType, action: ConfigureParamet
         }
 
         case 'GO_BACK': {
-            const currentIndex = state.wizardIndex
-            if(currentIndex === 0) {
+            if(state.currentParameterIndex === 0) {
                 return state
-            }
-            const currentParameter = state.currentParameterIndex || 0
-            if(currentParameter === 0) {
-                return {
-                    ...state,
-                    wizardIndex: 0,
-                    interractiveConfigure: false
-                }
             } else {
                 return {
                     ...state,
-                    currentParameterIndex: currentParameter - 1
+                    currentParameterIndex: (state?.currentParameterIndex || 1) - 1
                 }
             }
         }
@@ -193,6 +184,31 @@ export const ConfigureParametersContextProvider = ({children}: {children: React.
     const setContextState: SetParametersConfigType = ( args: ConfigureParametersActions) => {
         dispatch({...args})
     }
+
+    React.useEffect(() => {
+        const action = contextState.actionData
+        const defaultActionTemplate = action.ActionTemplatesWithParameters.find(template => template.model.Id === action.ActionDefinition.model.DefaultActionTemplateId)
+        const firstActionTemplate = action.ActionTemplatesWithParameters[0]
+        const selectedActionTemplate = defaultActionTemplate || firstActionTemplate
+        const selectedActionTemplateModel = selectedActionTemplate?.model
+        const selectedActionParams = selectedActionTemplate?.actionParameterDefinitions
+
+        if(!contextState.parameters?.length) {
+            dispatch({
+                type: 'SET_PARAMETERS',
+                payload: selectedActionParams
+            })
+            dispatch({
+                type: 'SET_ACTION_TEMPLATE',
+                payload: selectedActionTemplateModel
+            })
+        }
+
+    }, [contextState.actionData])
+
+    React.useEffect(() => {
+
+    }, [])
 
     return (
         <ConfigureParametersContext.Provider value={contextState}>

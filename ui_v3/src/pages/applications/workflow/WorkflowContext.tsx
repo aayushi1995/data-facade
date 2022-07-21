@@ -27,6 +27,7 @@ export type WorkflowActionDefinition = {
     DisplayName: string,
     DefaultActionTemplateId: string,
     Parameters: WorkflowActionParameters[],
+    ParameterAdditionalConfigs?: Object,
     TemplateId?: string,
     DefinitionId?: string,
     Name?: string,
@@ -148,6 +149,8 @@ type AssignParameterDefaultValuePayload = {
     actionParameterDefinitionId: string,
     sourceExecutionId?: UpstreamAction,
     parameterValue?: string
+    tableId?: string,
+    columnId?: string
 }
 
 type ClearParameterDefaultValuePayload = {
@@ -570,14 +573,21 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                                 actionDef.Parameters.map(parameter => parameter.ActionParameterDefinitionId !== action.payload.actionParameterDefinitionId ? parameter : {
                                     ...parameter,
                                     SourceExecutionId: action.payload.sourceExecutionId,
-                                    ParameterValue: action.payload.parameterValue
+                                    ParameterValue: action.payload.parameterValue,
+                                    userInputRequired: "No",
+                                    TableId: action.payload.tableId,
+                                    ColumnId: action.payload.columnId,
+                                    GlobalParameterId: undefined
                                 })
                                 :
                                 [...actionDef.Parameters, {
                                     ActionParameterDefinitionId: action.payload.actionParameterDefinitionId,
                                     SourceExecutionId: action.payload.sourceExecutionId,
                                     ParameterValue: action.payload.parameterValue,
-                                    userInputRequired: "No"
+                                    userInputRequired: "No",
+                                    TableId: action.payload.tableId,
+                                    ColumnId: action.payload.columnId,
+                                    GlobalParameterId: undefined
                                 }]
                         })
                     })
@@ -877,7 +887,49 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 })
             }
 
-            return newState
+            // Validate all column Params
+            const newState2: WorkflowContextType = {
+                ...newState,
+                stages: newState.stages.map(stage => {
+                    return {
+                        ...stage,
+                        Actions: stage.Actions.map((action, index) => {
+                            const parameters = action.Parameters
+                            const isTableParam = (paramInstance: WorkflowActionParameters) => {
+                                return paramInstance?.ColumnId===undefined && paramInstance?.TableId!==undefined
+                            }
+                            const isColumnParam = (paramInstance: WorkflowActionParameters) => {
+                                return paramInstance?.ColumnId!==undefined && paramInstance?.TableId!==undefined
+                            }
+
+                            const validatedParams = parameters.map(param => {
+                                if(isColumnParam(param) && param?.GlobalParameterId===undefined) {
+                                    const isTableStillValid = action.Parameters?.find(tableParam => isTableParam(tableParam) && tableParam?.TableId===param?.TableId)
+                                    if(isTableStillValid!==undefined) {
+                                        return param
+                                    } else {
+                                        return {
+                                            ...param,
+                                            TableId: undefined,
+                                            ColumnId: undefined,
+                                            ParameterValue: undefined,
+                                            SourceExecutionId: undefined
+                                        } as WorkflowActionParameters
+                                    }
+                                } else {
+                                    return param
+                                }
+                            })
+                            return {
+                                ...action,
+                                Parameters: validatedParams
+                            }
+                        })
+                    }
+                })
+            }
+
+            return newState2
         }
 
         case 'SET_LATEST_ACTION_ADDED': {
@@ -984,8 +1036,6 @@ const findAction = (stageId: string, actionIndex: number, actionId: string, work
     var found = false
     workflowContext.stages.forEach(stage => {
         if(stage.Id === stageId) {
-            console.log(stage.Actions)
-            console.log(actionIndex, actionId)
             found = stage.Actions?.[actionIndex]?.Id === actionId
             return
         }
