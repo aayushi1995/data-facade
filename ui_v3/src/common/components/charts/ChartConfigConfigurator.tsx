@@ -89,7 +89,7 @@ const ChartConfigConfigurator = (props: ChartConfigConfiguratorProps) => {
             <Box>
                 <TabPanel value={tabValue} index={0}>
                     <Box m={1} sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 1}}>
-                        <Button onClick={handleSwitchAxes} disabled={chartDataWithOptions?.data?.model?.ChartGroup !== ChartGroups.TWO_DIMENSIONAL_SCATTER || chartDataWithOptions?.data?.model?.ChartGroup !== ChartGroups.TWO_DIMENSION}>Switch Axes</Button>
+                        <Button onClick={handleSwitchAxes} disabled={chartDataWithOptions?.data?.model?.ChartGroup !== ChartGroups.TWO_DIMENSIONAL_SCATTER && chartDataWithOptions?.data?.model?.ChartGroup !== ChartGroups.TWO_DIMENSION}>Switch Axes</Button>
                         <FormGroup row={true} sx={{display: 'webkit', minWidth: '400px'}}>
                             <FormControlLabel control={<Checkbox checked={(JSON.parse(chartDataWithOptions?.data?.model?.Config || "{}") as ChartModelConfig).uiConfig?.showLables || false} onChange={handleShowLableChange}/>} label="Show label"/>
                         </FormGroup>

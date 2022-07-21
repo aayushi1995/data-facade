@@ -4,6 +4,8 @@ import ActionDefinitionPresentationFormat from "../../../../enums/ActionDefiniti
 import ActionExecutionStatus from "../../../../enums/ActionExecutionStatus"
 import { WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
 import ViewExecutionCharts from "../../../ViewExecutionCharts"
+import SaveAndBuildChartContextProvider from "../../charts/SaveAndBuildChartsContext"
+import SaveAndBuildChartsFromExecution from "../../charts/SaveAndBuildChartsFromExecution"
 import ViewActionExecutionOutput from "../../ViewActionExecutionOutput"
 
 
@@ -25,11 +27,14 @@ const ShowWorkflowExecutionOutput = () => {
                                 {actionExecution.DisplayName}
                             </Typography>
                             <Divider/>
-                            <ViewActionExecutionOutput executionId={actionExecution.Id} presentationFormat={actionExecution.PresentationFormat || "NA"}/>
+                            <SaveAndBuildChartContextProvider>
+                                <SaveAndBuildChartsFromExecution executionId={actionExecution.Id}/>
+                            </SaveAndBuildChartContextProvider>
+                            {/* <ViewActionExecutionOutput executionId={actionExecution.Id} presentationFormat={actionExecution.PresentationFormat || "NA"}/> */}
                             <Divider/>
-                            <Card sx={{height: '100%', width: '100%'}}>
+                            {/* <Card sx={{height: '100%', width: '100%'}}>
                                 <ViewExecutionCharts executionId={actionExecution.Id}/>
-                            </Card>
+                            </Card> */}
                         </Box>
                     )
                 })

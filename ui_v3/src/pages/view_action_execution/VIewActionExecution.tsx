@@ -2,6 +2,8 @@ import { Box, Button, Card, Dialog, DialogContent, DialogTitle, Typography } fro
 import React from "react";
 import ReactJson from 'react-json-view';
 import { useQueryClient } from "react-query";
+import SaveAndBuildChartContextProvider from "../../common/components/charts/SaveAndBuildChartsContext";
+import SaveAndBuildChartsFromExecution from "../../common/components/charts/SaveAndBuildChartsFromExecution";
 import LoadingIndicator from "../../common/components/LoadingIndicator";
 import LoadingWrapper from "../../common/components/LoadingWrapper";
 import ProgressBar from "../../common/ProgressBar";
@@ -206,11 +208,14 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
             </Dialog>
             <Dialog open={dialogState} onClose={handleClose} fullWidth maxWidth="xl">
                 <DialogContent sx={{ height: "800px"}}>
-                    <ViewActionExecutionOutput 
-                        ActionDefinition={actionExecutionDetail.ActionDefinition!}
-                        ActionInstance={actionExecutionDetail.ActionInstance!}
-                        ActionExecution={actionExecutionDetail.ActionExecution!}
-                    />
+                    <SaveAndBuildChartContextProvider>
+                        {/* <ViewActionExecutionOutput 
+                            ActionDefinition={actionExecutionDetail.ActionDefinition!}
+                            ActionInstance={actionExecutionDetail.ActionInstance!}
+                            ActionExecution={actionExecutionDetail.ActionExecution!}
+                        /> */}
+                        <SaveAndBuildChartsFromExecution executionId={actionExecutionDetail?.ActionExecution?.Id!}/>
+                    </SaveAndBuildChartContextProvider>
                 </DialogContent>
             </Dialog>
             <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
