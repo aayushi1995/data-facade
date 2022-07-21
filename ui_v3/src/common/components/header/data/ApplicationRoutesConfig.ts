@@ -13,6 +13,7 @@ export const EXECUTE_INSTANCE_ROUTE = `${APPLICATION_ROUTE}/execute-instance/:ac
 export const WORKFLOW_EDIT_ROUTE = `${APPLICATION_ROUTE}/edit-workflow/:WorkflowId`
 export const APPPLICATION_CREATE_AUTO_FLOW = `${APPLICATION_ROUTE}/create-autoFlow`
 export const SCHEDULED_JOBS_ROUTE = `${APPLICATION_ROUTE}/scheduled`
+export const EXECUTION_HISTORY_ROUTE = `${APPLICATION_ROUTE}/execution-history`
 
 export const APPLICATION_SUB_TABS: TabsType = [
     {
@@ -28,9 +29,15 @@ export const APPLICATION_SUB_TABS: TabsType = [
         href: SCHEDULED_JOBS_ROUTE,
         title: "Scheduled",
         subTitle: "View Scheduled Jobs from here"
+    },
+    {
+        id: 'History',
+        label: 'History',
+        href: EXECUTION_HISTORY_ROUTE,
+        title: "History",
+        subTitle: "View Previously Run Jobs from here"
     }
 ];
 
 
 console.log(APPLICATION_SUB_TABS)
-

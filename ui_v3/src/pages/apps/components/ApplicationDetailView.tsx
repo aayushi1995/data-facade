@@ -63,7 +63,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                 <Box>
                     <Tabs value={tabValue} onChange={((event, newValue) => setTableValue(newValue))}>
                     {
-                        ["Flows", "Actions", "Runs By Me", "History", "Live Apps"].map((label, index) => 
+                        ["All","Flows", "Actions", "History"].map((label, index) => 
                             <Tab label={label} value={index} sx={{
                                 fontFamily: "SF Pro Text",
                                 fontStyle: "normal",
@@ -80,20 +80,23 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                     }
                     </Tabs>
                 </Box>
-                <Box mb={3}>
+                <Box mb={4}>
                     <TabPanel value={tabValue} index={0}>
                         <Box mt={1}>
                             <ApplicationWorkflows workflows={application.workflows || []}/>
                         </Box>
-                    </TabPanel>
-                    <TabPanel value={tabValue} index={1}>
                         <Box mt={1}>
                             <ApplicationActions application={application}/>
                         </Box>
                     </TabPanel>
+                    <TabPanel value={tabValue} index={1}>
+                        <Box mt={1}>
+                            <ApplicationWorkflows workflows={application.workflows || []}/>
+                        </Box>
+                    </TabPanel>
                     <TabPanel value={tabValue} index={2}>
                         <Box mt={1}>
-                            <ApplicationRunsByMe application={application?.model}/>
+                            <ApplicationActions application={application}/>
                         </Box>
                     </TabPanel>
                     <TabPanel value={tabValue} index={3}>
