@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Checkbox, createFilterOptions, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Autocomplete, Box, Checkbox, createFilterOptions, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from "@mui/material";
 import React from "react";
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler";
 import { ActionParameterAdditionalConfig } from "../../../../common/components/workflow/create/ParameterInput";
@@ -72,114 +72,104 @@ const EditActionParameter = (props: EditActionParameterProps) => {
         const allParameters = allParamsWithTags?.map(param => param.parameter)
         const attributeValue = getInputTypeFromAttributesNew(template.Language, parameter.Tag, parameter.Type, parameter.Datatype)
         return(
-            <Grid container spacing={1}>
-                <Grid item xs={12} md={4} lg={2}>
-                    <FormControl sx={{width: "100%"}}>
-                        <InputLabel htmlFor="component-outlined">Type Parameter Name</InputLabel>
-                        <OutlinedInput
-                            id="component-outlined"
-                            value={paramName}
-                            onChange={(event) => setParamName(event.target.value)}
-                            onBlur={() => handleParameterNameChange()}
-                            label="Type Parameter Name"
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Box sx={{ display: "flex", flexDirectin: "row", gap: 1 }}>
+                    <Box sx={{width: "20%", flexShrink: 5}}>
+                        <FormControl sx={{width: "100%"}}>
+                            <InputLabel htmlFor="component-outlined">Type Parameter Name</InputLabel>
+                            <OutlinedInput
+                                id="component-outlined"
+                                value={paramName}
+                                onChange={(event) => setParamName(event.target.value)}
+                                onBlur={() => handleParameterNameChange()}
+                                label="Type Parameter Name"
+                            />
+                        </FormControl>
+                    </Box>
+                    <Box sx={{width: "20%", flexShrink: 5}}>
+                        <FormControl sx={{width: "100%"}}>
+                            <InputLabel htmlFor="component-outlined">Parameter Display Name(Optional)</InputLabel>
+                            <OutlinedInput
+                                id="component-outlined"
+                                value={paramDisplayName}
+                                onChange={(event) => setParamDisplayName(event.target.value)}
+                                onBlur={() => handleParameterDisplayNameChange()}
+                                label="Parameter Display Name(Optional)"
+                            />
+                        </FormControl>
+                    </Box>
+                    <Box sx={{width: "200px"}}>
+                        <FormControl sx={{width: "100%"}}>
+                            <InputLabel htmlFor="component-outlined">Type</InputLabel>
+                            <Select
+                                variant="outlined"
+                                value={getInputTypeFromAttributesNew(template.Language, parameter.Tag, parameter.Type, parameter.Datatype)}
+                                fullWidth
+                                onChange={handleParameterTypeChange}
+                                label="Type"
+                            >
+                                {Object.keys(InputMap[props.template.Language!]).map((inputType) => {
+                                    return <MenuItem value={inputType}>{inputType}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box sx={{width: "50%", flexShrink: 1}}>
+                        <FormControl sx={{width: "100%"}}>
+                            <InputLabel htmlFor="component-outlined">Parameter Description</InputLabel>
+                            <OutlinedInput
+                                sx={{minHeight: '100px', display: 'flex', alignItems: 'flex-start'}}
+                                multiline
+                                maxRows={4}
+                                value={parameterDescription}
+                                onChange={(event) => setParameterDescription(event.target.value)}
+                                onBlur={() => handleParameterDescriptionChange()}
+                                label="Parameter Description"
+                                
+                            />
+                        </FormControl>
+                    </Box>
+                </Box>
+                <Box sx={{ display: "flex", flexDirection: "row", gap: 1}}>
+                    <Box sx={{ width: "30%" }}>
+                        <DefaultValueInput
+                            actionParameterDefinition={parameter}
+                            actionParameterDefinitionAdditionalConfig={additionalConfig}
+                            onDefaultValueChange={(newDefaultValue?: string) => {
+                                const newActionParameterDefinition: ActionParameterDefinition = {
+                                    ...parameter,
+                                    DefaultParameterValue: newDefaultValue
+                                }
+                                onDefaultValueChange(newActionParameterDefinition)
+                            }}
                         />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={4} lg={2}>
-                    <FormControl sx={{width: "100%"}}>
-                        <InputLabel htmlFor="component-outlined">Parameter Display Name(Optional)</InputLabel>
-                        <OutlinedInput
-                            id="component-outlined"
-                            value={paramDisplayName}
-                            onChange={(event) => setParamDisplayName(event.target.value)}
-                            onBlur={() => handleParameterDisplayNameChange()}
-                            label="Parameter Display Name(Optional)"
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={4} lg={2}>
-                    <FormControl sx={{width: "100%"}}>
-                        <InputLabel htmlFor="component-outlined">Type</InputLabel>
-                        <Select
-                            variant="outlined"
-                            value={getInputTypeFromAttributesNew(template.Language, parameter.Tag, parameter.Type, parameter.Datatype)}
-                            fullWidth
-                            onChange={handleParameterTypeChange}
-                            label="Type"
-                        >
-                            {Object.keys(InputMap[props.template.Language!]).map((inputType) => {
-                                return <MenuItem value={inputType}>{inputType}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} lg={6} sm={12} md={6}>
-                    <FormControl sx={{width: "100%"}}>
-                        <InputLabel htmlFor="component-outlined">Parameter Description</InputLabel>
-                        <OutlinedInput
-                            sx={{minHeight: '100px', display: 'flex', alignItems: 'flex-start'}}
-                            multiline
-                            value={parameterDescription}
-                            onChange={(event) => setParameterDescription(event.target.value)}
-                            onBlur={() => handleParameterDescriptionChange()}
-                            label="Parameter Description"
-                            
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} md={4} lg={2} sx={{width: '100%'}}>
-                    <FormControl sx={{width: "100%"}}>
-                        <InputLabel htmlFor="component-outlined">User Input Required</InputLabel>
-                        <Select
-                            variant="outlined"
-                            value={"No"}
-                            fullWidth
-                            onChange={handleUserInputRequiredChange}
-                            label="User Input Required"
-                            disabled
-                        >
-                            <MenuItem value={"Yes"}>Yes</MenuItem>
-                            <MenuItem value={"No"}>No</MenuItem>
-                        </Select>
-                    </FormControl>    
-                </Grid>
-                <Grid item xs={12} md={4} lg={4}>
-                    <DefaultValueInput
-                        actionParameterDefinition={parameter}
-                        actionParameterDefinitionAdditionalConfig={additionalConfig}
-                        onDefaultValueChange={(newDefaultValue?: string) => {
-                            const newActionParameterDefinition: ActionParameterDefinition = {
-                                ...parameter,
-                                DefaultParameterValue: newDefaultValue
-                            }
-                            onDefaultValueChange(newActionParameterDefinition)
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={8} lg={6}>
-                    <VirtualTagHandler
-                        selectedTags={tags}
-                        tagFilter={{}}
-                        allowAdd={true}
-                        allowDelete={true}
-                        onSelectedTagsChange={(newTags: Tag[]) => {onTagsChange(newTags)}}
-                        inputFieldLocation="LEFT"
-                    />
-                </Grid>
-                <Grid xs={12} md={8} lg={4} py={2}>
+                    </Box>
                     {
                         isParentConfigurable && 
+                        <Box sx={{ width: "20%"}}>
                             <ConfigureParentParameter allParamDefs={allParameters} currentParamDef={parameter} onParameterEdit={onParameterEdit}/>
+                        
+                        </Box>
                     }
-                </Grid>
+                    <Box sx={{ width: isParentConfigurable ? "50%": "70%" }}>
+                        <VirtualTagHandler
+                            selectedTags={tags}
+                            tagFilter={{}}
+                            allowAdd={true}
+                            allowDelete={true}
+                            onSelectedTagsChange={(newTags: Tag[]) => {onTagsChange(newTags)}}
+                            inputFieldLocation="LEFT"
+                        />
+                    </Box>
+                </Box>
                 {attributeValue === "String" || attributeValue === "Integer" || attributeValue === "Decimal" ? (
-                    <Grid item xs={12} mt={2}>
+                    <Box>
                         <OptionSetSelector parameter={parameter} onParameterEdit={onParameterEdit}/>
-                    </Grid>
+                    </Box>
                 ) : (
                     <></>
                 )}
-            </Grid>
+            </Box>
         )
     } else {
         return <></>

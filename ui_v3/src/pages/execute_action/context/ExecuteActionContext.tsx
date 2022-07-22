@@ -379,6 +379,7 @@ const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDeta
         ToCreateModels: {
             ActionInstance: {},
             ActionParameterInstances: newActionParameterDefinitions.map(apd => {
+                console.log(apd.DefaultParameterValue)
                 const defaultActionParameterInstance = JSON.parse( apd.DefaultParameterValue || "{}")  
                 return {
                     ActionParameterDefinitionId: apd.Id,

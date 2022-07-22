@@ -8,7 +8,6 @@ import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, DataGridProps, GridCellParams, GridRowParams, GridValueGetterParams } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from 'react';
 import { generatePath, Route, useHistory } from "react-router";
-import { JsxElement } from 'typescript';
 import { DATA_ALL_TABLES_ROUTE, DATA_TABLE_SYNC_ACTIONS, DATA_TABLE_VIEW } from "../../../common/components/header/data/DataRoutesConfig";
 import SyncingLogo from "../../../common/components/logos/SyncingLogo";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
@@ -42,7 +41,6 @@ const AllTableView = (props: AllTableViewProps) => {
             setRows(
                 tableQuery.data?.map(tableData => {
                     const tableInfo = JSON.parse(tableData?.TableInfo || "{}") as TablePropertiesInfo
-                    console.log(tableInfo)
                     return {
                         ...tableData,
                         Health: tableInfo?.Health,
@@ -146,7 +144,7 @@ const AllTableView = (props: AllTableViewProps) => {
         },
         initialState: {
             pagination: {
-                pageSize: 10
+                pageSize: 50
             }
         },
         onCellClick: (params: GridCellParams<unknown, TableBrowserResponseAndCalculatedInfo, unknown>, event, details) => {

@@ -18,7 +18,6 @@ interface UseSaveWorkflowProps {
 }
 
 const useSaveWorkflowMutation = (props: UseSaveWorkflowProps) => {
-    
     const saveWorkflow = useMutation(
         props.mutationName,
         (options: {actionContext?: BuildActionContextState, workflowContext: WorkflowContextType, definitionId: string}) => {
@@ -33,7 +32,7 @@ const useSaveWorkflowMutation = (props: UseSaveWorkflowProps) => {
                 CreatedBy: actionContext?.actionDefinitionWithTags?.actionDefinition?.CreatedBy,
                 DefaultActionTemplateId: templateId,
                 ApplicationId: props.applicationId,
-                PublishStatus: ActionDefinitionPublishStatus.DRAFT,
+                PublishStatus: ActionDefinitionPublishStatus.READY_TO_USE,
                 PinnedToDashboard: actionContext?.actionDefinitionWithTags?.actionDefinition?.PinnedToDashboard,
                 Visibility: ActionDefinitionVisibility.CREATED_BY
             }

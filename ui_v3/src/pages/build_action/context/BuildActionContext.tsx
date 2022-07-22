@@ -89,7 +89,7 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
                 PresentationFormat: ActionDefinitionPresentationFormat.TABLE_VALUE,
                 PinnedToDashboard: true,
                 Visibility: ActionDefinitionVisibility.CREATED_BY,
-                PublishStatus: ActionDefinitionPublishStatus.DRAFT,
+                PublishStatus: ActionDefinitionPublishStatus.READY_TO_USE,
                 DefaultActionTemplateId: actionTemplateId
             },
             tags: []

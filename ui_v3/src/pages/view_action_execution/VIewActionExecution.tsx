@@ -18,7 +18,6 @@ import DownloadAndDisplayLogs from "./DownloadAndDisplyaLogs";
 import FetchActionExecutionDetails from "./hooks/FetchActionExecutionDetails";
 import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOutputFromS3";
 import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput";
-import ViewActionExecutionOutput from "./ViewActionExecutionOutput";
 
 export interface ViewActionExecutionProps {
     actionExecutionId?: string
@@ -277,16 +276,26 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
 }
 
 const ViewActionExecutionInNonTerminalState = (props: ResolvedActionExecutionProps) => {
-
-    const formTimeElapsed = () => {
-        const startTime = props?.actionExecutionDetail?.ActionExecution?.ExecutionStartedOn
-        if(startTime === undefined) {
-            return "Time Elapsed: NA"
-        } else {
-            const elapsedTime = Date.now() - startTime
-            return `Time Elapsed: ${(elapsedTime/1000).toFixed(2)} s`
-        }
+    const [componentRenderedAt, setComponentRenderedAt] = React.useState<number>(Date.now())
+    const [timer, setTimer] = React.useState<number>(Date.now())
+    const [timerValueWhenActionStarted, setTimerValueWhenActionStarted] = React.useState<number|undefined>(undefined)
+    
+    const formFormattedElapsedTime = () => {
+        const elapsedTime = timer - (timerValueWhenActionStarted || componentRenderedAt)
+        return `Time Elapsed: ${(elapsedTime/1000).toFixed(0)} s`
     }
+    
+    React.useEffect(() => {
+        setTimerValueWhenActionStarted(props?.actionExecutionDetail?.ActionExecution?.ExecutionStartedOn)
+    }, [props?.actionExecutionDetail?.ActionExecution?.ExecutionStartedOn])
+    
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setTimer(Date.now())
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [])
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2 }}>
@@ -298,7 +307,7 @@ const ViewActionExecutionInNonTerminalState = (props: ResolvedActionExecutionPro
                     <LoadingIndicator/>
                 </Box>
                 <Box>
-                    <>{formTimeElapsed()}</>
+                    <>{formFormattedElapsedTime()}</>
                 </Box>
             </Box>
             

@@ -170,8 +170,6 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
         })
     }
 
-    console.log(executeActionContext)
-
     const StepNumberToComponent = [
         {
             component: 
