@@ -20,7 +20,7 @@ import ApplicationCreationWizardDialog from './components/ApplicationCreationWiz
 import ApplicationDetailView from './components/ApplicationDetailView';
 import ApplicationRunsByMe from './components/ApplicationRunsByMe';
 import ScheduledJobsView from './components/ScheduledJobsView';
-import Application from '../../generated/entities/Entities';
+import { Application } from '../../generated/entities/Entities';
 
 
 export const ApplicationContent = withRouter(function TableBrowserRoutes() {
@@ -101,10 +101,8 @@ export const ExecutionHistory = () => {
             }
         })
     }, [])
-    const app :Application = {
-        id: 1
-    }
-    return <ApplicationRunsByMe application={app}/>
+
+    return <ApplicationRunsByMe fetchAll={true}/>
 }
 
 export default ApplicationContent;  

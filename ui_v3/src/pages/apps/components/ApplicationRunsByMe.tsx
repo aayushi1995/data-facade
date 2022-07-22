@@ -8,12 +8,13 @@ import { TextCell, TimestampCell } from "../../table_browser/components/AllTable
 import useApplicationRunsByMe, { Run } from "./UseApplicationRunsByMe"
 
 export type ApplicationRunsByMeProps = {
-    application?: Application
+    application?: Application,
+    fetchAll?: boolean
 }
 
 const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
     const {application} = props
-    const { fetchDataQuery, displayActionOutput, displayWorkflowOutput, reRunWorkflow, reRunAction } = useApplicationRunsByMe({ application: application })
+    const { fetchDataQuery, displayActionOutput, displayWorkflowOutput, reRunWorkflow, reRunAction } = useApplicationRunsByMe({ application: application, fetchAll: props.fetchAll })
     const history = useHistory()
 
     const datagridProps: DataGridProps = {

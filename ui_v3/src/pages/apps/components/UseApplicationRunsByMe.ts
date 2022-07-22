@@ -9,7 +9,8 @@ import { ApplicationRunsByMe } from "../../../generated/interfaces/Interfaces"
 import labels from "../../../labels/labels"
 
 export type ApplicationRunsByMeHookParams = {
-    application?: Application
+    application?: Application,
+    fetchAll?: boolean
 }
 
 export type ApplicationRunsByMeHookFields = {
@@ -42,12 +43,24 @@ const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {
     const fetchDataQuery: UseQueryResult<Run[]> = useQuery([labels.entities.APPLICATION, pluginTrigger, application?.Id],
         () => fetchedDataManagerInstance.retreiveData(labels.entities.APPLICATION, {
                 filter: {
-                    Id: application?.Id
+                    Id: application?.Id,
+                    IsVisibleOnUI: true
                 },
                 [pluginTrigger]: true
-            }).then((data: ApplicationRunsByMe[]) => data[0] ).then((data: ApplicationRunsByMe) => formRuns(data)),
+            }).then((data: ApplicationRunsByMe[]) => {
+                
+                if(params.fetchAll === true) {
+                    const allExecutions: Run[] = []
+                    data.forEach(ae => {
+                        allExecutions.push(...formRuns(ae))
+                    })
+                    return allExecutions
+                } else {
+                    return formRuns(data[0])
+                }
+            }),
         {
-            enabled: !!application?.Id
+            enabled: !!application?.Id || params.fetchAll
         }
     )
 
