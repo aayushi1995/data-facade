@@ -34,7 +34,7 @@ const useCreateActionInstance = (params: UseCreateActionInstanceParams): UseCrea
     const createActionInstanceAsyncMutation = useMutation((config: MutationContext) => fetchedDataManagerInstance.saveData(labels.entities.ActionInstance, {
             entityProperties: config.actionInstance,
             ActionParameterInstanceEntityProperties: config.actionParameterInstances,
-            slack: config.slack,  // TODO: Remove hard coding of slack ID
+            slack: config.slack,
             email: config.email,
             withActionParameterInstance: true,
             executionScheduledDate: config.executionScheduledDate,

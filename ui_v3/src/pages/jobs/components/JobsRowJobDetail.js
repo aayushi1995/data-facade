@@ -236,7 +236,8 @@ const DisplayData = (props) => {
                                 id="outlined-multiline-static"
                                 label="Executed Template"
                                 multiline
-                                rows={2}
+                                minRows={3}
+                                maxRows={10}
                                 value={props.JobBase.Input.charAt(0) == '{' ? JSON.parse(props.JobBase.Input).script : props.JobBase.Input}
                                 variant="outlined"
                                 InputProps={{readOnly: true}}

@@ -12,7 +12,7 @@ const ViewConfiguredParameters = (props: ViewConfiguredParametersProps) => {
         const apd = props.parameterDefinitions.find(apd => apd.Id===api.ActionParameterDefinitionId)
         if(!!api && !!apd){
             return [(
-                <Grid xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={3} lg={2}>
                     <ConfiguredParameter
                         definition={apd!}
                         instance={api!}
@@ -23,7 +23,7 @@ const ViewConfiguredParameters = (props: ViewConfiguredParametersProps) => {
     })
 
     return (
-        <Grid container>
+        <Grid container spacing={3}>
             {params}
         </Grid>
     )
@@ -32,7 +32,7 @@ const ViewConfiguredParameters = (props: ViewConfiguredParametersProps) => {
 const ConfiguredParameter = (props: {definition: ActionParameterDefinition, instance: ActionParameterInstance}) => {
     const {definition, instance} = props
     return (
-        <Card sx={{px: 3, py: 3}}>
+        <Card sx={{px: 3, py: 3, maxHeight: '183px', overflowY: 'auto', minHeight: '183px'}}>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "120px", width: "100%"}}>
                 <Box sx={{width: "100%"}}>
                     <Typography sx={{

@@ -3,6 +3,8 @@ import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
 import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
+import { SetModuleContextState } from "../../../common/components/ModuleContext";
+import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
@@ -24,6 +26,7 @@ interface MatchParams {
 
 const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
     const actionDefinitionId = match.params.actionDefinitionId
+    const setModuleContext = React.useContext(SetModuleContextState)
 
     const { createActionInstanceAsyncMutation, createActionInstanceSyncMutation, fetchActionExeuctionParsedOutputMutation } = useCreateActionInstance({
         asyncOptions: {
@@ -79,6 +82,18 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             })
         }
     }, [data])
+
+    React.useEffect(() => {
+        setModuleContext({
+            type: 'SetHeader',
+            payload: {
+                'newHeader': {
+                    Title: executeActionContext.ExistingModels?.ActionDefinition?.DisplayName,
+                    SubTitle: 'Last Updated On ' + (new Date(executeActionContext.ExistingModels?.ActionDefinition?.UpdatedOn || executeActionContext.ExistingModels?.ActionDefinition?.CreatedOn || Date.now()).toString())
+                }
+            }
+        })
+    }, [executeActionContext.ExistingModels?.ActionDefinition?.DisplayName])
 
     const handleAsyncCreate = () => {
         const request = constructCreateActionInstanceRequest(executeActionContext)
@@ -228,7 +243,7 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 4}}>
             <Box>
-                <ActionDefinitionHero
+                {/* <ActionDefinitionHero
                     mode="READONLY"
                     name={executeActionContext.ExistingModels.ActionDefinition?.UniqueName}
                     description={executeActionContext.ExistingModels.ActionDefinition?.Description}
@@ -237,7 +252,8 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                     group={executeActionContext.ExistingModels.ActionDefinition?.ActionGroup}
                     lastUpdatedOn={executeActionContext.ExistingModels.ActionDefinition?.UpdatedOn}
                     publishStatus={executeActionContext.ExistingModels.ActionDefinition?.PublishStatus}
-                />
+                /> */}
+                <ActionDescriptionCard description={executeActionContext.ExistingModels.ActionDefinition?.Description} mode="READONLY" />
             </Box>
             <Grid container>
                 <Grid item xs={4} />

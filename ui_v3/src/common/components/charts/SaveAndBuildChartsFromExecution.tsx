@@ -1,4 +1,4 @@
-import { Box, Grid, Button, Typography } from "@mui/material"
+import { Box, Grid, Button, Typography, Tabs, Tab } from "@mui/material"
 import WrapInCollapsable from "../collapsable/WrapInCollapsable"
 import FilterIcon from "../../../../src/images/filter.svg"
 import ChartIcon from "../../../../src/images/ChartIcon.svg"
@@ -18,11 +18,37 @@ interface SaveAndBuildChartsFromExecutionProps {
     executionId: string
 }
 
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+            >
+            {value === index && (
+                <Box>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>);
+}
+
 const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionProps) => {
 
     const saveAndBuildChartsState = React.useContext(SaveAndBuildChartContext)
     const setSaveAndBuildChartsState = React.useContext(SetSaveAndBuildChartContext)
     const chartQueriesState = React.useContext(ChartQueriesContext)
+    const [activeTab, setActiveTab] = React.useState<number>(-1)
 
     const handleSaveCharts = () => {
         saveAndBuildChartsState.Charts.forEach(chart => {
@@ -62,6 +88,10 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     React.useEffect(() => {
         setSaveAndBuildChartsState({type: 'SetExecutionId', payload: {executionId: props.executionId}})
     }, [props.executionId])
+
+    const handleTabChange = (tabValue: number) => {
+        setActiveTab(tabValue)
+    }
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2, mr: 2}}>
@@ -107,19 +137,31 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 </Grid> */}
                 <Grid item xs={12}>
                     <WrapInCollapsable summary={
-                        <CollapsibleSummary label="Charts" icon={ChartIcon} />
+                        <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>
                     }
                         expanded={
-                            <ReactQueryWrapper isLoading={chartQueriesState.fetchCharts?.isLoading || chartQueriesState.fetchCharts?.isFetching} data={saveAndBuildChartsState.Charts} error={chartQueriesState.fetchCharts?.error}>
-                                {() => 
-                                <Box>
-                                    <ShowChartsFromContext/>
-                                </Box>}
-                            </ReactQueryWrapper>
-                        }
+                            <Box sx={{mt: 2}}>
+                                <TabPanel value={activeTab} index={0}>
+                                    <ReactQueryWrapper isLoading={chartQueriesState.fetchCharts?.isLoading || chartQueriesState.fetchCharts?.isFetching} data={saveAndBuildChartsState.Charts} error={chartQueriesState.fetchCharts?.error}>
+                                        {() => <ShowChartsFromContext/>}
+                                    </ReactQueryWrapper>
+                                </TabPanel>
+                                <TabPanel value={activeTab} index={1}>
+                                    <ReactQueryWrapper isLoading={chartQueriesState.fetchExecution?.isLoading || chartQueriesState.fetchExecution?.isFetching} data={chartQueriesState.fetchExecution?.data} error={chartQueriesState.fetchExecution?.error}>
+                                        {() => <>{saveAndBuildChartsState.ExecutionDetails ? 
+                                            <ViewActionExecutionOutput 
+                                                ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
+                                                ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
+                                                ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}
+                                                showCharts={false}    /> : <LoadingIndicator />
+                                        }
+                                        </>}
+                                    </ReactQueryWrapper>
+                                </TabPanel>
+                            </Box>}
                     />
                 </Grid>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                     <WrapInCollapsable summary={
                         <CollapsibleSummary label="Results" icon={ResultIcon} />
                     }
@@ -137,7 +179,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                         } 
                         borderLeft='7px solid #A6ABBD'
                     />
-                </Grid>
+                </Grid> */}
                 {/* <WrapInCollapsable summary={} */}
                 
             </Grid>
@@ -162,6 +204,41 @@ export const CollapsibleSummary = (props: {icon: string, label: string}) => {
             }}>
                 {props.label}
             </Typography>
+        </Box>
+    )
+}
+
+const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value: number) => void}) => {
+    return (
+        <Box sx={{display: 'flex', gap: 1}}>
+            <Tabs value={props.activeTab} onChange={(event, newValue) => {
+                if(newValue !== props.activeTab && props.activeTab !== -1){
+                    event.stopPropagation() 
+                }
+                props.onTabChange(newValue)   
+            }}>
+                <Tab value={0} icon={<img src={ChartIcon}/>} iconPosition="start" label="Charts" sx={{
+                    fontFamily: "'SF Pro Text'",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    fontSize: "17.4731px",
+                    lineHeight: "157%",
+                    letterSpacing: "0.124808px",
+                    color: "#DB8C28"
+                }}/>
+                <Tab value={1} icon={<img src={ResultIcon}/>} iconPosition="start" label="Results" sx={{
+                    fontFamily: "'SF Pro Text'",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    fontSize: "17.4731px",
+                    lineHeight: "157%",
+                    letterSpacing: "0.124808px",
+                    color: "#353535"
+                }}/>
+            </Tabs>
+            {/* <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+
+            </Box> */}
         </Box>
     )
 }

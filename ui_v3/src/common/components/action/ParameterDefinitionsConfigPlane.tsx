@@ -12,7 +12,8 @@ interface ParameterDefinitionsConfigPlaneProps {
     parameterDefinitions: ActionParameterDefinition[],
     parameterInstances: ActionParameterInstance[],
     parameterAdditionalConfigs?: ActionParameterAdditionalConfig[],
-    handleChange: (parameterInstances: ActionParameterInstance[]) => void
+    handleChange: (parameterInstances: ActionParameterInstance[]) => void,
+    onParameterClick?: (parameterDefinitionId: string) => void
 }
 
 
@@ -267,7 +268,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     }) || [],
                     filters: {
                         tableFilters: uniqueTableFilters,
-                        parameterDefinitionId: parameterDefinition?.Id
+                        parameterDefinitionId: parameterDefinition?.Id!
                     }
                 }
             }
@@ -280,33 +281,24 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
     })
 
     return (
-        <Box sx={{display: 'flex', minWidth: '100%', minHeight: '200px'}}>
-            <Card sx={{background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8', border: '2px solid rgba(255, 255, 255, 0.4)',
-        boxShadow: '-5px -5px 10px #E3E6F0, 5px 5px 10px #A6ABBD', borderRadius: '10px', backgroundBlendMode: 'soft-light, normal', minWidth: '100%', minHeight: '100%'
-        , justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
-                <Grid container spacing = {5} sx={{p: 2}}>
-                    {parameterDefinitions.length === 0 && 
-                        <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                            <Typography> No Parameters Present</Typography>
+        <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%'}}>
+            <Grid container spacing = {5} sx={{p: 2}}>
+                {parameterDefinitions.length === 0 && 
+                    <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <Typography> No Parameters Present</Typography>
+                    </Grid>
+                }
+                {parameterDefinitions.map((parameter) => {
+                    return (
+                        <Grid item xs={12}>
+                            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}} onClick={() => props.onParameterClick?.(parameter.parameterId!)}>
+                                <ParameterInput {...parameter}/>
+                            </Box>
+                            
                         </Grid>
-                    }
-                    {parameterDefinitions.map((parameter) => {
-                        return (
-                            <Grid item xs={4}>
-                                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                        <ParameterInput {...parameter}/>
-                                        <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', ml: 1}}>
-                                            <Tooltip title={getParameterDescription(parameter.parameterId || "ID NA") || "No Description"} placement="top">
-                                                <img src={InfoIcon} alt="Info"/>
-                                            </Tooltip>
-                                        </Box>
-                                </Box>
-                                
-                            </Grid>
-                        )
-                    })}
-                </Grid>
-            </Card>
+                    )
+                })}
+            </Grid>
         </Box>
     )
 }

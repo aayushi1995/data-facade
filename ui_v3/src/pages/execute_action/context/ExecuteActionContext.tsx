@@ -4,7 +4,7 @@ import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig,
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ProviderInstance, TableProperties, Tag } from "../../../generated/entities/Entities";
+import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ActionTemplate, ProviderInstance, TableProperties, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
 import { ActionParameterDefinitionConfig } from "../../build_action/components/common-components/EditActionParameter";
 import { MutationContext } from "../hooks/useCreateActionInstance";
@@ -21,7 +21,8 @@ type ExecuteActionContextState = {
         ActionDefinition: ActionDefinition,
         ActionParameterDefinitions: ActionParameterDefinition[],
         SelectedProviderInstance?: ProviderInstance,
-        ParameterAdditionalConfig?: ActionParameterAdditionalConfig[]
+        ParameterAdditionalConfig?: ActionParameterAdditionalConfig[],
+        ActionTemplates?: ActionTemplate[]
     },
     ToCreateModels: {
         ActionInstance: ActionInstance,
@@ -38,7 +39,8 @@ const defaultExecuteActionContext: () => ExecuteActionContextState = () => {
     return {
         ExistingModels: {
             ActionDefinition: {},
-            ActionParameterDefinitions: []
+            ActionParameterDefinitions: [],
+            ActionTemplates: []
         },
         ToCreateModels: {
             ActionInstance: {},
@@ -62,6 +64,7 @@ export type SetFromActionDefinitionDetailAction = {
     type: "SetFromActionDefinitionDetail",
     payload: {
         ActionDefinitionDetail: ActionDefinitionDetail
+        existingParameterInstances?: ActionParameterInstance[]
     }
 }
 
@@ -150,12 +153,13 @@ export type ExecuteActionAction = SetFromActionDefinitionDetailAction
 
 const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction): ExecuteActionContextState => {
     switch (action.type) {
-        case "SetFromActionDefinitionDetail":  
-            if(state?.ExistingModels?.ActionDefinition?.Id===action.payload.ActionDefinitionDetail?.ActionDefinition?.model?.Id){
-                return safeMergeState(state, action.payload.ActionDefinitionDetail)
-            } else {
-                return resetStateFromActionDefinitionDetail(action.payload.ActionDefinitionDetail)
+        case "SetFromActionDefinitionDetail": {
+            const newState = state?.ExistingModels?.ActionDefinition?.Id===action.payload.ActionDefinitionDetail?.ActionDefinition?.model?.Id ? safeMergeState(state, action.payload.ActionDefinitionDetail) : resetStateFromActionDefinitionDetail(action.payload.ActionDefinitionDetail)
+            if(!!action.payload.existingParameterInstances) {
+                return reducer(newState, {type: 'SetActionParameterInstances', payload: {newActionParameterInstances: action.payload.existingParameterInstances}})
             }
+            return newState
+        }
 
         case "SetActionParameterInstances":
             const newParameterAdditionalConfigs = formColumnAdditionalConfigs(action.payload.newActionParameterInstances, state.ExistingModels.ActionParameterDefinitions)
@@ -339,7 +343,7 @@ const formColumnAdditionalConfigs = (actionParameterInstances: ActionParameterIn
         if(parentParamInstance?.TableId !== undefined){
             const columnAdditionalConfig: ActionParameterColumnAdditionalConfig = {
                 parameterDefinitionId: colParamDef?.Id,
-                parentTableId: parentParamInstance?.TableId,
+                availableTablesFilter: [{Id: parentParamInstance?.TableId}],
                 type: "Column"
             } 
             return columnAdditionalConfig
@@ -374,7 +378,8 @@ const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDeta
         ExistingModels: {
             ActionDefinition: (actionDetail?.ActionDefinition?.model || {}),
             ActionParameterDefinitions: newActionParameterDefinitions,
-            ParameterAdditionalConfig: []
+            ParameterAdditionalConfig: [],
+            ActionTemplates: (actionDetail?.ActionTemplatesWithParameters?.map(templateWithParameter => templateWithParameter.model))
         },
         ToCreateModels: {
             ActionInstance: {},

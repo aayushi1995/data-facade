@@ -1,15 +1,18 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import ExecuteAction from "./components/ExecuteAction";
+import ExecuteActionNew from "./components/ExecuteActionNew";
 import { ExecuteActionContextProvider } from "./context/ExecuteActionContext";
 
-const ExecuteActionHomePage = () => {
-    const match = useRouteMatch()
+interface MatchParams {
+    ActionDefinitionId: string
+}
 
+
+const ExecuteActionHomePage = () => {
+    const match = useRouteMatch<MatchParams>()
     return (
         <ExecuteActionContextProvider>
-            <Switch>
-                <Route path={`${match.path}/:actionDefinitionId`} component={ExecuteAction}/>
-            </Switch>
+            <ExecuteActionNew actionDefinitionId={match.params.ActionDefinitionId} showActionDescription={true}/>
         </ExecuteActionContextProvider>
     )
 }

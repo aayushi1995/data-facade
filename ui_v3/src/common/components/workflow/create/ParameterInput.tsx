@@ -238,7 +238,8 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
 
     React.useEffect(() => {
         if(fetchTableQuery?.data?.[0]?.FilteredBasedOnTags) {
-            onChange?.(fetchTableQuery.data?.[0]?.Columns)
+            // TODO: Disabling auto-fill of columns
+            // onChange?.(fetchTableQuery.data?.[0]?.Columns)
         }
     }, [fetchTableQuery.data])
 
@@ -310,7 +311,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
         data={fetchTableQuery.data}
         >
             <Autocomplete
-                options={fetchTableQuery.data?.[0]?.Columns!}
+                options={fetchTableQuery.data?.[0]?.Columns || []}
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName!}
                 groupBy={(column) => column.TableName||"Table NA"}
                 value={getSelectedColumn()}
@@ -472,6 +473,7 @@ const FloatInput = (props: FloatParameterInput) => {
     const isNumber = (str: string): boolean => {
         if (typeof str != "string") return false // we only process strings!
         // could also coerce to string: str = ""+str
+        // TODO: fix this type error
         return !isNaN(str)
     }
     
@@ -519,6 +521,7 @@ const TableInput = (props: TableParameterInput) => {
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
     const {tables, loading, error}  = useTables({tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId})
     
+    const [, updateState] = React.useState();
     const getSelectedTable = () => {
         return tables?.find(table => table?.Id === selectedTableFilter?.Id)
     }
@@ -532,13 +535,14 @@ const TableInput = (props: TableParameterInput) => {
                 if(selectedTable !== undefined) {
                     onChange(selectedTable)
                 } else {
-                    onChange(getAnyTable())
+                    // onChange(getAnyTable())
                 }
             } else {
-                onChange(getAnyTable())
+                // onChange(getAnyTable())
             }
         }
     }, [tables])
+
     
     return (
         <LoadingWrapper
@@ -550,11 +554,11 @@ const TableInput = (props: TableParameterInput) => {
                 options={tables!}
                 getOptionLabel={(table: TableProperties) => table.UniqueName!}
                 groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
-                value={tables?.find(table => table.Id===selectedTableFilter?.Id || (selectedTableFilter?.Id===undefined && (table.UniqueName===selectedTableFilter?.UniqueName)))}
+                value={getSelectedTable()}
                 filterSelectedOptions
                 fullWidth
                 selectOnFocus
-                clearOnBlur
+                // clearOnBlur
                 handleHomeEndKeys
                 onChange={(event, value, reason, details) => {
                     onChange(!!value ? value : undefined)

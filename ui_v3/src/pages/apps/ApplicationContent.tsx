@@ -34,7 +34,7 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
             <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionHomePage}/>
             <Route path="/application/execute-workflow" component={ExecuteWorkflowHomePage}/>
             <Route path="/application/workflow-execution" component={ViewWorkflowExecutionHomePage}/>
-            <Route path="/application/execute-action" component={ExecuteActionHomePage}/>
+            <Route path="/application/execute-action/:ActionDefinitionId" component={ExecuteActionHomePage}/>
             <Route path="/application/edit-workflow" component={EditWorkflowHomePage}/>
             <Route path="/application/execute-instance" component={ExecuteInstanceHomePage}/>
             <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route>
