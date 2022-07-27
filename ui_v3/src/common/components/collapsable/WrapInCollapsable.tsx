@@ -7,6 +7,7 @@ export interface WrapInCollapsableProps {
     summary: JSX.Element,
     expanded: JSX.Element,
     borderLeft?: string
+    defaultExpanded?: boolean
 }
 
 const WrapInCollapsable = (props: WrapInCollapsableProps) => {
@@ -24,6 +25,7 @@ const WrapInCollapsable = (props: WrapInCollapsableProps) => {
             borderLeft: props.borderLeft || "7px solid rgba(219, 140, 40, 1)",
             }}
             variant={'outlined'}
+            defaultExpanded={props.defaultExpanded || false}
         >
             <AccordionSummary expandIcon={props.expandMoreIcon || <ExpandMoreIcon />}>
                 {props.summary}

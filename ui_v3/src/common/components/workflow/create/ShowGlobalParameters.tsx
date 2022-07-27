@@ -38,8 +38,6 @@ const ShowGlobalParameters = () => {
                 })
             })
 
-            console.log(globalParameter)
-
             return {
                 "GlobalParameterName": globalParameter.ParameterName || "NA",
                 "MappedActionLevelParameters": details.map(detail => detail.stageName + " | " + detail.actionName + " | " + detail.parameterName).join(', '),

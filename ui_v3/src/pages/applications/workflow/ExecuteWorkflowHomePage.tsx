@@ -4,8 +4,10 @@ import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "r
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
+import { SetModuleContextState } from "../../../common/components/ModuleContext"
 import NoData from "../../../common/components/NoData"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
+import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard"
 import useCreateWorkflowActionInstanceMutation from "../../../common/components/workflow/execute/hooks/useCreateWorkflowActionInstanceMutation"
 import { useGetWorkflowChildInstances, useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
@@ -15,6 +17,7 @@ import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../..
 import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero"
 import ConfigureActionRecurring from "../../execute_action/components/ConfigureActionRecurring"
+import ConfigureParameters from "../../execute_action/components/ConfigureParameters"
 import ConfigureSlackAndEmail from "../../execute_action/components/ConfigureSlackAndEmail"
 import SelectProviderInstance from "../../execute_action/components/SelectProviderInstance"
 import { safelyParseJSON } from "../../execute_action/util"
@@ -27,6 +30,7 @@ interface MatchParams {
 const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const setModuleContextState = React.useContext(SetModuleContextState)
     const history = useHistory()
     const [isReady, setIsReady] = React.useState(false)
     const [snackbarState, setSnackbarState] = React.useState(false)
@@ -53,6 +57,16 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const saveWorkflowMutation = useCreateWorkflowActionInstanceMutation(workflowContext, handleInstanceSaved)
     const workflowId = match.params.workflowId
     const handleTemplate = (data: ActionDefinitionDetail[]) => {
+        setModuleContextState({
+            type: 'SetHeader',
+            payload: {
+                newHeader: {
+                    Title: data?.[0]?.ActionDefinition?.model?.DisplayName,
+                    SubTitle: 'Last Updated On ' + (new Date(data?.[0]?.ActionDefinition?.model?.UpdatedOn || data?.[0]?.ActionDefinition?.model?.CreatedOn || Date.now()).toString())
+                }
+            }
+        })
+
         setWorkflowContext({type: 'ADD_ACTION_TEMPLATE', payload: {template: data?.[0]?.ActionTemplatesWithParameters?.[0].model}})
         setWorkflowContext({type: 'CHANGE_NAME', payload: {newName: data?.[0]?.ActionDefinition?.model?.DisplayName || "workflow"}})
         setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: {newDescription: data?.[0]?.ActionDefinition?.model?.Description || "NA"}})
@@ -80,11 +94,12 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             workflowContext.WorkflowParameters.forEach(globalParameter => {
                 const mappedGlobalParameter = workflowAction.Parameters?.find(parameter => parameter.GlobalParameterId === globalParameter.Id)
                 const defaultParameterInstance = safelyParseJSON(globalParameter?.DefaultParameterValue) as ActionParameterInstance
+                console.log(mappedGlobalParameter, defaultParameterInstance)
                 if(!!mappedGlobalParameter) {
                     parametersArray.push({
                         ...defaultParameterInstance,
                         TableId: mappedGlobalParameter.TableId || defaultParameterInstance?.TableId, 
-                        ParameterValue: mappedGlobalParameter.ParameterValue || defaultParameterInstance?.ParameterValue, 
+                        ParameterValue: defaultParameterInstance?.ParameterValue || mappedGlobalParameter.ParameterValue , 
                         ActionParameterDefinitionId: globalParameter.Id
                     })
                 }
@@ -94,6 +109,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: stageId, Action: workflowAction}})
         }) 
         if(parametersArray.length > 0){
+            console.log(parametersArray)
             setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': parametersArray}})
         }
         setIsReady(true)
@@ -149,15 +165,28 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
 
     const IndexToComponent = [
         {
-            component: <ParameterDefinitionConfigPlane 
-                parameterDefinitions={workflowContext.WorkflowParameters} 
-                parameterInstances={workflowContext.WorkflowParameterInstance || []} 
-                parameterAdditionalConfigs={workflowContext.WorkflowParameterAdditionalConfigs}
-                handleChange={handleParameterInstancesChange}
-            />
+            component: <ConfigureParameters 
+                ActionParameterDefinitions={workflowContext.WorkflowParameters} 
+                ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
+                ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
+                handleParametersChange={handleParameterInstancesChange}
+                mode="GENERAL"
+            />,
+            label: "Inputs General"
+        },
+        {
+            component: <ConfigureParameters 
+                ActionParameterDefinitions={workflowContext.WorkflowParameters} 
+                ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
+                ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
+                handleParametersChange={handleParameterInstancesChange}
+                mode="ADVANCED"
+            />,
+            label: "Inputs Advanced"
         },
         {
             component: <ConfigureSlackAndEmail parameterInstances={workflowContext.WorkflowParameterInstance || []} slack={recurrenceConfig.slack} email={recurrenceConfig.email} handleEmailAndSlackChange={handleEmailAndSlackChange}/>,
+            label: "Notifcation"
         },
         
     ]
@@ -182,14 +211,16 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                         </Grid>
                         <Grid item xs={0} md={3} lg={4}/>
                     </Grid>
-                </Card>
+                </Card>,
+            label: "Providers"
         })
     }
 
     if(history.location.state !== 'fromTest') {
         IndexToComponent.push(
             {
-                component: <ConfigureActionRecurring actionInstance = {recurrenceConfig.actionInstance} handleRecurringChange={handleRecurringChange} startDate={recurrenceConfig.startDate} handleStartDateChange={changeStartDate}/>
+                component: <ConfigureActionRecurring actionInstance = {recurrenceConfig.actionInstance} handleRecurringChange={handleRecurringChange} startDate={recurrenceConfig.startDate} handleStartDateChange={changeStartDate}/>,
+                label: "Schedule"
             }
         )
     }
@@ -198,7 +229,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         return (
             <Box sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center'}}>
                 <Box sx={{flex: 1}}>
-                    <ActionDefinitionHero mode="READONLY" name={workflowContext.Name} description={workflowContext.Description} applicationId={workflowContext.ApplicationId} group={workflowContext.ActionGroup}/>
+                    <ActionDescriptionCard description={workflowContext.Description}  mode="READONLY" />
                 </Box>
                 <Box sx={{flex: 4, mb: 2}}>
                     <ReactQueryWrapper data={workflowContext.WorkflowParameterInstance} isLoading={instancesLoading} error={instancesError} children={
@@ -207,11 +238,11 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                                 <Grid container sx={{mt: 3}}>
                                     <Grid item xs={4} />
                                     <Grid item xs= {4} >
-                                        <Stepper nonLinear activeStep={recurrenceConfig.activeIndex}>
+                                        <Stepper nonLinear activeStep={recurrenceConfig.activeIndex} alternativeLabel>
                                             {IndexToComponent.map((component, index) => (
                                                 <Step key={index}>
                                                     <StepButton onClick={() => handleGoToStep(index)}>
-                                                        step {index+1}/{IndexToComponent.length}
+                                                        {IndexToComponent[index].label}
                                                     </StepButton>
                                                 </Step>
                                             ))}
@@ -227,7 +258,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                     
                 </Box>
                 <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', mt: 5}}>
-                    <Box sx={{flex: 1, maxWidth: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <Box sx={{flex: 1, maxWidth: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2}}>
                         {saveWorkflowMutation.isLoading ? (
                             <LoadingIndicator/>
                         ) : (

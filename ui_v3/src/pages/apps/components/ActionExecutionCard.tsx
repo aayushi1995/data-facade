@@ -1,5 +1,5 @@
 import { ActionExecution } from "../../../generated/entities/Entities"
-import { Card, Grid, Box, Typography, Button, IconButton, LinearProgress } from "@mui/material"
+import { Card, Grid, Box, Typography, Button, IconButton, LinearProgress, Tooltip } from "@mui/material"
 import ArrowDropDownIcon from "../../../../src/images/DropDown.svg"
 import DownloadIcon from "../../../../src/images/DownloadData.svg"
 import DownloadAndDisplayLogs from "../../view_action_execution/DownloadAndDisplyaLogs"
@@ -75,7 +75,11 @@ const ActionExecutionCard = (props: ActionExecutionCardProps) => {
                 <Grid container alignItems="center" sx={{maxWidth: '100%'}}>
                     <Grid item xs={12}>
                         <Box sx={{display: 'flex', gap: 2, alignItem: 'center'}}>
-                            <img src={ArrowDropDownIcon} style={{transform: `rotate(${props.arrowState==="UP" ? 180 : 0}deg)`, cursor: 'pointer'}} onClick={() => props.handleClickArrow?.()}/>
+                            <Tooltip title={props.arrowState==="DOWN" ? "Show Inputs" : "Hide Inputs"}>
+                                <IconButton onClick={() => props.handleClickArrow?.()}>
+                                    <img src={ArrowDropDownIcon} style={{transform: `rotate(${props.arrowState==="UP" ? 180 : 0}deg)`, cursor: 'pointer'}} />
+                                </IconButton>
+                            </Tooltip>
                             <Box sx={{display: 'flex', flexDirection: 'column', flex: 3, justifyContent: 'center'}}>
                                 <Typography sx={{
                                     fontFamily: "'SF Pro Display'",

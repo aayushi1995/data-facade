@@ -48,7 +48,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     const saveAndBuildChartsState = React.useContext(SaveAndBuildChartContext)
     const setSaveAndBuildChartsState = React.useContext(SetSaveAndBuildChartContext)
     const chartQueriesState = React.useContext(ChartQueriesContext)
-    const [activeTab, setActiveTab] = React.useState<number>(-1)
+    const [activeTab, setActiveTab] = React.useState<number>(0)
 
     const handleSaveCharts = () => {
         saveAndBuildChartsState.Charts.forEach(chart => {
@@ -123,22 +123,11 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 </Grid>
             </Grid>
             <Grid container spacing={2} direction="column" ml={2}>
-                {/* <Grid item xs={12}>
-                    <WrapInCollapsable summary={
-                        <CollapsibleSummary label="Filters" icon={FilterIcon} />
-                    } 
-                        expanded={
-                            <Box>
-                                
-                            </Box>
-                        }
-                        borderLeft='7px solid #A6ABBD'
-                    />
-                </Grid> */}
                 <Grid item xs={12}>
                     <WrapInCollapsable summary={
                         <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>
                     }
+                        defaultExpanded={true}
                         expanded={
                             <Box sx={{mt: 2}}>
                                 <TabPanel value={activeTab} index={0}>

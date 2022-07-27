@@ -1,8 +1,9 @@
-import { Box, Button, Card, Dialog, DialogContent, Grid, Snackbar, Step, StepButton, Stepper } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogContent, Typography, Grid, Snackbar, Step, StepButton, Stepper, Tabs,Tab, Divider } from "@mui/material";
 import React from "react";
-import { RouteComponentProps, useHistory } from "react-router-dom";
+import { styled } from '@mui/material/styles';
+import { generatePath, RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
-import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
+import { ACTION_EXECUTION_ROUTE, SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
@@ -18,15 +19,52 @@ import ConfigureActionRecurring from "./ConfigureActionRecurring";
 import ConfigureSlackAndEmail from "./ConfigureSlackAndEmail";
 import SelectProviderInstance from "./SelectProviderInstance";
 import ViewConfiguredParameters from "./ViewConfiguredParameters";
+import ParametersIcon from "../../../../src/images/Parameters.svg"
+import CodeTabIcon from "../../../../src/images/CodeTab.svg"
+import CodeEditor from "../../../common/components/CodeEditor";
+import ConfigureParameters from "./ConfigureParameters";
 
 interface MatchParams {
-    actionDefinitionId: string
+    actionDefinitionId: string,
 }
 
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
 
-const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
-    const actionDefinitionId = match.params.actionDefinitionId
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+            >
+            {value === index && (
+                <Box>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+}
+
+interface ExecuteActionProps {
+    actionDefinitionId: string, 
+    existingParameterInstances?: ActionParameterInstance[], 
+    showActionDescription: boolean
+}
+
+const ExecuteActionNew = (props: ExecuteActionProps) => {
+    const actionDefinitionId = props.actionDefinitionId
+    console.log(actionDefinitionId)
     const setModuleContext = React.useContext(SetModuleContextState)
+    const [tabValue, setTabValue] = React.useState(0)
 
     const { createActionInstanceAsyncMutation, createActionInstanceSyncMutation, fetchActionExeuctionParsedOutputMutation } = useCreateActionInstance({
         asyncOptions: {
@@ -77,7 +115,8 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             setExecuteActionContext({
                 type: "SetFromActionDefinitionDetail",
                 payload: {
-                    ActionDefinitionDetail: data[0]
+                    ActionDefinitionDetail: data[0],
+                    existingParameterInstances: props.existingParameterInstances
                 }
             })
         }
@@ -101,7 +140,8 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
             onSuccess: () => {
                 setSnackbarState(true)
                 if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
-                    setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
+                    // setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
+                    history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: request?.actionExecutionToBeCreatedId}))
                 } else {
                     setDialogState({isOpen: false})
                     history.push(SCHEDULED_JOBS_ROUTE)
@@ -188,19 +228,33 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
     const StepNumberToComponent = [
         {
             component: 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Box>
-                    <ParameterDefinitionsConfigPlane 
-                        parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                        parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                        parameterAdditionalConfigs={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
-                        handleChange={handleChange}
-                    />
-                </Box>
-            </Box>
+            <Box sx={{ mx: 15 }}>
+                <ConfigureParameters 
+                    mode="GENERAL"
+                    ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                    ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                    ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
+                    handleParametersChange={handleChange}
+                />
+            </Box>,
+            label: "Inputs General"
         },
         {
-            component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>
+            component: 
+            <Box sx={{ mx: 15 }}>
+                <ConfigureParameters 
+                    mode="ADVANCED"
+                    ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                    ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                    ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
+                    handleParametersChange={handleChange}
+                />
+            </Box>,
+            label: "Inputs Advanced"
+        },
+        {
+            component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>,
+            label: "Notification"
         },
         
     ]
@@ -227,86 +281,131 @@ const ExecuteAction = ({match}: RouteComponentProps<MatchParams>) => {
                         </Grid>
                         <Grid item xs={0} md={3} lg={4}/>
                     </Grid>
-                </Card>
+                </Card>,
+            label: "Providers"
         })
     }
 
     if(history.location.state !== 'fromTest') {
         StepNumberToComponent.push(
             {
-                component: <ConfigureActionRecurring actionInstance = {executeActionContext.ToCreateModels.ActionInstance} handleRecurringChange={handleRecurringChange} startDate={executeActionContext.startDate || new Date(Date.now())} handleStartDateChange={changeStartDate}/>
+                component: <ConfigureActionRecurring actionInstance = {executeActionContext.ToCreateModels.ActionInstance} handleRecurringChange={handleRecurringChange} startDate={executeActionContext.startDate || new Date(Date.now())} handleStartDateChange={changeStartDate}/>,
+                label: "Schedule"
             }
         )
     }
 
     
     return (
-        <Box sx={{display: "flex", flexDirection: "column", gap: 4}}>
-            <Box>
-                {/* <ActionDefinitionHero
-                    mode="READONLY"
-                    name={executeActionContext.ExistingModels.ActionDefinition?.UniqueName}
-                    description={executeActionContext.ExistingModels.ActionDefinition?.Description}
-                    createdBy={executeActionContext.ExistingModels.ActionDefinition?.CreatedBy}
-                    applicationId={executeActionContext.ExistingModels.ActionDefinition?.ApplicationId}
-                    group={executeActionContext.ExistingModels.ActionDefinition?.ActionGroup}
-                    lastUpdatedOn={executeActionContext.ExistingModels.ActionDefinition?.UpdatedOn}
-                    publishStatus={executeActionContext.ExistingModels.ActionDefinition?.PublishStatus}
-                /> */}
-                <ActionDescriptionCard description={executeActionContext.ExistingModels.ActionDefinition?.Description} mode="READONLY" />
-            </Box>
-            <Grid container>
-                <Grid item xs={4} />
-                <Grid item xs= {4} >
-                    <Stepper nonLinear activeStep={executeActionContext.currentStep}>
-                        {StepNumberToComponent.map((component, index) => (
-                            <Step key={index}>
-                                <StepButton onClick={() => handleGoToStep(index)}>
-                                    step {index+1}/{StepNumberToComponent.length}
-                                </StepButton>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Grid>
-            </Grid>
-            <Box>
-                {StepNumberToComponent[executeActionContext.currentStep].component}
-            </Box>
-            <Box>
-                <ViewConfiguredParameters
-                    parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                    parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                />
-            </Box>
-            <Box sx={{width: "100%"}}>
-                {executeActionContext.ExistingModels.ActionDefinition.ActionType === ActionDefinitionActionType.AUTO_FLOW ? (
-                    <Button onClick={handleCreateWorkflow} variant="contained" sx={{width: "100%"}}>
-                        Create Auto Flow
-                    </Button>
-                ) : (
-                    <Box>
-                        {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
-                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}}>
-                                GET PREDICTION / RUN
-                            </Button>
-                        ) : (
-                            <Button onClick={handleGoNext} variant="contained" sx={{width: "100%"}}>
-                                NEXT
-                            </Button>
-                        )}
-                        
-                    </Box>
-                )}
-                
-            </Box>
-            <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
-                <DialogContent>
-                    <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
-                </DialogContent>
-            </Dialog>
-            <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/>
+        <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+            {props.showActionDescription ? (
+                <Box>
+                    <ActionDescriptionCard description={executeActionContext.ExistingModels.ActionDefinition?.Description} mode="READONLY" />
+                </Box>
+            ) : (
+                <></>
+            )}
+            <Card sx={{
+                background: "#F8F8F8",
+                boxShadow:
+                "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
+                borderRadius: "9.72px",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                p: 2,
+                mb: 2
+            }}>
+                <Box sx={{display: 'flex', gap: 1}}>
+                    <Tabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
+                        <Tab label="Parameters" value={0} sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 500,
+                            lineHeight: "157%",
+                            letterSpacing: "0.124808px",
+                            color: "#DB8C28",
+                        }}
+                        iconPosition="start" 
+                        icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>
+                        <Tab label="Code" value={1} sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 500,
+                            lineHeight: "157%",
+                            letterSpacing: "0.124808px",
+                            color: "#353535",
+                        }} icon={<img src={CodeTabIcon} alt=""/>} iconPosition="start"/>
+                    </Tabs>
+
+                </Box>
+                <Divider orientation="horizontal" sx={{mt: 1, transform: "matrix(-1, 0, 0, -1, 0, 0)"}}/>
+                <Box m={1}>
+                    <TabPanel value={tabValue} index={0}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', gap: 4}}>
+                            <Grid container>
+                                <Grid item xs={4} />
+                                <Grid item xs= {4} >
+                                    <Stepper nonLinear activeStep={executeActionContext.currentStep} alternativeLabel>
+                                        {StepNumberToComponent.map((component, index) => (
+                                            <Step key={index}>
+                                                <StepButton onClick={() => handleGoToStep(index)} >
+                                                    {StepNumberToComponent[index].label}
+                                                </StepButton>
+                                            </Step>
+                                        ))}
+                                    </Stepper>
+                                </Grid>
+                            </Grid>
+                            <Box>
+                                {StepNumberToComponent[executeActionContext.currentStep].component}
+                            </Box>
+                            {/* <Box>
+                                <ViewConfiguredParameters
+                                    parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                                    parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                                />
+                            </Box> */}
+                            <Box sx={{width: "100%"}}>
+                                {executeActionContext.ExistingModels.ActionDefinition.ActionType === ActionDefinitionActionType.AUTO_FLOW ? (
+                                    <Button onClick={handleCreateWorkflow} variant="contained" sx={{width: "100%"}}>
+                                        Create Auto Flow
+                                    </Button>
+                                ) : (
+                                    <Box>
+                                        {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
+                                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}}>
+                                                RUN
+                                            </Button>
+                                        ) : (
+                                            <Button onClick={handleGoNext} variant="contained" sx={{width: "100%"}}>
+                                                NEXT
+                                            </Button>
+                                        )}
+                                        
+                                    </Box>
+                                )}
+                                
+                            </Box>
+                        </Box>
+                    </TabPanel>
+                    <TabPanel value={tabValue} index={1}>
+                        <CodeEditor 
+                            code={executeActionContext?.ExistingModels?.ActionTemplates?.[0]?.Text || "NA"}
+                            readOnly={true}
+                            language={executeActionContext?.ExistingModels?.ActionTemplates?.[0]?.Language}
+                        />
+                    </TabPanel>
+                </Box>
+                <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
+                    <DialogContent>
+                        <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
+                    </DialogContent>
+                </Dialog>
+                <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/> 
+            </Card>
         </Box>
     )
 }
 
-export default ExecuteAction;
+export default ExecuteActionNew;

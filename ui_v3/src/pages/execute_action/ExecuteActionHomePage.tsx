@@ -1,6 +1,5 @@
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import ExecuteAction from "./components/ExecuteAction";
-import ExecuteActionNew from "./components/ExecuteActionNew";
 import { ExecuteActionContextProvider } from "./context/ExecuteActionContext";
 
 interface MatchParams {
@@ -12,7 +11,7 @@ const ExecuteActionHomePage = () => {
     const match = useRouteMatch<MatchParams>()
     return (
         <ExecuteActionContextProvider>
-            <ExecuteActionNew actionDefinitionId={match.params.ActionDefinitionId} showActionDescription={true}/>
+            <ExecuteAction actionDefinitionId={match.params.ActionDefinitionId} showActionDescription={true}/>
         </ExecuteActionContextProvider>
     )
 }

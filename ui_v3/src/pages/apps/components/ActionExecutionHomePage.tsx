@@ -11,7 +11,7 @@ import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
 import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "../../../generated/interfaces/Interfaces"
 import { BuildActionContextProvider, SetBuildActionContext } from "../../build_action/context/BuildActionContext"
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail"
-import ExecuteActionNew from "../../execute_action/components/ExecuteActionNew"
+import ExecuteAction from "../../execute_action/components/ExecuteAction"
 import { ExecuteActionContextProvider } from "../../execute_action/context/ExecuteActionContext"
 import FetchActionExecutionDetails from "../../view_action_execution/hooks/FetchActionExecutionDetails"
 import ViewActionExecution, { ViewFailedActionExecution } from "../../view_action_execution/VIewActionExecution"
@@ -101,7 +101,7 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string}) => {
                             flexDirection: 'column',
                             gap: 1,
                         }}>
-                            <ExecuteActionNew actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false}/>
+                            <ExecuteAction actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false}/>
                         </Box>
                     ) : (
                         <></>
@@ -121,7 +121,9 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string}) => {
                                 <ViewFailedActionExecution actionExecutionDetail={actionExecutionDetailQuery?.data || {}}/>
                             ) : (
                                 <Box sx={{maxWidth: '100%'}}>
-                                    <SaveAndBuildChartsFromExecution executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}/>
+                                    <SaveAndBuildChartContextProvider>
+                                        <SaveAndBuildChartsFromExecution executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}/>
+                                    </SaveAndBuildChartContextProvider>
                                 </Box>
                             )}
                             
@@ -142,9 +144,7 @@ const ActionExecutionHomePage = () => {
 
     return (
         <ExecuteActionContextProvider>
-            <SaveAndBuildChartContextProvider>
-                <ActionExecutionDetails actionExecutionId={actionExecutionId || "NA"} />
-            </SaveAndBuildChartContextProvider>
+            <ActionExecutionDetails actionExecutionId={actionExecutionId || "NA"} />
         </ExecuteActionContextProvider>
     )
 }

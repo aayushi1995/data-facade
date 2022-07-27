@@ -142,6 +142,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 }
             } as ColumnParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
+            console.log(props.parameterInstances)
             const allOptions = parameterDefinition.OptionSetValues?.split(',')
             return {
                 parameterType: "OPTION_SET_SINGLE",

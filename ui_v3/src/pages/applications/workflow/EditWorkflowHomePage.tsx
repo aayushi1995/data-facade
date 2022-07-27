@@ -43,7 +43,6 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const setActionContext = React.useContext(SetBuildActionContext)
     const [isWorkflowFetched, setIsWorkflowFetched] = React.useState(false)
     const [errorDialogState, setErrorDialogState] = React.useState(false)
-    console.log(workflowContext)
     const {isError, errorMessage} = useValidateWorkflow(workflowContext, initialWorkflow !== undefined)
 
     // TODO: Check with Shishir if things to be sent to backend should be sent at time of .mutate() call or reference should be passed right at time of mutation declaration.
