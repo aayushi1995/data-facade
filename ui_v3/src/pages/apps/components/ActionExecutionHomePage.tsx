@@ -41,6 +41,8 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string}) => {
             setExecutionTerminal(true)
             if(actionStatus === ActionExecutionStatus.FAILED) {
                 setExecutionError(true)
+            } else {
+                setExecutionError(false)
             }
         }
 
