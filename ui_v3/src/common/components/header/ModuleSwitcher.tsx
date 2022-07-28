@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { ButtonIconWithToolTip } from "../ButtonIconWithToolTip";
 import { ModuleContent } from "../ModuleContent";
+import { ModuleContextState } from "../ModuleContext";
 import { ModuleContext, SetModuleContext } from "./data/ModuleContext";
 import { TOP_TAB_ROUTES } from "./data/RoutesConfig";
 import ModuleSwitcherIcon from './images/module-switcher.svg';
@@ -111,7 +112,7 @@ export function TabsContainer(props: TabsContainerType) {
 
 const TabsTree = (props: TabsTreePropType) => {
     const {tabs, level} = props;
-
+    const moduleStateContext = React.useContext(ModuleContextState)
     const isFistTab = level === 0;
     const _activeTabIndex = findCurrentSelectedTabIndex(props);
     const activeTabIndex = _activeTabIndex === -1 ? 0 : _activeTabIndex;
@@ -138,11 +139,16 @@ const TabsTree = (props: TabsTreePropType) => {
                 {
                     areLeafTabs ? 
                         <Box>
-                            <Box sx={{ mx: isFistTab ? 6: 0 }}>
-                                <ModuleContent.Header
-                                    tab={activeTab}
-                                />
-                            </Box>
+                            {moduleStateContext.DisplayHeader ? (
+                                <Box sx={{ mx: isFistTab ? 6: 0 }}>
+                                    <ModuleContent.Header
+                                        tab={activeTab}
+                                    />
+                                </Box>
+                            ) : (
+                                <></>
+                            )}
+                            
                             <Box sx={{ px: 2 }}>
                                 <ModuleContent.MainContent/> 
                             </Box>

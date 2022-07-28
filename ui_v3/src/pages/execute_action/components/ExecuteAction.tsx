@@ -1,9 +1,9 @@
-import { Box, Button, Card, Dialog, DialogContent, Typography, Grid, Snackbar, Step, StepButton, Stepper, Tabs,Tab, Divider } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogContent, Typography, Grid, Snackbar, Step, StepButton, Stepper, Tabs,Tab, Divider, IconButton } from "@mui/material";
 import React from "react";
 import { styled } from '@mui/material/styles';
 import { generatePath, RouteComponentProps, useHistory } from "react-router-dom";
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
-import { ACTION_EXECUTION_ROUTE, SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
+import { ACTION_EXECUTION_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
@@ -22,7 +22,8 @@ import ViewConfiguredParameters from "./ViewConfiguredParameters";
 import ParametersIcon from "../../../../src/images/Parameters.svg"
 import CodeTabIcon from "../../../../src/images/CodeTab.svg"
 import CodeEditor from "../../../common/components/CodeEditor";
-import ConfigureParameters from "./ConfigureParameters";
+import EditIcon from '@mui/icons-material/Edit';
+import ConfigureParameters, { isDefaultValueDefined } from "./ConfigureParameters";
 
 interface MatchParams {
     actionDefinitionId: string,
@@ -57,7 +58,8 @@ function TabPanel(props: TabPanelProps) {
 interface ExecuteActionProps {
     actionDefinitionId: string, 
     existingParameterInstances?: ActionParameterInstance[], 
-    showActionDescription: boolean
+    showActionDescription: boolean,
+    disableRun?: boolean
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
@@ -225,8 +227,14 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         })
     }
 
-    const StepNumberToComponent = [
-        {
+    const areAllParametersFilled = () => {
+        return executeActionContext.ToCreateModels?.ActionParameterInstances?.filter(wpi => !!wpi.ParameterValue || !!wpi.TableId || !!wpi.ColumnId)?.length === executeActionContext.ToCreateModels.ActionParameterInstances?.length
+    }
+
+    const StepNumberToComponent: {component: React.ReactNode, label: string}[] = []
+
+    if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => !isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
+        StepNumberToComponent.unshift({
             component: 
             <Box sx={{ mx: 15 }}>
                 <ConfigureParameters 
@@ -237,9 +245,12 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     handleParametersChange={handleChange}
                 />
             </Box>,
-            label: "Inputs General"
-        },
-        {
+            label: "Required Inputs"
+        })
+    }
+
+    if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
+        StepNumberToComponent.push({
             component: 
             <Box sx={{ mx: 15 }}>
                 <ConfigureParameters 
@@ -251,16 +262,23 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                 />
             </Box>,
             label: "Inputs Advanced"
-        },
+            
+        })
+    }
+
+    StepNumberToComponent.push(
         {
             component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>,
             label: "Notification"
         },
-        
-    ]
+    )
+
+    const handleEdit = () => {
+        history.push(generatePath(APPLICATION_EDIT_ACTION_ROUTE_ROUTE, {ActionDefinitionId: executeActionContext.ExistingModels.ActionDefinition.Id}))
+    }
 
     if((!tableTypeParameterExists)&&(!pandasDataframeParameterExists)) {
-        StepNumberToComponent.unshift({
+        StepNumberToComponent.push({
             component:  
                 <Card sx={{
                     background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8', 
@@ -337,7 +355,11 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                             color: "#353535",
                         }} icon={<img src={CodeTabIcon} alt=""/>} iconPosition="start"/>
                     </Tabs>
-
+                    <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2, flex: 1}}>
+                        <IconButton onClick={handleEdit}>
+                            <EditIcon/>
+                        </IconButton>
+                    </Box>
                 </Box>
                 <Divider orientation="horizontal" sx={{mt: 1, transform: "matrix(-1, 0, 0, -1, 0, 0)"}}/>
                 <Box m={1}>
@@ -374,13 +396,22 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                                 ) : (
                                     <Box>
                                         {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
-                                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}}>
+                                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}} disabled={props.disableRun || false}>
                                                 RUN
                                             </Button>
                                         ) : (
-                                            <Button onClick={handleGoNext} variant="contained" sx={{width: "100%"}}>
-                                                NEXT
-                                            </Button>
+                                            <Box sx={{display: 'flex', gap: 1}}>
+                                                {areAllParametersFilled() ? (
+                                                    <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}} disabled={props.disableRun || false}>
+                                                        RUN
+                                                    </Button>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                                <Button onClick={handleGoNext} variant="contained" sx={{width: "100%"}}>
+                                                    NEXT
+                                                </Button>
+                                            </Box>
                                         )}
                                         
                                     </Box>

@@ -13,7 +13,8 @@ export type ProviderParameterInputProps = {
     onProviderInstanceNameChange?: ( newName: string ) => void,
     onCreate?: () => void,
     onRecurrenceIntervalChange?: (interval: number) => void,
-    recurrenceInterval?: number
+    recurrenceInterval?: number,
+    onDefaultProviderChange?: (value: boolean) => void
 };
 
 const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
@@ -59,8 +60,13 @@ const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
                         <Divider flexItem orientation="vertical"/>
                     </Grid>
                         
-                    <Grid item xs={5} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                    <Grid item xs={5} sx={{display: 'flex', height: '100%', flexDirection: 'column', gap: 2}}>
                         <TextField value={props.recurrenceInterval} fullWidth sx={{height: '100%'}} label="Recurrence Interval in Minutes" type="number" onChange={(event) => props?.onRecurrenceIntervalChange?.(parseInt(event.target.value))}/>
+                        <FormControlLabel label="Make Default Provider" 
+                            control={
+                                <Checkbox checked={props.ProviderInstance?.ProviderInstance?.model?.IsDefaultProvider} onChange={(event) => props.onDefaultProviderChange?.(event.target.checked)}/>
+                            }    
+                        />
                     </Grid>
                 </Grid>
             )}

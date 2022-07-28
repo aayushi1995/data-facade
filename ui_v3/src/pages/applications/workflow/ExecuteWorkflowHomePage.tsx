@@ -17,7 +17,7 @@ import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../..
 import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero"
 import ConfigureActionRecurring from "../../execute_action/components/ConfigureActionRecurring"
-import ConfigureParameters from "../../execute_action/components/ConfigureParameters"
+import ConfigureParameters, { isDefaultValueDefined } from "../../execute_action/components/ConfigureParameters"
 import ConfigureSlackAndEmail from "../../execute_action/components/ConfigureSlackAndEmail"
 import SelectProviderInstance from "../../execute_action/components/SelectProviderInstance"
 import { safelyParseJSON } from "../../execute_action/util"
@@ -49,6 +49,10 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         } else {
             history.push(`/application/workflow-execution/${data?.[0]?.Id}`)
         }
+    }
+
+    const areAllParametersFilled = () => {
+        return workflowContext.WorkflowParameterInstance?.filter(wpi => !!wpi.ParameterValue || !!wpi.TableId || !!wpi.ColumnId)?.length === workflowContext.WorkflowParameterInstance?.length
     }
 
     const tableTypeParameterExists = workflowContext.WorkflowParameters?.some(apd => apd.Tag === ActionParameterDefinitionTag.TABLE_NAME)
@@ -163,33 +167,45 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         }))
     }
 
-    const IndexToComponent = [
-        {
-            component: <ConfigureParameters 
-                ActionParameterDefinitions={workflowContext.WorkflowParameters} 
-                ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
-                ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
-                handleParametersChange={handleParameterInstancesChange}
-                mode="GENERAL"
-            />,
-            label: "Inputs General"
-        },
-        {
-            component: <ConfigureParameters 
-                ActionParameterDefinitions={workflowContext.WorkflowParameters} 
-                ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
-                ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
-                handleParametersChange={handleParameterInstancesChange}
-                mode="ADVANCED"
-            />,
-            label: "Inputs Advanced"
-        },
+    const IndexToComponent: {component: React.ReactNode, label: string}[] = []
+
+    if(workflowContext.WorkflowParameters.filter(apd => !isDefaultValueDefined(apd.DefaultParameterValue)).length > 0) {
+        IndexToComponent.push(
+            {
+                component: <ConfigureParameters 
+                    ActionParameterDefinitions={workflowContext.WorkflowParameters} 
+                    ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
+                    ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
+                    handleParametersChange={handleParameterInstancesChange}
+                    mode="GENERAL"
+                />,
+                label: "Required Input"
+            }
+        )
+    }
+
+    if(workflowContext.WorkflowParameters.filter(apd => isDefaultValueDefined(apd.DefaultParameterValue)).length > 0) {
+        IndexToComponent.push(
+            {
+                component: <ConfigureParameters 
+                    ActionParameterDefinitions={workflowContext.WorkflowParameters} 
+                    ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
+                    ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
+                    handleParametersChange={handleParameterInstancesChange}
+                    mode="ADVANCED"
+                />,
+                label: "Inputs Advanced"
+            },
+        )
+    }
+    
+
+    IndexToComponent.push(
         {
             component: <ConfigureSlackAndEmail parameterInstances={workflowContext.WorkflowParameterInstance || []} slack={recurrenceConfig.slack} email={recurrenceConfig.email} handleEmailAndSlackChange={handleEmailAndSlackChange}/>,
             label: "Notifcation"
-        },
-        
-    ]
+        }   
+    )
 
     if((!tableTypeParameterExists)&&(!pandasDataframeParameterExists)) {
         IndexToComponent.unshift({
@@ -266,7 +282,14 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                             {recurrenceConfig.activeIndex ===  (IndexToComponent.length - 1)? (
                                 <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
                             ) : (
-                                <Button sx={{minWidth: '50%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={handleGoNext}>NEXT</Button>
+                                <Box sx={{display: 'flex', gap: 2}}>
+                                    {areAllParametersFilled() ? (
+                                        <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
+                                    ) : (
+                                        <></>
+                                    )}
+                                    <Button sx={{minWidth: '50%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={handleGoNext}>NEXT</Button>
+                                </Box>
                             )}
                             
                             </>

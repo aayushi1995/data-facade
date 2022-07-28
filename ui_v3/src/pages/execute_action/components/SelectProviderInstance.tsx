@@ -1,4 +1,5 @@
 import { Autocomplete, TextField } from "@mui/material"
+import React from "react"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import { ProviderInstance } from "../../../generated/entities/Entities"
 import SelectProviderInstanceHook from "./SelectProviderInstanceHook"
@@ -12,7 +13,24 @@ export type SelectProviderInstanceProps = {
 const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
     const { selectedProviderInstance, onProviderInstanceChange, availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook(props)
     const availableProviderInstances = availableProviderInstanceQuery?.data || []
+    console.log(selectedProviderInstance)
+    React.useEffect(() => {
+        availableProviderInstanceQuery?.data?.forEach(parameterInstance => {
+            if(parameterInstance.IsDefaultProvider === true) {
+                props.onProviderInstanceChange?.(parameterInstance)
+            }
+        })
+    }, [availableProviderInstanceQuery?.data]) 
 
+    React.useEffect(() => {
+        if(!!availableProviderInstanceQuery.data) {
+            availableProviderInstanceQuery?.data?.forEach(parameterInstance => {
+                if(parameterInstance.IsDefaultProvider === true) {
+                    props.onProviderInstanceChange?.(parameterInstance)
+                }
+            })
+        }
+    }, [])
 
     return (
         <ReactQueryWrapper

@@ -1,6 +1,6 @@
 import { TabsType } from "../schema";
 import { APPLICATION_SUB_TABS } from "./ApplicationRoutesConfig";
-import { DATA_ALL_TABLES_ROUTE, DATA_SUB_TABS } from "./DataRoutesConfig";
+import { DATA_ALL_TABLES_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_SUB_TABS } from "./DataRoutesConfig";
 
 export const BLANK_STRING = '';
 export const APPLICATION_ROUTE = '/application';
@@ -10,7 +10,7 @@ export const TOP_TAB_ROUTES: TabsType = [
     {
         id: 'DATA',
         label: 'DATA',
-        href: DATA_ALL_TABLES_ROUTE,
+        href: DATA_CONNECTIONS_ROUTE,
         children: DATA_SUB_TABS,
         title: BLANK_STRING,
         subTitle: BLANK_STRING

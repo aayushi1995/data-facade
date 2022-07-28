@@ -17,11 +17,11 @@ export const EXECUTION_HISTORY_ROUTE = `${APPLICATION_ROUTE}/execution-history`
 
 export const APPLICATION_SUB_TABS: TabsType = [
     {
-        id: 'Models',
-        label: 'Models',
+        id: 'Packages',
+        label: 'Packages',
         href: APPLICATION_ROUTE,
-        title: "Models",
-        subTitle: "Create and manage your Models from here",
+        title: "Packages",
+        subTitle: "Create and manage your Packages from here",
     },
     {
         id: 'Scheduled',

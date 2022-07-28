@@ -254,7 +254,12 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                         <DialogContent sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 3}}>
                             {tablesSynced !== undefined ? (
                                 <Typography variant="heroMeta" sx={{fontSize: '30px'}}>
-                                    <span>Connecting <b>{tablesSynced}</b> Tables</span>
+                                    {tablesSynced !==0 ? (
+                                        <span>Connecting <b>{tablesSynced}</b> Tables</span>
+                                    ) : (
+                                        <span>Sync Complete</span>
+                                    )}
+                                    
                                 </Typography>
                             ) : (
                                 <React.Fragment>
@@ -439,7 +444,7 @@ const SyncStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
 export const StatusCard = (props: {background: string, text: string | number, title?: string}) => {
     return (
         <Tooltip title={props.title || ""}>
-            <Card sx={{  width: "75px",
+            <Card sx={{  width: "100px",
                 height: "36px",
                 display: 'flex',
                 alignItems: 'center',

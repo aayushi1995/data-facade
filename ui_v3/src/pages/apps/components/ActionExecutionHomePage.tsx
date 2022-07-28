@@ -101,7 +101,7 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string}) => {
                             flexDirection: 'column',
                             gap: 1,
                         }}>
-                            <ExecuteAction actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false}/>
+                            <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false}/>
                         </Box>
                     ) : (
                         <></>

@@ -15,7 +15,7 @@ const FetchActionExecutionDetails = (params: FetchActionExecutionDetailsParams) 
     {
         ...queryOptions,
         enabled: (!!params.actionExecutionId) && queryOptions.enabled,
-        refetchInterval: 4000
+        refetchInterval: 1000
     })
 
     return { 

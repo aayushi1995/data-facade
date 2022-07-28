@@ -9,7 +9,7 @@ import useGetActionDefinitionsForUi from "../hooks/useGetActionDefinitionsForUi"
 
 
 const AllActionDefinitionsView = (props: AllApplicationRowProps) => {
-    const {data, isLoading, error} = useGetActionDefinitionsForUi({filter: {}})
+    const {data, isLoading, error} = useGetActionDefinitionsForUi({filter: {IsVisibleOnUI: true}})
 
     const searchQuery = props.searchQuery || ""
     const renderCards = (actionDefinitions: ActionDefinitionCardViewResponse[]) => {

@@ -1,19 +1,22 @@
 import React from "react";
+import { useHistory, useRouteMatch } from "react-router";
 
 export type HeaderType = {
     Title?: string,
-    SubTitle?: string
+    SubTitle?: string,
 }
 
 export type ModuleContextStateType = {
-    Header: HeaderType
+    Header: HeaderType,
+    DisplayHeader: boolean
 }
 
 const defaultModuleContextState: ModuleContextStateType = { 
     Header: {
         Title: "Default Title",
         SubTitle: "Default SubTitle"
-    } 
+    },
+    DisplayHeader: false 
 }
 
 
@@ -31,7 +34,14 @@ export type SetHeaderAction = {
     }
 }
 
-export type ModuleContextStateAction = SetHeaderAction
+export type SetDisplayHeader = {
+    type: "SetDisplayHeader",
+    payload: {
+        display: boolean
+    }
+}
+
+export type ModuleContextStateAction = SetHeaderAction | SetDisplayHeader
 
 
 const reducer: (state: ModuleContextStateType, action: ModuleContextStateAction) => ModuleContextStateType = (state: ModuleContextStateType, action: ModuleContextStateAction) => {
@@ -40,6 +50,12 @@ const reducer: (state: ModuleContextStateType, action: ModuleContextStateAction)
             return {
                 ...state, 
                 Header: action.payload.newHeader
+            }
+        }
+        case "SetDisplayHeader": {
+            return {
+                ...state,
+                DisplayHeader: action.payload.display
             }
         }
 
@@ -51,8 +67,29 @@ const reducer: (state: ModuleContextStateType, action: ModuleContextStateAction)
 
 
 const ModuleContextStateProvider = ({children}: { children: React.ReactElement }) => {
+
+    const history = useHistory()
     const [state, dispatch] = React.useReducer( reducer, defaultModuleContextState )
     const setState = (args: ModuleContextStateAction) => dispatch(args)
+
+    React.useEffect(() => {
+        if(history.location.pathname.includes("application/action-execution")) {
+            console.log(history.location.pathname)
+            setState({
+                type: 'SetDisplayHeader',
+                payload: {
+                    display: false
+                }
+            })
+        } else {
+            setState({
+                type: 'SetDisplayHeader',
+                payload: {
+                    display: true
+                }
+            })
+        }
+    }, [history.location.pathname])
 
     return (
         <ModuleContextState.Provider value={state}>

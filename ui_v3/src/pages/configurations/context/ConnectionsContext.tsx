@@ -92,6 +92,13 @@ type SetRecurrenceInterval = {
     }
 }
 
+type SetDefaultProviderValue = {
+    type: "SetDefaultProviderValue",
+    payload: {
+        newValue: boolean
+    }
+}
+
 type SetConnectionStateAction = SetModeAction | 
 SetProviderDefinitionIdAction | 
 SetProviderInstanceIdAction | 
@@ -99,7 +106,8 @@ SetProviderDefinitionAction |
 SetProviderInstanceAction |
 SetProviderInstanceNameAction |
 SetProviderParameterValueAction |
-SetRecurrenceInterval
+SetRecurrenceInterval |
+SetDefaultProviderValue
 
 const reducer = (state: ConnectionState, action: SetConnectionStateAction): ConnectionState => {
     switch(action.type) {
@@ -189,6 +197,22 @@ const reducer = (state: ConnectionState, action: SetConnectionStateAction): Conn
             return {
                 ...state,
                 RecurrenceInterval: action.payload.recurrenceInterval > 0 ? action.payload.recurrenceInterval : undefined
+            }
+        }
+
+        case "SetDefaultProviderValue": {
+            return {
+                ...state,
+                ProviderInformation: {
+                    ...state?.ProviderInformation,
+                    ProviderInstance: {
+                        ...state?.ProviderInformation?.ProviderInstance,
+                        model: {
+                            ...state.ProviderInformation?.ProviderInstance?.model,
+                            IsDefaultProvider: action.payload.newValue
+                        }
+                    }
+                }
             }
         }
 

@@ -86,6 +86,12 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     }
 
     React.useEffect(() => {
+        if(chartQueriesState.fetchCharts?.data?.length === 0 || !!chartQueriesState.fetchCharts?.data) {
+            setActiveTab(1)
+        }
+    }, [chartQueriesState.fetchCharts?.isLoading]) 
+
+    React.useEffect(() => {
         setSaveAndBuildChartsState({type: 'SetExecutionId', payload: {executionId: props.executionId}})
     }, [props.executionId])
 
@@ -125,6 +131,14 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
             <Grid container spacing={2} direction="column" ml={2}>
                 <Grid item xs={12}>
                     <WrapInCollapsable summary={
+                        <CollapsibleSummary icon={FilterIcon} label="Filter"/>
+                    }
+                        expanded={<></>}
+                        
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <WrapInCollapsable summary={
                         <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>
                     }
                         defaultExpanded={true}
@@ -150,26 +164,6 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                             </Box>}
                     />
                 </Grid>
-                {/* <Grid item xs={12}>
-                    <WrapInCollapsable summary={
-                        <CollapsibleSummary label="Results" icon={ResultIcon} />
-                    }
-                        expanded={
-                            <ReactQueryWrapper isLoading={chartQueriesState.fetchExecution?.isLoading || chartQueriesState.fetchExecution?.isFetching} data={chartQueriesState.fetchExecution?.data} error={chartQueriesState.fetchExecution?.error}>
-                                {() => <>{saveAndBuildChartsState.ExecutionDetails ? 
-                                    <ViewActionExecutionOutput 
-                                        ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
-                                        ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
-                                        ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}
-                                        showCharts={false}    /> : <LoadingIndicator />
-                                }
-                                </>}
-                            </ReactQueryWrapper>
-                        } 
-                        borderLeft='7px solid #A6ABBD'
-                    />
-                </Grid> */}
-                {/* <WrapInCollapsable summary={} */}
                 
             </Grid>
         </Box>

@@ -41,7 +41,8 @@ const ConnectionDetailsSetup = (props: {ProviderInstanceId: string}) => {
                         onParameterValueChange: (parameterDefinitionId?: string, parameterValue?: string) => setConnectionState({ type: "SetProviderParameterValue", payload: { parameterDefinitionId: parameterDefinitionId, newValue: parameterValue }}),
                         onProviderInstanceNameChange: (newName?: string) => setConnectionState({ type: "SetProviderInstanceName", payload: { newName: newName }}),
                         onCreate: () => {},
-                        onRecurrenceIntervalChange: (interval: number) => setConnectionState({type: 'SetRecurrenceInterval', payload: { recurrenceInterval: interval }})
+                        onRecurrenceIntervalChange: (interval: number) => setConnectionState({type: 'SetRecurrenceInterval', payload: { recurrenceInterval: interval }}),
+                        onDefaultProviderChange: (value: boolean) => setConnectionState({type: 'SetDefaultProviderValue', payload: {newValue: value}})
                     }
                     return (
                         <Box sx={{ display: "flex", flexDirection: "column", height: "100%", 

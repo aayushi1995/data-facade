@@ -9,6 +9,8 @@ import TableDetails from "../table_details/TableDetails";
 import UploadTablePage from "../upload_table/UploadTablePage";
 
 const DataContent = () => {
+    const setModuleContext = useContext(SetModuleContextState)
+
     return (
         <Switch>
             <Redirect exact from={DATA_CONNECTIONS_UPLOAD_ROUTE} to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE}/>
