@@ -176,8 +176,12 @@ SELECT COUNT(*) FROM {table}
 
 is similar to
 
-def execute(self, df):
-    return len(df.index())
+from dft.base_execution_handler import BaseExecutionHandler
+
+
+class ExecutionHandler(BaseExecutionHandler):
+    def execute(self, df):
+        return len(df.index())
 `,
         SECONDARY: "Add Runtime Group"
     },

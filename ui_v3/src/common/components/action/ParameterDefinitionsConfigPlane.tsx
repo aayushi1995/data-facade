@@ -1,5 +1,4 @@
-import { Box, Card, Grid, Tooltip, Typography } from "@mui/material";
-import InfoIcon from "../../../../src/images/info.svg";
+import { Box, Grid, Typography } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
@@ -142,7 +141,6 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 }
             } as ColumnParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
-            console.log(props.parameterInstances)
             const allOptions = parameterDefinition.OptionSetValues?.split(',')
             return {
                 parameterType: "OPTION_SET_SINGLE",

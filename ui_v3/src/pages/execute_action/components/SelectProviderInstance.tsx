@@ -11,9 +11,9 @@ export type SelectProviderInstanceProps = {
 
 
 const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
-    const { selectedProviderInstance, onProviderInstanceChange, availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook(props)
+    const { availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook()
     const availableProviderInstances = availableProviderInstanceQuery?.data || []
-    console.log(selectedProviderInstance)
+    console.log(props?.selectedProviderInstance)
     React.useEffect(() => {
         availableProviderInstanceQuery?.data?.forEach(parameterInstance => {
             if(parameterInstance.IsDefaultProvider === true) {
@@ -47,7 +47,7 @@ const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
                         options={availableProviderInstances || []}
                         getOptionLabel={(providerInstance: ProviderInstance) => providerInstance.Name || "NA"}
                         groupBy={(providerInstance: ProviderInstance) => availableProviderDefinitionQuery?.data?.find(providerDefinition => providerDefinition?.Id===providerInstance.ProviderDefinitionId)?.UniqueName || "NA"}
-                        value={availableProviderInstances?.find(providerInstance => providerInstance.Id===selectedProviderInstance?.Id)}
+                        value={availableProviderInstances?.find(providerInstance => providerInstance.Id===props?.selectedProviderInstance?.Id)}
                         filterSelectedOptions
                         fullWidth
                         selectOnFocus
@@ -55,7 +55,7 @@ const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
                         handleHomeEndKeys
                         onChange={(event, value, reason, details) => {
                             if( reason==="selectOption" || reason==="clear" ) {
-                                onProviderInstanceChange?.(value)
+                                props?.onProviderInstanceChange?.(value)
                             }
                         }}
                         renderInput={(params) => <TextField {...params} label={"Provider Name"}/>}

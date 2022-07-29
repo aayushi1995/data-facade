@@ -154,7 +154,7 @@ export type ExecuteActionAction = SetFromActionDefinitionDetailAction
 const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction): ExecuteActionContextState => {
     switch (action.type) {
         case "SetFromActionDefinitionDetail": {
-            const newState = state?.ExistingModels?.ActionDefinition?.Id===action.payload.ActionDefinitionDetail?.ActionDefinition?.model?.Id ? safeMergeState(state, action.payload.ActionDefinitionDetail) : resetStateFromActionDefinitionDetail(action.payload.ActionDefinitionDetail)
+            const newState = state?.ExistingModels?.ActionDefinition?.Id===action.payload.ActionDefinitionDetail?.ActionDefinition?.model?.Id ? safeMergeState(state, action.payload.ActionDefinitionDetail) : resetStateFromActionDefinitionDetail(state, action.payload.ActionDefinitionDetail)
             if(!!action.payload.existingParameterInstances) {
                 return reducer(newState, {type: 'SetActionParameterInstances', payload: {newActionParameterInstances: action.payload.existingParameterInstances}})
             }
@@ -356,7 +356,7 @@ const formColumnAdditionalConfigs = (actionParameterInstances: ActionParameterIn
     return columnAdditionalConfig
 }
 
-const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDetail) => {
+const resetStateFromActionDefinitionDetail = (state: ExecuteActionContextState, actionDetail: ActionDefinitionDetail) => {
     const newActionParameterDefinitions = getDefaultTemplateParameters(actionDetail)
     // const columnAdditionalConfig = newActionParameterDefinitions
     //     ?.filter(ap => ap.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
@@ -375,13 +375,16 @@ const resetStateFromActionDefinitionDetail = (actionDetail: ActionDefinitionDeta
     //     })
 
     return {
+        ...state,
         ExistingModels: {
+            ...state?.ExistingModels,
             ActionDefinition: (actionDetail?.ActionDefinition?.model || {}),
             ActionParameterDefinitions: newActionParameterDefinitions,
             ParameterAdditionalConfig: [],
             ActionTemplates: (actionDetail?.ActionTemplatesWithParameters?.map(templateWithParameter => templateWithParameter.model))
         },
         ToCreateModels: {
+            ...state?.ToCreateModels,
             ActionInstance: {},
             ActionParameterInstances: newActionParameterDefinitions.map(apd => {
                 console.log(apd.DefaultParameterValue)

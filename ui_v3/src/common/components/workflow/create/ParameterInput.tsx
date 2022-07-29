@@ -204,7 +204,6 @@ const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
 
 const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
     const {parameterName, availableOptions, selectedOptions, onChange} = props.inputProps
-    console.log(selectedOptions)
     return (
         <Autocomplete 
             options={availableOptions}
@@ -419,7 +418,6 @@ const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
 
 const StringInput = (props: StringParameterInput) => {
     const {value, parameterName, onChange} = props.inputProps
-    console.log(value)
     const [input, setInput] = React.useState<string|undefined>()
     React.useEffect(() => {
         setInput(value)

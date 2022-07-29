@@ -1,8 +1,10 @@
-import { Box, Button, Card, Dialog, DialogContent, Typography, Grid, Snackbar, Step, StepButton, Stepper, Tabs,Tab, Divider, IconButton } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import { Box, Button, Card, Dialog, DialogContent, Divider, Grid, IconButton, Snackbar, Step, StepButton, Stepper, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
-import { styled } from '@mui/material/styles';
-import { generatePath, RouteComponentProps, useHistory } from "react-router-dom";
-import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane";
+import { generatePath, useHistory } from "react-router-dom";
+import CodeTabIcon from "../../../../src/images/CodeTab.svg";
+import ParametersIcon from "../../../../src/images/Parameters.svg";
+import CodeEditor from "../../../common/components/CodeEditor";
 import { ACTION_EXECUTION_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard";
@@ -10,20 +12,15 @@ import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionTyp
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../../../generated/entities/Entities";
-import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero";
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
 import ConfigureActionRecurring from "./ConfigureActionRecurring";
+import ConfigureParameters, { isDefaultValueDefined } from "./ConfigureParameters";
 import ConfigureSlackAndEmail from "./ConfigureSlackAndEmail";
 import SelectProviderInstance from "./SelectProviderInstance";
-import ViewConfiguredParameters from "./ViewConfiguredParameters";
-import ParametersIcon from "../../../../src/images/Parameters.svg"
-import CodeTabIcon from "../../../../src/images/CodeTab.svg"
-import CodeEditor from "../../../common/components/CodeEditor";
-import EditIcon from '@mui/icons-material/Edit';
-import ConfigureParameters, { isDefaultValueDefined } from "./ConfigureParameters";
+import SelectProviderInstanceHook from "./SelectProviderInstanceHook";
 
 interface MatchParams {
     actionDefinitionId: string,
@@ -64,7 +61,6 @@ interface ExecuteActionProps {
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
     const actionDefinitionId = props.actionDefinitionId
-    console.log(actionDefinitionId)
     const setModuleContext = React.useContext(SetModuleContextState)
     const [tabValue, setTabValue] = React.useState(0)
 
@@ -81,6 +77,8 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         }
     })
     const {data, error, isLoading, refetch} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: { enabled: false }})
+    const { availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook()
+    const defaultProviderInstance = availableProviderInstanceQuery?.data?.find(prov => prov?.IsDefaultProvider)
 
     const setExecuteActionContext = React.useContext(SetExecuteActionContext)
     const executeActionContext = React.useContext(ExecuteActionContext)
@@ -108,6 +106,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         setDialogState({isOpen: false})
     }
 
+    // TODO: WHY???
     React.useEffect(() => {
         refetch()
     }, [])
@@ -123,6 +122,12 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             })
         }
     }, [data])
+
+    React.useEffect(() => {
+        if(defaultProviderInstance!==undefined){
+            setExecuteActionContext({ type: "SetProviderInstance", payload: { newProviderInstance: defaultProviderInstance } })
+        }
+    }, [defaultProviderInstance])
 
     React.useEffect(() => {
         setModuleContext({
@@ -313,6 +318,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         )
     }
 
+    console.log(executeActionContext, defaultProviderInstance)
     
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>

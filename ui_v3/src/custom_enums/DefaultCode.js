@@ -24,8 +24,12 @@ To plot charts you can use the df_plot class. The options for df_plot are:
 For eg to plot column1 against column2 as a line chart for dataframe df use:
 - df_plot.line_chart("Chart Name", column1, column2, df)
 '''
-def execute(self, df, column, k):
-    return df[column].sum()*k
+from dft.base_execution_handler import BaseExecutionHandler
+
+
+class ExecutionHandler(BaseExecutionHandler):
+    def execute(self, df, column, k):
+        return df[column].sum()*k
 `
     },
     [ActionDefinitionActionType.CHECK]: {
@@ -36,8 +40,13 @@ def execute(self, df, column, k):
             `# each function will be wrapped inside a single class. It should have a self attribute
 # The execute function must have a pandas dataframe as a parameter which will be replaced by the table you select
 # For eg. the below code checks if a table is empty or not and returns a boolean value accordingly
-def execute(self, df):
-    return len(df.index) > 0
+
+from dft.base_execution_handler import BaseExecutionHandler
+
+
+class ExecutionHandler(BaseExecutionHandler):
+    def execute(self, df):
+        return len(df.index) > 0
 `
     },
     [ActionDefinitionActionType.CLEANUP_STEP]: {
@@ -46,9 +55,14 @@ def execute(self, df):
 # The execute function must have a pandas dataframe as a parameter which will be replaced by the table you select
 # Cleanup steps should return a pandas dataframe, which should be the transformed table after your operations
 # For eg. the below code takes a table and a column as parameters and returns a new table with that column values multiplied by 2
-def execute(self, df, column):
-    df[column] = df[column].multiply(2)
-    return df
+
+from dft.base_execution_handler import BaseExecutionHandler
+
+
+class ExecutionHandler(BaseExecutionHandler):
+    def execute(self, df, column):
+        df[column] = df[column].multiply(2)
+        return df
 `
     }
 }
