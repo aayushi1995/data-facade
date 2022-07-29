@@ -3,7 +3,7 @@ import { DataGridProps, GridCallbackDetails, GridCellParams, DataGrid, GridRowPa
 import SyncIcon from "@mui/icons-material/Sync";
 import CloseIcon from '@mui/icons-material/Close';
 import React from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { generatePath, useHistory } from "react-router";
 import { ButtonIconWithToolTip } from "../../../common/components/ButtonIconWithToolTip";
 import { DATA_CONNECTION_DETAIL_ROUTE } from "../../../common/components/header/data/DataRoutesConfig";
@@ -137,7 +137,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
     }
 
     const handleCellClick = (params: GridCellParams<any, DataGridRow, any>) => {
-        if(params.field !== "Connection") {
+        if(params.field !== "Connection" && params.field !== "DefaultConnection") {
             history.push(generatePath(DATA_CONNECTION_DETAIL_ROUTE, { ProviderInstanceId: params.row.ProviderInstance?.Id || "NA" }))
         }
     }
@@ -193,6 +193,13 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                 flex: 2,
                 minWidth: 200,
                 hide: !props.showSyncStatus
+            },
+            {
+                field: "DefaultConnection",
+                headerName: "Default Connection",
+                renderCell: (params: GridCellParams<any, DataGridRow, any>) => <DefaultProviderCell providerInstance={params?.row?.ProviderInstance!}/>,
+                flex: 1,
+                minWidth: 100
             }
             
         ],
@@ -465,5 +472,34 @@ export const StatusCard = (props: {background: string, text: string | number, ti
                     </Typography>
             </Card>
         </Tooltip>
+    )
+}
+
+export const DefaultProviderCell = (props: {providerInstance: ProviderInstance}) => {
+    const queryClient = useQueryClient()
+    const updateProviderInstanceMutation = useMutation(
+        (config: {isDefaultProvider: boolean}) => Fetcher.fetchData("PATCH", "/updateProviderInstance", {filter: {Id: props.providerInstance.Id}, newProperties: {IsDefaultProvider: config.isDefaultProvider}}),
+        {
+            onSuccess: () => queryClient.invalidateQueries([labels.entities.ProviderInstance, "Card"])
+        }
+    )
+
+    const handleDefaultProviderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        updateProviderInstanceMutation.mutate({isDefaultProvider: event.target.checked})
+    }
+
+    return (
+        <Box>
+            <Tooltip title="Sync Scheduled">
+                <FormGroup>
+                    <FormControlLabel control={
+                        <Switch 
+                            disabled={updateProviderInstanceMutation.isLoading}
+                            checked={props.providerInstance?.IsDefaultProvider || false}
+                            onChange={handleDefaultProviderChange}
+                        />}  label=""/>
+                </FormGroup>
+            </Tooltip>
+        </Box>
     )
 }
