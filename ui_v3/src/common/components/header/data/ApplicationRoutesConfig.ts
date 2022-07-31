@@ -2,6 +2,7 @@ import { TabsType } from "../schema";
 
 const APPLICATION_ROUTE = '/application'
 
+export const APPLICATION_ROUTE_MARKETPLACE = `${APPLICATION_ROUTE}/marketplace`
 export const APPLICATION_ROUTE_ALL = `${APPLICATION_ROUTE}/all`
 export const APPLICATION_CREATION_WIZARD_ROUTE = `${APPLICATION_ROUTE}/app-builder`
 export const APPLICATION_DETAIL_ROUTE_ROUTE = `${APPLICATION_ROUTE}/detail/:applicationId`

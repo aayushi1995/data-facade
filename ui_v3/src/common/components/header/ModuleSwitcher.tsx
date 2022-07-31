@@ -4,6 +4,7 @@ import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { ButtonIconWithToolTip } from "../ButtonIconWithToolTip";
 import { ModuleContent } from "../ModuleContent";
 import { ModuleContextState } from "../ModuleContext";
+import { APPLICATION_ROUTE_MARKETPLACE } from "./data/ApplicationRoutesConfig";
 import { ModuleContext, SetModuleContext } from "./data/ModuleContext";
 import { TOP_TAB_ROUTES } from "./data/RoutesConfig";
 import ModuleSwitcherIcon from './images/module-switcher.svg';
@@ -54,7 +55,7 @@ export function TabsContainer(props: TabsContainerType) {
                     />
                 </Box>
             }
-            {  moduleContext.tabsVisible && 
+            {moduleContext.tabsVisible && 
                 <Box>
                     <Box>
                         <Tabs value={value}>
@@ -95,6 +96,11 @@ export function TabsContainer(props: TabsContainerType) {
                             <Box sx={{display: "flex"}}>
                                 <RouterLink to="/application/jobs">
                                     <Button variant="contained">Jobs And Logs </Button>
+                                </RouterLink>
+                            </Box>
+                            <Box sx={{display: "flex"}}>
+                                <RouterLink to={APPLICATION_ROUTE_MARKETPLACE}>
+                                    <Button variant="contained">Application Marketplace </Button>
                                 </RouterLink>
                             </Box>
                             <Box sx={{display: "flex"}}>

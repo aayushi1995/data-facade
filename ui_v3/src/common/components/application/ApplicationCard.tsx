@@ -1,5 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import InstallDesktopIcon from '@mui/icons-material/InstallDesktop'
 import PeopleIcon from '@mui/icons-material/People'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import ShareIcon from '@mui/icons-material/Share'
@@ -14,11 +15,14 @@ import { ApplicationCardViewResponse } from "../../../generated/interfaces/Inter
 import ConfirmationDialog from "../ConfirmationDialog"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
+import useInstallApplication from './hooks/useInstallApplication'
 
 
 interface ApplicationCardProps {
-    application: ApplicationCardViewResponse
+    application: ApplicationCardViewResponse,
+    isInstalled: boolean
 }
+
 const ApplicationCard = (props: ApplicationCardProps) => {
     const {application} = props
     const history = useHistory()
@@ -30,6 +34,14 @@ const ApplicationCard = (props: ApplicationCardProps) => {
             onSettled: () => setDisableCardActions(false)
         }
     })
+
+    const installApplicationMutation = useInstallApplication({
+        mutationOptions: {
+            onMutate: () => setDisableCardActions(true),
+            onSettled: () => setDisableCardActions(false)
+        }
+    })
+    
     const [dialogOpen, setDialogOpen] = React.useState(false)
     const handleDialogClose = () => setDialogOpen(false)
     const handleDialogOpen = () => setDialogOpen(true)
@@ -41,7 +53,11 @@ const ApplicationCard = (props: ApplicationCardProps) => {
 
 
     const formInfoString = () => {
-        return `${(application.NumberOfFlows || "0")} Flows  |  ${(application.NumberOfActions||"0")} Actions | ${(application.NumberOfDashboards||"0")} Dashboards`
+        if(props.isInstalled) {
+            return `${(application.NumberOfFlows || "0")} Flows  |  ${(application.NumberOfActions||"0")} Actions | ${(application.NumberOfDashboards||"0")} Dashboards`
+        } else {
+            return ""
+        }
     }
 
     const formCreatedByString = () => {
@@ -50,12 +66,21 @@ const ApplicationCard = (props: ApplicationCardProps) => {
 
     const formCreatedOnString = () => {
         const createdOnTimestamp = application.ApplicationCreatedOn||Date.now()
-
         return `Created On ${new Date(createdOnTimestamp).toDateString()}`
     }
 
+    const onApplicationInstall = () => {
+        if(props.application.ApplicationName !== undefined) {
+            installApplicationMutation.mutate({
+                ArtifactLocation: props.application.ApplicationName
+            })
+        }
+    }
+
     const onApplicationSelect = () => {
-        history.push(generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, { applicationId: props.application.ApplicationId}))
+        if(props.isInstalled) {
+            history.push(generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, { applicationId: props.application.ApplicationId}))            
+        }
     }
 
     const toggleMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>) => {
@@ -82,6 +107,108 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         event.stopPropagation()
     }
 
+    const formActions = () => {
+        if(props.isInstalled) {
+            return (
+                <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
+                    <Box>
+                        <Tooltip title="Add to Favorites">
+                            <IconButton sx={{
+                                height: "42px",
+                                width: "42px",
+                                background: "#A4CAF0",
+                                boxShadow: lightShadows[32],
+                                "&:hover": {
+                                    background: "#0AA1DD",
+                                    color: "#FFFFFF"
+                                }
+                            }} onClick={onFavorite}>
+                                <FavoriteIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                    <Box>
+                        <Tooltip title="More Options">
+                            <SpeedDial
+                                ariaLabel={props.application.ApplicationId||""}
+                                direction="down"
+                                sx={{ 
+                                    height: "42px", 
+                                    width: "42px",
+                                }}
+                                FabProps={{
+                                    sx: {
+                                        minHeight: "42px", 
+                                        width: "42px",
+                                        background: "#A4CAF0",
+                                        boxShadow: lightShadows[32],
+                                        "&:hover": {
+                                            background: "#0AA1DD"
+                                        }
+                                    }
+                                }}  
+                                open={moreOptionsSpeedDialState.isOpen}
+                                onClick = {toggleMoreOptionsSpeedDial}
+                                icon={<PlaylistAddIcon/>}
+                            >
+                                <SpeedDialAction
+                                    key="Delete"
+                                    icon={
+                                        <DeleteIcon />
+                                    }
+                                    tooltipTitle="Delete"
+                                    onClick={promptDeleteApplication}
+                                    sx={{
+                                        height: "42px",
+                                        width: "42px",
+                                        background: "#F4F4F4"
+                                    }}
+                                />
+                            </SpeedDial>
+                        </Tooltip>
+                    </Box>
+                    <Box>
+                        <Tooltip title="Share">
+                            <IconButton sx={{
+                                height: "42px",
+                                width: "42px",
+                                background: "#A4CAF0",
+                                boxShadow: lightShadows[32],
+                                "&:hover": {
+                                    background: "#0AA1DD",
+                                    color: "#FFFFFF"
+                                }
+                            }} onClick={onShare}>
+                                <ShareIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                </Box>
+            )
+        } else {
+            return (
+                <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
+                    <Box>
+                        <Tooltip title="Install">
+                            <IconButton sx={{
+                                height: "42px",
+                                width: "42px",
+                                background: "#A4CAF0",
+                                boxShadow: lightShadows[32],
+                                "&:hover": {
+                                    background: "#0AA1DD",
+                                    color: "#FFFFFF"
+                                }
+                            }} onClick={onApplicationInstall}>
+                                <InstallDesktopIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                </Box>
+            )
+        }
+    }
+    
     return (
         <>
             <ConfirmationDialog
@@ -101,7 +228,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                     background: disableCardActions ? "F3F3F3" : "#A4CAF0",
                     border: "0.439891px solid #FFFFFF",
                     boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)",
-                    cursor: 'pointer'
+                    cursor: props.isInstalled ? 'pointer' : undefined
                 }}>
                     <Box sx={{display: "flex", flexDirection: "row", height: "100%"}}>
                         <Box sx={{display: "flex", flexDirection: "column", width: "100%", pt: 2}}>
@@ -208,103 +335,32 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                         </Box>
                                     </Box>
                                 </Box>
-                                <Box sx={{display: "flex", alignItems: "flex-end"}}>
-                                    <Box sx={{
-                                            width: "60px",
-                                            height: "60px",
-                                            borderRadius: "50%",
-                                            background: "#A4CAF0",
-                                            boxShadow: lightShadows[32],
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center"
-                                        }}>
-                                        <IconButton sx={{
-                                                height: "42px",
-                                                width: "42px",
-                                                background: "#A4CAF0",
-                                                boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
-                                            }}>
-                                                <img src={PackageLogo} alt="Package"/>
-                                        </IconButton>
-                                    </Box>
-                                </Box>
-                            </Box>
-                        </Box>
-                        <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
-                            <Box>
-                                <Tooltip title="Add to Favorites">
-                                    <IconButton sx={{
-                                        height: "42px",
-                                        width: "42px",
-                                        background: "#A4CAF0",
-                                        boxShadow: lightShadows[32],
-                                        "&:hover": {
-                                            background: "#0AA1DD",
-                                            color: "#FFFFFF"
-                                        }
-                                    }} onClick={onFavorite}>
-                                        <FavoriteIcon/>
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                            <Box>
-                                <Tooltip title="More Options">
-                                    <SpeedDial
-                                        ariaLabel={props.application.ApplicationId||""}
-                                        direction="down"
-                                        sx={{ 
-                                            height: "42px", 
-                                            width: "42px",
-                                        }}
-                                        FabProps={{
-                                            sx: {
-                                                minHeight: "42px", 
-                                                width: "42px",
+                                {props.isInstalled &&
+                                    <Box sx={{display: "flex", alignItems: "flex-end"}}>
+                                        <Box sx={{
+                                                width: "60px",
+                                                height: "60px",
+                                                borderRadius: "50%",
                                                 background: "#A4CAF0",
                                                 boxShadow: lightShadows[32],
-                                                "&:hover": {
-                                                    background: "#0AA1DD"
-                                                }
-                                            }
-                                        }}  
-                                        open={moreOptionsSpeedDialState.isOpen}
-                                        onClick = {toggleMoreOptionsSpeedDial}
-                                        icon={<PlaylistAddIcon/>}
-                                    >
-                                        <SpeedDialAction
-                                            key="Delete"
-                                            icon={
-                                                <DeleteIcon />
-                                            }
-                                            tooltipTitle="Delete"
-                                            onClick={promptDeleteApplication}
-                                            sx={{
-                                                height: "42px",
-                                                width: "42px",
-                                                background: "#F4F4F4"
-                                            }}
-                                        />
-                                    </SpeedDial>
-                                </Tooltip>
-                            </Box>
-                            <Box>
-                                <Tooltip title="Share">
-                                    <IconButton sx={{
-                                        height: "42px",
-                                        width: "42px",
-                                        background: "#A4CAF0",
-                                        boxShadow: lightShadows[32],
-                                        "&:hover": {
-                                            background: "#0AA1DD",
-                                            color: "#FFFFFF"
-                                        }
-                                    }} onClick={onShare}>
-                                        <ShareIcon/>
-                                    </IconButton>
-                                </Tooltip>
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center"
+                                            }}>
+                                            <IconButton sx={{
+                                                    height: "42px",
+                                                    width: "42px",
+                                                    background: "#A4CAF0",
+                                                    boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
+                                                }}>
+                                                    <img src={PackageLogo} alt="Package"/>
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                }
                             </Box>
                         </Box>
+                        {formActions()}
                     </Box>
                 </Card> 
             </Box>

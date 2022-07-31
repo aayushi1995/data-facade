@@ -39,14 +39,14 @@ const AllTableView = (props: AllTableViewProps) => {
     React.useEffect(() => {
         if(!!tableQuery.data){
             setRows(
-                tableQuery.data?.map(tableData => {
+                tableQuery?.data?.map(tableData => {
                     const tableInfo = JSON.parse(tableData?.TableInfo || "{}") as TablePropertiesInfo
                     return {
                         ...tableData,
                         Health: tableInfo?.Health,
                         SyncStatus: tableInfo?.SyncStatus
                     }
-                })
+                }) || []
             )
         }
     }, [tableQuery.data])

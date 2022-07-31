@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { ACTION_EXECUTION_ROUTE, EXECUTION_HISTORY_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_ROUTE_ALL, APPLICATION_SUB_TABS, APPPLICATION_CREATE_AUTO_FLOW, SCHEDULED_JOBS_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
+import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_ROUTE_MARKETPLACE, APPLICATION_SUB_TABS, APPPLICATION_CREATE_AUTO_FLOW, EXECUTION_HISTORY_ROUTE, SCHEDULED_JOBS_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
 import { findTab } from '../../common/components/header/data/DataRoutesConfig';
-import { APPLICATION_ROUTE, TOP_TAB_ROUTES } from '../../common/components/header/data/RoutesConfig';
+import { APPLICATION_ROUTE } from '../../common/components/header/data/RoutesConfig';
 import { SetModuleContextState } from '../../common/components/ModuleContext';
 import ExecuteInstanceHomePage from '../applications/execute-instance/ExecuteInstanceHomePage';
 import EditWorkflowHomePage from '../applications/workflow/EditWorkflowHomePage';
@@ -18,9 +18,9 @@ import ActionExecutionHomePage from './components/ActionExecutionHomePage';
 import AllApplicationView from './components/AllApplicationView';
 import ApplicationCreationWizardDialog from './components/ApplicationCreationWizardDialog';
 import ApplicationDetailView from './components/ApplicationDetailView';
+import ApplicationMarketplace from './components/ApplicationMarketplpace';
 import ApplicationRunsByMe from './components/ApplicationRunsByMe';
 import ScheduledJobsView from './components/ScheduledJobsView';
-import { Application } from '../../generated/entities/Entities';
 
 
 export const ApplicationContent = withRouter(function TableBrowserRoutes() {
@@ -29,6 +29,7 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
     return (
         <Switch>
             <Route path='/application/jobs' component={Jobs}/>
+            <Route path={APPLICATION_ROUTE_MARKETPLACE} component={ApplicationMarketplace}/>
             <Route path="/application/build-workflow" component={BuildWorkflowHomePage}/>
             <Route path={APPLICATION_BUILD_ACTION_ROUTE_ROUTE} component={BuildActionHomePage}/>
             <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionHomePage}/>
