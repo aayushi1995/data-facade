@@ -3,32 +3,37 @@ import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button } fro
 import React from "react"
 import { Route, RouteComponentProps, Switch, useRouteMatch } from "react-router-dom"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
+import { SetModuleContextState } from '../../../common/components/ModuleContext'
 import NoData from "../../../common/components/NoData"
+import { ReactQueryWrapper } from '../../../common/components/ReactQueryWrapper'
 import ViewActionExecutionOutput from "../../../common/components/ViewActionExecutionOutput"
+import ActionDescriptionCard from '../../../common/components/workflow-action/ActionDescriptionCard'
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
 import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
-import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
-import ViewWorkflowStageResults from '../../../common/components/workflow/execute/ViewWorkflowStageResults'
-import ViewExecutionCharts from '../../../common/ViewExecutionCharts'
+import ActionExecutionStatus from '../../../enums/ActionExecutionStatus'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
-import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/components/shared-components/ActionDefinitionHero'
+import ActionExecutionCard from '../../apps/components/ActionExecutionCard'
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from '../../build_action/context/BuildActionContext'
 import ViewActionExecution from '../../view_action_execution/VIewActionExecution'
-import ViewWorkflowExecutionNew from './ViewWorkflowExecutionNew'
-import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
+import { ExecuteWorkflow } from './ExecuteWorkflowHomePage'
+import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
+import WorkflowExecutionStages from './WorkflowExecutionStages'
 
-interface MatchParams {
+interface ViewWorkflowExecutionProps {
     workflowExecutionId: string
 }
 
-const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
-    const workflowExecutionId = match.params.workflowExecutionId
+const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
+    const workflowExecutionId = props.workflowExecutionId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const setModuleStateContext = React.useContext(SetModuleContextState)
 
     const actionContext = React.useContext(BuildActionContext)
     const setActionContext = React.useContext(SetBuildActionContext)
+    const [initialTime, setInitialTime] = React.useState<number>(Date.now())
+    const [showParameters, setShowParameters] = React.useState(false)
     
     const [areChildActionsReady, setAreChildActionReady] = React.useState<boolean>(false)
     const [areActionsCompleted, setAreActionsCompleted] = React.useState<boolean>(false)
@@ -46,6 +51,16 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
     }
 
     const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
+        setModuleStateContext({
+            type: 'SetHeader',
+            payload: {
+                newHeader: {
+                    Title: data?.[0]?.WorkflowExecution?.ActionInstanceName,
+                    SubTitle: "Run on " + (new Date(data?.[0]?.WorkflowExecution?.ScheduledTime || Date.now()).toString())
+                }
+            }
+        })
+
         if(data?.[0]?.ChildExecutionsWithDefinitions?.length || 0 > 0) {
             if(areChildActionsReady === false) {
                 setWorkflowContext({type: 'DELETE_STAGE', payload: {stageId: workflowContext.stages[0].Id}})
@@ -76,6 +91,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                 if(!!currentStage) {
                     var completedActions = 0;
                     stageActions.forEach((stageAction, index) => {
+                        
                         setWorkflowContext({type: 'UPDATE_CHILD_STATUS', payload: {
                             stageId: currentStageId,
                             actionId: stageAction.Id,
@@ -86,17 +102,41 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                         }})
                         if(stageAction.ExecutionStatus === 'Completed' || stageAction.ExecutionStatus === 'Failed') {
                             completedActions++;
+                        } else if(stageAction.ExecutionStatus === ActionExecutionStatus.STARTED) {
+                            if(currentStage.stageStarted !== true) {
+                                setWorkflowContext({
+                                    type: 'SET_STAGE_STARTED_TIME',
+                                    payload: {
+                                        stageId: currentStageId,
+                                        startedOn: Date.now()
+                                    }
+                                })
+                            }
+                        } 
+                        if(stageAction.ExecutionStatus === ActionExecutionStatus.FAILED) {
+                            setWorkflowContext({
+                                type: 'SET_STAGE_FAILED',
+                                payload: {
+                                    stageId: currentStageId
+                                }
+                            })
                         }
                     })
-                    setWorkflowContext({type: 'CHANGE_STAGE_PERCENTAGE', payload: {
-                        stageId: currentStageId,
-                        percentage: (completedActions/stageActions.length) * 100
-                    }})
+            
+                    if(completedActions === currentStage.Actions.length) {
+                        setWorkflowContext({
+                            type: 'SET_STAGE_COMPLETED',
+                            payload: {
+                                stageId: currentStageId
+                            }
+                        })
+                    }
                 } else {
                     setWorkflowContext({type: 'ADD_STAGE', payload: {
                         Name: childExecutions?.[i]?.stageName || "stage",
                         Id: currentStageId,
-                        Actions: stageActions
+                        Actions: stageActions,
+                        completed: data?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.COMPLETED || data?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED
                     }})
                 }
 
@@ -128,80 +168,78 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
         setWorkflowContext({type: 'SET_EXECUTION_FOR_PREVIEW', payload: undefined})
     }
 
+    const increaseTime = () => {
+        if(!workflowContext.WorkflowExecutionCompletedOn){
+            setInitialTime(time => time + 1000)
+        }
+    }
+
     const handleResultsDialogClose = () => {
         setAreActionsCompleted(false)
     }
 
+    React.useEffect(() => {
+        setInitialTime(Date.now())
+        setInterval(increaseTime, 1000)
+        setAreChildActionReady(false)
+        setShowParameters(false)
+        setWorkflowContext({
+            type: 'SET_ENTIRE_CONTEXT',
+            payload: defaultWorkflowContext
+        })
+
+    }, [props.workflowExecutionId])
+
     const [workflowActionExecutionData, workflowActionExecutionError, workflowActionExecutionLoading] = useGetWorkflowStatus(workflowExecutionId, {enabled: (workflowContext.WorkflowExecutionStatus !== 'Completed' && workflowContext.WorkflowExecutionStatus !== 'Failed'), handleSuccess: handleRefreshQuery})
 
-    if(!areChildActionsReady){
-        return <LoadingIndicator/>
-    } else if(workflowActionExecutionError) {
-        return <NoData/>
-    } else {
-        return (
-            <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center'}}>
-                <Dialog open={areActionsCompleted} fullWidth maxWidth="xl" scroll="paper">
-                    <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <IconButton aria-label="close" onClick={handleResultsDialogClose}>
-                            <CloseIcon/>
-                        </IconButton>
-                    </Grid>
-                    <DialogTitle sx={{display: 'flex', gap: 20, alignItems: 'center'}}>
-                        Results
-                        <Box>
-                            <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
-                        </Box>
-                    </DialogTitle>
-                    <DialogContent sx={{overflow: 'auto', p: 1}}>
-                        <ShowWorkflowExecutionOutput/>
-                    </DialogContent>
-                </Dialog>
-                <Dialog open={workflowContext.actionExecutionIdForPreview !== undefined} onClose={handleResultsDialogClose} fullWidth maxWidth="xl" scroll="paper">
-                    <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}} onClick={handlePreviewDialogClose}>
-                        <IconButton aria-label="close" >
-                            <CloseIcon/>
-                        </IconButton>
-                    </Grid>
-                    <DialogTitle>Output preview</DialogTitle>
-                    <DialogContent sx={{overflow: 'auto', p: 1, display: 'flex', gap: 2, flexDirection: 'column'}}>
-                        <ViewActionExecution actionExecutionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"}/>
-                    </DialogContent>
-                </Dialog>
-                <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>
-                    <ActionDefinitionHeroActionContextWrapper mode="READONLY"/>
-                </Box>
-                <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%', mb: 4}}>
-                    {workflowContext.currentSelectedStage ? (
-                        <ViewWorkflowStageResults />
-                    ) : (
-                        <StagesWithActions/>
-                    )}
-                    
-                </Box>
-                <Box sx={{mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end', mr: 2}}>
-                    <Button variant="contained" color="primary" disabled={!resultsAvailable} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>
-                </Box>
-            </Box>
-        )
+    const getElapsedTime = () => {
+        const finalTime = workflowContext.WorkflowExecutionCompletedOn || initialTime
+        console.log(finalTime, initialTime)
+        const timeInMilliseconds = finalTime - (workflowContext.WorkflowExecutionStartedOn || 0)
+
+        const timeInSeconds = timeInMilliseconds/1000
+        const m = Math.floor(timeInSeconds / 60).toString().padStart(2,'0')
+        const s = Math.floor(timeInSeconds % 60).toString().padStart(2,'0');
+
+        return m + ' MIN ' + s + ' SEC'
+
     }
-}
 
-export const ViewWorkflowExecutionHomePage = () => {
-    const match = useRouteMatch<MatchParams>()
+    const handleShowParameters = () => {
+        setShowParameters(showParameters => !showParameters)
+    }
 
-    const workflowExecutionId = match.params.workflowExecutionId
     return (
-        <WorkflowContextProvider>
-            <BuildActionContextProvider>
-                {/* <Switch>
-                    <Route path={`${match.path}/:workflowExecutionId`} component={ViewWorkflowExecutionNew}/>
-                </Switch> */}
-                <ViewWorkflowExecutionNew workflowExecutionId={workflowExecutionId} />
-            </BuildActionContextProvider>
-        </WorkflowContextProvider>
+        <ReactQueryWrapper isLoading={workflowActionExecutionLoading} error={workflowActionExecutionError} data={workflowActionExecutionData}>
+            {() => {
+                if(!areChildActionsReady){
+                    return <LoadingIndicator/>
+                } else if(workflowActionExecutionError) {
+                    return <NoData/>
+                } else {
+                    return (
+                        <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                            <ActionDescriptionCard description={workflowContext.Description} mode="READONLY"/>
+                            <ActionExecutionCard 
+                                elapsedTime={getElapsedTime()} 
+                                actionExecution={workflowActionExecutionData?.[0]?.WorkflowExecution || {}}  
+                                arrowState={showParameters ? "DOWN": "UP"}
+                                handleClickArrow={handleShowParameters}
+                                terminalState={!!workflowContext.WorkflowExecutionCompletedOn} 
+                                error={workflowActionExecutionData?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED}/>
+                            {showParameters ? (
+                                <WorkflowContextProvider>
+                                    <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>
+                                </WorkflowContextProvider>
+                            ) : (<></>)}
+                            <WorkflowExecutionStages/>
+                        </Box>
+                    )
+                }
+            }}
+        </ReactQueryWrapper>
     )
+
 }
 
-
-export default ViewWorkflowExecutionHomePage
+export default ViewWorkflowExecutionNew

@@ -18,7 +18,8 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
                 return {
                     ...childParameterInstance,
                     ...globalParameterInstance,
-                    ActionParameterDefinitionId: apdId
+                    ActionParameterDefinitionId: apdId,
+                    Id: uuidv4()
                 }
             }),
             model: {
@@ -38,20 +39,23 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
     return useMutation(
         "CreateWorkflowInstance",
         (params: {workflowId: string, workflowName: string, recurrenceConfig: {actionInstance: ActionInstance, startDate: Date, slack?: string, email?: string}}) => {
+            const actionInstanceId = uuidv4()
             const actionProperties = {
                 entityProperties: {
                     DefinitionId: params.workflowId,
                     DisplayName: params.workflowName,
-                    Id: uuidv4(),
+                    Id: actionInstanceId,
                     Name: params.workflowName,
                     ProviderInstanceId: actionInstanceProvider || "5", // TODO: hard coding here, write logic to fix,
                     IsRecurring: params.recurrenceConfig.actionInstance.IsRecurring,
                     RecurrenceIntervalInSecs: params.recurrenceConfig.actionInstance.RecurrenceIntervalInSecs
                 } as ActionInstance,
+                ActionParameterInstanceEntityProperties: workflowContext.WorkflowParameterInstance?.map(pi => ({...pi, ActionInstanceId: actionInstanceId, Id: uuidv4()})),
                 withWorkflowActionInstances: workflowInstancesWithParameterInstances as ActionInstanceWithParameters[],
                 executionScheduledDate: params.recurrenceConfig.actionInstance.IsRecurring ? params.recurrenceConfig.startDate?.getTime()?.toString() : undefined,
                 slack: params.recurrenceConfig.slack,
-                email: params.recurrenceConfig.email
+                email: params.recurrenceConfig.email,
+                withActionParameterInstance: true
             }
 
             return fetchedDataManagerInstance.saveData("ActionInstance", actionProperties)

@@ -73,7 +73,8 @@ const ModuleContextStateProvider = ({children}: { children: React.ReactElement }
     const setState = (args: ModuleContextStateAction) => dispatch(args)
 
     React.useEffect(() => {
-        if(history.location.pathname.includes("application/action-execution")) {
+        console.log(history.location.pathname.includes("application/workflow-execution"))
+        if(history.location.pathname.includes("application/action-execution") || history.location.pathname.includes("application/workflow-execution")) {
             console.log(history.location.pathname)
             setState({
                 type: 'SetDisplayHeader',

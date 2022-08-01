@@ -18,10 +18,10 @@ import ViewActionExecution, { ViewFailedActionExecution } from "../../view_actio
 import ActionExecutionCard from "./ActionExecutionCard"
 
 type MatchParams = {
-    ActionExecutionId?: string
+    ActionExecutionId?: string,
 }
 
-export const ActionExecutionDetails = (props: {actionExecutionId: string}) => {
+export const ActionExecutionDetails = (props: {actionExecutionId: string, showDescription?: boolean, showParametersOnClick?: boolean}) => {
     const actionExecutionId = props.actionExecutionId
     const [executionTerminal, setExecutionTerminal] = React.useState(false)
     const [executionError, setExecutionError] = React.useState(false)
@@ -86,14 +86,18 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string}) => {
     }, [props.actionExecutionId])
 
     const handleClickArrow = () => {
-        setShowParameters(showParameters => !showParameters)
+        if(!(props.showParametersOnClick === false)){
+            setShowParameters(showParameters => !showParameters)
+        }
     }
 
     return (
         <ReactQueryWrapper {...actionExecutionDetailQuery}>
             {() => (
                 <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
-                    <ActionDescriptionCard description={actionExecutionDetailQuery?.data?.ActionDefinition?.Description} mode="READONLY"/>
+                    {props.showDescription === false ? (<></>): (
+                        <ActionDescriptionCard description={actionExecutionDetailQuery?.data?.ActionDefinition?.Description} mode="READONLY"/>
+                    )}
                     <ActionExecutionCard elapsedTime={getElapsedTime()} actionExecution={actionExecutionDetailQuery?.data?.ActionExecution!} handleClickArrow={handleClickArrow} arrowState={showParameters ? "UP":"DOWN"} terminalState={executionTerminal} error={executionError}/>
                     {showParameters ? (
                         <Box sx={{

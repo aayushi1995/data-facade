@@ -9,25 +9,32 @@ import NoData from "../../../common/components/NoData"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard"
 import useCreateWorkflowActionInstanceMutation from "../../../common/components/workflow/execute/hooks/useCreateWorkflowActionInstanceMutation"
+import useGetActionInstanceDetails from "../../../common/components/workflow/execute/hooks/useGetActionInstanceDetails"
 import { useGetWorkflowChildInstances, useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype"
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag"
 import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../../../generated/entities/Entities"
-import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
+import { ActionDefinitionDetail, ActionInstanceDetails, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
 import ActionDefinitionHero from "../../build_action/components/shared-components/ActionDefinitionHero"
 import ConfigureActionRecurring from "../../execute_action/components/ConfigureActionRecurring"
 import ConfigureParameters, { isDefaultValueDefined } from "../../execute_action/components/ConfigureParameters"
 import ConfigureSlackAndEmail from "../../execute_action/components/ConfigureSlackAndEmail"
 import SelectProviderInstance from "../../execute_action/components/SelectProviderInstance"
 import { safelyParseJSON } from "../../execute_action/util"
-import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
+import { defaultWorkflowContext, SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 
 interface MatchParams {
     workflowId: string
 }
 
-const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
+interface ExecuteWorkflowProps {
+    workflowId?: string,
+    previousInstanceId?: string
+}
+
+export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
+    const match = useRouteMatch<MatchParams>()
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const setModuleContextState = React.useContext(SetModuleContextState)
@@ -41,6 +48,8 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         slack?: string,
         email?: string
     }>({actionInstance: {}, startDate: new Date(Date.now()), activeIndex: 0, slack: 'C01NSTT6AA3', email: userSettingsSingleton.userEmail})
+
+    
 
     const handleInstanceSaved = (data: any) => {
         if(recurrenceConfig.actionInstance.IsRecurring) {
@@ -59,7 +68,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const pandasDataframeParameterExists = workflowContext.WorkflowParameters?.some(apd => apd.Tag === ActionParameterDefinitionTag.DATA && apd.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME)
 
     const saveWorkflowMutation = useCreateWorkflowActionInstanceMutation(workflowContext, handleInstanceSaved)
-    const workflowId = match.params.workflowId
+    const workflowId = props.workflowId || match.params.workflowId
     const handleTemplate = (data: ActionDefinitionDetail[]) => {
         setModuleContextState({
             type: 'SetHeader',
@@ -100,12 +109,14 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 const defaultParameterInstance = safelyParseJSON(globalParameter?.DefaultParameterValue) as ActionParameterInstance
                 console.log(mappedGlobalParameter, defaultParameterInstance)
                 if(!!mappedGlobalParameter) {
-                    parametersArray.push({
-                        ...defaultParameterInstance,
-                        TableId: mappedGlobalParameter.TableId || defaultParameterInstance?.TableId, 
-                        ParameterValue: defaultParameterInstance?.ParameterValue || mappedGlobalParameter.ParameterValue , 
-                        ActionParameterDefinitionId: globalParameter.Id
-                    })
+                    if(!parametersArray.find(parameter => parameter.ActionParameterDefinitionId === globalParameter.Id)){
+                        parametersArray.push({
+                            ...defaultParameterInstance,
+                            TableId: mappedGlobalParameter.TableId || defaultParameterInstance?.TableId, 
+                            ParameterValue: defaultParameterInstance?.ParameterValue || mappedGlobalParameter.ParameterValue , 
+                            ActionParameterDefinitionId: globalParameter.Id
+                        })
+                    }
                 }
             })
 
@@ -126,6 +137,26 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const executeWorkflow = () => {
         saveWorkflowMutation.mutate({workflowId: workflowId, workflowName: workflowContext.Name, recurrenceConfig: recurrenceConfig})
     }
+
+    const handlePreviousInstanceFetched = (data: ActionInstanceDetails[]) => {
+        const actionInstanceDetails = data?.[0]
+        if(!!actionInstanceDetails) {
+            setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': actionInstanceDetails.ActionParameterInstance || []}})
+        }
+    }
+
+    React.useEffect(() => {
+        if(!!props.previousInstanceId && isReady) {
+            actionInstanceDetailsQuery.refetch()
+        }
+    }, [props.previousInstanceId, isReady])
+
+    React.useEffect(() => {
+        setWorkflowContext({
+            type: 'SET_ENTIRE_CONTEXT',
+            payload: defaultWorkflowContext
+        })
+    }, [props.workflowId])
 
     const handleRecurringChange = (actionInstance: ActionInstance) => {
         setRecurrenceConfig(config => ({
@@ -155,7 +186,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             activeIndex: index + 1
         }))
     }
-
+    const actionInstanceDetailsQuery = useGetActionInstanceDetails({filter: {Id: props.previousInstanceId}, options: {enabled: false, onSuccess: handlePreviousInstanceFetched}})
     const [workflowDefinition, error, loading] = useGetWorkflowDetails(workflowId, {enabled: workflowContext.Template === undefined, onSuccess: handleTemplate})
     const [workflowInstances, instancesError, instancesLoading] = useGetWorkflowChildInstances(workflowId, {enabled: ((workflowDefinition?.length || 0) > 0 && workflowContext.stages[0].Actions.length === 0), onSuccess: handleInstances})
     
@@ -240,7 +271,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             }
         )
     }
-    if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0 && isReady)
+    if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0 && isReady && !actionInstanceDetailsQuery.isRefetching)
     {
         return (
             <Box sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center'}}>
@@ -300,7 +331,7 @@ const ExecuteWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                 <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/>
             </Box>
         )
-    } else if(loading || instancesLoading || !isReady){
+    } else if(loading || instancesLoading || !isReady || actionInstanceDetailsQuery.isRefetching){
         return <LoadingIndicator/>
     } else if(!!instancesError || !!error){
         return <>Fetching Instances Error...</>

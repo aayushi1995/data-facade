@@ -82,6 +82,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
 
     const setExecuteActionContext = React.useContext(SetExecuteActionContext)
     const executeActionContext = React.useContext(ExecuteActionContext)
+    console.log(executeActionContext)
     
     const [resultActionExecutionId, setResultActionExecutionId] = React.useState<string|undefined>()
     const history = useHistory()

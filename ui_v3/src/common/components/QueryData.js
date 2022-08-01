@@ -27,6 +27,12 @@ const QueryData = (props) => {
             components={{
                 Toolbar: CustomToolbar([])
             }}
+            rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+            initialState={{
+                pagination: {
+                    pageSize: 50
+                }
+            }}
             headerHeight={70}
             sx={{
                 "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}

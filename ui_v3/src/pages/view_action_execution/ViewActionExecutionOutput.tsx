@@ -87,7 +87,13 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                 sx={{
                     "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
                 }}
-                autoHeight 
+                rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+                initialState={{
+                    pagination: {
+                        pageSize: 50
+                    }
+                }}
+                autoHeight
                 columns={dataGridColumns} 
                 rows={dataGridRows}
                 components={{

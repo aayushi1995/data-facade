@@ -1,4 +1,5 @@
 import { Box, Grid } from "@mui/material"
+import { truncate } from "node:fs/promises"
 import { ActionDefinition } from "../../../../generated/entities/Entities"
 import { ActionDefinitionCardViewResponse } from "../../../../generated/interfaces/Interfaces"
 import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
@@ -22,7 +23,7 @@ const AllActionDefinitionsView = (props: AllApplicationRowProps) => {
                 return show
             })
             .map(actionDefinition => 
-                <Grid item xs={3}>
+                <Grid item xs={12} lg={4} md={6} xl={3}>
                     <Box sx={{ height: '100%', p: 2}}  key={actionDefinition.DefinitionId}>
                         <ActionDefinitionCard actionDefinition={actionDefinition}/>
                     </Box>

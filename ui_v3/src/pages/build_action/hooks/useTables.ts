@@ -9,6 +9,7 @@ export interface UseTablesProps {
     tableFilter: TableProperties,
     parameterId?: string
     filterForParameterTags?: boolean
+    handleOnSucces?: (data: TableProperties[]) => void
 }
 
 const useTables: (props: UseTablesProps) => {tables: TableProperties[]|undefined, loading: boolean, error: any} = (props: UseTablesProps) => {
@@ -25,6 +26,9 @@ const useTables: (props: UseTablesProps) => {tables: TableProperties[]|undefined
                     FilterForParameterTags: filterForParameterTags || false,
                     withParameterId: parameterId
             })
+        },
+        {
+            onSuccess: (data) => props.handleOnSucces?.(data)
         }
     )
 

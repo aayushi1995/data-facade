@@ -4,6 +4,7 @@ import InfoIcon from "../../../../../src/images/info.svg"
 import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
+import LoadingIndicator from "../../LoadingIndicator"
 import LoadingWrapper from "../../LoadingWrapper"
 import { HtmlTooltip } from "../../workflow-action/ActionCard"
 import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
@@ -517,17 +518,11 @@ const BooleanInput = (props: BooleanParameterInput) => {
 const TableInput = (props: TableParameterInput) => {
     // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
-    const {tables, loading, error}  = useTables({tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId})
-    
-    const [, updateState] = React.useState();
-    const getSelectedTable = () => {
-        return tables?.find(table => table?.Id === selectedTableFilter?.Id)
-    }
+    const [settingTables, setSettingTables] = React.useState(false)
 
-    const getAnyTable = () => tables?.[0]
-
-    React.useEffect(() => {
-        if(tables !== undefined) {
+    const handleTablesReceived = (tables: TableProperties[]) => {
+        if(!!tables) {
+            setSettingTables(true)
             if(selectedTableFilter !== undefined){
                 const selectedTable = getSelectedTable()
                 if(selectedTable !== undefined) {
@@ -538,8 +533,32 @@ const TableInput = (props: TableParameterInput) => {
             } else {
                 // onChange(getAnyTable())
             }
+            setSettingTables(false)
         }
-    }, [tables])
+    }
+
+    const {tables, loading, error}  = useTables({tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived})
+    const [, updateState] = React.useState();
+    const getSelectedTable = () => {
+        return tables?.find(table => table?.Id === selectedTableFilter?.Id)
+    }
+
+    const getAnyTable = () => tables?.[0]
+
+    // React.useEffect(() => {
+    //     if(tables !== undefined) {
+    //         if(selectedTableFilter !== undefined){
+    //             const selectedTable = getSelectedTable()
+    //             if(selectedTable !== undefined) {
+    //                 onChange(selectedTable)
+    //             } else {
+    //                 // onChange(getAnyTable())
+    //             }
+    //         } else {
+    //             // onChange(getAnyTable())
+    //         }
+    //     }
+    // }, [tables])
 
     
     return (
@@ -548,21 +567,26 @@ const TableInput = (props: TableParameterInput) => {
         error={error}
         data={tables}
         >
-            <Autocomplete
-                options={tables!}
-                getOptionLabel={(table: TableProperties) => table.UniqueName!}
-                groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
-                value={getSelectedTable()}
-                filterSelectedOptions
-                fullWidth
-                selectOnFocus
-                // clearOnBlur
-                handleHomeEndKeys
-                onChange={(event, value, reason, details) => {
-                    onChange(!!value ? value : undefined)
-                }}
-                renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
-            />
+            {settingTables ? (
+                <LoadingIndicator/>
+            ) : (
+                <Autocomplete
+                    options={tables!}
+                    getOptionLabel={(table: TableProperties) => table.UniqueName!}
+                    groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
+                    value={getSelectedTable()}
+                    filterSelectedOptions
+                    fullWidth
+                    selectOnFocus
+                    // clearOnBlur
+                    handleHomeEndKeys
+                    onChange={(event, value, reason, details) => {
+                        onChange(!!value ? value : undefined)
+                    }}
+                    renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
+                />
+            )}
+            
         </LoadingWrapper>
     )
 }

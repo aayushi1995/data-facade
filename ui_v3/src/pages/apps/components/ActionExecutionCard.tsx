@@ -64,7 +64,7 @@ const ActionExecutionCard = (props: ActionExecutionCardProps) => {
         <Box>
             <Card sx={{
                 borderRadius: '12px',
-                minHeight: '110px',
+                minHeight: '100px',
                 display: 'flex',
                 flexDirection: 'column',
                 minWidth: '100%',

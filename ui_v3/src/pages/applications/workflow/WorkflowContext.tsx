@@ -46,7 +46,11 @@ export type WorkflowContextType = {
         Id: string, 
         Name: string,
         Actions: WorkflowActionDefinition[],
-        Percentage?: number
+        Percentage?: number,
+        StartedOn?: number,
+        completed?: boolean,
+        stageStarted?: boolean,
+        stageFailed?: boolean
     }[]
     currentStageView?: {
         startIndex: number
@@ -82,10 +86,11 @@ export type WorkflowContextType = {
     },
     WorkflowExecutionStartedOn?: number,
     WorkflowExecutionCompletedOn?: number,
-    SelectedProviderInstance?: ProviderInstance
+    SelectedProviderInstance?: ProviderInstance,
+    currentStageRunning?: string
 }
 
-const defaultWorkflowContext: WorkflowContextType = {
+export const defaultWorkflowContext: WorkflowContextType = {
     stages: [
         {
             Id: uuidv4(),
@@ -130,7 +135,8 @@ type AddStagePayloadType = {
     Id: string
     Name: string,
     Actions: WorkflowActionDefinition[],
-    previousStageId?: string
+    previousStageId?: string,
+    completed?: boolean
 }
 
 type StageNameChangePayloadType = {
@@ -462,6 +468,35 @@ type GoToPreviousStage = {
     payload: {}
 }
 
+type SetCurrentStageRunning = {
+    type: 'SET_CURRENT_STAGE_RUNNING',
+    payload: {
+        stageId: string
+    }
+}
+
+type SetStageStartedTime = {
+    type: 'SET_STAGE_STARTED_TIME',
+    payload: {
+        stageId: string,
+        startedOn: number
+    }
+}
+
+type SetStageCompleted = {
+    type: 'SET_STAGE_COMPLETED',
+    payload: {
+        stageId: string
+    }
+}
+
+type SetStageFailed = {
+    type: 'SET_STAGE_FAILED',
+    payload: {
+        stageId: string
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -505,7 +540,11 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetWorkflowGlobalParameter |
                              SetMode |
                              GoToNextStage | 
-                             GoToPreviousStage
+                             GoToPreviousStage |
+                             SetCurrentStageRunning |
+                             SetStageStartedTime |
+                             SetStageCompleted |
+                             SetStageFailed
 
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
@@ -1024,6 +1063,44 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return {
                 ...state,
                 currentSelectedStage: newStage?.Id
+            }
+        }
+
+        case 'SET_CURRENT_STAGE_RUNNING': {
+            return {
+                ...state,
+                currentStageRunning: action.payload.stageId
+            }
+        }
+
+        case 'SET_STAGE_STARTED_TIME': {
+            return {
+                ...state,
+                stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage : {
+                    ...stage,
+                    StartedOn: action.payload.startedOn,
+                    stageStarted: true
+                })
+            }
+        }
+
+        case 'SET_STAGE_COMPLETED': {
+            return {
+                ...state,
+                stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage : {
+                    ...stage,
+                    completed: true
+                })
+            }
+        }
+
+        case 'SET_STAGE_FAILED': {
+            return {
+                ...state,
+                stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage : {
+                    ...stage,
+                    stageFailed: true
+                })
             }
         }
 
