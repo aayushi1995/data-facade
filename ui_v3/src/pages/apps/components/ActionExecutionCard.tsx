@@ -107,9 +107,11 @@ const ActionExecutionCard = (props: ActionExecutionCardProps) => {
                                 {downloadExecutionOutputFromS3.isLoading ? (
                                     <LoadingIndicator />
                                 ) : (
-                                    <IconButton onClick={handleDownloadResult}>
-                                        <img src={DownloadIcon} />
-                                    </IconButton>
+                                    <Tooltip title="Download Result as CSV">
+                                        <IconButton onClick={handleDownloadResult}>
+                                            <img src={DownloadIcon} />
+                                        </IconButton>
+                                    </Tooltip>
                                 )}
                                 
                                 <Button variant="outlined" sx={{border: '1.28323px solid #0A414D;'}} onClick={handleMoreInfoClick}>

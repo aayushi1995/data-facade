@@ -67,6 +67,10 @@ const InputMap = {
             [ActionParameterDefinitionAttribute.TYPE]: ActionParameterDefinitionType.COMPILE_TIME,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING,
         },
+        [ActionParameterDefinitionInputType.COLUMN_LIST]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
+            [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
+        }
     }
 }
 
