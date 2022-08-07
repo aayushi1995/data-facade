@@ -93,7 +93,7 @@ export interface ColumnListParameterInput {
     parameterId?: string
     inputProps: {
         parameterName: string,
-        selectedColumnFilters: ColumnProperties[] | undefined,
+        selectedColumnFiltersWithNameOnly: ColumnProperties[] | undefined,
         filters: {
             tableFilters: TableProperties[] | undefined,
             parameterDefinitionId: string
@@ -229,31 +229,49 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
 }
 
 const ColumnListInput = (props: ColumnListParameterInput) => {
-    const {parameterName, selectedColumnFilters, filters, onChange} = props.inputProps
-    const fetchTableQuery = useFetchColumnsForTableAndTags({filters: {
+    const {parameterName, selectedColumnFiltersWithNameOnly, filters, onChange} = props.inputProps
+    const fetchColumnsQuery = useFetchColumnsForTableAndTags({filters: {
         tableFilters: filters.tableFilters,
         parameterDefinitionId: filters.parameterDefinitionId
     }})
+    const allColumns = fetchColumnsQuery?.data?.[0]?.Columns
 
+    const getAutoCompleteValue = () => {
+        const columnNameFrequencyMap = selectedColumnFiltersWithNameOnly?.reduce((oldMap: Object, column: ColumnProperties) => {
+            const columnName: string = column?.UniqueName || "NA"
+            if(columnName in oldMap) {
+                oldMap[columnName]+=1
+            } else {
+                oldMap[columnName]=1
+            }
+            return oldMap
+        }, {}) || {}
+
+        const selectedColumns = Object.entries(columnNameFrequencyMap).flatMap(([columnName, freq]) => {
+            return allColumns?.filter(col => col?.UniqueName===columnName).slice(0, freq) || []
+        })
+
+        return selectedColumns
+    }
 
     React.useEffect(() => {
-        if(fetchTableQuery?.data?.[0]?.FilteredBasedOnTags) {
+        if(fetchColumnsQuery?.data?.[0]?.FilteredBasedOnTags) {
             // TODO: Disabling auto-fill of columns
             // onChange?.(fetchTableQuery.data?.[0]?.Columns)
         }
-    }, [fetchTableQuery.data])
+    }, [fetchColumnsQuery.data])
 
     return (
         <LoadingWrapper
-            {...fetchTableQuery}
+            {...fetchColumnsQuery}
         >
             <Autocomplete
-                options={fetchTableQuery.data?.[0]?.Columns || []}
+                options={fetchColumnsQuery.data?.[0]?.Columns || []}
                 multiple={true}
                 fullWidth
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName || "Un-named column"}
                 groupBy={(column) => column.TableName || "Table NA"}
-                value={fetchTableQuery.data?.[0]?.Columns?.filter(column => props.inputProps.selectedColumnFilters?.find(selectedColumn => selectedColumn?.Id === column.Id || (selectedColumn.Id === undefined && selectedColumn?.UniqueName === column.UniqueName) ) !== undefined)}
+                value={getAutoCompleteValue()}
                 renderInput={(params) => (
                     <TextField
                         {...params}

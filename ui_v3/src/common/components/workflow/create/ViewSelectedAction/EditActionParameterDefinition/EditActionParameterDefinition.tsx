@@ -14,7 +14,7 @@ import { safelyParseJSON } from '../../../../../../pages/execute_action/util';
 import { getUniqueFilters } from '../../../../action/ParameterDefinitionsConfigPlane';
 import TagHandler from '../../../../tag-handler/TagHandler';
 import { HtmlTooltip } from '../../../../workflow-action/ActionCard';
-import getParameterInputField, { AutoCompleteOption, BooleanParameterInput, ColumnParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
+import getParameterInputField, { AutoCompleteOption, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
 
 
 export interface EditActionParameterDefinitionProps {
@@ -250,7 +250,7 @@ const DefaultValueSelector = (props: {parametersInstances: WorkflowActionParamet
                 parameterType: "COLUMN_LIST",
                 inputProps: {
                     parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "NAME NA",
-                    selectedColumnFilters: parameterConfig?.ParameterValue?.split(',').map(name => ({UniqueName: name})) || [],
+                    selectedColumnFiltersWithNameOnly: parameterConfig?.ParameterValue?.split(',').map(name => ({UniqueName: name})) || [],
                     filters: {
                         tableFilters: [{Id: parameterConfig?.TableId}],
                         parameterDefinitionId: props.parameter.Id!
@@ -271,7 +271,7 @@ const DefaultValueSelector = (props: {parametersInstances: WorkflowActionParamet
 
                     }
                 }
-            }
+            } as ColumnListParameterInput
         } else if(parameter.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
             const parameterConfig = getCurrentParameterConfig()
             return {

@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
-import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
+import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
 
 
 
@@ -262,7 +262,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         }
                         onParameterValueChange(newParameterInstance)
                     },
-                    selectedColumnFilters: existingParameterValue?.split(',')?.map(name => {
+                    selectedColumnFiltersWithNameOnly: existingParameterValue?.split(',')?.map(name => {
                         return {UniqueName: name}
                     }) || [],
                     filters: {
@@ -270,7 +270,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         parameterDefinitionId: parameterDefinition?.Id!
                     }
                 }
-            }
+            } as ColumnListParameterInput
         } else {
             return {
                 parameterType: undefined,

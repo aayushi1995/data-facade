@@ -185,7 +185,7 @@ const ParameterValueInput = (props: ParameterValueInputProps) => {
                         }
                         onParameterInstanceParameterValueChange(newParameterInstance)
                     },
-                    selectedColumnFilters: parameterInstance?.ParameterValue?.split(',')?.map(name => {
+                    selectedColumnFiltersWithNameOnly: parameterInstance?.ParameterValue?.split(',')?.map(name => {
                         return {UniqueName: name}
                     }) || [],
                     filters: {

@@ -116,7 +116,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                             ParameterValue: names.join(',')
                         })
                     },
-                    selectedColumnFilters: defaultActionParameterInstance?.ParameterValue?.split(',')?.map(name => {
+                    selectedColumnFiltersWithNameOnly: defaultActionParameterInstance?.ParameterValue?.split(',')?.map(name => {
                         return { UniqueName: name }
                     }) || [],
                     filters: {
