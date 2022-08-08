@@ -1,6 +1,6 @@
-import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper } from "@mui/material"
+import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper, Tooltip, IconButton } from "@mui/material"
 import React from "react"
-import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
+import { generatePath, Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import ParameterDefinitionConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
@@ -21,8 +21,10 @@ import ConfigureActionRecurring from "../../execute_action/components/ConfigureA
 import ConfigureParameters, { isDefaultValueDefined } from "../../execute_action/components/ConfigureParameters"
 import ConfigureSlackAndEmail from "../../execute_action/components/ConfigureSlackAndEmail"
 import SelectProviderInstance from "../../execute_action/components/SelectProviderInstance"
+import SelectProviderInstanceHook from "../../execute_action/components/SelectProviderInstanceHook"
 import { safelyParseJSON } from "../../execute_action/util"
 import { defaultWorkflowContext, SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
+import EditIcon from '@mui/icons-material/Edit';
 
 interface MatchParams {
     workflowId: string
@@ -86,7 +88,17 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
         setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETERS', payload: data?.[0]?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions?.map(parameter => parameter?.model || {}) || []})
         setWorkflowContext({type: 'SET_APPLICATION_ID', payload: data?.[0]?.ActionDefinition?.model?.ApplicationId })
         setWorkflowContext({type: 'SET_ACTION_GROUP', payload: data?.[0]?.ActionDefinition?.model?.ActionGroup })
+        refetchFunction()
     }
+    const { availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook()
+    const defaultProviderInstance = availableProviderInstanceQuery?.data?.find(prov => prov?.IsDefaultProvider)
+
+    React.useEffect(() => {
+        if(!!defaultProviderInstance && !workflowContext.SelectedProviderInstance){
+            console.log("here")
+            setWorkflowContext({type: 'SET_SELECTED_PROVIDER_INSTANCE', payload: {newProviderInstance: defaultProviderInstance}})
+        }
+    }, [defaultProviderInstance])
 
     const handleInstances = (data: ActionInstanceWithParameters[]) => {
         const parametersArray: ActionParameterInstance[] = []
@@ -188,7 +200,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     }
     const actionInstanceDetailsQuery = useGetActionInstanceDetails({filter: {Id: props.previousInstanceId}, options: {enabled: false, onSuccess: handlePreviousInstanceFetched}})
     const [workflowDefinition, error, loading] = useGetWorkflowDetails(workflowId, {enabled: workflowContext.Template === undefined, onSuccess: handleTemplate})
-    const [workflowInstances, instancesError, instancesLoading] = useGetWorkflowChildInstances(workflowId, {enabled: ((workflowDefinition?.length || 0) > 0 && workflowContext.stages[0].Actions.length === 0), onSuccess: handleInstances})
+    const [workflowInstances, instancesError, instancesLoading, refetchFunction, isRefetching] = useGetWorkflowChildInstances(workflowId, {enabled: false, onSuccess: handleInstances})
     
     const handleEmailAndSlackChange = (slack?: string, email?: string) => {
         setRecurrenceConfig(config => ({
@@ -239,7 +251,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     )
 
     if((!tableTypeParameterExists)&&(!pandasDataframeParameterExists)) {
-        IndexToComponent.unshift({
+        IndexToComponent.push({
             component:  
                 <Card sx={{
                     background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8', 
@@ -263,6 +275,10 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
         })
     }
 
+    const handleEditFlow = () => {
+        history.push(`/application/edit-workflow/${workflowId}`)
+    }
+
     if(history.location.state !== 'fromTest') {
         IndexToComponent.push(
             {
@@ -279,7 +295,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                     <ActionDescriptionCard description={workflowContext.Description}  mode="READONLY" />
                 </Box>
                 <Box sx={{flex: 4, mb: 2}}>
-                    <ReactQueryWrapper data={workflowContext.WorkflowParameterInstance} isLoading={instancesLoading} error={instancesError} children={
+                    <ReactQueryWrapper data={workflowContext.WorkflowParameterInstance} isLoading={!isReady} error={instancesError} children={
                         () => (
                             <Box sx={{display: 'flex', flexDirection: 'column', gap: 3}}>
                                 <Grid container sx={{mt: 3}}>
@@ -294,6 +310,13 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                                                 </Step>
                                             ))}
                                         </Stepper>
+                                    </Grid>
+                                    <Grid item xs={4} sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                                        <Tooltip title="Edit Flow">
+                                            <IconButton onClick={handleEditFlow}>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
                                     </Grid>
                                 </Grid>
                                 <Box> 
@@ -314,11 +337,8 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                                 <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
                             ) : (
                                 <Box sx={{display: 'flex', gap: 2}}>
-                                    {areAllParametersFilled() ? (
-                                        <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
-                                    ) : (
-                                        <></>
-                                    )}
+                                    
+                                    <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" disabled={!areAllParametersFilled()} onClick={executeWorkflow}>EXECUTE</Button>
                                     <Button sx={{minWidth: '50%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={handleGoNext}>NEXT</Button>
                                 </Box>
                             )}

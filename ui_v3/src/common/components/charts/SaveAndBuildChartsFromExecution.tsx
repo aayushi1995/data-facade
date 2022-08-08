@@ -86,10 +86,12 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     }
 
     React.useEffect(() => {
-        if(chartQueriesState.fetchCharts?.data?.length === 0 || !!chartQueriesState.fetchCharts?.data) {
-            setActiveTab(1)
+        if(!!chartQueriesState.fetchCharts?.data) {
+            if(chartQueriesState.fetchCharts?.data?.length === 0 || !chartQueriesState.fetchCharts?.data) {
+                setActiveTab(1)
+            }
         }
-    }, [chartQueriesState.fetchCharts?.isLoading]) 
+    }, [chartQueriesState.fetchCharts?.data]) 
 
     React.useEffect(() => {
         setSaveAndBuildChartsState({type: 'SetExecutionId', payload: {executionId: props.executionId}})

@@ -11,6 +11,7 @@ import ActionDescriptionCard from '../../../common/components/workflow-action/Ac
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
 import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
+import ShowWorkflowExecutionOutput from '../../../common/components/workflow/execute/ShowWorkflowExecutionOutput'
 import ActionExecutionStatus from '../../../enums/ActionExecutionStatus'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
 import ActionExecutionCard from '../../apps/components/ActionExecutionCard'
@@ -36,19 +37,7 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
     const [showParameters, setShowParameters] = React.useState(false)
     
     const [areChildActionsReady, setAreChildActionReady] = React.useState<boolean>(false)
-    const [areActionsCompleted, setAreActionsCompleted] = React.useState<boolean>(false)
     const [resultsAvailable, setResultsAvailable] = React.useState<boolean>(false)
-
-    const checkIfActionsCompleted = (data: WorkflowActionExecutions[]) => {
-        var areActionsCompleted = true
-        data[0].ChildExecutionsWithDefinitions?.forEach(child => {
-            if(child?.ActionExecution?.Status !== 'Completed' && child?.ActionExecution?.Status !== 'Failed') {
-                areActionsCompleted = false;
-            }
-        })
-        
-        setAreActionsCompleted(areActionsCompleted)
-    }
 
     const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
         setModuleStateContext({
@@ -154,7 +143,6 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
             setActionContext({ type: "SetActionDefinition", payload: { newActionDefinition: data?.[0]?.WorkflowDefinition}})
             
             setAreChildActionReady(true)   
-            checkIfActionsCompleted(data || [])
 
             if(data?.[0]?.WorkflowExecution?.Status === "Completed" || data?.[0]?.WorkflowExecution?.Status === "Failed") {
                 setResultsAvailable(true)
@@ -172,10 +160,6 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
         if(!workflowContext.WorkflowExecutionCompletedOn){
             setInitialTime(time => time + 1000)
         }
-    }
-
-    const handleResultsDialogClose = () => {
-        setAreActionsCompleted(false)
     }
 
     React.useEffect(() => {
@@ -208,6 +192,9 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
     const handleShowParameters = () => {
         setShowParameters(showParameters => !showParameters)
     }
+    const handleShowResults = () => {
+        setResultsAvailable(true)
+    }
 
     return (
         <ReactQueryWrapper isLoading={workflowActionExecutionLoading} error={workflowActionExecutionError} data={workflowActionExecutionData}>
@@ -219,6 +206,22 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
                 } else {
                     return (
                         <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                            <Dialog open={resultsAvailable} onClose={() => setResultsAvailable(false)} fullWidth maxWidth="xl">
+                                <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                                    <IconButton aria-label="close" onClick={() => setResultsAvailable(false)}>
+                                        <CloseIcon/>
+                                    </IconButton>
+                                </Grid>
+                                <DialogTitle sx={{display: 'flex', gap: 20, alignItems: 'center'}}>
+                                    Results
+                                    <Box>
+                                        <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
+                                    </Box>
+                                </DialogTitle>
+                                <DialogContent sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                                    <ShowWorkflowExecutionOutput/>
+                                </DialogContent>
+                            </Dialog>
                             <ActionDescriptionCard description={workflowContext.Description} mode="READONLY"/>
                             <ActionExecutionCard 
                                 elapsedTime={getElapsedTime()} 
@@ -226,7 +229,10 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
                                 arrowState={showParameters ? "DOWN": "UP"}
                                 handleClickArrow={handleShowParameters}
                                 terminalState={!!workflowContext.WorkflowExecutionCompletedOn} 
-                                error={workflowActionExecutionData?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED}/>
+                                error={workflowActionExecutionData?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED}
+                                isWorkflow={true}
+                                handleShowResult={handleShowResults}
+                                />
                             {showParameters ? (
                                 <WorkflowContextProvider>
                                     <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>

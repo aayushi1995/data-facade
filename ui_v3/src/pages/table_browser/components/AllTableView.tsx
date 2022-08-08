@@ -379,7 +379,7 @@ export const TextCell = (props: { text?: string}) => {
     }
 }
 
-export const WrapInDialog = (props: { children: JSX.Element, dialogProps: { open: boolean, label?: string, handleClose: Function, TransitionComponent?: React.JSXElementConstructor<TransitionProps & { children: React.ReactElement<any, any> }> } }) => {
+export const WrapInDialog = (props: { children: JSX.Element, showChild?: boolean, dialogProps: { open: boolean, label?: string, handleClose: Function, TransitionComponent?: React.JSXElementConstructor<TransitionProps & { children: React.ReactElement<any, any> }> } }) => {
     const { children, dialogProps } = props
     let El = <></>;
     if(dialogProps.open) {
@@ -411,7 +411,9 @@ export const WrapInDialog = (props: { children: JSX.Element, dialogProps: { open
     } else {
         El = props?.children
     }
-
+    if(props.showChild === false && dialogProps.open === false) {
+        return <></>
+    }
     return El;
 }
 

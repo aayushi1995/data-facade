@@ -15,15 +15,17 @@ const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
     const availableProviderInstances = availableProviderInstanceQuery?.data || []
     console.log(props?.selectedProviderInstance)
     React.useEffect(() => {
-        availableProviderInstanceQuery?.data?.forEach(parameterInstance => {
-            if(parameterInstance.IsDefaultProvider === true) {
-                props.onProviderInstanceChange?.(parameterInstance)
-            }
-        })
+        if(!props.selectedProviderInstance){
+            availableProviderInstanceQuery?.data?.forEach(parameterInstance => {
+                if(parameterInstance.IsDefaultProvider === true) {
+                    props.onProviderInstanceChange?.(parameterInstance)
+                }
+            })
+        }
     }, [availableProviderInstanceQuery?.data]) 
 
     React.useEffect(() => {
-        if(!!availableProviderInstanceQuery.data) {
+        if(!!availableProviderInstanceQuery.data && !props.selectedProviderInstance) {
             availableProviderInstanceQuery?.data?.forEach(parameterInstance => {
                 if(parameterInstance.IsDefaultProvider === true) {
                     props.onProviderInstanceChange?.(parameterInstance)

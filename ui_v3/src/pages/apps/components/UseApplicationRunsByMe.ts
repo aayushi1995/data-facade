@@ -47,17 +47,11 @@ const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {
                     IsVisibleOnUI: true
                 },
                 [pluginTrigger]: true
-            }).then((data: ApplicationRunsByMe[]) => {
-                
-                if(params.fetchAll === true) {
-                    const allExecutions: Run[] = []
-                    data.forEach(ae => {
-                        allExecutions.push(...formRuns(ae))
-                    })
-                    return allExecutions
-                } else {
-                    return formRuns(data[0])
-                }
+            }).then((data: Run[]) => {
+                return data.map(run => ({
+                    ...run,
+                    id: run.ActionExecutionId
+                }))
             }),
         {
             enabled: !!application?.Id || params.fetchAll

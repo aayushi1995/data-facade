@@ -1,6 +1,7 @@
 
 import React from 'react'
-import { Box, Card, Chip, FormControlLabel, FormGroup, Switch, Typography, useTheme, Dialog, DialogTitle, DialogContent, IconButton, Grid} from '@mui/material';
+import EditIcon from "@mui/icons-material/Edit"
+import { Box, Card, Tooltip, FormControlLabel, FormGroup, Switch, Typography, useTheme, Dialog, DialogTitle, DialogContent, IconButton, Grid} from '@mui/material';
 import {Tabs, Tab} from "@mui/material"
 import CloseIcon from "../../../../../../src/images/close.svg"
 import { ActionParameterDefinition, ActionTemplate } from '../../../../../generated/entities/Entities';
@@ -11,6 +12,10 @@ import useViewAction, { ActionDetail } from './hooks/UseViewAction';
 import { SetWorkflowContext } from '../../../../../pages/applications/workflow/WorkflowContext';
 import { ConfigureParametersContextProvider } from '../../context/ConfigureParametersContext';
 import ConfigureActionParameters from '../addAction/ConfigureActionParameters';
+import { WrapInDialog } from '../../../../../pages/table_browser/components/AllTableView';
+import EditActionForm from '../../../../../pages/build_action/components/BuildActionForm';
+import { useQueryClient } from 'react-query';
+import labels from '../../../../../labels/labels';
 
 export interface ViewSelectedActionProps {
     actionDefinitionId: string
@@ -47,9 +52,11 @@ function TabPanel(props: TabPanelProps) {
 const ViewSelectedAction = (props: ViewSelectedActionProps) => {
     const theme = useTheme();
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const queryClient = useQueryClient()
     const [activeTab, setActiveTab] = React.useState(0)
     const [guideEnabled, setGuideEnabled] = React.useState(false)
     const [selectedParameterForEdit, setSelectedParameterForEdit] = React.useState<ActionParameterDefinition|undefined>()
+    const [editActionDialog, setEditActionDialog] = React.useState(false)
 
     const {isLoading, error, data} = useViewAction({actionDefinitionId: props.actionDefinitionId, expectUniqueResult: true})
 
@@ -73,6 +80,15 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         }
     }
 
+    const handleEditAction = () => {
+        setEditActionDialog(true)
+    }
+
+    const handleEditActionDialogClose = () => {
+        queryClient.invalidateQueries([labels.entities.ActionDefinition, "All", {IsVisibleOnUI: true}])
+        setEditActionDialog(false)
+    }
+
     React.useEffect(() => {
         setSelectedParameterForEdit(undefined)
     }, [props.actionDefinitionId, props.actionDefinitionIndex, props.stageId])
@@ -93,6 +109,9 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         }
         return (
         <Box>
+            <WrapInDialog showChild={false} dialogProps={{open: editActionDialog, label: "Edit Action", handleClose: handleEditActionDialogClose}}>                
+                <EditActionForm actionDefinitionId={props.actionDefinitionId}/>
+            </WrapInDialog>
             <Dialog open={guideEnabled} fullWidth maxWidth="xl" >
                 <DialogTitle sx={{display: 'flex', justifyContent: 'center',background: "#66748A", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
                     <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
@@ -148,7 +167,12 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                     }}/>
                 </Tabs>
                 </Box>
-                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', alignItems: 'center'}}>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', alignItems: 'center', gap: 2}}>
+                    <Tooltip title="Edit Action">
+                        <IconButton onClick={handleEditAction}>
+                            <EditIcon />
+                        </IconButton>
+                    </Tooltip>
                     <FormGroup>
                         <FormControlLabel control={
                             <Switch 
@@ -178,7 +202,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                             p: 2,
                             height: "100%"
                         }}
-                        variant={'outlined'}    
+                        variant={'outlined'} 
                     >
                         <Box sx={{display: "flex", flexDirection: "column", gap: 5}}>
                             <Box>

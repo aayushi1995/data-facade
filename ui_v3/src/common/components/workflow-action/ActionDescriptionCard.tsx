@@ -40,7 +40,7 @@ const ActionDescriptionCard = (props: ActionDescriptionCardProps) => {
                         fontFamily: "SF Pro Text",
                         fontStyle: "normal",
                         fontWeight: 400,
-                        fontSize: "35px",
+                        fontSize: "15px",
                         lineHeight: "143%",
                         letterSpacing: "0.15px",
                         color: "#353535",

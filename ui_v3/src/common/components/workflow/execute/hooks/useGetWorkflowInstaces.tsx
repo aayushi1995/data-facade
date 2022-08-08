@@ -6,7 +6,7 @@ import labels from '../../../../../labels/labels'
 
 export const useGetWorkflowDetails = (workflowId: string, options: {enabled: boolean, onSuccess: (data: ActionDefinitionDetail[]) => void}): [ActionDefinitionDetail[] | undefined, any, boolean] => {
 
-    const {data: workflowTemplate, error: workflowTemplateError, isLoading: workflowTemplateLoading} = useQuery([],
+    const {data: workflowTemplate, error: workflowTemplateError, isLoading: workflowTemplateLoading} = useQuery(["GetWorkflowDetails", workflowId],
         () => {
             return Fetcher.fetchData('GET', '/getActionDefinitionDetails', {Id: workflowId})
         },
@@ -18,8 +18,8 @@ export const useGetWorkflowDetails = (workflowId: string, options: {enabled: boo
     return [workflowTemplate , workflowTemplateError, workflowTemplateLoading]
 }
 
-export const useGetWorkflowChildInstances = (workflowId: string, options: {enabled: boolean, onSuccess: (data: ActionInstanceWithParameters[]) => void}): [ActionInstanceWithParameters[], any, boolean] => {
-    const {data: workflowActionInstances, error: workflowInstancesError, isLoading: workflowInstancesLoading} = useQuery([labels.entities.ActionInstance, "Workflow", workflowId],
+export const useGetWorkflowChildInstances = (workflowId: string, options: {enabled: boolean, onSuccess: (data: ActionInstanceWithParameters[]) => void}): [ActionInstanceWithParameters[], any, boolean, Function, boolean] => {
+    const {data: workflowActionInstances, error: workflowInstancesError, isLoading: workflowInstancesLoading, refetch: refetchFunction, isRefetching} = useQuery([labels.entities.ActionInstance, "Workflow", workflowId],
         () => {
             return Fetcher.fetchData('GET', '/getWorkflowActionInstances', {Id: workflowId})
         },
@@ -28,6 +28,6 @@ export const useGetWorkflowChildInstances = (workflowId: string, options: {enabl
             onSuccess: (data) => options.onSuccess(data)
         }
     )
-    return  [workflowActionInstances || [], workflowInstancesError, workflowInstancesLoading]
+    return  [workflowActionInstances || [], workflowInstancesError, workflowInstancesLoading, refetchFunction, isRefetching]
 }
 

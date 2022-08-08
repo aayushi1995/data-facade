@@ -6,6 +6,7 @@ import DownloadAndDisplayLogs from "../../view_action_execution/DownloadAndDispl
 import { useGetPreSignedUrlForExecutionOutput } from "../../view_action_execution/hooks/useGetPreSignedUrlForExecutionOutput"
 import { useDownloadExecutionOutputFromS3 } from "../../view_action_execution/hooks/useDownloadExecutionOutputFromS3"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
+import { PlotVbpVolumeDivisionStylesOptions } from "highcharts"
 
 interface ActionExecutionCardProps {
     elapsedTime: string,
@@ -13,7 +14,9 @@ interface ActionExecutionCardProps {
     arrowState: "DOWN" | "UP",
     terminalState: boolean,
     error: boolean
-    handleClickArrow?: () => void
+    handleClickArrow?: () => void,
+    isWorkflow?: boolean,
+    handleShowResult?: () => void
 }
 
 const ActionExecutionCard = (props: ActionExecutionCardProps) => {
@@ -118,6 +121,13 @@ const ActionExecutionCard = (props: ActionExecutionCardProps) => {
                                     More Info
                                 </Button>
                                 <DownloadAndDisplayLogs actionExecution={props.actionExecution} />
+                                {
+                                    props.isWorkflow ? (props.terminalState && !props.error ? (
+                                        <Button variant="outlined" sx={{border: '1.28323px solid #0A414D;'}} onClick={() => props.handleShowResult?.()}>
+                                            View Result
+                                        </Button>
+                                    ) : (<></>)) : (<></>)
+                                }
                             </Box>
                         </Box>
                     </Grid>
