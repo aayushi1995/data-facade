@@ -1,9 +1,8 @@
+import { Box, Card, Grid, Typography } from "@mui/material"
 import React from "react"
-import { ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext"
-import { Grid, Card, Box, Typography } from "@mui/material"
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
-import { ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities"
 import { ActionParameterAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput"
+import { ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities"
 
 
 interface ConfigureParametersProps {

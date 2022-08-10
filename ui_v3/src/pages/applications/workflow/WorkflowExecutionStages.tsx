@@ -1,4 +1,4 @@
-import { Box , Grid} from "@mui/material"
+import { Box, Grid } from "@mui/material"
 import React from "react"
 import WorkflowExecutionStage, { WorkflowExecutionStageProps } from "../../../common/components/workflow/execute/WorkflowExecutionStage"
 import { WorkflowContext } from "./WorkflowContext"
@@ -9,7 +9,6 @@ const WorkflowExecutionStages = () => {
     const workflowContext = React.useContext(WorkflowContext)
 
     const stagesWithActions: WorkflowExecutionStageProps[] = workflowContext.stages.map(workflowStage => {
-        console.log(workflowStage)
         return {
             stageId: workflowStage.Id,
             stageName: workflowStage.Name,

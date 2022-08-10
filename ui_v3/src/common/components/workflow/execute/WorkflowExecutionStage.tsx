@@ -1,4 +1,4 @@
-import { Card, Box, Grid, IconButton, Typography, LinearProgress, Divider } from "@mui/material"
+import { Box, Card, Divider, Grid, IconButton, LinearProgress, Typography } from "@mui/material"
 import React from "react"
 import ArrowDropDownIcon from "../../../../../src/images/DropDown.svg"
 import ActionExecutionStatus from "../../../../enums/ActionExecutionStatus"
@@ -34,7 +34,6 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
 
     React.useEffect(() => {
         if(props.stageStarted) {
-            console.log("STAGE STARTED ", props.stageName)
             setCurrentTime(Date.now())
             const intervalId = setInterval(increaseTime, 1000)
             setIntervalId(intervalId as unknown as number)

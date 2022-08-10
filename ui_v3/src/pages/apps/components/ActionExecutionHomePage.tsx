@@ -1,6 +1,5 @@
 import { Box, Card } from "@mui/material"
 import React from "react"
-import { useQueryClient } from "react-query"
 import { useRouteMatch } from "react-router"
 import SaveAndBuildChartContextProvider from "../../../common/components/charts/SaveAndBuildChartsContext"
 import SaveAndBuildChartsFromExecution from "../../../common/components/charts/SaveAndBuildChartsFromExecution"
@@ -9,12 +8,11 @@ import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard"
 import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
 import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "../../../generated/interfaces/Interfaces"
-import { BuildActionContextProvider, SetBuildActionContext } from "../../build_action/context/BuildActionContext"
-import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail"
+import { SetBuildActionContext } from "../../build_action/context/BuildActionContext"
 import ExecuteAction from "../../execute_action/components/ExecuteAction"
 import { ExecuteActionContextProvider } from "../../execute_action/context/ExecuteActionContext"
 import FetchActionExecutionDetails from "../../view_action_execution/hooks/FetchActionExecutionDetails"
-import ViewActionExecution, { ViewFailedActionExecution } from "../../view_action_execution/VIewActionExecution"
+import { ViewFailedActionExecution } from "../../view_action_execution/VIewActionExecution"
 import ActionExecutionCard from "./ActionExecutionCard"
 
 type MatchParams = {
@@ -30,10 +28,8 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string, showDe
     const setModuleContextState = React.useContext(SetModuleContextState)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
     const [intervalId, setIntervalId] = React.useState<number | undefined>()
-    console.log(props, executionTerminal)
 
     const handleDataFetched = (data?: ActionExecutionIncludeDefinitionInstanceDetailsResponse[]) => {
-        console.log("DATA CHANGED")
         const actionExecutionDetails = data?.[0]
         const actionStatus = actionExecutionDetails?.ActionExecution?.Status
         if(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED) {
@@ -78,7 +74,6 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string, showDe
     }
 
     React.useEffect(() => {
-        console.log("TRIGGERED")
         setCurrentTime(Date.now())
         const intervalId = setInterval(increaseTime, 1000)
         setIntervalId(intervalId as unknown as number)

@@ -140,14 +140,12 @@ const reducer = (state: SaveAndBuildChartsContextType, action: SaveAndBuildChart
             }
         }
         case 'SetExecutionDetails': {
-            console.log(action)
             return {
                 ...state,
                 ExecutionDetails: action.payload.details
             }
         }
         case 'SetChartsWithDataAndOptions': {
-            console.log(action)
             return {
                 ...state,
                 Charts: action.payload.chartData
@@ -351,11 +349,9 @@ const SaveAndBuildChartContextProvider = ({children}: {children: React.ReactElem
         "GetS3PreSignedUrl",
         (config: {expirationDurationInMinutes: number, uploadPath: string, chart: ChartWithData}) => {
             const file = new File([JSON.stringify(config.chart.chartData || {})], 'data.txt')
-            console.log(config.uploadPath)
             return fetchedDataManager.s3PresignedUploadUrlRequest(file, config.expirationDurationInMinutes, "ChartData", config.uploadPath)
         },{
             onSuccess: (data, variables, context) => {
-                console.log(variables)
                 const expectedData = data as {requestUrl: string, headers: any}
                 uploadFileToS3Mutation.mutate({
                     requestUrl: expectedData.requestUrl,
@@ -401,14 +397,12 @@ const SaveAndBuildChartContextProvider = ({children}: {children: React.ReactElem
     )
     React.useEffect(() => {
         if(contextState.ExecutionId !== 'NA') {
-            console.log("REFETCHING")
             FetchActionExecutionDetails.refetch()
         }
     }, [contextState.ExecutionId])
 
     React.useEffect(() => {
         if(contextState.ExecutionId !== 'NA') {
-            console.log("FETCHING CHARTS")
             FetchCharts.refetch()
         }
     }, [contextState.ExecutionId])
@@ -420,7 +414,6 @@ const SaveAndBuildChartContextProvider = ({children}: {children: React.ReactElem
         uploadFileToS3Mutation: uploadFileToS3Mutation,
         updateChart: updateChart
     }
-    console.log(FetchCharts.isLoading)
     return (
         <ChartQueriesContext.Provider value={chartQueries}>
             <SaveAndBuildChartContext.Provider value={contextState}>

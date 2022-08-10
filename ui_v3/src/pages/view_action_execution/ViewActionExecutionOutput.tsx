@@ -1,12 +1,16 @@
-import { Box, Divider, Typography } from "@mui/material"
+import { Box, Divider, IconButton, Tooltip, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import ReactJson from "react-json-view"
 import { CustomToolbar } from "../../common/components/CustomToolbar"
+import LoadingIndicator from "../../common/components/LoadingIndicator"
 import LoadingWrapper from "../../common/components/LoadingWrapper"
 import ViewExecutionCharts from "../../common/ViewExecutionCharts"
 import ActionDefinitionPresentationFormat from "../../enums/ActionDefinitionPresentationFormat"
 import { ActionDefinition, ActionExecution, ActionInstance } from "../../generated/entities/Entities"
+import DownloadIcon from "../../images/DownloadData.svg"
 import { useActionExecutionParsedOutputNew } from "../execute_action/hooks/useActionExecutionParsedOutput"
+import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOutputFromS3"
+import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput"
 
 export interface ViewActionExecutionOutputProps {
     ActionExecution: ActionExecution,
@@ -23,9 +27,9 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     const outputComponentToRender = (output?: any) => {
         switch(ActionDefinition?.PresentationFormat || "NA") {
             case ActionDefinitionPresentationFormat.TABLE_VALUE:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputFormat}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution}/>
             case ActionDefinitionPresentationFormat.OBJECT:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputFormat}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution}/>
             case ActionDefinitionPresentationFormat.SINGLE_VALUE:
                 return <ViewActionExecutionSingleValueOutput SingleValueOutput={output as SingleValueOutputFormat}/>
             default:
@@ -52,11 +56,28 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     )
 }
 
-export interface TableOutputFormat {
+export interface TableOutputSuccessfulFormat {
     preview: string,
     column_stats?: any[]
     
 }
+
+export interface TableOutputSizeExceededErrorFormat {
+    errorMessage: string,
+    errorType: string
+}
+
+export type TableOutputFormat = TableOutputSuccessfulFormat | TableOutputSizeExceededErrorFormat
+
+function isTableOutputSuccessfulFormat(output: TableOutputFormat): output is TableOutputSuccessfulFormat {
+    return (output as TableOutputSuccessfulFormat).preview !== undefined;
+}
+
+function isTableOutputSizeExceededErrorFormat(output: TableOutputFormat): output is TableOutputSizeExceededErrorFormat {
+    return (output as TableOutputSizeExceededErrorFormat).errorType !== undefined;
+}
+
+
 
 export interface TablePreview {
     schema: {
@@ -72,38 +93,102 @@ export interface SingleValueOutputFormat {
 }
 
 export interface ViewActionExecutionTableOutputProps {
-    TableOutput: TableOutputFormat
+    TableOutput: TableOutputSuccessfulFormat | TableOutputSizeExceededErrorFormat,
+    ActionExecution: ActionExecution
 }
 
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
-    const { TableOutput } = props
-    const preview: TablePreview = JSON.parse(TableOutput.preview)
-    const dataGridColumns = (preview?.schema?.fields || []).map(f => {return {...f, field: f.name, headerName: f.name, flex: 1, minWidth: 200}}).filter(col => col.field!=='datafacadeindex')
-    const dataGridRows = (preview?.data || []).map((row, index) => ({...row, id: row?.Id||index}))
-    if(!!TableOutput) {
+    const { TableOutput, ActionExecution } = props
+    const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionOutput(ActionExecution?.OutputFilePath || "NA", 5)
+    const {downloadExecutionOutputFromS3, download} = useDownloadExecutionOutputFromS3()
+
+    const handleDownloadResult = () => {
+        useGetPresignedDowloadUrl.mutate(
+            (undefined),
+            {
+                onSuccess: (data, variables, context) => {
+                    const s3Data = data as {requestUrl: string, headers: any}
+                    downloadExecutionOutputFromS3.mutate(
+                        ({requestUrl: s3Data.requestUrl as string, headers: s3Data.headers}), {
+                            onSuccess: (data, variables, context) => {
+                                download(data as Blob, ActionExecution?.ActionInstanceName + ".csv" || "DataFacadeOutput")
+                            }
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    const downloadButton = downloadExecutionOutputFromS3.isLoading ? (
+        <LoadingIndicator />
+    ) : (
+        <Tooltip title="Download Result as CSV">
+            <IconButton onClick={handleDownloadResult}>
+                <img src={DownloadIcon} />
+            </IconButton>
+        </Tooltip>
+    )
+
+    if(isTableOutputSuccessfulFormat(TableOutput)) {
+        const preview: TablePreview = JSON.parse(TableOutput.preview)
+        const dataGridColumns = (preview?.schema?.fields || []).map(f => {return {...f, field: f.name, headerName: f.name, flex: 1, minWidth: 200}}).filter(col => col.field!=='datafacadeindex')
+        const dataGridRows = (preview?.data || []).map((row, index) => ({...row, id: row?.Id||index}))
+
         return (
-            <DataGrid 
-                headerHeight={70}
-                sx={{
-                    "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
-                }}
-                rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
-                initialState={{
-                    pagination: {
-                        pageSize: 50
-                    }
-                }}
-                autoHeight
-                columns={dataGridColumns} 
-                rows={dataGridRows}
-                components={{
-                    Toolbar: CustomToolbar([])
-                }}
-            ></DataGrid>
+            <Box>
+                <Box>
+                    <DataGrid 
+                        headerHeight={70}
+                        sx={{
+                            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                        }}
+                        rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+                        initialState={{
+                            pagination: {
+                                pageSize: 50
+                            }
+                        }}
+                        autoHeight
+                        columns={dataGridColumns} 
+                        rows={dataGridRows}
+                        components={{
+                            Toolbar: CustomToolbar([downloadButton])
+                        }}
+                    />
+                </Box>
+            </Box>
+        )
+    } else if(isTableOutputSizeExceededErrorFormat(TableOutput)) {
+        const errorType: string = TableOutput.errorType
+        
+        return (
+            <Box sx={{ display: "flex", flexDirection: "row", gap: 1, justifyContent: "space-between", alignItems: "center"}}>
+                <Box>
+                    <Typography variant="h5">
+                        Error: {errorType}
+                    </Typography>
+                </Box>
+                <Box>
+                    {downloadButton}
+                </Box>
+            </Box>
         )
     } else {
-        return <>Error</>
+        return (
+            <Typography sx={{
+                fontFamily: "SF Pro Text",
+                fontStyle: "normal",
+                fontWeight: "normal",
+                fontSize: "10.1078px",
+                lineHeight: "143%",
+                letterSpacing: "0.108298px"
+            }}>
+                Something went wrong parsing the Action Output. Contact Support.
+            </Typography>
+        )
     }
+    
     
 }
 

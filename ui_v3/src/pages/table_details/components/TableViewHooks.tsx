@@ -5,7 +5,7 @@ import ActionExecutionStatus from "../../../enums/ActionExecutionStatus";
 import { ColumnProperties } from "../../../generated/entities/Entities";
 import { TableView } from "../../../generated/interfaces/Interfaces";
 import labels from "../../../labels/labels";
-import { TableOutputFormat, TablePreview } from "../../view_action_execution/ViewActionExecutionOutput";
+import { TableOutputSuccessfulFormat, TablePreview } from "../../view_action_execution/ViewActionExecutionOutput";
 import { TableViewColumnHeader } from "./TableView";
 
 export const useTableView = (params: {TableId?: string, options?: UseQueryOptions<TableView, unknown, TableView, (string | undefined)[]>}) => {
@@ -27,7 +27,7 @@ export const useTableView = (params: {TableId?: string, options?: UseQueryOption
 
 export const formDataGridPropsFromResponse = (response?: TableView, searchQuery?: string) => {
     if(!!response) {
-        const tableData: TableOutputFormat = JSON.parse(response?.TableData?.Output || "{}")
+        const tableData: TableOutputSuccessfulFormat = JSON.parse(response?.TableData?.Output || "{}")
         const tablePreview: TablePreview = JSON.parse(tableData.preview)
 
         const rows = tablePreview.data?.map((row, i) => ({...row, id: i}))
