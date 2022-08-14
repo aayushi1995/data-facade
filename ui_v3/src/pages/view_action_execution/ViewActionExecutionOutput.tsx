@@ -146,7 +146,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                         rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
                         initialState={{
                             pagination: {
-                                pageSize: 50
+                                pageSize: 10
                             }
                         }}
                         autoHeight

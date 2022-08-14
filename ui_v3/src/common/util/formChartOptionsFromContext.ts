@@ -1,3 +1,4 @@
+import { ca } from "date-fns/locale";
 import ChartGroups from "../../enums/ChartGroups";
 import ChartType from "../../enums/ChartType";
 import { Chart } from "../../generated/entities/Entities";
@@ -83,6 +84,26 @@ export interface HeatMapDataframeData {
         x_labels: string[],
         min_value: number,
         max_value: number
+    }
+}
+
+export interface MultipleSegmentsScatterChartData {
+    data: {
+        series: {
+            y_name: string,
+            result: number[][]
+        }[],
+        x_name: string
+    }
+}
+
+export interface RadarChartData {
+    data: {
+        result: {
+            name: string,
+            value: (string|number)[]
+        }[],
+        indicators: string[]
     }
 }
 
@@ -1025,6 +1046,9 @@ export const formChartOptionsHeatMap = (chartWithData: ChartWithData): {uiConfig
                     height: '50%',
                     top: '10%'
                   },
+                title: {
+                    text: chartWithData?.model?.Name
+                }
             }
 
             const dataOptions: BaseChartsConfig = {
@@ -1124,6 +1148,156 @@ export const formChartOptionsHeatMap = (chartWithData: ChartWithData): {uiConfig
     }
 }
 
+export const formChartOptionsMultipleSeriesScatter = (chartWithData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig} => {
+    switch(chartWithData?.model?.Type) {
+        case ChartType.MULTIPLE_SERIES_SCATTER: {
+            const chartOptions: EChartUISpecificConfig = {
+                tooltip: {
+                    trigger: 'axis',
+                    showContent: true
+                },
+                title: {
+                    show: true,
+                    text: chartWithData.model?.Name
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                dataZoom:{
+                    
+                },
+                legend: {
+
+                }
+            }
+            const chartDataCasted = chartWithData.chartData as MultipleSegmentsScatterChartData
+            const dataOptions: BaseChartsConfig = {
+                series: chartDataCasted.data.series.map(series => ({
+                    type: 'scatter',
+                    symbolSize: 8,
+                    data: series.result,
+                    name: series.y_name
+                })),
+                xAxis: [{
+                    name: chartDataCasted.data.x_name
+                }],
+                yAxis: [{
+                    name: ''
+                }]
+            }
+            console.log(dataOptions)
+            
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+            }
+        }
+        default: {
+            const chartOptions: EChartUISpecificConfig = {
+                tooltip: {
+                    trigger: 'axis',
+                    showContent: true
+                },
+                title: {
+                    show: true,
+                    text: chartWithData.model?.Name
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                dataZoom:{
+                    
+                },
+                legend: {
+
+                }
+            }
+            const chartDataCasted = chartWithData.chartData as MultipleSegmentsScatterChartData
+            const dataOptions: BaseChartsConfig = {
+                series: chartDataCasted.data.series.map(series => ({
+                    type: 'scatter',
+                    symbolSize: 5,
+                    data: series.result,
+                    name: series.y_name
+                }))
+            }
+            console.log(dataOptions)
+            
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,
+            }
+        }
+    }
+}
+
+export const formChartOptionsRadarChart = (chartWithData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig} => {
+    switch(chartWithData?.model?.Type) {
+        case ChartType.RADAR_CHART: {
+            const castedChartData: RadarChartData = chartWithData.chartData as RadarChartData
+            const chartOptions: EChartUISpecificConfig = {
+                title: {
+                    text: chartWithData?.model?.Name
+                  },
+                  legend: {
+                  },
+                  tooltip: {
+                    trigger: 'item'
+                  },
+                  radar: {
+                    indicator: castedChartData.data.indicators.map(indicator => ({
+                        name: indicator
+                    }))
+                  }
+            }
+            const dataOptions: BaseChartsConfig = {
+                series: [{
+                    type: 'radar',
+                    data: castedChartData.data.result
+                }]
+            }
+
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,   
+            }
+        }
+        default: {
+            const castedChartData: RadarChartData = chartWithData.chartData as RadarChartData
+            const chartOptions: EChartUISpecificConfig = {
+                title: {
+                    text: chartWithData?.model?.Name
+                  },
+                  legend: {
+                  },
+                  tooltip: {
+                    trigger: 'item'
+                  },
+                  radar: {
+                    indicator: castedChartData.data.indicators.map(indicator => ({
+                        name: indicator
+                    }))
+                  }
+            }
+            const dataOptions: BaseChartsConfig = {
+                series: [{
+                    type: 'radar',
+                    data: castedChartData.data.result
+                }]
+            }
+
+            return {
+                uiConfig: chartOptions,
+                config: dataOptions,   
+            }
+        }
+    }
+}
+
 const getChartConfig = (chart: Chart) => {
     return JSON.parse(chart?.Config || "{}") as ChartModelConfig
 }
@@ -1153,6 +1327,12 @@ const formChartOptions = (chartWithData: ChartWithData) => {
         
         case ChartGroups.HEAT_MAP:
             return formChartOptionsHeatMap(chartWithData)
+        
+        case ChartGroups.MULTIPLE_SERIES_SCATTER:
+            return formChartOptionsMultipleSeriesScatter(chartWithData)
+        
+        case ChartGroups.RADAR_CHART:
+            return formChartOptionsRadarChart(chartWithData)
 
         default: {
             // TODO: defaulting to single value

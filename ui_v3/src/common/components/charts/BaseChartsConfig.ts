@@ -80,9 +80,17 @@ type SeriesHeatMap = {
     emphasis?: {}
 }[]
 
+type SeriesRadar = {
+    type: 'radar',
+    data: {
+        name: string,
+        value: (string|number)[]
+    }[]
+}[]
+
 
 export type BaseChartsConfig = {
     xAxis?: (CategoryAxis|NonCategoryAxis)[],
     yAxis?: (CategoryAxis|NonCategoryAxis)[],
-    series: SeriesLine | SeriesScatter | SeriesPie | SeriesBar | SeriesGaugeSingleValue | SeriesHeatMap
+    series: SeriesLine | SeriesScatter | SeriesPie | SeriesBar | SeriesGaugeSingleValue | SeriesHeatMap | SeriesScatter[] | SeriesRadar
 }
