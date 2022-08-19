@@ -63,7 +63,7 @@ const SetActionParameters = () => {
             }
         }),
     }
-    console.log(buildActionContext)
+    
     return (
         <Grid container>
             <Grid item xs={12}>

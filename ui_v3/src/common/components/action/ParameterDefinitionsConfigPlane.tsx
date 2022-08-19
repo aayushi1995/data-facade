@@ -90,7 +90,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         }
                         onParameterValueChange(newParameterInstance)
                     },
-                    selectedTableFilter: {Id: existingParameterInstance?.TableId},
+                    selectedTableFilter: {Id: existingParameterInstance?.TableId, UniqueName: existingParameterInstance?.ParameterValue },
                     availableTablesFilter: addtionalConfig?.availableTablesFilter,
                     parameterDefinitionId: parameterDefinition.Id
                 }
@@ -111,7 +111,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                         }
                         onParameterValueChange(newParameterInstance)
                     },
-                    selectedTableFilter: {Id: existingParameterInstance?.TableId},
+                    selectedTableFilter: {Id: existingParameterInstance?.TableId, UniqueName: existingParameterInstance?.ParameterValue },
                     availableTablesFilter: addtionalConfig?.availableTablesFilter,
                     parameterDefinitionId: parameterDefinition.Id
                 }
@@ -125,7 +125,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 parameterId: parameterDefinition.Id,
                 inputProps: {
                     parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
-                    selectedColumnFilter: {Id: existingParameterInstance?.ColumnId},
+                    selectedColumnFilter: {Id: existingParameterInstance?.ColumnId, UniqueName: existingParameterInstance?.ParameterValue },
                     filters: {
                         tableFilters: uniqueTableFilters,
                         parameterDefinitionId: parameterDefinition.Id!

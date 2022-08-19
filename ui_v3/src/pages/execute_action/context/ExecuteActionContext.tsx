@@ -312,7 +312,6 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
                 []
             
             const newParamAddConfs = [...additionalConfsForTableParameters, ...additionalConfForColumnParameters]
-            console.log(newParamAddConfs)
             const finalState = newParamAddConfs.reduce((prevValue, currValue) => reducer(prevValue, { type: "SetParameterAdditionalConfig", payload: { parameterAdditionalConfig: currValue }}), state)
 
             return finalState
@@ -387,7 +386,6 @@ const resetStateFromActionDefinitionDetail = (state: ExecuteActionContextState, 
             ...state?.ToCreateModels,
             ActionInstance: {},
             ActionParameterInstances: newActionParameterDefinitions.map(apd => {
-                console.log(apd.DefaultParameterValue)
                 const defaultActionParameterInstance = JSON.parse( apd.DefaultParameterValue || "{}")  
                 return {
                     ActionParameterDefinitionId: apd.Id,

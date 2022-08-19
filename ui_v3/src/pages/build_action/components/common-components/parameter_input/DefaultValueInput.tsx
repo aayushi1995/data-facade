@@ -15,6 +15,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
     const {actionParameterDefinition, actionParameterDefinitionAdditionalConfig, onDefaultValueChange} = props
     const defaultActionParameterInstance = safelyParseJSON(actionParameterDefinition?.DefaultParameterValue) as ActionParameterInstance
     const updateDefaultActionParameterInstance = (newDefaultActionParameterInstance: ActionParameterInstance) => {
+        console.log(newDefaultActionParameterInstance)
         onDefaultValueChange(JSON.stringify(newDefaultActionParameterInstance))
     }
     
@@ -25,7 +26,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                 parameterType: "TABLE",
                 inputProps: {
                     parameterName: `Default Value for ${actionParameterDefinition.ParameterName}`,
-                    selectedTableFilter: {Id: defaultActionParameterInstance?.TableId},
+                    selectedTableFilter: {Id: defaultActionParameterInstance?.TableId, UniqueName: defaultActionParameterInstance?.ParameterValue},
                     availableTablesFilter: addtionalConfig?.availableTablesFilter,
                     onChange: (newTable?: TableProperties) => updateDefaultActionParameterInstance({
                                     ParameterValue: newTable?.UniqueName,

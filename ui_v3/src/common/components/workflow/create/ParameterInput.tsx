@@ -1,10 +1,9 @@
-import { Autocomplete, Box, FormControl, Icon, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, createFilterOptions, FormControl, Icon, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
 import React, { ChangeEvent } from "react"
 import InfoIcon from "../../../../../src/images/info.svg"
 import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
-import LoadingIndicator from "../../LoadingIndicator"
 import LoadingWrapper from "../../LoadingWrapper"
 import { HtmlTooltip } from "../../workflow-action/ActionCard"
 import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
@@ -237,7 +236,7 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
     const allColumns = fetchColumnsQuery?.data?.[0]?.Columns
 
     const getAutoCompleteValue = () => {
-        const columnNameFrequencyMap = selectedColumnFiltersWithNameOnly?.reduce((oldMap: Object, column: ColumnProperties) => {
+        const columnNameFrequencyMap = selectedColumnFiltersWithNameOnly?.reduce((oldMap: {[key: string]: number}, column: ColumnProperties) => {
             const columnName: string = column?.UniqueName || "NA"
             if(columnName in oldMap) {
                 oldMap[columnName]+=1
@@ -292,6 +291,7 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
 }
 
 const ColumnInput = (props: ColumnParameterInput) => {
+    const filter = createFilterOptions<ColumnProperties>()
     const {parameterName, selectedColumnFilter, filters, onChange} = props.inputProps
     const fetchTableQuery = useFetchColumnsForTableAndTags({
         filters: {
@@ -301,26 +301,48 @@ const ColumnInput = (props: ColumnParameterInput) => {
         queryOptions: {
             enabled: filters?.tableFilters!==undefined
         }
-    })
+    })    
     
-    const getSelectedColumn = () => {
-        const selectedColumn = fetchTableQuery?.data?.[0]?.Columns?.find?.(col => col?.Id === selectedColumnFilter?.Id)
-        return selectedColumn 
-    }
+    const getColumnSelectionInfo: (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => { AvailableColumns: ColumnProperties[], SelectedColumn?: ColumnProperties} = (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => {
+        const columnById = availableColumns?.find(column => column?.Id === selectedColumnFilter?.Id)
+        const columnByName = availableColumns?.find(column => column?.UniqueName === selectedColumnFilter?.UniqueName)
 
-    React.useEffect(() => {
-        if(!!fetchTableQuery.data) {
-            const selectedColumn = getSelectedColumn()
-            if(selectedColumn===undefined) {
-                const index = 0
-                if(fetchTableQuery.data?.[0]?.FilteredBasedOnTags) {
-                    onChange(fetchTableQuery.data?.[0]?.Columns?.[index])
-                }
-            } else {
-                onChange(selectedColumn)
+        if(columnById !== undefined) {
+            return {
+                AvailableColumns: availableColumns || [], 
+                SelectedColumn: columnById
+            }
+        } else if(columnByName !== undefined) {
+            return {
+                AvailableColumns: availableColumns || [], 
+                SelectedColumn: columnByName
+            }
+        } else if(selectedColumnFilter?.UniqueName !== undefined){
+            const selectedTable: ColumnProperties = { UniqueName: selectedColumnFilter?.UniqueName }
+            return {
+                AvailableColumns: [...(availableColumns || []), selectedTable],
+                SelectedColumn: selectedTable
+            }
+        } else {
+            return {
+                AvailableColumns: availableColumns || [],
+                SelectedColumn: undefined
             }
         }
-    }, [fetchTableQuery.data])
+    }
+
+    const { AvailableColumns, SelectedColumn } = getColumnSelectionInfo(fetchTableQuery.data?.[0]?.Columns, selectedColumnFilter)
+
+
+    React.useEffect(() => {
+        if(!!AvailableColumns) {
+            if(SelectedColumn===undefined) {
+                onChange(AvailableColumns?.[0])
+            } else {
+                onChange(SelectedColumn)
+            }
+        }
+    }, [AvailableColumns])
  
     return (
         <LoadingWrapper 
@@ -329,17 +351,29 @@ const ColumnInput = (props: ColumnParameterInput) => {
         data={fetchTableQuery.data}
         >
             <Autocomplete
-                options={fetchTableQuery.data?.[0]?.Columns || []}
+                options={AvailableColumns}
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName!}
                 groupBy={(column) => column.TableName||"Table NA"}
-                value={getSelectedColumn()}
+                value={SelectedColumn}
                 filterSelectedOptions
                 fullWidth
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys
                 onChange={(event, value, reason, details) => {
-                    onChange(!!value ? value : undefined)
+                    if(value?.Id === "NA") {
+                        const column = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21)}
+                        onChange(column)
+                    } else {
+                        onChange(!!value ? value : undefined)
+                    }
+                }}
+                filterOptions={(options, params) => {
+                    const filtered = filter(options, params);
+                    if (params.inputValue !== '') {
+                        filtered.push({ UniqueName: `${params.inputValue} (Not Synced With DF)`, TableName: "NA", Id: "NA" });
+                    }
+                    return filtered;
                 }}
                 renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
             />
@@ -534,77 +568,88 @@ const BooleanInput = (props: BooleanParameterInput) => {
 }
 
 const TableInput = (props: TableParameterInput) => {
+    const filter = createFilterOptions<TableProperties>()
     // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
-    const [settingTables, setSettingTables] = React.useState(false)
+
+    const getTableSelectionInfo: (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => { AvailableTables: TableProperties[], SelectedTable?: TableProperties} = (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => {
+        const tableById = availableTables?.find(table => table?.Id === selectedTableFilter?.Id)
+        const tableByName = availableTables?.find(table => table?.UniqueName === selectedTableFilter?.UniqueName)
+
+        if(tableById !== undefined) {
+            return {
+                AvailableTables: availableTables || [], 
+                SelectedTable: tableById
+            }
+        } else if(tableByName !== undefined) {
+            return {
+                AvailableTables: availableTables || [], 
+                SelectedTable: tableByName
+            }
+        } else if(selectedTableFilter?.UniqueName !== undefined){
+            const selectedTable: TableProperties = { UniqueName: selectedTableFilter?.UniqueName, ProviderInstanceName: "Default Provider"}
+            return {
+                AvailableTables: [...(availableTables || []), selectedTable],
+                SelectedTable: selectedTable
+            }
+        } else {
+            return {
+                AvailableTables: availableTables || [],
+                SelectedTable: undefined
+            }
+        }
+    }
 
     const handleTablesReceived = (tables: TableProperties[]) => {
         if(!!tables) {
-            setSettingTables(true)
-            if(selectedTableFilter !== undefined){
-                const selectedTable = getSelectedTable()
-                if(selectedTable !== undefined) {
-                    onChange(selectedTable)
+            if(selectedTableFilter !== undefined) {
+                if(SelectedTable !== undefined) {
+                    onChange(SelectedTable)
                 } else {
-                    // onChange(getAnyTable())
+                    onChange(tables?.[0])
                 }
             } else {
-                // onChange(getAnyTable())
+                onChange(tables?.[0])
             }
-            setSettingTables(false)
         }
     }
 
     const {tables, loading, error}  = useTables({tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived})
-    const [, updateState] = React.useState();
-    const getSelectedTable = () => {
-        return tables?.find(table => table?.Id === selectedTableFilter?.Id)
-    }
-
-    const getAnyTable = () => tables?.[0]
-
-    // React.useEffect(() => {
-    //     if(tables !== undefined) {
-    //         if(selectedTableFilter !== undefined){
-    //             const selectedTable = getSelectedTable()
-    //             if(selectedTable !== undefined) {
-    //                 onChange(selectedTable)
-    //             } else {
-    //                 // onChange(getAnyTable())
-    //             }
-    //         } else {
-    //             // onChange(getAnyTable())
-    //         }
-    //     }
-    // }, [tables])
-
+    const { AvailableTables, SelectedTable } = getTableSelectionInfo(tables, selectedTableFilter)
     
     return (
         <LoadingWrapper
-        isLoading={loading}
-        error={error}
-        data={tables}
+            isLoading={loading}
+            error={error}
+            data={tables}
         >
-            {settingTables ? (
-                <LoadingIndicator/>
-            ) : (
-                <Autocomplete
-                    options={tables!}
-                    getOptionLabel={(table: TableProperties) => table.UniqueName!}
-                    groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
-                    value={getSelectedTable()}
-                    filterSelectedOptions
-                    fullWidth
-                    selectOnFocus
-                    // clearOnBlur
-                    handleHomeEndKeys
-                    onChange={(event, value, reason, details) => {
+            <Autocomplete
+                options={AvailableTables}
+                getOptionLabel={(table: TableProperties) => table.UniqueName!}
+                groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
+                value={SelectedTable}
+                filterSelectedOptions
+                fullWidth
+                selectOnFocus
+                // clearOnBlur
+                handleHomeEndKeys
+                onChange={(event, value, reason, details) => {
+                    if(value?.Id === "NA") {
+                        const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21)}
+                        onChange(table)
+                    } else {
                         onChange(!!value ? value : undefined)
-                    }}
-                    renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
-                />
-            )}
-            
+                    }
+                }}
+                filterOptions={(options, params) => {
+                    const filtered = filter(options, params);
+                    if (params.inputValue !== '') {
+                        filtered.push({ UniqueName: `${params.inputValue} (Not Synced With DF)`, ProviderInstanceName: "Default Provider", Id: "NA" });
+                    }
+                    return filtered;
+                }}
+                renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"}/>}
+            />
         </LoadingWrapper>
     )
 }

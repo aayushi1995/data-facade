@@ -1,32 +1,27 @@
-import { Box, Typography, Card, Tooltip, FormGroup, FormControlLabel, Switch, IconButton, Dialog, DialogTitle, DialogContent, Grid, TextField, Button } from "@mui/material";
-import { DataGridProps, GridCallbackDetails, GridCellParams, DataGrid, GridRowParams } from "@mui/x-data-grid";
-import SyncIcon from "@mui/icons-material/Sync";
 import CloseIcon from '@mui/icons-material/Close';
+import SyncIcon from "@mui/icons-material/Sync";
+import { Box, Button, Card, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Grid, IconButton, Switch, TextField, Tooltip, Typography } from "@mui/material";
+import { DataGrid, DataGridProps, GridCellParams } from "@mui/x-data-grid";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { generatePath, useHistory } from "react-router";
-import { ButtonIconWithToolTip } from "../../../common/components/ButtonIconWithToolTip";
+import { v4 as uuidv4 } from 'uuid';
 import { DATA_CONNECTION_DETAIL_ROUTE } from "../../../common/components/header/data/DataRoutesConfig";
-import LoadingWrapper from "../../../common/components/LoadingWrapper";
+import LoadingIndicator from "../../../common/components/LoadingIndicator";
+import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
+import ActionExecutionStatus from "../../../enums/ActionExecutionStatus";
 import { Fetcher } from "../../../generated/apis/api";
 import { ActionInstance, ProviderInstance } from "../../../generated/entities/Entities";
 import { ProviderCardView, ProviderInstanceStat } from "../../../generated/interfaces/Interfaces";
 import labels from "../../../labels/labels";
-import { ConnectionCard } from "../../data/components/connections/ConnectionCard";
 import { ProviderIcon } from "../../data/components/connections/ConnectionDialogContent";
 import { TextCell, TimestampCell } from "../../table_browser/components/AllTableView";
-import useSyncProviderInstance from "./hooks/useSyncProviderInstance";
-import { v4 as uuidv4 } from 'uuid'
-import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import FetchActionExecutionDetails from "../../view_action_execution/hooks/FetchActionExecutionDetails";
-import ActionExecutionStatus from "../../../enums/ActionExecutionStatus";
-import { Action } from "@storybook/router/node_modules/react-router-dom/node_modules/history";
 import { ViewFailedActionExecution } from "../../view_action_execution/VIewActionExecution";
-import useUpdateSyncActionInstance from "./hooks/useUpdateSyncActionInstance";
-import { SetModuleContext } from "../../../common/components/header/data/ModuleContext";
-import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import { useDeleteActionInstance } from "./hooks/useDeleteActionInstance";
+import useSyncProviderInstance from "./hooks/useSyncProviderInstance";
+import useUpdateSyncActionInstance from "./hooks/useUpdateSyncActionInstance";
 
 type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 
@@ -203,7 +198,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
             }
             
         ],
-        rows: rows.map(row => ({...row, id: row.ProviderInstance?.Id, providerName: row.ProviderInstance?.Name})),
+        rows: rows?.map(row => ({...row, id: row.ProviderInstance?.Id, providerName: row.ProviderInstance?.Name})) || [],
         autoHeight: true,
         sx: {
             "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"},

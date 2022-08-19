@@ -131,7 +131,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                     </Box>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 1}}>
-                    <Box sx={{ width: "30%" }}>
+                    <Box sx={{ width: "30%" }} id={`${parameter.ParameterName || "NA"}-default-value-box`}>
                         <DefaultValueInput
                             actionParameterDefinition={parameter}
                             actionParameterDefinitionAdditionalConfig={additionalConfig}
