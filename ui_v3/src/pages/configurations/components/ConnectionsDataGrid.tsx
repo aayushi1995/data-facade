@@ -485,7 +485,7 @@ export const DefaultProviderCell = (props: {providerInstance: ProviderInstance})
 
     return (
         <Box>
-            <Tooltip title="Sync Scheduled">
+            <Tooltip title="Default Provider">
                 <FormGroup>
                     <FormControlLabel control={
                         <Switch 

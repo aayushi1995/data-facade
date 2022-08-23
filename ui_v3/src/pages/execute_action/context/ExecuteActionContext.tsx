@@ -431,10 +431,13 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
     const {ActionInstance, ActionParameterInstances} = state.ToCreateModels
     const tableParameterId: string|undefined = ActionParameterDefinitions?.find(apd => apd?.Tag===ActionParameterDefinitionTag.TABLE_NAME)?.Id
     const getProviderInstanceId: () => string|undefined = () => {
-        if(SelectedProviderInstance !== undefined){
-            return SelectedProviderInstance.Id
+        const providerInstanceId = ActionParameterInstances.find(api => api.ActionParameterDefinitionId===tableParameterId)?.ProviderInstanceId
+        if(!providerInstanceId) {
+            if(SelectedProviderInstance !== undefined){
+                return SelectedProviderInstance.Id
+            }
         }
-        return ActionParameterInstances.find(api => api.ActionParameterDefinitionId===tableParameterId)?.ProviderInstanceId
+        return providerInstanceId
     }
     
 
