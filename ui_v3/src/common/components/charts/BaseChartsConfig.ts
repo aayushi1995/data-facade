@@ -88,9 +88,23 @@ type SeriesRadar = {
     }[]
 }[]
 
+type SeriesSankey = {
+    type: 'sankey',
+    data: {
+        name: string
+    }[],
+    links: {
+        source: string,
+        target: string,
+        value: number
+    }[],
+    emphasis: {},
+    lineStyle: {}
+}[]
+
 
 export type BaseChartsConfig = {
     xAxis?: (CategoryAxis|NonCategoryAxis)[],
     yAxis?: (CategoryAxis|NonCategoryAxis)[],
-    series: SeriesLine | SeriesScatter | SeriesPie | SeriesBar | SeriesGaugeSingleValue | SeriesHeatMap | SeriesScatter[] | SeriesRadar
+    series: SeriesLine | SeriesScatter | SeriesPie | SeriesBar | SeriesGaugeSingleValue | SeriesHeatMap | SeriesScatter[] | SeriesRadar | SeriesSankey
 }

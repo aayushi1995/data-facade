@@ -17,7 +17,8 @@
         CLUBBED_HISTOGRAM: "clubbed_histogram",
         HEAT_MAP_DATAFRAME: "heat_map_dataframe",
         MULTIPLE_SERIES_SCATTER: "multiple_series_scatter",
-        RADAR_CHART: "radar_chart"
+        RADAR_CHART: "radar_chart",
+        SANKEY_CHART: "sankey_chart"
     }
     
     export default ChartType;

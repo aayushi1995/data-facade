@@ -14,7 +14,8 @@
         STACKED_HISTOGRAM: "stacked_histogram",
         HEAT_MAP: "heat_map",
         MULTIPLE_SERIES_SCATTER: "multiple_series_scatter",
-        RADAR_CHART: "radar_chart"
+        RADAR_CHART: "radar_chart",
+        SANKEY_CHART: "sankey_chart"
     }
     
     export default ChartGroups;

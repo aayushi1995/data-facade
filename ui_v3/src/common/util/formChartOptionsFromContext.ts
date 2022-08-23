@@ -107,6 +107,17 @@ export interface RadarChartData {
     }
 }
 
+export interface SankeyChartData {
+    data: {
+        nodes: string[],
+        links: {
+            target: string,
+            source: string,
+            value: number
+        }[]
+    }
+}
+
 export const formChartOptionsSingleDimensionWithLables = (chartData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig}=> {
     switch(chartData.model?.Type) {
         case ChartType.PIE:
@@ -1298,6 +1309,47 @@ export const formChartOptionsRadarChart = (chartWithData: ChartWithData): {uiCon
     }
 }
 
+export const formChartOptionsSankey = (chartWithData: ChartWithData): {uiConfig: EChartUISpecificConfig, config: BaseChartsConfig} => {
+    const castedChartData = chartWithData.chartData as SankeyChartData
+
+    const chartOptions: EChartUISpecificConfig = {
+        title: {
+            text: chartWithData?.model?.Name
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        tooltip: {
+            trigger: 'item',
+            triggerOn: 'mousemove'
+        },
+    }
+
+    const dataOptions: BaseChartsConfig = {
+        series: [{
+            type: 'sankey',
+            data: castedChartData.data.nodes.map(node => ({
+                name: node
+            })),
+            links: castedChartData.data.links,
+            emphasis: {
+                focus: 'adjacency'
+            },
+            lineStyle: {
+                color: 'gradient',
+                curveness: 0.5
+            }
+        }]
+    }
+    console.log(dataOptions)
+    return {
+        uiConfig: chartOptions,
+        config: dataOptions
+    }
+}
+
 const getChartConfig = (chart: Chart) => {
     return JSON.parse(chart?.Config || "{}") as ChartModelConfig
 }
@@ -1333,6 +1385,9 @@ const formChartOptions = (chartWithData: ChartWithData) => {
         
         case ChartGroups.RADAR_CHART:
             return formChartOptionsRadarChart(chartWithData)
+        
+        case ChartGroups.SANKEY_CHART:
+            return formChartOptionsSankey(chartWithData)
 
         default: {
             // TODO: defaulting to single value
