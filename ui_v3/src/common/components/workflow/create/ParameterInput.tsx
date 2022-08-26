@@ -605,11 +605,7 @@ const TableInput = (props: TableParameterInput) => {
             if(selectedTableFilter !== undefined) {
                 if(SelectedTable !== undefined) {
                     onChange(SelectedTable)
-                } else {
-                    onChange(tables?.[0])
                 }
-            } else {
-                onChange(tables?.[0])
             }
         }
     }
