@@ -4,6 +4,7 @@ import { DATA_ALL_TABLES_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_SUB_TABS } from "./
 
 export const BLANK_STRING = '';
 export const APPLICATION_ROUTE = '/application';
+export const APPLICATION_DETAIL_ROUTE = '/application/detail';
 export const INSIGHTS_ROUTE = '/insights';
 
 export const TOP_TAB_ROUTES: TabsType = [

@@ -15,6 +15,7 @@ export const WORKFLOW_EDIT_ROUTE = `${APPLICATION_ROUTE}/edit-workflow/:Workflow
 export const APPPLICATION_CREATE_AUTO_FLOW = `${APPLICATION_ROUTE}/create-autoFlow`
 export const SCHEDULED_JOBS_ROUTE = `${APPLICATION_ROUTE}/scheduled`
 export const EXECUTION_HISTORY_ROUTE = `${APPLICATION_ROUTE}/execution-history`
+export const APPLICATION_DETAIL_ROUTE = `${APPLICATION_ROUTE}/detail`
 
 export const APPLICATION_SUB_TABS: TabsType = [
     {

@@ -69,7 +69,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                         <DashboardNavbar/>
                         <Box sx={{position: 'relative', top: '64px', display: 'flex', flex: 1, width: "100%"}}>
                             <Grid container>
-                                <Grid item xs={12}>
+                                <Grid item xs={12 }>
                                     <ModuleContextStateProvider>
                                         <ModuleSwitcher/>
                                     </ModuleContextStateProvider>

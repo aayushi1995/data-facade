@@ -114,7 +114,7 @@ const UploadApplicationButton = (props) => {
     return (
         <>
             <Button onClick={handleDialogOpen} variant="ModuleHeaderButton2">
-                <AddIcon fontSize="small"/> Import Application
+                <AddIcon  sx={{marginRight: 1}}/> Import Application
             </Button>
             <Dialog onClose={handleDialogClose} open={dialogState.isDialogOpen}
                     classes={{paper: classes.dialogPaper}} scroll="paper">

@@ -114,8 +114,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                     <Box>
                         <Tooltip title="Add to Favorites">
                             <IconButton sx={{
-                                height: "42px",
-                                width: "42px",
+                                height: "35px",
+                                width: "35px",
                                 background: "#A4CAF0",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
@@ -133,13 +133,13 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 ariaLabel={props.application.ApplicationId||""}
                                 direction="down"
                                 sx={{ 
-                                    height: "42px", 
-                                    width: "42px",
+                                    height: "35px", 
+                                    width: "35px",
                                 }}
                                 FabProps={{
                                     sx: {
-                                        minHeight: "42px", 
-                                        width: "42px",
+                                        minHeight: "35px", 
+                                        width: "35px",
                                         background: "#A4CAF0",
                                         boxShadow: lightShadows[32],
                                         "&:hover": {
@@ -159,8 +159,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     tooltipTitle="Delete"
                                     onClick={promptDeleteApplication}
                                     sx={{
-                                        height: "42px",
-                                        width: "42px",
+                                        height: "35px",
+                                        width: "35px",
                                         background: "#F4F4F4"
                                     }}
                                 />
@@ -170,8 +170,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                     <Box>
                         <Tooltip title="Share">
                             <IconButton sx={{
-                                height: "42px",
-                                width: "42px",
+                                height: "35px",
+                                width: "35px",
                                 background: "#A4CAF0",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
@@ -191,8 +191,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                     <Box>
                         <Tooltip title="Install">
                             <IconButton sx={{
-                                height: "42px",
-                                width: "42px",
+                                height: "35px",
+                                width: "35px",
                                 background: "#A4CAF0",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
@@ -220,7 +220,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
             />
             <Box>
                 <Card onClick={onApplicationSelect} sx={{
-                    width: "350px", 
+                    width: "297px", 
                     height: "186px",
                     borderRadius: 2, 
                     p: 2, 

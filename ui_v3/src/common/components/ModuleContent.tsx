@@ -11,7 +11,7 @@ import {
     DATA_ROUTE,
     DATA_SUB_TABS
 } from "./header/data/DataRoutesConfig";
-import { APPLICATION_ROUTE, INSIGHTS_ROUTE } from "./header/data/RoutesConfig";
+import { APPLICATION_ROUTE, INSIGHTS_ROUTE , APPLICATION_DETAIL_ROUTE } from "./header/data/RoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
 import { ModuleContextState } from "./ModuleContext";
 
@@ -50,7 +50,8 @@ export const Header = ({tab}: ModuleHeaderPropType) => {
             </Box>
             <Switch>
                 <Route path={DATA_ROUTE} component={DataHeader}/>
-                <Route path={APPLICATION_ROUTE} component={ApplicationHeader}/>
+                <Route exact path={APPLICATION_ROUTE} component={ApplicationHeader}/>
+                <Route path={APPLICATION_DETAIL_ROUTE} component={ApplicationHeader}/>
             </Switch>
         </Box>
         

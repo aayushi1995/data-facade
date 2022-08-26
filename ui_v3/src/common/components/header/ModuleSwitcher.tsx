@@ -58,7 +58,7 @@ export function TabsContainer(props: TabsContainerType) {
             {moduleContext.tabsVisible && 
                 <Box>
                     <Box>
-                        <Tabs value={value}>
+                        <Tabs value={value}>            
                             {tabs && tabs?.map(({label, href}) => {
                                 return <Tab label={label} key={label} sx={{px: 10}} component={RouterLink} to={href}/>
                             }
@@ -147,9 +147,7 @@ const TabsTree = (props: TabsTreePropType) => {
                         <Box>
                             {moduleStateContext.DisplayHeader ? (
                                 <Box sx={{ mx: isFistTab ? 6: 0 }}>
-                                    <ModuleContent.Header
-                                        tab={activeTab}
-                                    />
+                                    <ModuleContent.Header tab={activeTab} />
                                 </Box>
                             ) : (
                                 <></>
