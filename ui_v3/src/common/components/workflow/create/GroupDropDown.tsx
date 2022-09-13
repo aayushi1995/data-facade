@@ -42,7 +42,7 @@ const GroupDropDown = (props: GroupDropDownProps) => {
                                     fontSize: "14px",
                                     lineHeight: "157%",
                                     letterSpacing: "0.1px",
-                                    color: "#253858"
+                                    color: "ActionDefinationHeroTextColor1.main"
                                 }}>
                                     {props.groupName}
                                 </Typography>

@@ -20,7 +20,7 @@ const  ActionDetailForm = () => {
                     <ActionDefinitionHeroActionContextWrapper/>
                 </Box>
                 <Box sx={{flexGrow: 1}}>
-                    <ActionConfigComponent/>
+                     <ActionConfigComponent/>
                 </Box>
             </Box>
         )

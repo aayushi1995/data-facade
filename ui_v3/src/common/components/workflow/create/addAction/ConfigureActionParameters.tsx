@@ -126,7 +126,7 @@ const ConfigureActionParameters = (props: ConfigureActionParameterProps) => {
                         </Box>
                         {configureParametersContext.interractiveConfigure ? (
                             <Box>
-                                <Card sx={{background: "#F4F5F7",
+                                <Card sx={{backgroundColor: "background.default",
                                             boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.12), 0px 0px 0px 1px rgba(0, 0, 0, 0.05)",
                                             borderRadius: "15px"}}>
                                     

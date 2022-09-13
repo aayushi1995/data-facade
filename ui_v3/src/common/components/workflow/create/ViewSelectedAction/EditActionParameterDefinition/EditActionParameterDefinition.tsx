@@ -375,7 +375,7 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
                             fontSize: "16px",
                             lineHeight: "175%",
                             letterSpacing: "0.15px",
-                            color: "#253858"
+                            color: "ActionDefinationHeroTextColor1.main"
                         }}>
                             Global Parameters
                         </Typography>
@@ -450,7 +450,7 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                                         fontSize: "16px",
                                         lineHeight: "175%",
                                         letterSpacing: "0.15px",
-                                        color: "#253858"
+                                        color: "ActionDefinationHeroTextColor1.main"
                                     }}>
                                         User Input Required
                                     </Typography>

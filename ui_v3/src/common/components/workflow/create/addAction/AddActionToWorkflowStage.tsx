@@ -49,9 +49,9 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
 
 
     return (
-        <Card sx={{display: 'flex', boxShadow: lightShadows[27], background: '#F8F8F8', borderRadius: '10px', width: '100%', height: '100%'}}>
+        <Card sx={{display: 'flex', boxShadow: lightShadows[27], backgroundColor: 'ActionCardBgColor.main', borderRadius: '10px', width: '100%', height: '100%'}}>
             <Dialog open={configureParametersDialog} fullWidth maxWidth="xl" >
-                <DialogTitle sx={{display: 'flex', justifyContent: 'center',background: "#66748A", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
+                <DialogTitle sx={{display: 'flex', justifyContent: 'center',backgroundColor: "ActionConfigDialogBgColor.main", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
                     <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
                         <Typography variant="heroHeader" sx={{
                             fontFamily: "'SF Pro Text'",
@@ -60,7 +60,7 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
                             fontSize: "18px",
                             lineHeight: "160%",
                             letterSpacing: "0.15px",
-                            color: "#F8F8F8"}}
+                            color: "ActionCardBgColor.main"}}
                         >
                             Action Configurator
                         </Typography>
@@ -80,7 +80,7 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
             </Dialog>
             <Grid container spacing={1} sx={{maxHeight: "700px", p: 1}}>
                 <Grid item xs={3} sx={{ p: 3, maxHeight: '600px'}}>
-                    <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px', background: '#F5F9FF'}}>
+                    <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px', background: 'buildActionDrawerCardBgColor.main'}}>
                         <WorkflowActionContainer
                             stageId={props.stageId}
                             buildActionHandler={buildActionHandler}

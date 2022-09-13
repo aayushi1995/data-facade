@@ -101,7 +101,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                                                 display: "flex",
                                                 alignItems: "center",
                                                 letterSpacing: "0.073125px",
-                                                color: "#253858",
+                                                color: "cardInfoFormCreatedByStringColor.main",
                                                 pt: 2,
                                                 pb: 2
                                             }}
@@ -123,7 +123,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                                                 display: "flex",
                                                 alignItems: "center",
                                                 letterSpacing: "0.073125px",
-                                                color: "#253858",
+                                                color: "cardInfoFormCreatedByStringColor.main",
                                                 pt: 2,
                                                 pb: 2
                                             }}
@@ -146,7 +146,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                                             display: "flex",
                                             alignItems: "center",
                                             letterSpacing: "0.073125px",
-                                            color: "#253858",
+                                            color: "cardInfoFormCreatedByStringColor.main",
                                             pt: 2,
                                             pb: 2
                                         }}

@@ -203,10 +203,16 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                         
                         {workflowContext.WorkflowExecutionStatus === undefined ? (
                             <Box sx={{  display: 'flex' }}>
-                                <IconButton sx={{ flex: 1, background: "#F8F8F8",  boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={handleAddAction}>
+                                <IconButton sx={{ 
+                                    flex: 1, 
+                                    backgroundColor: "ActionCardBgColor.main",  
+                                    boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={handleAddAction}>
                                     <img src={addActionIcon} alt="add action" style={{height: '100%', width: '100%', transform: 'scale(1.7)'}}/>
                                 </IconButton>
-                                <IconButton sx={{ flex: 1, background: "#F8F8F8",  boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={() => setIsBuildDialogOpen(true)}>
+                                <IconButton sx={{ 
+                                    flex: 1, 
+                                    backgroundColor: "ActionCardBgColor.main",  
+                                    boxShadow:"-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05)" }} onClick={() => setIsBuildDialogOpen(true)}>
                                     <img src={buildActionIcon} alt="build action" />
                                 </IconButton>
                             </Box>
@@ -254,18 +260,57 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                         </Droppable>
                     </DragDropContext>
                     {props?.fromBuildAction === true || stageActions.length === 0 ? (
-                        <Box sx={{ flex: 1, px: 2, pb: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', flexDirection: 'column', height: '100%' }}>
-                            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '6px', alignItems: 'center', flexBasis: 0, flexGrow: 1, width: '100%', minHeight: '70px'}}>
-                                <Typography sx={{ fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px', fontWeight: '500px' }}>
-                                    Select Action to add here
+                        <Box sx={{ 
+                            flex: 1, 
+                            px: 2, 
+                            pb: 2, 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'flex-start', 
+                            flexDirection: 'column', 
+                            height: '100%' }}>
+                            <Box sx={{ 
+                                flex: 1, 
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                justifyContent: 'center', 
+                                border: '1px dashed #66748A', 
+                                borderRadius: '6px', 
+                                alignItems: 'center', 
+                                flexBasis: 0, 
+                                flexGrow: 1, 
+                                width: '100%', 
+                                minHeight: '70px'}}>
+                                <Typography sx={{ 
+                                    fontFamily: 'SF Compact Text', 
+                                    color: 'ActionText1Color.main', 
+                                    letterSpacing: '0.15px', 
+                                    fontWeight: '500px' }}>
+                                        Select Action to add here
                                 </Typography>
-                                <IconButton sx={{ flex: 1, background: "#F8F8F8"}} onClick={handleAddAction}>
+                                <IconButton sx={{ 
+                                    flex: 1, 
+                                    backgroundColor: "ActionCardBgColor.main"}} onClick={handleAddAction}>
                                     <img src={addActionIcon} alt="add action" style={{height: '100%', width: '100%'}}/>
                                 </IconButton>
                             </Box>
                             <Box py={0.5} />
-                            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px dashed #66748A', borderRadius: '6px', alignItems: 'center', height: '100%', width: '100%' }}>
-                                <Typography sx={{ flex: 1, pt: 1, fontFamily: 'SF Compact Text', color: '#A6ABBD', letterSpacing: '0.15px' }}>
+                            <Box sx={{ 
+                                flex: 1, 
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                justifyContent: 'center', 
+                                border: '1px dashed #66748A', 
+                                borderRadius: '6px', 
+                                alignItems: 'center', 
+                                height: '100%', 
+                                width: '100%' }}>
+                                <Typography sx={{ 
+                                    flex: 1, 
+                                    pt: 1, 
+                                    fontFamily: 'SF Compact Text',
+                                    color: 'ActionText1Color.main', 
+                                    letterSpacing: '0.15px' }}>
                                     Create New Action
                                 </Typography>
                                 <IconButton sx={{ flex: 1, paddingBottom: 1 }} onClick={() => setIsBuildDialogOpen(true)}>

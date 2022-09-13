@@ -71,10 +71,54 @@ declare module "@mui/styles" {
   interface Palette {
     lightBrown: string;
     lightBlueDF: string;
+    cardTextColor: string;
+    cardHeaderColor: string;
+    cardBackgroundColor: string;
+    disableCardBackgroundColor: string;
+    cardInfoColor: string;
+    cardInfoFormCreatedByStringColor: string;
+    cardInfoFormatCreatedOnString: string;
+    cardIconButtonBackgroundColor: string;
+    cardIconBtn1HoverBgColor: string;
+    cardIconBtn1HoverColor: string;
+    cardDeleteBtnBgColor: string;
+    cardNumUserTextColor: string;
+    buildActionDrawerCardBgColor: string;
+    ActionCardBgColor: string;
+    ActionDefinationHeroCardBgColor: string;
+    ActionDefinationHeroTextColor1: string;
+    ActionDefinationTextPanelBgColor: string;
+    ActionDefinationTextPanelBgHoverColor: string;
+    ActionConfigComponentBtnColor1: string;
+    ActionConfigComponentBtnColor2: string;
+    ActionText1Color: string;
+    ActionConfigDialogBgColor: string;
   }
   interface PaletteOptions {
     lightBrown?: string;
     lightBlueDF?: string;
+    cardTextColor?: string;
+    cardHeaderColor?: string;
+    cardBackgrondColor?: string;
+    disableCardBackgroundColor?: string;
+    cardInfoColor?: string;
+    cardInfoFormCreatedByStringColor?: string;
+    cardInfoFormatCreatedOnString?: string;
+    cardIconButtonBackgroundColor?: string;
+    cardIconBtn1HoverBgColor?: string;
+    cardIconBtn1HoverColor?: string;
+    cardDeleteBtnBgColor?: string;
+    cardNumUserTextColor?: string;
+    buildActionDrawerCardBgColor?: string;
+    ActionCardBgColor?: string;
+    ActionDefinationHeroCardBgColor?: string;
+    ActionDefinationHeroTextColor1?: string;
+    ActionDefinationTextPanelBgColor?: string;
+    ActionDefinationTextPanelBgHoverColor?: string;
+    ActionConfigComponentBtnColor1?: string;
+    ActionConfigComponentBtnColor2?: string;
+    ActionText1Color?: string;
+    ActionConfigDialogBgColor?: string;
   }
 }
 

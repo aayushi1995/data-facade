@@ -21,7 +21,7 @@ const ActionCard = (props: ActionCardProps) => {
     return(
         <Card
             sx={{
-                background: "#F8F8F8",
+                backgroundColor: "ActionCardBgColor.main",
                 boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)",
                 borderRadius: "10px",
                 p: 1,

@@ -116,11 +116,11 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                             <IconButton sx={{
                                 height: "35px",
                                 width: "35px",
-                                background: "#A4CAF0",
+                                backgroundColor: "cardIconButtonBackgroundColor.main",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
-                                    background: "#0AA1DD",
-                                    color: "#FFFFFF"
+                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
+                                    color: "cardIconBtn1HoverColor.main"
                                 }
                             }} onClick={onFavorite}>
                                 <FavoriteIcon/>
@@ -140,10 +140,10 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     sx: {
                                         minHeight: "35px", 
                                         width: "35px",
-                                        background: "#A4CAF0",
+                                        backgroundColor: "cardIconButtonBackgroundColor.main",
                                         boxShadow: lightShadows[32],
                                         "&:hover": {
-                                            background: "#0AA1DD"
+                                            backgroundColor: "cardIconBtn1HoverBgColor.main"
                                         }
                                     }
                                 }}  
@@ -161,7 +161,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     sx={{
                                         height: "35px",
                                         width: "35px",
-                                        background: "#F4F4F4"
+                                        backgroundColor: "cardDeleteBtnBgColor.main"
                                     }}
                                 />
                             </SpeedDial>
@@ -172,11 +172,11 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                             <IconButton sx={{
                                 height: "35px",
                                 width: "35px",
-                                background: "#A4CAF0",
+                                backgroundColor: "cardIconButtonBackgroundColor.main",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
-                                    background: "#0AA1DD",
-                                    color: "#FFFFFF"
+                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
+                                    color: "cardIconBtn1HoverColor.main"
                                 }
                             }} onClick={onShare}>
                                 <ShareIcon/>
@@ -193,11 +193,11 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                             <IconButton sx={{
                                 height: "35px",
                                 width: "35px",
-                                background: "#A4CAF0",
+                                backgroundColor: "cardIconButtonBackgroundColor.main",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
-                                    background: "#0AA1DD",
-                                    color: "#FFFFFF"
+                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
+                                    color: "cardIconBtn1HoverColor.main"
                                 }
                             }} onClick={onApplicationInstall}>
                                 <InstallDesktopIcon/>
@@ -225,7 +225,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                     borderRadius: 2, 
                     p: 2, 
                     boxSizing: "content-box",
-                    background: disableCardActions ? "F3F3F3" : "#A4CAF0",
+                    backgroundColor: disableCardActions ? 'disableBackgroundColor.main' : 'cardBackgroundColor.main',
                     border: "0.439891px solid #FFFFFF",
                     boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)",
                     cursor: props.isInstalled ? 'pointer' : undefined
@@ -238,6 +238,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     fontStyle: "normal",
                                     fontWeight: 600,
                                     fontSize: "12px",
+                                    color: 'cardHeaderColor.main',
                                     lineHeight: "266%",
                                     letterSpacing: "0.5px",
                                     textTransform: "uppercase"
@@ -251,6 +252,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     fontStyle: "normal",
                                     fontWeight: "normal",
                                     fontSize: "11px",
+                                    color: 'cardTextColor.main',
                                     lineHeight: "133.4%",
                                     display: "flex",
                                 }}>
@@ -264,9 +266,9 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                             fontFamily: "SF Pro Display",
                                             fontStyle: "normal",
                                             fontWeight: 600,
-                                            fontSize: "12px",
+                                            fontSize: "11px",
                                             lineHeight: "133.4%",
-                                            color: "#5B5B5B"
+                                            color: 'cardInfoColor.main'
                                         }}>
                                             {formInfoString()}
                                         </Typography>
@@ -278,7 +280,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                 alignContent: "center", 
                                                 width: "30px",
                                                 height: "30px",
-                                                background: "#A4CAF0",
+                                                background: "cardIconButtonBackgroundColor.main",
                                                 boxShadow: "inset 8px 8px 8px rgba(0, 0, 0, 0.25), inset -8px -8px 8px #B8DBFF",
                                                 borderRadius: "50%",
                                                 p: "3px"
@@ -298,7 +300,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                     display: "flex",
                                                     alignItems: "center",
                                                     fontFeatureSettings: "'liga' off",
-                                                    color: "#AA9BBE"
+                                                    color: "cardNumUserTextColor.main"
                                                 }}>{application.NumberOfUsers||"-"}</Typography>
                                             </Box>
                                             <Box sx={{display: "flex", alignContent: "center"}}>
@@ -314,7 +316,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                     fontSize: "10px",
                                                     lineHeight: "157%",
                                                     letterSpacing: "0.1px",
-                                                    color: "#253858"
+                                                    color: "cardInfoFormCreatedByStringColor.main"
                                                 }}>
                                                     {formCreatedByString()}
                                                 </Typography>
@@ -327,7 +329,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                     fontSize: "9px",
                                                     lineHeight: "166%",
                                                     letterSpacing: "0.4px",
-                                                    color: "rgba(66, 82, 110, 0.86)"
+                                                    color: "cardInfoFormatCreatedOnString.main"
                                                 }}>
                                                     {formCreatedOnString()}
                                                 </Typography>
@@ -341,7 +343,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                 width: "60px",
                                                 height: "60px",
                                                 borderRadius: "50%",
-                                                background: "#A4CAF0",
+                                                //As the color of background is similar as card background color so we put here cardBackgroun Color
+                                                backgroundColor: "cardBackgroundColor.main",
                                                 boxShadow: lightShadows[32],
                                                 display: "flex",
                                                 alignItems: "center",
@@ -350,7 +353,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                             <IconButton sx={{
                                                     height: "42px",
                                                     width: "42px",
-                                                    background: "#A4CAF0",
+                                                //As the color of background is similar as card background color so we put here cardBackgroun Color
+                                                    background: "cardBackgroundColor.main",
                                                     boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
                                                 }}>
                                                     <img src={PackageLogo} alt="Package"/>

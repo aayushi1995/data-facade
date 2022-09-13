@@ -32,10 +32,11 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
     return (
         <Card
             sx={{
-            backgroundColor: '#F5F9FF',
+            backgroundColor: 'ActionDefinationHeroCardBgColor.main',
             boxSizing: "border-box",
             boxShadow: '0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)',
             borderRadius: "26.3934px",
+            padding: "10px",
             border: '0.439891px solid #FFFFFF',
             minWidth: '100%'
             }}
@@ -60,16 +61,17 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                                     fontWeight: 600,
                                                     fontSize: "36px",
                                                     lineHeight: "116.7%",
-                                                    color: "#253858",
+                                                    color: "ActionDefinationHeroTextColor1.main",
                                                     borderStyle: "solid",
                                                     borderColor: "transparent",
                                                     borderRadius: "10px",
-                                                    background: "#E5E5E5",
+                                                    padding: "10px",
+                                                    backgroundColor: "ActionDefinationTextPanelBgColor.main",
                                                     ":hover": {
                                                         ...(props.mode==="READONLY" ? {
                                                             
                                                         } : {
-                                                            background: "#E3E3E3"
+                                                            background: "ActionDefinationTextPanelBgHoverColor.main"
                                                         })
                                                     }
                                                 },
@@ -179,7 +181,7 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                         <Box className="header">
                                             <Typography variant="heroMeta" sx={{
                                                 fontSize: '16px',
-                                                color: "#253858"
+                                                color: "ActionDefinationHeroTextColor1.main"
                                             }}>Description</Typography>
                                         </Box>
                                         <Box className="meta">
@@ -211,12 +213,13 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                                     borderStyle: "solid",
                                                     borderColor: "transparent",
                                                     borderRadius: "10px",
-                                                    background: "#E5E5E5",
+                                                    padding: "10px",
+                                                    backgroundColor: "ActionDefinationTextPanelBgColor.main",
                                                     ":hover": {
                                                         ...(props.mode==="READONLY" ? {
                                                             
                                                         } : {
-                                                            background: "#E3E3E3"
+                                                            backgroundColor: "ActionDefinationTextPanelBgHoverColor.main"
                                                         })
                                                     }
                                                 },

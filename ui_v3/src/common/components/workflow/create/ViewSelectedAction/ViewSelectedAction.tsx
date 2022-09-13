@@ -113,7 +113,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                 <EditActionForm actionDefinitionId={props.actionDefinitionId}/>
             </WrapInDialog>
             <Dialog open={guideEnabled} fullWidth maxWidth="xl" >
-                <DialogTitle sx={{display: 'flex', justifyContent: 'center',background: "#66748A", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
+                <DialogTitle sx={{display: 'flex', justifyContent: 'center',backgroundColor: "ActionConfigDialogBgColor.main", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
                     <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
                         <Typography variant="heroHeader" sx={{
                             fontFamily: "'SF Pro Text'",
@@ -122,7 +122,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                             fontSize: "18px",
                             lineHeight: "160%",
                             letterSpacing: "0.15px",
-                            color: "#F8F8F8"}}
+                            color: "ActionCardBgColor.main"}}
                         >
                             Action Configurator
                         </Typography>

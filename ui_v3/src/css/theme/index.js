@@ -1,3 +1,4 @@
+import { PaletteTwoTone } from '@mui/icons-material';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import merge from 'lodash/merge';
 import { THEMES } from '../../data_manager/constants';
@@ -378,6 +379,120 @@ const themesOptions = {
                 color: {
                     main: '#A4CAF0'
                 }
+            }),
+
+            // Application Card All Colors
+            cardTextColor: palette.augmentColor({
+                color: {
+                    main: '#242424'
+                }
+            }),
+            carHeaderColor: palette.augmentColor({
+                color:{
+                    main: '#121312'
+                }
+            }),
+            cardBackgroundColor: palette.augmentColor({
+                color:{
+                    main: '#A4CAF0'
+                }
+            }),
+            disableCardBackgroundColor: palette.augmentColor({
+                color:{
+                    main: '#F3F3F3'
+                }
+            }),
+            cardInfoColor: palette.augmentColor({
+                color:{
+                    main: '#5B5B5B'
+                }
+            }),
+            cardInfoFormCreatedByStringColor: palette.augmentColor({
+                color:{
+                    main: '#253858'
+                }
+            }),
+            cardInfoFormatCreatedOnString: palette.augmentColor({
+                color:{
+                    main: '#42526e'
+                }
+            }),
+            cardIconButtonBackgroundColor: palette.augmentColor({
+                color:{
+                    main: '#A4CAF0'
+                }
+            }),
+            cardIconBtn1HoverBgColor: palette.augmentColor({
+                color:{
+                    main: '#0AA1DD'
+                }
+            }),
+            cardIconBtn1HoverColor: palette.augmentColor({
+                color:{
+                    main: '#FFFFFF'
+                }
+            }),
+            cardDeleteBtnBgColor: palette.augmentColor({
+                color:{
+                    main: '#F4F4F4'
+                }
+            }),
+            cardNumUserTextColor: palette.augmentColor({
+                color:{
+                    main: '#AA9BBE'
+                }
+            }),
+
+            //build action form
+            buildActionDrawerCardBgColor: palette.augmentColor({
+                color:{
+                    main: '#F5F9FF'
+                }
+            }),
+            ActionCardBgColor: palette.augmentColor({
+                color:{
+                    main: '#F8F8F8'
+                }
+            }),
+            ActionDefinationHeroCardBgColor: palette.augmentColor({
+                color: {
+                    main: '#F5F9FF'
+                }
+            }),
+            ActionDefinationHeroTextColor1: palette.augmentColor({
+                color:{
+                    main: '#253858'
+                }
+            }),
+            ActionDefinationTextPanelBgColor: palette.augmentColor({
+                color:{
+                    main: '#E5E5E5'
+                }
+            }),
+            ActionDefinationTextPanelBgHoverColor: palette.augmentColor({
+                color:{
+                    main: '#E3E3E3'
+                }
+            }),
+            ActionConfigComponentBtnColor1: palette.augmentColor({
+                color:{
+                    main: '#56D280'
+                }
+            }),
+            ActionConfigComponentBtnColor2: palette.augmentColor({
+                color:{
+                    main: '#F178B6'
+                }
+            }),
+            ActionText1Color: palette.augmentColor({
+                color:{
+                    main: '#A6ABBD'
+                }
+            }),
+            ActionConfigDialogBgColor: palette.augmentColor({
+                color:{
+                    main: '#66748A'
+                }
             })
         },
         shadows: lightShadows
@@ -425,7 +540,74 @@ const themesOptions = {
             warning: {
                 contrastText: '#ffffff',
                 main: '#ff9800'
+            },
+            cardTextColor: {
+                main: '#E6EAE7'
+            },
+            cardHeaderColor: {
+                main: '#E6EDE8'
+            },
+            cardBackgroundColor:{
+                main: '#054D3A '
+            },
+            disableCardBackgroundColor:{
+                main: '#051A63'
+            },
+            cardInfoColor:{
+                main: '#5B5B5B'
+            },
+            cardInfoFormCreatedByStringColor:{
+                main: 'ffffff'
+            },
+            cardInfoFormatCreatedOnString:{
+                main: '#E5D6EB'
+            },
+            cardIconButtonBackgroundColor:{
+                main: '#054D3A'
+            },
+            cardIconBtn1HoverBgColor:{
+                main: '#ffffff'
+            },
+            cardDeleteBtnBgColor:{
+                main: '#ffffff'
+            },
+            cardNumUserTextColor:{
+                main: '#ffffff'
+            },
+
+
+            //ACTIONS FORMS
+            buildActionDrawerCardBgColor:{
+                main: '#ffffff'
+            },
+            ActionCardBgColor:{
+                main: '#fff'
+            },
+            ActionDefinationHeroCardBgColor:{
+                main: '#fff'
+            },
+            ActionDefinationHeroTextColor1:{
+                main: '#fff'
+            },
+            ActionDefinationTextPanelBgColor:{
+                main: '#fff'
+            },
+            ActionDefinationTextPanelBgHoverColor:{
+                main: '#fff'
+            },
+            ActionConfigComponentBtnColor1:{
+                main: '#fff'
+            },
+            ActionConfigComponentBtnColor2:{
+                main: '#fff'
+            },
+            ActionText1Color:{
+                main: '#fff'
+            },
+            ActionConfigDialogBgColor:{
+                main: '#fff'
             }
+
         },
         shadows: darkShadows
     },
@@ -472,6 +654,72 @@ const themesOptions = {
             warning: {
                 contrastText: '#ffffff',
                 main: '#ff9800'
+            },
+            cardTextColor: {
+                main: '#E6EAE7'
+            },
+            cardHeaderColor: {
+                main: '#E6EDE8'
+            },
+            cardBackgroundColor:{
+                main: '#054D3A '
+            },
+            disableCardBackgroundColor:{
+                main: '#051A63'
+            },
+            cardInfoColor:{
+                main: '#acd8ff'
+            },
+            cardInfoFormCreatedByStringColor:{
+                main: 'ffffff'
+            },
+            cardInfoFormatCreatedOnString:{
+                main: '#E5D6EB'
+            },
+            cardIconButtonBackgroundColor:{
+                main: '#054D3A'
+            },
+            cardIconBtn1HoverBgColor:{
+                main: '#ffffff'
+            },
+            cardDeleteBtnBgColor:{
+                main: '#ffffff'
+            },
+            cardNumUserTextColor:{
+                main: '#ffffff'
+            },
+
+
+            //Action bulid
+            buildActionDrawerCardBgColor:{
+                main: '#ffffff'
+            },
+            ActionCardBgColor:{
+                main: '#fff'
+            },
+            ActionDefinationHeroCardBgColor:{
+                main: '#fff'
+            },
+            ActionDefinationHeroTextColor1:{
+                main: '#fff'
+            },
+            ActionDefinationTextPanelBgColor:{
+                main: '#fff'
+            },
+            ActionDefinationTextPanelBgHoverColor:{
+                main: '#fff'
+            },
+            ActionConfigComponentBtnColor1:{
+                main: '#fff'
+            },
+            ActionConfigComponentBtnColor2:{
+                main: '#fff'
+            },
+            ActionText1Color:{
+                main: '#fff'
+            },
+            ActionConfigDialogBgColor:{
+                main: '#fff'
             }
         },
         shadows: darkShadows

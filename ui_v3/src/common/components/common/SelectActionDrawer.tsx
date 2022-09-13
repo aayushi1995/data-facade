@@ -30,7 +30,7 @@ const SelectActionDrawer = (props: SelectActionDrawerProps) => {
             maxWidth: '100%', 
             overflowY: 'auto', 
             borderRadius: '20px', 
-            background: '#F5F9FF'}}
+            backgroundColor: 'ActionDefinationHeroCardBgColor.main'}}
         >
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <Box sx={{display: "flex", flexDirection: "column", gap: 1}}>
