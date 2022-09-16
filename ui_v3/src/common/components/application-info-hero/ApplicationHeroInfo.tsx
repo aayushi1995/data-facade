@@ -17,7 +17,8 @@ export interface ApplicationHeroInfoProps {
     usedBy?: Array<UserAvatar>,
     providers?: Array<ProviderAvatar>,
     description?: string
-
+    gitSyncStatus?: boolean,
+    handleSyncWithGit?: () => void
 }
 
 const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
@@ -72,6 +73,29 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                             <NumberStat {...numberStat}/>
                         </Box>
                     )}
+                    {props.gitSyncStatus !== undefined ? (
+                        <div>
+                            {props.gitSyncStatus ? (
+                                <Button variant="contained" sx={{
+                                    backgroundColor: '#FFBDBD',
+                                    maxHeight: '55px',
+                                    wordWrap: 'break-word',
+                                    ":hover": {
+                                        backgroundColor: '#8C0000'
+                                    }  
+                                }}
+                                    onClick={() => {props.handleSyncWithGit?.()}}
+                                >
+                                    Sync With GIT Repo
+                                </Button>
+                            ) : (
+                                <Button variant="outlined" sx={{
+                                    maxHeight: '55px',
+                                    wordWrap: 'break-word'
+                                }}>In Sync With Git Repo</Button>
+                            )}
+                        </div>
+                    ) : (<></>)}
                 </Box>
             </Box>
             <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>

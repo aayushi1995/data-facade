@@ -19,6 +19,7 @@ const MakeWorkflowContextFromDetail = (props: MakeWorkflowContextPropsFromDetail
     const workflowTemplate = workflowTemplateModel.Text || "{}"
 
     const workflowContextObject: WorkflowContextType = {
+        mode: "EDIT",
         stages: [],
         Name: workflowDefinition?.DisplayName || "",
         WorkflowParameters: workflowParameters,

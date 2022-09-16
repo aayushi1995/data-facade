@@ -1,4 +1,4 @@
-import { Box, Card, Tab, Tabs, Typography } from "@mui/material"
+import { Box, Card, Tab, Tabs, Typography, Dialog, DialogTitle, DialogContent } from "@mui/material"
 import React from "react"
 import { RouteComponentProps } from "react-router-dom"
 import ApplicationHeroInfo from "../../../common/components/application-info-hero/ApplicationHeroInfo"
@@ -7,6 +7,7 @@ import ApplicationWorkflows from "../../../common/components/application/Applica
 import NoData from "../../../common/components/NoData"
 import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
 import ApplicationRunsByMe from "./ApplicationRunsByMe"
+import SyncWithGitDialog from "./SyncWithGitDialog"
 
 interface MatchParams {
     applicationId: string
@@ -39,13 +40,23 @@ function TabPanel(props: TabPanelProps) {
 
 const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
     const [tabValue, setTableValue] = React.useState(0)
+    const [syncWithGitDialogState, setSyncWithGitDialogState] = React.useState(false)
     const applicationId = match.params.applicationId
-
     const [applicationDetailData, applicationDataError, applicationDetailLoading] = useGetApplicationDetails(applicationId)
+
+    const handleSyncWithGit = () => {
+        setSyncWithGitDialogState(true)
+    }
+
+    const handleDialogClose = () => {
+        setSyncWithGitDialogState(false)
+    }
+
     if(!!applicationDetailData) {
         const application = applicationDetailData[0]
         return (
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
+                <SyncWithGitDialog open={syncWithGitDialogState} onClose={handleDialogClose} applicationId={applicationId}/>
                 <Box sx={{flex: 1}}>
                     <Card sx={{background: 'background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
                             backgroundBlendMode: 'soft-light, normal',
@@ -56,7 +67,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                     >
                         <ApplicationHeroInfo applicationName={application?.model?.Name || "Name"} createdBy={{name: "Created By"}} 
                         numberStats={[{value: application?.numberOfActions || 0, label: "Actions"}, {value: application?.numberOfFlows || 0, label: "Workflows"}]}
-                        status="In use" description={application?.model?.Description}
+                        status="In use" description={application?.model?.Description} gitSyncStatus={application?.gitSyncStatus} handleSyncWithGit={handleSyncWithGit}
                         />
                     </Card>
                 </Box>

@@ -74,7 +74,6 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
             setWorkflowContext({type: 'SET_ENTIRE_CONTEXT', payload: workflowContextObject})
             setActionContext({type: "SetActionDefinition", payload: {
                 newActionDefinition: {
-                    UniqueName: workflowContextObject.Name,
                     DisplayName: workflowContextObject.Name,
                     Description: workflowContextObject.Description,
                     ActionGroup: workflowContextObject.ActionGroup,

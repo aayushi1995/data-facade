@@ -249,7 +249,7 @@ export const ActionDefinitionHeroActionContextWrapper = (props: ActionDefinition
     
     const actionDefinitionHeroProps: ActionDefinitionHeroProps = {
         mode: props?.mode || "EDIT",
-        name: actionContext?.actionDefinitionWithTags?.actionDefinition?.UniqueName,
+        name: actionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName,
         description: actionContext?.actionDefinitionWithTags?.actionDefinition?.Description,
         createdBy: actionContext?.actionDefinitionWithTags?.actionDefinition?.CreatedBy,
         group: actionContext?.actionDefinitionWithTags?.actionDefinition?.ActionGroup,
