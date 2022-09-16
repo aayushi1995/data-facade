@@ -224,7 +224,7 @@ const IntermediaryTables = (props) => {
                             handleImportTable: handleImportTable
                         }}
                         sx={{
-                            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"}
                         }}
                         headerHeight={70}
                         rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}

@@ -70,7 +70,7 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
                 field: "Info",
                 width: 300,
                 renderCell: (params: GridRenderCellParams<any, ColumnStatViewProps, any>) => {
-                    return !!(params.row?.column?.Id) ? <Box sx={{ py: 2, width: "100%" }}><Box sx={{ background: "#E8E8E8", height: "100%", width: "100%" }}><TableViewColumnHeader ColumnId={params.row?.column?.Id}/></Box></Box> : <></>
+                    return !!(params.row?.column?.Id) ? <Box sx={{ py: 2, width: "100%" }}><Box sx={{ backgroundColor: "ActionDefinationTextPanelBgColor.main", height: "100%", width: "100%" }}><TableViewColumnHeader ColumnId={params.row?.column?.Id}/></Box></Box> : <></>
                 },
                 valueGetter: (params: GridValueGetterParams<any, ColumnStatViewProps>) => params?.row?.column?.UniqueName
             },
@@ -112,7 +112,7 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
                                 onChange={handleSearchChange}
                                 placeholder="Search Columns"
                                 sx={{width: '40%', 
-                                    background: '#E0E5EC',
+                                    backgroundColor: 'allTableTextfieldbgColor1.main',
                                     boxSizing: 'border-box', 
                                     boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                                     backgroundBlendMode: 'soft-light, normal', 

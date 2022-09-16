@@ -65,7 +65,7 @@ const AllDashboardView = () => {
                 rows={formRows(dashboardDetails)}
                 onRowClick={handleRowClick}
                 sx={{
-                    "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"},
+                    "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
                     minHeight: '800px'
                 }}
                 headerHeight={70}

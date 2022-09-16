@@ -118,7 +118,7 @@ const AllTableView = (props: AllTableViewProps) => {
         ],
         rows: (rows.map?.((x, index) => ({ ...x, id: index})) || []),
         sx: {
-            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"}
         },
         autoHeight: true,
         headerHeight: 70,
@@ -170,7 +170,7 @@ const AllTableView = (props: AllTableViewProps) => {
                                 onChange={handleSearchChange}
                                 placeholder="Search Tables"
                                 sx={{width: '40%', 
-                                    background: '#E0E5EC',
+                                    backgroundColor: 'allTableTextfieldbgColor1.main',
                                     boxSizing: 'border-box', 
                                     boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                                     backgroundBlendMode: 'soft-light, normal', 
@@ -235,7 +235,7 @@ const ActionCell = (props?: TableBrowserResponseAndCalculatedInfo) => {
             <Box>
                 <Tooltip title="ReSync">
                     <IconButton sx={{ width: "40px", height: "40px" }} onClick={ (event) => {event.stopPropagation(); reSyncTable(props?.TableId)} }>
-                        <SyncingLogo color="#000000" height="24px" width="auto"/>
+                        <SyncingLogo color="syncingLogoColor1.main" height="24px" width="auto"/>
                     </IconButton>
                 </Tooltip>
                 {reSyncTablesMutation.isLoading && <LinearProgress variant="indeterminate"/>}
@@ -298,8 +298,8 @@ const SyncStatusCell = (props?: { SyncStatus?: string }) => {
     const getLabel = () => SyncStatus
 
     const getIcon = () => {
-        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return <CheckCircleIcon height="24px" width="24px" sx={{ color: "#00AA11" }}/>
-        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return <CancelIcon height="24px" width="24px" sx={{ color: "#FF0000" }}/>
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return <CheckCircleIcon height="24px" width="24px" sx={{ color: "syncStatusColor1.main" }}/>
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return <CancelIcon height="24px" width="24px" sx={{ color: "syncStatusColor2.main" }}/>
         else return (
             <Box sx={{
                 animation: "spin 2s linear infinite",
@@ -314,7 +314,7 @@ const SyncStatusCell = (props?: { SyncStatus?: string }) => {
                 height: "24px", 
                 width: "24px"
               }}>
-                 <SyncingLogo height="24px" width="24px" color="#FA9705"/>
+                 <SyncingLogo height="24px" width="24px" color="syncingLogoColor2.main"/>
             </Box>
         )
     }
@@ -390,7 +390,7 @@ export const WrapInDialog = (props: { children: JSX.Element, showChild?: boolean
                 onClose={() => dialogProps.handleClose()}
                 TransitionComponent={dialogProps.TransitionComponent}
             >
-                <AppBar sx={{ position: 'relative', background: "#A6CEE3" }}>
+                <AppBar sx={{ position: 'relative', backgroundColor: "navbarBgColor.main" }}>
                     <Toolbar>
                         <IconButton
                             edge="start"

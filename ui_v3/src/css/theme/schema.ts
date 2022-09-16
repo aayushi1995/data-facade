@@ -93,6 +93,15 @@ declare module "@mui/styles" {
     ActionConfigComponentBtnColor2: string;
     ActionText1Color: string;
     ActionConfigDialogBgColor: string;
+    navbarBgColor: string;
+    statusCardBgColor1: string;
+    statusCardBgColor2: string;
+    statusCardBgColor3: string;
+    allTableTextfieldbgColor1: string;
+    syncingLogoColor1: string;
+    syncingLogoColor2: string;
+    syncStatusColor1: string;
+    syncStatusColor2: string;
   }
   interface PaletteOptions {
     lightBrown?: string;
@@ -119,6 +128,15 @@ declare module "@mui/styles" {
     ActionConfigComponentBtnColor2?: string;
     ActionText1Color?: string;
     ActionConfigDialogBgColor?: string;
+    navbarBgColor?: string;
+    statusCardBgColor1?: string;
+    statusCardBgColor2?: string;
+    statusCardBgColor3?: string;
+    allTableTextfieldbgColor1?: string;
+    syncingLogoColor1?: string;
+    syncingLogoColor2?: string;
+    syncStatusColor1?: string;
+    syncStatusColor2?: string;
   }
 }
 

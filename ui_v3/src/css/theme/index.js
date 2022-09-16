@@ -380,6 +380,12 @@ const themesOptions = {
                     main: '#A4CAF0'
                 }
             }),
+            //
+            navbarBgColor: palette.augmentColor({
+                color:{
+                    main: '#A6CEE3'
+                }
+            }),
 
             // Application Card All Colors
             cardTextColor: palette.augmentColor({
@@ -466,7 +472,7 @@ const themesOptions = {
             }),
             ActionDefinationTextPanelBgColor: palette.augmentColor({
                 color:{
-                    main: '#E5E5E5'
+                    main: '#E8E8E8'
                 }
             }),
             ActionDefinationTextPanelBgHoverColor: palette.augmentColor({
@@ -492,6 +498,50 @@ const themesOptions = {
             ActionConfigDialogBgColor: palette.augmentColor({
                 color:{
                     main: '#66748A'
+                }
+            }),
+
+
+            // DATA Connecion grid
+
+            statusCardBgColor1: palette.augmentColor({
+                color:{
+                    main: '#C3FDED'
+                }
+            }),
+            statusCardBgColor2: palette.augmentColor({
+                color:{
+                    main: '#ffbdbd'
+                }
+            }),
+            statusCardBgColor3: palette.augmentColor({
+                color:{
+                    main: '#FCF4AC'
+                }
+            }),
+            allTableTextfieldbgColor1: palette.augmentColor({
+                color:{
+                    main: '#E0E5EC'
+                }
+            }),
+            syncingLogoColor1: palette.augmentColor({
+                color:{
+                    main: '#000000'
+                }
+            }),
+            syncingLogoColor2: palette.augmentColor({
+                color:{
+                    main: '#FA9705'
+                }
+            }),
+            syncStatusColor1: palette.augmentColor({
+                color:{
+                    main: '#00AA11'
+                }
+            }),
+            syncStatusColor2: palette.augmentColor({
+                color:{
+                    main: '#FF0000'
                 }
             })
         },
@@ -541,6 +591,13 @@ const themesOptions = {
                 contrastText: '#ffffff',
                 main: '#ff9800'
             },
+            // navbar
+            navbarBgColor:{
+                main : '#fff'
+            },
+
+
+            //application card
             cardTextColor: {
                 main: '#E6EAE7'
             },
@@ -606,6 +663,30 @@ const themesOptions = {
             },
             ActionConfigDialogBgColor:{
                 main: '#fff'
+            },
+            statusCardBgColor1:{
+                main: '#fff'
+            },
+            statusCardBgColor2:{
+                main: '#fff'
+            },
+            statusCardBgColor3:{
+                main: '#fff'
+            },
+            allTableTextfieldbgColor1:{
+                color: '#E0E5EC'
+            },
+            syncingLogoColor1:{
+                color: '#000000'
+            },
+            syncingLogoColor2:{
+                color: '#FA9705'
+            },
+            syncStatusColor1:{
+                color: '#00AA11'
+            },
+            syncStatusColor2:{
+                color: '#FF0000'
             }
 
         },
@@ -655,6 +736,12 @@ const themesOptions = {
                 contrastText: '#ffffff',
                 main: '#ff9800'
             },
+
+            // navbar
+            navbarBgColor:{
+                main: '#0b4f4b'
+            },
+            //application card
             cardTextColor: {
                 main: '#E6EAE7'
             },
@@ -671,7 +758,7 @@ const themesOptions = {
                 main: '#acd8ff'
             },
             cardInfoFormCreatedByStringColor:{
-                main: 'ffffff'
+                main: '#ffffff'
             },
             cardInfoFormatCreatedOnString:{
                 main: '#E5D6EB'
@@ -695,7 +782,7 @@ const themesOptions = {
                 main: '#ffffff'
             },
             ActionCardBgColor:{
-                main: '#fff'
+                main: '#171201'
             },
             ActionDefinationHeroCardBgColor:{
                 main: '#fff'
@@ -704,7 +791,7 @@ const themesOptions = {
                 main: '#fff'
             },
             ActionDefinationTextPanelBgColor:{
-                main: '#fff'
+                main: '#300b28'
             },
             ActionDefinationTextPanelBgHoverColor:{
                 main: '#fff'
@@ -720,6 +807,32 @@ const themesOptions = {
             },
             ActionConfigDialogBgColor:{
                 main: '#fff'
+            },
+
+            // data connection grid
+            statusCardBgColor1:{
+                main: '#014213'
+            },
+            statusCardBgColor2:{
+                main: '#450101'
+            },
+            statusCardBgColor3:{
+                main: '#cca404'
+            },
+            allTableTextfieldbgColor1:{
+                color: '#E0E5EC'
+            },
+            syncingLogoColor1:{
+                color: '#000000'
+            },
+            syncingLogoColor2:{
+                color: '#FA9705'
+            },
+            syncStatusColor1:{
+                color: '#00AA11'
+            },
+            syncStatusColor2:{
+                color: '#FF0000'
             }
         },
         shadows: darkShadows

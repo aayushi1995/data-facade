@@ -128,7 +128,7 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
                         {updateChart.isLoading ? (
                             <LoadingIndicator/>
                         ) : (
-                            <Button variant="contained" sx={{ background: "#56D280", borderRadius: "64px" }} onClick={handleSaveChart}>
+                            <Button variant="contained" sx={{ backgroundColor: "ActionConfigComponentBtnColor1.main", borderRadius: "64px" }} onClick={handleSaveChart}>
                                 Save
                             </Button>
                         )}

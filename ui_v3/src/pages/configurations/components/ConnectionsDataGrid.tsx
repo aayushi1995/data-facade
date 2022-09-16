@@ -201,8 +201,9 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
         rows: rows?.map(row => ({...row, id: row.ProviderInstance?.Id, providerName: row.ProviderInstance?.Name})) || [],
         autoHeight: true,
         sx: {
-            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"},
-            background: "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8",
+            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+            // background: "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%)",
+            backgroundColor: 'ActionCardBgColor.main',
             backgroundBlendMode: "soft-light, normal",
             border: "2px solid rgba(255, 255, 255, 0.4)",
             boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
@@ -425,9 +426,9 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
 export const JobStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
     return (
         <Box sx={{display: 'flex', gap: 1, minWidth: '100%'}}>
-            <StatusCard text={props.providerStats?.NumberOfRunningExecutions || 0} background='#C3FDED' title='Running'/>
-            <StatusCard text={props.providerStats?.NumberOfFailedExecutions || 0} background='rgba(255, 189, 189, 0.88);' title='Failed'/>
-            <StatusCard text={props.providerStats?.NumberOfCompletedExecutions || 0} background='#FCF4AC' title='Completed'/>
+            <StatusCard text={props.providerStats?.NumberOfRunningExecutions || 0} background='statusCardBgColor1.main' title='Running'/>
+            <StatusCard text={props.providerStats?.NumberOfFailedExecutions || 0} background='statusCardBgColor2.main' title='Failed'/>
+            <StatusCard text={props.providerStats?.NumberOfCompletedExecutions || 0} background='statusCardBgColor3.main' title='Completed'/>
         </Box>
     )
 }
@@ -435,9 +436,9 @@ export const JobStatusCell = (props: {providerStats?: ProviderInstanceStat}) => 
 const SyncStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
     return (
         <Box sx={{display: 'flex', gap: 1, minWidth: '100%'}}>
-            <StatusCard text={props.providerStats?.SyncRunning || 0} background='#C3FDED' title='Active'/>
-            <StatusCard text={props.providerStats?.SyncFailed || 0} background='rgba(255, 189, 189, 0.88);' title='Errors'/>
-            <StatusCard text={props.providerStats?.SyncCompleted || 0} background='#FCF4AC' title='Successful'/>
+            <StatusCard text={props.providerStats?.SyncRunning || 0} background='statusCardBgColor1.main' title='Active'/>
+            <StatusCard text={props.providerStats?.SyncFailed || 0} background='statusCardBgColor2.main' title='Errors'/>
+            <StatusCard text={props.providerStats?.SyncCompleted || 0} background='statusCardBgColor3.main' title='Successful'/>
         </Box>
     )
 }
@@ -451,7 +452,7 @@ export const StatusCard = (props: {background: string, text: string | number, ti
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                background: props.background,
+                backgroundColor: props.background,
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 5px 10px rgba(54, 48, 116, 0.3)",
                 borderRadius: "26.3934px"}}>
@@ -461,7 +462,7 @@ export const StatusCard = (props: {background: string, text: string | number, ti
                         fontSize: "11.5435px",
                         lineHeight: "160%",
                         letterSpacing: "0.0961957px",
-                        color: "#253858"}}
+                        color: "cardInfoFormCreatedByStringColor.main"}}
                     >    
                         {props.text} {props.title}
                     </Typography>

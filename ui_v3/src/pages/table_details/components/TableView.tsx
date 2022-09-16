@@ -29,7 +29,7 @@ const TableView = (props: {TableId?: string}) => {
                     placeholder="Search Columns"
                     multiline={true}
                     sx={{width: '40%', 
-                        background: '#E0E5EC',
+                        backgroundColor: 'allTableTextfieldbgColor1.main',
                         boxSizing: 'border-box', 
                         boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                         backgroundBlendMode: 'soft-light, normal', 
@@ -56,7 +56,7 @@ const TableView = (props: {TableId?: string}) => {
                             isDataGridRenderPossible(tableViewQuery.data) &&
                                 <DataGrid sx={{ 
                                     "& .MuiDataGrid-columnHeaderTitleContainerContent": { width: "100%" },
-                                    "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                                    "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"}
                                 }}
                                     {...formDataGridPropsFromResponse(tableViewQuery.data, searchQuery)}  
                                 />
@@ -130,7 +130,7 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
                                     display: "flex",
                                     alignItems: "center",
                                     letterSpacing: "0.25px",
-                                    color: "#253858",
+                                    color: "ActionDefinationHeroTextColor1.main",
                                     px: 3
                                 }}
                                 disableUnderline
@@ -181,7 +181,7 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
         display: "flex",
         alignItems: "center",
         letterSpacing: "0.073125px",
-        color: "#253858",
+        color: "ActionDefinationHeroTextColor1.main",
         py: 1
     }
     const filter = createFilterOptions<string>()
@@ -234,7 +234,7 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
                                 display: "flex",
                                 alignItems: "center",
                                 letterSpacing: "0.25px",
-                                color: "#253858",
+                                color: "ActionDefinationHeroTextColor1.main",
                                 px: 3,
                                 width: "100%"
                             }} onClick={handleClick}>
