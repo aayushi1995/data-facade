@@ -12,8 +12,8 @@ type BuildApplicationContextState = {
 const defaultBuildActionContext: () => BuildApplicationContextState = () => ({
     Application: {
         Id: uuidv4(),
-        Name: "Demo",
-        Description: "Description"
+        Description: "Description",
+        UniqueName: "Demo"
     },
     Tags: [],
     isCreating: false
@@ -61,12 +61,20 @@ type RefreshIdAction = {
     type: "RefreshId"
 }
 
+type SetUniqueName = {
+    type: "SetUniqueName",
+    payload: {
+        newUniqueName: string|undefined
+    }
+}
+
 export type BuildApplicationAction = SetApplicationNameAction | 
 SetApplicationDescriptionAction | 
 SetApplicationTagsAction | 
 CreatingApplicationAction |
 CreatingApplicationOverAction |
-RefreshIdAction
+RefreshIdAction |
+SetUniqueName
 
 
 
@@ -116,6 +124,15 @@ const reducer = (state: BuildApplicationContextState, action: BuildApplicationAc
                     Id: uuidv4()
                 }
             }
+        case "SetUniqueName": {
+            return {
+                ...state,
+                Application: {
+                    ...state.Application,
+                    UniqueName: action.payload.newUniqueName
+                }
+            }
+        }
 
         default:
             const neverAction: never = action

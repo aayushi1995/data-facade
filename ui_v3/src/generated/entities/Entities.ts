@@ -140,6 +140,7 @@
 	 Description?: string
 	 IsVisibleOnUI?: boolean
 	 ProviderInstanceId?: string
+	 UniqueName?: string
  }
  
  

@@ -335,12 +335,8 @@ const ColumnInput = (props: ColumnParameterInput) => {
 
 
     React.useEffect(() => {
-        if(!!AvailableColumns) {
-            if(SelectedColumn===undefined) {
-                onChange(AvailableColumns?.[0])
-            } else {
-                onChange(SelectedColumn)
-            }
+        if(SelectedColumn!==undefined) {
+            onChange(SelectedColumn)
         }
     }, [AvailableColumns])
  

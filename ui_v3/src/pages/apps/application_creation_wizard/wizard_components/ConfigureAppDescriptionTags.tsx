@@ -50,8 +50,7 @@ const ConfigureAppDescriptionTags = (props: BuildApplicationWizardStepProps) => 
         tagFilter: {},
         allowAdd: true,
         allowDelete: true,
-        orientation: "VERTICAL",
-        direction: "DEFAULT"
+        inputFieldLocation: "BOTTOM"
     }
 
     return (
