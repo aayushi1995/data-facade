@@ -77,7 +77,7 @@ const ApplicationHeroInfo = (props: ApplicationHeroInfoProps) => {
                         <div>
                             {props.gitSyncStatus ? (
                                 <Button variant="contained" sx={{
-                                    backgroundColor: '#FFBDBD',
+                                    backgroundColor: 'statusCardBgColor2.main',
                                     maxHeight: '55px',
                                     wordWrap: 'break-word',
                                     ":hover": {

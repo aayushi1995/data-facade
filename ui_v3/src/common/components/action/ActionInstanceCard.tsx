@@ -79,7 +79,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                 borderRadius: 2, 
                 p: 2, 
                 boxSizing: "content-box",
-                bgcolor: creatingExecution ? "#FFFFFF" : "lightBrown.main",
+                bgcolor: creatingExecution ? "cardIconBtn1HoverColor.main" : "lightBrown.main",
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
@@ -153,7 +153,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                                 display: "flex",
                                                 alignItems: "center",
                                                 fontFeatureSettings: "'liga' off",
-                                                color: "#AA9BBE"
+                                                color: "cardNumUserTextColor.main"
                                             }}>{actionInstance.NumberOfUsers||"-"}</Typography>
                                         </Box>
                                         <Box sx={{display: "flex", alignContent: "center"}}>
@@ -182,7 +182,7 @@ const ActionInstanceCard = (props: ActionInstanceCardProps) => {
                                                 fontSize: "9px",
                                                 lineHeight: "166%",
                                                 letterSpacing: "0.4px",
-                                                color: "#F8F8F8"
+                                                color: "ActionCardBgColor.main"
                                             }}>
                                                 {formCreatedOnString()}
                                             </Typography>

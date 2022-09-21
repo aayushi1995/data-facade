@@ -65,8 +65,6 @@ const ApplicationCreationWizard = (props: ApplicationCreationWizardProps) => {
         return(
             <Box sx={{display: "flex", flexDirection: "column", minHeight: "inherit", gap: 2}}>
                 <Box sx={{display: "flex", flexGrow: 1}}>
-                </Box>
-                <Box sx={{display: "flex", flexGrow: 8}}>
                     {steps[activeStep].component(stepProps)}
                 </Box>
             </Box>

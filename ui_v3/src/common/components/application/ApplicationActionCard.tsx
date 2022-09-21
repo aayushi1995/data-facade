@@ -12,6 +12,7 @@ import { ActionDetailsForApplication } from "../../../generated/interfaces/Inter
 import labels from "../../../labels/labels";
 import NumberStat from "../NumberStat";
 import TagHandler from "../tag-handler/TagHandler";
+import ConfirmationDialog from "../ConfirmationDialog";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 import useDeleteAction from "./hooks/useDeleteActions";
 
@@ -35,6 +36,16 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
             history.push(`/application/execute-action/${props.action.model?.Id || "id"}`)
         }
     }
+
+    const [dialogOpen, setDialogOpen] = React.useState(false)
+    const handleDialogClose = () => setDialogOpen(false)
+    const handleDialogOpen = () => setDialogOpen(true)
+
+    const promptDeleteApplication = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.stopPropagation() 
+        handleDialogOpen()
+    }
+
     const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation()
         setMenuAnchor(event.currentTarget)
@@ -62,6 +73,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                     props.handleDeleteAction?.(props.action.model?.Id!, props.action.model?.ApplicationId || "1")
                 }
         })
+        handleDialogClose();
     }
 
     const edit = () => {
@@ -72,9 +84,16 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
         }
     }
 
-    const background = !props.isWorkflow ? '#EEEEFF' : '#F8F8F8'
+    const background = !props.isWorkflow ? '#EEEEFF' : 'ActionCardBgColor.main'
     return (
         <Box sx={{height: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
+            <ConfirmationDialog
+                messageToDisplay={`Application ${props.action.model?.DisplayName} will be deleted permanently. Proceed with deletion ?`}
+                dialogOpen={dialogOpen}
+                onDialogClose={handleDialogClose}
+                onAccept={handleDelete}
+                onDecline={handleDialogClose}
+            />
             <Card sx={{background: background, boxShadow: lightShadows[27], borderRadius: '10.2px', minHeight: '100%', minWidth: '100%'}}>
                 <Box sx={{display: 'flex', minHeight: '100%'}}>
                     <Box sx={{flex: 4, width: '100%', height: '100%'}}>
@@ -132,7 +151,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                         fontStyle: 'normal',
                                         fontSize: '12px',
                                         lineHeight: '133.4%',
-                                        color: '#253858'
+                                        color: 'ActionDefinationHeroTextColor1.main'
                                     }}>
                                         {props.action.model?.PresentationFormat || ""}
                                     </Typography>
@@ -151,7 +170,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                             fontStyle: 'normal',
                                             fontSize: '12px',
                                             lineHeight: '133.4%',
-                                            color: '#253858'
+                                            color: 'ActionDefinationHeroTextColor1.main'
                                         }}>
                                             {(props.action.averageRunTime || 0)/1000 } sec
                                         </Typography>
@@ -227,7 +246,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                 vertical: 'top',
                                 horizontal: 'left',
                         }}>
-                            <MenuItem onClick={handleDelete} value={0}>Delete</MenuItem>
+                            <MenuItem onClick={handleDialogOpen} value={0}>Delete</MenuItem>
                         </Menu>
                     </Box>
                 </Box>

@@ -58,7 +58,7 @@ const ActionInfoHero = (props: ActionInfoHeroProps) => {
                             fontWeight: 600,
                             fontSize: "36px",
                             lineHeight: "116.7%",
-                            color: "#253858"
+                            color: "ActionDefinationHeroTextColor1.main"
                         }}>
                             {props.name}
                         </Typography>
@@ -131,7 +131,7 @@ const ActionInfoHero = (props: ActionInfoHeroProps) => {
                             fontWeight: 600,
                             fontSize: "12px",
                             lineHeight: "133.4%",
-                            color: "#253858",
+                            color: "ActionDefinationHeroTextColor1.main",
                             transform: "matrix(1, 0, 0, 1, 0, 0)"
                         }}>
                             {props.outputType}
@@ -156,7 +156,7 @@ const ActionInfoHero = (props: ActionInfoHeroProps) => {
                             fontWeight: 600,
                             fontSize: "12px",
                             lineHeight: "133.4%",
-                            color: "#253858",
+                            color: "ActionDefinationHeroTextColor1",
                             transform: "matrix(1, 0, 0, 1, 0, 0)"
                         }}>
                             <span><b>{formHumanReadableRuntime(props.avgRuntimeInS)}</b></span>

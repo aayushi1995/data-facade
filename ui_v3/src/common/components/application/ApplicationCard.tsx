@@ -91,7 +91,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const promptDeleteApplication = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation() 
         handleMoreOptionsSpeedDialClose()
-        handleDialogOpen()
+        // handleDialogOpen()
     }
 
     const deleteApplication = () => {

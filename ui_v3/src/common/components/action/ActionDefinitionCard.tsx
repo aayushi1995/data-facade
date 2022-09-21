@@ -108,7 +108,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                 borderRadius: 2, 
                 p: 2, 
                 boxSizing: "content-box",
-                background: !deletingState ? "#F4F4F4": "#A4CAF0",
+                backgroundColor: !deletingState ? "cardDeleteBtnBgColor.main": "cardBackgroundColor.main",
                 border: "0.439891px solid #FFFFFF",
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
@@ -150,7 +150,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                             alignContent: "center", 
                                             width: "30px",
                                             height: "30px",
-                                            background: "#F4F4F4",
+                                            backgroundColor: "cardDeleteBtnBgColor.main",
                                             boxShadow: "inset 8px 8px 8px rgba(0, 0, 0, 0.25), inset -8px -8px 8px #B8DBFF",
                                             borderRadius: "50%",
                                             p: "3px"
@@ -170,7 +170,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                                 display: "flex",
                                                 alignItems: "center",
                                                 fontFeatureSettings: "'liga' off",
-                                                color: "#AA9BBE"
+                                                color: "cardNumUserTextColor.main"
                                             }}>{actionDefinition.NumberOfUsers||"-"}</Typography>
                                         </Box>
                                         <Box sx={{display: "flex", alignContent: "center"}}>
@@ -186,7 +186,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                                 fontSize: "10px",
                                                 lineHeight: "157%",
                                                 letterSpacing: "0.1px",
-                                                color: "#253858"
+                                                color: "ActionDefinationHeroTextColor1.main"
                                             }}>
                                                 {formCreatedByString()}
                                             </Typography>
@@ -213,7 +213,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                         width: "60px",
                                         height: "60px",
                                         borderRadius: "50%",
-                                        background: "#F4F4F4",
+                                        backgroundColor: "cardDeleteBtnBgColor.main",
                                         boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
                                         display: "flex",
                                         alignItems: "center",
@@ -247,7 +247,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                     sx: {
                                         minHeight: "42px", 
                                         width: "42px",
-                                        background: "#F4F4F4",
+                                        backgroundColor: "cardDeleteBtnBgColor.main",
                                         boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
                                     }
                                 }}  
@@ -265,7 +265,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                     sx={{
                                         height: "42px",
                                         width: "42px",
-                                        background: "#F4F4F4"
+                                        backgroundColor: "cardDeleteBtnBgColor.main"
                                     }}
                                 />
                                 
@@ -276,7 +276,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#F4F4F4",
+                                backgroundColor: "cardDeleteBtnBgColor.main",
                                 boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
                             }} onClick={handleEdit}>
                                 <EditIcon/>
@@ -286,7 +286,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                             <IconButton sx={{
                                 height: "42px",
                                 width: "42px",
-                                background: "#F4F4F4",
+                                backgroundColor: "cardDeleteBtnBgColor.main",
                                 boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
                             }}>
                                 <FavoriteIcon sx={{color: 'rgba(150, 142, 241, 1)'}}/>

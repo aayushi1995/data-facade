@@ -48,7 +48,7 @@ const WizardView2 = (props: BuildActionWizardStepProps) => {
     
     return (
         <Grid container>
-            <Grid item xs={6} p={5} sx={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <Grid item xs={12} px={5} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <Box>
                     <Typography variant="wizardText">
                         Type your Action Details
@@ -56,7 +56,7 @@ const WizardView2 = (props: BuildActionWizardStepProps) => {
                 </Box> 
                 <ActionSummary/>
             </Grid>
-            <Grid item xs={6} p={5} sx={{ display: "flex", flexDirection: "column", gap: 4}}>
+            <Grid item xs={12} px={5} sx={{ display: "flex", flexDirection: "column", gap: 2}}>
                 <Box>
                     <Typography variant="wizardText">
                         Select Tags for your action

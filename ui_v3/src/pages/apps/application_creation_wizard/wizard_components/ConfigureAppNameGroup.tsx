@@ -41,7 +41,7 @@ const ConfigureAppNameGroup = (props: BuildApplicationWizardStepProps) => {
                     display: "flex",
                     alignItems: "center",
                     textAlign: "center",
-                    color: "#A7A9AC"
+                    color: "dialogueTextColor1.main"
                 }}>
                     Type your Application Name
                 </Typography>

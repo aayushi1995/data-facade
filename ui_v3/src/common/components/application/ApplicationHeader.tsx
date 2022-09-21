@@ -67,7 +67,7 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                             placeholder="Search Apps/Flows/Actions"
                             multiline={true}
                             sx={{width: '40%', 
-                                background: '#E0E5EC',
+                                backgroundColor: 'allTableTextfieldbgColor1.main',
                                 boxSizing: 'border-box', 
                                 boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                                 backgroundBlendMode: 'soft-light, normal', 

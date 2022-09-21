@@ -1,6 +1,7 @@
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography,DialogTitle, Grid ,DialogContent} from "@mui/material";
+// import CloseIcon from "../../../../src/images/close.svg"
 import React from "react";
 import { useHistory } from "react-router-dom";
 import LoadingIndicator from "../../../common/components/LoadingIndicator";
@@ -80,28 +81,38 @@ const CreateActionWizard = (props: CreateActionWizardProps) => {
     
     return(
         (activeStep < steps.length) ?
-            <Box sx={{display: "flex", flexDirection: "column", minHeight: "inherit", gap: 2}}>
-                <Box sx={{ display: "flex", flexDirection: "row"}}>
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <IconButton onClick={stepProps.previousStep}>
-                            <ArrowBackIosIcon/>
-                        </IconButton>
-                    </Box>  
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <Typography variant="wizardHeader">
+            <Box sx={{display: "flex", flexDirection: "column"}}>
+                    <DialogTitle sx={{width:'100%' , display: 'flex', justifyContent: 'center',backgroundColor: "ActionConfigDialogBgColor.main", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
+                    <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
+                        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <IconButton onClick={stepProps.previousStep} sx={{color:"cardIconBtn1HoverColor.main"}}>
+                                <ArrowBackIosIcon/>
+                            </IconButton>
+                        </Box>
+                        <Typography variant="wizardHeader" sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 500,
+                            fontSize: "18px",
+                            lineHeight: "160%",
+                            letterSpacing: "0.15px",
+                            color: "ActionCardBgColor.main"}}
+                        >
                             {steps[activeStep].label}
                         </Typography>
-                    </Box>
-                    <Box sx={{ flexGrow: 1 }}/>
-                    <Box>
-                        <IconButton onClick={closeDialog}>
+                    </Grid>
+                    <Grid item xs={6} style={{display: 'flex', justifyContent: 'flex-end'}} >
+                        <IconButton onClick={closeDialog} sx={{color:"cardIconBtn1HoverColor.main"}}>
                             <CloseIcon/>
                         </IconButton>
+                    </Grid>
+                    </DialogTitle>
+
+                <DialogContent sx={{minHeight: "400px" , flexDirection: "column"}}>
+                    <Box sx={{display: "flex", flexGrow: 8 , flexDirection: "column"}}>
+                        {steps[activeStep].component(stepProps)}
                     </Box>
-                </Box>
-                <Box sx={{display: "flex", flexGrow: 8}}>
-                    {steps[activeStep].component(stepProps)}
-                </Box>
+                </DialogContent>
             </Box>
             : 
             <LoadingIndicator/>

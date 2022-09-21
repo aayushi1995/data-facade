@@ -55,21 +55,31 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
     return (
         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", px:4}}>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", flexGrow: 1}}>
-                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", flexGrow: 1}}>
+                
                     <Box>
-                        <Typography variant="wizardText">
+                        <Typography variant="wizardText" sx={{
+                            color: 'dialogueTextColor1.main',
+                            fontFamily: "'SF Compact Display'",
+                            fontWeight: 800,
+                            fontSize: '25px'
+                        }}>
                             Welcome to Data Facade APP-Creation widget.
                             Experience a new way in how you create apps 
                         </Typography>
                     </Box>
                     <Box>
-                        <Typography variant="wizardText">
+                        <Typography variant="wizardText" sx={{
+                            color: 'dialogueTextColor1.main',
+                            fontFamily: "'SF Compact Display'",
+                            fontWeight: 800,
+                            fontSize: '22px'
+                        }}>
                             Data Facade brings you the power to use
                             either a No-code or a Hybrid-code platform to create your actions
                             The first step in building your AI App
                         </Typography>
                     </Box>
-                </Box>
+                
                 <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Typography sx={{
                         fontFamily: "'SF Compact Display'",
@@ -80,7 +90,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                         display: "flex",
                         alignItems: "center",
                         textAlign: "center",
-                        color: "#A7A9AC"
+                        color: "dialogueTextColor1.main"
                     }}>
                         Please select an option to help you
                     </Typography>
@@ -93,7 +103,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                         display: "flex",
                         alignItems: "center",
                         textAlign: "center",
-                        color: "#A7A9AC"
+                        color: "dialogueTextColor1.main"
                     }}>
                         create your first app
                     </Typography>
@@ -101,7 +111,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
             </Box>
             <Grid container sx={{flexGrow: 1}}>
                 {createOptions.map(opt => 
-                    <Grid item xs={12} md={6} sx={{ px: 2 }}>
+                    <Grid item xs={12} md={12} sx={{ px: 2 , py:1}}>
                         <CreateOption {...opt} selectedValue={selectedOption} onSelect={(newValue: string) => setSelectedOption(newValue)}/>
                     </Grid>
                 )}
@@ -128,13 +138,13 @@ interface CreateOptionProps {
 const CreateOption = (props: CreateOptionProps) => {
     const {value, selectedValue, description, onSelect} = props
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2}}>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 3 , boxShadow: '0 0 1px 0 rgba(0,0,0,0.31), 0 3px 4px -2px rgba(0,0,0,0.25)' , backgroundColor: 'ActionCardBgColor.main', padding:'5px'}}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2}}>
                 <Radio checked={value===selectedValue} onClick={() => onSelect(value)}/>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 2}}>
+            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 1}}>
                 <Box>
-                    <Typography>
+                    <Typography sx={{fontSize: '18px' , fontWeight: 500}}>
                         {value}
                     </Typography>
                 </Box>

@@ -54,8 +54,8 @@ const ConfigureAppDescriptionTags = (props: BuildApplicationWizardStepProps) => 
     }
 
     return (
-        <Box sx={{display: "flex", flexDirection: "column", gap: 2, width: "100%", px: 5}}>
-            <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 3, flexGrow: 1}}>
+        <Box sx={{display: "flex", flexDirection: "column", gap: 2, width: "100%", px: 5 , py:3}}>
+            <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 2, flexGrow: 1}}>
                 <Box sx={{width: "100%"}}>
                     <TextField onBlur={setDescriptionInContext} variant="outlined" label="App Description" value={description} onChange={(event => setDescription(event.target.value))} fullWidth/>
                 </Box>

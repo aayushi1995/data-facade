@@ -36,8 +36,8 @@ const CreateActionWizardDialog = (props: CreateActionWizardDialogProps) => {
     return (
         actionContext.mode==="CREATE" ?
             <Box>
-                <Dialog open={props.showWizard} fullWidth maxWidth="lg">
-                    <DialogContent sx={{minHeight: "600px"}}>
+                <Dialog open={props.showWizard} fullWidth maxWidth="md" >
+                    
                         <CreateActionWizard
                             onSuccessfulCreation={(createdActionDefinition) => {
                                 props?.onWizardClose?.()
@@ -48,7 +48,6 @@ const CreateActionWizardDialog = (props: CreateActionWizardDialogProps) => {
                                 props?.onCancelCreation?.()
                             }}
                         />
-                    </DialogContent>
                 </Dialog>
             </Box>
             :

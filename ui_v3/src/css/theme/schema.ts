@@ -102,6 +102,9 @@ declare module "@mui/styles" {
     syncingLogoColor2: string;
     syncStatusColor1: string;
     syncStatusColor2: string;
+
+    dialogueTextColor1: string;
+
   }
   interface PaletteOptions {
     lightBrown?: string;
@@ -137,6 +140,7 @@ declare module "@mui/styles" {
     syncingLogoColor2?: string;
     syncStatusColor1?: string;
     syncStatusColor2?: string;
+    dialogueTextColor1?: string;
   }
 }
 

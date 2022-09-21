@@ -543,6 +543,12 @@ const themesOptions = {
                 color:{
                     main: '#FF0000'
                 }
+            }),
+
+            dialogueTextColor1: palette.augmentColor({
+                color:{
+                    main: '#A7A9AC'
+                }
             })
         },
         shadows: lightShadows
@@ -687,6 +693,9 @@ const themesOptions = {
             },
             syncStatusColor2:{
                 color: '#FF0000'
+            },
+            dialogueTextColor1:{
+                color: '#A7A9AC'
             }
 
         },
@@ -833,6 +842,9 @@ const themesOptions = {
             },
             syncStatusColor2:{
                 color: '#FF0000'
+            },
+            dialogueTextColor1:{
+                color: '#A7A9AC'
             }
         },
         shadows: darkShadows

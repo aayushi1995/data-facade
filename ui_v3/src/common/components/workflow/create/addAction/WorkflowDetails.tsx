@@ -1,10 +1,14 @@
-import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material"
+import { Box, Button, Card, Grid, TextField, Typography ,DialogTitle ,IconButton ,} from "@mui/material"
 import React from "react"
+import { useHistory } from "react-router-dom"
+import { APPLICATION_ROUTE } from "../../../../../../src/common/components/header/data/RoutesConfig"
+import CloseIcon from "../../../../../../src/images/close.svg"
 import { BuildActionContext, SetBuildActionContext } from "../../../../../pages/build_action/context/BuildActionContext"
 
 export interface WorkflowDetailsProps {
     onContinue?: () => void
 }
+
 
 const WorkflowDetails = (props: WorkflowDetailsProps) => {
     const actionContext = React.useContext(BuildActionContext)
@@ -13,6 +17,10 @@ const WorkflowDetails = (props: WorkflowDetailsProps) => {
     const [name, setName] = React.useState<string|undefined>()
     const [description, setDescription] = React.useState<string|undefined>()
 
+    const history = useHistory()
+    const handleDialogClose = () => {
+        history.push(APPLICATION_ROUTE)
+    }
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setActionContext({type: 'SetActionDefinitionName', payload: {newName: name}})
     }
@@ -37,14 +45,27 @@ const WorkflowDetails = (props: WorkflowDetailsProps) => {
     }, [])
 
     return (
-        <Grid container rowSpacing={12}>
-            <Grid item xs = {12}>
-                <Card sx={{width: '100%', display: 'block' , fontWeight: 'normal', borderRadius: '10px 10px 0px 0px', p: 2}}>
-                    <Typography>
-                        Create Flow
-                    </Typography>
-                </Card>
-            </Grid>
+        <Box sx={{padding:'0px'}} >
+            <DialogTitle sx={{display: 'flex', justifyContent: 'center',backgroundColor: "ActionConfigDialogBgColor.main", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
+                    <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
+                        <Typography variant="heroHeader" sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 500,
+                            fontSize: "18px",
+                            lineHeight: "160%",
+                            letterSpacing: "0.15px",
+                            color: "ActionCardBgColor.main"}}
+                        >
+                            Create Flow
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6} style={{display: 'flex', justifyContent: 'flex-end'}} >
+                        <IconButton onClick={handleDialogClose}>
+                            <img src={CloseIcon} alt="close"/>
+                        </IconButton>
+                    </Grid>
+            </DialogTitle>
             <Grid item xs = {12}>
                 <Grid container rowSpacing={2} justifyContent='center' alignItems='center'>
                     <Grid item xs={12}>
@@ -71,7 +92,7 @@ const WorkflowDetails = (props: WorkflowDetailsProps) => {
                     </Grid>
                 </Grid>
             </Grid>
-        </Grid>
+        </Box>
     )
 }
 
