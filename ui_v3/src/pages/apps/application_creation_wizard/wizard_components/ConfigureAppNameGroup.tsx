@@ -50,7 +50,7 @@ const ConfigureAppNameGroup = (props: BuildApplicationWizardStepProps) => {
                 <Box sx={{width: '40%'}}>
                     <TextField onBlur={setUniqueNameInContext} variant="outlined" label="Application Unique Name" value={uniqueName} onChange={(event => setUniqueName(event.target.value))} fullWidth/>
                 </Box>
-                <Box sx={{width: "40%"}}>
+                {/* <Box sx={{width: "40%"}}>
                     <FormControl variant="outlined" fullWidth>
                         <InputLabel>Select App Group</InputLabel>
                         <Select
@@ -61,7 +61,7 @@ const ConfigureAppNameGroup = (props: BuildApplicationWizardStepProps) => {
                         >
                         </Select>
                     </FormControl>
-                </Box>
+                </Box> */}
                 <Box sx={{width: "40%"}}>
                     <TextField onBlur={setNameInContext} variant="outlined" label="Application Display Name" value={name} onChange={(event => setName(event.target.value))} fullWidth/>
                 </Box>

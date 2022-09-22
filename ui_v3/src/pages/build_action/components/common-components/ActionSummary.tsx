@@ -12,7 +12,7 @@ const ActionSummary = () => {
         return buildActionContext.actionDefinitionWithTags.actionDefinition.ActionType
     }
     const getInitialTemplateLanguage = () => {
-        return buildActionContext.actionTemplateWithParams.find(at => at.template.Id===buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId)!.template.Language
+        return buildActionContext.actionTemplateWithParams.find(at => at.template.Id===buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId)!.template?.SupportedRuntimeGroup
     }
 
     const getInitialReturnType = () => {

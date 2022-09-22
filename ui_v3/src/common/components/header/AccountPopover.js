@@ -63,7 +63,7 @@ const AccountPopover = () => {
                         >
                             {appcontext.workspaceName}
                         </Typography>
-                        <ThemeToggle/>
+                        {/* <ThemeToggle/> */}
                     </Box>
                     <Divider/>
                     <Box>

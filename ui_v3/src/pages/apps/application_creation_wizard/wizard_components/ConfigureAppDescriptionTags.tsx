@@ -63,18 +63,18 @@ const ConfigureAppDescriptionTags = (props: BuildApplicationWizardStepProps) => 
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
                 <VirtualTagHandler {...tagHandlerProps}/>
             </Box>
-            <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
-                    <FormControl variant="outlined" fullWidth>
-                        <InputLabel>Select an option that resembles your App</InputLabel>
-                        <Select
-                            variant="outlined"
-                            label="Select an option that resembles your App"
-                            fullWidth
-                            disabled
-                        >
-                        </Select>
-                    </FormControl>
-                </Box>
+            {/* <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
+                <FormControl variant="outlined" fullWidth>
+                    <InputLabel>Select an option that resembles your App</InputLabel>
+                    <Select
+                        variant="outlined"
+                        label="Select an option that resembles your App"
+                        fullWidth
+                        disabled
+                    >
+                    </Select>
+                </FormControl>
+            </Box> */}
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 2}}>
                 <Button variant="contained" onClick={() => onCreate()}>Create</Button>
             </Box>

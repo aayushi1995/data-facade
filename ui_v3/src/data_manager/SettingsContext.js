@@ -24,9 +24,11 @@ export const restoreSettings = () => {
                 direction: 'ltr',
                 responsiveFontSizes: true,
                 roundedCorners: true,
-                theme: window.matchMedia('(prefers-color-scheme: dark)').matches
-                    ? THEMES.DARK
-                    : THEMES.LIGHT
+                // theme: window.matchMedia('(prefers-color-scheme: dark)').matches
+                //     ? THEMES.DARK
+                //     : THEMES.LIGHT
+                // Enable this when dark theme is active
+                theme: THEMES.LIGHT
             };
         }
     } catch (err) {
