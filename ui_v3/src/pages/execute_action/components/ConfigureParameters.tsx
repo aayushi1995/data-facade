@@ -22,9 +22,6 @@ export const isDefaultValueDefined = (parameterDefaultValue?: string) => {
 const ConfigureParameters = (props: ConfigureParametersProps) => {
 
     const filteredParameters = props.mode === "GENERAL" ? props.ActionParameterDefinitions?.filter(apd => !isDefaultValueDefined(apd.DefaultParameterValue) ) : props.ActionParameterDefinitions?.filter(apd => isDefaultValueDefined(apd.DefaultParameterValue))
-    props?.ActionParameterDefinitions?.forEach(element => {
-        console.log(element, isDefaultValueDefined(element?.DefaultParameterValue))
-    })
         
     const [parameterSelected, setParameterSelected] = React.useState<ActionParameterDefinition | undefined>()
 

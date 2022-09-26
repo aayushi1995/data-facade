@@ -2,6 +2,7 @@ import { Autocomplete, Box, createFilterOptions, FormControl, Icon, InputLabel, 
 import React, { ChangeEvent } from "react"
 import InfoIcon from "../../../../../src/images/info.svg"
 import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
+import { FilteredColumnsResponse } from "../../../../generated/interfaces/Interfaces"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
 import LoadingWrapper from "../../LoadingWrapper"
@@ -293,13 +294,15 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
 const ColumnInput = (props: ColumnParameterInput) => {
     const filter = createFilterOptions<ColumnProperties>()
     const {parameterName, selectedColumnFilter, filters, onChange} = props.inputProps
+    const [availableColumnsState, setAvailableColumns] = React.useState<ColumnProperties[]>([])
     const fetchTableQuery = useFetchColumnsForTableAndTags({
         filters: {
             tableFilters: filters.tableFilters,
             parameterDefinitionId: filters.parameterDefinitionId
         },
         queryOptions: {
-            enabled: filters?.tableFilters!==undefined
+            enabled: filters?.tableFilters!==undefined,
+            onSuccess: (data: FilteredColumnsResponse[]) => setAvailableColumns(data?.[0]?.Columns || [])
         }
     })    
     
@@ -317,8 +320,9 @@ const ColumnInput = (props: ColumnParameterInput) => {
                 AvailableColumns: availableColumns || [], 
                 SelectedColumn: columnByName
             }
-        } else if(selectedColumnFilter?.UniqueName !== undefined){
+        } else if(selectedColumnFilter?.UniqueName !== undefined && selectedColumnFilter?.UniqueName?.length > 0){
             const selectedTable: ColumnProperties = { UniqueName: selectedColumnFilter?.UniqueName }
+            setAvailableColumns([...(availableColumns || []), selectedTable])
             return {
                 AvailableColumns: [...(availableColumns || []), selectedTable],
                 SelectedColumn: selectedTable
@@ -331,14 +335,13 @@ const ColumnInput = (props: ColumnParameterInput) => {
         }
     }
 
-    const { AvailableColumns, SelectedColumn } = getColumnSelectionInfo(fetchTableQuery.data?.[0]?.Columns, selectedColumnFilter)
-
+    const { AvailableColumns, SelectedColumn } = getColumnSelectionInfo(availableColumnsState, selectedColumnFilter)
 
     React.useEffect(() => {
-        if(SelectedColumn!==undefined) {
+        if(SelectedColumn!==undefined && SelectedColumn !== selectedColumnFilter) {
             onChange(SelectedColumn)
         }
-    }, [AvailableColumns])
+    }, [availableColumnsState])
  
     return (
         <LoadingWrapper 
