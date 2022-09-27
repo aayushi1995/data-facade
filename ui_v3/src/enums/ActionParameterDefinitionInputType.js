@@ -13,7 +13,8 @@ const ActionParameterDefinitionInputType = {
     TABLE_NAME: "Table Name",
     FIXED_DATE: "Fixed Date",
     LIVE_DATE: "Live Date",
-    COLUMN_LIST: "Column List"
+    COLUMN_LIST: "Column List",
+    STRING_NO_QUOTES: "String With No Quotes"
 }
 
 export default ActionParameterDefinitionInputType;

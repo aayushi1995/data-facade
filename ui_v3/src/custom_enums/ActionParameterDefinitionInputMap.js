@@ -34,6 +34,10 @@ const InputMap = {
         [ActionParameterDefinitionInputType.COLUMN_LIST]: {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
+        },
+        [ActionParameterDefinitionInputType.STRING_NO_QUOTES]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
+            [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING_NO_QUOTES
         }
     },
     [TemplateLanguage.SQL]: {
@@ -70,6 +74,10 @@ const InputMap = {
         [ActionParameterDefinitionInputType.COLUMN_LIST]: {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
+        },
+        [ActionParameterDefinitionInputType.STRING_NO_QUOTES]: {
+            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
+            [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING_NO_QUOTES
         }
     }
 }
