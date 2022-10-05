@@ -13,8 +13,8 @@ const PreBuiltApplications = (props: AllApplicationRowProps) => {
         const filteredApplications = (prebuiltApplications||[]).filter(prebuiltApplication => prebuiltApplication.ApplicationName?.toLowerCase().includes(searchQuery.toLowerCase())||prebuiltApplication.ApplicationName?.toLowerCase().includes(searchQuery.toLowerCase()))
 
         return filteredApplications.map(prebuiltApplication => 
-            <Grid item xs={12} lg={4} md={6} xl={3}>
-                <Box sx={{ height: '100%', p: 2}}  key={prebuiltApplication.ApplicationId}>
+            <Grid item xs={12} lg={4} md={6} xl={3} sx={{}}>
+                <Box sx={{ height: '100%', padding:'32px', marginRight:'20px'}}  key={prebuiltApplication.ApplicationId}>
                     <ApplicationCard application={prebuiltApplication} isInstalled={true}/>
                 </Box>
             </Grid>

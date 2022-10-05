@@ -392,27 +392,27 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                                     parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
                                 />
                             </Box> */}
-                            <Box sx={{width: "100%"}}>
+                            <Box sx={{justifyContent:'center'}}>
                                 {executeActionContext.ExistingModels.ActionDefinition.ActionType === ActionDefinitionActionType.AUTO_FLOW ? (
                                     <Button onClick={handleCreateWorkflow} variant="contained" sx={{width: "100%"}}>
                                         Create Auto Flow
                                     </Button>
                                 ) : (
-                                    <Box>
+                                    <Box sx={{display: 'flex', flexDirection:'row',justifyContent: 'center'}}>
                                         {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
-                                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}} disabled={props.disableRun || false}>
+                                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
                                                 RUN
                                             </Button>
                                         ) : (
                                             <Box sx={{display: 'flex', gap: 1}}>
                                                 {areAllParametersFilled() ? (
-                                                    <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "100%"}} disabled={props.disableRun || false}>
+                                                    <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
                                                         RUN
                                                     </Button>
                                                 ) : (
                                                     <></>
                                                 )}
-                                                <Button onClick={handleGoNext} variant="contained" sx={{width: "100%"}}>
+                                                <Button onClick={handleGoNext} variant="contained" sx={{width: "250px"}}>
                                                     NEXT
                                                 </Button>
                                             </Box>

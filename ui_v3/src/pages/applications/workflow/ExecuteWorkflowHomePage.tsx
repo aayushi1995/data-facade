@@ -328,18 +328,17 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                     
                 </Box>
                 <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', mt: 5}}>
-                    <Box sx={{flex: 1, maxWidth: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2}}>
+                    <Box sx={{flex: 1, maxWidth: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2}}>
                         {saveWorkflowMutation.isLoading ? (
                             <LoadingIndicator/>
                         ) : (
                             <>
                             {recurrenceConfig.activeIndex ===  (IndexToComponent.length - 1)? (
-                                <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
+                                <Button sx={{width: '200px',backgroundColor: 'ActionConfigComponentBtnColor2.main',justifyContent: 'center'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
                             ) : (
-                                <Box sx={{display: 'flex', gap: 2}}>
-                                    
-                                    <Button sx={{minWidth: '100%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" disabled={!areAllParametersFilled()} onClick={executeWorkflow}>EXECUTE</Button>
-                                    <Button sx={{minWidth: '50%', background: 'rgba(241, 120, 182, 1)'}} variant="contained" onClick={handleGoNext}>NEXT</Button>
+                                <Box sx={{display: 'flex', flexDirection:'row', width:'350px',justifyContent: 'center'}}>
+                                    <Button sx={{mx:1, minWidth: '45%',position:'relative',left:0 ,backgroundColor: 'ActionConfigComponentBtnColor1.main'}} variant="contained" disabled={!areAllParametersFilled()} onClick={executeWorkflow}>EXECUTE</Button>
+                                    <Button sx={{mx:1, minWidth: '45%',position:'relative',right:0 ,backgroundColor: 'ActionConfigComponentBtnColor2.main'}} variant="contained" onClick={handleGoNext}>NEXT</Button>
                                 </Box>
                             )}
                             

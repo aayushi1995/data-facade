@@ -30,20 +30,20 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 field: "ActionInstanceName",
                 headerName: "Instance Name",
                 flex: 1,
-                minWidth: 200,
+                minWidth: 250,
                 renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionInstanceName}/>
             },
             {
                 field: "ActionDefinitionName",
                 headerName: "Definition Name",
                 flex: 1,
-                minWidth: 200,
+                minWidth: 250,
                 renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionDefinitionName}/>
             },
             {
                 field: "ActionExecutionStatus",
                 headerName: "Status",
-                width: 100,
+                width: 200,
                 renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionExecutionStatus}/>
             },
             {
@@ -58,7 +58,7 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 field: "Duration",
                 headerName: "Duration",
                 flex: 1,
-                minWidth: 200,
+                minWidth: 100,
                 renderCell: (params: GridCellParams<any, Run, any>) => <DurationCell start={params.row.ActionExecutionStartedOn} end={params?.row?.ActionExecutionCompletedOn}/>
             },
             {
@@ -83,7 +83,12 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
             },
         ],
         sx: {
-            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+            backgroundColor: 'ActionCardBgColor.main',
+            backgroundBlendMode: "soft-light, normal",
+            border: "2px solid rgba(255, 255, 255, 0.4)",
+            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+            borderRadius: "15px"
         },
         autoHeight: true,
         headerHeight: 70,

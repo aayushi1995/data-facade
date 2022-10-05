@@ -39,12 +39,13 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
         const selectedTagsId: string[] = selectedTags.map(tag => tag.Id!)
         const availableTagsForEntity = (data as Tag[]).filter(availableTag => !selectedTagsId.includes(availableTag.Id!))
         return(
-            <Grid container spacing={2} sx={{overflowY: 'auto', overflowX: 'auto'}} direction={ 
+            <Grid sx={{overflowY: 'auto', overflowX: 'auto' ,height:'180px'}} direction={ 
                 inputFieldLocation==="BOTTOM" ? "column-reverse" : 
                 inputFieldLocation==="TOP" ? "column" :
                 inputFieldLocation==="LEFT" ? "row" : "row-reverse"
+                
             }>
-                {props.allowAdd && <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:4, lg:3} )}>
+                {props.allowAdd && <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:12, lg:12} )}>
                     <Autocomplete
                         options={availableTagsForEntity}
                         getOptionLabel={tag => tag.Name!}
@@ -74,11 +75,11 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                             }
                             return filtered;
                         }}
-                        renderInput={(params) => <TextField {...params} label="Add Tag"/>}
+                        renderInput={(params) => <TextField sx={{width:'200px' , mb:2}} {...params} label="Add Tag"/>}
                     />
                 </Grid>}
-                <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:8, lg:9} )}>
-                    <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%"}}>
+                <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:12, lg:12} )}>
+                    <Box sx={{display: "flex",overflowY:'scroll',overflowX:'hidden', flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center",height:'100px'}}>
 
                         {selectedTags.length > 0 ? 
                             (

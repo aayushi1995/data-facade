@@ -7,11 +7,12 @@ import ConfiguredDataSource from "../configurations/components/ConfiguredDataSou
 import AllTableView from "../table_browser/components/AllTableView";
 import TableDetails from "../table_details/TableDetails";
 import UploadTablePage from "../upload_table/UploadTablePage";
-
+import { Box, Typography } from "@mui/material";
 const DataContent = () => {
     const setModuleContext = useContext(SetModuleContextState)
 
     return (
+        <Box sx={{mx:6}}>
         <Switch>
             <Redirect exact from={DATA_CONNECTIONS_UPLOAD_ROUTE} to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE}/>
             <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
@@ -24,6 +25,7 @@ const DataContent = () => {
                 <CertifiedTables/>
             </Route>
         </Switch>
+        </Box>
     )
 }
 

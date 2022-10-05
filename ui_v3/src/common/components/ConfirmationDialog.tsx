@@ -18,10 +18,10 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
             <DialogContent>
                 <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3}}>
                     <Button color="primary" onClick={() => props.onAccept()}>
-                        Yes
+                        Delete
                     </Button>
                     <Button color="primary" onClick={() => props.onDecline()}>
-                        No
+                        Cancel
                     </Button>
                 </Box>
             </DialogContent>

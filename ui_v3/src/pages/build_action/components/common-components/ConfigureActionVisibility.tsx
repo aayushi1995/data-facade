@@ -18,7 +18,7 @@ const ConfigureActionVisibility = () => {
     const toggleActionDefinitionPublishStatus = () => setBuildActionContext({ type: "TogglePublishStatus"})
     
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, p: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, p: 2 ,minHeight:'180px'}}>
             <Box>
                 <FormGroup>
                     <FormControlLabel control={

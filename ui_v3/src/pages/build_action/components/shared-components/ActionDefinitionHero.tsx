@@ -6,7 +6,8 @@ import useGetApplications from "../../../../common/components/workflow/edit/hook
 import ActionDefinitionActionGroups from "../../../../enums/ActionDefinitionActionGroups";
 import { Application } from "../../../../generated/entities/Entities";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
-
+import pythonLogo from "../../../../../src/images/python.svg"
+import sqlLogo from "../../../../../src/images/SQL.svg"
 type HeroComponentMode = "EDIT" | "READONLY"
 
 export interface ActionDefinitionHeroProps {
@@ -94,7 +95,11 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                             <Box sx={{display: "flex", flexDirection: "row", gap: 4}}>
                                 <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: 2}} className="info">
                                     <Box className="createdBy">
-                                        <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.createdBy}/>
+                                        {/* Checking that if action made in python the action made  */}
+                                     {/* {condition}?    */}
+                                    {<img width='35px' height='35px' src={pythonLogo} alt="python"/> /* : */}
+                                    {/* <img src={sqlLogo} alt="python"/> */}
+                                      {/* <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.createdBy}/> */}
                                     </Box>
                                         <Divider orientation="vertical" flexItem/>
                                     <Box className="status">
@@ -171,11 +176,11 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                             <Box sx={{pl: 1, pt: 1, display: "flex", flexDirection: "column", justifyContent: "flex-start", flexGrow: 1}} className="data">
                                 <Box sx={{display: "flex", flexDirection: "row"}} className="data-author">
                                     <Box sx={{mr: 1, display: "flex", alignItems: "center", justifyContent: "center"}}className="data-author-avatar">
-                                        <Button sx={{m:0, p:0}}>
+                                        {/* <Button sx={{m:0, p:0}}>
                                             <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.createdBy}>
 
                                             </Avatar>
-                                        </Button>
+                                        </Button> */}
                                     </Box>
                                     <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-around"}} className="data-author-info">
                                         <Box className="header">

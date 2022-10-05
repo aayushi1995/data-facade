@@ -1,4 +1,5 @@
 import { useContext, useEffect } from 'react';
+import { Box} from "@mui/material";
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_ROUTE_MARKETPLACE, APPLICATION_SUB_TABS, APPPLICATION_CREATE_AUTO_FLOW, EXECUTION_HISTORY_ROUTE, SCHEDULED_JOBS_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
 import { findTab } from '../../common/components/header/data/DataRoutesConfig';
@@ -28,6 +29,7 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
 
     return (
         <Switch>
+            <Box sx={{mx:6}}>
             <Route path='/application/jobs' component={Jobs}/>
             <Route path={APPLICATION_ROUTE_MARKETPLACE} component={ApplicationMarketplace}/>
             <Route path="/application/build-workflow" component={BuildWorkflowHomePage}/>
@@ -44,7 +46,8 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
             <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
             <Route path={EXECUTION_HISTORY_ROUTE} component={ExecutionHistory}/>
             <Route path={SCHEDULED_JOBS_ROUTE} component={ScheduledJobsWrapper} />
-            <Route path={APPLICATION_ROUTE} component={AllApplicationViewWrapper}/>
+            <Route exact path={APPLICATION_ROUTE} component={AllApplicationViewWrapper}/>
+            </Box>
         </Switch>
     )
 });
@@ -65,7 +68,7 @@ export const AllApplicationViewWrapper = () => {
         })
     }, [])
 
-    return <AllApplicationView/>
+    return <Box sx={{mx:-6}}> <AllApplicationView/></Box>
 }
 
 export const ScheduledJobsWrapper = () => {

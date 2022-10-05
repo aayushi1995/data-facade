@@ -16,6 +16,7 @@ import ConfirmationDialog from "../ConfirmationDialog"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 import useInstallApplication from './hooks/useInstallApplication'
+import LinesEllipsis from 'react-lines-ellipsis'
 
 
 interface ApplicationCardProps {
@@ -91,7 +92,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const promptDeleteApplication = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation() 
         handleMoreOptionsSpeedDialClose()
-        // handleDialogOpen()
+        handleDialogOpen()
     }
 
     const deleteApplication = () => {
@@ -112,10 +113,10 @@ const ApplicationCard = (props: ApplicationCardProps) => {
             return (
                 <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
                     <Box>
-                        <Tooltip title="Add to Favorites">
+                        <Tooltip arrow title="Add to Favorites">
                             <IconButton sx={{
-                                height: "35px",
-                                width: "35px",
+                                height: "100%",
+                                width: "100%",
                                 backgroundColor: "cardIconButtonBackgroundColor.main",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
@@ -127,19 +128,38 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                             </IconButton>
                         </Tooltip>
                     </Box>
+
+
                     <Box>
-                        <Tooltip title="More Options">
+                        <Tooltip arrow placement='top' title="Share">
+                            <IconButton sx={{
+                                height: "100%",
+                                width: "100%",
+                                backgroundColor: "cardIconButtonBackgroundColor.main",
+                                boxShadow: lightShadows[32],
+                                "&:hover": {
+                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
+                                    color: "cardIconBtn1HoverColor.main"
+                                }
+                            }} onClick={onShare}>
+                                <ShareIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+
+
+                    <Box>
+                        <Tooltip arrow placement='top' title="More Options">
                             <SpeedDial
                                 ariaLabel={props.application.ApplicationId||""}
                                 direction="down"
                                 sx={{ 
-                                    height: "35px", 
-                                    width: "35px",
+                                    height: "40px", 
+                                    width: "40px",
                                 }}
                                 FabProps={{
-                                    sx: {
-                                        minHeight: "35px", 
-                                        width: "35px",
+                                    sx: { 
+                                        width: "100%",
                                         backgroundColor: "cardIconButtonBackgroundColor.main",
                                         boxShadow: lightShadows[32],
                                         "&:hover": {
@@ -159,40 +179,27 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     tooltipTitle="Delete"
                                     onClick={promptDeleteApplication}
                                     sx={{
-                                        height: "35px",
-                                        width: "35px",
+                                        // height: "100%",
+                                        // width: "100%",
+                                        marginTop:'-5px',
+                                        // color:'cardIconBtn1HoverColor.main',
                                         backgroundColor: "cardDeleteBtnBgColor.main"
                                     }}
                                 />
                             </SpeedDial>
                         </Tooltip>
                     </Box>
-                    <Box>
-                        <Tooltip title="Share">
-                            <IconButton sx={{
-                                height: "35px",
-                                width: "35px",
-                                backgroundColor: "cardIconButtonBackgroundColor.main",
-                                boxShadow: lightShadows[32],
-                                "&:hover": {
-                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
-                                    color: "cardIconBtn1HoverColor.main"
-                                }
-                            }} onClick={onShare}>
-                                <ShareIcon/>
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
+                    
                 </Box>
             )
         } else {
             return (
                 <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
                     <Box>
-                        <Tooltip title="Install">
+                        <Tooltip arrow title="Install">
                             <IconButton sx={{
-                                height: "35px",
-                                width: "35px",
+                                height: "100%",
+                                width: "100%",
                                 backgroundColor: "cardIconButtonBackgroundColor.main",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
@@ -219,11 +226,12 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                 onDecline={handleDialogClose}
             />
             <Box>
-                <Card onClick={onApplicationSelect} sx={{
-                    width: "297px", 
-                    height: "186px",
+                <Tooltip arrow title={application.ApplicationDescription}>
+                    <Card onClick={onApplicationSelect} sx={{
+                    width: "100%", 
+                    height: "200px",
                     borderRadius: 2, 
-                    p: 2, 
+                    p: 3, 
                     boxSizing: "content-box",
                     backgroundColor: disableCardActions ? 'disableBackgroundColor.main' : 'cardBackgroundColor.main',
                     border: "0.439891px solid #FFFFFF",
@@ -246,7 +254,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     {application.ApplicationName}
                                 </Typography>
                             </Box>
-                            <Box sx={{textOverflow: 'ellipsis', overflow: 'hidden', maxHeight: "70px"}}>
+                            <Box sx={{margin:'10px'}}>
                                 <Typography sx={{
                                     fontFamily: "SF Pro Display",
                                     fontStyle: "normal",
@@ -256,7 +264,14 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     lineHeight: "133.4%",
                                     display: "flex",
                                 }}>
-                                    {application.ApplicationDescription}
+                                    <LinesEllipsis
+                                        text={application.ApplicationDescription}
+                                        maxLine='3'
+                                        ellipsis='...'
+                                        trimRight
+                                        basedOn='letters'
+                                    />
+                                    {/* {application.ApplicationDescription} */}
                                 </Typography>
                             </Box>
                             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", flexGrow: 1, mr: 3}}>
@@ -366,7 +381,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                         </Box>
                         {formActions()}
                     </Box>
-                </Card> 
+                    </Card>
+                </Tooltip>     
             </Box>
         </>
     )

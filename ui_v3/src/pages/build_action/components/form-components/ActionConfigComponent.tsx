@@ -80,7 +80,7 @@ const ActionConfigComponent = () => {
                                 textAlign: "center",
                                 opacity: 0.7
                         }}/>
-                        <Tab label="Tags & Summary" value={2} sx={{
+                        <Tab label="Config" value={2} sx={{
                                 fontFamily: "SF Pro Text",
                                 fontStyle: "normal",
                                 fontWeight: 600,

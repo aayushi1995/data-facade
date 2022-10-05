@@ -134,7 +134,7 @@ const TabsTree = (props: TabsTreePropType) => {
                     flexDirection: 'column',
                     flex: 1,
                     gap: 1,
-                    mx: isFistTab ? 0 : 6
+                    mx: isFistTab ? 0 : 0
                 }}
             >
                 <TabsContainer
@@ -146,7 +146,7 @@ const TabsTree = (props: TabsTreePropType) => {
                     areLeafTabs ? 
                         <Box>
                             {moduleStateContext.DisplayHeader ? (
-                                <Box sx={{ mx: isFistTab ? 6: 0 }}>
+                                <Box sx={{ mx: isFistTab ? 6: 0 , px: 2}}>
                                     <ModuleContent.Header tab={activeTab} />
                                 </Box>
                             ) : (

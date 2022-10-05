@@ -21,7 +21,7 @@ const ApplicationHeader = () => {
             <Route path={WORKFLOW_EXECUTION_ROUTE}></Route>
             <Route path={WORKFLOW_EDIT_ROUTE}></Route>
             <Route path={APPLICATION_ROUTE}>
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center"}}>
+                <Box sx={{ display: "flex", flexDirection: "row", gap: 2,marginRight:'2%', alignItems: "center"}}>
                     {AppBuilderButton}
                     <UploadApplicationButton/>
                 </Box>

@@ -22,11 +22,10 @@ const CodeEditor = (props) => {
     const [code, setCode] = useState(props.code)
 
     return (
-        <main className="container">
-            <Box className="container__content"
-                sx={{ backgroundColor: "background.default", color: 'text.secondary' }}
+        <main >
+            <Box 
+                sx={{ backgroundColor: "background.default", color: 'text.secondary', border:'1px solid black', overflow:'scroll', height:'360px' }}
             >
-                <div className="container_editor_area">
                     <Editor
                         value={props.code||""}
                         onValueChange={props.onCodeChange || (() => {
@@ -47,7 +46,6 @@ const CodeEditor = (props) => {
                         }}
                         className="container__editor"
                     />
-                </div>
             </Box>
         </main>
     );

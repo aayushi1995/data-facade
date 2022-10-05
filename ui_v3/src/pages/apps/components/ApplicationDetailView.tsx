@@ -8,7 +8,7 @@ import NoData from "../../../common/components/NoData"
 import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
 import ApplicationRunsByMe from "./ApplicationRunsByMe"
 import SyncWithGitDialog from "./SyncWithGitDialog"
-
+import { ActionDefinitionHeroActionContextWrapper } from "../../build_action/components/shared-components/ActionDefinitionHero"
 interface MatchParams {
     applicationId: string
 }
@@ -58,17 +58,22 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                 <SyncWithGitDialog open={syncWithGitDialogState} onClose={handleDialogClose} applicationId={applicationId}/>
                 <Box sx={{flex: 1}}>
-                    <Card sx={{background: 'background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
+                    <Card sx={{background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
                             backgroundBlendMode: 'soft-light, normal',
                             border: '2px solid rgba(255, 255, 255, 0.4)',
                             boxShadow: '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
                             borderRadius: '10px',
                             p: 1, marginBottom: 1}}
                     >
-                        <ApplicationHeroInfo applicationName={application?.model?.Name || "Name"} createdBy={{name: "Created By"}} 
+                        <ApplicationHeroInfo applicationName={application?.model?.Name || "Name"} createdBy={{name: "Creator"}} 
                         numberStats={[{value: application?.numberOfActions || 0, label: "Actions"}, {value: application?.numberOfFlows || 0, label: "Workflows"}]}
                         status="In use" description={application?.model?.Description} gitSyncStatus={application?.gitSyncStatus} handleSyncWithGit={handleSyncWithGit}
                         />
+
+                        <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                            {/* <ActionDefinitionHeroActionContextWrapper/> */}
+                        </Box>
+                        
                     </Card>
                 </Box>
                 <Box>
@@ -96,7 +101,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                         <Box mt={1}>
                             <ApplicationWorkflows workflows={application.workflows || []}/>
                         </Box>
-                        <Box mt={1}>
+                        <Box mt={0}>
                             <ApplicationActions application={application}/>
                         </Box>
                     </TabPanel>

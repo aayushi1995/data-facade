@@ -118,7 +118,14 @@ const AllTableView = (props: AllTableViewProps) => {
         ],
         rows: (rows.map?.((x, index) => ({ ...x, id: index})) || []),
         sx: {
-            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"}
+            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+            backgroundColor: 'ActionCardBgColor.main',
+            backgroundBlendMode: "soft-light, normal",
+            border: "2px solid rgba(255, 255, 255, 0.4)",
+            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+            borderRadius: "15px",
+            height:'500px',
+            overflow:'scroll'
         },
         autoHeight: true,
         headerHeight: 70,
@@ -164,7 +171,13 @@ const AllTableView = (props: AllTableViewProps) => {
             <WrapInDialog dialogProps={{ ...dialogProps, handleClose: handleDialogClose }}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
                     <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                        <Box sx={{ flex: 1 }}>
+                        <Box sx={{ flex: 1, 
+                                width:'100%' ,
+                                // top:'100px', 
+                                // position:'fixed', 
+                                overflow:'hidden' , 
+                                // zIndex:'3'
+                                }}>
                             <TextField variant="standard" 
                                 value={searchQuery}
                                 onChange={handleSearchChange}
@@ -285,7 +298,7 @@ const HealthCell = (props?: { Health?: number, SyncStatus?: string }) => {
             <Box sx={{ width: "100%" }}>
                 {formLinearProgressBar()}
             </Box>
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%", textAlign:'center' }}>
                 <Typography variant="tableBrowserHealthCell">{formText()}</Typography>
             </Box>
         </Box>
@@ -342,7 +355,7 @@ const SyncStatusCell = (props?: { SyncStatus?: string }) => {
 }
 
 export const formDateText = (timestamp?: number) => {
-    const dateFormatter = new Intl.DateTimeFormat([], {year: "numeric", month: "long", day: "numeric", weekday: "short",hour: "numeric", minute: "numeric", second: "numeric", hour12: true})
+    const dateFormatter = new Intl.DateTimeFormat([], {year: "numeric", month: "short", day: "numeric", weekday: "short",hour: "numeric", minute: "numeric", second: "numeric", hour12: true})
         
     if(timestamp!==undefined){
         return dateFormatter.format(new Date(timestamp))

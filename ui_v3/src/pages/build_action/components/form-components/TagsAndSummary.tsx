@@ -33,32 +33,30 @@ const TagsAndSummary = () => {
 
     return (
         <Grid container spacing={2} sx={{p: 5}}>
-            <Grid container spacing={2} item xs={12} lg={7}>
-                <Grid item xs={12} lg={6}>
+            <Grid container spacing={2} item xs={12} lg={12}>
+                <Grid item xs={12} lg={4}>
                     <WrapInHeader header="Action Summary">
                         <ActionSummary/>
                     </WrapInHeader>
                 </Grid>
-                <Grid container spacing={2} item xs={12} lg={6}>
-                    <Grid item xs={12}>
-                        <WrapInHeader header="Action Definition Behaviour">
-                            <ConfigureActionVisibility/>
-                        </WrapInHeader>
-                    </Grid>
+                <Grid item spacing={2} item xs={12} lg={4}>
+                    <WrapInHeader header="Action Definition Behaviour">
+                        <ConfigureActionVisibility/>
+                    </WrapInHeader>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} lg={4}>
                     <WrapInHeader header="Action Tags">
                         <VirtualTagHandler {...tagHandlerProps}/>
                     </WrapInHeader>
                 </Grid>
             </Grid>
-            <Grid container spacing={2} item xs={12} lg={5}>
+            {/* <Grid container spacing={2} item xs={12} lg={5}>
                 <Grid item xs={12}>
                     <WrapInHeader header="Action High Level Details">
                         <ActionHighLevelDetails/>
                     </WrapInHeader>
                 </Grid>
-            </Grid>
+            </Grid> */}
         </Grid>
     )
 }

@@ -15,6 +15,9 @@ import TagHandler from "../tag-handler/TagHandler";
 import ConfirmationDialog from "../ConfirmationDialog";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 import useDeleteAction from "./hooks/useDeleteActions";
+import pythonLogo from "../../../../src/images/python.svg"
+import DeleteIcon from '@mui/icons-material/Delete'
+import sqlLogo from "../../../../src/images/SQL.svg"
 
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
@@ -86,7 +89,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
 
     const background = !props.isWorkflow ? 'ActionCardBgColor2.main' : 'ActionCardBgColor.main'
     return (
-        <Box sx={{height: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
+        <Box sx={{minheight: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
             <ConfirmationDialog
                 messageToDisplay={`Application ${props.action.model?.DisplayName} will be deleted permanently. Proceed with deletion ?`}
                 dialogOpen={dialogOpen}
@@ -94,10 +97,10 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                 onAccept={handleDelete}
                 onDecline={handleDialogClose}
             />
-            <Card sx={{background: background, boxShadow: lightShadows[27], borderRadius: '10.2px', minHeight: '100%', minWidth: '100%'}}>
-                <Box sx={{display: 'flex', minHeight: '100%'}}>
-                    <Box sx={{flex: 4, width: '100%', height: '100%'}}>
-                        <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 2, p: 1}}>
+            <Card sx={{backgroundColor: background, boxShadow: lightShadows[27], borderRadius: '10.2px', Width: '100%', height:'120px'}}>
+                <Box sx={{display: 'flex'}}>
+                    <Box sx={{flex: 4, width: '100%',height:'100%'}}>
+                        <Box sx={{height:'100%',display: 'flex', flexDirection: 'column',alignItems: 'flex-start', gap: 2, p: 1, height:'120px',overflow:'scroll'}}>
                             <Typography variant="actionCardHeader">
                                 {props.action.model?.DisplayName || "Name"}
                             </Typography>
@@ -108,7 +111,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                     </Box>
 
                     <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "200%"}}/>
+                        <Divider orientation="vertical" sx={{height: "100%"}}/>
                     </Box>
                     <Box sx={{flex: 3, display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
                         {props.isWorkflow ? (
@@ -127,6 +130,12 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         ) : (
                             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2}}>
+                                    <Box sx={{display:'flex',flexDirection:'column',alignItems:'center'}}>
+                                        <img width='35px' height="35px" src={pythonLogo} alt="pythonLogo" />
+                                        <Typography variant="heroMeta">
+                                            Language
+                                        </Typography>
+                                    </Box>    
                                     <NumberStat {...{value: props.action.stagesOrParameters || 0, label: "Parameters"}}/>
                                     <NumberStat {...{value: props.action.numberOfRuns || 0, label: "Runs"}}/>
                                 </Box>
@@ -183,11 +192,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <Divider orientation="vertical" sx={{height: "200%"}}/>
                     </Box>
                     <Box sx={{flex: 3, display: 'flex', width: '100%'}}>
-                        <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'flex-start', justifyContent: 'center', width: '100%'}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'flex-start', width: '100%',height:'120px',overflow:'scroll'}}>
                             <Typography
                                 sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase'}}>
                                     TAGS
-                            </Typography>
+                             </Typography>
                             <Box p={1} sx={{overflowY: 'auto', maxHeight: '72px', width: '100%'}}>
                                 <TagHandler entityType="ActionDefinition" entityId={props.action?.model?.Id || "ID"} allowAdd={false} allowDelete={true} tagFilter={{ Scope: labels.entities.ActionDefinition }} inputFieldLocation="TOP"/>
                             </Box>
@@ -205,28 +214,28 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <Divider orientation="vertical" sx={{height: "200%"}}/>
                     </Box>
                     <Box sx={{flex: 2, width: '100%'}}>
-                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 2, width: '100%', height: '100%'}}>
+                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 1, width: '100%', height: '100%'}}>
                             <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase', flex: 1}}>
                                 EXECUTE
                             </Typography>
-                            <IconButton sx={{flex: 3, height: '100%'}} onClick={handleExecute}>
-                                <img src={ExecuteImage} style={{width: '100%', height: '100%'}} alt="Execute"/>
+                            <IconButton sx={{flex: 2, height: '50%'}} onClick={handleExecute}>
+                                <img src={ExecuteImage} style={{width: '50px', height: '50px'}} alt="Execute"/>
                             </IconButton>
                         </Box>
                     </Box>
                     <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "200%"}}/>
+                        <Divider orientation="vertical" sx={{height: "100%"}}/>
                     </Box>
                     <Box sx={{flex: 1, width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '100%', overflowY: 'auto'}}>
                         {/* <IconButton>
                             <img src={FavouriteIcon} alt="favoutite"/>
                         </IconButton> */}
-                        <Tooltip title="Edit">
+                        <Tooltip arrow title="Edit">
                             <IconButton onClick={edit}>
                                 <EditIcon/>
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Duplicate">
+                        <Tooltip arrow title="Duplicate">
                             <IconButton onClick={handleCopy}>
                                 <ContentCopyIcon/>
                             </IconButton>
@@ -246,7 +255,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                 vertical: 'top',
                                 horizontal: 'left',
                         }}>
-                            <MenuItem onClick={handleDialogOpen} value={0}>Delete</MenuItem>
+                            <MenuItem onClick={handleDialogOpen} value={0}><DeleteIcon /> Delete </MenuItem>
                         </Menu>
                     </Box>
                 </Box>

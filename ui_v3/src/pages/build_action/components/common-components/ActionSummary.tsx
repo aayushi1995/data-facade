@@ -58,7 +58,7 @@ const ActionSummary = () => {
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 4}}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 4 ,minHeight:'180px'}}>
             {/* 
             TODO: Disabling action Type. Defaulting to Profiling. Keeping commented code in case this needs to be re-enabled 
             <Box>

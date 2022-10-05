@@ -38,7 +38,7 @@ export interface SyncActionExecutionOutput {
     State?: string,
     Value?: {
         TableProperties?: any[]
-    }
+    } 
 }
 
 export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
@@ -324,6 +324,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
         }
     })
     const [recurrenceInterval, setRecurrenceInterval] = React.useState<number | undefined>()
+    let syncing_flag=0
     const handleUpdateActionInstance = (event: React.ChangeEvent<HTMLInputElement>) => {
         if(event.target.checked) {
             if(!!props.syncActionInstance) {
@@ -334,6 +335,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
             } else {
                 setCreateActionInstanceDialog(true)
                 // props?.handleCreateSyncActionInstance?.(props.providerInstance?.Id)
+                
             }
         } else {
             if(!!props.syncActionInstance){
@@ -352,8 +354,9 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
     const handleRecurrenceChange = (recurrence: number) => {
         setRecurrenceInterval(recurrence > 0 ? recurrence * 60 : undefined)
     }
-
+    
     const handleCreateSyncActionInstance = () => {
+        syncing_flag=1
         syncProviderInstanceScheduled.mutate({
             providerInstanceId: props.providerInstance?.Id,
             syncDepthConfig: {
@@ -366,6 +369,36 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                 CopyActionInstanceIdInConfig: true
             }
         })
+
+    }
+
+    const getIcon=()=>{
+        if(syncing_flag==1){ return (
+            <Box sx={{
+                animation: "spin 2s linear infinite",
+                "@keyframes spin": {
+                "0%": {
+                    transform: "rotate(360deg)",
+                },
+                "100%": {
+                    transform: "rotate(0deg)",
+                },
+                },
+                height: "24px", 
+                width: "24px"
+            }}>
+                <SyncIcon/>
+            </Box>
+        )}else{
+            return(
+                <Box sx={{
+                    height: "24px", 
+                    width: "24px"
+                }}>
+                    <SyncIcon/>
+                </Box>
+            )
+        }
     }
 
     return (
@@ -413,8 +446,8 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                 </FormGroup>
             </Tooltip>
             <Tooltip title="Sync now">
-                <IconButton onClick={handleForceSync}>
-                    <SyncIcon/>
+                <IconButton onClick={handleForceSync} >
+                    {getIcon()}
                 </IconButton>
             </Tooltip>
             {/* <ButtonIconWithToolTip Icon={SyncIcon}  title="Sync now"/> */}

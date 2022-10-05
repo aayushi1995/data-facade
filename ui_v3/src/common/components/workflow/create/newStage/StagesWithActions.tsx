@@ -120,7 +120,6 @@ export const StagesWithActions = () => {
                                 </Card>
                             </Grid>)
                     })}
-                {/* </Card> */}
                 
             </Box>
         </Box>

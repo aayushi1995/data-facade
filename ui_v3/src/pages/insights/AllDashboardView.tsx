@@ -31,7 +31,7 @@ const columns: GridColDef[] = [
         flex: 1,
         minWidth: 200
     }
-]
+] 
 
 const AllDashboardView = () => {
 
@@ -66,6 +66,11 @@ const AllDashboardView = () => {
                 onRowClick={handleRowClick}
                 sx={{
                     "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+                    backgroundColor: 'ActionCardBgColor.main',
+                    backgroundBlendMode: "soft-light, normal",
+                    border: "2px solid rgba(255, 255, 255, 0.4)",
+                    boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+                    borderRadius: "15px",
                     minHeight: '800px'
                 }}
                 headerHeight={70}

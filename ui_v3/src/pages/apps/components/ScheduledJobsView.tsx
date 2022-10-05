@@ -47,7 +47,7 @@ const ScheduledJobsView = (props: ScheduledJobsViewProps) => {
                 headerName: "Job Name",
                 renderCell: (params: GridCellParams<any, DataGridRow, any>) => <TextCell text={params.row?.jobName} />,
                 flex: 1,
-                minWidth: 200
+                minWidth: 300
             },
             {
                 field: "ProviderInstance",
@@ -88,7 +88,12 @@ const ScheduledJobsView = (props: ScheduledJobsViewProps) => {
         rows: rows.map(row => ({...row, id: row.model?.Id, jobName: row.model?.Name})),
         autoHeight: true,
         sx: {
-            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+            backgroundColor: 'ActionCardBgColor.main',
+            backgroundBlendMode: "soft-light, normal",
+            border: "2px solid rgba(255, 255, 255, 0.4)",
+            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+            borderRadius: "15px"
         },
         disableSelectionOnClick: true,
         headerHeight: 70,
@@ -124,10 +129,10 @@ const ScheduledJobsView = (props: ScheduledJobsViewProps) => {
 }
 
 export const JobStatusCell = (props: {status: string}) => {
-    let background = '#C3FDED'
+    let background = 'statusCardBgColor1.main'
     switch (props.status) {
         case 'Error': {
-            background = '#FCF4AC'
+            background = 'statusCardBgColor3.main'
             break;
         }
         case 'Failure': {
@@ -141,7 +146,7 @@ export const JobStatusCell = (props: {status: string}) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: background,
+            backgroundColor: background,
             border: "0.439891px solid #FFFFFF",
             boxShadow: "0px 5px 10px rgba(54, 48, 116, 0.3)",
             borderRadius: "26.3934px"}}>
@@ -152,7 +157,7 @@ export const JobStatusCell = (props: {status: string}) => {
                     fontSize: "11.5435px",
                     lineHeight: "160%",
                     letterSpacing: "0.0961957px",
-                    color: "#253858"}}
+                    color: "ActionDefinationHeroTextColor1.main"}}
                 >    
                     {props.status}
                 </Typography>
@@ -217,7 +222,9 @@ export const ActionButtonCells = (props: {historicalRuns?: ActionExecution[], ac
         <Box sx={{display: 'flex', gap: 2}}>
             <Card sx={{
                 borderRadius: '100%',
-                background: "#F8F8F8",
+                backgroundColor: "ActionCardBgColor.main",
+                width: '40px',
+                height: '40px',
                 boxShadow:
                   "-5px -5px 7.5px #FFFFFF, 5px 5px 5px rgba(0, 0, 0, 0.05), inset 5px 5px 5px rgba(0, 0, 0, 0.05), inset -5px -5px 10px #FFFFFF"
             }}>
@@ -227,7 +234,9 @@ export const ActionButtonCells = (props: {historicalRuns?: ActionExecution[], ac
             </Card>
             <Card sx={{
                 borderRadius: '100%',
-                background: "#F8F8F8",
+                backgroundColor: "ActionCardBgColor.main",
+                width: '40px',
+                height: '40px',
                 boxShadow:
                   "-5px -5px 7.5px #FFFFFF, 5px 5px 5px rgba(0, 0, 0, 0.05), inset 5px 5px 5px rgba(0, 0, 0, 0.05), inset -5px -5px 10px #FFFFFF"
             }}>
