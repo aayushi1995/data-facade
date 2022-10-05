@@ -84,7 +84,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
         }
     }
 
-    const background = !props.isWorkflow ? '#EEEEFF' : 'ActionCardBgColor.main'
+    const background = !props.isWorkflow ? 'ActionCardBgColor2.main' : 'ActionCardBgColor.main'
     return (
         <Box sx={{height: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
             <ConfirmationDialog

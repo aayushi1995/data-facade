@@ -60,7 +60,7 @@ const ActionAndParameterConfig = (props: ActionAndParameterConfigProps) => {
                             fontSize: "18px",
                             lineHeight: "160%",
                             letterSpacing: "0.15px",
-                            color: "#253858"}}
+                            color: "ActionDefinationHeroTextColor1.main"}}
                 >
                     Details
                 </Typography>
@@ -82,7 +82,7 @@ const ActionAndParameterConfig = (props: ActionAndParameterConfigProps) => {
                                     fontSize: "16px",
                                     lineHeight: "175%",
                                     letterSpacing: "0.15px",
-                                    color: "#253858"}}>
+                                    color: "ActionDefinationHeroTextColor1.main"}}>
                                         Action Description
                                 </Typography>
                                 <Typography sx={{
@@ -150,7 +150,7 @@ const ActionAndParameterConfig = (props: ActionAndParameterConfigProps) => {
                                     fontSize: "16px",
                                     lineHeight: "175%",
                                     letterSpacing: "0.15px",
-                                    color: "#253858"}}
+                                    color: "ActionDefinationHeroTextColor1.main"}}
                                 >
                                     Parameter Description
                                 </Typography>
@@ -174,7 +174,7 @@ const ActionAndParameterConfig = (props: ActionAndParameterConfigProps) => {
                                     fontSize: "16px",
                                     lineHeight: "175%",
                                     letterSpacing: "0.15px",
-                                    color: "#253858"
+                                    color: "ActionDefinationHeroTextColor1.main"
                                 }}>
                                     Parameter Type
                                 </Typography>

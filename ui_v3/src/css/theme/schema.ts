@@ -85,6 +85,7 @@ declare module "@mui/styles" {
     cardNumUserTextColor: string;
     buildActionDrawerCardBgColor: string;
     ActionCardBgColor: string;
+    ActionCardBgColor2: string;
     ActionDefinationHeroCardBgColor: string;
     ActionDefinationHeroTextColor1: string;
     ActionDefinationTextPanelBgColor: string;
@@ -102,9 +103,14 @@ declare module "@mui/styles" {
     syncingLogoColor2: string;
     syncStatusColor1: string;
     syncStatusColor2: string;
-
     dialogueTextColor1: string;
-
+    typographyColor1: string;
+    typographyColor2: string;
+    typographyColor3: string;
+    executionCardBgColor1: string;
+    executionCardBgColor2: string;
+    executionCardBgColor3: string;
+    linearProgressBgColor1: string;
   }
   interface PaletteOptions {
     lightBrown?: string;
@@ -123,6 +129,7 @@ declare module "@mui/styles" {
     cardNumUserTextColor?: string;
     buildActionDrawerCardBgColor?: string;
     ActionCardBgColor?: string;
+    ActionCardBgColor2?: string;
     ActionDefinationHeroCardBgColor?: string;
     ActionDefinationHeroTextColor1?: string;
     ActionDefinationTextPanelBgColor?: string;
@@ -141,6 +148,13 @@ declare module "@mui/styles" {
     syncStatusColor1?: string;
     syncStatusColor2?: string;
     dialogueTextColor1?: string;
+    typographyColor1?: string;
+    typographyColor2?: string;
+    typographyColor3?: string;
+    executionCardBgColor1?: string;
+    executionCardBgColor2?: string;
+    executionCardBgColor3?: string;
+    linearProgressBgColor1?: string;
   }
 }
 

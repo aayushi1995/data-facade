@@ -71,7 +71,7 @@ const ExportAsDashboard = (props: ExportAsDashboardProps) => {
                     
                 </DialogContent>
             </Dialog>
-            <Button variant="contained" sx={{ background: "#56D280", borderRadius: "64px" }} onClick={handleDialogOpen} fullWidth>
+            <Button variant="contained" sx={{ backgroundColor: "ActionConfigComponentBtnColor1.main", borderRadius: "64px" }} onClick={handleDialogOpen} fullWidth>
                 Export As Dashboard
             </Button>
         </React.Fragment>

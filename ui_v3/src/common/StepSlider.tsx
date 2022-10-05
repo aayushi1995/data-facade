@@ -29,7 +29,7 @@ const StepSlider = (props: StepSliderProps) => {
                     lineHeight: "160%",
                     textAlign: "center",
                     letterSpacing: "0.0961957px",
-                    color: "#333333"
+                    color: "typographyColor1.main"
                 }}>
                     {props.label} {(props.currentIndex || 0) + 1}/{(props.maximumIndex || 0) + 1}
                 </Typography>

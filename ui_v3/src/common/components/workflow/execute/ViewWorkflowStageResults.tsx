@@ -78,13 +78,13 @@ const ViewWorkflowStageResults = (props: ViewWorkflowStageResultsProps) => {
             <Box sx={{display: 'flex', gap: 1, p: 1, flexDirection: 'column'}}>
                 <Card sx={{
                     display: 'flex', alignItems: 'center',
-                    background: "#F5F9FF",
+                    backgroundColor: "buildActionDrawerCardBgColor.main",
                     border: "0.439891px solid #FFFFFF",
                     boxShadow: "0px 15px 25px rgba(54, 48, 116, 0.3)",
                     borderRadius: "26.3934px"
                 }}>
                     <Box sx={{
-                        background: "#F8F8F8",
+                        backgroundColor: "ActionCardBgColor.main",
                         boxShadow:
                         "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
                         borderRadius: "15px",
@@ -101,7 +101,7 @@ const ViewWorkflowStageResults = (props: ViewWorkflowStageResultsProps) => {
                         <StepSlider label="Stage" currentIndex={currentIndex} maximumIndex={workflowContext.stages.length - 1} handleNext={handleGoNext} handleBack={handleGoBack}/>
                         <WorkflowStagesWrapper stages={selectedStage} allowEdit={false} percentageWidth='100%'/>
                         <Card sx={{
-                            background: "#F5F9FF",
+                            backgroundColor: "ActionDefinationHeroCardBgColor.main",
                             boxShadow:
                             "-4px -6px 16px rgba(255, 255, 255, 0.5), 4px 6px 16px rgba(163, 177, 198, 0.5)",
                             borderRadius: "20px"

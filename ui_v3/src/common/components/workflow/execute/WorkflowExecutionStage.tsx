@@ -67,7 +67,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
 
     return (
         <Card sx={{
-            background: "#F5F9FF",
+            backgroundColor: "ActionDefinationHeroCardBgColor.main",
             border: "0.439891px solid #FFFFFF",
             boxShadow: "3.99px 3.99px 5px rgba(54, 48, 116, 0.3)",
             borderRadius: "26.3934px",
@@ -91,7 +91,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                                 fontWeight: 400,
                                 fontSize: "15.1688px",
                                 lineHeight: "17px",
-                                color: "#353535"
+                                color: "typographyColor1.main"
                             }}>
                                 {props.stageName}
                             </Typography>
@@ -101,7 +101,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                                 fontWeight: 400,
                                 fontSize: "11.3766px",
                                 lineHeight: "13px",
-                                color: "#353535"
+                                color: "typographyColor1.main"
                             }}>
                                 {props.numberOfActions} Actions {props.stageCompleted ? "Completed": "Running"}
                             </Typography>
@@ -112,7 +112,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                                 fontSize: "11.3766px",
                                 lineHeight: "13px",
                                 textTransform: "uppercase",
-                                color: "#000000"
+                                color: "syncingLogoColor1.main"
                             }}>
                                 ELAPSED TIME : {getElapsedTime()}
                             </Typography>
@@ -123,7 +123,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                             <Box>
                                 {props.stageFailed ? (
                                     <Card sx={{
-                                        background: "#8C0000", borderRadius: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', p: 1
+                                        backgroundColor: "executionCardBgColor1.main", borderRadius: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', p: 1
                                     }}>
                                         <Typography sx={{
                                             fontFamily: "'Ubuntu'",
@@ -131,14 +131,14 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                                             fontWeight: 500,
                                             fontSize: "13px",
                                             lineHeight: "15px",
-                                            color: "#EDF0F4"
+                                            color: "typographyColor2.main"
                                         }}>
                                             Failed
                                         </Typography>
                                     </Card>
                                 ) : (
                                     <Card sx={{
-                                        background: "#32E6B7", borderRadius: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', p: 1
+                                        backgroundColor: "executionCardBgColor2.main", borderRadius: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', p: 1
                                     }}>
                                         <Typography sx={{
                                             fontFamily: "'Ubuntu'",
@@ -146,7 +146,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                                             fontWeight: 500,
                                             fontSize: "13px",
                                             lineHeight: "15px",
-                                            color: "#2C2D30"
+                                            color: "typographyColor3.main"
                                         }}>
                                             Completed Successfully
                                         </Typography>
@@ -157,7 +157,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                             <Box>
                                 {props.stageStarted ? (
                                     <Card sx={{
-                                        background: "#32E6B7", borderRadius: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', p: 1
+                                        backgroundColor: "executionCardBgColor2.main", borderRadius: "15px", display: 'flex', alignItems: 'center', justifyContent: 'center', p: 1
                                     }}>
                                         <Typography sx={{
                                             fontFamily: "'Ubuntu'",
@@ -165,7 +165,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                                             fontWeight: 500,
                                             fontSize: "13px",
                                             lineHeight: "15px",
-                                            color: "#2C2D30"
+                                            color: "typographyColor3.main"
                                         }}>
                                             Running
                                         </Typography>
@@ -174,7 +174,7 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                                     <Card sx={{
                                         width: "119px",
                                         height: "35px",
-                                        background: "#DDDDDD",
+                                        backgroundColor: "executionCardBgColor3.main",
                                         borderRadius: "15px",
                                         display: 'flex', alignItems: 'center', justifyContent: 'center'
                                     }}>
@@ -206,10 +206,10 @@ const WorkflowExecutionStage = (props: WorkflowExecutionStageProps) => {
                             <Box sx={{flex: 1}}>
                                 <LinearProgress variant="determinate" value={100} sx={{
                                     "& .MuiLinearProgress-colorPrimary": {
-                                        backgroundColor: "#FFE700",
+                                        backgroundColor: "linearProgressBgColor1.main",
                                     },
                                     "& .MuiLinearProgress-barColorPrimary": {
-                                        backgroundColor: "#FFE700",
+                                        backgroundColor: "linearProgressBgColor1.main",
                                     },
                                 }}/>
                             </Box>

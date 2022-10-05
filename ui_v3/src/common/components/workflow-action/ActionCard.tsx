@@ -111,14 +111,14 @@ const ActionCard = (props: ActionCardProps) => {
                 </React.Fragment>
             ): ("")
         } placement="top-end"  arrow sx={{'& .MuiTooltip-arrow': {
-            color: '#F9F9F9',
+            color: 'ActionCardBgColor.main',
             width: '10px'
           }}}>
             <Card sx={{
                 maxWidth: '100%',
                 overflowX: 'auto',
                 boxShadow: '-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05);',
-                background: '#F8F8F8',
+                backgroundColor: 'ActionCardBgColor.main',
                 border: border
                 }} onClick={handleClick}
             >

@@ -460,6 +460,11 @@ const themesOptions = {
                     main: '#F8F8F8'
                 }
             }),
+            ActionCardBgColor2: palette.augmentColor({
+                color:{
+                    main: '#EEEEFF'
+                }
+            }),
             ActionDefinationHeroCardBgColor: palette.augmentColor({
                 color: {
                     main: '#F5F9FF'
@@ -548,6 +553,42 @@ const themesOptions = {
             dialogueTextColor1: palette.augmentColor({
                 color:{
                     main: '#A7A9AC'
+                }
+            }),
+
+            typographyColor1: palette.augmentColor({
+                color:{
+                    main: '#353535'
+                }
+            }),
+            typographyColor2: palette.augmentColor({
+                color:{
+                    main: '#EDF0F4'
+                }
+            }),
+            typographyColor3: palette.augmentColor({
+                color:{
+                    main: '#2C2D30'
+                }
+            }),
+            executionCardBgColor1: palette.augmentColor({
+                color:{
+                    main: '#8C0000'
+                }
+            }),
+            executionCardBgColor2: palette.augmentColor({
+                color:{
+                    main: '#32E6B7'
+                }
+            }),
+            executionCardBgColor3: palette.augmentColor({
+                color:{
+                    main: '#DDDDDD'
+                }
+            }),
+            linearProgressBgColor1: palette.augmentColor({
+                color:{
+                    main: '#FFE700'
                 }
             })
         },
@@ -646,6 +687,9 @@ const themesOptions = {
             ActionCardBgColor:{
                 main: '#fff'
             },
+            ActionCardBgColor2:{
+                main: '#fff'
+            },
             ActionDefinationHeroCardBgColor:{
                 main: '#fff'
             },
@@ -696,6 +740,27 @@ const themesOptions = {
             },
             dialogueTextColor1:{
                 color: '#A7A9AC'
+            },
+            typographyColor1:{
+                main: '#353535'
+            },
+            typographyColor2:{
+                main: '#EDF0F4'
+            },
+            typographyColor3:{
+                main: '#2C2D30'
+            },
+            executionCardBgColor1:{
+                main: '#8C0000'
+            },
+            executionCardBgColor2:{
+                main: '#32E6B7'
+            },
+            executionCardBgColor3:{
+                main: '#DDDDDD'
+            },
+            linearProgressBgColor1:{
+                main: '#FFE700'
             }
 
         },
@@ -793,6 +858,9 @@ const themesOptions = {
             ActionCardBgColor:{
                 main: '#171201'
             },
+            ActionCardBgColor2:{
+                main: '#fff'
+            },
             ActionDefinationHeroCardBgColor:{
                 main: '#fff'
             },
@@ -845,6 +913,27 @@ const themesOptions = {
             },
             dialogueTextColor1:{
                 color: '#A7A9AC'
+            },
+            typographyColor1:{
+                main: '#353535'
+            },
+            typographyColor2:{
+                main: '#EDF0F4'
+            },
+            typographyColor3:{
+                main: '#2C2D30'
+            },
+            executionCardBgColor1:{
+                main: '#8C0000'
+            },
+            executionCardBgColor2:{
+                main: '#32E6B7'
+            },
+            executionCardBgColor3:{
+                main: '#DDDDDD'
+            },
+            linearProgressBgColor1:{
+                main: '#FFE700'
             }
         },
         shadows: darkShadows

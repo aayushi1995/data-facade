@@ -441,7 +441,7 @@ const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
                                 fontSize: "16px",
                                 lineHeight: "175%",
                                 letterSpacing: "0.15px",
-                                color: "#253858"
+                                color: "ActionDefinationHeroTextColor1.main"
                             }}>
                                 Upstream Action
                             </Typography>

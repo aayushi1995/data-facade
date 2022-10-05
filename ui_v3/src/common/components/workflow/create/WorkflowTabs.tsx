@@ -101,7 +101,7 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
                     </Button>
                     <Button variant="contained" onClick={() => props?.onSave?.()} sx={{ 
                         minWidth: "150px", 
-                        background: "#56D280",
+                        backgroundColor: "ActionConfigComponentBtnColor1.main",
                         borderRadius: "64px" 
                     }}>
                         Save
@@ -117,7 +117,7 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
                     <Button variant="contained" sx={{ 
                         minWidth: "150px",
                         borderRadius: "64px",
-                        background: "#F178B6"
+                        backgroundColor: "ActionConfigComponentBtnColor2.main"
                     }} onClick={() => props?.onDuplicate?.()}>
                         Duplicate
                     </Button>

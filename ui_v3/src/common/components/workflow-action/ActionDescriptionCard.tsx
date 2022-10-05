@@ -11,7 +11,7 @@ const ActionDescriptionCard = (props: ActionDescriptionCardProps) => {
 
     return (
         <Card sx={{
-            background: "#F5F9FF",
+            backgroundColor: "buildActionDrawerCardBgColor.main",
             border: "0.439891px solid #FFFFFF",
             boxShadow: "3.99px 3.99px 5px rgba(54, 48, 116, 0.3)",
             borderRadius: "16px",
@@ -20,7 +20,7 @@ const ActionDescriptionCard = (props: ActionDescriptionCardProps) => {
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
                 <Box sx={{
                     display: 'flex', alignItems: 'center',
-                    background: "#24B2CF",
+                    backgroundColor: "lightBlueDF.main",
                     // borderRadius: "0px 0px 16px 16px",
                 }}>
                     <Typography sx={{
@@ -29,7 +29,7 @@ const ActionDescriptionCard = (props: ActionDescriptionCardProps) => {
                         fontWeight: 700,
                         fontSize: "24px",
                         lineHeight: "24px",
-                        color: "#FFFFFF",
+                        color: "cardIconBtn1HoverColor.main",
                         p: 2
                     }}>
                         What's this app about?
@@ -43,7 +43,7 @@ const ActionDescriptionCard = (props: ActionDescriptionCardProps) => {
                         fontSize: "15px",
                         lineHeight: "143%",
                         letterSpacing: "0.15px",
-                        color: "#353535",
+                        color: "typographyColor1.main",
                         maxHeight:  "140px",
                         overflowY: "auto"
                     }}>
