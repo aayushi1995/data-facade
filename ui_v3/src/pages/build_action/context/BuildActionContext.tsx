@@ -46,7 +46,8 @@ export type BuildActionContextState = {
     savingAction: boolean,
     loadingActionForEdit: boolean,
     actionDefinitionToLoadId?: string,
-    SourceApplicationId?: string
+    SourceApplicationId?: string,
+    testMode?: boolean
 }
 
 const formEmptyDefaultContext: () => BuildActionContextState = () => {
@@ -331,6 +332,11 @@ type FormAdditionalConfigAction = {
     type: "FormAdditionalConfig"
 }
 
+type SetTestMode = {
+    type: "SetTestMode",
+    payload: boolean
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -363,7 +369,8 @@ LoadActionForEditMutatingAction |
 LoadActionForEditSettledAction |
 SetActionDefinitionToLoadIdAction |
 InferParametersAction |
-FormAdditionalConfigAction
+FormAdditionalConfigAction |
+SetTestMode
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -757,6 +764,13 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             return {
                 ...state,
                 actionTemplateWithParams: newTemplateWithParams
+            }
+        }
+
+        case "SetTestMode": {
+            return {
+                ...state,
+                testMode: action.payload
             }
         }
 

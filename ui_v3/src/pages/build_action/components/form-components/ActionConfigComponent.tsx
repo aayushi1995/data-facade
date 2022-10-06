@@ -6,7 +6,7 @@ import LoadingIndicator from "../../../../common/components/LoadingIndicator";
 import useCopyAndSaveDefinition from '../../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition';
 import { TabPanel } from "../../../../common/components/workflow/create/SelectAction/SelectAction";
 import ActionDefinitionPublishStatus from '../../../../enums/ActionDefinitionPublishStatus';
-import { BuildActionContext, UseActionHooks } from "../../context/BuildActionContext";
+import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../context/BuildActionContext";
 import SetActionParameters from "../common-components/SetActionParameters";
 import EditActionTemplates from "./EditActionTemplates";
 import TagsAndSummary from "./TagsAndSummary";
@@ -14,10 +14,10 @@ import TagsAndSummary from "./TagsAndSummary";
 const ActionConfigComponent = () => {
     const history = useHistory()
     const buildActionContext = React.useContext(BuildActionContext)
+    const setBuildActionContext = React.useContext(SetBuildActionContext)
     const useActionHooks = React.useContext(UseActionHooks)
     const [activeTab, setActiveTab] = React.useState(1)
     const copyActionDefinition = useCopyAndSaveDefinition({mutationName: "CopyWhileEditingAction"})
-
 
     const onActionSave = () => {
         useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext)
@@ -42,15 +42,24 @@ const ActionConfigComponent = () => {
     }
 
     const onTestAction = () => {
+        setBuildActionContext({
+            type: 'SetTestMode',
+            payload: false
+        })
         useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
             onSuccess: () => {
-                const actionId = buildActionContext?.lastSavedActionDefinition?.Id
-                if(!!actionId) {
-                    history.push({pathname: `/application/execute-action/${actionId}`, state: 'fromTest'})
-                }
+                // const actionId = buildActionContext?.lastSavedActionDefinition?.Id
+                // if(!!actionId) {
+                //     history.push({pathname: `/application/execute-action/${actionId}`, state: 'fromTest'})
+                // }
+                setBuildActionContext({
+                    type: 'SetTestMode',
+                    payload: true
+                })
             }
         })
     }
+
 
 
     return (
@@ -94,36 +103,46 @@ const ActionConfigComponent = () => {
                     </Tabs>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row-reverse", flexGrow: 1, gap: 3 }}>   
-                    <Button variant="contained" 
-                        disabled={(!!!buildActionContext?.lastSavedActionDefinition)||(buildActionContext?.actionDefinitionWithTags?.actionDefinition?.PublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE)} 
-                        onClick={OnRunAction} 
-                        sx={{ 
-                            minWidth: "150px",
+                    {buildActionContext.testMode ? <></> : (
+                        <Button variant="contained" 
+                            disabled={(!!!buildActionContext?.lastSavedActionDefinition)||(buildActionContext?.actionDefinitionWithTags?.actionDefinition?.PublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE)} 
+                            onClick={OnRunAction} 
+                            sx={{ 
+                                minWidth: "150px",
+                                borderRadius: "64px" 
+                            }}
+                        >
+                            Run
+                        </Button>
+                    )}
+                    
+                    {buildActionContext.testMode ? (
+                        <></>
+                    ) : (
+                        <Button variant="contained" onClick={onActionSave} sx={{ 
+                            minWidth: "150px", 
+                            backgroundColor: "ActionConfigComponentBtnColor1.main",
                             borderRadius: "64px" 
-                        }}
-                    >
-                        Run
-                    </Button>
-                    <Button variant="contained" onClick={onActionSave} sx={{ 
-                        minWidth: "150px", 
-                        backgroundColor: "ActionConfigComponentBtnColor1.main",
-                        borderRadius: "64px" 
-                    }}>
-                        Save
-                    </Button>
+                        }}>
+                            Save
+                        </Button>
+                    )}
                     <Button variant="contained" onClick={onTestAction} sx={{ 
                         minWidth: "150px",
                         borderRadius: "64px",
                     }}>
                         Test
-                    </Button>
-                    <Button variant="contained" sx={{ 
-                        minWidth: "150px",
-                        borderRadius: "64px",
-                        backgroundColor: "ActionConfigComponentBtnColor2.main"
-                    }} onClick={handleDuplicate}>
-                        Duplicate
-                    </Button>
+                    </Button>  
+                    {buildActionContext.testMode ? <></> : (
+                        <Button variant="contained" sx={{ 
+                            minWidth: "150px",
+                            borderRadius: "64px",
+                            backgroundColor: "ActionConfigComponentBtnColor2.main"
+                        }} onClick={handleDuplicate}>
+                            Duplicate
+                        </Button>
+                    )}
+                    
                     <Box sx={{ display: "flex", alignItems: "center", px: 2 }}>
                         {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <LoadingIndicator/> : <DoneIcon sx={{ transform: "scale(1.5)"  }}/> }
                     </Box>

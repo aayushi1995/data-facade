@@ -7,6 +7,7 @@ export interface CollapsibleDrawerProps {
     openWidth: string,
     closedWidth: string,
     children: React.ReactNode,
+    showClosed?: boolean,
     openDrawer: () => void,
 }
  
@@ -16,13 +17,13 @@ const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
 
     return (
         <Box sx={{
-            width: open ? openWidth : closedWidth,
+            minWidth: open ? openWidth : closedWidth,
             marginY: 1,
             pb: 2,
             minHeight: "100%",
            ...(open ? {
                 backgroundColor: "#F5F9FF"
-           } : {
+           } : props.showClosed === false ? {} : {
                 background:
                 "linear-gradient(135.37deg, rgba(0, 0, 0, 0.4) 4.29%, rgba(255, 255, 255, 0.4) 95.6%), #A6CEE3",
                 backgroundBlendMode: "soft-light, normal",
@@ -37,9 +38,11 @@ const CollapsibleDrawer = (props: CollapsibleDrawerProps) => {
                 children
                 :
                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center"}}>
-                    <IconButton onClick={() => openDrawer()}>
-                        <ArrowRight/>
-                    </IconButton>
+                    {props.showClosed === false ? <></> : (
+                        <IconButton onClick={() => openDrawer()}>
+                            <ArrowRight/>
+                        </IconButton>
+                    )}
                 </Box>
             }
         </Box>

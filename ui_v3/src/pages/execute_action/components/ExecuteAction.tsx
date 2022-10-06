@@ -56,11 +56,16 @@ interface ExecuteActionProps {
     actionDefinitionId: string, 
     existingParameterInstances?: ActionParameterInstance[], 
     showActionDescription: boolean,
-    disableRun?: boolean
+    disableRun?: boolean,
+    redirectToExecution?: boolean,
+    onExecutionCreate?: (executionId: string) => void,
+    fromTestRun?: boolean,
+    showOnlyParameters?: boolean
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
     const actionDefinitionId = props.actionDefinitionId
+    console.log(actionDefinitionId)
     const setModuleContext = React.useContext(SetModuleContextState)
     const [tabValue, setTabValue] = React.useState(0)
 
@@ -148,7 +153,12 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                 setSnackbarState(true)
                 if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
                     // setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
-                    history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: request?.actionExecutionToBeCreatedId}))
+                    if(props.redirectToExecution !== false) { 
+                        history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: request?.actionExecutionToBeCreatedId}))
+                    } else {
+                        setDialogState({isOpen: false})
+                        props.onExecutionCreate?.(request?.actionExecutionToBeCreatedId!)
+                    }
                 } else {
                     setDialogState({isOpen: false})
                     history.push(SCHEDULED_JOBS_ROUTE)
@@ -248,6 +258,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
                     ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
                     handleParametersChange={handleChange}
+                    showOnlyParameters={props.showOnlyParameters}
                 />
             </Box>,
             label: "Required Inputs"
@@ -259,6 +270,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             component: 
             <Box sx={{ mx: 15 }}>
                 <ConfigureParameters 
+                    showOnlyParameters={props.showOnlyParameters}
                     mode="ADVANCED"
                     ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
                     ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
@@ -270,13 +282,14 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             
         })
     }
-
-    StepNumberToComponent.push(
-        {
-            component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>,
-            label: "Notification"
-        },
-    )
+    if(!props.fromTestRun) {
+        StepNumberToComponent.push(
+            {
+                component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>,
+                label: "Notification"
+            },
+        )
+    }
 
     const handleEdit = () => {
         history.push(generatePath(APPLICATION_EDIT_ACTION_ROUTE_ROUTE, {ActionDefinitionId: executeActionContext.ExistingModels.ActionDefinition.Id}))
@@ -309,9 +322,9 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         })
     }
 
-    if(history.location.state !== 'fromTest') {
+    if(history.location.state !== 'fromTest' && !props.fromTestRun) {
         StepNumberToComponent.push(
-            {
+            {   
                 component: <ConfigureActionRecurring actionInstance = {executeActionContext.ToCreateModels.ActionInstance} handleRecurringChange={handleRecurringChange} startDate={executeActionContext.startDate || new Date(Date.now())} handleStartDateChange={changeStartDate}/>,
                 label: "Schedule"
             }
@@ -338,33 +351,37 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                 p: 2,
                 mb: 2
             }}>
-                <Box sx={{display: 'flex', gap: 1}}>
-                    <Tabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
-                        <Tab label="Parameters" value={0} sx={{
-                            fontFamily: "'SF Pro Text'",
-                            fontStyle: "normal",
-                            fontWeight: 500,
-                            lineHeight: "157%",
-                            letterSpacing: "0.124808px",
-                            color: "#DB8C28",
-                        }}
-                        iconPosition="start" 
-                        icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>
-                        <Tab label="Code" value={1} sx={{
-                            fontFamily: "'SF Pro Text'",
-                            fontStyle: "normal",
-                            fontWeight: 500,
-                            lineHeight: "157%",
-                            letterSpacing: "0.124808px",
-                            color: "#353535",
-                        }} icon={<img src={CodeTabIcon} alt=""/>} iconPosition="start"/>
-                    </Tabs>
-                    <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2, flex: 1}}>
-                        <IconButton onClick={handleEdit}>
-                            <EditIcon/>
-                        </IconButton>
+                {props.fromTestRun ? (
+                    <></>
+                ) : (
+                    <Box sx={{display: 'flex', gap: 1}}>
+                        <Tabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
+                            <Tab label="Parameters" value={0} sx={{
+                                fontFamily: "'SF Pro Text'",
+                                fontStyle: "normal",
+                                fontWeight: 500,
+                                lineHeight: "157%",
+                                letterSpacing: "0.124808px",
+                                color: "#DB8C28",
+                            }}
+                            iconPosition="start" 
+                            icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>
+                            <Tab label="Code" value={1} sx={{
+                                fontFamily: "'SF Pro Text'",
+                                fontStyle: "normal",
+                                fontWeight: 500,
+                                lineHeight: "157%",
+                                letterSpacing: "0.124808px",
+                                color: "#353535",
+                            }} icon={<img src={CodeTabIcon} alt=""/>} iconPosition="start"/>
+                        </Tabs>
+                        <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2, flex: 1}}>
+                            <IconButton onClick={handleEdit}>
+                                <EditIcon/>
+                            </IconButton>
+                        </Box>
                     </Box>
-                </Box>
+                )}
                 <Divider orientation="horizontal" sx={{mt: 1, transform: "matrix(-1, 0, 0, -1, 0, 0)"}}/>
                 <Box m={1}>
                     <TabPanel value={tabValue} index={0}>

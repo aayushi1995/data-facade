@@ -15,11 +15,13 @@ const  ActionDetailForm = () => {
         )
     } else {
         return (
-            <Box sx={{display: "flex", flexDirection: "column", gap: 3, minHeight: "100%", px: 4}}>
-                <Box>
-                    <ActionDefinitionHeroActionContextWrapper/>
-                </Box>
-                <Box sx={{flexGrow: 1}}>
+            <Box sx={{display: "flex", flexDirection: "column", gap: 3, minHeight: "100%", px: buildActionContext.testMode ? 1 : 4}}>
+                {buildActionContext.testMode ? <></> : (
+                    <Box>
+                        <ActionDefinitionHeroActionContextWrapper/>
+                    </Box>
+                )}
+                <Box sx={{flexGrow: 1, overflowX: 'auto'}}>
                      <ActionConfigComponent/>
                 </Box>
             </Box>
