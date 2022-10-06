@@ -7,11 +7,11 @@ import labels from "../../../labels/labels"
 
 const useGetDashboardDetails = (props: {filter: Dashboard}): [DashboardDetails[], boolean, object, Function] => {
 
-    const {data, isLoading, error, refetch} = useQuery([labels.entities.Dashboard, "details", props.filter], 
+    const {data, isLoading, isRefetching, error, refetch} = useQuery([labels.entities.Dashboard, "details", props.filter], 
         () => Fetcher.fetchData("GET", "/getDashboardDetails", props.filter)
     )
 
-    return [data || [], isLoading, error as object, refetch]
+    return [data || [], isLoading || isRefetching, error as object, refetch]
 }
 
 export default useGetDashboardDetails

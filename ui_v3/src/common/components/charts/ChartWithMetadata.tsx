@@ -1,8 +1,8 @@
 
-import { Grid, Box, Autocomplete, TextField, Button, IconButton, Popover, Dialog } from "@mui/material";
+import { Grid, Box, Autocomplete, TextField, Button, IconButton, Popover, Dialog, createFilterOptions } from "@mui/material";
 import { BaseChartsConfig } from "./BaseChartsConfig";
 import { Chart} from "./Chart";
-import { Chart as ChartModel } from "../../../generated/entities/Entities";
+import { Chart as ChartModel, Dashboard } from "../../../generated/entities/Entities";
 import OptionsIcon from "../../../../src/images/more-horizontal.svg"
 import getChartTypeOptions from "../../util/getChartTypeOptions";
 import React from "react"
@@ -13,6 +13,7 @@ import ViewActionExecution from "../../../pages/view_action_execution/VIewAction
 import useGetDashboardDetails from "../../../pages/insights/hooks/useGetDashboardDetails";
 import LoadingWrapper from "../LoadingWrapper";
 import {EChartUISpecificConfig} from "./types/EChartUISpecificConfig";
+import { DashboardDetails } from "../../../generated/interfaces/Interfaces";
 
 interface ChartWithMetadataProps {
     chart: {config: BaseChartsConfig, uiConfig: EChartUISpecificConfig, model: ChartModel},
@@ -105,14 +106,14 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
                         <LoadingWrapper isLoading={isDashboardLoading} data={dashboardData} error={dashboardDataError}>
                             <Autocomplete
                                 fullWidth
-                                value={dashboardData.find(dashboard => dashboard?.model?.Id === props.chart.model.DashboardId)?.model || {}}
+                                value={dashboardData.find(dashboard => dashboard?.model?.Id === props.chart.model.DashboardId)?.model}
                                 onChange={(event, value, reason, details) => {
                                     if(!!value){
                                         props.onChartDashboardChange?.(props.chart.model.Id || "id", value.Id || "NA")
                                     }
                                 }}
                                 getOptionLabel={(dashboardDataElement) => dashboardDataElement?.Name || "NA"}
-                                options={dashboardData.map((dashboard) => {return dashboard.model})}
+                                options={dashboardData.map((dashboard) => {return dashboard.model || {}})}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}

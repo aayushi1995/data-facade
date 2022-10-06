@@ -33,8 +33,7 @@ const WizardView2 = (props: BuildActionWizardStepProps) => {
                 }
             })
         },
-        orientation: "VERTICAL",
-        direction: "DEFAULT"
+        inputFieldLocation: "BOTTOM"
     }
 
     React.useEffect(() => {
