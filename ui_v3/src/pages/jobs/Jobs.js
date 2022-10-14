@@ -3,6 +3,7 @@ import {Divider, Grid, Tab, Tabs} from '@mui/material'
 import {Route, Switch, useLocation, useRouteMatch, withRouter} from 'react-router-dom'
 import {JobsFiltered} from './components/JobsFiltered'
 import {PageHeader} from "../../common/components/header/PageHeader";
+import { SetModuleContextState } from "../../common/components/ModuleContext";
 import JobsRowJobDetail from "./components/JobsRowJobDetail";
 
 
@@ -109,6 +110,19 @@ const _Jobs = (props) => {
 
 }
 const Jobs = withRouter(function JobsRoutes() {
+    const setModuleContext = React.useContext(SetModuleContextState)
+
+    React.useEffect(() => {
+        setModuleContext({
+            type: "SetHeader",
+            payload: {
+                newHeader: {
+                    Title: "Jobs and Logs",
+                    SubTitle: "All Your jobs are listed here"
+                }
+            }
+        })
+    }, [])
     const match = useRouteMatch();
     return (
         <Switch>

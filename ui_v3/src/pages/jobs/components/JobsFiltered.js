@@ -208,7 +208,7 @@ export function JobsFiltered(props) {
                 <Snackbar open={notificationState.open} autoHideDuration={4000} onClose={handleNotificationClose}>
                     <Alert onClose={handleNotificationClose} severity={notificationState.severity}>
                         {notificationState.message}
-                    </Alert>
+                    </Alert> 
                 </Snackbar>
                 <Grid container spacing={0}>
                     <Grid item xs={12}>
@@ -243,6 +243,16 @@ export function JobsFiltered(props) {
                                         rows={searchResults()}
                                         onRowClick={(params) => {
                                             history.push(`${match.url}/${params.row.Id}`)
+                                        }}
+
+                                        sx={{
+                                            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+                                            // background: "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%)",
+                                            backgroundColor: 'ActionCardBgColor.main',
+                                            backgroundBlendMode: "soft-light, normal",
+                                            border: "2px solid rgba(255, 255, 255, 0.4)",
+                                            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+                                            borderRadius: "10px"
                                         }}
                                     />
                                 </Grid>

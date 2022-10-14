@@ -27,8 +27,8 @@ export const TABLE_QUICK_VIEW = 2;
 export const TABLE_QUICK_STATS = 3;
 export const TABLE_CHECKS = 4;
 export const TABLE_CLEAN_ACTIONS = 5;
-export const TABLE_ACTION_INSTANCES = 6;
-export const INTERMIDIARY_TABLES = 7;
+// export const TABLE_ACTION_INSTANCES = 6;
+// export const INTERMIDIARY_TABLES = 7;
 
 const URL_TAB_INFO = [
   {
@@ -43,14 +43,16 @@ const URL_TAB_INFO = [
     TabLabel: "Column View",
     ViewName: DATA_TABLE_TAB_COLUMN_VIEW
   },
-  {
-    TabLabel: "Action Instance",
-    ViewName: DATA_TABLE_TAB_ACTION_INSTANCES
-  },
-  {
-    TabLabel: "Intermediary Tables",
-    ViewName: DATA_TABLE_TAB_INTERMEDIARY_TABLES
-  }
+
+  // **** Action Instance And Intermediary Tabs are comnt out for temporary bcz these are not required now
+  // {
+  //   TabLabel: "Action Instance",
+  //   ViewName: DATA_TABLE_TAB_ACTION_INSTANCES
+  // },
+  // {
+  //   TabLabel: "Intermediary Tables",
+  //   ViewName: DATA_TABLE_TAB_INTERMEDIARY_TABLES
+  // }
 ]
 
 interface MatchParams {
@@ -110,12 +112,13 @@ const TableDetailsView = () => {
                   <TabPanel value={DATA_TABLE_TAB_COLUMN_VIEW}>
                     <ColumnView TableId={data[0].Id} />
                   </TabPanel>
-                  <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
+                  {/* **** Action Instance And Intermediary Tabs are comnt out for temporary bcz these are not required now */}
+                  {/* <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
                     <ActionInstances TableId={data[0].Id} />
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_INTERMEDIARY_TABLES}>
                       <IntermediaryTables TableId={data[0].Id}/>
-                  </TabPanel>
+                  </TabPanel> */}
                 </Box>
               )}
             </ReactQueryWrapper>

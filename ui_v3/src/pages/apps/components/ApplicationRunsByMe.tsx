@@ -30,14 +30,14 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 field: "ActionInstanceName",
                 headerName: "Instance Name",
                 flex: 1,
-                minWidth: 250,
+                minWidth: 300,
                 renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionInstanceName}/>
             },
             {
                 field: "ActionDefinitionName",
                 headerName: "Definition Name",
                 flex: 1,
-                minWidth: 250,
+                minWidth: 300,
                 renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionDefinitionName}/>
             },
             {
@@ -58,7 +58,7 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 field: "Duration",
                 headerName: "Duration",
                 flex: 1,
-                minWidth: 100,
+                width: 50,
                 renderCell: (params: GridCellParams<any, Run, any>) => <DurationCell start={params.row.ActionExecutionStartedOn} end={params?.row?.ActionExecutionCompletedOn}/>
             },
             {

@@ -15,9 +15,7 @@ import TagHandler from "../tag-handler/TagHandler";
 import ConfirmationDialog from "../ConfirmationDialog";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 import useDeleteAction from "./hooks/useDeleteActions";
-import pythonLogo from "../../../../src/images/python.svg"
 import DeleteIcon from '@mui/icons-material/Delete'
-import sqlLogo from "../../../../src/images/SQL.svg"
 
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
@@ -102,7 +100,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
             <Card sx={{backgroundColor: background, boxShadow: lightShadows[27], borderRadius: '10.2px', Width: '100%', height:'120px'}}>
                 <Box sx={{display: 'flex'}}>
                     <Box sx={{flex: 4, width: '100%',height:'100%'}}>
-                        <Box sx={{height:'100%',display: 'flex', flexDirection: 'column',alignItems: 'flex-start', gap: 2, p: 1, height:'120px',overflow:'scroll'}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column',alignItems: 'flex-start', gap: 2, p: 1, height:'120px',overflow:'scroll'}}>
                             <Typography variant="actionCardHeader">
                                 {props.action.model?.DisplayName || "Name"}
                             </Typography>
@@ -130,18 +128,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                 </Box>
                             </Box>
                         ) : (
-                            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2}}>
-                                    <Box sx={{display:'flex',flexDirection:'column',alignItems:'center'}}>
-                                        <img width='35px' height="35px" src={sqlLogo} alt="pythonLogo" />
-                                        <Typography variant="heroMeta">
-                                            Language
-                                        </Typography>
-                                    </Box>    
+                            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                <Box sx={{display: 'flex', gap: 2}}>    
                                     <NumberStat {...{value: props.action.stagesOrParameters || 0, label: "Parameters"}}/>
                                     <NumberStat {...{value: props.action.numberOfRuns || 0, label: "Runs"}}/>
                                 </Box>
-                                <Box sx={{display: 'flex', flexDirection: 'column'}}></Box>
                             </Box>
                         )}
                         {props.isWorkflow ? (
