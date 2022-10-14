@@ -64,7 +64,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                             fontSize: '25px'
                         }}>
                             Welcome to Data Facade APP-Creation widget.
-                            Experience a new way in how you create apps 
+                            
                         </Typography>
                     </Box>
                     <Box>
@@ -74,9 +74,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                             fontWeight: 800,
                             fontSize: '22px'
                         }}>
-                            Data Facade brings you the power to use
-                            either a No-code or a Hybrid-code platform to create your actions
-                            The first step in building your AI App
+                            Experience a new way of creating data-apps
                         </Typography>
                     </Box>
                 
@@ -86,26 +84,25 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                         fontStyle: "normal",
                         fontWeight: 300,
                         fontSize: "25px",
-                        lineHeight: "45px",
+                        lineHeight: "35px",
                         display: "flex",
                         alignItems: "center",
                         textAlign: "center",
                         color: "dialogueTextColor1.main"
                     }}>
-                        Please select an option to help you
+                        Please select an option
                     </Typography>
                     <Typography sx={{
                         fontFamily: "'SF Compact Display'",
                         fontStyle: "normal",
                         fontWeight: 300,
                         fontSize: "25px",
-                        lineHeight: "45px",
+                        lineHeight: "25px",
                         display: "flex",
                         alignItems: "center",
                         textAlign: "center",
                         color: "dialogueTextColor1.main"
                     }}>
-                        create your first app
                     </Typography>
                 </Box>
             </Box>
@@ -138,9 +135,9 @@ interface CreateOptionProps {
 const CreateOption = (props: CreateOptionProps) => {
     const {value, selectedValue, description, onSelect} = props
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 3 , boxShadow: '0 0 1px 0 rgba(0,0,0,0.31), 0 3px 4px -2px rgba(0,0,0,0.25)' , backgroundColor: 'ActionCardBgColor.main', padding:'5px'}}>
+        <Box onClick={()=> onSelect(value)} sx={{ display: "flex", flexDirection: "row", gap: 3 , borderRadius:'10px',boxShadow: '0 0 2px 0 rgba(0,0,0,0.31), 5px 8px 10px -5px rgba(0,0,0,0.25)' , backgroundColor: 'ActionCardBgColor.main', padding:'5px',cursor:'pointer'}}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2}}>
-                <Radio checked={value===selectedValue} onClick={() => onSelect(value)}/>
+                <Radio id="myRadio" checked={value===selectedValue} onClick={() => onSelect(value)}/>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 1}}>
                 <Box>

@@ -22,7 +22,7 @@ import { ViewFailedActionExecution } from "../../view_action_execution/VIewActio
 import { useDeleteActionInstance } from "./hooks/useDeleteActionInstance";
 import useSyncProviderInstance from "./hooks/useSyncProviderInstance";
 import useUpdateSyncActionInstance from "./hooks/useUpdateSyncActionInstance";
-
+import ConfirmationDialog from "../../../../src/common/components/ConfirmationDialog"
 type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 
 interface ConnectionDataGridProps {
@@ -314,6 +314,13 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
             onSuccess: () => queryClient.invalidateQueries([labels.entities.ProviderInstance, "Card"])
         }
     })
+    const deleteActionHandler =()=>{
+        deleteActionInstanceMutation.mutate({
+            filter: {Id: props.syncActionInstance?.Id},
+            hard: true
+        })
+        handleDialogClose()
+    }
     const [createActionInstanceDialog, setCreateActionInstanceDialog] = React.useState(false)
     const syncProviderInstanceScheduled = useSyncProviderInstance({
         mutationOptions: {
@@ -323,6 +330,9 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
             }
         }
     })
+    const [dialogOpen, setDialogOpen] = React.useState(false)
+    const handleDialogClose = () => setDialogOpen(false)
+    const handleDialogOpen = () => setDialogOpen(true)
     const [recurrenceInterval, setRecurrenceInterval] = React.useState<number | undefined>()
     let syncing_flag=0
     const handleUpdateActionInstance = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -339,10 +349,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
             }
         } else {
             if(!!props.syncActionInstance){
-                deleteActionInstanceMutation.mutate({
-                    filter: {Id: props.syncActionInstance?.Id},
-                    hard: true
-                })
+                handleDialogOpen()
             }
         }
     }
@@ -433,8 +440,17 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                         )}
                     </Box>
                 </DialogContent>
-                
             </Dialog>
+            <ConfirmationDialog
+                messageToDisplay={`Do you want to Sync off ?`}
+                acceptString={'Sync Off'}
+                declineString={'Cancel'}
+                dialogOpen={dialogOpen}
+                onDialogClose={handleDialogClose}
+                onAccept={deleteActionHandler}
+                onDecline={handleDialogClose}
+            />
+
             <Tooltip title="Sync Scheduled">
                 <FormGroup>
                     <FormControlLabel control={

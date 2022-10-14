@@ -54,7 +54,6 @@ const AllTableView = (props: AllTableViewProps) => {
     const handleSearchChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSearchQuery(event?.target.value)
     }
-
     const handleDialogClose = () => setDialogProps(old => ({ ...old, open: false }))
     const handleDialogOpen = () => setDialogProps(old => ({ ...old, open: true }))
 
@@ -170,13 +169,13 @@ const AllTableView = (props: AllTableViewProps) => {
         <>
             <WrapInDialog dialogProps={{ ...dialogProps, handleClose: handleDialogClose }}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
-                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                        <Box sx={{ flex: 1, 
-                                width:'100%' ,
-                                // top:'100px', 
-                                // position:'fixed', 
-                                overflow:'hidden' , 
-                                // zIndex:'3'
+                {!dialogProps.open &&
+                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", 
+                                position:'sticky',
+                                top:'70px' ,  zIndex:1, overflow:'hidden'}}>
+                        <Box sx={{ 
+                                width:'100%' 
+                                
                                 }}>
                             <TextField variant="standard" 
                                 value={searchQuery}
@@ -188,7 +187,8 @@ const AllTableView = (props: AllTableViewProps) => {
                                     boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                                     backgroundBlendMode: 'soft-light, normal', 
                                     borderRadius: '26px',
-                                    display: 'flex', 
+                                    
+                                    // display: 'flex', 
                                     justifyContent: 'center', 
                                     minHeight: '50px'}}
                                 InputProps={{
@@ -200,14 +200,46 @@ const AllTableView = (props: AllTableViewProps) => {
                                     )
                             }}/>
                         </Box>
-                        {!dialogProps.open &&
                             <Box>
                                 <IconButton onClick={() => handleDialogOpen()}>
                                     <FullscreenIcon/>
                                 </IconButton>
                             </Box>
-                        }
                     </Box>
+                }{
+                    dialogProps.open &&
+                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", 
+                                position:'sticky',
+                                top:'0px' ,zIndex:1, overflow:'hidden'}}>
+                        <Box sx={{ 
+                                width:'100%' 
+                                
+                                }}>
+                            <TextField variant="standard" 
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                placeholder="Search Tables"
+                                sx={{width: '40%', 
+                                    backgroundColor: 'allTableTextfieldbgColor1.main',
+                                    boxSizing: 'border-box', 
+                                    boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
+                                    backgroundBlendMode: 'soft-light, normal', 
+                                    borderRadius: '26px',
+                                    
+                                    // display: 'flex', 
+                                    justifyContent: 'center', 
+                                    minHeight: '50px'}}
+                                InputProps={{
+                                    disableUnderline: true,
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon sx={{marginLeft: 1}}/>
+                                        </InputAdornment>
+                                    )
+                            }}/>
+                        </Box>
+                        </Box>
+                }
                     <Card sx={{ borderRadius: 2, boxShadow: lightShadows[31]}}>
                         <ReactQueryWrapper
                             isLoading={tableQuery.isLoading}
@@ -416,7 +448,7 @@ export const WrapInDialog = (props: { children: JSX.Element, showChild?: boolean
                         <Typography>{dialogProps?.label}</Typography>
                     </Toolbar>
                 </AppBar>
-                <DialogContent sx={{ py: 2 }}>
+                <DialogContent sx={{ my:2 , py:0 }}>
                     {props?.children}
                 </DialogContent>
             </Dialog>

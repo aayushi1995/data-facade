@@ -146,14 +146,14 @@ const TabsTree = (props: TabsTreePropType) => {
                     areLeafTabs ? 
                         <Box>
                             {moduleStateContext.DisplayHeader ? (
-                                <Box sx={{ mx: isFistTab ? 6: 0 , px: 2}}>
+                                <Box sx={{ mx: isFistTab ? 6: 0 ,px:0}}>
                                     <ModuleContent.Header tab={activeTab} />
                                 </Box>
                             ) : (
                                 <></>
                             )}
                             
-                            <Box sx={{ px: 2 }}>
+                            <Box sx={{ px: 0}}>
                                 <ModuleContent.MainContent/> 
                             </Box>
                         </Box>

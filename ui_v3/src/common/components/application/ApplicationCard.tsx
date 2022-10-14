@@ -220,6 +220,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         <>
             <ConfirmationDialog
                 messageToDisplay={`Application ${props.application.ApplicationName} will be deleted permanently. Proceed with deletion ?`}
+                acceptString={'Delete'}
+                declineString={'Cancel'}
                 dialogOpen={dialogOpen}
                 onDialogClose={handleDialogClose}
                 onAccept={deleteApplication}

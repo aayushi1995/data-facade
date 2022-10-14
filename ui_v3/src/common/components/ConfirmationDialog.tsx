@@ -3,6 +3,8 @@ import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material"
 
 export interface ConfirmationDialogProps {
     messageToDisplay: string,
+    acceptString:string,
+    declineString:string,
     onAccept: Function,
     onDecline: Function,
     dialogOpen: boolean,
@@ -18,10 +20,10 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
             <DialogContent>
                 <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3}}>
                     <Button color="primary" onClick={() => props.onAccept()}>
-                        Delete
+                        {props.acceptString}
                     </Button>
                     <Button color="primary" onClick={() => props.onDecline()}>
-                        Cancel
+                        {props.declineString}
                     </Button>
                 </Box>
             </DialogContent>

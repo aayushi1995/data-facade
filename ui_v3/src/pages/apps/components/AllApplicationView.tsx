@@ -56,7 +56,7 @@ const AllApplicationView = () => {
     }
 
     return (
-        <Box sx={{p: 1, overflowY: 'auto', minHeight: '100%', display: 'flex', gap: 2, flexDirection: 'column'}}>
+        <Box sx={{p: 0, overflowY: 'auto', minHeight: '100%', display: 'flex', gap: 2, flexDirection: 'column'}}>
             <Box sx={{flex: 1 , mx:5}}>
                 <ApplicationHeader pageHeader="Application" subHeading="Create, Manage Applications from here" searchQuery={searchQuery} setSearchQuery={handleApplicationSearchQuery}></ApplicationHeader>
             </Box>

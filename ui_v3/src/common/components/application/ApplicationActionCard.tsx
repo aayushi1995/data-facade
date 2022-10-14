@@ -92,6 +92,8 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
         <Box sx={{minheight: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
             <ConfirmationDialog
                 messageToDisplay={`Application ${props.action.model?.DisplayName} will be deleted permanently. Proceed with deletion ?`}
+                acceptString={'Delete'}
+                declineString={'Cancel'}
                 dialogOpen={dialogOpen}
                 onDialogClose={handleDialogClose}
                 onAccept={handleDelete}
@@ -131,7 +133,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2}}>
                                     <Box sx={{display:'flex',flexDirection:'column',alignItems:'center'}}>
-                                        <img width='35px' height="35px" src={pythonLogo} alt="pythonLogo" />
+                                        <img width='35px' height="35px" src={sqlLogo} alt="pythonLogo" />
                                         <Typography variant="heroMeta">
                                             Language
                                         </Typography>
