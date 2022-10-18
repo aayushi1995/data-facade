@@ -6,7 +6,7 @@ import { SetWorkflowContext, WorkflowContext } from "../../../../pages/applicati
 import { DefaultValueInputFromAllParameters } from "../../../../pages/build_action/components/common-components/parameter_input/DefaultValueInput"
 import { TextCell } from "../../../../pages/table_browser/components/AllTableView"
 import { ReactComponent as DeleteIcon } from "./../../../../../src/images/DeleteIcon.svg"
-
+import ConfirmationDialog from "../../../../../src/common/components/ConfirmationDialog"
 interface GlobalParametersRow {
     GlobalParameterName: string,
     MappedActionLevelParameters: string,
@@ -111,7 +111,12 @@ const ShowGlobalParameters = () => {
         disableSelectionOnClick: true,
         hideFooterSelectedRowCount: true,
         sx: {
-            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+            backgroundColor: 'ActionCardBgColor.main',
+            backgroundBlendMode: "soft-light, normal",
+            border: "2px solid rgba(255, 255, 255, 0.4)",
+            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+            borderRadius: "10px"
         },
         autoHeight: true,
         headerHeight: 70,
@@ -139,11 +144,27 @@ const DeleteCell = (props: GlobalParametersRow) => {
             }
         })
     }
+    const [dialogOpen, setDialogOpen] = React.useState(false)
+    const handleDialogClose = () => setDialogOpen(false)
+    const handleDialogOpen = () => setDialogOpen(true)
 
+    const deleleteParameterFunc = ()=>{
+        deleteParameter(props?.id)
+        handleDialogClose()
+    }
     return (
         <Box>
+            <ConfirmationDialog
+                messageToDisplay={`Do you want to delete ${props.GlobalParameterName} ? `}
+                acceptString={'Delete'}
+                declineString={'Cancel'}
+                dialogOpen={dialogOpen}
+                onDialogClose={handleDialogClose}
+                onAccept={deleleteParameterFunc}
+                onDecline={handleDialogClose}
+            />
             <Tooltip title="Delete">
-                <IconButton sx={{ width: "40px", height: "40px" }} onClick={ (event) => {event.stopPropagation(); deleteParameter(props?.id)} }>
+                <IconButton sx={{ width: "40px", height: "40px" }} onClick={handleDialogOpen}>
                     <DeleteIcon/>
                 </IconButton>
             </Tooltip>

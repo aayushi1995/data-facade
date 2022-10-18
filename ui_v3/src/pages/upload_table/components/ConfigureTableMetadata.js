@@ -4,12 +4,13 @@ import {
     FormControl, Grid, InputLabel,
     List,
     ListItem, MenuItem,
-    Select, TextField
+    Select, TextField,
+    IconButton
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { DataGrid } from "@mui/x-data-grid";
 import Papa from 'papaparse';
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
@@ -25,9 +26,10 @@ import TagGroups from './../../../enums/TagGroups';
 import TagScope from './../../../enums/TagScope';
 import SelectHeaderRowsButton from './SelectHeaderRowsButton';
 import { findHeaderRows } from './util';
-
-
-
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CollapsibleDrawer from "../../../../src/pages/build_action/components/form-components/CollapsibleDrawer"
+import DoubeLeftIcon from '../../../../src/images/Group 691.svg';
+import {Link } from "react-router-dom";
 const useStyles = makeStyles(() => ({
     requiredTags: {
         width: "100%",
@@ -256,9 +258,11 @@ export const ConfigureTableMetadata = (props) => {
         );
     };
 
+
+
     // TODO: Apply colour to disbaled Upload Button
     return (
-        <Grid container spacing={2}>
+        <Grid sx={{m:-4 , mt:-5}}>
             {props.isApplication &&
                 <Grid item xs={12}>
                     <Box m={2}>
@@ -304,25 +308,29 @@ export const ConfigureTableMetadata = (props) => {
                         </Grid>
                     </Box>
                 </Grid>}
+                <Grid container item xs={12} direction="row">
+                        <Box  sx={{width:'100%',mx:1,px:2,pb:2, display:'flex' , flexDirection:'row', justifyContent:'flex-end'}}>
+                            <Link to="/data/connections" style={{textDecoration: 'none'}}>
+                            <Button  sx={{borderRadius:'5px',width:'115px',mr:2,textDecoration:'none'}} variant="outlined" color="error">
+                                Cancel
+                            </Button>
+                            </Link>
 
+                            <Button color="success" variant="contained" sx={{borderRadius:'5px', width:'115px'}} component="label" onClick={uploadSelectedFiles}
+                                // classes={{ root: "select-all", disabled: classes.disabledButton }}
+                                disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled}>
+                                Save
+                            </Button>
+                        </Box>
+                </Grid>
             <Grid container item xs={12}>
                 <TableSchemaSelection selectedFile={selectedFile}
                     setSelectedFileColumnSchema={setSelectedFileColumnSchema}
                     setSelectedFileTableName={setSelectedFileTableName}
                     enableUploadButton={enableUploadButton} disableUploadButton={disableUploadButton}
                     setSelectedFileTablTags={setSelectedFileTableTags}
-                    setSelectedFileDataStartsFromRow={setSelectedFileDataStartsFromRow} />
-            </Grid>
-            <Grid container item xs={12} direction="row">
-                <Grid item xs={2}>
-                    <Box>
-                        <Button variant="contained" component="label" onClick={uploadSelectedFiles}
-                            classes={{ root: "select-all", disabled: classes.disabledButton }}
-                            disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled}>
-                            Upload
-                        </Button>
-                    </Box>
-                </Grid>
+                    setSelectedFileDataStartsFromRow={setSelectedFileDataStartsFromRow} 
+                    statusMSG = {props.stateData}/>
             </Grid>
             <p></p>
         </Grid>
@@ -582,18 +590,12 @@ const TableSchemaSelection = (props) => {
 
     const schemaDataSelector = (displayColumnProperties || []).map((columnProperty, columnIndex) =>
         <>
-            <ListItem
+            <ListItem sx={{px:1}}
                 style={((columnProperty.duplicateColor !== undefined) ? {background: columnProperty.duplicateColor} : {})} key={`ColumnIndex-${columnIndex}`}>
                 <MemoizedColumnPropertiesSelector columnIndex={columnIndex} columnProperty={columnProperty}
                                                   setColumnProperty={setColumnProperty} key={columnIndex}/>
             </ListItem>
-            {columnIndex !== displayColumnProperties.length - 1 &&
-                <Box pb={1}>
-                    <Box pt={1} pb={1} style={{background: "#ededed"}}>
-                        <Divider variant="middle"/>
-                    </Box>
-                </Box>
-            }
+            
         </>
     )
 
@@ -604,64 +606,134 @@ const TableSchemaSelection = (props) => {
             return `Non Empty except '"'`
         }
     }
-
+    const [opener , setopener] = useState();
+    
+    const drawerOpenHandler = (mp)=>{
+        setopener(mp)
+    }
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 1 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", boxSizing: "box-sizing", gap: 1 }}>
-                <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 1 }}>
-                    <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "300px" }}>
+        <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 0 }}>
+                <CollapsibleDrawer
+                open={opener || false}
+                openWidth="400px"
+                closedWidth="50px"
+                openDrawer={() => {drawerOpenHandler(true)}}
+                >
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", flex: 1 }}>
+                            <IconButton onClick={() => drawerOpenHandler(false)}>
+                                <img src={DoubeLeftIcon} alt="NA"/>
+                            </IconButton>
+                        </Box>
+                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", gap: 0 ,px:1, borderRadius:'10px' }}>
+                    <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 1,pr:2 }}>
+                        <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "300px" }}>
+                            <TextField
+                                fullWidth
+                                label="Search Column"
+                                value={columnSearchQuery}
+                                onChange={(event) => {
+                                    setColumnSearchQuery(event.target.value)
+                                }}
+                            />
+                        </Box>
+                        <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", flex: 1 , width:'100px' }}>
+                            <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
+                        </Box>
+                    </Box>
+                    <Box sx={{}}>
+                        <List sx={{ height: 700, overflow: 'auto', width: "100%" ,p:0}}>
+                            {schemaDataSelector}
+                        </List>
+                    </Box>
+                </Box>
+                </CollapsibleDrawer>
+            <Box sx={{  display: "flex",
+                        flexDirection: "column", 
+                        width: "100%", 
+                        gap: 1 ,
+                        }}>
+                <Box sx={{ display: "flex", 
+                            flexDirection: "row", 
+                            gap: 1, 
+                            backgroundColor: 'ActionDefinationHeroCardBgColor.main',
+                            boxShadow: '0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)',
+                            borderRadius: "10px",
+                            padding: "10px",
+                            mx:3
+                            // boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF' 
+                        }}>
+                    <Box sx={{ width: "50%",p:2, display:'flex', flexDirection:'row'}}>
                         <TextField
-                            fullWidth
-                            label="Search Column"
-                            value={columnSearchQuery}
-                            onChange={(event) => {
-                                setColumnSearchQuery(event.target.value)
-                            }}
-                        />
-                    </Box>
-                    <Box>
-                        <Divider orientation='vertical'/>
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", flex: 1 }}>
-                        <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
-                    </Box>
-                </Box>
-                <Box>
-                    <Divider orientation='horizontal'/>
-                </Box>
-                <Box>
-                    <List sx={{ height: 600, overflow: 'auto', width: "100%" }}>
-                        {schemaDataSelector}
-                    </List>
-                </Box>
-            </Box>
-            <Divider orientation='vertical'/>
-            <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 1 }}>
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 1, width: "100%" }}>
-                    <Box sx={{ width: "300px" }}>
-                        <TextField
+                            variant="standard"
                             fullWidth
                             value={tableProperties.tableName}
                             error={tableProperties.tableName && !tableProperties.isValid}
-                            label={tableProperties.tableName && whyTableNameNotValid()}
+                            // label={tableProperties.tableName && whyTableNameNotValid()}
                             onChange={(event) => {
                                 setTableName(event.target.value)
                             }}
+                            InputProps={{
+                                sx: {
+                                    fontFamily: "SF Pro Display",
+                                    fontStyle: "normal",
+                                    fontWeight: 600,
+                                    fontSize: "36px",
+                                    lineHeight: "116.7%",
+                                    color: "ActionDefinationHeroTextColor1.main",
+                                    borderStyle: "solid",
+                                    borderColor: "transparent",
+                                    borderRadius: "5px",
+                                    boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF',
+                                    backgroundColor: "ActionCardBgColor.main",
+                                    padding:'10px', 
+                                    ":hover": {
+                                        ...(props.mode==="READONLY" ? {
+                                            
+                                        } : {
+                                            backgroundColor: "ActionDefinationTextPanelBgHoverColor.main"
+                                        })
+                                    }
+                                },
+                                disableUnderline: true,
+                            }}
                         />
+                        <CheckCircleIcon sx={{ color: "syncStatusColor1.main" ,fontSize:'40px', m:2}}/>
                     </Box>
-                    <Divider orientation='vertical'/>
-                    <Box sx={{ flex: 1 }}>
-                        <VirtualTagHandler
-                            selectedTags={tableProperties.tags}
-                            onSelectedTagsChange={handleTableTagChange}
-                            tagFilter={{Scope: TagScope.TABLE}}
-                            allowAdd={true}
-                            allowDelete={true}
-                            inputFieldLocation="LEFT"
-                        />
+                    <Box sx={{ flex: 1 , my:1,px:2}}>
+                            <TextField
+                                disabled
+                                multiline
+                                rows={1}
+                                fullWidth
+                                id="outlined-disabled"
+                                label="Status"
+                                rowsMax="1"
+                                value={props.statusMSG}
+                            />
+                            <Box sx={{
+                                borderRadius: "5px",
+                                boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF',
+                                backgroundColor: "ActionCardBgColor.main",
+                                p:1,
+                                mt:2,
+                                height:'130px',
+                                overflow:'scroll'
+
+                                
+                            }}>
+                            <VirtualTagHandler
+                                selectedTags={tableProperties.tags}
+                                onSelectedTagsChange={handleTableTagChange}
+                                tagFilter={{Scope: TagScope.TABLE}}
+                                allowAdd={true}
+                                allowDelete={true}
+                                inputFieldLocation="BOTTOM"
+                                />
+                            </Box>
+                        
                     </Box>
                 </Box>
-                <Divider orientation='horizontal'/>
+
                 <Box>
                     <TablePreview 
                         selectedFile={props.selectedFile}
@@ -732,8 +804,16 @@ const TablePreview = (props) => {
     }, [selectedFile, dataStartsFromRow, columns, tableName, data])
 
     return (
-        <Box className={classes.TablePreviewBox} fullWidth>
-            <DataGrid className={classes.TablePreview}
+        <Box className={classes.TablePreviewBox} sx={{p:4}} fullWidth>
+            <DataGrid
+                sx={{
+                    "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
+                    backgroundBlendMode: "soft-light, normal",
+                    border: "2px solid rgba(255, 255, 255, 0.4)",
+                    boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+                    borderRadius: "10px",
+                    
+                }}
                 {...dataGridProps}
             />
         </Box>
@@ -776,21 +856,20 @@ const ColumnPropertiesSelector = (props) => {
 
     return (
         <Card sx={{
-            borderRadius: 2, 
+            borderRadius: '10px', 
             px: 1,
             py: 2, 
             boxSizing: "content-box",
             border: "0.439891px solid #FFFFFF",
-            width: "100%"
-        }}>
+            width: "100%",
+            boxShadow: "-5px -5px 10px #E3E6F0, 5px 5px 10px #A6ABBD",
+            backgroundColor:'ButtonHighlight'
+             }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 1, width: "100%" }}>
                     <Box sx={{ width: "300px" }}>
-                        <TextField value={props.columnProperty.columnName} error={!isColumnFieldValid()}
+                        <TextField sx={{borderRadius:'0px'}} value={props.columnProperty.columnName} error={!isColumnFieldValid()}
                                 label={whyColumnFieldNotValid()} onChange={handleColumnNameChange} fullWidth/>
-                    </Box>
-                    <Box>
-                        <Divider orientation='vertical'/>
                     </Box>
                     <Box sx={{ display: "flex", flex: 1 }}>
                         <FormControl className={classes.formControl}>
@@ -810,8 +889,7 @@ const ColumnPropertiesSelector = (props) => {
                         </FormControl>
                     </Box>
                 </Box>
-                <Divider orientation='horizontal'/>
-                <Box>
+                <Box sx={{m:-1}}>
                     <VirtualTagHandler
                         selectedTags={props.columnProperty.columnTags}
                         onSelectedTagsChange={handleColumnTagChange}

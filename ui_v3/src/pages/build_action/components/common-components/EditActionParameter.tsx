@@ -72,7 +72,18 @@ const EditActionParameter = (props: EditActionParameterProps) => {
         const allParameters = allParamsWithTags?.map(param => param.parameter)
         const attributeValue = getInputTypeFromAttributesNew(template.Language, parameter.Tag, parameter.Type, parameter.Datatype)
         return(
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box sx={{ 
+                        display: "flex", 
+                        flexDirection: "column",
+                        gap: 1 ,
+                        "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+                        backgroundColor: 'ActionCardBgColor.main',
+                        boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+                        backgroundBlendMode: "soft-light, normal",
+                        borderRadius:'10px',
+                        p:5,
+                        mx:'30px',
+                    }}>
                 <Box sx={{ display: "flex", flexDirectin: "row", gap: 1 }}>
                     <Box sx={{width: "20%", flexShrink: 5}}>
                         <FormControl sx={{width: "100%"}}>
@@ -131,7 +142,7 @@ const EditActionParameter = (props: EditActionParameterProps) => {
                     </Box>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 1}}>
-                    <Box sx={{ width: "30%" }} id={`${parameter.ParameterName || "NA"}-default-value-box`}>
+                    <Box sx={{ width: "30%",m:1 }} id={`${parameter.ParameterName || "NA"}-default-value-box`}>
                         <DefaultValueInput
                             actionParameterDefinition={parameter}
                             actionParameterDefinitionAdditionalConfig={additionalConfig}

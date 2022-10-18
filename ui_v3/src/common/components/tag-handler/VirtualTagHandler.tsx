@@ -10,7 +10,8 @@ export interface VirtualTagHandlerProps {
     allowAdd: boolean,
     allowDelete: boolean,
     inputFieldLocation: "LEFT" | "RIGHT" | "TOP" | "BOTTOM",
-    numberOfTagsToDisplay?: number
+    numberOfTagsToDisplay?: number,
+    barWidth?: string,
 }
 
 const filter = createFilterOptions<Tag>()
@@ -39,7 +40,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
         const selectedTagsId: string[] = selectedTags.map(tag => tag.Id!)
         const availableTagsForEntity = (data as Tag[]).filter(availableTag => !selectedTagsId.includes(availableTag.Id!))
         return(
-            <Grid sx={{overflowY: 'auto', overflowX: 'auto' ,height:'180px'}} direction={ 
+            <Grid sx={{m:1}} direction={ 
                 inputFieldLocation==="BOTTOM" ? "column-reverse" : 
                 inputFieldLocation==="TOP" ? "column" :
                 inputFieldLocation==="LEFT" ? "row" : "row-reverse"
@@ -75,11 +76,11 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                             }
                             return filtered;
                         }}
-                        renderInput={(params) => <TextField sx={{width:'200px' , mb:2}} {...params} label="Add Tag"/>}
+                        renderInput={(params) => <TextField sx={{width:'100%'}} {...params} label="Add Tag"/>}
                     />
                 </Grid>}
                 <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:12, lg:12} )}>
-                    <Box sx={{display: "flex",overflowY:'scroll',overflowX:'hidden', flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center",height:'100px'}}>
+                    <Box sx={{display: "flex",overflowY:'scroll',overflowX:'hidden      ', flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center",height:'50px',p:1}}>
 
                         {selectedTags.length > 0 ? 
                             (
@@ -120,7 +121,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                                                 fontStyle: "normal",
                                                 fontWeight: "normal",
                                                 fontSize: "13px",
-                                                lineHeight: "24px",
+                                                lineHeight: "10px",
                                                 display: "flex",
                                                 alignItems: "center",
                                                 letterSpacing: "0.073125px",

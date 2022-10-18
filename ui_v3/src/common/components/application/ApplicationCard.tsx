@@ -228,7 +228,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                 onDecline={handleDialogClose}
             />
             <Box>
-                <Tooltip arrow title={application.ApplicationDescription}>
+                
                     <Card onClick={onApplicationSelect} sx={{
                     width: "100%", 
                     height: "200px",
@@ -256,7 +256,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     {application.ApplicationName}
                                 </Typography>
                             </Box>
-                            <Box sx={{margin:'10px'}}>
+                            <Box sx={{my:'10px'}}>
+                            <Tooltip placement='top' arrow title={application.ApplicationDescription}>
                                 <Typography sx={{
                                     fontFamily: "SF Pro Display",
                                     fontStyle: "normal",
@@ -269,12 +270,13 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     <LinesEllipsis
                                         text={application.ApplicationDescription}
                                         maxLine='3'
-                                        ellipsis='...'
+                                        ellipsis=' ...'
                                         trimRight
                                         basedOn='letters'
                                     />
                                     {/* {application.ApplicationDescription} */}
                                 </Typography>
+                            </Tooltip>      
                             </Box>
                             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", flexGrow: 1, mr: 3}}>
                                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: 1}}>
@@ -300,7 +302,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                 background: "cardIconButtonBackgroundColor.main",
                                                 boxShadow: "inset 8px 8px 8px rgba(0, 0, 0, 0.25), inset -8px -8px 8px #B8DBFF",
                                                 borderRadius: "50%",
-                                                p: "3px"
+                                                p: "3px",
+                                                ml:'12px'
                                             }}>
                                                 <img src={DataFacadeLogo} alt="Data Facade"/>
                                             </Box>
@@ -384,7 +387,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                         {formActions()}
                     </Box>
                     </Card>
-                </Tooltip>     
+                   
             </Box>
         </>
     )

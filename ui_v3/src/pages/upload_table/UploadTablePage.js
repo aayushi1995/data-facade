@@ -7,9 +7,8 @@ import S3UploadState from './../../custom_enums/S3UploadState';
 import ConfigureTableMetadata from './components/ConfigureTableMetadata';
 import SelectFileStep from './components/SelectFileStep';
 import SelectTableStep from './components/SelectTableStep';
-
-
-
+import { SetModuleContextState } from "../../../src/common/components/ModuleContext";
+import { useContext , useEffect} from 'react';
 
 
 
@@ -23,7 +22,18 @@ export const UploadTablePage = (props) => {
         stepProps: {}
     })
 
-
+    const setModuleContext = useContext(SetModuleContextState)
+    useEffect(() => {
+    setModuleContext({
+        type: "SetHeader",
+        payload: {
+            newHeader: {
+                Title: "Upload Wizard",
+                SubTitle: "Upload your CSV, Excel files from here"
+            }
+        }
+    })
+}, [])
     const nextStep = (nextStepProps, nextStepIndex) => {
         setActiveStep(oldActiveStep => {
             const getNewStepIndex = () => {
@@ -72,15 +82,6 @@ export const UploadTablePage = (props) => {
     return (
         <Box px={1} py={2}>
             <Grid container spacing={5}>
-                { (activeStep.stepIndex===0) &&<Grid item xs={12}>
-                    <SelectFileStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
-                </Grid> }
-                { (activeStep.stepIndex===1) &&<Grid item xs={12}>
-                    <SelectTableStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
-                </Grid> }
-                { (activeStep.stepIndex===2) &&<Grid item xs={12}>
-                    <ConfigureTableMetadata nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
-                </Grid> }
                 <Grid container item xs={12}>
                     <Grid item xs={5}>
                         <Button sx={{ display: "none"}}>
@@ -88,26 +89,17 @@ export const UploadTablePage = (props) => {
                             <input ref={uploadButtonRef} type="file" accept={".csv,.xlsx"} hidden onChange={changeHandler} onClick={(event) => {event.target.value=''}}/>
                         </Button>
                     </Grid>
-                    <Grid item xs={5}>
-                        <TextField
-                            disabled
-                            multiline
-                            rows={1}
-                            fullWidth
-                            id="outlined-disabled"
-                            label="Status"
-                            rowsMax="4"
-                            value={uploadState.message}
-                        />
-                    </Grid>
-                    <Grid container item xs={2} justifyContent="center">
-                        <Grid item xs={6} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>{uploadState.icon}</Grid>
-                    </Grid>
                 </Grid>
+                { (activeStep.stepIndex===0) &&<Grid item xs={12}>
+                    <SelectFileStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
+                </Grid> }
+                { (activeStep.stepIndex===1) &&<Grid item xs={12}>
+                    <SelectTableStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
+                </Grid> }
+                { (activeStep.stepIndex===2) &&<Grid item xs={12}>
+                    <ConfigureTableMetadata stateData={uploadState.message} nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
+                </Grid> }
+                
             </Grid>
         </Box>
     )

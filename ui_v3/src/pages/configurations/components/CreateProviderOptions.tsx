@@ -12,7 +12,7 @@ const CreateProviderOptions = () => {
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", px: 2}}>
+        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", px: 2,my:2}}>
             <Box>
                 <Box>
                 

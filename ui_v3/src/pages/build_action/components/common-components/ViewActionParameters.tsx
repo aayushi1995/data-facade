@@ -71,16 +71,16 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
             {
                 field: "Tags",
                 headerName: "Tags",
-                flex: 6,
+                flex: 5,
                 renderCell: (params: any) => 
-                <Box sx={{overflowY: "auto", width: '100%', overflowX: 'auto'}}>
+                <Box>
                     <VirtualTagHandler
                         tagFilter={{}}
                         allowAdd={false}
                         allowDelete={false}
                         selectedTags={params.row.tags}
                         onSelectedTagsChange={() => {}}
-                        inputFieldLocation="RIGHT"
+                        inputFieldLocation="TOP"
                         numberOfTagsToDisplay={1}
                     />
                 </Box>
@@ -139,8 +139,17 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
     if(!!paramsWithTag && !!template) {
         return (
             <Box style={{ height: "500px", width: "100%" }}>
-                <DataGrid {...getDatagridProps()}/> 
+                <DataGrid sx={{
+                    "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+                    backgroundColor: 'ActionCardBgColor.main',
+                    backgroundBlendMode: "soft-light, normal",
+                    border: "2px solid rgba(255, 255, 255, 0.4)",
+                    boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+                    mx:'30px',
+                    borderRadius: "10px"
+                }} {...getDatagridProps()}/> 
             </Box>
+            
         )
     } else {
         return <>NO PARAM</>

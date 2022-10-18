@@ -26,7 +26,7 @@ export function CreateConnectionButton() {
                 Create Connection
             </Button>
             <Route path={CHOOSE_CONNECTOR_ROUTE}>
-                <Dialog onClose={handleDialogClose} open={dialogState} fullWidth={true} maxWidth="xl">
+                <Dialog sx={{background:"linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8",backgroundBlendMode: "soft-light, normal",}} onClose={handleDialogClose} open={dialogState} fullWidth={true} maxWidth="xl">
                     <DialogTitle id="simple-dialog-title">
                         <Grid container>
                             <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
@@ -36,7 +36,7 @@ export function CreateConnectionButton() {
                             </Grid>
                         </Grid>
                     </DialogTitle>
-                    <DialogContent sx={{ minHeight: "400px"}}>
+                    <DialogContent>
                         <ConnectionDialogContent handleDialogClose={handleDialogClose}/>
                     </DialogContent>
                 </Dialog>

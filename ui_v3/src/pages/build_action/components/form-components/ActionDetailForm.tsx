@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
+import LoadingIndicator from "../../../../../src/common/components/LoadingIndicator"
 import { ActionDefinitionHeroActionContextWrapper } from "../shared-components/ActionDefinitionHero";
 import ActionConfigComponent from "./ActionConfigComponent";
 
@@ -11,7 +12,7 @@ const  ActionDetailForm = () => {
 
     if(buildActionContext.loadingActionForEdit) {
         return (
-            <>Loading...</>
+            <LoadingIndicator/>
         )
     } else {
         return (

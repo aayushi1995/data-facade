@@ -7,7 +7,6 @@ import { ReactQueryWrapper } from "../../../../common/components/ReactQueryWrapp
 import { Fetcher } from "../../../../generated/apis/api";
 import { ProviderDefinitionDetail } from "../../../../generated/interfaces/Interfaces";
 import labels from "../../../../labels/labels";
-import CreateProviderOptions from "../../../configurations/components/CreateProviderOptions";
 import { ProviderInputConnectionStateWrapper } from "../../../configurations/components/ProviderParameterInput";
 import { ConnectionsProvider, ConnectionStateContext } from "../../../configurations/context/ConnectionsContext";
 import {
@@ -24,7 +23,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 
-export function ProviderIcon({ providerUniqueName, height }: {providerUniqueName?: string, height?: number}) {
+export function ProviderIcon({ providerUniqueName, height , width }: {providerUniqueName?: string, height?: number, width?: number}) {
     const classes = useStyles();
     // ignoring because server should send ProviderType with only legit enum UniqueNames in its type
     // @ts-ignore
@@ -32,7 +31,7 @@ export function ProviderIcon({ providerUniqueName, height }: {providerUniqueName
     return src? <img src={src}
                 className={classes.img}
                 height={height || 65}
-                width={130}
+                width={width || 130}
                 alt={providerUniqueName}
     />: null;
 }
@@ -112,9 +111,6 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
                     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                         <Box sx={{ height: "100%" }}>
                             <ProviderInputConnectionStateWrapper {...routeProps}/>
-                        </Box>
-                        <Box>
-                            <CreateProviderOptions/>
                         </Box>
                     </Box>
                     

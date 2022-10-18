@@ -9,12 +9,10 @@ import {
 import * as XLSX from 'xlsx';
 
 import './../../../css/table_browser/TableBrowser.css'
-
 import S3UploadState from '../../../custom_enums/S3UploadState';
 import labels from './../../../labels/labels'
 import {convertToCsv} from './util'
 import AddIcon from "@mui/icons-material/Add";
-
 
 /*
     Parses a file to find valid tables
@@ -63,16 +61,7 @@ const SelectFileStep = (props) => {
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Grid item xs={12}>
-                    <TextField
-                        id="outlined-multiline-static"
-                        label="Note"
-                        multiline
-                        rows={4}
-                        defaultValue={labels.UploadTableButton.DIRECTION}
-                        variant="outlined"
-                        InputProps={{ readOnly: true }}
-                        fullWidth
-                        rowsMax="10" />
+                {labels.UploadTableButton.DIRECTION}
                 </Grid>
             </Grid>
             {/* <Grid item xs={12}>

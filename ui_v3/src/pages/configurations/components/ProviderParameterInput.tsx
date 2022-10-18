@@ -5,6 +5,7 @@ import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import { ProviderDefinitionDetail, ProviderInformation } from '../../../generated/interfaces/Interfaces';
 import { ProviderIcon } from '../../data/components/connections/ConnectionDialogContent';
 import { ConnectionQueryContext, ConnectionSetStateContext, ConnectionStateContext } from '../context/ConnectionsContext';
+import CreateProviderOptions from "../../../../src/pages/configurations/components/CreateProviderOptions";
 
 export type ProviderParameterInputProps = { 
     ProviderDefinition?: ProviderDefinitionDetail,
@@ -104,9 +105,8 @@ export const ProviderInputConnectionStateWrapper = ({ match }: RouteComponentPro
                 background:
                 "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #F8F8F8",
                 backgroundBlendMode: "soft-light, normal",
-                border: "2px solid rgba(255, 255, 255, 0.4)",
-                boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-                borderRadius: "20px",
+                border: "1px solid rgba(255, 255, 255, 0.4)",
+                borderRadius: "10px",
                 m: 2
             }}>
                 <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 1, p: 2}}>
@@ -118,6 +118,7 @@ export const ProviderInputConnectionStateWrapper = ({ match }: RouteComponentPro
                     <ProviderParameterInput {...paramInputProps}/>
                     </Box>
                 </Box>
+                <CreateProviderOptions/>
             </Card>
         )
     } else {

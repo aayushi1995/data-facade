@@ -158,21 +158,21 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                 headerName: "Details",
                 renderCell: (params: GridCellParams<any, DataGridRow, any>) => <DetailsCell numberOfTables={params.row?.ProviderInstanceStat?.NumberOfTables} providerType={params.row?.ProviderDefinition?.ProviderType}/>,
                 flex: 1,
-                minWidth: 100
+                width: 50
             },
             {
                 field: "LastSyncedOn",
                 headerName: "Last Synced On",
                 renderCell: (params: GridCellParams<any, DataGridRow, any>) => <TimestampCell timestamp={params.row?.ProviderInstanceStat?.LastSyncedOn}/>,
                 flex: 1,
-                minWidth: 100
+                minWidth: 200
             },
             {
                 field: "Connection",
-                headerName: "Connection",
+                headerName: "Scheduler and Sync",
                 renderCell: (params: GridCellParams<any, DataGridRow, any>) => <ConnectionCell providerInstance={params?.row?.ProviderInstance} handleForceSync={handleForceSync} syncActionInstance={params?.row?.SyncActionInstance}/>,
                 flex: 1,
-                minWidth: 100
+                width: 300
             },
             {
                 field: "JobStatus",
@@ -201,13 +201,11 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
         rows: rows?.map(row => ({...row, id: row.ProviderInstance?.Id, providerName: row.ProviderInstance?.Name})) || [],
         autoHeight: true,
         sx: {
-            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
-            // background: "linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%)",
-            backgroundColor: 'ActionCardBgColor.main',
+            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
             backgroundBlendMode: "soft-light, normal",
             border: "2px solid rgba(255, 255, 255, 0.4)",
             boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-            borderRadius: "15px"
+            borderRadius: "10px"
         },
         disableSelectionOnClick: true,
         headerHeight: 70,
@@ -286,7 +284,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
 export const DataSourceCell = (props: {providerName?: string}) => {
     return (
         <Box sx={{display: 'flex', gap: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <ProviderIcon providerUniqueName={props.providerName} height={60}/>
+            <ProviderIcon providerUniqueName={props.providerName} height={35} width={35}/>
             <TextCell text={props.providerName} />
         </Box>
     )
@@ -305,6 +303,8 @@ export const DetailsCell = (props: {numberOfTables?: number, providerType?: stri
         </Typography>
     )
 }
+
+
 
 export const ConnectionCell = (props: {providerInstance?: ProviderInstance, syncActionInstance?: ActionInstance, handleForceSync: (providerInstanceId?: string) => void}) => {
     const queryClient = useQueryClient()
@@ -334,7 +334,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
     const handleDialogClose = () => setDialogOpen(false)
     const handleDialogOpen = () => setDialogOpen(true)
     const [recurrenceInterval, setRecurrenceInterval] = React.useState<number | undefined>()
-    let syncing_flag=0
+    
     const handleUpdateActionInstance = (event: React.ChangeEvent<HTMLInputElement>) => {
         if(event.target.checked) {
             if(!!props.syncActionInstance) {
@@ -363,7 +363,6 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
     }
     
     const handleCreateSyncActionInstance = () => {
-        syncing_flag=1
         syncProviderInstanceScheduled.mutate({
             providerInstanceId: props.providerInstance?.Id,
             syncDepthConfig: {
@@ -378,7 +377,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
         })
 
     }
-
+    let syncing_flag=0
     const getIcon=()=>{
         if(syncing_flag==1){ return (
             <Box sx={{
@@ -407,9 +406,11 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
             )
         }
     }
+ 
+    
 
     return (
-        <Box sx={{width: '100%', display: 'flex', gap: 2, }}>
+        <Box sx={{width: '100%', display: 'flex', gap: 2, px:1}}>
             <Dialog open={createActionInstanceDialog} fullWidth maxWidth="md">
                 <DialogTitle sx={{display: 'flex', justifyContent: 'center'}}>
                     <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
@@ -466,7 +467,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                     {getIcon()}
                 </IconButton>
             </Tooltip>
-            {/* <ButtonIconWithToolTip Icon={SyncIcon}  title="Sync now"/> */}
+            
         </Box>
     )
 }
@@ -474,7 +475,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
 
 export const JobStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
     return (
-        <Box sx={{display: 'flex', gap: 1, minWidth: '100%'}}>
+        <Box sx={{display: 'flex', gap: 3, minWidth: '100%'}}>
             <StatusCard text={props.providerStats?.NumberOfRunningExecutions || 0} background='statusCardBgColor1.main' title='Running'/>
             <StatusCard text={props.providerStats?.NumberOfFailedExecutions || 0} background='statusCardBgColor2.main' title='Failed'/>
             <StatusCard text={props.providerStats?.NumberOfCompletedExecutions || 0} background='statusCardBgColor3.main' title='Completed'/>
@@ -484,7 +485,7 @@ export const JobStatusCell = (props: {providerStats?: ProviderInstanceStat}) => 
 
 const SyncStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
     return (
-        <Box sx={{display: 'flex', gap: 1, minWidth: '100%'}}>
+        <Box sx={{display: 'flex', gap: 3, minWidth: '100%'}}>
             <StatusCard text={props.providerStats?.SyncRunning || 0} background='statusCardBgColor1.main' title='Active'/>
             <StatusCard text={props.providerStats?.SyncFailed || 0} background='statusCardBgColor2.main' title='Errors'/>
             <StatusCard text={props.providerStats?.SyncCompleted || 0} background='statusCardBgColor3.main' title='Successful'/>
@@ -534,7 +535,7 @@ export const DefaultProviderCell = (props: {providerInstance: ProviderInstance})
     }
 
     return (
-        <Box>
+        <Box sx={{ml:5}}>
             <Tooltip title="Default Provider">
                 <FormGroup>
                     <FormControlLabel control={

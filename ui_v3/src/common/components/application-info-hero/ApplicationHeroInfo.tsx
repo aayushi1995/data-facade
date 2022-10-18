@@ -49,13 +49,12 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                                     fontFamily: "SF Pro Display",
                                                     fontStyle: "normal",
                                                     fontWeight: 600,
-                                                    fontSize: "36px",
-                                                    lineHeight: "116.7%",
+                                                    fontSize: "32px",
                                                     color: "ActionDefinationHeroTextColor1.main",
                                                     borderStyle: "solid",
                                                     borderColor: "transparent",
                                                     borderRadius: "10px",
-                                                    padding: "10px",
+                                                    px:'10px',
                                                     backgroundColor: "ActionDefinationTextPanelBgColor.main",
                                                     ":hover": {
                                                         ...(props.mode==="READONLY" ? {
