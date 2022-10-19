@@ -5,6 +5,7 @@ import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOu
 import CloseIcon from '@mui/icons-material/Close'
 import React from "react"
 import LoadingIndicator from "../../common/components/LoadingIndicator"
+import useGetLogStatus from "./hooks/useGetLogsStatus"
 
 interface DownloadAndDisplayLogsProps {
     actionExecution: ActionExecution
@@ -17,6 +18,11 @@ const DownloadAndDisplayLogs = (props: DownloadAndDisplayLogsProps) => {
     const logsLocation = props.actionExecution.ExecutionLogs
     const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionLogs(logsLocation || "NA", 5)
     const {downloadExecutionOutputFromS3} = useDownloadExecutionOutputFromS3()
+    const executionLogStatus = useGetLogStatus({
+        filter: {
+            Id: props.actionExecution.Id
+        }
+    })
 
     const reader = new FileReader()
 
@@ -64,9 +70,15 @@ const DownloadAndDisplayLogs = (props: DownloadAndDisplayLogsProps) => {
             {useGetPresignedDowloadUrl.isLoading || downloadExecutionOutputFromS3.isLoading ? (
                 <LoadingIndicator/>
             ) : (
-                <Button variant="outlined" onClick={handleViewLogs}>
-                    View Logs
-                </Button>
+                <>
+                    {executionLogStatus?.data?.[0]?.logsPresent ? (
+                        <Button variant="outlined" onClick={handleViewLogs}>
+                            View Logs
+                        </Button>
+                    ) : (
+                        <></>
+                    )}
+                </>
             )}
             
         </Box>

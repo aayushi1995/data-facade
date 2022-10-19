@@ -89,9 +89,18 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
     )
 }
 
+const getFailureMessage = (actionOutput: any): Object => {
+    try {
+        return JSON.parse(actionOutput?.Message?.[0])
+    } catch (e) {
+        return actionOutput
+    }
+}
+
 export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) => {
     const { actionExecutionDetail } = props
     const actionOutput = JSON.parse(actionExecutionDetail?.ActionExecution?.Output || "{}")
+    const failureMessage = getFailureMessage(actionOutput)
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2}}>
             <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
@@ -118,7 +127,7 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
                         boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)",
                         overflowX: 'auto'
                     }}>
-                        <ReactJson src={actionOutput} />
+                        <ReactJson src={failureMessage} />
                     </Card>
                 </Box>
                 <Box>

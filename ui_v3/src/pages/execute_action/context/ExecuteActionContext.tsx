@@ -449,7 +449,8 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
         DefinitionId: ActionDefinition?.Id,
         TemplateId: ActionDefinition?.DefaultActionTemplateId,
         ProviderInstanceId: getProviderInstanceId(),
-        ActionType: ActionDefinition?.ActionType
+        ActionType: ActionDefinition?.ActionType,
+        CreatedBy: userSettingsSingleton.userEmail
     }
 
     const apis = ActionParameterInstances.map(api => ({

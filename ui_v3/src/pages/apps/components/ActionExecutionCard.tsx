@@ -120,7 +120,9 @@ const ActionExecutionCard = (props: ActionExecutionCardProps) => {
                                 <Button variant="outlined" sx={{border: '1.28323px solid #0A414D;'}} onClick={handleMoreInfoClick}>
                                     More Info
                                 </Button>
-                                <DownloadAndDisplayLogs actionExecution={props.actionExecution} />
+                                {props.terminalState ? (
+                                    <DownloadAndDisplayLogs actionExecution={props.actionExecution} />
+                                ) : (<></>)}
                                 {
                                     props.isWorkflow ? (props.terminalState && !props.error ? (
                                         <Button variant="outlined" sx={{border: '1.28323px solid #0A414D;'}} onClick={() => props.handleShowResult?.()}>

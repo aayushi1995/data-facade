@@ -3,6 +3,7 @@ import { DataGrid, DataGridProps, GridCellParams, GridValueGetterParams } from "
 import { generatePath, useHistory } from "react-router"
 import { EXECUTE_INSTANCE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType"
 import { Application } from "../../../generated/entities/Entities"
 import { TextCell, TimestampCell } from "../../table_browser/components/AllTableView"
 import useApplicationRunsByMe, { Run } from "./UseApplicationRunsByMe"
@@ -22,9 +23,9 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
         columns: [
             {
                 field: "ActionDefinitionActionType",
-                headerName: "Action Type",
+                headerName: "Type",
                 width: 100,
-                renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionDefinitionActionType}/>
+                renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionDefinitionActionType === ActionDefinitionActionType.WORKFLOW ? "Flow" : "Action"}/>
             },
             {
                 field: "ActionInstanceName",
@@ -33,12 +34,19 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 minWidth: 300,
                 renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionInstanceName}/>
             },
+            // {
+            //     field: "ActionDefinitionName",
+            //     headerName: "Definition Name",
+            //     flex: 1,
+            //     minWidth: 300,
+            //     renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionDefinitionName}/>
+            // },
             {
-                field: "ActionDefinitionName",
-                headerName: "Definition Name",
+                field: "RunBy",
+                headerName: "Run By",
                 flex: 1,
-                minWidth: 300,
-                renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionDefinitionName}/>
+                minWidth: 200,
+                renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.RanBy} />
             },
             {
                 field: "ActionExecutionStatus",

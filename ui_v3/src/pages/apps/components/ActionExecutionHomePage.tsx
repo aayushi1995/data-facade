@@ -16,10 +16,10 @@ import { ViewFailedActionExecution } from "../../view_action_execution/VIewActio
 import ActionExecutionCard from "./ActionExecutionCard"
 
 type MatchParams = {
-    ActionExecutionId?: string,
+    ActionExecutionId?: string
 }
 
-export const ActionExecutionDetails = (props: {actionExecutionId: string, showDescription?: boolean, showParametersOnClick?: boolean}) => {
+export const ActionExecutionDetails = (props: {actionExecutionId: string, showDescription?: boolean, showParametersOnClick?: boolean, fromTestAction?: boolean, onExecutionCreate?: (actionExecutionId: string) => void}) => {
     const actionExecutionId = props.actionExecutionId
     const [executionTerminal, setExecutionTerminal] = React.useState(false)
     const [executionError, setExecutionError] = React.useState(false)
@@ -100,7 +100,7 @@ export const ActionExecutionDetails = (props: {actionExecutionId: string, showDe
                             flexDirection: 'column',
                             gap: 1,
                         }}>
-                            <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false}/>
+                            <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction}/>
                         </Box>
                     ) : (
                         <></>

@@ -21,6 +21,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
     
     const getParameterInputProps: () => ParameterInputProps = () => {
         const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
+   
         if(actionParameterDefinition.Tag === ActionParameterDefinitionTag.DATA || actionParameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             return {
                 parameterType: "TABLE",
@@ -44,7 +45,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                 parameterType: "COLUMN",
                 inputProps: {
                     parameterName: actionParameterDefinition.ParameterName,
-                    selectedColumnFilter: {Id: defaultActionParameterInstance?.ColumnId},
+                    selectedColumnFilter: {Id: defaultActionParameterInstance?.ColumnId, UniqueName: defaultActionParameterInstance?.ParameterValue},
                     filters: {
                         tableFilters: uniqueTableFilters,
                         parameterDefinitionId: actionParameterDefinition?.Id

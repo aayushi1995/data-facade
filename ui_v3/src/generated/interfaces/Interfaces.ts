@@ -201,6 +201,11 @@ export interface WorkflowActionExecutions {
 }
 
 
+export interface ExecutionLogsStatus {
+    logsPresent?: boolean
+}
+
+
 export interface TagDetails {
     Id?: string
 	Name?: string

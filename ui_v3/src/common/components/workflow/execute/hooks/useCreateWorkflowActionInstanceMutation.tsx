@@ -1,5 +1,6 @@
 import { useMutation } from "react-query"
 import { v4 as uuidv4 } from 'uuid'
+import { userSettingsSingleton } from "../../../../../data_manager/userSettingsSingleton"
 import { ActionInstance } from "../../../../../generated/entities/Entities"
 import { ActionInstanceWithParameters } from "../../../../../generated/interfaces/Interfaces"
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext"
@@ -48,7 +49,8 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
                     Name: params.workflowName,
                     ProviderInstanceId: actionInstanceProvider || "5", // TODO: hard coding here, write logic to fix,
                     IsRecurring: params.recurrenceConfig.actionInstance.IsRecurring,
-                    RecurrenceIntervalInSecs: params.recurrenceConfig.actionInstance.RecurrenceIntervalInSecs
+                    RecurrenceIntervalInSecs: params.recurrenceConfig.actionInstance.RecurrenceIntervalInSecs,
+                    CreatedBy: userSettingsSingleton.userEmail
                 } as ActionInstance,
                 ActionParameterInstanceEntityProperties: workflowContext.WorkflowParameterInstance?.map(pi => ({...pi, ActionInstanceId: actionInstanceId, Id: uuidv4()})),
                 withWorkflowActionInstances: workflowInstancesWithParameterInstances as ActionInstanceWithParameters[],

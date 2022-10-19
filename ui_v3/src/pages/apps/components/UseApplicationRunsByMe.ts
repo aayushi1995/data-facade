@@ -32,7 +32,8 @@ export type Run = {
     ActionExecutionStartedOn?: number,
     ActionExecutionCompletedOn?: number,
     ActionExecutionStatus?: string,
-    isWorkflow?: boolean
+    isWorkflow?: boolean,
+    RanBy?: string
 }
 
 const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {

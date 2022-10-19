@@ -17,7 +17,7 @@ const TestAction = () => {
         <Box>
             {!!executionId ? (
                 <ExecuteActionContextProvider>
-                    <ActionExecutionDetails actionExecutionId={executionId} showDescription={false}/>
+                    <ActionExecutionDetails actionExecutionId={executionId} showDescription={false} fromTestAction={true} onExecutionCreate={onExecutionCreated}/>
                 </ExecuteActionContextProvider>
             ) : (
                 <ExecuteActionContextProvider>

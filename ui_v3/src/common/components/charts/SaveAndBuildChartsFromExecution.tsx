@@ -131,14 +131,14 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 </Grid>
             </Grid>
             <Grid container spacing={2} direction="column" ml={2}>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                     <WrapInCollapsable summary={
                         <CollapsibleSummary icon={FilterIcon} label="Filter"/>
                     }
                         expanded={<></>}
                         
                     />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12}>
                     <WrapInCollapsable summary={
                         <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>

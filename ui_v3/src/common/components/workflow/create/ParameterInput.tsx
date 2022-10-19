@@ -309,7 +309,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
     const getColumnSelectionInfo: (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => { AvailableColumns: ColumnProperties[], SelectedColumn?: ColumnProperties} = (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => {
         const columnById = availableColumns?.find(column => column?.Id === selectedColumnFilter?.Id)
         const columnByName = availableColumns?.find(column => column?.UniqueName === selectedColumnFilter?.UniqueName)
-
+        console.log(selectedColumnFilter)
         if(columnById !== undefined) {
             return {
                 AvailableColumns: availableColumns || [], 
@@ -336,6 +336,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
     }
 
     const { AvailableColumns, SelectedColumn } = getColumnSelectionInfo(availableColumnsState, selectedColumnFilter)
+    console.log(AvailableColumns, SelectedColumn)
 
     React.useEffect(() => {
         if(SelectedColumn!==undefined && SelectedColumn !== selectedColumnFilter) {
@@ -570,7 +571,6 @@ const TableInput = (props: TableParameterInput) => {
     const filter = createFilterOptions<TableProperties>()
     // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
-
     const getTableSelectionInfo: (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => { AvailableTables: TableProperties[], SelectedTable?: TableProperties} = (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => {
         const tableById = availableTables?.find(table => table?.Id === selectedTableFilter?.Id)
         const tableByName = availableTables?.find(table => table?.UniqueName === selectedTableFilter?.UniqueName)
@@ -619,8 +619,10 @@ const TableInput = (props: TableParameterInput) => {
             data={tables}
         >
             <Autocomplete
+                key={SelectedTable?.UniqueName || "NA"}
                 options={AvailableTables}
                 getOptionLabel={(table: TableProperties) => table.UniqueName!}
+                defaultValue={SelectedTable}
                 groupBy={(table) => table.ProviderInstanceName||"Provider NA"}
                 value={SelectedTable}
                 filterSelectedOptions

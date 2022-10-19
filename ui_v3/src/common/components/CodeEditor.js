@@ -24,7 +24,7 @@ const CodeEditor = (props) => {
     return (
         <main >
             <Box 
-                sx={{ backgroundColor: "background.default", color: 'text.secondary', border:'1px solid black', overflow:'scroll', height:'360px' }}
+                sx={{ backgroundColor: "background.default", color: 'text.secondary', border:'1px solid black', overflow:'scroll', minHeight:'360px' }}
             >
                     <Editor
                         value={props.code||""}
