@@ -95,9 +95,12 @@ const formCreateRequestBodyFromContextState = (state: BuildActionContextState) =
 }
 
 const formUpdateRequestBodyFromContextState = (state: BuildActionContextState) => {
+    
     const updatedAction: ActionDefinitionFormPayload = {
         ActionDefinition: {
-            model: state.actionDefinitionWithTags.actionDefinition,
+            model: {...state.actionDefinitionWithTags.actionDefinition, Config: JSON.stringify({
+                charts: state?.charts?.map(chart => chart.expose_data ? chart: {...chart, expose_data: false})
+            })},
             tags: state.actionDefinitionWithTags.tags
         },
         ActionTemplatesWithParameters: state.actionTemplateWithParams.map(at => ({

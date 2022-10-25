@@ -8,6 +8,7 @@ import { TabPanel } from "../../../../common/components/workflow/create/SelectAc
 import ActionDefinitionPublishStatus from '../../../../enums/ActionDefinitionPublishStatus';
 import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../context/BuildActionContext";
 import SetActionParameters from "../common-components/SetActionParameters";
+import EditActionChartConfig from './EditActionChartConfig';
 import EditActionTemplates from "./EditActionTemplates";
 import TagsAndSummary from "./TagsAndSummary";
 
@@ -100,6 +101,18 @@ const ActionConfigComponent = () => {
                                 textAlign: "center",
                                 opacity: 0.7
                         }}/>
+                        <Tab label="Charts" value={3} sx={{
+                            fontFamily: "SF Pro Text",
+                            fontStyle: "normal",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                            lineHeight: "24px",
+                            display: "flex",
+                            alignItems: "center",
+                            textAlign: "center",
+                            opacity: 0.7,
+                            color: '#DB8C28'
+                        }}/>
                     </Tabs>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row-reverse", flexGrow: 1, gap: 3 }}>   
@@ -157,6 +170,9 @@ const ActionConfigComponent = () => {
                 </TabPanel>
                 <TabPanel value={activeTab} index={2}>
                     <TagsAndSummary/>
+                </TabPanel>
+                <TabPanel value={activeTab} index={3}>
+                    <EditActionChartConfig />
                 </TabPanel>
             </Box>
         </Box>    

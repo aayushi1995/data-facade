@@ -1,6 +1,7 @@
 import React from "react";
 import { UseMutationResult, useQueryClient } from "react-query";
 import { v4 as uuidv4 } from 'uuid';
+import ChartOptionType, { ChartKindsType } from "../../../common/components/charts/types/ChartTypes";
 import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType } from "../../../custom_enums/ActionParameterDefinitionInputMap";
 import { getLanguage } from "../../../custom_enums/SupportedRuntimeGroupToLanguage";
@@ -47,7 +48,8 @@ export type BuildActionContextState = {
     loadingActionForEdit: boolean,
     actionDefinitionToLoadId?: string,
     SourceApplicationId?: string,
-    testMode?: boolean
+    testMode?: boolean,
+    charts?: ChartOptionType[]
 }
 
 const formEmptyDefaultContext: () => BuildActionContextState = () => {
@@ -337,6 +339,34 @@ type SetTestMode = {
     payload: boolean
 }
 
+type AddChartToConfig = {
+    type: "AddChartToConfig"
+}
+
+type ChangeChartKind = {
+    type: 'ChangeChartKind',
+    payload: {
+        chartIndex: number,
+        chartKind: ChartKindsType
+    }
+}
+
+type ChangeChartName = {
+    type: 'ChangeChartName',
+    payload: {
+        chartIndex: number,
+        newName: string
+    }
+}
+
+type SetChartConfigForIndex = {
+    type: 'SetChartConfigForIndex',
+    payload: {
+        chartConfig: ChartOptionType,
+        chartIndex: number
+    }
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -370,7 +400,11 @@ LoadActionForEditSettledAction |
 SetActionDefinitionToLoadIdAction |
 InferParametersAction |
 FormAdditionalConfigAction |
-SetTestMode
+SetTestMode |
+AddChartToConfig |
+ChangeChartKind |
+ChangeChartName |
+SetChartConfigForIndex
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -618,7 +652,8 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 })),
                 isLoadingAction: false,
                 activeTemplateId: activeTemplateId,
-                sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!
+                sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!,
+                charts: formChartsFromActionDefinitionConfig(action.payload?.ActionDefinition?.model?.Config || "{}")
             } as BuildActionContextState
         
             const finalState = (state.mode==="CREATE") ? 
@@ -630,7 +665,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                         : 
                         assignActiveTemplateId(newState)
                 )
-            
+            console.log(finalState)
             return reducer(finalState, {type: "FormAdditionalConfig"})
         }
 
@@ -774,11 +809,57 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
+        case 'AddChartToConfig': {
+            return {
+                ...state,
+                charts: [...state.charts || [], {
+                    kind: 'bar',
+                    expose_data: false,
+                    name: 'New chart',
+                    options: {
+                        x: '',
+                        y: ''
+                    }
+                }]
+            }
+        }
+
+        case 'ChangeChartKind': {
+            var newCharts = state.charts || []
+            newCharts[action.payload.chartIndex] = {kind: action.payload.chartKind, name: state.charts?.[action.payload.chartIndex]?.name || "New Chart", expose_data: state.charts?.[action.payload.chartIndex]?.expose_data || false}
+            return {
+                ...state,
+                charts: newCharts
+            }
+        }
+
+        case 'ChangeChartName': {
+            return {
+                ...state,
+                charts: state.charts?.map((chartConfig, index) => index === action.payload.chartIndex ? {
+                    ...chartConfig,
+                    name: action.payload.newName
+                } : chartConfig)
+            }
+        }
+
+        case 'SetChartConfigForIndex': {
+            return {
+                ...state,
+                charts: state.charts?.map((chart, index) => index === action.payload.chartIndex ? action.payload.chartConfig : chart)
+            }
+        }
+
         default:
             const neverAction: never = action
             console.log(`Action: ${neverAction} does not match any action`)
             return state
     }
+}
+
+const formChartsFromActionDefinitionConfig = (config: string): ChartOptionType[] => {
+    const actionDefinitionConfig = safelyParseJSON(config) as any
+    return actionDefinitionConfig?.charts
 }
 
 const validateColumnParameters = (parameters: ActionParameterDefinition[]) => {

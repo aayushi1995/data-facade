@@ -4,6 +4,7 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import { APPLICATION_CREATION_WIZARD_ROUTE, WORKFLOW_EDIT_ROUTE, WORKFLOW_EXECUTION_ROUTE } from "../../common/components/header/data/ApplicationRoutesConfig";
 import { APPLICATION_ROUTE } from "../../common/components/header/data/RoutesConfig";
 import UploadApplicationButton from "../../common/components/UploadApplicationButton";
+import { userSettingsSingleton } from "../../data_manager/userSettingsSingleton";
 
 const ApplicationHeader = () => {
     const history = useHistory()
@@ -15,7 +16,8 @@ const ApplicationHeader = () => {
     const AppBuilderButton = <Button variant="ModuleHeaderButton1" onClick={() => handleAppBuilder()}>
                                 APP Builder <AddIcon sx={{marginLeft: 2}}/>
                             </Button>
-    
+    const email = userSettingsSingleton.userEmail as string
+
     return (
         <Switch>
             <Route path={WORKFLOW_EXECUTION_ROUTE}></Route>
@@ -23,7 +25,12 @@ const ApplicationHeader = () => {
             <Route path={APPLICATION_ROUTE}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2,marginRight:'2%', alignItems: "center"}}>
                     {AppBuilderButton}
-                    <UploadApplicationButton/>
+                    {email.endsWith("@data-facade.com") ? (
+                        <UploadApplicationButton/>
+                    ) : (
+                        <></>
+                    )}
+                    
                 </Box>
             </Route>
         </Switch>
