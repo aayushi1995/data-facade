@@ -94,7 +94,7 @@ const SelectHeaderRowsButton = (props) => {
     return (
         <Grid container>
             <Grid xs={12}>
-                <Button sx={{ minWidth:'120px' , borderRadius:'5px'}} variant="contained"  component="label" onClick={() => {setShowDialog(true)}}
+                <Button sx={{ minWidth:'120px' , borderRadius:'13px', height:'55px'}} variant="contained"  component="label" onClick={() => {setShowDialog(true)}}
 
                     >
                     Select Header

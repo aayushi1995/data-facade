@@ -69,6 +69,8 @@ const EditActionForm = (props: EditActionFormProps) => {
                 <ShowActionInfo actionId={selectedActionId}/>
             </DialogContent>
         </Dialog>
+
+        
         <Box sx={{display: "flex", flexDirection: "row", minWidth: "100%", pl: 1, height: '100%', pb: 5, overflowX: 'auto'}}>
             {buildActionContext.testMode ? <></> : (
                 <CollapsibleDrawer

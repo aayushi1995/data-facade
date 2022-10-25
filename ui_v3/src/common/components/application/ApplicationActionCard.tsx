@@ -198,11 +198,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                     <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
                         <Divider orientation="vertical" sx={{height: "200%"}}/>
                     </Box>
-                    <Box sx={{flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
+                    {/* <Box sx={{flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
                         <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase'}}>
                             Data Sources
                         </Typography>
-                    </Box>
+                    </Box> */}
                     <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
                         <Divider orientation="vertical" sx={{height: "200%"}}/>
                     </Box>

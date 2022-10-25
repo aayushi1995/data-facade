@@ -5,7 +5,8 @@ import {
     List,
     ListItem, MenuItem,
     Select, TextField,
-    IconButton
+    IconButton,
+    InputAdornment
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { DataGrid } from "@mui/x-data-grid";
@@ -30,6 +31,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CollapsibleDrawer from "../../../../src/pages/build_action/components/form-components/CollapsibleDrawer"
 import DoubeLeftIcon from '../../../../src/images/Group 691.svg';
 import {Link } from "react-router-dom";
+import SearchIcon from '@mui/icons-material/Search'; 
+import TableIcon from '../../../../src/images/table_2.svg'
 const useStyles = makeStyles(() => ({
     requiredTags: {
         width: "100%",
@@ -629,11 +632,25 @@ const TableSchemaSelection = (props) => {
                         <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "300px" }}>
                             <TextField
                                 fullWidth
-                                label="Search Column"
+                                sx={{
+                                    backgroundColor: 'allTableTextfieldbgColor1.main',
+                                    boxSizing: 'border-box', 
+                                    boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5)',
+                                    borderRadius: '15px'
+                                }}
+                                placeholder="Search Column"
                                 value={columnSearchQuery}
                                 onChange={(event) => {
                                     setColumnSearchQuery(event.target.value)
                                 }}
+                                InputProps={{
+                                    disableUnderline: true,
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon sx={{marginLeft: 0}}/>
+                                        </InputAdornment>
+                                    )
+                            }}
                             />
                         </Box>
                         <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", flex: 1 , width:'100px' }}>
@@ -662,7 +679,7 @@ const TableSchemaSelection = (props) => {
                             mx:3
                             // boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF' 
                         }}>
-                    <Box sx={{ width: "50%",p:2, display:'flex', flexDirection:'row'}}>
+                    <Box sx={{ width: "50%",p:2, display:'flex', flexDirection:'column'}}>
                         <TextField
                             variant="standard"
                             fullWidth
@@ -695,21 +712,23 @@ const TableSchemaSelection = (props) => {
                                     }
                                 },
                                 disableUnderline: true,
+                                startAdornment: (
+                                    <InputAdornment position="end">
+                                        <CheckCircleIcon sx={{ color: "syncStatusColor1.main" ,fontSize:'40px', m:2}}/>
+                                    </InputAdornment>
+                                )
                             }}
+                            
                         />
-                        <CheckCircleIcon sx={{ color: "syncStatusColor1.main" ,fontSize:'40px', m:2}}/>
+                            <Box  sx={{mt:2, display:'flex', flexDirection:'row'}}>
+                                <img src={TableIcon} alt="table" sx={{width:'40px' , height:'40px'}}/>
+                                <Box sx={{px:2,ml:2, borderLeft:'3px solid black'}}>
+                                    <Box sx={{display:'inline',fontWeight:'600' , color:'gray'}}>Status : </Box>{props.statusMSG}
+                                </Box>
+                            </Box>
                     </Box>
                     <Box sx={{ flex: 1 , my:1,px:2}}>
-                            <TextField
-                                disabled
-                                multiline
-                                rows={1}
-                                fullWidth
-                                id="outlined-disabled"
-                                label="Status"
-                                rowsMax="1"
-                                value={props.statusMSG}
-                            />
+                            
                             <Box sx={{
                                 borderRadius: "5px",
                                 boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF',
