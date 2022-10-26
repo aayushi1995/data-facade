@@ -15,10 +15,10 @@ RUN npm install
 # RUN npm install serve -g --silent
 # add app
 COPY . ./
-ENV REACT_APP_FDS_ENDPOINT https://prod.datafacade.io/fds/v1
-ENV REACT_APP_AUTH0_CLIENT_ID JgwzQpOEOtJSTqSu7ZRIt29zLQBOtXWD
+ENV REACT_APP_FDS_ENDPOINT https://datafacade.io/fds/v1
+ENV REACT_APP_AUTH0_CLIENT_ID jRiHIABIhr6YvGhGd5pBDUEntuugritH
 ENV APPLICATION_RUNNING_MODE production
-RUN PUBLIC_URL=https://prod.datafacade.io npm run-script build
+RUN PUBLIC_URL=https://datafacade.io npm run-script build
 EXPOSE 3000
 # start app
 CMD ["serve", "-l", "3000", "-s", "build"]
