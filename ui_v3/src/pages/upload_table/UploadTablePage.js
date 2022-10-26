@@ -97,7 +97,7 @@ export const UploadTablePage = (props) => {
                     <SelectTableStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
                 </Grid> }
                 { (activeStep.stepIndex===2) &&<Grid item xs={12}>
-                    <ConfigureTableMetadata stateData={uploadState.message} nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
+                    <ConfigureTableMetadata nextStep={nextStep} prevStep={prevStep} stateData={uploadState.message} setUploadState={setUploadState} {...activeStep.stepProps}/>
                 </Grid> }
                 
             </Grid>

@@ -39,7 +39,7 @@ const TagsAndSummary = () => {
                         <ActionSummary/>
                     </WrapInHeader>
                 </Grid>
-                <Grid item spacing={2} item xs={12} lg={4}>
+                <Grid item spacing={2} xs={12} lg={4}>
                     <WrapInHeader header="Action Definition Behaviour">
                         <ConfigureActionVisibility/>
                     </WrapInHeader>

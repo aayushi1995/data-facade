@@ -18,6 +18,7 @@ import { TableBrowserResponse, TablePropertiesInfo } from "../../../generated/in
 import SyncOOBActionExecutionStatus from '../SyncOOBActionStatus';
 import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
 import { useDeleteTables, useGetTables, useReSyncTables } from "./AllTableViewHooks";
+import Stack from '@mui/material/Stack';
 
 export type AllTableViewProps = {
     tableFilter?: TableProperties,
@@ -246,7 +247,13 @@ const AllTableView = (props: AllTableViewProps) => {
                             error={tableQuery.error}
                             data={tableQuery.data}
                             children={() =>
-                                <DataGrid {...dataGridProps}/>
+                                <DataGrid {...dataGridProps} components={{
+                                    NoRowsOverlay: () => (
+                                      <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                                        No Table Here 
+                                      </Stack>
+                                    )
+                                  }}/>
                             }
                         />
                     </Card>

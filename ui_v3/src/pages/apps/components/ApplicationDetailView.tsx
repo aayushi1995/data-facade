@@ -65,14 +65,19 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                             borderRadius: '10px',
                             p: 1, marginBottom: 1}}
                     >
-                        <ApplicationHeroInfo applicationName={application?.model?.Name || "Name"} createdBy={{name: "Creator"}} 
+                        <ApplicationHeroInfo mode='EDIT' applicationName={application?.model?.Name || "Name"} createdBy={{name: "Creator"}} 
                         numberStats={[{value: application?.numberOfActions || 0, label: "Actions"}, {value: application?.numberOfFlows || 0, label: "Workflows"}]}
                         status="In use" description={application?.model?.Description} gitSyncStatus={application?.gitSyncStatus} handleSyncWithGit={handleSyncWithGit}
+                        // onChangeHandlers= {
+                        //     // onNameChange= (newName?: string) => setApplicationContext({ type: "SetApplicationName", payload: { newName: newName } }),
+                        //     // onDescriptionChange= (newDescription?: string) => setApplicationContext({ type: "SetApplicationDescription", payload: { newDescription: newDescription } }),
+                        //   }
+                        
                         />
 
-                        <Box sx={{display: 'flex', flexDirection: 'row'}}>
-                            {/* <ActionDefinitionHeroActionContextWrapper/> */}
-                        </Box>
+                        {/* <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                            <ActionDefinitionHeroActionContextWrapper/>
+                        </Box> */}
                         
                     </Card>
                 </Box>

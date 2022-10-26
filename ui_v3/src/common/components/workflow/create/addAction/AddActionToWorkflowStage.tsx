@@ -40,7 +40,7 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
     }
 
     const buildActionHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-        
+         
     }
 
     const handleConfigureParametersDialogClose = () => {
