@@ -2,9 +2,11 @@ import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, MuiEvent } fr
 import React from "react"
 import { useHistory } from "react-router"
 import { INSIGHTS_ROUTE } from "../../common/components/header/data/RoutesConfig"
+import { ReactQueryWrapper } from "../../../src/common/components/ReactQueryWrapper";//"../../../common/components/ReactQueryWrapper";
 import LoadingWrapper from "../../common/components/LoadingWrapper"
 import { DashboardDetails } from "../../generated/interfaces/Interfaces"
 import useGetDashboardDetails from "./hooks/useGetDashboardDetails"
+import Stack from '@mui/material/Stack';
 
 const columns: GridColDef[] = [
     {
@@ -55,11 +57,16 @@ const AllDashboardView = () => {
     }
 
     return (
-        <LoadingWrapper
-            isLoading={isLoading}
-            data={dashboardDetails}
-            error={error}
-        >
+        // <LoadingWrapper
+        //     isLoading={isLoading}
+        //     data={dashboardDetails}
+        //     error={error}
+        // >
+        <ReactQueryWrapper
+                    isLoading={isLoading}
+                    error={error}
+                    data={dashboardDetails}
+                    children={() => (
             <DataGrid
                 columns={columns}
                 rows={formRows(dashboardDetails)}
@@ -81,8 +88,22 @@ const AllDashboardView = () => {
                         pageSize: 10
                     }
                 }}
+                components={{
+                    NoRowsOverlay: () => (
+                    <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                        No Rows
+                    </Stack>
+                    ),
+                    LoadingOverlay: () => (
+                        <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                            Table is Loading.....
+                        </Stack>
+                    )
+                }} 
             />
-        </LoadingWrapper>
+        // </LoadingWrapper>
+            )}
+            />
     )
 }
 

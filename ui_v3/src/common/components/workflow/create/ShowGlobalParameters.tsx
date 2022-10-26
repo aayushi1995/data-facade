@@ -155,6 +155,7 @@ const DeleteCell = (props: GlobalParametersRow) => {
     return (
         <Box>
             <ConfirmationDialog
+                messageHeader={'Delete Parameter'}
                 messageToDisplay={`Do you want to delete ${props.GlobalParameterName} ? `}
                 acceptString={'Delete'}
                 declineString={'Cancel'}

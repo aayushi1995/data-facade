@@ -23,6 +23,8 @@ import { useDeleteActionInstance } from "./hooks/useDeleteActionInstance";
 import useSyncProviderInstance from "./hooks/useSyncProviderInstance";
 import useUpdateSyncActionInstance from "./hooks/useUpdateSyncActionInstance";
 import ConfirmationDialog from "../../../../src/common/components/ConfirmationDialog"
+import Stack from '@mui/material/Stack';
+
 type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 
 interface ConnectionDataGridProps {
@@ -221,13 +223,24 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
     }
     
     return (
-        <ReactQueryWrapper
-            isLoading={providerCardQuery.isLoading}
-            error={providerCardQuery.error}
-            data={providerCardQuery.data}
-            children={() => (
+                <ReactQueryWrapper
+                    isLoading={providerCardQuery.isLoading}
+                    error={providerCardQuery.error}
+                    data={providerCardQuery.data}
+                    children={() => (
                 <Box sx={{minWidth: '100%'}}>
-                    <DataGrid {...dataGridProps}/>
+                    <DataGrid {...dataGridProps} components={{
+                                    NoRowsOverlay: () => (
+                                    <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                                        No Content ... Sorry !!!!
+                                    </Stack>
+                                    ),
+                                    LoadingOverlay: () => (
+                                        <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                                            Table is Loading.....
+                                        </Stack>
+                                    )
+                                }}/>
                     <Dialog open={syncActionExecutionConfig.creatingExecution} onClose={() => setSyncActionExecutionConfig(config => ({...config, creatingExecution: false}))} fullWidth maxWidth="xl">
                         <LoadingIndicator/>
                     </Dialog>
@@ -276,8 +289,9 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                         </DialogContent>
                     </Dialog>
                 </Box>
-            )}
-        />
+                 )}
+                 />
+            
     )
 }
 
@@ -443,8 +457,9 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                 </DialogContent>
             </Dialog>
             <ConfirmationDialog
-                messageToDisplay={`Do you want to Sync off ?`}
-                acceptString={'Sync Off'}
+                messageHeader={'Turn off Sync'}
+                messageToDisplay={`Are you sure you want to turn off sync ? This may result in runtime failure for all linked scheduled actions and flows with the connection.`}
+                acceptString={'Turn off'}
                 declineString={'Cancel'}
                 dialogOpen={dialogOpen}
                 onDialogClose={handleDialogClose}

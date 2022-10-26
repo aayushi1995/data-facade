@@ -7,6 +7,7 @@ import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionTyp
 import { Application } from "../../../generated/entities/Entities"
 import { TextCell, TimestampCell } from "../../table_browser/components/AllTableView"
 import useApplicationRunsByMe, { Run } from "./UseApplicationRunsByMe"
+import Stack from '@mui/material/Stack';
 
 export type ApplicationRunsByMeProps = {
     application?: Application,
@@ -128,14 +129,26 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
     return (
         <Box>
             <Box>
-                <ReactQueryWrapper
+            <ReactQueryWrapper
                     isLoading={fetchDataQuery?.isLoading}
                     error={fetchDataQuery.error}
                     data={fetchDataQuery.data}
                     children={() => 
-                        <DataGrid {...datagridProps} />
+                        <DataGrid {...datagridProps} components={{
+                            NoRowsOverlay: () => (
+                            <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                                Nothing to show 
+                            </Stack>
+                            ),
+                            LoadingOverlay: () => (
+                                <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                                    Table is Loading.....
+                                </Stack>
+                            )
+                        }} />
                     }
                 />
+                
             </Box>
         </Box>    
     )

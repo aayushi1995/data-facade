@@ -242,7 +242,7 @@ const AllTableView = (props: AllTableViewProps) => {
                         </Box>
                 }
                     <Card sx={{ borderRadius: 2, boxShadow: lightShadows[31]}}>
-                        <ReactQueryWrapper
+                    <ReactQueryWrapper
                             isLoading={tableQuery.isLoading}
                             error={tableQuery.error}
                             data={tableQuery.data}
@@ -252,10 +252,15 @@ const AllTableView = (props: AllTableViewProps) => {
                                       <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
                                         No Table Here 
                                       </Stack>
+                                    ),
+                                    LoadingOverlay: () => (
+                                        <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                                            Table is Loading.....
+                                        </Stack>
                                     )
                                   }}/>
-                            }
-                        />
+                            }/>
+                        
                     </Card>
                 </Box>
             </WrapInDialog>

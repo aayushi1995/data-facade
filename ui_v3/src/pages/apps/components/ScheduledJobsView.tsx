@@ -12,7 +12,7 @@ import EditIcon from "../../../../src/images/edit.svg"
 import { generatePath, useHistory } from "react-router"
 import { ACTION_EXECUTION_ROUTE, WORKFLOW_EXECUTION_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType"
-
+import Stack from '@mui/material/Stack';
 
 interface ScheduledJobsViewProps {
 
@@ -117,12 +117,24 @@ const ScheduledJobsView = (props: ScheduledJobsViewProps) => {
     }
 
     return ( 
+
         <ReactQueryWrapper 
             isLoading={getScheduledActionInstanceQuery.isLoading}
             error={getScheduledActionInstanceQuery.error}
             data={getScheduledActionInstanceQuery.data}
             children={() => (
-                <DataGrid {...dataGridProps} />
+                <DataGrid {...dataGridProps} components={{
+                    NoRowsOverlay: () => (
+                      <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                         There is no running connection
+                      </Stack>
+                    ),
+                    LoadingOverlay: () => (
+                        <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
+                            Table is Loading.....
+                        </Stack>
+                    )
+                  }} />
             )}
         />
     )

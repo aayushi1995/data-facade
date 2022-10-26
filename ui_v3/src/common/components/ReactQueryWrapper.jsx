@@ -13,8 +13,8 @@ const _ReactQueryWrapper = ({
     let El;
     if (isLoading) {
         El =  <Box sx={sx}><LoadingIndicator /></Box>
-    } else if (error || (!isLoading && (!data || data?.length <= 0) )) {
-        El = children();
+    } else if (error || (!isLoading && (!data) )) {
+        El =  (<Box sx={sx}><NoData /></Box>);
     } else {
         El = children();
     }

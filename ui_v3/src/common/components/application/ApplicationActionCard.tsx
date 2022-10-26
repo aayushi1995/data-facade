@@ -89,6 +89,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
     return (
         <Box sx={{minheight: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
             <ConfirmationDialog
+                messageHeader={'Delete Application'}
                 messageToDisplay={`Application ${props.action.model?.DisplayName} will be deleted permanently. Proceed with deletion ?`}
                 acceptString={'Delete'}
                 declineString={'Cancel'}
