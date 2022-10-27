@@ -9,7 +9,7 @@ const useSyncApplicationToGit = (props: {mutationOptions?: UseMutationOptions<Ap
 
     return useMutation(
         "SyncApplicationToGit",
-        (options: {branchName: string, commitMessage: string, applicationId: string}) => fetchedDataManagerInstance.retreiveData(
+        (options: {branchName: string, commitMessage: string, applicationId: string, providerInstanceId?: string}) => fetchedDataManagerInstance.retreiveData(
             "Application",
             {
                 filter: {
@@ -17,6 +17,7 @@ const useSyncApplicationToGit = (props: {mutationOptions?: UseMutationOptions<Ap
                 },
                 "ExportApplicationToGit": true,
                 "commitMessage": options.commitMessage,
+                "withProviderInstanceId": options.providerInstanceId,
                 "branch": options.branchName
             }
         ).then((response: any) => {

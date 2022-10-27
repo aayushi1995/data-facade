@@ -24,7 +24,7 @@ export interface ApplicationHeroInfoProps {
         onNameChange?: (newName?: string) => void,
         onDescriptionChange?: (newDescription?: string) => void,
     }
-    handleSyncWithGit?: () => void
+    handleSyncWithGit?: (attatchNewProvider: boolean) => void
 }
 
 const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
@@ -37,44 +37,39 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
         <Box p={1} sx={{display: 'flex', maxHeight: '350px'}}>
             <Box sx={{display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '50%'}}>
                 <Box className="header">
-                <Box className="name">
-                                    <Tooltip title={props.mode==="READONLY" ? "Edit not permitted" : "Edit"} placement="left">
-                                        <TextField value={props.applicationName} 
-                                            variant="standard"
-                                            fullWidth
-                                            onChange={(event) => props?.onChangeHandlers?.onNameChange?.(event.target.value)} 
-                                            placeholder={props.mode==="EDIT" ? "Enter Name Here" : "NA"}
-                                            InputProps ={{
-                                                sx: {
-                                                    fontFamily: "SF Pro Display",
-                                                    fontStyle: "normal",
-                                                    fontWeight: 600,
-                                                    fontSize: "32px",
-                                                    color: "ActionDefinationHeroTextColor1.main",
-                                                    borderStyle: "solid",
-                                                    borderColor: "transparent",
-                                                    borderRadius: "10px",
-                                                    px:'10px',
-                                                    backgroundColor: "ActionDefinationTextPanelBgColor.main",
-                                                    ":hover": {
-                                                        ...(props.mode==="READONLY" ? {
-                                                            
-                                                        } : {
-                                                            background: "ActionDefinationTextPanelBgHoverColor.main"
-                                                        })
-                                                    }
-                                                },
-                                                disableUnderline: true,
-                                                readOnly: props?.mode==="READONLY"
-                                            }}
-                                        />
-                                    </Tooltip>
-                                </Box>
-                    {/* <Box className="name">
-                        <Typography variant="heroHeader">
-                            {props.applicationName}
-                        </Typography>
-                    </Box> */}
+                    <Box className="name">
+                        <Tooltip title={props.mode==="READONLY" ? "Edit not permitted" : "Edit"} placement="left">
+                            <TextField value={props.applicationName} 
+                                variant="standard"
+                                fullWidth
+                                onChange={(event) => props?.onChangeHandlers?.onNameChange?.(event.target.value)} 
+                                placeholder={props.mode==="EDIT" ? "Enter Name Here" : "NA"}
+                                InputProps ={{
+                                    sx: {
+                                        fontFamily: "SF Pro Display",
+                                        fontStyle: "normal",
+                                        fontWeight: 600,
+                                        fontSize: "32px",
+                                        color: "ActionDefinationHeroTextColor1.main",
+                                        borderStyle: "solid",
+                                        borderColor: "transparent",
+                                        borderRadius: "10px",
+                                        px:'10px',
+                                        backgroundColor: "ActionDefinationTextPanelBgColor.main",
+                                        ":hover": {
+                                            ...(props.mode==="READONLY" ? {
+                                                
+                                            } : {
+                                                background: "ActionDefinationTextPanelBgHoverColor.main"
+                                            })
+                                        }
+                                    },
+                                    disableUnderline: true,
+                                    readOnly: props?.mode==="READONLY"
+                                }}
+                            />
+                        </Tooltip>
+                    </Box>
                     <Box className="meta" sx={{mx:2}}>
                         <Typography variant="heroMeta">
                             <span>Created By <b>{props.createdBy.name}</b></span>
@@ -124,7 +119,7 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                             backgroundColor: '#8C0000'
                                         }  
                                     }}
-                                        onClick={() => {props.handleSyncWithGit?.()}}
+                                        onClick={() => {props.handleSyncWithGit?.(false)}}
                                     >
                                         Sync With GIT Repo
                                     </Button>
@@ -135,7 +130,20 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                     }}>In Sync With Git Repo</Button>
                                 )}
                             </div>
-                        ) : (<></>)}
+                        ) : (
+                            <Button variant="contained" sx={{
+                                backgroundColor: 'statusCardBgColor2.main',
+                                maxHeight: '55px',
+                                wordWrap: 'break-word',
+                                ":hover": {
+                                    backgroundColor: '#8C0000'
+                                }  
+                            }}
+                                onClick={() => {props.handleSyncWithGit?.(true)}}
+                            >
+                                Sync With GIT Repo
+                            </Button>
+                        )}
                     </Box>
                 </Box>    
             </Box>

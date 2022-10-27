@@ -41,11 +41,13 @@ function TabPanel(props: TabPanelProps) {
 const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
     const [tabValue, setTableValue] = React.useState(0)
     const [syncWithGitDialogState, setSyncWithGitDialogState] = React.useState(false)
+    const [attatchNewProvider, setAttatchNewProvider] = React.useState<boolean>(false)
     const applicationId = match.params.applicationId
     const [applicationDetailData, applicationDataError, applicationDetailLoading] = useGetApplicationDetails(applicationId)
 
-    const handleSyncWithGit = () => {
+    const handleSyncWithGit = (attatchNewProvider: boolean) => {
         setSyncWithGitDialogState(true)
+        setAttatchNewProvider(attatchNewProvider)
     }
 
     const handleDialogClose = () => {
@@ -56,7 +58,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
         const application = applicationDetailData[0]
         return (
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
-                <SyncWithGitDialog open={syncWithGitDialogState} onClose={handleDialogClose} applicationId={applicationId}/>
+                <SyncWithGitDialog open={syncWithGitDialogState} onClose={handleDialogClose} applicationId={applicationId} attatchNewProvider={attatchNewProvider}/>
                 <Box sx={{flex: 1}}>
                     <Card sx={{background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
                             backgroundBlendMode: 'soft-light, normal',
