@@ -24,7 +24,7 @@ const ApplicationMarketplace = () => {
     
     const renderCards = (apps: ApplicationCardViewResponse[] | undefined) => {
         return apps?.map(app => 
-            <Grid item xs={12} lg={4} md={6} xl={3} sx={{p:8}}>
+            <Grid item xs={12} lg={12} md={12} xl={12} sx={{py:1,px:8,ml:4}}>
                 <Box sx={{ height: '100%',mx:3 }}  key={app.ApplicationName}>
                     <ApplicationCard application={app} isInstalled={false}/>
                 </Box>

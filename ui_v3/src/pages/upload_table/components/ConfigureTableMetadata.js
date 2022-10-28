@@ -609,7 +609,7 @@ const TableSchemaSelection = (props) => {
             return `Non Empty except '"'`
         }
     }
-    const [opener , setopener] = useState();
+    const [opener , setopener] = useState(true);
     
     const drawerOpenHandler = (mp)=>{
         setopener(mp)

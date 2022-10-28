@@ -211,12 +211,11 @@ const ApplicationCard = (props: ApplicationCardProps) => {
             )
         } else {
             return (
-                <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
-                    <Box>
+                <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%" , alignItems:'center'}}>
                         <Tooltip arrow title="Install">
                             <IconButton sx={{
-                                height: "100%",
-                                width: "100%",
+                                height: "60px",
+                                width: "60px",
                                 backgroundColor: "cardIconButtonBackgroundColor.main",
                                 boxShadow: lightShadows[32],
                                 "&:hover": {
@@ -227,7 +226,6 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 <InstallDesktopIcon/>
                             </IconButton>
                         </Tooltip>
-                    </Box>
                 </Box>
             )
         }
@@ -340,8 +338,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                 </Typography>
 
                         </Box>
-                        <Box sx={{width:'10%', alignItems:'center'}}>    
-                            <Box sx={{display: "flex", flexDirection: "column",alignItems:'center', justifyContent: "space-between",borderRight:"0.439891px solid #FFFFFF",px:3,py:1,width:'100%', flexGrow: 1, mr: 3}}>
+                        <Box sx={{width:'10%', alignItems:'center',borderRight:"0.439891px solid #FFFFFF",}}>    
+                            <Box sx={{display: "flex", flexDirection: "column",alignItems:'center', justifyContent: "space-between",px:3,py:1,width:'100%', flexGrow: 1, mr: 3}}>
                                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", gap: 1}}>
                                     
                                     <Box sx={{display: "flex", flexDirection: "row"}}>

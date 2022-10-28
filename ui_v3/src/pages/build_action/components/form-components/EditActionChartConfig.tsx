@@ -3,6 +3,25 @@ import React from "react"
 import AddChartIcon from "../../../../images/add_chart.svg"
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext"
 import ChartOptionConfigurator from "./ChartOptionConfigurator"
+import LineChart from "./ChartsOption/LineCharts"
+import BarChart from "./ChartsOption/BarCharts"
+import PieChart from "./ChartsOption/pieChart"
+import ScatterChart from "./ChartsOption/ScatterCharts"
+import GaugeChart from "./ChartsOption/GaugeCharts"
+import HeatMapChart from "./ChartsOption/HeatMapCharts"
+import SankeyChart from "./ChartsOption/SankeyCharts"
+import RadarChart from "./ChartsOption/RadarChart"
+import RadialPolarChart from "./ChartsOption/RadialPolarCharts"
+import CalChart from "./ChartsOption/CalenderHeatMap"
+import MultScatter from "./ChartsOption/MultScattersChart"
+import StackedChart from "./ChartsOption/StackedChart"
+import Single from "./ChartsOption/SingleValGauge"
+import ClubbedHis from "./ChartsOption/ClubbedHis"
+import Segment from "./ChartsOption/SegmentCharts"
+
+
+// import ReactEcharts from "echarts-for-react"; 
+
 
 const EditActionChartConfig = () => {
     const buildActionContext = React.useContext(BuildActionContext)
@@ -86,7 +105,46 @@ const EditActionChartConfig = () => {
                 </Grid>
                 <Divider orientation="vertical" flexItem sx={{ mr: "-1px" }} />
                 <Grid item xs={7}>
-                    
+                    {buildActionContext.charts?.map?.((chartConfig, index) => {
+                        if(selectedChart===index){
+                            switch(chartConfig.kind){
+                                case 'line':
+                                    return(<LineChart/>);
+                                case 'bar':
+                                    return(<BarChart/>);    
+                                case 'pie':
+                                    return(<PieChart/>);    
+                                case 'scatter':
+                                    return(<ScatterChart/>);
+                                case 'single_value_gauge':
+                                    return(<GaugeChart/>);        
+                                case 'heat_map_dataframe':
+                                    return(<HeatMapChart/>);   
+                                case 'sankey_chart':
+                                    return(<SankeyChart/>);
+                                case 'radar_chart':
+                                    return(<RadarChart/>); 
+                                case 'radial_polar_chart':
+                                    return(<RadialPolarChart/>); 
+                                case 'time_series':
+                                    return(<CalChart/>);           
+                                case 'multiple_series_scatter':
+                                    return(<MultScatter/>);  
+                                case 'stacked_histogram':
+                                    return(<StackedChart/>)   
+                                case 'single_value':
+                                    return(<Single/>)       
+                                case 'clubbed_histogram':
+                                    return(<ClubbedHis/>) 
+                                case 'segment':
+                                    return(<Segment/>);               
+                            }
+                            
+
+
+                            
+                        }
+                    })}
                 </Grid>
             </Grid>
 
