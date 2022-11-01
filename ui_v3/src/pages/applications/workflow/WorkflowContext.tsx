@@ -723,7 +723,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         })
                     })
                 }
-
                 return reducer(newState, {type: 'VALIDATE', payload: newState})
             }
             const newState = {
@@ -735,11 +734,13 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                         Parameters: actionDef.Parameters.map(parameter => parameter.ActionParameterDefinitionId !== action.payload.parameterDefinitionId ? parameter : {
                             ...parameter,
                             userInputRequired: action.payload.userInput,
-                            SourceExecutionId: action.payload.userInput === "No" ? undefined : parameter.SourceExecutionId
+                            SourceExecutionId: action.payload.userInput === "Yes" ? undefined : parameter.SourceExecutionId,
+                            GlobalParameterId: action.payload.userInput === "No" ? undefined : parameter.GlobalParameterId
                         })
                     })
                 })
             }
+            console.log(newState)
             return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
 
@@ -1148,6 +1149,7 @@ function extractErrorMessages(state: WorkflowContextType) {
         stage.Actions.forEach((action, actionIndex) => {
             action?.Parameters?.forEach((parameter, index) => {
                 if(parameter.userInputRequired === "No") {
+                    console.log(parameter)
                     if(parameter.ParameterValue === undefined && parameter.SourceExecutionId === undefined) {
                         const errorMessage = `${parameter.ParameterName} in Action ${action.DisplayName} of Stage ${stage.Name} does not have default value`
                         errorMessages.push(

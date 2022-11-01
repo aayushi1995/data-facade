@@ -16,6 +16,7 @@ import { WrapInDialog } from '../../../../../pages/table_browser/components/AllT
 import EditActionForm from '../../../../../pages/build_action/components/BuildActionForm';
 import { useQueryClient } from 'react-query';
 import labels from '../../../../../labels/labels';
+import { BuildActionContextProvider } from '../../../../../pages/build_action/context/BuildActionContext';
 
 export interface ViewSelectedActionProps {
     actionDefinitionId: string
@@ -109,8 +110,10 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         }
         return (
         <Box>
-            <WrapInDialog showChild={false} dialogProps={{open: editActionDialog, label: "Edit Action", handleClose: handleEditActionDialogClose}}>                
-                <EditActionForm actionDefinitionId={props.actionDefinitionId}/>
+            <WrapInDialog showChild={false} dialogProps={{open: editActionDialog, label: "Edit Action", handleClose: handleEditActionDialogClose}}>
+                <BuildActionContextProvider>                
+                    <EditActionForm actionDefinitionId={props.actionDefinitionId}/>
+                </BuildActionContextProvider>
             </WrapInDialog>
             <Dialog open={guideEnabled} fullWidth maxWidth="xl" >
                 <DialogTitle sx={{display: 'flex', justifyContent: 'center',backgroundColor: "ActionConfigDialogBgColor.main", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>

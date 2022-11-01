@@ -13,7 +13,8 @@ const defaultBuildActionContext: () => BuildApplicationContextState = () => ({
     Application: {
         Id: uuidv4(),
         Description: "Description",
-        UniqueName: "Demo"
+        UniqueName: "Demo",
+        CreatedOn: Date.now()
     },
     Tags: [],
     isCreating: false

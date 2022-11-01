@@ -423,6 +423,7 @@ const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
                     getOptionLabel={(option: AutoCompleteOption) => option.type==="UpstreamAction" ? formLabel(option.value) : (option.value?.UniqueName || "NA")}
                     groupBy={(option: AutoCompleteOption) => option.type}
                     value={selectedOption}
+                    key={props.parameterId}
                     filterSelectedOptions
                     fullWidth
                     selectOnFocus
