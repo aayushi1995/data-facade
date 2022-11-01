@@ -6,7 +6,7 @@ import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, T
 import { safelyParseJSON } from "../../../../execute_action/util"
 
 export type DefaultValueInputProps = {
-    actionParameterDefinition: ActionParameterDefinition,
+    actionParameterDefinition?: ActionParameterDefinition,
     actionParameterDefinitionAdditionalConfig?: ActionParameterAdditionalConfig
     onDefaultValueChange: (newDefaultValue: string) => void
 }
@@ -22,7 +22,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
     const getParameterInputProps: () => ParameterInputProps = () => {
         const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
    
-        if(actionParameterDefinition.Tag === ActionParameterDefinitionTag.DATA || actionParameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
+        if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.DATA || actionParameterDefinition?.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             return {
                 parameterType: "TABLE",
                 inputProps: {
@@ -36,7 +36,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                                 })
                 }
             } as TableParameterInput
-        } else if(actionParameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
+        } else if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
             const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
             const tableFilters = addtionalConfig?.availableTablesFilter || []
             const uniqueTableFilters = getUniqueFilters(tableFilters)
@@ -44,7 +44,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
             return {
                 parameterType: "COLUMN",
                 inputProps: {
-                    parameterName: actionParameterDefinition.ParameterName,
+                    parameterName: actionParameterDefinition?.ParameterName,
                     selectedColumnFilter: {Id: defaultActionParameterInstance?.ColumnId, UniqueName: defaultActionParameterInstance?.ParameterValue},
                     filters: {
                         tableFilters: uniqueTableFilters,
@@ -57,60 +57,60 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                             })
                 }
             } as ColumnParameterInput 
-        } else if(actionParameterDefinition.Datatype === ActionParameterDefinitionDatatype.STRING) {
+        } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.STRING) {
             return {
                 parameterType: "STRING",
                 inputProps: {
-                    parameterName: `Default Value for ${actionParameterDefinition.ParameterName}`,
+                    parameterName: `Default Value for ${actionParameterDefinition?.ParameterName}`,
                     value: defaultActionParameterInstance?.ParameterValue,
                     onChange: (newValue: string) => updateDefaultActionParameterInstance({
                                 ParameterValue: newValue
                             })
                 }
             } as StringParameterInput
-        } else if(actionParameterDefinition.Datatype === ActionParameterDefinitionDatatype.INT) {
+        } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.INT) {
             return {
                 parameterType: "INT",
                 inputProps: {
-                    parameterName: `Default Value for ${actionParameterDefinition.ParameterName}`,
+                    parameterName: `Default Value for ${actionParameterDefinition?.ParameterName}`,
                     value: defaultActionParameterInstance?.ParameterValue,
                     onChange: (newValue: string) => updateDefaultActionParameterInstance({
                                 ParameterValue: newValue
                             })
                 }
             } as IntParameterInput
-        } else if(actionParameterDefinition.Datatype === ActionParameterDefinitionDatatype.BOOLEAN) {
+        } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.BOOLEAN) {
             return {
                 parameterType: "BOOLEAN",
                 inputProps: {
-                    parameterName: `Default Value for ${actionParameterDefinition.ParameterName}`,
+                    parameterName: `Default Value for ${actionParameterDefinition?.ParameterName}`,
                     value: defaultActionParameterInstance?.ParameterValue,
                     onChange: (newValue: string) => updateDefaultActionParameterInstance({
                                 ParameterValue: newValue
                             })
                 }
             } as BooleanParameterInput
-        } else if(actionParameterDefinition.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
+        } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.FLOAT) {
             return {
                 parameterType: "FLOAT",
                 inputProps: {
-                    parameterName: `Default Value for ${actionParameterDefinition.ParameterName}`,
+                    parameterName: `Default Value for ${actionParameterDefinition?.ParameterName}`,
                     value: defaultActionParameterInstance?.ParameterValue,
                     onChange: (newValue: string) => updateDefaultActionParameterInstance({
                                 ParameterValue: newValue
                             })
                 }
             } as FloatParameterInput
-        } else if(actionParameterDefinition.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
+        } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
             const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
             const tableFilters = addtionalConfig?.availableTablesFilter || []
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             
             return {
                 parameterType: "COLUMN_LIST",
-                parameterId: actionParameterDefinition.Id,
+                parameterId: actionParameterDefinition?.Id,
                 inputProps: {
-                    parameterName: actionParameterDefinition.DisplayName || actionParameterDefinition.ParameterName || "parameterName",
+                    parameterName: actionParameterDefinition?.DisplayName || actionParameterDefinition?.ParameterName || "parameterName",
                     onChange: (newColumns?: ColumnProperties[]) => {
                         const names = newColumns?.map(column => column.UniqueName) || []
                         console.log(names)

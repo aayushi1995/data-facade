@@ -148,6 +148,21 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         setErrorDialogState(false)
     }
 
+    const handleAddingActionViewBack = () => {
+        if(!isError) {
+            useWorkflowUpdate.mutate({
+                workflowId: workflowId
+            },{
+                onSuccess: () => {
+                    setWorkflowContext({type: 'CHANGE_CURRENT_SELECTED_STAGE', payload: {stageId: undefined}})
+                    setWorkflowContext({type: 'SET_SELECTED_ACTION', payload: {actionId: "", actionIndex: -1}})
+                }
+            })
+        } else {
+            setErrorDialogState(true)
+        }
+    }
+
     if(isWorkflowFetched && !useWorkflowUpdate.isLoading) {
         return (
             <Box sx={{display: 'flex', gap: 1, flexDirection: 'row', width: '100%', height: '100%', overflowY: 'clip'}}>
@@ -173,7 +188,9 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                     </Box>
                     <Box sx={{flex: 4, height: '100%', width: '100%'}}>
                         {workflowContext.currentSelectedStage ? (
-                            <AddingActionView/>
+                            <AddingActionView
+                                onBack={handleAddingActionViewBack}
+                            />
                         ) : (
                             <WorkflowTabs
                                 onDuplicate={handleDuplicate}

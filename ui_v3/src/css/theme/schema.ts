@@ -16,7 +16,8 @@ declare module '@mui/styles' {
       tableStatValue: React.CSSProperties,
       higlLevelInfoHeader: React.CSSProperties,
       tableBrowserContent: React.CSSProperties,
-      tableBrowserHealthCell: React.CSSProperties
+      tableBrowserHealthCell: React.CSSProperties,
+      parameterGrid: React.CSSProperties
     }
   
     // allow configuration using `createTheme`
@@ -36,7 +37,8 @@ declare module '@mui/styles' {
       tableStatValue?: React.CSSProperties,
       higlLevelInfoHeader: React.CSSProperties,
       tableBrowserContent: React.CSSProperties,
-      tableBrowserHealthCell: React.CSSProperties
+      tableBrowserHealthCell: React.CSSProperties,
+      parameterGrid: React.CSSProperties
     }
 }
 declare module '@mui/material/Typography' {
@@ -56,7 +58,8 @@ declare module '@mui/material/Typography' {
         tableStatValue: true,
         higlLevelInfoHeader: true,
         tableBrowserContent: true,
-        tableBrowserHealthCell: true
+        tableBrowserHealthCell: true,
+        parameterGrid: true
     }
 }
 

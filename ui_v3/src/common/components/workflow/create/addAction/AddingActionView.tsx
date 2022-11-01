@@ -1,12 +1,12 @@
-import { Box, Card, IconButton, Typography, Tooltip } from "@mui/material"
+import { Box, IconButton, Tooltip, Typography } from "@mui/material"
 import React from "react"
 import WorkflowStagesWrapper from "../../../../../application/common/workflowStages/WorkflowStagesWrapper"
+import slideNext from '../../../../../images/new_frame.png'
 import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 import NoData from "../../../NoData"
 import { AddActionToWorkflowStage } from "./AddActionToWorkflowStage"
-import slideNext from '../../../../../images/new_frame.png'
 
-export const AddingActionView = () => {
+export const AddingActionView = (props: { onBack: Function }) => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
 
@@ -24,10 +24,7 @@ export const AddingActionView = () => {
         }
     ) : ( undefined )
 
-    const handleGoBack = () => {
-        setWorkflowContext({type: 'CHANGE_CURRENT_SELECTED_STAGE', payload: {stageId: undefined}})
-        setWorkflowContext({type: 'SET_SELECTED_ACTION', payload: {actionId: "", actionIndex: -1}})
-    }
+    const handleGoBack = () => props.onBack()
 
     if(selectedStage) {
         return (

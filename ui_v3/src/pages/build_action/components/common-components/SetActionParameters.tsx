@@ -20,9 +20,9 @@ const SetActionParameters = () => {
     })
 
     const viewActionParameterProps: ViewActionParametersProps = {
-        template: activeTemplateWithParams?.template,
+        templateLanguage: activeTemplateWithParams?.template?.Language,
         paramsWithTag: activeTemplateWithParams?.parameterWithTags,
-        onSelectParameterForEdit: (selectedParam: {parameter: ActionParameterDefinition, tags: Tag[]}) => setActiveParameter(selectedParam),
+        paramsAdditionalConfig: activeTemplateWithParams?.parameterAdditionalConfig,
         onDeleteParameters: (deletedParams: ActionParameterDefinition[]) => setBuildActionContext({
             type: "RemoveActionParameterDefinitions",
             payload: {
@@ -33,6 +33,35 @@ const SetActionParameters = () => {
             type: "ResetActionParameterDefinitionsAction",
             payload: {
                 templateId: activeTemplateWithParams?.template?.Id
+            }
+        }),
+        onParameterEdit: (newParameter: ActionParameterDefinition) => setBuildActionContext({
+            type: "SetParameterDetails",
+            payload: {
+                newParamConfig: newParameter
+            }
+        }),
+        onTagsChange: (parameterId?: string, newTags?: Tag[]) => {
+            if(!!parameterId && !!newTags){
+                setBuildActionContext({
+                    type: "SetActionParameterDefintionTags",
+                    payload: {
+                        parameterId: parameterId!,
+                        newTags: newTags
+                    }
+                })
+            }
+        },
+        onParameterTypeEdit: (newParameter: ActionParameterDefinition) => setBuildActionContext({
+            type: "SetParameterType",
+            payload: {
+                newParamConfig: newParameter
+            }
+        }),
+        onParameterDuplicate: (parametersToDuplicate: ActionParameterDefinition[]) => setBuildActionContext({
+            type: "DuplicateActionParameterDefinitions",
+            payload: {
+                actionParameterDefinitions: parametersToDuplicate
             }
         }),
         onCreateNewParameter: addParam

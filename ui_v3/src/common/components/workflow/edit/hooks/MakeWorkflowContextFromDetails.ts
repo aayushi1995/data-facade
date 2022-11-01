@@ -81,7 +81,7 @@ const MakeWorkflowContextFromDetail = (props: MakeWorkflowContextPropsFromDetail
     }
     if(workflowContextObject.stages.length === 0) {
         workflowContextObject.stages.push({
-            Name: "Enter Stage Name here",
+            Name: "Stage 1",
             Id: uuidv4(),
             Actions: []
         })

@@ -94,7 +94,7 @@ export const defaultWorkflowContext: WorkflowContextType = {
     stages: [
         {
             Id: uuidv4(),
-            Name: "Enter Stage Name Here",
+            Name: "Stage 1",
             Actions: []
         }
     ],
@@ -910,7 +910,6 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
 
         case 'VALIDATE': {
             const errorMessages = extractErrorMessages(action.payload)
-            console.log(errorMessages)
             const newState: WorkflowContextType = {
                 ...state,
                 stages: state.stages.map(stage => {

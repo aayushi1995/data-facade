@@ -258,6 +258,13 @@ type RemoveActionParameterDefinitionsAction = {
     }
 }
 
+type DuplicateActionParameterDefinitionsAction = {
+    type: "DuplicateActionParameterDefinitions",
+    payload: {
+        actionParameterDefinitions: ActionParameterDefinition[]
+    }
+}
+
 type SetActionParameterDefintionTagsAction = {
     type: "SetActionParameterDefintionTags",
     payload: {
@@ -382,6 +389,7 @@ SetParameterTypeAction |
 SetActionDefinitionAction |
 AddActionParameterDefinitionAction |
 RemoveActionParameterDefinitionsAction |
+DuplicateActionParameterDefinitionsAction |
 ResetActionParameterDefinitions |
 SetActionParameterDefintionTagsAction |
 RefreshIdsAction |
@@ -603,6 +611,33 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => ({...at, parameterWithTags: at.parameterWithTags.filter(apwt => !toRemoveIds.includes(apwt.parameter.Id))}))
             }
             return reducer(oldState, {type: "FormAdditionalConfig"})
+        }
+
+        case "DuplicateActionParameterDefinitions": {
+            const newState = {
+                    ...state,
+                    actionTemplateWithParams: state?.actionTemplateWithParams?.map?.(actionTemplateWithParam => {
+                        const duplicateParams = actionTemplateWithParam?.parameterWithTags
+                            ?.filter(paramWithTag => action.payload?.actionParameterDefinitions?.find(paramDef => paramDef?.Id===paramWithTag?.parameter?.Id))
+                            ?.map(paramWithTag => {
+                                return {
+                                    ...paramWithTag,
+                                    parameter: {
+                                        ...paramWithTag?.parameter,
+                                        Id: uuidv4(),
+                                        ParameterName: (paramWithTag?.parameter?.ParameterName || "") + " Copy",
+                                        DisplayName: (paramWithTag?.parameter?.DisplayName || "") + " Copy"
+                                    }
+                                }
+                            })
+                        return {
+                            ...actionTemplateWithParam,
+                            parameterWithTags: [...actionTemplateWithParam?.parameterWithTags, ...duplicateParams]
+                        }
+                    })
+                }
+
+            return reducer(newState, {type: "FormAdditionalConfig"})
         }
 
         case "ResetActionParameterDefinitionsAction": {

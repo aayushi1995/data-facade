@@ -309,7 +309,6 @@ const ColumnInput = (props: ColumnParameterInput) => {
     const getColumnSelectionInfo: (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => { AvailableColumns: ColumnProperties[], SelectedColumn?: ColumnProperties} = (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => {
         const columnById = availableColumns?.find(column => column?.Id === selectedColumnFilter?.Id)
         const columnByName = availableColumns?.find(column => column?.UniqueName === selectedColumnFilter?.UniqueName)
-        console.log(selectedColumnFilter)
         if(columnById !== undefined) {
             return {
                 AvailableColumns: availableColumns || [], 
@@ -336,7 +335,6 @@ const ColumnInput = (props: ColumnParameterInput) => {
     }
 
     const { AvailableColumns, SelectedColumn } = getColumnSelectionInfo(availableColumnsState, selectedColumnFilter)
-    console.log(AvailableColumns, SelectedColumn)
 
     React.useEffect(() => {
         if(SelectedColumn!==undefined && SelectedColumn !== selectedColumnFilter) {
@@ -417,7 +415,7 @@ const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
         error={error}
         data={tables}
         >
-            <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+            <Box sx={{display: 'flex', gap: 1, alignItems: 'center', width: "100%"}}>
                 <Autocomplete
                     options={autoCompleteOptions}
                     getOptionLabel={(option: AutoCompleteOption) => option.type==="UpstreamAction" ? formLabel(option.value) : (option.value?.UniqueName || "NA")}

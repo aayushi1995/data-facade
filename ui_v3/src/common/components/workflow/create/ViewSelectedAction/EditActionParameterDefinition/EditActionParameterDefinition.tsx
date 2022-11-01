@@ -8,7 +8,7 @@ import ActionParameterDefinitionDatatype from '../../../../../../enums/ActionPar
 import ActionParameterDefinitionTag from '../../../../../../enums/ActionParameterDefinitionTag';
 import { ActionParameterDefinition, ActionTemplate, ColumnProperties, TableProperties, Tag } from '../../../../../../generated/entities/Entities';
 import labels from '../../../../../../labels/labels';
-import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowActionParameters, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
+import { findIfParameterPresent, SetWorkflowContext, UpstreamAction, WorkflowContext } from '../../../../../../pages/applications/workflow/WorkflowContext';
 import { ActionParameterDefinitionConfig } from '../../../../../../pages/build_action/components/common-components/EditActionParameter';
 import { safelyParseJSON } from '../../../../../../pages/execute_action/util';
 import { getUniqueFilters } from '../../../../action/ParameterDefinitionsConfigPlane';
@@ -24,10 +24,17 @@ export interface EditActionParameterDefinitionProps {
     actionIndex: number
 }
 
-const DefaultValueSelector = (props: {parametersInstances: WorkflowActionParameters[] , parameter: ActionParameterDefinition, actionIndex: number, stageId: string}) => {
+export type DefaultValueSelectorProps = {
+    parameter: ActionParameterDefinition, 
+    actionIndex: number, 
+    stageId: string
+}
+
+export const DefaultValueSelector = (props: DefaultValueSelectorProps) => {
     const {parameter} = props
     const workflowState = React.useContext(WorkflowContext)
     const setWorkflowState = React.useContext(SetWorkflowContext)
+    const parametersInstances = workflowState?.stages.find(stage => stage?.Id===props?.stageId)?.Actions?.[props?.actionIndex]?.Parameters || []
 
     const getCurrentParameterConfig = () => workflowState.stages.find(stage => stage.Id===props.stageId)?.Actions[props.actionIndex]?.Parameters.find(parameter => parameter.ActionParameterDefinitionId===props.parameter.Id)
 
@@ -111,13 +118,13 @@ const DefaultValueSelector = (props: {parametersInstances: WorkflowActionParamet
             } as UpstreamActionParameterInput
         } else if(parameter.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
             const addtionalConfig = safelyParseJSON(parameter?.Config) as (undefined | ActionParameterDefinitionConfig)
-            const parentTableId = props?.parametersInstances?.find(paramInstance => paramInstance?.ActionParameterDefinitionId === addtionalConfig?.ParentParameterDefinitionId)?.TableId
+            const parentTableId = parametersInstances?.find(paramInstance => paramInstance?.ActionParameterDefinitionId === addtionalConfig?.ParentParameterDefinitionId)?.TableId
             const tableFilters = parentTableId!==undefined ? 
                 [{Id: parentTableId} as TableProperties]
                 :
-                props?.parametersInstances?.filter(paramInstance => paramInstance?.GlobalParameterId===undefined && paramInstance?.TableId!==undefined)?.map(paramInstance => ({ Id: paramInstance?.TableId } as TableProperties))
+                parametersInstances?.filter(paramInstance => paramInstance?.GlobalParameterId===undefined && paramInstance?.TableId!==undefined)?.map(paramInstance => ({ Id: paramInstance?.TableId } as TableProperties))
             const uniqueTableFilters = getUniqueFilters(tableFilters)
-            const selectedColumnId = props?.parametersInstances?.find(paramInstance => paramInstance?.ActionParameterDefinitionId === parameter?.Id)?.ColumnId
+            const selectedColumnId = parametersInstances?.find(paramInstance => paramInstance?.ActionParameterDefinitionId === parameter?.Id)?.ColumnId
 
             return {
                 parameterType: "COLUMN",
@@ -298,16 +305,25 @@ const DefaultValueSelector = (props: {parametersInstances: WorkflowActionParamet
     return getParameterInputField(formParameterInputProps())
 }
 
-const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, actionIndex: number, stageId: string}) => {
+const filter = createFilterOptions<ActionParameterDefinition>()
+
+export type UseGlobalParameterHandlerParams = {
+    parameter: ActionParameterDefinition, 
+    actionIndex: number, 
+    stageId: string
+}
+
+export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParams) => {
+    const { parameter, actionIndex, stageId } = params
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
 
-    const currentParameterInContext = workflowContext.stages.filter(stage => stage.Id === props.stageId)[0].Actions.filter((action, index) => index === props.actionIndex)[0].Parameters.filter(parameter => parameter.ActionParameterDefinitionId === props.parameter.Id)[0]
+    const currentParameterInContext = workflowContext.stages.filter(stage => stage.Id === stageId)[0].Actions.filter((action, index) => index === actionIndex)[0].Parameters.filter(param => param.ActionParameterDefinitionId === parameter?.Id)[0]
     const currentGlobalParameterIfPresent = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Id === currentParameterInContext?.GlobalParameterId )
     const currentGlobalParameter = currentGlobalParameterIfPresent.length > 0 ? currentGlobalParameterIfPresent[0] : {}
 
-    const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Tag === props.parameter.Tag && wfParameter.Datatype === props.parameter.Datatype)
-    const filter = createFilterOptions<ActionParameterDefinition>()
+    const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Tag === parameter.Tag && wfParameter.Datatype === parameter.Datatype)
+    
 
     const addAndMapGlobalParameter = (parameter: ActionParameterDefinition) => {
         const paramterName = parameter.ParameterName?.substring(25)
@@ -316,9 +332,9 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
             ...parameter,
             Id: id,
             ParameterName: paramterName,
-            Datatype: props.parameter.Datatype,
-            Tag: props.parameter.Tag,
-            OptionSetValues: props.parameter.OptionSetValues
+            Datatype: parameter.Datatype,
+            Tag: parameter.Tag,
+            OptionSetValues: parameter.OptionSetValues
         }
         setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: newGlobalParamter}})
         mapToGlobalParameter(id)
@@ -327,17 +343,22 @@ const GlobalParameterHandler = (props: {parameter: ActionParameterDefinition, ac
     const mapToGlobalParameter = (workflowParameterId: string) => {
         setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER', 
                             payload: {
-                                stageId: props.stageId, 
+                                stageId: stageId, 
                                 globalParameterId: workflowParameterId, 
-                                parameterDefinitionId: props.parameter.Id || "ID", 
-                                actionIndex: props.actionIndex, 
-                                parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "parameterName"
+                                parameterDefinitionId: parameter.Id || "ID", 
+                                actionIndex: actionIndex, 
+                                parameterName: parameter.DisplayName || parameter.ParameterName || "parameterName"
                             }
                         })
     }
 
+    return {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter}
+}
+
+export const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
+    const {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter} = useGlobalParameterHandler(props)
     return (
-        <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+        <Box sx={{display: 'flex', gap: 1, alignItems: 'center', width: "100%" }}>
             <Autocomplete
                 options={availableParameters}
                 value={currentGlobalParameter}
@@ -411,13 +432,13 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
     const userInputRequired = currentParameter?.userInputRequired || "No"
     const handleParameterNameChange = () => {}
     const handleParameterTypeChange = () => {}
-    const handleUserInputRequiredChange = (e: SelectChangeEvent<string>) => {
+    const handleUserInputRequiredChange = (newValue?: string) => {
         setWorkflowContext({type: 'CHANGE_USER_INPUT_REQUIRED', payload: {
             stageId: props.stageId,
             parameterDefinitionId: props.parameter?.Id || "NA",
             actionIndex: props.actionIndex,
             actionDefinitionId: props.template.DefinitionId || "NA",
-            userInput: e.target.value === "Yes" ? "Yes" : "No"
+            userInput: newValue === "Yes" ? "Yes" : "No"
         }})    
     }
     const parameterInstancesForGivenAction = workflowContext?.stages.find(stage => stage?.Id===props?.stageId)?.Actions?.[props?.actionIndex]?.Parameters || []
@@ -427,51 +448,11 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
             <Grid container spacing={3}>
                 <Grid item xs={12} md={4} lg={2}>
                     <Box sx={{width: '100%', display: 'flex', gap: 1, alignItems: 'center'}}>
-                        <FormControl sx={{width: '100%'}}>
-                            <InputLabel htmlFor="component-outlined">User Input Required</InputLabel>
-                            <Select
-                                variant="outlined"
-                                value={userInputRequired}
-                                fullWidth
-                                onChange={handleUserInputRequiredChange}
-                                label="User Input Required"
-                                disabled={props.parameter.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST}
-                            >
-                                <MenuItem value={"Yes"}>Yes</MenuItem>
-                                <MenuItem value={"No"}>No</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
-                            <React.Fragment>
-                                <Box p={1} sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '300px'}}>
-                                    <Typography sx={{
-                                        fontStyle: "normal",
-                                        fontWeight: 700,
-                                        fontSize: "16px",
-                                        lineHeight: "175%",
-                                        letterSpacing: "0.15px",
-                                        color: "ActionDefinationHeroTextColor1.main"
-                                    }}>
-                                        User Input Required
-                                    </Typography>
-                                    <Typography sx={{
-                                        fontFamily: "'SF Pro Text'",
-                                        fontStyle: "normal",
-                                        fontWeight: 400,
-                                        fontSize: "14px",
-                                        lineHeight: "143%",
-                                        letterSpacing: "0.15px",
-                                        color: "rgba(66, 82, 110, 0.86)"
-                                    }}>
-                                        User input for the parameter can be yes or no. If ‘Yes’ is selected, then the user needs to create a display name (label) for the input that the user will enter when running the flow. If ‘No’ is selected, then the user can choose any of the upstream actions which returns a ‘table’ as output or give a default value.
-                                    </Typography>
-                                </Box>
-                            </React.Fragment>
-                        }>
-                            <Icon sx={{display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'center'}}>
-                                <img src={InfoIcon} />
-                            </Icon>
-                        </HtmlTooltip>
+                        <UserInputRequired
+                            userInputRequiredValue={userInputRequired}
+                            handleUserInputRequiredChange={handleUserInputRequiredChange}
+                            disabled={props.parameter.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST}
+                        />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={8} lg={6}>
@@ -505,7 +486,7 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
                 </Grid>
                 {userInputRequired === "No" ? (
                     <Grid item xs={12} md={4} lg={4}>
-                        <DefaultValueSelector parametersInstances={parameterInstancesForGivenAction} parameter={props.parameter} actionIndex={props.actionIndex} stageId={props.stageId}/>
+                        <DefaultValueSelector parameter={props.parameter} actionIndex={props.actionIndex} stageId={props.stageId}/>
                     </Grid>
                 ) : (
                     <Grid item xs={12} md={4} lg={4}>
@@ -530,6 +511,64 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
     }
 }
 
+export type UserInputRequiredProps = {
+    userInputRequiredValue?: string,
+    disabled?: boolean,
+    handleUserInputRequiredChange?: (newValue?: string) => void
+}
+
+export const UserInputRequired = (props: UserInputRequiredProps) => {
+    const { userInputRequiredValue, disabled, handleUserInputRequiredChange } = props
+    return (
+        <>
+            <FormControl sx={{width: '100%'}}>
+                <InputLabel htmlFor="component-outlined">User Input Required</InputLabel>
+                <Select
+                    variant="outlined"
+                    value={userInputRequiredValue}
+                    fullWidth
+                    onChange={(event?: SelectChangeEvent<string>) => handleUserInputRequiredChange?.(event?.target?.value)}
+                    label="User Input Required"
+                    disabled={disabled}
+                >
+                    <MenuItem value={"Yes"}>Yes</MenuItem>
+                    <MenuItem value={"No"}>No</MenuItem>
+                </Select>
+            </FormControl>
+            <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
+                <React.Fragment>
+                    <Box p={1} sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '300px'}}>
+                        <Typography sx={{
+                            fontStyle: "normal",
+                            fontWeight: 700,
+                            fontSize: "16px",
+                            lineHeight: "175%",
+                            letterSpacing: "0.15px",
+                            color: "ActionDefinationHeroTextColor1.main"
+                        }}>
+                            User Input Required
+                        </Typography>
+                        <Typography sx={{
+                            fontFamily: "'SF Pro Text'",
+                            fontStyle: "normal",
+                            fontWeight: 400,
+                            fontSize: "14px",
+                            lineHeight: "143%",
+                            letterSpacing: "0.15px",
+                            color: "rgba(66, 82, 110, 0.86)"
+                        }}>
+                            User input for the parameter can be yes or no. If ‘Yes’ is selected, then the user needs to create a display name (label) for the input that the user will enter when running the flow. If ‘No’ is selected, then the user can choose any of the upstream actions which returns a ‘table’ as output or give a default value.
+                        </Typography>
+                    </Box>
+                </React.Fragment>}
+            >
+                <Icon sx={{display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'center'}}>
+                    <img src={InfoIcon} />
+                </Icon>
+            </HtmlTooltip>
+        </>
+    )
+}
 
 const getTagFilterForParameter: (parameter?: ActionParameterDefinition) => Tag = (parameter?: ActionParameterDefinition) => {
     if(parameter?.Tag===ActionParameterDefinitionTag.TABLE_NAME || parameter?.Tag===ActionParameterDefinitionTag.DATA) {

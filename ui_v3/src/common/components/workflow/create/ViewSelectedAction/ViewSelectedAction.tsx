@@ -1,22 +1,21 @@
 
-import React from 'react'
-import EditIcon from "@mui/icons-material/Edit"
-import { Box, Card, Tooltip, FormControlLabel, FormGroup, Switch, Typography, useTheme, Dialog, DialogTitle, DialogContent, IconButton, Grid} from '@mui/material';
-import {Tabs, Tab} from "@mui/material"
-import CloseIcon from "../../../../../../src/images/close.svg"
-import { ActionParameterDefinition, ActionTemplate } from '../../../../../generated/entities/Entities';
-import ActionParameterDefinitionList from './ActionParameterDefinitionList/ActionParameterDefinitionList';
-import EditActionParameterDefinition from './EditActionParameterDefinition/EditActionParameterDefinition';
-import CodeEditor from '../../../CodeEditor';
-import useViewAction, { ActionDetail } from './hooks/UseViewAction';
+import EditIcon from "@mui/icons-material/Edit";
+import { Box, Card, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Grid, IconButton, Switch, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
+import React from 'react';
+import { useQueryClient } from 'react-query';
+import CloseIcon from "../../../../../../src/images/close.svg";
+import { ActionParameterDefinition } from '../../../../../generated/entities/Entities';
+import labels from '../../../../../labels/labels';
 import { SetWorkflowContext } from '../../../../../pages/applications/workflow/WorkflowContext';
+import EditActionForm from '../../../../../pages/build_action/components/BuildActionForm';
+import { BuildActionContextProvider } from '../../../../../pages/build_action/context/BuildActionContext';
+import { WrapInDialog } from '../../../../../pages/table_browser/components/AllTableView';
+import CodeEditor from '../../../CodeEditor';
 import { ConfigureParametersContextProvider } from '../../context/ConfigureParametersContext';
 import ConfigureActionParameters from '../addAction/ConfigureActionParameters';
-import { WrapInDialog } from '../../../../../pages/table_browser/components/AllTableView';
-import EditActionForm from '../../../../../pages/build_action/components/BuildActionForm';
-import { useQueryClient } from 'react-query';
-import labels from '../../../../../labels/labels';
-import { BuildActionContextProvider } from '../../../../../pages/build_action/context/BuildActionContext';
+import ActionParameterDefinitionEditList from "./ActionParameterDefinitionEditList";
+import useViewAction, { ActionDetail } from './hooks/UseViewAction';
+
 
 export interface ViewSelectedActionProps {
     actionDefinitionId: string
@@ -209,15 +208,11 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                     >
                         <Box sx={{display: "flex", flexDirection: "column", gap: 5}}>
                             <Box>
-                                <EditActionParameterDefinition 
-                                    parameter={selectedParameterForEdit}
-                                    template={selectedActionTemplateModel}
+                                <ActionParameterDefinitionEditList
+                                    templateWithParams={selectedActionTemplate}
                                     stageId={props.stageId}
                                     actionIndex={props.actionDefinitionIndex}
                                 />
-                            </Box>
-                            <Box>
-                                <ActionParameterDefinitionList templateWithParams={selectedActionTemplate} onParameterSelectForEdit={onParameterSelectForEdit} deleteParametersWithIds={deleteParametersWithIds}/>
                             </Box>
                         </Box>
                     </Card> 

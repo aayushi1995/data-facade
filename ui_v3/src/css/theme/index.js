@@ -1,4 +1,3 @@
-import { PaletteTwoTone } from '@mui/icons-material';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import merge from 'lodash/merge';
 import { THEMES } from '../../data_manager/constants';
@@ -311,6 +310,13 @@ const baseOptions = {
             lineHeight: "157%",
             letterSpacing: "0.1px",
             color: "rgba(66, 82, 110, 0.86)"
+        },
+        parameterGrid: {
+            fontFamily: "'Rubik'", 
+            fontStyle: "normal", 
+            fontWeight: 400, 
+            fontSize: "16px", 
+            lineHeight: "116.7%"
         }
     }
 };
