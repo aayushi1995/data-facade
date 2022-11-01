@@ -3,7 +3,11 @@ import ReactEcharts from "echarts-for-react";
 import * as echarts from 'echarts';
 
 type EChartsOption = echarts.EChartsOption;
-const MultScatterChart =()=>{
+const MultScatterChart =(props: {
+                            titleName: String;
+                            xTitle: String;
+                            yTitle: String;
+                          })=>{
     const dataAll = [
         [
           [10.0, 8.04],
@@ -87,7 +91,7 @@ const MultScatterChart =()=>{
     const mul = {
         
         title: {
-            text: "Anscombe's quartet",
+            text: props.titleName,
             left: 'center',
             top: 0
           },
@@ -101,16 +105,16 @@ const MultScatterChart =()=>{
             formatter: 'Group {a}: ({c})'
           },
           xAxis: [
-            { gridIndex: 0, min: 0, max: 20 },
-            { gridIndex: 1, min: 0, max: 20 },
-            { gridIndex: 2, min: 0, max: 20 },
-            { gridIndex: 3, min: 0, max: 20 }
+            { gridIndex: 0, min: 0, max: 20,name: props.xTitle },
+            { gridIndex: 1, min: 0, max: 20,name: props.xTitle },
+            { gridIndex: 2, min: 0, max: 20,name: props.xTitle },
+            { gridIndex: 3, min: 0, max: 20,name: props.xTitle }
           ],
           yAxis: [
-            { gridIndex: 0, min: 0, max: 15 },
-            { gridIndex: 1, min: 0, max: 15 },
-            { gridIndex: 2, min: 0, max: 15 },
-            { gridIndex: 3, min: 0, max: 15 }
+            { gridIndex: 0, min: 0, max: 15, name: props.yTitle },
+            { gridIndex: 1, min: 0, max: 15, name: props.yTitle },
+            { gridIndex: 2, min: 0, max: 15, name: props.yTitle },
+            { gridIndex: 3, min: 0, max: 15, name: props.yTitle }
           ],
           series: [
             {

@@ -1,11 +1,11 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const BarChart =()=>{
+const BarChart =(props: {titleName: String; xTitle: String; yTitle: String;})=>{
     
     const Bar = {
         title: {
             left: 'center',
-            text: 'Large Ara Chart'
+            text: props.titleName
           },
           tooltip: {
             trigger: 'axis',
@@ -15,10 +15,12 @@ const BarChart =()=>{
           },
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            name: props.xTitle
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            name: props.yTitle
           },
           series: [
             {

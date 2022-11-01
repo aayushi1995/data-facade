@@ -1,9 +1,17 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const StackedChart =()=>{
+const StackedChart =(props: {
+                      titleName: String;
+                      xTitle: String;
+                      yTitle: String;
+                    })=>{
 
     const st = {
-        
+      title: {
+        text: props.titleName,
+        left: 'right',
+        top: 'bottom'
+      },
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -20,12 +28,14 @@ const StackedChart =()=>{
           xAxis: [
             {
               type: 'category',
-              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              name: props.xTitle
             }
           ],
           yAxis: [
             {
-              type: 'value'
+              type: 'value',
+              name: props.yTitle
             }
           ],
           series: [

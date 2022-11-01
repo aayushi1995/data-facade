@@ -1,6 +1,6 @@
 exports.FDSEndpoint = (process.env.REACT_APP_FDS_ENDPOINT !== undefined) ?
     process.env.REACT_APP_FDS_ENDPOINT :
-     'https://stage.datafacade.io/fds/v1'
+     'https://datafacade.io/fds/v1'
     //  'http://localhost:9000/v1'
 
 

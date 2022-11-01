@@ -1,4 +1,5 @@
 import { Box, Grid, Typography, Divider, Card } from "@mui/material"
+import { borderRadius } from "@mui/system"
 import React from "react"
 import ActionDefinitionPresentationFormat from "../../../../enums/ActionDefinitionPresentationFormat"
 import ActionExecutionStatus from "../../../../enums/ActionExecutionStatus"
@@ -13,7 +14,7 @@ const ShowWorkflowExecutionOutput = () => {
     const workflowContext = React.useContext(WorkflowContext)
 
     return (
-        <Box sx={{display: 'flex', flexDirection: 'column', gap: 4}}>
+        <Box sx={{display: 'flex', flexDirection: 'column',mt:1}}>
             {workflowContext.stages.slice(0).reverse().map(stage => {
                 return stage.Actions.slice(0).reverse().map(actionExecution => {
                     if (actionExecution.PresentationFormat === undefined ||
@@ -22,11 +23,20 @@ const ShowWorkflowExecutionOutput = () => {
                         return (<Box></Box>)
                     }
                     return (
-                        <Box sx={{display: 'flex', gap: 2, flexDirection: 'column'}}>
-                            <Typography sx={{display: 'flex', justifyContent: 'center'}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                            <Typography sx={{display: 'flex', 
+                                            justifyContent: 'center',
+                                            fontSize:'20px',boxShadow: '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
+                                            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
+                                            backgroundBlendMode: 'soft-light, normal',
+                                            border: '2px solid rgba(255, 255, 255, 0.4)',
+                                            borderRadius:'8px',
+                                            py:2,
+                                            mx:2
+                                            }}>
                                 {actionExecution.DisplayName}
                             </Typography>
-                            <Divider/>
+
                             <SaveAndBuildChartContextProvider>
                                 <SaveAndBuildChartsFromExecution executionId={actionExecution.Id}/>
                             </SaveAndBuildChartContextProvider>

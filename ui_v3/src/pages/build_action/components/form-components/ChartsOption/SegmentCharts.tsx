@@ -1,9 +1,18 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const SegmentChart =()=>{
+const SegmentChart =(props: {
+                        titleName: String;
+                        xTitle: String;
+                        yTitle: String;
+                        segmentCol: String;
+                      })=>{
 
     const seg = {
-        
+        title: {
+          text: props.titleName,
+          left: 'center',
+          top:'bottom'
+        },
         tooltip: {
             trigger: 'item'
           },

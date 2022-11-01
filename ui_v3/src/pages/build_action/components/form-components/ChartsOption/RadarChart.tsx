@@ -1,12 +1,11 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const RadarChart =()=>{
+const RadarChart =(props:{dimensionColumn:String; axisColumn: String; titleName:String;})=>{
 
     const Radar = {
         
         title: {
-            text: 'Proportion of Browsers',
-            subtext: 'Fake Data',
+            text: props.titleName,
             top: 10,
             left: 10
           },

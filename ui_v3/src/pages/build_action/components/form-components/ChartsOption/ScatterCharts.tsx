@@ -1,6 +1,6 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const ScatterChart =()=>{
+const ScatterChart =(props:{titleName: String; xTitle: String; yTitle: String;})=>{
 
     const Scatter = {
         
@@ -39,9 +39,7 @@ const ScatterChart =()=>{
             }
           ],
           title: {
-            text: '1981 - 1998 gross domestic product GDP (trillion yuan)',
-            subtext: 'By ecStat.regression',
-            sublink: 'https://github.com/ecomfe/echarts-stat',
+            text: props.titleName,
             left: 'center'
           },
           tooltip: {
@@ -55,14 +53,16 @@ const ScatterChart =()=>{
               lineStyle: {
                 type: 'dashed'
               }
-            }
+            },
+            name: props.xTitle
           },
           yAxis: {
             splitLine: {
               lineStyle: {
                 type: 'dashed'
               }
-            }
+            },
+            name: props.yTitle
           },
           series: [
             {

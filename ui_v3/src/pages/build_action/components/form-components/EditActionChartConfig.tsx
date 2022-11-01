@@ -28,6 +28,9 @@ const EditActionChartConfig = () => {
     const setBuildActionContext = React.useContext(SetBuildActionContext)
     const [selectedChart, setSelectedChart] = React.useState<number | undefined>()
 
+    const selectedMyChart = selectedChart !== undefined ? buildActionContext?.charts?.[selectedChart] : undefined
+
+
     const onChartCellClick = (index: number) => {
         setSelectedChart(index)
     }
@@ -109,35 +112,35 @@ const EditActionChartConfig = () => {
                         if(selectedChart===index){
                             switch(chartConfig.kind){
                                 case 'line':
-                                    return(<LineChart/>);
+                                    return(<LineChart yTitle={selectedMyChart?.options?.y || "Y Axis Name"} xTitle={selectedMyChart?.options?.x || "X Axis Name"} titleName={selectedMyChart?.name || "Its a New chart"}/>);
                                 case 'bar':
-                                    return(<BarChart/>);    
+                                    return(<BarChart yTitle={selectedMyChart?.options?.y || "Y Axis Name"} xTitle={selectedMyChart?.options?.x || "X Axis Name"} titleName={selectedMyChart?.name || "Its a New chart"}/>);    
                                 case 'pie':
-                                    return(<PieChart/>);    
+                                    return(<PieChart vaLueColumn="valueColumn" legendColumn="legendColumn" titleName={selectedMyChart?.name || "Its a New chart"}/>);    
                                 case 'scatter':
-                                    return(<ScatterChart/>);
+                                    return(<ScatterChart yTitle={selectedMyChart?.options?.y || "Y Axis Name"} xTitle={selectedMyChart?.options?.x || "X Axis Name"} titleName={selectedMyChart?.name || "Its a New chart"}/>);
                                 case 'single_value_gauge':
-                                    return(<GaugeChart/>);        
+                                    return(<GaugeChart titleName={selectedMyChart?.name || "Its a New chart"}/>);        
                                 case 'heat_map_dataframe':
-                                    return(<HeatMapChart/>);   
+                                    return(<HeatMapChart yTitle={selectedMyChart?.options?.y || "Y Axis Name"} xTitle={selectedMyChart?.options?.x || "X Axis Name"} titleName={selectedMyChart?.name || "Its a New chart"}/>);   
                                 case 'sankey_chart':
-                                    return(<SankeyChart/>);
+                                    return(<SankeyChart titleName={selectedMyChart?.name || "Its a New chart"}/>);
                                 case 'radar_chart':
-                                    return(<RadarChart/>); 
+                                    return(<RadarChart dimensionColumn="valueColumn" axisColumn="legendColumn" titleName={selectedMyChart?.name || "Its a New chart"}/>); 
                                 case 'radial_polar_chart':
-                                    return(<RadialPolarChart/>); 
+                                    return(<RadialPolarChart segmentCol="Segment column" yTitle={selectedMyChart?.options?.y || "Y Axis Name"} xTitle={selectedMyChart?.options?.x || "X Axis Name"} titleName={selectedMyChart?.name || "Its a New chart"}/>); 
                                 case 'time_series':
-                                    return(<CalChart/>);           
+                                    return(<CalChart titleName={selectedMyChart?.name || "Its a New chart"}/>);           
                                 case 'multiple_series_scatter':
-                                    return(<MultScatter/>);  
+                                    return(<MultScatter yTitle={selectedMyChart?.options?.y || "Y"} xTitle={selectedMyChart?.options?.x || "X"} titleName={selectedMyChart?.name || "Its a New chart"} />);  
                                 case 'stacked_histogram':
-                                    return(<StackedChart/>)   
+                                    return(<StackedChart yTitle={selectedMyChart?.options?.y || "Y axis"} xTitle={selectedMyChart?.options?.x || "X axis"} titleName={selectedMyChart?.name || "Its a New chart"} />)   
                                 case 'single_value':
-                                    return(<Single/>)       
+                                    return(<Single titleName={selectedMyChart?.name || "Its a New chart"}/>)       
                                 case 'clubbed_histogram':
-                                    return(<ClubbedHis/>) 
+                                    return(<ClubbedHis yTitle={selectedMyChart?.options?.y || "Y Axis Name"} xTitle={selectedMyChart?.options?.x || "X Axis Name"} titleName={selectedMyChart?.name || "Its a New chart"}/>) 
                                 case 'segment':
-                                    return(<Segment/>);               
+                                    return(<Segment segmentCol="Segment column" yTitle={selectedMyChart?.options?.y || "Y Axis Name"} xTitle={selectedMyChart?.options?.x || "X Axis Name"} titleName={selectedMyChart?.name || "Its a New chart"}/>);               
                             }
                             
 

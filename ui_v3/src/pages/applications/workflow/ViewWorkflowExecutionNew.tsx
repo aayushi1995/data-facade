@@ -1,4 +1,4 @@
-import { Box, Tabs, Tab } from "@mui/material"
+import { Box, Tabs, Tab, Typography } from "@mui/material"
 import React from "react"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import { SetModuleContextState } from '../../../common/components/ModuleContext'
@@ -199,7 +199,7 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
                         <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
     
                             <ActionDescriptionCard description={workflowContext.Description} mode="READONLY"/>
-                            <Tabs value={tabState} onChange={(event, newValue) => setTabState(newValue)}>
+                            {/* <Tabs value={tabState} onChange={(event, newValue) => setTabState(newValue)}>
                                 <Tab value={0} label="FLow" sx={{
                                     fontFamily: "SF Pro Text",
                                     fontStyle: "normal",
@@ -222,33 +222,40 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
                                     textAlign: "center",
                                     opacity: 0.7
                                 }}/>
-                            </Tabs>
-                            <TabPanel index={0} value={tabState}>
-                                <ActionExecutionCard 
-                                    elapsedTime={getElapsedTime()} 
-                                    actionExecution={workflowActionExecutionData?.[0]?.WorkflowExecution || {}}  
-                                    arrowState={showParameters ? "DOWN": "UP"}
-                                    handleClickArrow={handleShowParameters}
-                                    terminalState={!!workflowContext.WorkflowExecutionCompletedOn} 
-                                    error={workflowActionExecutionData?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED}
-                                    isWorkflow={true}
-                                    handleShowResult={handleShowResults}
-                                    />
-                                {showParameters ? (
-                                    <WorkflowContextProvider>
-                                        <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>
-                                    </WorkflowContextProvider>
-                                ) : (<></>)}
-                                <WorkflowExecutionStages/>
-                            </TabPanel>
-                            <TabPanel index={1} value={tabState}>
-                                <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
-                                    <Box sx={{display: 'flex', flexDirection: 'flex-end', maxWidth: '10%'}}>
-                                        <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
+                            </Tabs> */}
+                                <Box sx={{display:'flex',flexDirection:'row'}}>
+                                    <Box sx={{display:'flex',flexDirection:'column',width:'50%',px:3}}>
+                                        <Typography sx={{px:2,m:2,fontSize:'23px',fontWeight:'600'}}>Flow</Typography>
+                                        <ActionExecutionCard 
+                                            elapsedTime={getElapsedTime()} 
+                                            actionExecution={workflowActionExecutionData?.[0]?.WorkflowExecution || {}}  
+                                            arrowState={showParameters ? "DOWN": "UP"}
+                                            handleClickArrow={handleShowParameters}
+                                            terminalState={!!workflowContext.WorkflowExecutionCompletedOn} 
+                                            error={workflowActionExecutionData?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED}
+                                            isWorkflow={true}
+                                            handleShowResult={handleShowResults}
+                                            />
+                                        {showParameters ? (
+                                            <WorkflowContextProvider>
+                                                <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>
+                                            </WorkflowContextProvider>
+                                        ) : (<></>)}
+                                        <WorkflowExecutionStages/>
                                     </Box>
-                                    <ShowWorkflowExecutionOutput/>
+
+                                    <Box  sx={{display: 'flex', flexDirection: 'column', gap: 1,width:'50%',px:3}}>
+                                        <Box sx={{display:'flex',flexDirection:'row',px:2,mt:2,fontSize:'23px',}}>
+                                            <Box sx={{fontWeight:'600'}}>
+                                                Result 
+                                            </Box>
+                                            <Box sx={{display: 'flex',height:'35px', width: '30%',ml:'auto'}}>
+                                                <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
+                                            </Box>
+                                        </Box>
+                                        <ShowWorkflowExecutionOutput/>
+                                    </Box>
                                 </Box>
-                            </TabPanel>
                             
                         </Box>
                     )

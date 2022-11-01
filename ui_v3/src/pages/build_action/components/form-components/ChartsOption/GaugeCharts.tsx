@@ -1,9 +1,12 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const GaugeChart =()=>{
+const GaugeChart =(props:{titleName: String;})=>{
 
     const Gauge = {
-        
+      title: {
+        text: props.titleName,
+        left: 'center'
+      },
           series: [
             {
               name: 'Pressure',

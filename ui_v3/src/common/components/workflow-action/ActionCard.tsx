@@ -10,7 +10,7 @@ import closeIcon from '../../../../src/images/delete_workflow_action.png'
 import selectGrid from '../../../../src/images/select_icon.png'
 import viewErrorIcon from '../../../../src/images/ShowErrorLogs.png'
 import viewResultIcon from '../../../../src/images/ViewResult.png'
-
+import ConfirmationDialog from "../../../../src/common/components/ConfirmationDialog" 
 
 export interface ActionCardProps {
     index: number
@@ -99,6 +99,17 @@ const ActionCard = (props: ActionCardProps) => {
         }
     } 
 
+
+    const [dialogOpen, setDialogOpen] = React.useState(false)
+    const handleDialogClose = () => setDialogOpen(false)
+    const handleDialogOpen = () => setDialogOpen(true)
+
+    const actionDeleteHandler = () => {
+        props.deleteButtonAction(props.actionId, props.index)
+        handleDialogClose();
+
+    }
+
     return (
         <HtmlTooltip title={
             (props.executionStaus === 'Completed' || props.executionStaus === 'Failed') ? (
@@ -114,6 +125,7 @@ const ActionCard = (props: ActionCardProps) => {
             color: 'ActionCardBgColor.main',
             width: '10px'
           }}}>
+            
             <Card sx={{
                 maxWidth: '100%',
                 overflowX: 'auto',
@@ -122,6 +134,16 @@ const ActionCard = (props: ActionCardProps) => {
                 border: border
                 }} onClick={handleClick}
             >
+                <ConfirmationDialog
+                    messageHeader={'Delete Action'}
+                    messageToDisplay={`Are you sure you want to delete the action?`}
+                    acceptString={'Delete'}
+                    declineString={'Cancel'}
+                    dialogOpen={dialogOpen}
+                    onDialogClose={handleDialogClose}
+                    onAccept={actionDeleteHandler}
+                    onDecline={handleDialogClose}
+                />
                 <Box sx={{
                     backgroundColor: background, 
                     display: "flex", 
@@ -168,9 +190,7 @@ const ActionCard = (props: ActionCardProps) => {
                     <Box>
                         <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                             {!!!props.executionStaus &&
-                                <IconButton onClick={(e: any) => {
-                                    e.stopPropagation?.()
-                                    props.deleteButtonAction(props.actionId, props.index)}}>
+                                <IconButton onClick={handleDialogOpen}>
                                     <Icon>
                                         <img src={closeIcon} alt='remove'/>
                                     </Icon>

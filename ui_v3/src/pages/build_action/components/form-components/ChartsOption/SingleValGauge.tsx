@@ -1,9 +1,12 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const SingleValChart =()=>{
+const SingleValChart =(props: {titleName: String;})=>{
 
     const single = {
-        
+      title: {
+        text: props.titleName,
+        left: 'center'
+      },
         series: [
             {
               type: 'gauge',
@@ -44,7 +47,9 @@ const SingleValChart =()=>{
               },
               detail: {
                 valueAnimation: true,
-                fontSize: 50,
+                fontSize: 50
+                
+                ,
                 offsetCenter: [0, '70%']
               },
               data: [

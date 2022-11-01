@@ -1,10 +1,13 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
 
-const SankeyChart =()=>{
+const SankeyChart =(props: {titleName: String;})=>{
 
     const Sankey = {
-        
+      title: {
+        text: props.titleName,
+        left: 'center'
+      },
         series: {
             type: 'sankey',
             layout: 'none',

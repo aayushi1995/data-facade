@@ -1,9 +1,16 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const RadialPolarChart =()=>{
+const RadialPolarChart =(props: {
+  titleName: String;
+  xTitle: String;
+  yTitle: String;
+  segmentCol: String})=>{
 
     const RadialPolar = {
-        
+      title: {
+        text: props.titleName,
+        left: 'left'
+      },
         angleAxis: {
             type: 'category',
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

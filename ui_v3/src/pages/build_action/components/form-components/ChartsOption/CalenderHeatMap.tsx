@@ -2,7 +2,7 @@ import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
 import * as echarts from 'echarts';
 
-const CalChart =()=>{
+const CalChart =(props: {titleName: String;})=>{
     function getVirtulData(year: string) {
         year = year || '2017';
         let date = +echarts.number.parseDate(year + '-01-01');
@@ -18,7 +18,10 @@ const CalChart =()=>{
         return data;
       }
     const Cal = {
-        
+      title: {
+        text: props.titleName,
+        left: 'left'
+      },
         tooltip: {
             position: 'top'
           },

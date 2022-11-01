@@ -3,7 +3,11 @@ import ReactEcharts from "echarts-for-react";
 import * as echarts from 'echarts';
 
 type EChartsOption = echarts.EChartsOption;
-const ClubChart =()=>{
+const ClubChart =(props: {
+                        titleName: String;
+                        xTitle: String;
+                        yTitle: String;
+                      })=>{
 
     const yearCount = 7;
 const categoryCount = 30;
@@ -44,6 +48,11 @@ const option = {
   tooltip: {
     trigger: 'axis'
   },
+  title: {
+    text: props.titleName,
+    left: 'center',
+    top:'bottom'
+  },
   legend: {
     data: legendData
   },
@@ -60,9 +69,12 @@ const option = {
     }
   ],
   xAxis: {
-    data: xAxisData
+    data: xAxisData,
+    name: props.xTitle
   },
-  yAxis: {},
+  yAxis: {
+    name: props.yTitle
+  },
   series: [
     {
       type: 'custom',

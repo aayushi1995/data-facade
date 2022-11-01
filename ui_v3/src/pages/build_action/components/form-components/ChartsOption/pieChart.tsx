@@ -1,12 +1,11 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const PieChart =()=>{
+const PieChart =(props:{titleName: String; vaLueColumn:String;legendColumn: String;})=>{
 
     const Pie = {
         
         title: {
-            text: 'Referer of a Website',
-            subtext: 'Fake Data',
+            text: props.titleName,
             left: 'center'
           },
           tooltip: {

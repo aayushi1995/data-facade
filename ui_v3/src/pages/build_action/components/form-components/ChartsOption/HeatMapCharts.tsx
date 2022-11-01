@@ -1,6 +1,6 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const HeatMapChart =()=>{
+const HeatMapChart =(props:{titleName: String; xTitle: String; yTitle: String})=>{
 
 
     // prettier-ignore
@@ -21,7 +21,10 @@ const data = [[0, 0, 5], [0, 1, 1], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], 
     return [item[1], item[0], item[2] || '-'];
 });
     const HeatMap = {
-        
+      title: {
+        text: props.titleName,
+        left: 'center'
+      },
         tooltip: {
             position: 'top'
           },
@@ -34,14 +37,16 @@ const data = [[0, 0, 5], [0, 1, 1], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], 
             data: hours,
             splitArea: {
               show: true
-            }
+            },
+            name: props.xTitle
           },
           yAxis: {
             type: 'category',
             data: days,
             splitArea: {
               show: true
-            }
+            },
+            name: props.yTitle
           },
           visualMap: {
             min: 0,

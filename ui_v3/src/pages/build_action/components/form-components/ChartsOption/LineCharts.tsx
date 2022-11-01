@@ -1,24 +1,27 @@
 import {Box} from "@mui/material"
+import props from 'react';
 import ReactEcharts from "echarts-for-react"; 
-const LineChart =()=>{
+const LineChart =(props: { titleName: String; xTitle: String; yTitle: String;})=>{
 
     const LineChar = {
         title: {
             left: 'center',
-            text: 'Large Ara Chart'
+            text: props.xTitle
           },
           tooltip: {
             trigger: 'axis',
-            position: function (pt) {
+            position: function (pt: any[]) {
               return [pt[0], '10%'];
             }
           },
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            name: props.xTitle
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            name: props.yTitle
           },
           series: [
             {

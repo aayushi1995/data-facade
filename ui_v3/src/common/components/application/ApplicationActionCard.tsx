@@ -16,6 +16,7 @@ import ConfirmationDialog from "../ConfirmationDialog";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 import useDeleteAction from "./hooks/useDeleteActions";
 import DeleteIcon from '@mui/icons-material/Delete'
+import { fontWeight } from '@mui/system';
 
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
@@ -85,6 +86,8 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
         }
     }
 
+    
+
     const background = !props.isWorkflow ? 'ActionCardBgColor2.main' : 'ActionCardBgColor.main'
     return (
         <Box sx={{minheight: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
@@ -101,7 +104,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
             <Card sx={{backgroundColor: background, boxShadow: lightShadows[27], borderRadius: '10.2px', Width: '100%', height:'120px'}}>
                 <Box sx={{display: 'flex'}}>
                     <Box sx={{flex: 4, width: '100%',height:'100%'}}>
-                        <Box sx={{display: 'flex', flexDirection: 'column',alignItems: 'flex-start', gap: 2, p: 1, height:'120px', overflow:'scroll'}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column',alignItems: 'flex-start', gap: 2, p: 1, height:'120px', overflow:'scroll' }}>
                             <Typography variant="actionCardHeader">
                                 {props.action.model?.DisplayName || "Name"}
                             </Typography>
@@ -114,6 +117,27 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                     <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
                         <Divider orientation="vertical" sx={{height: "100%"}}/>
                     </Box>
+                    
+                    <Box sx={{flex: 4, width: '100%',height:'100%'}}>
+                        <Typography variant="heroMeta">
+                                <b>Created By : </b>{props.action.model?.CreatedBy || ""}
+                        </Typography>
+                        <br></br>
+                        <Typography variant="heroMeta">
+                                <b>Updated By : </b>{props.action.model?.UpdatedBy || "Creator"}
+                        </Typography>
+                        <br></br>
+                        <Typography variant="heroMeta">
+                                <b>Created On : </b>{new Date(props.action.model?.CreatedOn).toDateString()}
+                        </Typography>
+                        <br></br>
+                        <Typography variant="heroMeta">
+                                <b>Updated On : </b>{new Date(props.action.model?.UpdatedOn || props.action.model?.CreatedOn).toDateString()}
+                        </Typography>
+                    </Box>
+                    <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
+                        <Divider orientation="vertical" sx={{height: "100%"}}/>
+                    </Box> 
                     <Box sx={{flex: 3, display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
                         {props.isWorkflow ? (
                             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -204,9 +228,6 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                             Data Sources
                         </Typography>
                     </Box> */}
-                    <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "200%"}}/>
-                    </Box>
                     <Box sx={{flex: 2, width: '100%'}}>
                         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 1, width: '100%', height: '100%'}}>
                             <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase', flex: 1}}>
