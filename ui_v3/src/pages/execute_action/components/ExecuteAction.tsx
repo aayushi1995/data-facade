@@ -1,5 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Card, Dialog, DialogContent, Divider, Grid, IconButton, Snackbar, Step, StepButton, Stepper, Tab, Tabs, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, Dialog, DialogContent, Divider, Grid, IconButton, Snackbar, Step, StepButton, Stepper, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
 import { generatePath, useHistory } from "react-router-dom";
 import CodeTabIcon from "../../../../src/images/CodeTab.svg";
@@ -16,6 +16,7 @@ import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinit
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
+import useValidateActionInstance from '../hooks/useValidateActionInstance';
 import ConfigureActionRecurring from "./ConfigureActionRecurring";
 import ConfigureParameters, { isDefaultValueDefined } from "./ConfigureParameters";
 import ConfigureSlackAndEmail from "./ConfigureSlackAndEmail";
@@ -68,6 +69,8 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
     console.log(actionDefinitionId)
     const setModuleContext = React.useContext(SetModuleContextState)
     const [tabValue, setTabValue] = React.useState(0)
+    const validateActionInstance = useValidateActionInstance()
+    const [validateErrorMessage, setValidationErrorMessage] = React.useState<string | undefined>()
 
     const { createActionInstanceAsyncMutation, createActionInstanceSyncMutation, fetchActionExeuctionParsedOutputMutation } = useCreateActionInstance({
         asyncOptions: {
@@ -148,23 +151,29 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
 
     const handleAsyncCreate = () => {
         const request = constructCreateActionInstanceRequest(executeActionContext)
-        createActionInstanceAsyncMutation.mutate(request, {
+        validateActionInstance.validate(request, executeActionContext.ExistingModels.ActionTemplates?.[0]?.SupportedRuntimeGroup || "python", {
             onSuccess: () => {
-                setSnackbarState(true)
-                if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
-                    // setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
-                    if(props.redirectToExecution !== false) { 
-                        history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: request?.actionExecutionToBeCreatedId}))
-                    } else {
-                        setDialogState({isOpen: false})
-                        props.onExecutionCreate?.(request?.actionExecutionToBeCreatedId!)
+                createActionInstanceAsyncMutation.mutate(request, {
+                    onSuccess: () => {
+                        setSnackbarState(true)
+                        if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
+                            // setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
+                            if(props.redirectToExecution !== false) { 
+                                history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: request?.actionExecutionToBeCreatedId}))
+                            } else {
+                                setDialogState({isOpen: false})
+                                props.onExecutionCreate?.(request?.actionExecutionToBeCreatedId!)
+                            }
+                        } else {
+                            setDialogState({isOpen: false})
+                            history.push(SCHEDULED_JOBS_ROUTE)
+                        }
                     }
-                } else {
-                    setDialogState({isOpen: false})
-                    history.push(SCHEDULED_JOBS_ROUTE)
-                }
-            }
+                })
+            },
+            onError: (errorMessage?: string) => setValidationErrorMessage(errorMessage)
         })
+        
     }
 
     const handleSyncCreate = () => {
@@ -454,7 +463,12 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                         <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
                     </DialogContent>
                 </Dialog>
-                <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/> 
+                {/* <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/>  */}
+                <Snackbar open={!!validateErrorMessage} autoHideDuration={5000} onClose={() => setValidationErrorMessage(undefined)} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                    <Alert severity='error' onClose={() => setValidationErrorMessage(undefined)} sx={{width: '100%'}}>
+                        {validateErrorMessage}
+                    </Alert>
+                </Snackbar>
             </Card>
         </Box>
     )
