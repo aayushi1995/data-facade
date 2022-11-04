@@ -5,6 +5,7 @@ import { userSettingsSingleton } from "../../../data_manager/userSettingsSinglet
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ActionTemplate, ProviderInstance } from "../../../generated/entities/Entities";
+import { assignIndex } from "../../build_action/context/BuildActionContext";
 
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
@@ -747,7 +748,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         case 'ADD_WORKFLOW_PARAMETER': {
             const newState = {
                 ...state,
-                WorkflowParameters: [...state.WorkflowParameters, action.payload.parameter]
+                WorkflowParameters: assignIndex([...state.WorkflowParameters, action.payload.parameter])
             }
             return reducer(newState, {type: 'VALIDATE', payload: newState})
         }
@@ -879,7 +880,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         case 'DELETE_GLOBAL_PARAMETER': {
             const newState: WorkflowContextType = {
                 ...state,
-                WorkflowParameters: state.WorkflowParameters.filter(parameter => parameter.Id !== action.payload.parameterId),
+                WorkflowParameters: assignIndex(state.WorkflowParameters.filter(parameter => parameter.Id !== action.payload.parameterId)),
                 stages: state.stages.map(stage => ({
                     ...stage,
                     Actions: stage.Actions.map(stageAction => ({

@@ -153,8 +153,7 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
 
 const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
     const {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter} = useGlobalParameterHandler(props)
-    
-    console.log(availableParameters, currentGlobalParameter)
+
     return (
         <Box sx={{display: 'flex', gap: 1, alignItems: 'center', width: "100%" }}>
             <Autocomplete

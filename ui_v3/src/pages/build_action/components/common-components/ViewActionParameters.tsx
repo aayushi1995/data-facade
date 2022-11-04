@@ -55,7 +55,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
     console.log("ReRendering")
     const { templateLanguage, paramsWithTag, paramsAdditionalConfig, onParameterEdit, onParameterTypeEdit, onDeleteParameters, onCreateNewParameter, onParameterDuplicate, onTagsChange } = props
     const [selectedParams, setSelectedParams] = useState<string[]>([])
-    const dataGridRows: ViewActionParametersDataGridRow[] = ( paramsWithTag || [] ).map(paramWithTag => {
+    const dataGridRows: ViewActionParametersDataGridRow[] = ( paramsWithTag || [] )?.sort(paramWithTag => paramWithTag?.parameter?.Index || 0)?.map(paramWithTag => {
         const parameter = paramWithTag?.parameter
         const parameterId = parameter?.Id
         const parameterName = parameter?.ParameterName

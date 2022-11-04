@@ -1,12 +1,12 @@
 import { Box, IconButton, Tooltip } from "@mui/material"
 import { DataGrid, DataGridProps, GridCellParams } from "@mui/x-data-grid"
 import React from "react"
+import ConfirmationDialog from "../../../../../src/common/components/ConfirmationDialog"
 import { ActionParameterDefinition } from "../../../../generated/entities/Entities"
 import { SetWorkflowContext, WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
 import { DefaultValueInputFromAllParameters } from "../../../../pages/build_action/components/common-components/parameter_input/DefaultValueInput"
 import { TextCell } from "../../../../pages/table_browser/components/AllTableView"
 import { ReactComponent as DeleteIcon } from "./../../../../../src/images/DeleteIcon.svg"
-import ConfirmationDialog from "../../../../../src/common/components/ConfirmationDialog"
 interface GlobalParametersRow {
     GlobalParameterName: string,
     MappedActionLevelParameters: string,
@@ -39,12 +39,12 @@ const ShowGlobalParameters = () => {
             })
 
             return {
-                "GlobalParameterName": globalParameter.ParameterName || "NA",
-                "MappedActionLevelParameters": details.map(detail => detail.stageName + " | " + detail.actionName + " | " + detail.parameterName).join(', '),
-                "InputType": globalParameter.Tag || "NA",
-                "DataType": globalParameter.Datatype || "NA",
-                "id": globalParameter.Id || "id",
-                "options": globalParameter.OptionSetValues || "NA",
+                GlobalParameterName: globalParameter.ParameterName || "NA",
+                MappedActionLevelParameters: details.map(detail => detail.stageName + " | " + detail.actionName + " | " + detail.parameterName).join(', '),
+                InputType: globalParameter.Tag || "NA",
+                DataType: globalParameter.Datatype || "NA",
+                id: globalParameter.Id || "id",
+                options: globalParameter.OptionSetValues || "NA",
                 Parameter: globalParameter
             }
         })

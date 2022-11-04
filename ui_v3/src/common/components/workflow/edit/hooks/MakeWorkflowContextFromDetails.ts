@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid"
 import { ActionDefinition, ActionParameterDefinition, ActionTemplate } from "../../../../../generated/entities/Entities"
 import { WorkflowTemplateType } from "../../../../../pages/applications/workflow/EditWorkflowHomePage"
 import { UpstreamAction, WorkflowActionDefinition, WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext"
+import { assignIndex } from "../../../../../pages/build_action/context/BuildActionContext"
 
 
 interface MakeWorkflowContextPropsFromDetailsProps {
@@ -22,7 +23,7 @@ const MakeWorkflowContextFromDetail = (props: MakeWorkflowContextPropsFromDetail
         mode: "EDIT",
         stages: [],
         Name: workflowDefinition?.DisplayName || "",
-        WorkflowParameters: workflowParameters,
+        WorkflowParameters: assignIndex(workflowParameters),
         Description: workflowDefinition?.Description || "",
         Author: props.createdBy || workflowDefinition?.CreatedBy || "",
         draggingAllowed: true,

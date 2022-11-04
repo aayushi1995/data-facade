@@ -558,13 +558,15 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             const inferredParameters = extractParameterNamesFromCode(activeTemplate?.template?.Text, activeTemplate?.template?.Language)
             const existingParameters = activeTemplate?.parameterWithTags
             const newParameters = inferredParameters.map(paramName => (existingParameters?.find(p => p?.parameter?.ParameterName===paramName) || getDefaultParameterDefinition(paramName, activeTemplate?.template?.Language, activeTemplate?.template?.Id, state?.actionDefinitionWithTags?.actionDefinition?.Id)))
-            return {
+            const newState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(actionTemplate => actionTemplate.template.Id!==state.activeTemplateId ? actionTemplate : {
                     ...actionTemplate,
                     parameterWithTags: newParameters
                 })
             }
+
+            return reducer(newState, {type: "FormAdditionalConfig"})
         }
 
         case "SetParameterDetails": {
@@ -813,7 +815,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
 
         case "FormAdditionalConfig": {
             const newTemplateWithParams = state?.actionTemplateWithParams?.map(at => {
-                const parameters = validateColumnParameters(at?.parameterWithTags?.map(apwt => apwt?.parameter))
+                const parameters = assignIndex(validateColumnParameters(at?.parameterWithTags?.map(apwt => apwt?.parameter)))
                 const additionalConfs = [
                     ...formAdditionalConfForColumnParameters(parameters)
                 ]
@@ -887,9 +889,20 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
 
         default:
             const neverAction: never = action
-            console.log(`Action: ${neverAction} does not match any action`)
             return state
     }
+}
+
+export const assignIndex = (parameters: ActionParameterDefinition[]) => {
+    const paramWithIndex = parameters?.filter(param => param?.Index !== undefined)
+    const paramWithoutIndex = parameters?.filter(param => param?.Index === undefined)
+
+    const paramWithIndexCount = paramWithIndex.length
+
+    const paramWithIndexCompressed = paramWithIndex?.sort(param => param?.Index || 0)?.map((param, index) => ({...param, Index: index+1}))
+    const paramWithNewAssignedIndex = paramWithoutIndex?.map((param, index) => ({...param, Index: paramWithIndexCount+index+1}))
+
+    return [...paramWithIndexCompressed, ...paramWithNewAssignedIndex]
 }
 
 const formChartsFromActionDefinitionConfig = (config: string): ChartOptionType[] => {
@@ -1049,6 +1062,7 @@ const getDefaultParameterDefinition = (parameterName: string, language?: string,
                 ParameterName: parameterName,
                 TemplateId: templateId,
                 ActionDefinitionId: definitionId,
+                Index: 0,
                 ...getAttributesFromInputType(ActionParameterDefinitionInputType.TABLE_NAME, language)
             },
             tags: [],
@@ -1061,6 +1075,7 @@ const getDefaultParameterDefinition = (parameterName: string, language?: string,
                 ParameterName: parameterName,
                 TemplateId: templateId,
                 ActionDefinitionId: definitionId,
+                Index: 0,
                 ...getAttributesFromInputType(ActionParameterDefinitionInputType.COLUMN_NAME, language)
             },
             tags: [],
@@ -1073,6 +1088,7 @@ const getDefaultParameterDefinition = (parameterName: string, language?: string,
                 ParameterName: parameterName,
                 TemplateId: templateId,
                 ActionDefinitionId: definitionId,
+                Index: 0,
                 ...getAttributesFromInputType(ActionParameterDefinitionInputType.STRING, language)
             },
             tags: [],
@@ -1146,7 +1162,6 @@ const getIdMap = (id: string|undefined, map: Record<string, string>) => {
     }
     return undefined
 }
-
 
 const defaultParameter: (definitionId: string, templateId: string) => ActionParameterDefinition = (definitionId: string, templateId: string) => ({
     Id: uuidv4(),

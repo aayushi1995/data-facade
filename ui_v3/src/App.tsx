@@ -1,6 +1,5 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace"
 import { Box, CssBaseline, Grid, ThemeProvider } from "@mui/material"
-import React from 'react'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Redirect, Route, Router, Switch } from 'react-router-dom'
 import ErrorBoundary from "./common/components/ErrorBoundry"
@@ -23,6 +22,7 @@ import DevTestPage from './pages/dev_test_page/DevTestPage'
 import { EULA } from "./pages/home/EULA"
 import Home from './pages/home/Home'
 import NotRegistered from './pages/home/NotRegistered'
+import OrgUpdateInProgress from "./pages/home/OrgUpdateInProgress"
 import { SearchQueryProvider } from './pages/table_browser/TableBrowser'
 import TagHomePage from './pages/tag/TagHomePage'
 import { Users } from "./pages/users/Users"
@@ -55,13 +55,19 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
             return (
                 <LoadingIndicator/>
             )
+        } else if (dummyData?.status == 426) {
+            return (
+                <Switch>
+                    <Route path="/" component={OrgUpdateInProgress}/>
+                </Switch>
+            )
         } else if (dummyData?.status >= 400) {
             return (
                 <Switch>
                     <Route path="/" component={NotRegistered}/>
                 </Switch>
             )
-        } else {
+        }  else {
 
             return (
                 <Grid container style={{justifyContent: "flex-start"}}>

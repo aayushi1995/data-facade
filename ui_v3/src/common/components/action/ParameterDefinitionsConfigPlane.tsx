@@ -52,12 +52,12 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
     }
 
     const getSortedParameters = () => {
-        const sortedByName = props.parameterDefinitions.sort((p1, p2) => ((p1?.ParameterName||"a") > (p2.ParameterName||"b")) ? 1 : -1)
+        const sortedByIndex = props.parameterDefinitions.sort((p1, p2) => ((p1?.Index||0) > (p2?.Index||1)) ? 1 : -1)
         const tableParameters: ActionParameterDefinition[] = []
         const columnParameters: ActionParameterDefinition[] = []
         const restParameters: ActionParameterDefinition[] = []
 
-        sortedByName.forEach(parameter => {
+        sortedByIndex.forEach(parameter => {
             if(parameter.Tag === ActionParameterDefinitionTag.DATA || parameter.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
                 tableParameters.push(parameter)
             } else if(parameter.Tag === ActionParameterDefinitionTag.COLUMN_NAME || parameter.Tag === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
