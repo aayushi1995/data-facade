@@ -3,7 +3,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Autocomplete, Box, Button, Chip, createFilterOptions, Dialog, FormControl, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridToolbarContainer } from "@mui/x-data-grid";
 import { ChangeEvent, useState } from 'react';
 import ConfirmationDialog from '../../../../common/components/ConfirmationDialog';
@@ -16,6 +16,8 @@ import { safelyParseJSON } from "../../../execute_action/util";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
 import { ActionParameterDefinitionConfig } from "./EditActionParameter";
 import DefaultValueInput from "./parameter_input/DefaultValueInput";
+import settingIcon from "../../../../../src/images/settings.svg"
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const tagFilter = createFilterOptions<Tag>()
 const stringFilter = createFilterOptions<string|undefined>()
@@ -93,7 +95,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
 
     const getParamWithTags = (paramId?: string) => paramsWithTag?.find(paramWithTag => paramWithTag?.parameter?.Id===paramId)
     const getAdditionalConfig = (paramId?: string) => paramsAdditionalConfig?.find(paramAdditionalConfig => paramAdditionalConfig?.parameterDefinitionId===paramId)
-    
+
     const dataGridProps: DataGridProps = {
         columns: [
             {
@@ -118,7 +120,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
             },
             {
                 headerName: "Description",
-                flex: 3,
+                flex: 5,
                 field: "Description",
                 renderCell: (params: GridRenderCellParams<ViewActionParametersDataGridRow>) => {
                     return <DescriptionEditor
@@ -154,11 +156,13 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
             },
             {
                 headerName: "Input Type",
-                flex: 5,
+                flex: 8,
                 field: "InputType",
                 renderCell: (params?: GridRenderCellParams<ViewActionParametersDataGridRow>) => {
                     const parameter = getParamWithTags(params?.row?.ParameterId)?.parameter
-                    return <FormControl sx={{width: "100%"}}>
+                    const inputAttribuuteValue = getInputTypeFromAttributesNew(templateLanguage, parameter.Tag, parameter.Type, parameter.Datatype)
+                    return <Box sx={{display:'flex', flexDirection:'row',width:'100%'}}>
+                            <FormControl sx={{width: "8.854vw"}}>
                                 <Select
                                     variant="standard"
                                     value={getInputTypeFromAttributesNew(templateLanguage, parameter?.Tag, parameter?.Type, parameter?.Datatype)}
@@ -177,7 +181,20 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                         return <MenuItem value={inputType}>{inputType}</MenuItem>
                                     })}
                                 </Select>
+                                
                             </FormControl>
+                            {
+                                inputAttribuuteValue === "String" || inputAttribuuteValue === "Integer" || inputAttribuuteValue === "Decimal" ?(
+                                        <>
+                                            <OptionSetSelector parameter={parameter} onParameterEdit={onParameterEdit} />
+                                        
+                                        </>
+                                ):(
+                                    <></>
+                                )
+
+                        }
+                        </Box>
                 }
             },
             {
@@ -185,12 +202,27 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 flex: 10,
                 field: "DefaultValue",
                 renderCell: (params?: GridRenderCellParams<ViewActionParametersDataGridRow>) => {
-                    return <DefaultValueInput
-                                actionParameterDefinition={getParamWithTags(params?.row?.ParameterId)?.parameter}
-                                actionParameterDefinitionAdditionalConfig={getAdditionalConfig(params?.row?.ParameterId)}
-                                onDefaultValueChange={(newDefaultValue?: string) => {
-                                    handleParameterChange(params?.row?.ParameterId, {DefaultParameterValue: newDefaultValue})
-                                }}
+                    return (
+                            <Box sx={{width:'100%'}}>
+                                <DefaultValueInput
+                                    actionParameterDefinition={getParamWithTags(params?.row?.ParameterId)?.parameter}
+                                    actionParameterDefinitionAdditionalConfig={getAdditionalConfig(params?.row?.ParameterId)}
+                                    onDefaultValueChange={(newDefaultValue?: string) => {
+                                        handleParameterChange(params?.row?.ParameterId, {DefaultParameterValue: newDefaultValue})
+                                    }}
+                                />
+                            </Box>)
+                }
+            },
+            {
+                headerName: "Parent",
+                flex: 8,
+                field: "Parent",
+                renderCell: (params: GridRenderCellParams<ViewActionParametersDataGridRow>) => {
+                    return <ConfigureParentParameter
+                                allParamDefs={paramsWithTag?.map(paramWithTag => paramWithTag?.parameter)}
+                                currentParamDef={getParamWithTags(params?.row?.ParameterId)?.parameter}
+                                onParameterEdit={(editedParam: ActionParameterDefinition) => handleParameterChange(params?.row?.ParameterId, editedParam)}
                             />
                 }
             },
@@ -207,18 +239,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                             onTagsChange={onChange}
                         />
                     )
-                }
-            },
-            {
-                headerName: "Parent",
-                flex: 6,
-                field: "Parent",
-                renderCell: (params: GridRenderCellParams<ViewActionParametersDataGridRow>) => {
-                    return <ConfigureParentParameter
-                                allParamDefs={paramsWithTag?.map(paramWithTag => paramWithTag?.parameter)}
-                                currentParamDef={getParamWithTags(params?.row?.ParameterId)?.parameter}
-                                onParameterEdit={(editedParam: ActionParameterDefinition) => handleParameterChange(params?.row?.ParameterId, editedParam)}
-                            />
                 }
             },
             {
@@ -275,8 +295,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                     onAccept={() => onDeleteParameters?.((selectedParams || []).map(paramId => ({ Id: paramId })))}
                                     onDecline={closeDeleteDialog}
                                     dialogOpen={deleteDialogOpen}
-                                    onDialogClose={closeDeleteDialog}
-                                />
+                                    onDialogClose={closeDeleteDialog} messageHeader={''}                                />
                                 <IconButton disabled={selectedParams?.length === 0} onClick={() => openDeleteDialog()}><DeleteIcon/></IconButton>
                             </Box>
                         </Box>
@@ -298,6 +317,136 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 borderRadius: "10px"
             }} {...dataGridProps}/> 
         </Box>
+    )
+}
+
+const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void}) => {
+
+    const filter = createFilterOptions<string>()
+    const handleChange = (newOptions: string[]) => {
+        const newOption = newOptions.find(option => option.includes("Create Option:"))
+        if(!!newOption) {
+            const optionName = newOption.substring(15)
+            const exisitingOpts = props.parameter.OptionSetValues?.split(',') || []
+            exisitingOpts.push(optionName)
+            props.onParameterEdit({
+                ...props.parameter,
+                OptionSetValues: exisitingOpts.join(',')
+            })
+        } else {
+            props.onParameterEdit({
+                ...props.parameter,
+                OptionSetValues: newOptions.length ? newOptions?.join(',') : undefined
+            })
+        }
+    }
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+    const closeDialog = () => setDialogOpen(false)
+    const openDialog = () => setDialogOpen(true)
+
+    const handleOptionSingleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.checked || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE) {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OPTION_SET_SINGLE
+            })
+        } else {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OTHER,
+                OptionSetValues: undefined
+            })
+        }
+    }
+
+    const handleOptionMultipleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.checked || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OPTION_SET_MULTIPLE
+            })
+        } else {
+            props.onParameterEdit({
+                ...props.parameter,
+                Tag: ActionParameterDefinitionTag.OTHER,
+                OptionSetValues: undefined
+            })
+        }
+    }
+
+    return (
+        
+        <><Button   onClick={openDialog}><SettingsIcon color={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE?"success":"error"}/></Button>
+        <Dialog onClose={closeDialog} open={dialogOpen} fullWidth={true} maxWidth="sm">
+            <Box sx={{ display: 'flex', gap: 1 ,flexDirection:'column'}}>
+            <Box sx={{
+                        background: "#66748A",
+                        boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)", 
+                        transform: "matrix(1, 0, 0, -1, 0, 0)",
+                        display: "flex", 
+                        flexDirection: "row",
+                        alignItems: "center",
+                        pl: 2,
+                        pr: 1,
+                        py: 1
+                    }}>
+                        <Box sx={{ flex: 1, alignItems: "center" }}>
+                            <Typography sx={{
+                                fontFamily: "'SF Pro Text'", 
+                                fontStyle: "normal", 
+                                fontWeight: "500", 
+                                fontSize: "16px", 
+                                lineHeight: "160%", 
+                                letterSpacing: "0.15px", 
+                                color: "#F8F8F8",
+                                transform: "matrix(1, 0, 0, -1, 0, 0)"
+                            }}>
+                                Add Option Set
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <IconButton onClick={() => closeDialog()}>
+                                <CloseOutlinedIcon sx={{ background: "#FFFFFF" , borderRadius:'50%'}}/>
+                            </IconButton>
+                        </Box>
+                    </Box>
+                <FormGroup row={true} sx={{ display: 'webkit', minWidth: '400px',mx:'auto' }}>
+                    <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE} onChange={handleOptionSingleChange} />} label="Option Set Single" />
+                    <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE} onChange={handleOptionMultipleChange} />} label="Option Set Multiple" />
+                </FormGroup>
+                <Box sx={{px:6,py:3}}>
+                {props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE ?
+                    (
+                        <Autocomplete
+                            options={"".split(',') || []}
+                            filterSelectedOptions
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                            multiple
+                            fullWidth
+                            value={props.parameter.OptionSetValues?.split(',') || []}
+                            onChange={(event, value, reason, details) => {
+                                if (!!value) {
+                                    handleChange(value);
+                                }
+                            } }
+                            filterOptions={(options, params) => {
+
+                                const filtered = filter(options, params);
+                                if (params.inputValue !== '') {
+                                    filtered.push(`Create Option: ${params.inputValue}`);
+                                }
+                                return filtered;
+                            } }
+                            renderInput={(params) => <TextField {...params} label="Add Options" />} />
+                    ) : (
+                        <></>
+                    )}
+                    </Box>
+
+            </Box>
+        </Dialog></>
     )
 }
 
@@ -395,7 +544,7 @@ const DescriptionEditor = (props: DescriptionEditorProps) => {
                         </Box>
                         <Box>
                             <IconButton onClick={() => closeDialog()}>
-                                <CloseOutlinedIcon sx={{ background: "#FFFFFF" }}/>
+                                <CloseOutlinedIcon sx={{ background: "#FFFFFF" ,borderRadius:'50%'}}/>
                             </IconButton>
                         </Box>
                     </Box>
@@ -649,7 +798,7 @@ export const TagEditorView = (props: TagEditorViewProps) => {
                         </Box>
                         <Box>
                             <IconButton onClick={() => closeDialog()}>
-                                <CloseOutlinedIcon sx={{ background: "#FFFFFF"}}/>
+                                <CloseOutlinedIcon sx={{ background: "#FFFFFF",borderRadius:'50%'}}/>
                             </IconButton>
                         </Box>
                     </Box>

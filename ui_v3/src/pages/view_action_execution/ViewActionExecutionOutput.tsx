@@ -141,7 +141,11 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                     <DataGrid 
                         headerHeight={70}
                         sx={{
-                            "& .MuiDataGrid-columnHeaders": { background: "#E8E8E8"}
+                            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
+                            backgroundBlendMode: "soft-light, normal",
+                            border: "2px solid rgba(255, 255, 255, 0.4)",
+                            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+                            borderRadius: "10px"
                         }}
                         rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
                         initialState={{

@@ -22,7 +22,9 @@ const WrapInCollapsable = (props: WrapInCollapsableProps) => {
                 backgroundColor: theme.palette.background.default
             },
             borderRadius: 6,
-            borderLeft: props.borderLeft || "7px solid rgba(219, 140, 40, 1)",
+            boxShadow: '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
+            background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
+            backgroundBlendMode: 'soft-light, normal',
             }}
             variant={'outlined'}
             defaultExpanded={props.defaultExpanded || false}
