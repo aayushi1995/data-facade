@@ -16,7 +16,6 @@ import ConfirmationDialog from "../ConfirmationDialog";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 import useDeleteAction from "./hooks/useDeleteActions";
 import DeleteIcon from '@mui/icons-material/Delete'
-import { fontWeight } from '@mui/system';
 
 interface ApplicationActionCardProps {
     isWorkflow?: boolean

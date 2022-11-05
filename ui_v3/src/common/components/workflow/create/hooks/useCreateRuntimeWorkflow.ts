@@ -1,4 +1,4 @@
-import { string } from "prop-types"
+
 import { useMutation, UseMutationOptions } from "react-query"
 import dataManager from "../../../../../data_manager/data_manager"
 import { ActionDefinition } from "../../../../../generated/entities/Entities"

@@ -1,4 +1,4 @@
-import { Box, Card, Tab, Tabs, Typography, Dialog, DialogTitle, DialogContent } from "@mui/material"
+import { Box, Card, Tab, Tabs, Typography } from "@mui/material"
 import React from "react"
 import { RouteComponentProps } from "react-router-dom"
 import ApplicationHeroInfo from "../../../common/components/application-info-hero/ApplicationHeroInfo"
@@ -8,7 +8,6 @@ import NoData from "../../../common/components/NoData"
 import useGetApplicationDetails from "../hooks/useGetApplicationDetails"
 import ApplicationRunsByMe from "./ApplicationRunsByMe"
 import SyncWithGitDialog from "./SyncWithGitDialog"
-import { ActionDefinitionHeroActionContextWrapper } from "../../build_action/components/shared-components/ActionDefinitionHero"
 interface MatchParams {
     applicationId: string
 }

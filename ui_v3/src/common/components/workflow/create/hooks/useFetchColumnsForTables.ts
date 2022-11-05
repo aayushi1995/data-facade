@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient, UseQueryOptions } from 'react-query';
-import { ActionDefinition, ColumnProperties, TableProperties } from '../../../../../generated/entities/Entities';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { ColumnProperties, TableProperties } from '../../../../../generated/entities/Entities';
 import labels from '../../../../../labels/labels';
-import dataManagerInstance, { useRetreiveData } from './../../../../../data_manager/data_manager'
+import dataManagerInstance from './../../../../../data_manager/data_manager'
 
 export interface UseFetchColumnsForTablesProps {
     tableFilters?: undefined | TableProperties[],

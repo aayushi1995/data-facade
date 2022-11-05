@@ -4,8 +4,6 @@ import { ActionContextActionParameterDefinitionWithTags, BuildActionContext, Set
 import { Autocomplete, Box, createFilterOptions, Divider, Grid, TextField, Typography } from "@mui/material"
 import ActionParameterDefinitionTag from "../../../../enums/ActionParameterDefinitionTag"
 import { ActionParameterDefinition } from "../../../../generated/entities/Entities"
-import { ActionParameterDefinitionWithTags } from "../../../../generated/interfaces/Interfaces"
-import { PanoramaFishEye } from "@mui/icons-material"
 
 
 interface GetChartTypeOptionProps {

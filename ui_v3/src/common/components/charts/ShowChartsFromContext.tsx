@@ -4,7 +4,7 @@ import { lightShadows } from "../../../css/theme/shadows"
 import { Chart as ChartModel } from "../../../generated/entities/Entities"
 import NoData from "../NoData"
 import ChartFromContext from "./ChartFromContext"
-import { ChartQueriesContext, ChartWithDataAndOptions, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext"
+import { ChartQueriesContext, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext"
 
 
 

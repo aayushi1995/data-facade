@@ -1,4 +1,4 @@
-import { Box, Dialog, DialogContent } from "@mui/material";
+import { Box, Dialog } from "@mui/material";
 import React, { useContext } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";

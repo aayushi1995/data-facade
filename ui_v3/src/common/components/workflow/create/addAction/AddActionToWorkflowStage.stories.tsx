@@ -2,7 +2,7 @@ import React from 'react'
 import { AddActionToWorkflowStage, AddActionToWorkflowStageProps } from "./AddActionToWorkflowStage";
 import { Story } from "@storybook/react";
 import { Box } from "@mui/material";
-import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "../../../../../pages/applications/workflow/WorkflowContext";
+import { WorkflowContextProvider } from "../../../../../pages/applications/workflow/WorkflowContext";
 
 export default {
     title: "WORKFLOW/Create/AddActionToStage",

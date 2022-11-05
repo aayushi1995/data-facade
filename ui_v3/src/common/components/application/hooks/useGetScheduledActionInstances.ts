@@ -1,6 +1,5 @@
 import { useQuery, UseQueryOptions } from "react-query"
 import { Fetcher } from "../../../../generated/apis/api"
-import { ActionInstance } from "../../../../generated/entities/Entities"
 import { RecurringActionInstanceDetails } from "../../../../generated/interfaces/Interfaces"
 import labels from "../../../../labels/labels"
 

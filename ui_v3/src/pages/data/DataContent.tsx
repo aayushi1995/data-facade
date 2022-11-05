@@ -7,7 +7,7 @@ import ConfiguredDataSource from "../configurations/components/ConfiguredDataSou
 import AllTableView from "../table_browser/components/AllTableView";
 import TableDetails from "../table_details/TableDetails";
 import UploadTablePage from "../upload_table/UploadTablePage";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 const DataContent = () => {
     const setModuleContext = useContext(SetModuleContextState)
 

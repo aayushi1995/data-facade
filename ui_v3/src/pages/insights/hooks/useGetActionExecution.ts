@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import dataManager from "../../../data_manager/data_manager";
-import { Fetcher } from "../../../generated/apis/api";
 import { ActionExecution } from "../../../generated/entities/Entities";
 import labels from "../../../labels/labels";
 

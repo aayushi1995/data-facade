@@ -1,11 +1,8 @@
-import { Grid, Button } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useContext } from "react";
-import { useHistory } from "react-router-dom";
 import VirtualTagHandler, { VirtualTagHandlerProps } from "../../../../common/components/tag-handler/VirtualTagHandler";
-import useCopyAndSaveDefinition from "../../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition";
 import { Tag } from "../../../../generated/entities/Entities";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
-import ActionHighLevelDetails from "../common-components/ActionHighLevelDetails";
 import ActionSummary from "../common-components/ActionSummary";
 import ConfigureActionVisibility from "../common-components/ConfigureActionVisibility";
 import WrapInHeader from "../common-components/WrapInHeader";

@@ -2,8 +2,7 @@ import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, MuiEvent } fr
 import React from "react"
 import { useHistory } from "react-router"
 import { INSIGHTS_ROUTE } from "../../common/components/header/data/RoutesConfig"
-import { ReactQueryWrapper } from "../../../src/common/components/ReactQueryWrapper";//"../../../common/components/ReactQueryWrapper";
-import LoadingWrapper from "../../common/components/LoadingWrapper"
+import { ReactQueryWrapper } from "../../../src/common/components/ReactQueryWrapper";
 import { DashboardDetails } from "../../generated/interfaces/Interfaces"
 import useGetDashboardDetails from "./hooks/useGetDashboardDetails"
 import Stack from '@mui/material/Stack';

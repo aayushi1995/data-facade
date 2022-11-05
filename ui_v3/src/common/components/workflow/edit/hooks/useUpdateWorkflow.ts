@@ -1,8 +1,5 @@
 import { useMutation } from "react-query";
 import dataManager from "../../../../../data_manager/data_manager";
-import { Fetcher } from "../../../../../generated/apis/api";
-import { ActionDefinition } from "../../../../../generated/entities/Entities";
-import { ActionTemplatesWithParameters, UpdateActionDefinitionWithTemplate } from "../../../../../generated/interfaces/Interfaces";
 import labels from "../../../../../labels/labels";
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext";
 import { BuildActionContextState } from "../../../../../pages/build_action/context/BuildActionContext";

@@ -13,7 +13,6 @@ import {
 } from "../../../util/formChartOptions";
 import {ShowChartsProps} from "../types/ShowChartsProps";
 import {UseChartsStateType} from "../types/useChartsStateType";
-import { ca } from "date-fns/locale";
 
 export function useShowCharts(props: ShowChartsProps) {
     const [chartDataOptions, setChartDataOptions] = React.useState<UseChartsStateType>()

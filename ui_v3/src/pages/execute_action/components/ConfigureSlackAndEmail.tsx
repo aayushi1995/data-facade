@@ -1,7 +1,6 @@
-import { PrintRounded } from "@mui/icons-material"
+
 import { Card, Grid, TextField } from "@mui/material"
 import React from "react"
-import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType"
 import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat"
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
 

@@ -1,10 +1,9 @@
 import { useMutation, UseMutationOptions } from "react-query"
-import dataManagerInstance, { useRetreiveData } from './../../../../data_manager/data_manager'
+import dataManagerInstance from './../../../../data_manager/data_manager'
 import { v4 as uuidv4} from 'uuid'
 import TagGroups from "../../../../enums/TagGroups"
 import TagMapCreatedBy from "../../../../enums/TagMapCreatedBy"
 import { Tag } from "../../../../generated/entities/Entities"
-import { circularProgressClasses } from "@mui/material"
 import labels from "../../../../labels/labels"
 
 

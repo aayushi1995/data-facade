@@ -1,5 +1,4 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
-import { SVGProps } from "react";
 
 
 const DfLogoText = (props: SvgIconProps) => {

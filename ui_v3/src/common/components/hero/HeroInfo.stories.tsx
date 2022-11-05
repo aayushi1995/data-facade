@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AlarmIcon from '@mui/icons-material/Alarm';import {Meta, Story} from "@storybook/react";
+import AlarmIcon from '@mui/icons-material/Alarm';import { Story} from "@storybook/react";
 import HeroInfo, {HeroInfoProps} from "./HeroInfo"
 
 

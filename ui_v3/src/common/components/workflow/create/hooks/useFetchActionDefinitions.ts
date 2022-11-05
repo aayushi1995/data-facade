@@ -1,9 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { Fetcher } from '../../../../../generated/apis/api';
 import { ActionDefinition } from '../../../../../generated/entities/Entities';
 import { ActionDefinitionDetail } from '../../../../../generated/interfaces/Interfaces';
 import labels from '../../../../../labels/labels';
-import dataManagerInstance, { useRetreiveData } from './../../../../../data_manager/data_manager'
+import dataManagerInstance from './../../../../../data_manager/data_manager'
 
 export interface UseFetchActionDefinitionsProps {
     filter?: ActionDefinition,

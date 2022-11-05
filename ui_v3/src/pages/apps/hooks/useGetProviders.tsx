@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from "react-query";
 import dataManager from "../../../data_manager/data_manager";
-import { ProviderDefinition, ProviderInstance } from "../../../generated/entities/Entities";
+import { ProviderInstance } from "../../../generated/entities/Entities";
 import labels from "../../../labels/labels";
 
 

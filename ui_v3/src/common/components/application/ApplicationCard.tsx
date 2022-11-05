@@ -1,10 +1,8 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import InstallDesktopIcon from '@mui/icons-material/InstallDesktop'
-import PeopleIcon from '@mui/icons-material/People'
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import ShareIcon from '@mui/icons-material/Share'
-import { Box, Card, Button,IconButton, SpeedDial, SpeedDialAction, Tooltip, Typography } from "@mui/material"
+import { Box, Card,IconButton, Tooltip, Typography } from "@mui/material"
 import React from "react"
 import { generatePath, useHistory, useRouteMatch } from "react-router-dom"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"

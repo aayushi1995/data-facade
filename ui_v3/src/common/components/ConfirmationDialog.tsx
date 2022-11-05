@@ -1,7 +1,6 @@
-import { Box, Button, Dialog, DialogContent, IconButton,DialogTitle } from "@mui/material"
+import { Box, Button, Dialog, DialogContent } from "@mui/material"
 import errorLogo from "../../../src/images/error.svg"
 import CloseIcon from '@mui/icons-material/Close';
-import { AddBox } from "@mui/icons-material";
 
 export interface ConfirmationDialogProps {
     messageHeader:string;

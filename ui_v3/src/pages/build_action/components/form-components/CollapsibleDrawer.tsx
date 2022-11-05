@@ -1,6 +1,5 @@
 import { ArrowRight } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
-import { minHeight } from "@mui/system";
 
 export interface CollapsibleDrawerProps {
     open: boolean,

@@ -1,4 +1,4 @@
-import { Autocomplete, Avatar, Box, Button, Card, Divider, Grid, TextField, Tooltip, Typography, Link } from "@mui/material";
+import { Avatar, Box, Button, Card, Divider, Grid, TextField, Tooltip, Typography, Link } from "@mui/material";
 import React from "react";
 import LoadingWrapper from "../../../common/components/LoadingWrapper";
 import NumberStat from "../../../common/components/NumberStat";

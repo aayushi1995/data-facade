@@ -1,5 +1,4 @@
 import { Box, Grid, Typography, Card } from "@mui/material";
-import ActionParameterDefinitionAttribute from "../../../enums/ActionParameterDefinitionAttribute";
 import { ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities";
 
 export interface ViewConfiguredParametersProps {

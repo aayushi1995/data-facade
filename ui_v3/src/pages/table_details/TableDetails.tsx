@@ -2,16 +2,14 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Divider, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { generatePath, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
-import { DATA_COLUMN_VIEW, DATA_TABLE_TAB, DATA_TABLE_TAB_ACTION_INSTANCES, DATA_TABLE_TAB_COLUMN_VIEW, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_INTERMEDIARY_TABLES, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_TAB_TABLE_VIEW, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_COLUMN_VIEW, DATA_TABLE_TAB, DATA_TABLE_TAB_COLUMN_VIEW, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_TAB_TABLE_VIEW, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
 import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper";
 import useStyles from "../../css/table_details/TableDetails";
 import { useRetreiveData } from "../../data_manager/data_manager";
 import labels from "../../labels/labels";
 import ColumnDetails from "../column_details/ColumnDetails";
-import ActionInstances from "../customizations/components/ActionInstances";
 import TableRowExpanded from "../table_browser/components/TableRowExpanded";
 import ColumnView from "./components/ColumnView";
-import IntermediaryTables from "./components/IntermediaryTables";
 import TableView from "./components/TableView";
 
 export const a11yProps = (index: number) => {

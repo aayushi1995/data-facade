@@ -2,13 +2,11 @@
 
 import React from "react"
 import { useMutation } from "react-query"
-import { getActionExecutionParsedOutput, getActionExecutionParsedOutputForTimeSeries } from "../../data_manager/entity_data_handlers/action_execution_data"
+import { getActionExecutionParsedOutput } from "../../data_manager/entity_data_handlers/action_execution_data"
 import ActionDefinitionPresentationFormat from "../../enums/ActionDefinitionPresentationFormat"
 import JobsRowJobDetail from "../../pages/jobs/components/JobsRowJobDetail"
-import ColumnChartVisualizer from "./ColumnChartVisualizer"
 import NoData from "./NoData"
 import QueryData from "./QueryData"
-import { Box } from "@mui/material"
 
 
 

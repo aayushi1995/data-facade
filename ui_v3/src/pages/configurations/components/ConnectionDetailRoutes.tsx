@@ -1,7 +1,6 @@
 import { useRouteMatch, Route, Switch, Redirect } from "react-router-dom"
 import { DATA_CONNECTION_DETAIL_DEFAULT_TAB, DATA_CONNECTION_DETAIL_ROUTE, DATA_CONNECTION_DETAIL_TAB } from "../../../common/components/header/data/DataRoutesConfig"
 import ConnectionDetails from "./ConnectionDetails"
-import ConnectionDetailsSetup  from "./ConnectionDetailsSetup"
 
 
 

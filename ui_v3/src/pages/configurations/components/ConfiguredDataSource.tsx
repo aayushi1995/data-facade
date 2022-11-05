@@ -1,10 +1,9 @@
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import React, { useContext } from 'react';
-import { Route, withRouter, Switch, useRouteMatch } from "react-router-dom";
+import { Route, withRouter, Switch } from "react-router-dom";
 import { DATA_CONNECTIONS_ROUTE, DATA_CONNECTION_DETAIL_ROUTE, DATA_SUB_TABS, findTab } from "../../../common/components/header/data/DataRoutesConfig";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import { ConnectionsProvider } from "../context/ConnectionsContext";
-import { ConnectionCardList } from "./ConnectionCardList";
 import ConnectionDetailRoutes from "./ConnectionDetailRoutes";
 import { ConnectionsDataGrid } from "./ConnectionsDataGrid";
 

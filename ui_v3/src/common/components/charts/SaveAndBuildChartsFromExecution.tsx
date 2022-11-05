@@ -1,16 +1,12 @@
 import { Box, Grid, Button, Typography, Tabs, Tab } from "@mui/material"
 import WrapInCollapsable from "../collapsable/WrapInCollapsable"
-import FilterIcon from "../../../../src/images/filter.svg"
 import ChartIcon from "../../../../src/images/ChartIcon.svg"
 import ResultIcon from "../../../../src/images/Results.png"
-import { GridToolbarFilterButton } from "@mui/x-data-grid"
 import React from "react"
 import { SetSaveAndBuildChartContext, SaveAndBuildChartContext, ChartQueriesContext } from "./SaveAndBuildChartsContext"
 import ViewActionExecutionOutput from "../../../pages/view_action_execution/ViewActionExecutionOutput"
 import { ReactQueryWrapper } from "../ReactQueryWrapper"
 import LoadingIndicator from "../LoadingIndicator"
-import ShowCharts from "./ShowCharts"
-import { ChartWithData } from "../../../generated/interfaces/Interfaces"
 import ShowChartsFromContext from "./ShowChartsFromContext"
 
 

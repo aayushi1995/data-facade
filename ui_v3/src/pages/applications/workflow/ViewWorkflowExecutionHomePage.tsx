@@ -1,16 +1,14 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button } from "@mui/material"
 import React from "react"
-import { Route, RouteComponentProps, Switch, useRouteMatch } from "react-router-dom"
+import { RouteComponentProps, useRouteMatch } from "react-router-dom"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import NoData from "../../../common/components/NoData"
-import ViewActionExecutionOutput from "../../../common/components/ViewActionExecutionOutput"
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
 import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
 import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
 import ViewWorkflowStageResults from '../../../common/components/workflow/execute/ViewWorkflowStageResults'
-import ViewExecutionCharts from '../../../common/ViewExecutionCharts'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
 import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/components/shared-components/ActionDefinitionHero'
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from '../../build_action/context/BuildActionContext'

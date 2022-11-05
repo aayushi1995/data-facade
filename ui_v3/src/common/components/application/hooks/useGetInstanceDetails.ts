@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query"
+import { useQuery } from "react-query"
 import { Fetcher } from "../../../../generated/apis/api"
 import { ActionInstanceDetails } from "../../../../generated/interfaces/Interfaces"
 import labels from "../../../../labels/labels"

@@ -1,8 +1,6 @@
-import { useMutation, UseMutationOptions, useQuery } from "react-query"
+import { useMutation, UseMutationOptions } from "react-query"
 import dataManagerInstance from "../../../../data_manager/data_manager"
-import { Fetcher } from "../../../../generated/apis/api"
-import { ActionExecution, Application } from "../../../../generated/entities/Entities"
-import { ActionInstanceCardViewResponse } from "../../../../generated/interfaces/Interfaces"
+import { ActionExecution } from "../../../../generated/entities/Entities"
 import labels from "../../../../labels/labels"
 
 export interface useCreateExecutionParams {

@@ -2,10 +2,6 @@ import { Box, Typography } from '@mui/material'
 import React from "react"
 import ApplicationHeader from "../../../common/components/application/ApplicationHeader"
 import AllActionDefinitionsView from '../../../common/components/application/rows/AllActionDefinitionsView'
-import OrgActionDefinitions from "../../../common/components/application/rows/OrgActionDefinitions"
-import OrgActionInstances from "../../../common/components/application/rows/OrgActionInstances"
-import PinnedActionDefinitions from "../../../common/components/application/rows/PinnedActionDefinitions"
-import PinnedActionInstances from "../../../common/components/application/rows/PinnedActionInstances"
 import PreBuiltApplications from "../../../common/components/application/rows/PreBuiltApplications"
 
 interface AllApplicationViewRow {

@@ -1,10 +1,6 @@
 import ChartGroups from "../../enums/ChartGroups";
-import ChartType from "../../enums/ChartType";
-import { Chart } from "../../generated/entities/Entities";
 import { ChartWithData } from "../../generated/interfaces/Interfaces";
-import { BaseChartsConfig, SeriesLine } from "../components/charts/BaseChartsConfig";
-import { EChartUISpecificConfig } from "../components/charts/types/EChartUISpecificConfig";
-import { GaugeSingelValueData, HeatMapDataframeData, LineChartOptions, PieChartOptions, ScatterChartOptions, StackedHistogramData, TimeSeriesChartData, TwoDSegmentChartOptions } from "./formChartOptionsFromContext";
+import { LineChartOptions, ScatterChartOptions } from "./formChartOptionsFromContext";
 
 
 export const swapAxesChartOptionsTwoDimenstion = (chartData: ChartWithData): ChartWithData => {

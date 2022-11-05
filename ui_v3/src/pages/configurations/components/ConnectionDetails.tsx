@@ -4,7 +4,6 @@ import { DATA_CONNECTION_DETAIL_TAB, DATA_CONNECTION_DETAIL_TAB_LOGS, DATA_CONNE
 import { Box, Tab, Tabs } from "@mui/material"
 import ConnectionOverview from "./ConnectionOverview";
 import React from "react";
-import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import ConnectionDetailsSetup from "./ConnectionDetailsSetup";
 
 

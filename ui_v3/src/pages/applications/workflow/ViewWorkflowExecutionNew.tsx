@@ -1,10 +1,9 @@
-import { Box, Tabs, Tab, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import React from "react"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import { SetModuleContextState } from '../../../common/components/ModuleContext'
 import NoData from "../../../common/components/NoData"
 import { ReactQueryWrapper } from '../../../common/components/ReactQueryWrapper'
-import TabPanel from '../../../common/components/tabs/TabPanel'
 import ActionDescriptionCard from '../../../common/components/workflow-action/ActionDescriptionCard'
 import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
 import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"

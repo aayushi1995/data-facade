@@ -1,4 +1,4 @@
-import { ca } from "date-fns/locale";
+
 import ChartGroups from "../../enums/ChartGroups";
 import ChartType from "../../enums/ChartType";
 import { Chart } from "../../generated/entities/Entities";

@@ -1,12 +1,10 @@
-import { Box, IconButton, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { DataGrid, GridRowId, GridRowParams, MuiEvent } from '@mui/x-data-grid';
 import React, { SyntheticEvent } from 'react';
 import { getInputTypeFromAttributesNew } from '../../../../../../custom_enums/ActionParameterDefinitionInputMap';
 import TemplateLanguage from '../../../../../../enums/TemplateLanguage';
 import { ActionParameterDefinition } from '../../../../../../generated/entities/Entities';
-import PencilAltIcon from "../../../../../../icons/PencilAlt";
 import TagHandler from '../../../../tag-handler/TagHandler';
-import VirtualTagHandler from '../../../../tag-handler/VirtualTagHandler';
 import { TemplateWithParams } from '../hooks/UseViewAction';
 
 

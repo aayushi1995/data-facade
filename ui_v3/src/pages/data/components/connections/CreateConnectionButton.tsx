@@ -1,12 +1,11 @@
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material";
 import React from "react";
 import { Route, useHistory } from "react-router-dom";
 import { DATA_CONNECTIONS_ROUTE } from "../../../../common/components/header/data/DataRoutesConfig";
-import { ConnectionBreadCrumbs } from "./ConnectionBreadCrumbs";
 import { ConnectionDialogContent } from "./ConnectionDialogContent";
-import { CHOOSE_CONNECTOR_ROUTE, CHOOSE_CONNECTOR_SELECTED_ROUTE } from "./DataRoutesConstants";
+import { CHOOSE_CONNECTOR_ROUTE } from "./DataRoutesConstants";
 
 export function CreateConnectionButton() {
     const history = useHistory();

@@ -2,9 +2,6 @@ import { useQuery } from "react-query"
 import dataManagerDefinition from "../../../../data_manager/data_manager"
 import ActionDefinitionVisibility from "../../../../enums/ActionDefinitionVisibility"
 import { Fetcher } from "../../../../generated/apis/api"
-import { Application } from "../../../../generated/entities/Entities"
-import { ActionDefinitionCardViewResponse } from "../../../../generated/interfaces/Interfaces"
-import labels from "../../../../labels/labels"
 
 
 export const useGetOrgActionDefinitions = () => {

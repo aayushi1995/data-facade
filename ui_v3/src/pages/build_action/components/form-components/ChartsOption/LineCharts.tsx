@@ -1,5 +1,4 @@
 import {Box} from "@mui/material"
-import props from 'react';
 import ReactEcharts from "echarts-for-react"; 
 const LineChart =(props: { titleName: String; xTitle: String; yTitle: String;})=>{
 

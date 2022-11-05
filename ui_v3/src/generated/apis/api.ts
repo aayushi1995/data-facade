@@ -6,7 +6,6 @@
 
 import * as Entity from '../entities/Entities'
 import * as CustomInterface from '../interfaces/Interfaces'
-import dataManager from '../../data_manager/data_manager'
 import { userSettingsSingleton } from '../../data_manager/userSettingsSingleton'
 
 const endPoint = require("../../common/config/config").FDSEndpoint

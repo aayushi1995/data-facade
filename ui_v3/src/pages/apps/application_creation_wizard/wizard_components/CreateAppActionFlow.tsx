@@ -2,7 +2,6 @@ import { Box, Button, Grid, Radio, Typography } from "@mui/material";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPPLICATION_CREATE_AUTO_FLOW } from "../../../../common/components/header/data/ApplicationRoutesConfig";
-import { APPLICATION_ROUTE } from "../../../../common/components/header/data/RoutesConfig";
 import { BuildApplicationWizardStepProps } from "../ApplicationCreationWizard";
 
 

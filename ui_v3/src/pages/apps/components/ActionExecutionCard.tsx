@@ -6,7 +6,6 @@ import DownloadAndDisplayLogs from "../../view_action_execution/DownloadAndDispl
 import { useGetPreSignedUrlForExecutionOutput } from "../../view_action_execution/hooks/useGetPreSignedUrlForExecutionOutput"
 import { useDownloadExecutionOutputFromS3 } from "../../view_action_execution/hooks/useDownloadExecutionOutputFromS3"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
-import { PlotVbpVolumeDivisionStylesOptions } from "highcharts"
 
 interface ActionExecutionCardProps {
     elapsedTime: string,

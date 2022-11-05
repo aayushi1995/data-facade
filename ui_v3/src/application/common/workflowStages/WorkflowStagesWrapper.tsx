@@ -1,9 +1,7 @@
 import WorkflowStage, { WorkflowStageProps } from "./WorkflowStage";
-import { Card, Box, Grid, Button, IconButton, Collapse, formLabelClasses } from "@mui/material";
+import { Card, Box, Collapse } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid'
-import { WorkflowContextType, WorkflowActionDefinition, SetWorkflowContext } from "../../../pages/applications/workflow/WorkflowContext";
-import CloseIcon from '@mui/icons-material/Close';
-import { DialogContent } from "@mui/material";
+import { WorkflowActionDefinition, SetWorkflowContext } from "../../../pages/applications/workflow/WorkflowContext";
 import { TransitionGroup } from 'react-transition-group';
 import React from "react";
 import { lightShadows } from "../../../css/theme/shadows";

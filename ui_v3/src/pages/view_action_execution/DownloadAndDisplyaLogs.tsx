@@ -1,6 +1,6 @@
 import { ActionExecution } from "../../generated/entities/Entities"
 import { Button, Box, Dialog, DialogTitle, DialogContent, Typography, IconButton, Grid } from "@mui/material"
-import { useGetPreSignedUrlForExecutionLogs, useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput"
+import { useGetPreSignedUrlForExecutionLogs } from "./hooks/useGetPreSignedUrlForExecutionOutput"
 import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOutputFromS3"
 import CloseIcon from '@mui/icons-material/Close'
 import React from "react"

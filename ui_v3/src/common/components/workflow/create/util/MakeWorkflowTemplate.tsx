@@ -1,4 +1,4 @@
-import { type } from "os";
+
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext";
 
 export type WorkflowTemplate = {

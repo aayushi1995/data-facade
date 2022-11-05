@@ -1,4 +1,4 @@
-import { Box, Card } from "@mui/material"
+import { Box } from "@mui/material"
 import ActionInstanceCard from "../../action/ActionInstanceCard"
 import { useGetOrgActionInstances } from "../hooks/useGetOrgActionInstances"
 import { ActionInstanceCardViewResponse } from "../../../../generated/interfaces/Interfaces"

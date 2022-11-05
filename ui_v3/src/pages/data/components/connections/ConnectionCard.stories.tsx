@@ -2,7 +2,7 @@ import {ConnectionCard, ConnectionCardType} from './ConnectionCard';
 import { withDesign } from 'storybook-addon-designs'
 import App from "../../../../App";
 import {RootComponent} from "../../../../index";
-import {Meta, Story} from "@storybook/react";
+import { Story} from "@storybook/react";
 
 export default {
     component: ConnectionCard,

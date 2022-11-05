@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Card, Dialog, DialogActions, DialogContent, IconButton, InputAdornment, Tab, Tabs, TextField, Drawer, Divider, styled } from "@mui/material";
+import { Box, Card, Dialog, DialogActions, DialogContent, IconButton, InputAdornment, Tab, Tabs, TextField, Divider, styled } from "@mui/material";
 import React from "react";
 import { TabPanel } from "../../../common/components/workflow/create/SelectAction/SelectAction";
 import { BuildActionContext, SetBuildActionContext } from "../context/BuildActionContext";
@@ -9,7 +9,6 @@ import ActionDetailForm from "./form-components/ActionDetailForm";
 import AllActions from "./form-components/AllActions";
 import CollapsibleDrawer from "./form-components/CollapsibleDrawer";
 import ShowActionInfo from "./form-components/ShowActionInfo";
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TestAction from './form-components/TestAction';
 
 export interface EditActionFormProps {

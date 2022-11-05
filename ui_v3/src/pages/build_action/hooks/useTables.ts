@@ -1,8 +1,8 @@
-import React, { Provider } from "react"
+
 import { useQuery } from "react-query"
-import { ProviderInstance, TableProperties } from "../../../generated/entities/Entities"
+import { TableProperties } from "../../../generated/entities/Entities"
 import labels from "../../../labels/labels"
-import dataManagerInstance, { useRetreiveData } from '../../../data_manager/data_manager'
+import dataManagerInstance from '../../../data_manager/data_manager'
 
 
 export interface UseTablesProps {

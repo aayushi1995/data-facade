@@ -16,7 +16,6 @@ import { safelyParseJSON } from "../../../execute_action/util";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
 import { ActionParameterDefinitionConfig } from "./EditActionParameter";
 import DefaultValueInput from "./parameter_input/DefaultValueInput";
-import settingIcon from "../../../../../src/images/settings.svg"
 import SettingsIcon from '@mui/icons-material/Settings';
 
 const tagFilter = createFilterOptions<Tag>()
