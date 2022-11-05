@@ -15,8 +15,13 @@ const useValidateActionInstance = () => {
                 options.onSuccess()
             } else {
                 const allProviderInstanceIds: (string | undefined)[] = []
-                actionInstanceRequest.actionParameterInstances.forEach(pi => allProviderInstanceIds.push(pi.ProviderInstanceId))
+                actionInstanceRequest.actionParameterInstances.forEach(pi => {
+                    if(!!pi.ProviderInstanceId) {
+                        allProviderInstanceIds.push(pi.ProviderInstanceId)
+                    }
+                })
                 const uniqueProviderInstances = [...new Set(allProviderInstanceIds)]
+                console.log(uniqueProviderInstances)
                 if(uniqueProviderInstances.length <= 1) {
                     options.onSuccess()
                 } else {

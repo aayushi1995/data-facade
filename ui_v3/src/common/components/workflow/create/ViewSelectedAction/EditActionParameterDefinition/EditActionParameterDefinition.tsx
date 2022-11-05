@@ -325,11 +325,11 @@ export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParam
     const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Tag === parameter.Tag && wfParameter.Datatype === parameter.Datatype)
     
 
-    const addAndMapGlobalParameter = (parameter: ActionParameterDefinition) => {
-        const paramterName = parameter.ParameterName?.substring(25)
+    const addAndMapGlobalParameter = (globalParamToAdd: ActionParameterDefinition) => {
+        const paramterName = globalParamToAdd.ParameterName?.substring(25)
         const id = uuidv4()
         const newGlobalParamter: ActionParameterDefinition = {
-            ...parameter,
+            ...globalParamToAdd,
             Id: id,
             ParameterName: paramterName,
             Datatype: parameter.Datatype,
