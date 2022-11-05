@@ -20,10 +20,6 @@ import ExternalStorageUploadRequestContentType from './../../enums/ExternalStora
 import DisplaySelectedFilesDetail from './DisplaySelectedFilesDetail';
 
 
-
-
-
-
 const useStyles = makeStyles(() => ({
     requiredTags: {
         width: "100%",
@@ -107,7 +103,6 @@ const UploadApplicationButton = (props) => {
 
     
     const handleTabChange = (event, newValue) => {
-        console.log(newValue)
       setActiveTab(newValue);
     };
 

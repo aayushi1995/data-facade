@@ -1,5 +1,4 @@
 import {Breadcrumbs, Grid, Typography, Button} from "@mui/material";
-import UploadApplicationButton from "../UploadApplicationButton"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import * as PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
@@ -62,9 +61,6 @@ export function PageHeader(props) {
                     <Button variant="contained" to="/data/connections/upload-file" component={ReactRouter}>
                         Upload File
                     </Button>
-            </Grid>
-            <Grid item>
-                <UploadApplicationButton/>
             </Grid>
         </Grid>
         {breadCrumbsToDisplay?.length > 1 && <Grid item xs={12}>

@@ -1,15 +1,19 @@
 import React from 'react';
+import { Route, Switch, useHistory } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 import {Box, Avatar, AvatarGroup, Button, Divider,Tooltip,TextField} from "@mui/material"
 import UserAvatar from '../../types/UserAvatar';
 import NumberStat, { NumberStatProp } from '../NumberStat';
 import ProviderAvatar from '../../types/ProviderAvatar';
 import Typography from '@mui/material/Typography';
+import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE } from '../header/data/ApplicationRoutesConfig';
 
 type HeroComponentMode = "EDIT" | "READONLY"
 
 export interface ApplicationHeroInfoProps {
     mode: HeroComponentMode,
     applicationName: string,
+    id: string,
     status: string,
     createdBy: UserAvatar,
     lastUpdatedTimestamp?: Date,
@@ -26,6 +30,15 @@ export interface ApplicationHeroInfoProps {
 }
 
 const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
+    const history = useHistory()
+
+    const handleActionBuilder= () => {
+        window.open(APPLICATION_BUILD_ACTION_ROUTE_ROUTE + "?applicationId=" + props.id, "_blank");
+    }
+
+    const handleFlowBuilder= () => {
+        window.open(APPLICATION_BUILD_FLOW_ROUTE_ROUTE + "?applicationId=" + props.id, "_blank");
+    }
 
     const formTimestampHumanReadable = (date: Date) => {
         return `${date.toDateString()}`
@@ -109,10 +122,8 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                         {props.gitSyncStatus !== undefined ? (
                             <div>
                                 {props.gitSyncStatus ? (
-                                    <Button variant="contained" sx={{
+                                    <Button variant="PackageActionButton1" sx={{
                                         backgroundColor: 'statusCardBgColor2.main',
-                                        maxHeight: '55px',
-                                        wordWrap: 'break-word',
                                         ":hover": {
                                             backgroundColor: '#8C0000'
                                         }  
@@ -122,17 +133,14 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                         Sync With GIT Repo
                                     </Button>
                                 ) : (
-                                    <Button variant="outlined" sx={{
-                                        maxHeight: '55px',
+                                    <Button variant="PackageActionButton1" sx={{
                                         wordWrap: 'break-word'
                                     }}>In Sync With Git Repo</Button>
                                 )}
                             </div>
                         ) : (
-                            <Button variant="contained" sx={{
+                            <Button variant="PackageActionButton1" sx={{
                                 backgroundColor: 'statusCardBgColor2.main',
-                                maxHeight: '55px',
-                                wordWrap: 'break-word',
                                 ":hover": {
                                     backgroundColor: '#8C0000'
                                 }  
@@ -142,6 +150,12 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                 Sync With GIT Repo
                             </Button>
                         )}
+                        <Button variant="PackageActionButton1" onClick={() => handleActionBuilder()}>
+                                Action <AddIcon sx={{marginLeft: 2}}/>
+                        </Button>
+                        <Button variant="PackageActionButton1" onClick={() => handleFlowBuilder()}>
+                                Flow <AddIcon sx={{marginLeft: 2}}/>
+                        </Button>
                     </Box>
                 </Box>    
             </Box>

@@ -66,8 +66,12 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                             borderRadius: '10px',
                             p: 1, marginBottom: 1}}
                     >
-                        <ApplicationHeroInfo mode='EDIT' applicationName={application?.model?.Name || "Name"} createdBy={{name: "Creator"}} 
-                        numberStats={[{value: application?.numberOfActions || 0, label: "Actions"}, {value: application?.numberOfFlows || 0, label: "Workflows"}]}
+                        <ApplicationHeroInfo 
+                            mode='EDIT' 
+                            applicationName={application?.model?.Name || "Name"}
+                            id={application?.model?.Id || "Id"} 
+                            createdBy={{name: "Creator"}} 
+                            numberStats={[{value: application?.numberOfActions || 0, label: "Actions"}, {value: application?.numberOfFlows || 0, label: "Workflows"}]}
                         status="In use" description={application?.model?.Description} gitSyncStatus={application?.gitSyncStatus} handleSyncWithGit={handleSyncWithGit}
                         // onChangeHandlers= {
                         //     // onNameChange= (newName?: string) => setApplicationContext({ type: "SetApplicationName", payload: { newName: newName } }),

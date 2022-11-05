@@ -65,7 +65,7 @@ const WizardView2 = (props: BuildActionWizardStepProps) => {
                     <VirtualTagHandler {...tagHandlerProps}/>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
-                    <Button variant="contained" onClick={onContinue}>Create</Button>
+                    <Button variant="PackageActionButton1" onClick={onContinue}>Create</Button>
                 </Box>
             </Grid>
         </Grid>

@@ -61,6 +61,22 @@ const baseOptions = {
                             color: "#FFFFFF",
                         }
                     }
+                },
+                {
+                    props: {
+                        variant: "PackageActionButton1"
+                    },
+                    style: {
+                        background: "#42C2FF",
+                        color: "#FFFFFF",
+                        borderRadius: '10px', 
+                        width: "250px",
+                        height: "50px",
+                        '&:hover': {
+                            backgroundColor: '#0AA1DD',
+                            color: "#FFFFFF",
+                        }
+                    }
                 }
             ]
         },
