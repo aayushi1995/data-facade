@@ -26,7 +26,7 @@ import Segment from "./ChartsOption/SegmentCharts"
 const EditActionChartConfig = () => {
     const buildActionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
-    const [selectedChart, setSelectedChart] = React.useState<number | undefined>()
+    const [selectedChart, setSelectedChart] = React.useState<number>(0)
 
     const selectedMyChart = selectedChart !== undefined ? buildActionContext?.charts?.[selectedChart] : undefined
 
@@ -49,7 +49,7 @@ const EditActionChartConfig = () => {
             borderRadius: '0px'}}
         >
             <Grid container sx={{minHeight: '100%', minWidth: '100%'}}>
-                <Grid item xs={1} sx={{minHeight: '100%'}}>
+                <Grid item xs={ 'auto' } sx={{minHeight: 'auto'}}>
                     <Box sx={{minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center'}}>
                         <Typography sx={{
                             fontFamily: "'SF Pro Display'",

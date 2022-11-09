@@ -1,7 +1,10 @@
-import { Box, Button, TextField, Typography } from "@mui/material"
+import { Box, Button, Grid, TextField, Typography } from "@mui/material"
 import React from "react"
+import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler"
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext"
 import { BuildActionWizardStepProps } from "../BuildActionWizard"
+import ActionSummary from "../common-components/ActionSummary"
+
 
 const WizardView1 = (props: BuildActionWizardStepProps) => {
     const {nextStep, previousStep} = props
@@ -22,48 +25,49 @@ const WizardView1 = (props: BuildActionWizardStepProps) => {
         })
     }
 
+    const tagHandlerProps: VirtualTagHandlerProps = {
+        selectedTags: buildActionContext.actionDefinitionWithTags.tags,
+        tagFilter: {
+            
+        },
+        allowAdd: true,
+        allowDelete: true,
+        onSelectedTagsChange: (newTags: Tag[]) => {
+            setBuildActionContext({
+                type: "ReAssignActionDefinitionTag",
+                payload: {
+                    newTags: newTags
+                }
+            })
+        },
+        inputFieldLocation: "BOTTOM"
+    }
+
     const onContinue = () => {
         props.nextStep()
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", justifyContent: "space-around", py: 3 }}>
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box sx={{display: "flex", justifyContent: "center"}}>
+        <Grid container>
+            
+            <Grid item xs={12} px={5} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <ActionSummary/>
+            </Grid>
+            <Grid item xs={12} px={5} sx={{ display: "flex", flexDirection: "column", gap: 4}}>
+                {/* <Box>
                     <Typography variant="wizardText">
-                        Welcome to Data Facade Action-Creation widget.
+                        Select Tags for your action
                     </Typography>
                 </Box>
-                <Box sx={{display: "flex", justifyContent: "center"}}>
-                    <Typography variant="wizardText">
-                        Experience a new way in how you write actions 
-                    </Typography>
+                <Box sx={{ display: "flex", flexGrow: 1}}>
+                    <VirtualTagHandler {...tagHandlerProps}/>
+                </Box> */}
+                
+                <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
+                    <Button variant="PackageActionButton1" onClick={onContinue}>Create</Button>
                 </Box>
-            </Box>
-            <Box sx={{display: "flex", alignItems: "center", flexDirection: "column", gap: 4}}>
-                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1}}>
-                    <Box>
-                        <Typography variant="wizardText">
-                            Type your Action Name
-                        </Typography>  
-                    </Box>
-                    <Box>
-                        <TextField 
-                            onBlur={saveActionName} 
-                            variant="outlined" 
-                            label="Action Name" 
-                            value={actionName} 
-                            onChange={(event => setActionName(event.target.value))}
-                        />
-                    </Box>
-                </Box>
-                <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 1}}>
-                    <Box>
-                        <Button variant="contained" onClick={onContinue} fullWidth>Continue</Button>
-                    </Box>
-                </Box>
-            </Box>
-        </Box>
+            </Grid>
+        </Grid>
     )
 }
 

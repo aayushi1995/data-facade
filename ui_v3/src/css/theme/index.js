@@ -237,7 +237,7 @@ const baseOptions = {
             color: "#304FFE"
         },
         wizardText: {
-            fontFamily: "'SF Compact Display'",
+            fontFamily: "'SF Pro Text'",
             fontStyle: "normal",
             fontWeight: 900,
             fontSize: "25px",

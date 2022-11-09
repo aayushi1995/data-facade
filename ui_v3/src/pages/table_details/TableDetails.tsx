@@ -2,12 +2,13 @@ import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Divider, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { generatePath, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
-import { DATA_COLUMN_VIEW, DATA_TABLE_TAB, DATA_TABLE_TAB_COLUMN_VIEW, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_TAB_TABLE_VIEW, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_COLUMN_VIEW, DATA_TABLE_TAB, DATA_TABLE_TAB_ACTION_INSTANCES, DATA_TABLE_TAB_COLUMN_VIEW, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_TAB_TABLE_VIEW, DATA_TABLE_VIEW } from "../../common/components/header/data/DataRoutesConfig";
 import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper";
 import useStyles from "../../css/table_details/TableDetails";
 import { useRetreiveData } from "../../data_manager/data_manager";
 import labels from "../../labels/labels";
 import ColumnDetails from "../column_details/ColumnDetails";
+import ActionInstances from "../customizations/components/ActionInstances";
 import TableRowExpanded from "../table_browser/components/TableRowExpanded";
 import ColumnView from "./components/ColumnView";
 import TableView from "./components/TableView";
@@ -25,7 +26,7 @@ export const TABLE_QUICK_VIEW = 2;
 export const TABLE_QUICK_STATS = 3;
 export const TABLE_CHECKS = 4;
 export const TABLE_CLEAN_ACTIONS = 5;
-// export const TABLE_ACTION_INSTANCES = 6;
+export const TABLE_ACTION_INSTANCES = 6;
 // export const INTERMIDIARY_TABLES = 7;
 
 const URL_TAB_INFO = [
@@ -43,10 +44,10 @@ const URL_TAB_INFO = [
   },
 
   // **** Action Instance And Intermediary Tabs are comnt out for temporary bcz these are not required now
-  // {
-  //   TabLabel: "Action Instance",
-  //   ViewName: DATA_TABLE_TAB_ACTION_INSTANCES
-  // },
+  {
+    TabLabel: "Recent Usages",
+    ViewName: DATA_TABLE_TAB_ACTION_INSTANCES
+  },
   // {
   //   TabLabel: "Intermediary Tables",
   //   ViewName: DATA_TABLE_TAB_INTERMEDIARY_TABLES
@@ -111,10 +112,10 @@ const TableDetailsView = () => {
                     <ColumnView TableId={data[0].Id} />
                   </TabPanel>
                   {/* **** Action Instance And Intermediary Tabs are comnt out for temporary bcz these are not required now */}
-                  {/* <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
+                  <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
                     <ActionInstances TableId={data[0].Id} />
                   </TabPanel>
-                  <TabPanel value={DATA_TABLE_TAB_INTERMEDIARY_TABLES}>
+                  {/* <TabPanel value={DATA_TABLE_TAB_INTERMEDIARY_TABLES}>
                       <IntermediaryTables TableId={data[0].Id}/>
                   </TabPanel> */}
                 </Box>

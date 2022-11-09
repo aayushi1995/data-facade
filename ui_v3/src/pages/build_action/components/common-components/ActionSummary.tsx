@@ -1,12 +1,15 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import React from "react";
 import ActionTypeToSupportedRuntimes from "../../../../custom_enums/ActionTypeToSupportedRuntimes";
+import getDefaultCode from "../../../../custom_enums/DefaultCode";
 import ActionDefinitionPresentationFormat from "../../../../enums/ActionDefinitionPresentationFormat";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
 
 const ActionSummary = () => {
     const buildActionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
+    const [actionName, setActionName] = React.useState("")
+    const [actionDescription, setActionDescription] = React.useState("")
 
     const getInitialActionType = () => {
         return buildActionContext.actionDefinitionWithTags.actionDefinition.ActionType
@@ -22,6 +25,17 @@ const ActionSummary = () => {
     const [actionType, setActionType] = React.useState(getInitialActionType())
     const [templateSupportedRuntimeGroup, setTemplateSupportedRuntimeGroup] = React.useState(getInitialTemplateLanguage())
     const [returnType, setReturnType] = React.useState(getInitialReturnType())
+    
+    const activeTemplate = (buildActionContext?.actionTemplateWithParams || []).find(at => at.template.Id===buildActionContext.activeTemplateId)?.template
+    React.useEffect(() => {
+        setBuildActionContext({
+            type: "SetActionTemplateText",
+            payload: {
+                newText: getDefaultCode(actionType, activeTemplate?.SupportedRuntimeGroup)
+            }
+        })
+    }, [actionType, actionName, activeTemplate?.SupportedRuntimeGroup])
+    
 
     const setReturnTypeInContext = () => {
         if (!!returnType && returnType !== "Select") {
@@ -57,6 +71,24 @@ const ActionSummary = () => {
         }
     }
 
+    const setNameInContext = () => {
+        setBuildActionContext({
+            type: "SetActionDefinitionName",
+            payload: {
+                newName: actionName
+            }
+        })
+    }
+
+    const setDescriptionInContext = () => {
+        setBuildActionContext({
+            type: "SetActionDefinitionDescription",
+            payload: {
+                newDescription: actionDescription
+            }
+        })
+    }
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 4 ,minHeight:'180px'}}>
             {/* 
@@ -78,6 +110,31 @@ const ActionSummary = () => {
                     </Select>
                 </FormControl>
             </Box> */}
+            <Box sx={{ display: "flex", flexDirection: "column", width: "100%", justifyContent: "space-around", py: 3 }}>
+                <Box sx={{display: "flex", alignItems: "left", flexDirection: "column", gap: 4}}>
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "left", gap: 1}}>
+                        <Box>
+                            <TextField fullWidth
+                                variant="outlined" 
+                                label="Action Name"
+                                onBlur={(event) => setNameInContext()} 
+                                value={actionName} 
+                                onChange={(event => setActionName(event.target.value))}
+                            />
+                        </Box>
+                        <Box>
+                            <TextField fullWidth
+                                onBlur={(event) => setDescriptionInContext()}
+                                variant="outlined" 
+                                label="Description" 
+                                value={actionDescription} 
+                                onChange={(event => setActionDescription(event.target.value))}
+                            />
+                        </Box>
+                    </Box>
+                </Box>
+            </Box>
+
             <Box>
                 <FormControl variant="outlined" fullWidth>
                     <InputLabel>Select your Scripting Language</InputLabel>
@@ -106,11 +163,11 @@ const ActionSummary = () => {
                         label="Return Type"
                         fullWidth
                     >
-                        <MenuItem value={ActionDefinitionPresentationFormat.SINGLE_VALUE}>Single Value</MenuItem>
+                        {/* <MenuItem value={ActionDefinitionPresentationFormat.SINGLE_VALUE}>Single Value</MenuItem>
                         <MenuItem value={ActionDefinitionPresentationFormat.TIME_SERIES}>Time Series</MenuItem>
-                        <MenuItem value={ActionDefinitionPresentationFormat.FREQUENCY}>Frequency</MenuItem>
+                        <MenuItem value={ActionDefinitionPresentationFormat.FREQUENCY}>Frequency</MenuItem> */}
                         <MenuItem value={ActionDefinitionPresentationFormat.TABLE_VALUE}>Table</MenuItem>
-                        <MenuItem value={ActionDefinitionPresentationFormat.OBJECT}>Object</MenuItem>
+                        {/* <MenuItem value={ActionDefinitionPresentationFormat.OBJECT}>Object</MenuItem> */}
                     </Select>
                 </FormControl>
             </Box>

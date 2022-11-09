@@ -23,24 +23,8 @@ const AllApplicationView = () => {
     const rows: AllApplicationViewRow[] = [
         {
             component: (props) => <PreBuiltApplications {...props}/>,
-            label: "Applications"
+            label: ""
         },
-        // {
-        //     component: (props) => <PinnedActionDefinitions {...props}/>,
-        //     label: "Pinned Actions"
-        // },
-        // {
-        //     component: (props) => <PinnedActionInstances {...props}/>,
-        //     label: "My Action Instances"
-        // },
-        // {
-        //     component: (props) => <OrgActionDefinitions {...props}/>,
-        //     label: "Public Actions"
-        // },
-        // {
-        //     component: (props) => <OrgActionInstances {...props}/>,
-        //     label: "Org Action Instances"
-        // },
         {
             component: (props) => <AllActionDefinitionsView {...props}/>,
             label: ""

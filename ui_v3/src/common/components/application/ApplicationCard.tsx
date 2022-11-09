@@ -15,6 +15,7 @@ import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutes
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 import useInstallApplication from './hooks/useInstallApplication'
 import LinesEllipsis from 'react-lines-ellipsis'
+import { getIconSxProperties } from './compomentCssProperties'
 
 
 interface ApplicationCardProps {
@@ -87,7 +88,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         handleMoreOptionsSpeedDialToggle()
     }
 
-    const promptDeleteApplication = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const promptDeleteApplication = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.stopPropagation() 
         handleMoreOptionsSpeedDialClose()
         handleDialogOpen()
@@ -106,22 +107,19 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         event.stopPropagation()
     }
 
+    const deleteButton = <Tooltip arrow placement='top' title="Delete">
+        <IconButton sx={getIconSxProperties()} onClick={promptDeleteApplication}>
+            <DeleteIcon />
+        </IconButton>
+    </Tooltip>
+
     const formActions = () => {
         if(props.isInstalled) {
             return (
                 <Box sx={{mx:'auto',width:'35%',display: "flex", flexDirection:"row", gap: 2, mt: "4%", mb: "4%"}}>
                     <Box>
-                        <Tooltip arrow title="Add to Favorites">
-                            <IconButton sx={{
-                                height: "100%",
-                                width: "100%",
-                                backgroundColor: "cardIconButtonBackgroundColor.main",
-                                boxShadow: lightShadows[32],
-                                "&:hover": {
-                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
-                                    color: "cardIconBtn1HoverColor.main"
-                                }
-                            }} onClick={onFavorite}>
+                        <Tooltip arrow placement='top' title="Add to Favorites">
+                            <IconButton sx={getIconSxProperties()} onClick={onFavorite}>
                                 <FavoriteIcon/>
                             </IconButton>
                         </Tooltip>
@@ -130,39 +128,14 @@ const ApplicationCard = (props: ApplicationCardProps) => {
 
                     <Box>
                         <Tooltip arrow placement='top' title="Share">
-                            <IconButton sx={{
-                                height: "100%",
-                                width: "100%",
-                                backgroundColor: "cardIconButtonBackgroundColor.main",
-                                boxShadow: lightShadows[32],
-                                "&:hover": {
-                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
-                                    color: "cardIconBtn1HoverColor.main"
-                                }
-                            }} onClick={onShare}>
+                            <IconButton sx={getIconSxProperties()} onClick={onShare}>
                                 <ShareIcon/>
                             </IconButton>
                         </Tooltip>
                     </Box>
-
-
                     <Box>
-
-                        <Tooltip arrow placement='top' title="Share">
-                            <IconButton sx={{
-                                height: "100%",
-                                width: "100%",
-                                backgroundColor: "cardIconButtonBackgroundColor.main",
-                                boxShadow: lightShadows[32],
-                                "&:hover": {
-                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
-                                    color: "cardIconBtn1HoverColor.main"
-                                }
-                            }} onClick={promptDeleteApplication}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-
+                        {deleteButton}
+                    </Box>
 
                         {/* <Tooltip arrow placement='top' title="More Options">
                             <SpeedDial
@@ -203,24 +176,13 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 />
                             </SpeedDial>
                         </Tooltip> */}
-                    </Box>
-                    
                 </Box>
             )
         } else {
             return (
                 <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%" , alignItems:'center'}}>
                         <Tooltip arrow title="Install">
-                            <IconButton sx={{
-                                height: "60px",
-                                width: "60px",
-                                backgroundColor: "cardIconButtonBackgroundColor.main",
-                                boxShadow: lightShadows[32],
-                                "&:hover": {
-                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
-                                    color: "cardIconBtn1HoverColor.main"
-                                }
-                            }} onClick={onApplicationInstall}>
+                            <IconButton sx={getIconSxProperties()} onClick={onApplicationInstall}>
                                 <InstallDesktopIcon/>
                             </IconButton>
                         </Tooltip>
@@ -395,15 +357,10 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                             {formActions()}
                         </Box>
                     </Box>
-                    </Card>
-                    
-
-                   
+                </Card>
             </Box>
         </>
     )
 }
 
 export default ApplicationCard
-
-

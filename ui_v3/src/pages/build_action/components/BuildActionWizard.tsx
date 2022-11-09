@@ -8,7 +8,6 @@ import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import { ActionDefinition } from "../../../generated/entities/Entities";
 import { BuildActionContext, UseActionHooks } from "../context/BuildActionContext";
 import WizardView1 from "./wizard-steps-components/WizardView1";
-import WizardView2 from "./wizard-steps-components/WizardView2";
 
 export interface BuildActionWizardStepProps {
     nextStep: () => void,
@@ -24,10 +23,6 @@ type BuildActionWizardStepConfig = {
 const steps: BuildActionWizardStepConfig[] = [
     {
         component: (props) => <WizardView1 {...props}/>,
-        label: "Create Action Name"
-    },
-    {
-        component: (props) => <WizardView2 {...props}/>,
         label: "Create Action"
     }
 ]
