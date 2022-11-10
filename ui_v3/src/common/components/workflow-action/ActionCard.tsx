@@ -56,7 +56,7 @@ const ActionCard = (props: ActionCardProps) => {
     }
     const [isNameBeingEdited, setIsNameBeingEdited] = React.useState(false)
 
-    var background = "#F8F8F8"
+    var background = 'ActionCardBgColor.main'
     switch(props.executionStaus){
         case 'WaitingForUpstream': 
             background = 'rgba(248, 241, 178, 1)';
@@ -70,16 +70,17 @@ const ActionCard = (props: ActionCardProps) => {
     } 
 
     const handleClick = (e: any) => {
-        if(!!props.executionStaus && props.executionStaus !== 'Completed') {
+        
+        if(!!props.executionStaus) {
+            props.handlePreviewOutput(props.actionId)
+            props.onActionSelect?.(props.actionId, props.index)
             return;
         }
         props.onActionSelect?.(props.actionId, props.index)
+        
     }
 
     const handleActionClick = () => {
-        if(!!props.executionStaus && props.executionStaus !== 'Completed') {
-            return;
-        }
         props.handleActionClick?.(props.actionId, props.index, props.stageId || "stageID")
     }
 
@@ -130,7 +131,8 @@ const ActionCard = (props: ActionCardProps) => {
                 maxWidth: '100%',
                 overflowX: 'auto',
                 boxShadow: '-9.71814px -9.71814px 14.5772px #FFFFFF, 9.71814px 9.71814px 14.5772px rgba(0, 0, 0, 0.05);',
-                backgroundColor: 'ActionCardBgColor.main',
+                backgroundColor: background,
+                ...(props.isCardSelected && isSelectedStyles),
                 border: border
                 }} onClick={handleClick}
             >
@@ -145,11 +147,8 @@ const ActionCard = (props: ActionCardProps) => {
                     onDecline={handleDialogClose}
                 />
                 <Box sx={{
-                    backgroundColor: background, 
                     display: "flex", 
-                    flex: 1, 
-                    boxShadow: lightShadows[30], 
-                    ...(props.isCardSelected && isSelectedStyles)
+                    flex: 1,  
                     }}>
                     <Box sx={{flex: 2, display: 'flex', flexDirection: 'row', p: 2, justifyContent: 'flex-start', gap: 1}}>
                         <Box sx={{ display: 'flex', alignItems: 'center'}} {...props.dragHandleProps}>

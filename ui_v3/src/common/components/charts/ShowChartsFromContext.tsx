@@ -29,7 +29,7 @@ const ShowChartsFromContext = () => {
                 if (!!chart) {
                     return (
                         <Grid item xs={12} sx={{minHeight: '400px'}}>
-                            <Card sx={{height: '100%', width: '100%', boxShadow: lightShadows[27]}}>
+                            <Card sx={{height: '100%', width: '100%'}}>
                                 <ChartFromContext chart={chart} onChartModelChange={onChartModelChange}/>
                             </Card>
                         </Grid>

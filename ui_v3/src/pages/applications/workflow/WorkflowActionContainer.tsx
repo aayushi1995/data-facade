@@ -233,7 +233,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                                         <Draggable key={action.actionId} draggableId={action.actionId + index} index={index}>
                                                             {(_provided: any) => (
                                                                 <li {..._provided.draggableProps} ref={_provided.innerRef}>
-                                                                    <Box px={3}>
+                                                                    <Box px={1}>
                                                                     <ActionCard
                                                                         {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput, handleActionClick: handleActionClick, stageId: props.stageId, handleActionNameChange: handleActionNameChange }}
                                                                     />

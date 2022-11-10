@@ -3,7 +3,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
 import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridToolbarContainer } from "@mui/x-data-grid";
 import { ChangeEvent, useState } from 'react';
 import ConfirmationDialog from '../../../../common/components/ConfirmationDialog';
@@ -375,7 +375,10 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
 
     return (
         
-        <><Button   onClick={openDialog}><SettingsIcon color={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE?"success":"error"}/></Button>
+        <>
+        <Tooltip arrow title="Configure option set">
+            <Button   onClick={openDialog}><SettingsIcon color={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE?"success":"error"}/></Button>
+        </Tooltip>
         <Dialog onClose={closeDialog} open={dialogOpen} fullWidth={true} maxWidth="sm">
             <Box sx={{ display: 'flex', gap: 1 ,flexDirection:'column'}}>
             <Box sx={{

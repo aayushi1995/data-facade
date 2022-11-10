@@ -21,15 +21,15 @@ const WrapInCollapsable = (props: WrapInCollapsableProps) => {
             '&:hover': {
                 backgroundColor: theme.palette.background.default
             },
-            borderRadius: 6,
-            boxShadow: '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
+            borderRadius: '10px',
+            // boxShadow: '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
             background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
             backgroundBlendMode: 'soft-light, normal',
             }}
             variant={'outlined'}
             defaultExpanded={props.defaultExpanded || false}
         >
-            <AccordionSummary expandIcon={props.expandMoreIcon || <ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon /> || props.expandMoreIcon}>
                 {props.summary}
             </AccordionSummary>
             <AccordionDetails>

@@ -69,18 +69,18 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
         }
     }
     return(
-        <Box>
+        <Box sx={{width:'100%',display:'flex'}}>
             <LoadingWrapper
                 data={actionExecutionDetailQuery.data}
                 isLoading={actionExecutionDetailQuery.isLoading}
                 error={actionExecutionDetailQuery.error}
             >
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                    <Box>
+                <Box sx={{width:'100%', display: "flex", flexDirection: "column", gap: 1 }}>
+                    <Box sx={{width:'100%'}}>
                     {getToRenderComponent()}
                     </Box>
                     <Box>
-                        <Button variant="contained" onClick={handleMoreInfoClick}>More Info</Button>
+                        {/* <Button variant="contained" onClick={handleMoreInfoClick}>More Info</Button> */}
                     </Box>
                 </Box>
             </LoadingWrapper>
@@ -114,7 +114,7 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
                     parameterInstances={actionExecutionDetail?.ActionParameterInstances||[]}
                 />
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box sx={{width:'100%', display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box>
                     <Typography>
                         Output
@@ -124,8 +124,10 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
                     <Card sx={{
                         p: 3,
                         background: "#F4F5F7",
+                        width:'70vw',
+                        height:'60vh',
                         boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)",
-                        overflowX: 'auto'
+                        overflow:'scroll'
                     }}>
                         <ReactJson src={failureMessage} />
                     </Card>

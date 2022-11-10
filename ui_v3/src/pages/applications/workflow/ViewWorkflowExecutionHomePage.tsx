@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close'
-import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button } from "@mui/material"
-import React from "react"
+import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button, Typography, Card, Divider, Tooltip } from "@mui/material"
+import React, { useState } from "react"
 import { RouteComponentProps, useRouteMatch } from "react-router-dom"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import NoData from "../../../common/components/NoData"
@@ -14,23 +14,36 @@ import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/com
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from '../../build_action/context/BuildActionContext'
 import ViewActionExecution from '../../view_action_execution/VIewActionExecution'
 import ViewWorkflowExecutionNew from './ViewWorkflowExecutionNew'
-import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
+import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { ExecuteWorkflow } from './ExecuteWorkflowHomePage'
+import ActionExecutionStatus from '../../../enums/ActionExecutionStatus'
+import { SetModuleContextState } from '../../../common/components/ModuleContext'
+import StepSlider from '../../../common/StepSlider'
+import WorkflowStagesWrapper from '../../../application/common/workflowStages/WorkflowStagesWrapper'
+import SaveAndBuildChartContextProvider from '../../../common/components/charts/SaveAndBuildChartsContext'
+import SaveAndBuildChartsFromExecution from '../../../common/components/charts/SaveAndBuildChartsFromExecution'
+import WorkflowActionContainer from './WorkflowActionContainer'
+import leftExpandIcon from '../../../../src/images/left expand.svg'
+import RightExpandIcon from '../../../../src/images/right expand.svg'
+import LinesEllipsis from 'react-lines-ellipsis'
 
 interface MatchParams {
     workflowExecutionId: string
 }
 
-const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
-    const workflowExecutionId = match.params.workflowExecutionId
+const ViewWorkflowExecution = (match: MatchParams) => {
+    const workflowExecutionId = match.workflowExecutionId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
 
     const actionContext = React.useContext(BuildActionContext)
     const setActionContext = React.useContext(SetBuildActionContext)
-    
+    const setModuleStateContext = React.useContext(SetModuleContextState)
     const [areChildActionsReady, setAreChildActionReady] = React.useState<boolean>(false)
     const [areActionsCompleted, setAreActionsCompleted] = React.useState<boolean>(false)
-    const [resultsAvailable, setResultsAvailable] = React.useState<boolean>(false)
+    const [resultsAvailable, setResultsAvailable] = React.useState<boolean>(true)
 
     const checkIfActionsCompleted = (data: WorkflowActionExecutions[]) => {
         var areActionsCompleted = true
@@ -43,7 +56,96 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
         setAreActionsCompleted(areActionsCompleted)
     }
 
+    // const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
+    //     if(data?.[0]?.ChildExecutionsWithDefinitions?.length || 0 > 0) {
+    //         if(areChildActionsReady === false) {
+    //             setWorkflowContext({type: 'DELETE_STAGE', payload: {stageId: workflowContext.stages[0].Id}})
+    //         }
+    //         const workflowExecutionStartedOn = data?.[0]?.WorkflowExecution?.ExecutionStartedOn || (new Date(Date.now()).getTime())
+    //         var currentStageId = ""
+    //         const totalChildExecutions = data?.[0]?.ChildExecutionsWithDefinitions?.length || 0
+    //         const childExecutions = data?.[0]?.ChildExecutionsWithDefinitions
+    //         for(let i = 0; i < totalChildExecutions; i++) {
+    //             currentStageId = childExecutions?.[i]?.stageId || "stageId"
+    //             const stageActions = []
+    //             while(i<totalChildExecutions && childExecutions?.[i]?.stageId === currentStageId) {
+    //                 stageActions.push({
+    //                     Id: childExecutions?.[i]?.ActionExecution?.Id || "executionId",
+    //                     ActionGroup: childExecutions?.[i]?.ActionDefinition?.ActionGroup || "Action Group NA",
+    //                     DisplayName: childExecutions?.[i]?.ActionDefinition?.DisplayName || "Name",
+    //                     DefaultActionTemplateId: childExecutions?.[i]?.ActionDefinition?.DefaultActionTemplateId || "templateId",
+    //                     Parameters: [],
+    //                     ExecutionStatus: childExecutions?.[i]?.ActionExecution?.Status || "Created",
+    //                     ExecutionStartedOn: childExecutions?.[i]?.ActionExecution?.ExecutionStartedOn,
+    //                     ExecutionCompletedOn: childExecutions?.[i]?.ActionExecution?.ExecutionCompletedOn,
+    //                     PresentationFormat: childExecutions?.[i]?.ActionDefinition?.PresentationFormat
+    //                 })
+    //                 i++;
+    //             }
+    //             i--;
+    //             const currentStage = workflowContext.stages.find(stage => stage.Id === currentStageId)
+    //             if(!!currentStage) {
+    //                 var completedActions = 0;
+    //                 stageActions.forEach((stageAction, index) => {
+    //                     setWorkflowContext({type: 'UPDATE_CHILD_STATUS', payload: {
+    //                         stageId: currentStageId,
+    //                         actionId: stageAction.Id,
+    //                         actionIndex: index,
+    //                         newStatus: stageAction.ExecutionStatus,
+    //                         ExecutionStartedOn: stageAction.ExecutionStartedOn,
+    //                         ExecutionCompletedOn: stageAction.ExecutionCompletedOn
+    //                     }})
+    //                     if(stageAction.ExecutionStatus === 'Completed' || stageAction.ExecutionStatus === 'Failed') {
+    //                         completedActions++;
+    //                     }
+    //                 })
+    //                 setWorkflowContext({type: 'CHANGE_STAGE_PERCENTAGE', payload: {
+    //                     stageId: currentStageId,
+    //                     percentage: (completedActions/stageActions.length) * 100
+    //                 }})
+    //             } else {
+    //                 setWorkflowContext({type: 'ADD_STAGE', payload: {
+    //                     Name: childExecutions?.[i]?.stageName || "stage",
+    //                     Id: currentStageId,
+    //                     Actions: stageActions
+    //                 }})
+    //             }
+
+    //         }
+    //         setWorkflowContext({type: 'SET_WORKFLOW_DETAILS', payload: {actionName: data?.[0]?.WorkflowDefinition?.DisplayName || "WorkflowName", description: data?.[0]?.WorkflowDefinition?.Description || "NA"}})
+    //         setWorkflowContext({type: 'CHANGE_EXECUTION_STATUS', payload: {status: data?.[0]?.WorkflowExecution?.Status || "NA"}})
+    //         setWorkflowContext({type: 'SET_DRAGGABLE_PROPERTY', payload: false})
+    //         setWorkflowContext({type: 'SET_APPLICATION_ID', payload: data?.[0]?.WorkflowDefinition?.ApplicationId })
+    //         setWorkflowContext({type: 'SET_ACTION_GROUP', payload: data?.[0]?.WorkflowDefinition?.ActionGroup })
+    //         setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: { newDescription: data?.[0]?.WorkflowDefinition?.Description||"NA" }})
+    //         setWorkflowContext({type: "SET_PUBLISHED_STATUS", payload: data?.[0]?.WorkflowDefinition?.PublishStatus })
+    //         setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_STARTED_ON', payload: workflowExecutionStartedOn})
+    //         setWorkflowContext({type: 'SET_MODE', payload: 'EXECUTING'})
+            
+    //         setActionContext({ type: "SetActionDefinition", payload: { newActionDefinition: data?.[0]?.WorkflowDefinition}})
+            
+    //         setAreChildActionReady(true)   
+    //         checkIfActionsCompleted(data || [])
+
+    //         if(data?.[0]?.WorkflowExecution?.Status === "Completed" || data?.[0]?.WorkflowExecution?.Status === "Failed") {
+    //             setResultsAvailable(true)
+    //             setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_COMPLETED_ON', payload: data?.[0]?.WorkflowExecution?.ExecutionCompletedOn || (new Date(Date.now()).getTime())})
+    //         }
+    //     }
+        
+    // }
+
     const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
+        setModuleStateContext({
+            type: 'SetHeader',
+            payload: {
+                newHeader: {
+                    Title: data?.[0]?.WorkflowExecution?.ActionInstanceName,
+                    SubTitle: "Run on " + (new Date(data?.[0]?.WorkflowExecution?.ScheduledTime || Date.now()).toString())
+                }
+            }
+        })
+
         if(data?.[0]?.ChildExecutionsWithDefinitions?.length || 0 > 0) {
             if(areChildActionsReady === false) {
                 setWorkflowContext({type: 'DELETE_STAGE', payload: {stageId: workflowContext.stages[0].Id}})
@@ -74,6 +176,7 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                 if(!!currentStage) {
                     var completedActions = 0;
                     stageActions.forEach((stageAction, index) => {
+                        
                         setWorkflowContext({type: 'UPDATE_CHILD_STATUS', payload: {
                             stageId: currentStageId,
                             actionId: stageAction.Id,
@@ -84,17 +187,41 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                         }})
                         if(stageAction.ExecutionStatus === 'Completed' || stageAction.ExecutionStatus === 'Failed') {
                             completedActions++;
+                        } else if(stageAction.ExecutionStatus === ActionExecutionStatus.STARTED) {
+                            if(currentStage.stageStarted !== true) {
+                                setWorkflowContext({
+                                    type: 'SET_STAGE_STARTED_TIME',
+                                    payload: {
+                                        stageId: currentStageId,
+                                        startedOn: Date.now()
+                                    }
+                                })
+                            }
+                        } 
+                        if(stageAction.ExecutionStatus === ActionExecutionStatus.FAILED) {
+                            setWorkflowContext({
+                                type: 'SET_STAGE_FAILED',
+                                payload: {
+                                    stageId: currentStageId
+                                }
+                            })
                         }
                     })
-                    setWorkflowContext({type: 'CHANGE_STAGE_PERCENTAGE', payload: {
-                        stageId: currentStageId,
-                        percentage: (completedActions/stageActions.length) * 100
-                    }})
+            
+                    if(completedActions === currentStage.Actions.length) {
+                        setWorkflowContext({
+                            type: 'SET_STAGE_COMPLETED',
+                            payload: {
+                                stageId: currentStageId
+                            }
+                        })
+                    }
                 } else {
                     setWorkflowContext({type: 'ADD_STAGE', payload: {
                         Name: childExecutions?.[i]?.stageName || "stage",
                         Id: currentStageId,
-                        Actions: stageActions
+                        Actions: stageActions,
+                        completed: data?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.COMPLETED || data?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED
                     }})
                 }
 
@@ -109,17 +236,34 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
             setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_STARTED_ON', payload: workflowExecutionStartedOn})
             setWorkflowContext({type: 'SET_MODE', payload: 'EXECUTING'})
             
-            setActionContext({ type: "SetActionDefinition", payload: { newActionDefinition: data?.[0]?.WorkflowDefinition}})
-            
             setAreChildActionReady(true)   
-            checkIfActionsCompleted(data || [])
 
             if(data?.[0]?.WorkflowExecution?.Status === "Completed" || data?.[0]?.WorkflowExecution?.Status === "Failed") {
-                setResultsAvailable(true)
+                // setTabState(1)
                 setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_COMPLETED_ON', payload: data?.[0]?.WorkflowExecution?.ExecutionCompletedOn || (new Date(Date.now()).getTime())})
             }
         }
         
+    }
+    
+
+
+    const [initialTime, setInitialTime] = React.useState((new Date(Date.now()).getTime()))
+    const increaseTime = () => {
+        if(!workflowContext.WorkflowExecutionCompletedOn){
+            setInitialTime(time => time + 1000)
+        }
+    }
+    const getElapsedTime = () => {
+        const finalTime = workflowContext.WorkflowExecutionCompletedOn || initialTime
+        const timeInMilliseconds = finalTime - (workflowContext.WorkflowExecutionStartedOn || 0)
+
+        const timeInSeconds = timeInMilliseconds/1000
+        const m = Math.floor(timeInSeconds / 60).toString().padStart(2,'0')
+        const s = Math.floor(timeInSeconds % 60).toString().padStart(2,'0');
+
+        return m + ' MIN ' + s + ' SEC'
+
     }
 
     const handlePreviewDialogClose = () => {
@@ -129,8 +273,90 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
     const handleResultsDialogClose = () => {
         setAreActionsCompleted(false)
     }
+    const numberOfActionINStage = ()=>{
+        let ans = 0;
+        for(var i=0;i<workflowContext.stages.length;i++){
+            ans += workflowContext.stages[i].Actions.length;
+        };
+        return ans;
+    }
+    const [userInputOpener , setuserInputOpener] = useState(false);
 
+    const handleInputOpener = () =>{
+        setuserInputOpener(userInputOpener=>!userInputOpener)
+    }
+    const currentIndex = workflowContext.stages.findIndex(stage => stage.Id === workflowContext.currentSelectedStage)
+
+    const handleGoNext = () => {
+        setWorkflowContext({
+            type: 'GO_TO_NEXT_STAGE',
+            payload: {}
+        })
+    }
+
+    const handleGoBack = () => {
+        setWorkflowContext({
+            type: 'GO_TO_PREV_STAGE',
+            payload: {}
+        })
+    }
+
+    const handleSelectAction = (actionId: string, actionIndex: number) => {
+        setWorkflowContext({
+            type: 'SET_SELECTED_ACTION',
+            payload: {
+                actionId: actionId,
+                actionIndex: actionIndex
+            }
+        })
+    }
+
+    const selectedStage = workflowContext.stages.filter(stage => stage.Id === workflowContext.currentSelectedStage).map(stage => ({
+        stageId: stage.Id,
+        stageName: stage.Name,
+        numberOfActions: stage.Actions.length,
+        totalRunTime: '32 SEC'
+    }))
+    const [finalOutputOpener , setFinalOutputOpener] = useState(false);
+    const [flowOpener , setFlowOpener] = useState(true);
+    const [flowResultOpener , setFlowResultOpener] = useState(true)
+    const handlefinalOutputOpener = () =>{
+        setFinalOutputOpener(true);
+        setFlowOpener(false);
+        setWorkflowContext({
+            type: 'CHANGE_CURRENT_SELECTED_STAGE',
+            payload: {
+                stageId: undefined
+            }
+        })
+    }
+    const handleFlowOpener = ()=>{
+        setFinalOutputOpener(false);
+        setFlowOpener(true);
+
+        setWorkflowContext({
+            type: 'CHANGE_CURRENT_SELECTED_STAGE',
+            payload: {
+                stageId: undefined
+            }
+        })
+    }
+    const handleAllCollapse = ()=>{
+        setFinalOutputOpener(false);
+        setFlowOpener(false);
+    }
     const [workflowActionExecutionData, workflowActionExecutionError, workflowActionExecutionLoading] = useGetWorkflowStatus(workflowExecutionId, {enabled: (workflowContext.WorkflowExecutionStatus !== 'Completed' && workflowContext.WorkflowExecutionStatus !== 'Failed'), handleSuccess: handleRefreshQuery})
+
+    React.useEffect(() => {
+        setInitialTime(Date.now())
+        setInterval(increaseTime, 1000)
+        setAreChildActionReady(false)
+        setWorkflowContext({
+            type: 'SET_ENTIRE_CONTEXT',
+            payload: defaultWorkflowContext
+        })
+
+    }, [workflowExecutionId])
 
     if(!areChildActionsReady){
         return <LoadingIndicator/>
@@ -139,23 +365,9 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
     } else {
         return (
             <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center'}}>
-                <Dialog open={areActionsCompleted} fullWidth maxWidth="xl" scroll="paper">
-                    <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <IconButton aria-label="close" onClick={handleResultsDialogClose}>
-                            <CloseIcon/>
-                        </IconButton>
-                    </Grid>
-                    <DialogTitle sx={{display: 'flex', gap: 20, alignItems: 'center'}}>
-                        Results
-                        <Box>
-                            <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
-                        </Box>
-                    </DialogTitle>
-                    <DialogContent sx={{overflow: 'auto', p: 1}}>
-                        <ShowWorkflowExecutionOutput/>
-                    </DialogContent>
-                </Dialog>
-                <Dialog open={workflowContext.actionExecutionIdForPreview !== undefined} onClose={handleResultsDialogClose} fullWidth maxWidth="xl" scroll="paper">
+                
+
+                {/* <Dialog open={workflowContext.actionExecutionIdForPreview !== undefined} onClose={handleResultsDialogClose} fullWidth maxWidth="xl" scroll="paper">
                     <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}} onClick={handlePreviewDialogClose}>
                         <IconButton aria-label="close" >
                             <CloseIcon/>
@@ -165,21 +377,121 @@ const ViewWorkflowExecution = ({match}: RouteComponentProps<MatchParams>) => {
                     <DialogContent sx={{overflow: 'auto', p: 1, display: 'flex', gap: 2, flexDirection: 'column'}}>
                         <ViewActionExecution actionExecutionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"}/>
                     </DialogContent>
-                </Dialog>
-                <Box sx={{display: 'flex', minWidth: '100%', flex: 1}}>
-                    <ActionDefinitionHeroActionContextWrapper mode="READONLY"/>
-                </Box>
-                <Box sx={{flex: 4, minHeight: '100%', minWidth: '100%', mb: 4}}>
-                    {workflowContext.currentSelectedStage ? (
-                        <ViewWorkflowStageResults />
-                    ) : (
-                        <StagesWithActions/>
-                    )}
+                </Dialog> */}
+                <Box sx={{display: 'flex',flexDirection:'column', minWidth: '100%',height:'100%'}}>
+                    {/* <ActionDefinitionHeroActionContextWrapper mode="READONLY"/> */}
+                    <Box sx={{px:9, display:'flex',flexDirection:'row'}}>
+                                    <Box sx={{display:'flex',flexDirection:'column',width:'50%'}}>
+                                        <Typography sx={{fontSize:'2rem',fontWeight:700}}>{workflowActionExecutionData?.[0]?.WorkflowDefinition?.DisplayName}</Typography>
+                                        <Tooltip placement='top' arrow title={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description}>
+                                        <Typography sx={{fontSize:'0.8rem',fontWeight:400,width:'70%'}}>
+                                            <LinesEllipsis
+                                                text={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description}
+                                                maxLine='3'
+                                                ellipsis=' ...'
+                                                trimRight
+                                                basedOn='letters'
+                                            />
+                                             </Typography>
+                                             </Tooltip>
+                                    </Box>
+                                    <Box sx={{textAlign:'right',display:'flex',flexDirection:'column',width:'50%',pt:5}}>
+                                        <Typography sx={{fontSize:'0.9rem',fontWeight:500}}>RUNNING : { workflowContext.stages.length} STAGES | {numberOfActionINStage()} ACTIONS</Typography>
+                                        <Typography sx={{color:'blue',fontSize:'0.9rem',fontWeight:500}}>RUN TIME : {getElapsedTime()}</Typography>
+
+                                    </Box>
+
+                    </Box>
+                                    <Box onClick={handleInputOpener} sx={{cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
+                                        <Box sx={{display:'flex',flexDirection:'row'}}>
+                                            <Button onClick={handleInputOpener}>
+                                                {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
+                                            </Button>
+                                            <Typography sx={{color:'#f09124',py:1,fontSize:'1.1rem',fontWeight:500}}>Inputs</Typography>
+                                        </Box>
+                                        <Box sx={{px:'20vw'}}>{userInputOpener?
+                                                <WorkflowContextProvider>
+                                                    <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>
+                                                </WorkflowContextProvider>:<></>
+                                            }
+                                        </Box>
+                                    </Box>
                     
+                
+                <Box sx={{display:'flex',flexDirection:'column',mx:-4}}>
+                    {/* {(!workflowContext.currentSelectedStage && flowOpener)?
+                    <></>:
+                    <Box sx={{mx:11,px:2,mr:9}}>
+                        <StagesWithActions showStage={true} showDet={false}/>
+                    </Box>
+                    } */}
+                    <Box sx={{mx:11}}>
+                        <StagesWithActions showStage={true} showDet={false}/>
+                    </Box>
+                    <Box sx={{display:'flex',flexDirection:'row',height:'100%',gap:2}}>
+                        <Box sx={{transitionDuration:'0.5s',ml:(workflowContext.currentSelectedStage?0:(flowOpener?10:0)), width:(!workflowContext.currentSelectedStage && flowOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && flowOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:(!workflowContext.currentSelectedStage &&flowOpener)? "":"-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
+                            {(workflowContext.currentSelectedStage || !flowOpener)?
+                            <Button onClick={handleFlowOpener} ><img width='50px' height='50px' src={leftExpandIcon} alt="Open"/></Button>:<></>
+                            }
+                                {(!workflowContext.currentSelectedStage && flowOpener)?
+                                    <Box sx={{flex: 4, mb: 4,mx:1,px:1}}>
+                                        <StagesWithActions showStage={false} showDet={true}/>
+                                    </Box>
+                                :
+                                <></>
+                            }
+                        </Box>
+                        {workflowContext.currentSelectedStage ? (
+                                    //    <ViewWorkflowStageResults />
+                                    <>
+                                    <Box sx={{mt: 1, display: 'flex', flex: 1,gap:3,px:2}}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2,width:'20vw'}}>
+                                            <StepSlider label="Stage" currentIndex={currentIndex} maximumIndex={workflowContext.stages.length - 1} handleNext={handleGoNext} handleBack={handleGoBack}/>
+                                            <Box sx={{height:'9vh'}}>
+                                                <WorkflowStagesWrapper stages={selectedStage} allowEdit={false} percentageWidth='100%'/>
+                                            </Box>    
+                                            <Card sx={{
+                                                backgroundColor: '#f4f5f7',
+                                                border:'2px solid #fafcfc',
+                                                boxShadow:"-4px -6px 16px rgba(255, 255, 255, 0.5), 4px 6px 16px rgba(163, 177, 198, 0.5)",
+                                                borderRadius: "10px",
+                                                height:'100%',
+                                                mr:1,
+                                                mx:2,
+                                            }}>
+                                                <WorkflowActionContainer stageId={workflowContext.currentSelectedStage || "stageNA"} handleSelectAction={handleSelectAction}/>
+                                            </Card>
+                                        </Box>
+                                        <Box sx={{display:'flex',flexDirection:'column',width:'68vw'}}>
+                                            <SaveAndBuildChartContextProvider>
+                                                <SaveAndBuildChartsFromExecution executionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
+                                            </SaveAndBuildChartContextProvider>
+                                            {workflowContext.actionExecutionIdForPreview?
+                                            <ViewActionExecution actionExecutionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"}/>
+                                            :<></>}
+                                            </Box>
+                                    </Box>
+                                    </>
+                                    ) : (
+                                        <></>
+                                    )}
+                        <Box sx={{transitionDuration:'0.5s',mr:finalOutputOpener?10:0,width:(!workflowContext.currentSelectedStage && finalOutputOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && finalOutputOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:finalOutputOpener?"": "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
+                            {workflowContext.currentSelectedStage ||!finalOutputOpener?
+                                <Button onClick={handlefinalOutputOpener} ><img width='50px' height='50px' src={RightExpandIcon} alt="Open"/></Button>:<></>
+                            }
+                            {!workflowContext.currentSelectedStage && finalOutputOpener?(
+                                <Box sx={{width:'100%'}}>
+                                    <Box sx={{overflow: 'auto', px: 2}}>
+                                        <ShowWorkflowExecutionOutput/>
+                                    </Box>
+                                </Box>)
+                                    :
+                                    <></>
+                            }
+                        </Box> 
+                    </Box>
                 </Box>
-                <Box sx={{mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end', mr: 2}}>
-                    <Button variant="contained" color="primary" disabled={!resultsAvailable} onClick={() => setAreActionsCompleted(true)} size="large">View Results</Button>
-                </Box>
+            </Box>
             </Box>
         )
     }
@@ -195,7 +507,7 @@ export const ViewWorkflowExecutionHomePage = () => {
                 {/* <Switch>
                     <Route path={`${match.path}/:workflowExecutionId`} component={ViewWorkflowExecutionNew}/>
                 </Switch> */}
-                <ViewWorkflowExecutionNew workflowExecutionId={workflowExecutionId} />
+                <ViewWorkflowExecution workflowExecutionId={workflowExecutionId} />
             </BuildActionContextProvider>
         </WorkflowContextProvider>
     )

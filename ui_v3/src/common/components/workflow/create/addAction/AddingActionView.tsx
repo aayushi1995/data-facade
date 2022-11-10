@@ -35,7 +35,7 @@ export const AddingActionView = (props: { onBack: Function }) => {
                             <img src={slideNext} style={{transform: 'rotate(180deg)'}} alt="go back"/>
                         </IconButton>
                     </Tooltip>
-                    <Typography sx={{fontFamily: 'SF Pro Text', fontWeight: 300}}>Go Back to Save</Typography>
+                    <Typography sx={{fontFamily: 'SF Pro Text', fontWeight: 300}}>Go Back to Save </Typography>
                 </Box>
                 <Box sx={{flex: 1, minHeight: '100px'}}>
                     <WorkflowStagesWrapper stages={allStages} selectedStage={selectedStage} maxWidthInPixel={100} numberOfStages={1} fromAddActionsView={true}></WorkflowStagesWrapper>

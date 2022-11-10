@@ -73,10 +73,34 @@ const ViewWorkflowStageResults = (props: ViewWorkflowStageResultsProps) => {
         })
     }
 
+    const numberOfActionINStage = ()=>{
+        let ans = 0;
+        for(var i=0;i<workflowContext.stages.length;i++){
+            ans += workflowContext.stages[i].Actions.length;
+        };
+        return ans;
+    }
+    const [initialTime, setInitialTime] = React.useState<number>(Date.now())
+    const increaseTime = () => {
+        if(!workflowContext.WorkflowExecutionCompletedOn){
+            setInitialTime(time => time + 1000)
+        }
+    }
+    const getElapsedTime = () => {
+        const finalTime = workflowContext.WorkflowExecutionCompletedOn || initialTime
+        const timeInMilliseconds = finalTime - (workflowContext.WorkflowExecutionStartedOn || 0)
+
+        const timeInSeconds = timeInMilliseconds/1000
+        const m = Math.floor(timeInSeconds / 60).toString().padStart(2,'0')
+        const s = Math.floor(timeInSeconds % 60).toString().padStart(2,'0');
+
+        return m + ' MIN ' + s + ' SEC'
+
+    }
     return (
-        <WrapInDialog dialogProps={{open: true, handleClose: handleClose, TransitionComponent: Transition}}>
+        <WrapInDialog dialogProps={{open: true, handleClose: handleClose,label:'DATA FACADE', TransitionComponent: Transition}}>
             <Box sx={{display: 'flex', gap: 1, p: 1, flexDirection: 'column'}}>
-                <Card sx={{
+                {/* <Card sx={{
                     display: 'flex', alignItems: 'center',
                     backgroundColor: "buildActionDrawerCardBgColor.main",
                     border: "0.439891px solid #FFFFFF",
@@ -95,7 +119,18 @@ const ViewWorkflowStageResults = (props: ViewWorkflowStageResultsProps) => {
                             {workflowContext.Name}
                         </Typography>
                     </Box>
-                </Card>
+                </Card> */}
+                <Box sx={{px:6, display:'flex',flexDirection:'row'}}>
+                                    <Box sx={{display:'flex',flexDirection:'column',width:'50%'}}>
+                                        <Typography sx={{fontSize:'2rem',fontWeight:700}}>{workflowContext.Name}</Typography>
+                                        <Typography sx={{fontSize:'0.8rem',fontWeight:400,width:'70%'}}>{workflowContext.Description} </Typography>
+                                    </Box>
+                                    <Box sx={{textAlign:'right',display:'flex',flexDirection:'column',width:'50%',pt:5}}>
+                                        <Typography sx={{fontSize:'0.9rem',fontWeight:500}}>RUNNING : { workflowContext.stages.length} STAGES | {numberOfActionINStage()} ACTIONS</Typography>
+                                        <Typography sx={{color:'blue',fontSize:'0.9rem',fontWeight:500}}>RUN TIME : {getElapsedTime()}</Typography>
+                                    </Box>
+
+                    </Box>
                 <Box sx={{mt: 1, display: 'flex', flex: 1}}>
                     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 2}}>
                         <StepSlider label="Stage" currentIndex={currentIndex} maximumIndex={workflowContext.stages.length - 1} handleNext={handleGoNext} handleBack={handleGoBack}/>

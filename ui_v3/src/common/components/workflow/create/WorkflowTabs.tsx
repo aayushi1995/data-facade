@@ -129,7 +129,7 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
             <Box>
                 <TabPanel value={tabValue} index={0}>
                     <Box mt={2}>
-                        <StagesWithActions/>
+                        <StagesWithActions showStage={true} showDet={true}/>
                     </Box>
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>

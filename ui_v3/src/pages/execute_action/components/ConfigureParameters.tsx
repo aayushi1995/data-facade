@@ -41,7 +41,7 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                     borderRadius: "16px",
                     minWidth: '100%'
                 }}>
-                    <Box sx={{maxHeight: '550px', overflowY: 'auto', height: '550px'}}>
+                    <Box sx={{maxHeight: '550px', height: '450px'}}>
                         <Grid container spacing={2} direction="column" justifyContent="center">
                             <Grid item xs={3}>
                                 <Box sx={{
@@ -61,13 +61,15 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                                 </Box>
                             </Grid>
                             <Grid item xs={9} mx={3}>
-                                <ParameterDefinitionsConfigPlane 
-                                    parameterDefinitions={filteredParameters}
-                                    parameterInstances={props.ActionParameterInstances}
-                                    parameterAdditionalConfigs={props.ParameterAdditionalConfig || []}
-                                    handleChange={props.handleParametersChange}
-                                    onParameterClick={onParameterClick}
-                                />
+                                <Box sx={{height:'350px',overflow:'scroll'}}>
+                                    <ParameterDefinitionsConfigPlane 
+                                        parameterDefinitions={filteredParameters}
+                                        parameterInstances={props.ActionParameterInstances}
+                                        parameterAdditionalConfigs={props.ParameterAdditionalConfig || []}
+                                        handleChange={props.handleParametersChange}
+                                        onParameterClick={onParameterClick}
+                                    />
+                                </Box>
                             </Grid>
                         </Grid>
                     </Box>
@@ -84,7 +86,7 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                         borderRadius: "16px",
                         minWidth: '100%'
                     }}>
-                        <Box sx={{maxHeight: '550px', overflowY: 'auto', height: '550px'}}>
+                        <Box sx={{maxHeight: '550px', overflowY: 'auto', height: '450px'}}>
                             <Grid container spacing={2} direction="column" justifyContent="center">
                                 <Grid item xs={3}>
                                     <Box sx={{

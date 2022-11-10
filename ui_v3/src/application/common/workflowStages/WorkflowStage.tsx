@@ -23,6 +23,8 @@ export interface WorkflowStageProps {
     setSelectedStage?: (stageId: string) => void
 }
 
+
+
 export const WorkflowStage = (props: WorkflowStageProps) => {
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const [isDeleteDialogOpen, setIsDialogOpen] = React.useState(false)
@@ -60,6 +62,8 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
         }})
     }
 
+    
+
     const handleDialogCloseWithoutDelete = () => {
         setIsDialogOpen(false)
     }
@@ -70,6 +74,12 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
     }
 
     const handleStageClick = () => {
+        setWorkflowContext({
+            type: 'CHANGE_CURRENT_SELECTED_STAGE',
+            payload: {
+                stageId: props.stageId
+            }
+        })
         if(props.selectedStageId!==undefined){
             props.setSelectedStage?.(props.stageId)
         }
@@ -84,8 +94,10 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 alignItems: "center", 
                 pt: 2, 
                 pb: 2, 
-                borderRadius: 1,
-                height: '100%'
+                borderRadius: '10px',
+                height: '8vh',
+                boxShadow: 'rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset'
+                // boxShadow: 'rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px'
             }}
         >
             <ConfirmationDialog
@@ -93,8 +105,7 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                 dialogOpen={isDeleteDialogOpen}
                 onDialogClose={handleDialogCloseWithoutDelete}
                 onAccept={handleDeleteStage}
-                onDecline={handleDialogCloseWithoutDelete}
-            />
+                onDecline={handleDialogCloseWithoutDelete} messageHeader={''} acceptString={'Delete'} declineString={'Cancel'}            />
             <Box sx={{
                 minWidth: "40px", 
                 zIndex: 1
@@ -102,22 +113,22 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
             <Box sx={{
                 display: "flex", 
                 flexDirection: "column", 
-                alignItems: "flex-start", 
+                alignItems: "center", 
                 overflowX: "hidden", 
                 mr: "2", 
                 boxSizing: "border-box", 
                 backgroundColor: "inherit",
                 zIndex: 2, 
                 flexGrow: 1,
-                gap: 3,
                 cursor: 'pointer'
             }} onClick={handleStageClick}>
                 <Box sx={{display: "flex"}}>
-                    <Box sx={{alignItems: "flex-start", overflowY: 'clip', textOverflow: 'ellipsis'}} >
+                    <Box sx={{alignItems: "flex-end", overflowY: 'clip', textOverflow: 'ellipsis'}} >
                         {!isNameBeingEdited ? (
                             <Typography variant="heroHeader" sx={{
-                                fontSize: '16px',
+                                fontSize: '1rem',
                                 fontWeight: 700,
+                                textAlign:'center'
                             }}
                             onClick = {() => {
                                 if((props.selectedStageId===undefined || props.selectedStageId === props.stageId) && props.allowEdit !== false) {
@@ -138,6 +149,8 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                         <Typography sx={{
                             display: 'inline-block',
                             whiteSpace: "nowrap",
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
                         }}
                         >
                             Actions: {props.numberOfActions} <b>|</b> RunTime: {props.totalRunTime}
@@ -161,17 +174,17 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                     alignItems: "center",
                     justifyContent: "center",
                     position: "relative",
-                    left: "40px",
+                    left: "50px",
                     zIndex: 1
                 }}>
                     <Box sx={{
                         width: "0",
                         height: "0",
                         borderTop: "25px solid transparent",
-                        borderLeft: "25px solid",
+                        borderLeft: "60px solid",
                         borderLeftColor: props.color,
-                        borderBottom: "25px solid transparent"
-                    }}>
+                        borderBottom: "25px solid transparent",
+                     }}>
                     </Box>
 
                     <Box sx={{
@@ -184,14 +197,9 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                         minWidth: "20px"
                     }}>
                         {props.selectedStageId === undefined &&
-                            <>
+                            <>  { props.allowEdit ? 
+                                <Box>
                                 <IconButton sx={{p: "0px", mt: '5px'}} onClick={handleAddDeleteClick}>
-                                    {/* {props.cardButton === 'plus' ? (
-                                        <AddIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
-                                    ):
-                                    (
-                                        <RemoveIcon sx={{height: "20px", width: "20px", color: "#fff"}}/>
-                                    )} */}
                                     <img src={AddRemoveIcon} alt="Add" style={{height: '20px', width: '20px', background: 'transparent', transform: 'scale(1.5)'}}/>
                                 </IconButton>
                                 <Menu 
@@ -211,6 +219,9 @@ export const WorkflowStage = (props: WorkflowStageProps) => {
                                         <MenuItem onClick={handleMenuItemSelect} value={1}>Add Stage Last</MenuItem>
                                         <MenuItem onClick={handleMenuItemSelect} value={2}>Delete Stage</MenuItem>
                                 </Menu>
+                                </Box> :<></>
+                                }
+                                
                             </>
                         }
                     </Box>

@@ -1,4 +1,4 @@
-import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper, Tooltip, IconButton } from "@mui/material"
+import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper, Tooltip, IconButton, Typography } from "@mui/material"
 import React from "react"
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
@@ -288,28 +288,28 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0 && isReady && !actionInstanceDetailsQuery.isRefetching)
     {
         return (
-            <Box sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center'}}>
+            <Box sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center',p:3}}>
                 <Box sx={{flex: 1}}>
-                    <ActionDescriptionCard description={workflowContext.Description}  mode="READONLY" />
+                    {/* <ActionDescriptionCard description={workflowContext.Description}  mode="READONLY" /> */}
                 </Box>
                 <Box sx={{flex: 4, mb: 2}}>
                     <ReactQueryWrapper data={workflowContext.WorkflowParameterInstance} isLoading={!isReady} error={instancesError} children={
                         () => (
                             <Box sx={{display: 'flex', flexDirection: 'column', gap: 3}}>
-                                <Grid container sx={{mt: 3}}>
-                                    <Grid item xs={4} />
-                                    <Grid item xs= {4} >
+                                <Grid container sx={{mt: 0}}>
+                                    <Grid item xs={2} />
+                                    <Grid item xs= {8} >
                                         <Stepper nonLinear activeStep={recurrenceConfig.activeIndex} alternativeLabel>
                                             {IndexToComponent.map((component, index) => (
                                                 <Step key={index}>
                                                     <StepButton onClick={() => handleGoToStep(index)}>
-                                                        {IndexToComponent[index].label}
+                                                        <Typography sx={{fontWeight:500}}>{IndexToComponent[index].label}</Typography>
                                                     </StepButton>
                                                 </Step>
                                             ))}
                                         </Stepper>
                                     </Grid>
-                                    <Grid item xs={4} sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                                    <Grid item xs={2} sx={{display: 'flex', justifyContent: 'flex-end'}}>
                                         <Tooltip title="Edit Flow">
                                             <IconButton onClick={handleEditFlow}>
                                                 <EditIcon />
@@ -325,8 +325,8 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                     }/>
                     
                 </Box>
-                <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', mt: 5}}>
-                    <Box sx={{flex: 1, maxWidth: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2}}>
+                <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', mt: 0,}}>
+                    <Box sx={{flex: 1, maxWidth: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2}}>
                         {saveWorkflowMutation.isLoading ? (
                             <LoadingIndicator/>
                         ) : (
@@ -334,7 +334,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                             {recurrenceConfig.activeIndex ===  (IndexToComponent.length - 1)? (
                                 <Button sx={{width: '200px',backgroundColor: 'ActionConfigComponentBtnColor2.main',justifyContent: 'center'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
                             ) : (
-                                <Box sx={{display: 'flex', flexDirection:'row', width:'350px',justifyContent: 'center'}}>
+                                <Box sx={{display: 'flex', flexDirection:'row', width:'25vw',justifyContent: 'center'}}>
                                     <Button sx={{mx:1, minWidth: '45%',position:'relative',left:0 ,backgroundColor: 'ActionConfigComponentBtnColor1.main'}} variant="contained" disabled={!areAllParametersFilled()} onClick={executeWorkflow}>EXECUTE</Button>
                                     <Button sx={{mx:1, minWidth: '45%',position:'relative',right:0 ,backgroundColor: 'ActionConfigComponentBtnColor2.main'}} variant="contained" onClick={handleGoNext}>NEXT</Button>
                                 </Box>

@@ -1,5 +1,5 @@
-import { Box, Typography } from "@mui/material"
-import React from "react"
+import { Box, Tabs, Tab, Typography, Button,IconButton ,Collapse } from "@mui/material"
+import React,{ useState } from "react"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import { SetModuleContextState } from '../../../common/components/ModuleContext'
 import NoData from "../../../common/components/NoData"
@@ -14,6 +14,11 @@ import ActionExecutionCard from '../../apps/components/ActionExecutionCard'
 import { ExecuteWorkflow } from './ExecuteWorkflowHomePage'
 import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 import WorkflowExecutionStages from './WorkflowExecutionStages'
+import CollapsibleDrawer from "../../../../src/pages/build_action/components/form-components/CollapsibleDrawer"
+import DoubeLeftIcon from '../../../../src/images/Group 691.svg';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import WorkflowStagesWrapper from "../../../../src/application/common/workflowStages/WorkflowStagesWrapper"
 
 interface ViewWorkflowExecutionProps {
     workflowExecutionId: string
@@ -186,6 +191,34 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
         setTabState(1)
     }
 
+    const [opener , setopener] = useState();
+    
+    const drawerOpenHandler = (mp)=>{
+        setopener(mp)
+    }
+    const numberOfActionINStage = ()=>{
+        let ans = 0;
+        for(var i=0;i<workflowContext.stages.length;i++){
+            ans += workflowContext.stages[i].Actions.length;
+        };
+        return ans;
+    }
+
+    const currentStages = workflowContext.currentStageView === undefined ? workflowContext.stages.slice(0, 4) : workflowContext.stages.slice(workflowContext.currentStageView.startIndex, workflowContext.currentStageView.endIndex)
+
+    const stages = currentStages.map(stage => {
+        return {
+            stageId: stage.Id,
+            stageName: stage.Name,
+            percentageCompleted: stage.Percentage
+        }
+    })
+
+    const [userInputOpener , setuserInputOpener] = useState(false);
+
+    const handleInputOpener = () =>{
+        setuserInputOpener(userInputOpener=>!userInputOpener)
+    }
     return (
         <ReactQueryWrapper isLoading={workflowActionExecutionLoading} error={workflowActionExecutionError} data={workflowActionExecutionData}>
             {() => {
@@ -197,63 +230,106 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
                     return (
                         <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
     
-                            <ActionDescriptionCard description={workflowContext.Description} mode="READONLY"/>
-                            {/* <Tabs value={tabState} onChange={(event, newValue) => setTabState(newValue)}>
-                                <Tab value={0} label="FLow" sx={{
-                                    fontFamily: "SF Pro Text",
-                                    fontStyle: "normal",
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    lineHeight: "24px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    textAlign: "center",
-                                    opacity: 0.7
-                                }}/>
-                                <Tab value={1} disabled={!workflowContext.WorkflowExecutionCompletedOn} label="Results" sx={{
-                                    fontFamily: "SF Pro Text",
-                                    fontStyle: "normal",
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    lineHeight: "24px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    textAlign: "center",
-                                    opacity: 0.7
-                                }}/>
-                            </Tabs> */}
-                                <Box sx={{display:'flex',flexDirection:'row'}}>
-                                    <Box sx={{display:'flex',flexDirection:'column',width:'50%',px:3}}>
-                                        <Typography sx={{px:2,m:2,fontSize:'23px',fontWeight:'600'}}>Flow</Typography>
-                                        <ActionExecutionCard 
-                                            elapsedTime={getElapsedTime()} 
-                                            actionExecution={workflowActionExecutionData?.[0]?.WorkflowExecution || {}}  
-                                            arrowState={showParameters ? "DOWN": "UP"}
-                                            handleClickArrow={handleShowParameters}
-                                            terminalState={!!workflowContext.WorkflowExecutionCompletedOn} 
-                                            error={workflowActionExecutionData?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED}
-                                            isWorkflow={true}
-                                            handleShowResult={handleShowResults}
-                                            />
-                                        {showParameters ? (
+                            {/* <ActionDescriptionCard description={workflowContext.Description} mode="READONLY"/> */}
+                                <Box sx={{px:6, display:'flex',flexDirection:'row'}}>
+                                    <Box sx={{display:'flex',flexDirection:'column',width:'50%'}}>
+                                        <Typography sx={{fontSize:'2rem',fontWeight:700}}>{workflowActionExecutionData?.[0]?.WorkflowDefinition?.DisplayName}</Typography>
+                                        <Typography sx={{fontSize:'0.8rem',fontWeight:400,width:'70%'}}>{workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description} </Typography>
+                                    </Box>
+                                    <Box sx={{textAlign:'right',display:'flex',flexDirection:'column',width:'50%',pt:5}}>
+                                        <Typography sx={{fontSize:'0.9rem',fontWeight:500}}>RUNNING : { workflowContext.stages.length} STAGES | {numberOfActionINStage()} ACTIONS</Typography>
+                                        <Typography sx={{color:'blue',fontSize:'0.9rem',fontWeight:500}}>RUN TIME : {getElapsedTime()}</Typography>
+                                    </Box>
+
+                                </Box>
+
+                                <Box sx={{px:6 , width:'100%',py:2}}>
+                                    <Box sx={{display:'flex',flexDirection:'column',px:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
+                                        <Box sx={{display:'flex',flexDirection:'row'}}>
+                                            <Button onClick={handleInputOpener}>
+                                                {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
+                                            </Button>
+                                            <Typography sx={{color:'#f09124',py:1,fontSize:'1.1rem',fontWeight:500}}>Inputs</Typography>
+                                        </Box>
+                                        <Box sx={{px:'20vw'}}>{userInputOpener?
+                                                <WorkflowContextProvider>
+                                                    <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>
+                                                </WorkflowContextProvider>:<></>
+                                            }
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box sx={{flex: 1, minHeight: '100px', minWidth: '300px',px:6}}>
+                                    {/* <WorkflowStagesWrapper stages={[...stages]} fromAddActionsView={false} maxWidthInPixel={100} numberOfStages={workflowContext.stages.length} allowEdit={false}></WorkflowStagesWrapper> */}
+                                    <WorkflowExecutionStages/>
+                                </Box>
+
+
+                                <Box sx={{display:'flex',flexDirection:'column'}}>
+                                        {/* <Box sx={{px:6,py:1}}>
+                                            <Button color={showParameters ? "success": "secondary"} variant="outlined" onClick={handleShowParameters}>WorkFlow Configarator</Button>
+                                        </Box> */}
+                                        {/* { (
                                             <WorkflowContextProvider>
                                                 <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>
                                             </WorkflowContextProvider>
-                                        ) : (<></>)}
-                                        <WorkflowExecutionStages/>
-                                    </Box>
+                                        ) } */}
+                                        <Box sx={{display:'flex', flexDirection:'column'}}>
+                                            {/* <CollapsibleDrawer
+                                                open={opener || false}
+                                                openWidth="500px"
+                                                closedWidth="50px"
+                                                openDrawer={() => {drawerOpenHandler(true)}}
+                                                > */}
+                                                    {/* <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", flex: 1 }}>
+                                                        <IconButton onClick={() => drawerOpenHandler(false)}>
+                                                            <img src={DoubeLeftIcon} alt="NA"/>
+                                                        </IconButton>
+                                                    </Box> */}
 
-                                    <Box  sx={{display: 'flex', flexDirection: 'column', gap: 1,width:'50%',px:3}}>
-                                        <Box sx={{display:'flex',flexDirection:'row',px:2,mt:2,fontSize:'23px',}}>
-                                            <Box sx={{fontWeight:'600'}}>
-                                                Result 
-                                            </Box>
-                                            <Box sx={{display: 'flex',height:'35px', width: '30%',ml:'auto'}}>
-                                                <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
-                                            </Box>
-                                        </Box>
-                                        <ShowWorkflowExecutionOutput/>
+
+                                                    {/* <Box  sx={{display: 'flex', flexDirection: 'column', gap: 1,width:'100%',px:3}}>
+                                                        <Box sx={{display:'flex',flexDirection:'row',px:2,mt:2,fontSize:'23px',}}>
+                                                            <Box sx={{fontWeight:'600'}}>
+                                                                Result 
+                                                            </Box>
+                                                            <Box sx={{display: 'flex',height:'35px', width: '30%',ml:'auto'}}>
+                                                                <ExportAsDashboard executionId={workflowExecutionId} definitionName={workflowContext.Name}/>
+                                                            </Box>
+                                                        </Box>
+                                                        <ShowWorkflowExecutionOutput/>
+                                                    </Box> */}
+
+
+
+
+                                                    {/* <Box sx={{display:'flex',flexDirection:'column',width:'100%',px:3}}>
+                                                        <Typography sx={{px:2,m:2,fontSize:'23px',fontWeight:'600'}}>Flow</Typography>
+                                                        <ActionExecutionCard 
+                                                            elapsedTime={getElapsedTime()} 
+                                                            actionExecution={workflowActionExecutionData?.[0]?.WorkflowExecution || {}}  
+                                                            arrowState={showParameters ? "DOWN": "UP"}
+                                                            // handleClickArrow={handleShowParameters}
+                                                            terminalState={!!workflowContext.WorkflowExecutionCompletedOn} 
+                                                            error={workflowActionExecutionData?.[0]?.WorkflowExecution?.Status === ActionExecutionStatus.FAILED}
+                                                            isWorkflow={true}
+                                                            handleShowResult={handleShowResults}
+                                                            />
+                                                        
+                                                        <WorkflowExecutionStages/>
+                                                    </Box> */}
+                                            {/* </CollapsibleDrawer> */}
+                                            {/* <Collapse key={stage.stageId} sx={{ 
+                                                width: "24.5%", 
+                                                height: "100%", 
+                                                "& .MuiCollapse-wrapper": { height: "100%"}, 
+                                                "& .MuiCollapse-wrapperInner": { height: "100%"}
+                                            }}> */}
+                                            
+                                            {/* </Collapse> */}
+
                                     </Box>
+                                    
                                 </Box>
                             
                         </Box>

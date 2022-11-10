@@ -8,10 +8,15 @@ import ViewActionExecutionOutput from "../../../pages/view_action_execution/View
 import { ReactQueryWrapper } from "../ReactQueryWrapper"
 import LoadingIndicator from "../LoadingIndicator"
 import ShowChartsFromContext from "./ShowChartsFromContext"
+import ExportAsDashboard from "../workflow/execute/ExportAsDashboard"
+import { borderRadius } from "@mui/system"
+import FetchActionExecutionDetails from "../../../pages/view_action_execution/hooks/FetchActionExecutionDetails"
+import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
 
 
 interface SaveAndBuildChartsFromExecutionProps {
-    executionId: string
+    executionId: string;
+    definitionName?: string
 }
 
 interface TabPanelProps {
@@ -97,47 +102,58 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         setActiveTab(tabValue)
     }
 
+
+    const [executionTerminal, setExecutionTerminal] = React.useState(false)
+    const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: props.executionId, queryOptions: {
+        enabled: !executionTerminal
+    }})
+    React.useEffect(() => {
+        const actionStatus = actionExecutionDetailQuery.data?.ActionExecution?.Status
+        if(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED) {
+            setExecutionTerminal(true)
+        }
+    }, [actionExecutionDetailQuery.data])
+
+    React.useEffect(() => {
+        setExecutionTerminal(false)
+    }, [props.executionId])
+    
+    const handleMoreInfoClick = () => {
+        const actionExecutionId = actionExecutionDetailQuery.data?.ActionExecution?.Id
+        if(actionExecutionId !== undefined) {
+            window.open(`/application/jobs/${actionExecutionId}`)
+        }
+    }
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2, mr: 2}}>
-            <Grid container>
-                <Grid item xs={12} sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                    {chartQueriesState.fetchPresignedUrlMutation?.isLoading || chartQueriesState.uploadFileToS3Mutation?.isLoading || chartQueriesState.updateChart?.isLoading ? (
-                        <LoadingIndicator />
-                    ) : (
-                        <Button
-                            onClick={handleSaveCharts}
-                            sx={{
-                                border: "1px solid #56D280",
-                                boxShadow: "0px 0px 0px 1px rgba(0, 0, 0, 0.05)",
-                                filter: "drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15))",
-                                borderRadius: "64px"
-                            }} variant="outlined">
-                            <Typography sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: 600,
-                                fontSize: "13px",
-                                lineHeight: "170%",
-                                color: "#353535"
-                            }}>
-                                Save Chart
-                            </Typography>
-                        </Button>)
-                    }
-                </Grid>
-            </Grid>
             <Grid direction="column" ml={2}>
-                {/* <Grid item xs={12}>
+                <Grid item xs={12} >
                     <WrapInCollapsable summary={
-                        <CollapsibleSummary icon={FilterIcon} label="Filter"/>
-                    }
-                        expanded={<></>}
-                        
-                    />
-                </Grid> */}
-                <Grid item xs={12}>
-                    <WrapInCollapsable summary={
+                        <>
                         <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>
+                        <Box sx={{display:'flex',flexDirection:'row',ml:'auto',gap:2,mt:'20px'}}>
+                            <Box sx={{width:'10vw', height:'100%',ml:'auto'}}>
+                                <ExportAsDashboard executionId={props.executionId} definitionName={props.definitionName || ""}/>
+                            </Box>
+                            {chartQueriesState.fetchPresignedUrlMutation?.isLoading || chartQueriesState.uploadFileToS3Mutation?.isLoading || chartQueriesState.updateChart?.isLoading ? (
+                                    <LoadingIndicator />
+                                ) : (
+                                    <Box sx={{width:'15vw', height:'100%',ml:'auto'}}>
+                                    <Button
+                                        onClick={handleSaveCharts}
+                                        variant="outlined"
+                                        color="success"
+                                        sx={{
+                                            ml:'auto',
+                                            borderRadius:'5px'
+                                        }}>
+                                            Save Chart
+                                    </Button>
+                                    <Button variant="outlined" color="success" sx={{ ml:'auto', borderRadius:'5px',px:2,mx:2 }} onClick={handleMoreInfoClick}>More Info</Button>
+                                    </Box>)
+                                }
+                        </Box>
+                        </>
                     }
                         defaultExpanded={true}
                         expanded={
@@ -191,7 +207,7 @@ export const CollapsibleSummary = (props: {icon: string, label: string}) => {
 
 const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value: number) => void}) => {
     return (
-        <Box sx={{display: 'flex', gap: 1}}>
+        <Box sx={{display: 'flex', gap: 0}}>
             <Tabs value={props.activeTab} onChange={(event, newValue) => {
                 if(newValue !== props.activeTab && props.activeTab !== -1){
                     event.stopPropagation() 
@@ -203,7 +219,7 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
                     fontStyle: "normal",
                     fontWeight: 500,
                     fontSize: "17.4731px",
-                    lineHeight: "157%",
+                    lineHeight: "100%",
                     letterSpacing: "0.124808px",
                     color: "#DB8C28"
                 }}/>
@@ -212,7 +228,7 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
                     fontStyle: "normal",
                     fontWeight: 500,
                     fontSize: "17.4731px",
-                    lineHeight: "157%",
+                    lineHeight: "100%",
                     letterSpacing: "0.124808px",
                     color: "#353535"
                 }}/>

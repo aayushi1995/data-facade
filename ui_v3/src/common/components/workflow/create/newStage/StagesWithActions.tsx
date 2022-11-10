@@ -5,7 +5,7 @@ import WorkflowStagesWrapper from "../../../../../application/common/workflowSta
 import WorkflowActionContainer from "../../../../../pages/applications/workflow/WorkflowActionContainer"
 import { SetWorkflowContext, WorkflowActionDefinition, WorkflowContext } from "../../../../../pages/applications/workflow/WorkflowContext"
 
-export const StagesWithActions = () => {
+export const StagesWithActions = (props :{showDet: boolean, showStage: boolean}) => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const workflowExecuting = workflowContext.mode === 'EXECUTING'
@@ -27,7 +27,11 @@ export const StagesWithActions = () => {
         return {
             stageId: stage.Id,
             stageName: stage.Name,
-            percentageCompleted: stage.Percentage
+            percentageCompleted: stage.Percentage,
+            numberOfActions: stage.Actions.length,
+            failed: stage.stageFailed,
+            completed: stage.completed,
+            totalRunTime: '00 MIN 34 SEC' //workflowContext.stages[1].
         }
     })
 
@@ -80,48 +84,50 @@ export const StagesWithActions = () => {
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', maxWidth: 'inherit'}}>
-            <Grid container direction="row-reverse" sx={{width: "100%"}}>
-                <Grid item xs={2} sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                    <Tooltip title="Previous">
-                        <IconButton onClick={handleSlidePrev}  disabled={!isPreviousPossible}>
-                            <img src={slideNext} alt="previos" style={{transform: 'rotate(180deg)', opacity: isPreviousPossible ? 1 : 0.2}}/>
-                        </IconButton>
-                    </Tooltip>
-                    <Typography variant="heroMeta" sx={{display: 'flex', alignItems: 'center'}}>
-                        Stage {(workflowContext?.currentStageView?.startIndex || 0) + 1}-{lastStage} / {workflowContext.stages.length}
-                    </Typography>
-                    <Tooltip title="Next">
-                        <IconButton onClick={handleSlideNext} disabled={!isNextPossible}>
-                            <img src={slideNext} alt="next" style={{opacity: isNextPossible ? 1 : 0.2}}/>
-                        </IconButton>
-                    </Tooltip>
-                </Grid>
-                <Grid item xs={10} sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
-                    {workflowContext.WorkflowExecutionStartedOn ? (
-                        <Typography variant="heroMeta" >
-                            <span><b>{Math.round(((workflowContext.WorkflowExecutionCompletedOn || initialTime) - workflowContext.WorkflowExecutionStartedOn)/1000)}</b> sec</span>
+            {props.showStage?
+            <><Grid container direction="row-reverse" sx={{ width: "100%",p:0 }}>
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Tooltip title="Previous">
+                            <IconButton onClick={handleSlidePrev} disabled={!isPreviousPossible}>
+                                <img src={slideNext} alt="previos" style={{ transform: 'rotate(180deg)', opacity: isPreviousPossible ? 1 : 0.2 }} />
+                            </IconButton>
+                        </Tooltip>
+                        <Typography variant="heroMeta" sx={{ display: 'flex', alignItems: 'center' }}>
+                            Stage {(workflowContext?.currentStageView?.startIndex || 0) + 1}-{lastStage} / {workflowContext.stages.length}
                         </Typography>
-                    ) : (
-                        <></>
-                    )}
+                        <Tooltip title="Next">
+                            <IconButton onClick={handleSlideNext} disabled={!isNextPossible}>
+                                <img src={slideNext} alt="next" style={{ opacity: isNextPossible ? 1 : 0.2 }} />
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={10} sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                        
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Box sx={{flex: 1, minHeight: '100px', minWidth: '300px'}}>
-                <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage} 
-                onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} allowEdit={!workflowExecuting}></WorkflowStagesWrapper>
-            </Box>
+                <Box>
+                <Box sx={{ mt:-2, dispaly:'flex',flexDirectionL:'row', minHeight: '100px', minWidth: '300px' }}>
+                        <WorkflowStagesWrapper stages={[...stages]} maxWidthInPixel={100} onAddStage={handleAddStage}
+                            onDeleteStage={handleDeleteStage} numberOfStages={workflowContext.stages.length} allowEdit={!workflowExecuting}></WorkflowStagesWrapper>
+                    </Box>
+                    </Box>
+                    </>:
+            <></>
+}
+            {props.showDet?
             <Box sx={{flex: 1, display: 'flex', mt: 1, p: 1, flexDirection: 'row', gap: 1}}>
                 {/* <Card sx={{display: 'flex', boxShadow: lightShadows[27], flexDirection: 'column', p: 1, flex: 1}}> */}
                     {currentStages.map(stage => {
                         return (
                             <Grid item xs={3}>
-                                <Card sx={{ boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '20px', backgroundColor: 'buildActionDrawerCardBgColor.main', display: 'flex'}}>
+                                <Card sx={{border:'2px solid #fafcfc', boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', height: '100%', maxWidth: '100%', overflowY: 'auto', borderRadius: '10px', backgroundColor: '#f4f5f7', display: 'flex'}}>
                                     <WorkflowActionContainer {...{stageId: stage.Id, actionSelectable: false}}></WorkflowActionContainer>
                                 </Card>
                             </Grid>)
                     })}
                 
-            </Box>
+            </Box>:<></>
+            }
         </Box>
     )
 

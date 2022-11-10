@@ -77,12 +77,7 @@ const ActionExecutionCard = (props: ActionExecutionCardProps) => {
                 <Grid container alignItems="center" sx={{maxWidth: '100%'}}>
                     <Grid item xs={12}>
                         <Box sx={{display: 'flex', gap: 2, alignItem: 'center'}}>
-                            <Tooltip title={props.arrowState==="DOWN" ? "Show Inputs" : "Hide Inputs"}>
-                                <IconButton onClick={() => props.handleClickArrow?.()}>
-                                    <img src={ArrowDropDownIcon} style={{transform: `rotate(${props.arrowState==="UP" ? 180 : 0}deg)`, cursor: 'pointer'}} />
-                                </IconButton>
-                            </Tooltip>
-                            <Box sx={{display: 'flex', flexDirection: 'column', flex: 3, justifyContent: 'center'}}>
+                            <Box sx={{display: 'flex', flexDirection: 'column', flex: 3, justifyContent: 'center',px:6}}>
                                 <Typography sx={{
                                     fontFamily: "'SF Pro Display'",
                                     fontStyle: "normal",

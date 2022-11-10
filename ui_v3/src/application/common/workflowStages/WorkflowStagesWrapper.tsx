@@ -24,6 +24,7 @@ export interface WorkflowStagesWrapperProps {
         isDisabled?: boolean
         showDetails?: boolean
         failed?: boolean
+        completed?: boolean
         percentageCompleted?: number
     }[]
     onAddStage?: (e: {Id: string, Name: string, Actions: WorkflowActionDefinition[]}, stageId?: string) => void
@@ -33,13 +34,24 @@ export interface WorkflowStagesWrapperProps {
 
 const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
     const setWorkflowContext = React.useContext(SetWorkflowContext)
-    var color = 'pink'
+    var color1 = '#7efa73'
+    var color2 = '#f29d9d'
+    var color = 'rgba(238, 238, 255, 1)'
+    var color3 = '#faf8c8'
     const workflowStages: any = props.stages.map((stage, index) => {
         color = index%2===1 ? 'rgba(238, 238, 255, 1)' : 'rgba(166, 206, 227, 1)'
+        color1 = index%2===1 ? '#7efa73' : '#d5fcd2'
+        color2 = index%2===1 ? '#f29d9d' : '#fc586e'
+        color3 = index%2=== 1? '#faf8c8' : '#d1cd64'
         const cardButton: string = (index !== props?.stages?.length-1 ) ? 'minus' : 'plus'
         return {
-            color: color,
+            stageCompleted: stage.completed || false,
+            color: (props.allowEdit || props.fromAddActionsView)? color:(stage.completed?(stage.failed?color2:color1):color3),
+            showDetails: !props.allowEdit && !props.fromAddActionsView,
             cardButton: cardButton,
+            numberOfActions : props.stages[index].numberOfActions,
+            totalRunTime: props.stages[index].totalRunTime,
+            stageFailed: stage.failed || false,
             ...stage
         }
     })
@@ -75,7 +87,6 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
     }
 
     return (
-        <Card sx={{ boxShadow: lightShadows[27], height: "100px" }}>
             <Box sx={{ display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden', height: "100%"}} p={1} pl={2}>
                 <TransitionGroup style={{display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'clip', overflowY: 'hidden', height: "100%"}}>
                     {workflowStages.map((stage: WorkflowStageProps, index: number) => 
@@ -92,13 +103,13 @@ const WorkflowStagesWrapper = (props: WorkflowStagesWrapperProps) => {
                                 handleDeleteStage: handleDeleteStage,
                                 handleAddStage: handleAddStage, 
                                 fromAddActions: props.fromAddActionsView,
-                                setSelectedStage: setSelectedStage
+                                setSelectedStage: setSelectedStage,
+                                
                                 }}/>
                         </Collapse>
                     )}
                 </TransitionGroup>
             </Box>
-        </Card>
     )
 }
 
