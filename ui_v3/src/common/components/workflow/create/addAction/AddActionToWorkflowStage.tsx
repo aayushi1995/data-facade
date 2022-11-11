@@ -8,7 +8,7 @@ import { ConfigureParametersContextProvider } from "../../context/ConfigureParam
 import SelectAction, { ActionDefinitionToAdd } from "../SelectAction/SelectAction"
 import ViewSelectedAction from "../ViewSelectedAction/ViewSelectedAction"
 import ConfigureActionParameters from "./ConfigureActionParameters"
-
+import {v4 as uuidv4} from "uuid"
 
 export interface AddActionToWorkflowStageProps {
     stageId: string
@@ -31,7 +31,8 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
             DefaultActionTemplateId: actionDefinition.DefaultTemplateId,
             Parameters: actionDefinition.Parameters || [],  
             ActionGroup: actionDefinition.ActionGroup || "",
-            ParameterAdditionalConfigs: actionDefinition?.ParameterAdditionalConfigs
+            ParameterAdditionalConfigs: actionDefinition?.ParameterAdditionalConfigs,
+            ReferenceId: uuidv4()
         }
 
         setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: props.stageId, Action: newWorkflowAction}})

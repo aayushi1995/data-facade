@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
@@ -22,6 +23,16 @@ export type WorkflowActionParameters = {
     ParameterName?: string
 }
 
+export type TestActionLevelDetails = {
+    LatestExecutionId?: string,
+    TestStatus?: string
+}
+
+export type TestActionInstance = {
+    actionDetails?: Record<string, TestActionLevelDetails>,
+    parameterDetails?: Record<string, ActionParameterInstance>
+}
+
 export type WorkflowActionDefinition = {
     Id: string,
     ActionGroup: string,
@@ -38,7 +49,9 @@ export type WorkflowActionDefinition = {
     PresentationFormat?: string,
     ErrorInParametersConfigured?: string[],
     ResultTableName?: string,
-    ResultSchemaName?: string
+    ResultSchemaName?: string,
+    TestStatus?: "PASS" | "FAIL",
+    ReferenceId?: string
 }
 
 export type WorkflowContextType = {
@@ -88,7 +101,9 @@ export type WorkflowContextType = {
     WorkflowExecutionStartedOn?: number,
     WorkflowExecutionCompletedOn?: number,
     SelectedProviderInstance?: ProviderInstance,
-    currentStageRunning?: string
+    currentStageRunning?: string,
+    TestInstance?: TestActionInstance,
+    currentActionForTesting?: WorkflowActionDefinition
 }
 
 export const defaultWorkflowContext: WorkflowContextType = {
@@ -498,6 +513,29 @@ type SetStageFailed = {
     }
 }
 
+type TestAction = {
+    type: 'TEST_ACTION',
+    payload: {
+        actionDefinitionId: string
+        stageId: string
+        actionDefinitionIndex: number
+    }
+}
+
+type SetTestGlobalParameters = {
+    type: 'SET_TEST_GLOBAL_PARAMETER_CONFIG',
+    payload: {
+        config: Record<string, ActionParameterInstance>
+    }
+}
+
+type SetTestActionLevelDetails = {
+    type: 'SET_TEST_ACTION_LEVEL_DETAILS',
+    payload: {
+        config?: Record<string, TestActionLevelDetails>
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -545,8 +583,10 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetCurrentStageRunning |
                              SetStageStartedTime |
                              SetStageCompleted |
-                             SetStageFailed
-
+                             SetStageFailed |
+                             TestAction |
+                             SetTestGlobalParameters |
+                             SetTestActionLevelDetails
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
 
@@ -1102,6 +1142,33 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     ...stage,
                     stageFailed: true
                 })
+            }
+        }
+
+        case 'TEST_ACTION': {
+            return {
+                ...state,
+                currentActionForTesting: state.stages.find(stage => stage.Id === action.payload.stageId)?.Actions?.find((actionDef, index) => index === action.payload.actionDefinitionIndex)
+            }
+        }
+
+        case 'SET_TEST_GLOBAL_PARAMETER_CONFIG': {
+            return {
+                ...state,
+                TestInstance: {
+                    ...state?.TestInstance,
+                    parameterDetails: action.payload.config
+                }
+            }
+        }
+
+        case 'SET_TEST_ACTION_LEVEL_DETAILS': {
+            return {
+                ...state,
+                TestInstance: {
+                    ...state?.TestInstance,
+                    actionDetails: action.payload.config
+                }
             }
         }
 

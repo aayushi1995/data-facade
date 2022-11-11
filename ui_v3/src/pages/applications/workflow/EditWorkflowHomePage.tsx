@@ -9,6 +9,7 @@ import useCopyAndSaveDefinition from "../../../common/components/workflow/create
 import WorkflowSideDrawer from "../../../common/components/workflow/create/SelectAction/WorkflowSideDrawer"
 import WorkflowTabs from "../../../common/components/workflow/create/WorkflowTabs"
 import MakeWorkflowContextFromDetail from "../../../common/components/workflow/edit/hooks/MakeWorkflowContextFromDetails"
+import useTestSingleActionInFlow from '../../../common/components/workflow/edit/hooks/useTestSingleAction'
 import { useUpdateWorkflow } from "../../../common/components/workflow/edit/hooks/useUpdateWorkflow"
 import useValidateWorkflow from "../../../common/components/workflow/edit/hooks/useValidateWorkflow"
 import { useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
@@ -16,7 +17,8 @@ import ApplicationID from "../../../enums/ApplicationID"
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces"
 import { ActionDefinitionHeroActionContextWrapper } from "../../build_action/components/shared-components/ActionDefinitionHero"
 import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from "../../build_action/context/BuildActionContext"
-import { SetWorkflowContext, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
+import TestWorkflowActionDialog from './TestWorkflowActionDialog'
+import { SetWorkflowContext, TestActionInstance, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
 
 
 interface MatchParams {
@@ -29,7 +31,8 @@ export interface WorkflowTemplateType {
     DefaultActionTemplateId: string,
     ParameterValues: object,
     stageId: string,
-    stageName: string
+    stageName: string,
+    ReferenceId: string
 }
 
 const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
@@ -44,6 +47,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
     const [isWorkflowFetched, setIsWorkflowFetched] = React.useState(false)
     const [errorDialogState, setErrorDialogState] = React.useState(false)
     const {isError, errorMessage} = useValidateWorkflow(workflowContext, initialWorkflow !== undefined)
+    const testActionMutation = useTestSingleActionInFlow()
 
     // TODO: Check with Shishir if things to be sent to backend should be sent at time of .mutate() call or reference should be passed right at time of mutation declaration.
     const useWorkflowUpdate = useUpdateWorkflow("UpdateWorkflow", workflowContext, actionContext)
@@ -163,6 +167,76 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         }
     }
 
+    React.useEffect(() => {
+        if(!!workflowContext.currentActionForTesting) {
+            if(!isError) {
+                useWorkflowUpdate.mutate({
+                    workflowId: workflowId
+                },{
+                    onSuccess: () => {
+
+                    }
+                })
+            } else {
+                setErrorDialogState(true)
+                setWorkflowContext({
+                    type: 'TEST_ACTION',
+                    payload: {
+                        actionDefinitionIndex: -1,
+                        stageId: "",
+                        actionDefinitionId: ""
+                    }
+                })
+            }
+        }
+    }, [workflowContext.currentActionForTesting])
+
+    const getParamsWhichChanged = () => {
+        const paramsChanged: string[] = []
+        Object.entries(workflowContext.TestInstance?.parameterDetails || {}).forEach(([parameterId, parameterValue]) => {
+            const initialValue = initialWorkflow?.TestInstance?.parameterDetails?.[parameterId]
+            console.log(initialValue, parameterValue)
+            if( initialValue?.ParameterValue !== parameterValue?.ParameterValue) {
+                paramsChanged.push(parameterId)
+            }
+        })
+        return paramsChanged
+    }
+
+    const handleTestSingleAction = () => {
+        useWorkflowUpdate.mutate({
+            workflowId: workflowId,
+        }, {
+            onSuccess: () => {
+                testActionMutation.mutate({
+                    testActionReferenceId: workflowContext?.currentActionForTesting?.ReferenceId || "",
+                    globalParametersChanged: getParamsWhichChanged(),
+                    workflowId: workflowId
+                }, {
+                    onSuccess: (data, variables, context) => {
+                        const testInstance = data as TestActionInstance[]
+                        const newTestInstance = testInstance?.[0]
+                        setWorkflowContext({
+                            type: 'SET_TEST_ACTION_LEVEL_DETAILS',
+                            payload: {
+                                config: newTestInstance?.actionDetails
+                            }
+                        })
+                        setWorkflowContext({
+                            type: 'TEST_ACTION',
+                            payload: {
+                                stageId: "",
+                                actionDefinitionId: "",
+                                actionDefinitionIndex: -1
+                            }
+                        })
+                        setInitialWorkflow(workflowContext)
+                    }
+                })
+            }
+        })
+    }
+
     if(isWorkflowFetched && !useWorkflowUpdate.isLoading) {
         return (
             <Box sx={{display: 'flex', gap: 1, flexDirection: 'row', width: '100%', height: '100%', overflowY: 'clip'}}>
@@ -179,6 +253,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                         <Button onClick={handleErrorDialogClose}>Okay</Button>
                     </DialogContent>
                 </Dialog>
+                <TestWorkflowActionDialog handleTestAction={handleTestSingleAction} isLoading={testActionMutation.isLoading}/>
                 <Box sx={{maxHeight: '100%', py: 2}}>
                 <WorkflowSideDrawer/>
                 </Box>

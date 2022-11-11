@@ -1,6 +1,6 @@
 
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Card, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Grid, IconButton, Switch, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
+import { Box, Button, Card, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Grid, IconButton, Switch, Tab, Tabs, Tooltip, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import { useQueryClient } from 'react-query';
 import CloseIcon from "../../../../../../src/images/close.svg";
@@ -78,6 +78,15 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
             })
             setGuideEnabled(true)
         }
+    }
+
+    const handleTestAction = () => {
+        setWorkflowContext({
+            type: 'TEST_ACTION',
+            payload: {
+                ...props
+            }
+        })   
     }
 
     const handleEditAction = () => {
@@ -170,6 +179,9 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                 </Tabs>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', alignItems: 'center', gap: 2}}>
+                    <Button onClick={handleTestAction}>
+                        Test
+                    </Button>
                     <Tooltip title="Edit Action">
                         <IconButton onClick={handleEditAction}>
                             <EditIcon />

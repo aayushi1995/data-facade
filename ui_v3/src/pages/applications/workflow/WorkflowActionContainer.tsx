@@ -117,7 +117,8 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             onActionSelect: onActionSelect,
             executionStaus: action.ExecutionStatus,
             runTime: runTime,
-            errorMessages: action.ErrorInParametersConfigured
+            errorMessages: action.ErrorInParametersConfigured,
+            latestExecutionId: workflowContext?.TestInstance?.actionDetails?.[action.ReferenceId || ""]?.LatestExecutionId
         }
         if(selectedDefinition.actionIndex === index && selectedDefinition.actionId === action.Id) {
             return {

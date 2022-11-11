@@ -33,7 +33,8 @@ const MakeWorkflowContextFromDetail = (props: MakeWorkflowContextPropsFromDetail
         PublishStatus: workflowDefinition.PublishStatus,
         ActionGroup: workflowDefinition.ActionGroup,
         UpdatedOn: workflowDefinition.UpdatedOn,
-        CreatedOn: workflowDefinition.CreatedOn
+        CreatedOn: workflowDefinition.CreatedOn,
+        TestInstance: JSON.parse(workflowDefinition.Config || "{}")
     }
     const workflowActions = JSON.parse(workflowTemplate) as WorkflowTemplateType[]
     let upstreamMapping: {[key: string]: UpstreamAction} = {}
@@ -67,7 +68,8 @@ const MakeWorkflowContextFromDetail = (props: MakeWorkflowContextPropsFromDetail
                 ActionGroup: "Yet to define", // TODO: Remove Hard Coding after introduction of groups
                 DisplayName: workflowActions[i].DisplayName,
                 DefaultActionTemplateId: workflowActions[i].DefaultActionTemplateId,
-                Parameters: parameters
+                Parameters: parameters,
+                ReferenceId: workflowActions[i].ReferenceId || uuidv4()
             })  
             stageIndex++;
             i++;

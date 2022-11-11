@@ -80,26 +80,4 @@ const DevTestPage = () => {
     )
 }
 
-const Test = () => {
-    const workflowContext = React.useContext(WorkflowContext)
-
-    return (
-        <>
-            {workflowContext.currentSelectedStage ? (
-                <Box pt={1} sx={{maxHeight: '1000px'}}>
-                    <AddingActionView/>
-                </Box>
-            ) : (
-                <Box sx={{overflow: 'clip'}}>  
-                    <StagesWithActions/>    
-                    <Button onClick={() => {const template = makeWorkflowTemplate(workflowContext); console.log(template)}}>
-                        save
-                    </Button>
-                </Box>
-                
-            )}
-        </>
-    )
-}
-
 export default DevTestPage

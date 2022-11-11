@@ -7,16 +7,28 @@ export type WorkflowTemplate = {
     DisplayName: string,
     ParameterValues?: object,
     stageId: string,
-    stageName: string
+    stageName: string,
+    ReferenceId?: string,
+    UpstreamDependencies: number[]
+    DownstreamDependencies: number[],
+    GlobalParameterDependencies: string[]
 }
 
 export function makeWorkflowTemplate(workflowContext: WorkflowContextType): string {
     const workflowActionDefinitions: WorkflowTemplate[] = []
     workflowContext.stages.map(stage => {
-        const actionsInThisStage = stage.Actions.map(stageAction => {
+        stage.Actions.map((stageAction, index) => {
             var parameters = {}
-            stageAction.Parameters.map(parameter => {
+            const upstreamDependencies: number[] = []
+            const parameterDependencies: string[] = []
+            stageAction.Parameters.forEach(parameter => {
                 const offset = parameter.SourceExecutionId ? calculateOffset(workflowContext, parameter.SourceExecutionId.stageId) + parameter.SourceExecutionId.actionIndex: 0
+                if(!!parameter.SourceExecutionId) {
+                    upstreamDependencies.push(offset)
+                }
+                if(!!parameter.GlobalParameterId) {
+                    parameterDependencies.push(parameter.GlobalParameterId)
+                }
                 parameters = {
                     ...parameters,
                     [parameter.ActionParameterDefinitionId]: {
@@ -29,16 +41,23 @@ export function makeWorkflowTemplate(workflowContext: WorkflowContextType): stri
                 }
                 return parameters
             })
-            return {
+            const currentActionIndex = calculateOffset(workflowContext, stage.Id) + index
+            upstreamDependencies.forEach(value => {
+                workflowActionDefinitions[value].DownstreamDependencies.push(currentActionIndex)
+            })
+            workflowActionDefinitions.push({
                 Id: stageAction.Id,
                 DefaultActionTemplateId: stageAction.DefaultActionTemplateId,
                 DisplayName: stageAction.DisplayName,
                 ParameterValues: {...parameters},
                 stageId: stage.Id,
-                stageName: stage.Name
-            }
+                stageName: stage.Name,
+                ReferenceId: stageAction.ReferenceId,
+                UpstreamDependencies: upstreamDependencies,
+                DownstreamDependencies: [],
+                GlobalParameterDependencies: parameterDependencies
+            })
         })
-        actionsInThisStage.forEach(stageAction => workflowActionDefinitions.push(stageAction))
     })
     return JSON.stringify(workflowActionDefinitions)
 }

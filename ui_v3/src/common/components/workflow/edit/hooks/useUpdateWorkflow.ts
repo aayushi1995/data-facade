@@ -8,16 +8,20 @@ import { makeWorkflowTemplate } from "../../create/util/MakeWorkflowTemplate";
 
 
 export const useUpdateWorkflow = (mutationName: string, workflowContext: WorkflowContextType, actionContext: BuildActionContextState) => {
-    const actionTemplateText = makeWorkflowTemplate(workflowContext)
+    
     const fetchedDataManagerInstance = dataManager.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function, patchData: Function}
+
+    const formWorkflowConfig = () => {
+        return JSON.stringify(workflowContext.TestInstance || {})
+    }
 
     return useMutation(
         mutationName,
         (options: {workflowId: string}) => {
-
+            const actionTemplateText = makeWorkflowTemplate(workflowContext)
             const updatedWorkflow: ActionDefinitionFormPayload = {
                 ActionDefinition: {
-                    model: {...actionContext?.actionDefinitionWithTags?.actionDefinition, Id: options.workflowId},
+                    model: {...actionContext?.actionDefinitionWithTags?.actionDefinition, Id: options.workflowId, Config: formWorkflowConfig()},
                     tags: []
                 },
                 ActionTemplatesWithParameters: [

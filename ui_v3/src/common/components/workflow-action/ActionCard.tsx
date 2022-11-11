@@ -1,4 +1,4 @@
-import { Box, Card, Icon, IconButton, Typography, TextField } from "@mui/material"
+import { Box, Card, Icon, IconButton, Typography, TextField, Dialog, DialogTitle, DialogContent } from "@mui/material"
 import LinearProgress from '@mui/material/LinearProgress'
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
 import { styled } from '@mui/styles'
@@ -11,6 +11,13 @@ import selectGrid from '../../../../src/images/select_icon.png'
 import viewErrorIcon from '../../../../src/images/ShowErrorLogs.png'
 import viewResultIcon from '../../../../src/images/ViewResult.png'
 import ConfirmationDialog from "../../../../src/common/components/ConfirmationDialog" 
+import FetchActionExecutionDetails from "../../../pages/view_action_execution/hooks/FetchActionExecutionDetails"
+import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "../../../generated/interfaces/Interfaces"
+import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
+import { ActionExecution } from "../../../generated/entities/Entities"
+import ViewActionExecution, { ViewFailedActionExecution } from "../../../pages/view_action_execution/VIewActionExecution"
+import SaveAndBuildChartContextProvider from "../charts/SaveAndBuildChartsContext"
+import SaveAndBuildChartsFromExecution from "../charts/SaveAndBuildChartsFromExecution"
 
 export interface ActionCardProps {
     index: number
@@ -25,7 +32,8 @@ export interface ActionCardProps {
     isCardSelected?: boolean,
     runTime?: number,
     stageId?: string,
-    errorMessages?: string[]
+    errorMessages?: string[],
+    latestExecutionId?: string,
     deleteButtonAction: (actionId: string, actionNumber: number) => void
     onActionSelect?: (actionId: string, actionIndex: number) => void
     handlePreviewOutput: (executionId: string) => void
@@ -55,9 +63,27 @@ const ActionCard = (props: ActionCardProps) => {
         backgroundBlendMode: 'soft-light, normal'
     }
     const [isNameBeingEdited, setIsNameBeingEdited] = React.useState(false)
+    const [fetchActionExecutionState, setFetchActionExecutionStatus] = React.useState(false)
+    const [actionExecution, setActionExecution] = React.useState<ActionExecution | undefined>()
+    const [resultDialogState, setResultDialogState] = React.useState(false)
+
+    const handleDataFetched = (data: ActionExecutionIncludeDefinitionInstanceDetailsResponse[]) => {
+        if(data?.[0]?.ActionExecution?.Status === ActionExecutionStatus.COMPLETED || data?.[0]?.ActionExecution?.Status === ActionExecutionStatus.FAILED) {
+            setFetchActionExecutionStatus(false)
+        }
+        setActionExecution(data?.[0]?.ActionExecution)
+    }
+
+    const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: props.latestExecutionId, queryOptions: {
+        enabled: fetchActionExecutionState,
+        onSuccess: handleDataFetched
+    }})
 
     var background = 'ActionCardBgColor.main'
-    switch(props.executionStaus){
+
+    const executionStatus = props.executionStaus || actionExecution?.Status
+
+    switch(executionStatus){
         case 'WaitingForUpstream': 
             background = 'rgba(248, 241, 178, 1)';
             break;
@@ -83,6 +109,13 @@ const ActionCard = (props: ActionCardProps) => {
     const handleActionClick = () => {
         props.handleActionClick?.(props.actionId, props.index, props.stageId || "stageID")
     }
+
+    React.useEffect(() => {
+        console.log(props.latestExecutionId)
+        if(!!props.latestExecutionId) {
+            setFetchActionExecutionStatus(true)
+        }
+    }, [props.latestExecutionId])
 
     const tooltipTitle = (props?.executionStaus === 'Completed' || props?.executionStaus === 'Failed') ? props.runTime : "";
     const border: string | undefined = (props?.executionStaus !== undefined  ? undefined : (props.errorMessages || []).length === 0 ? '0.75px solid #00AA11' : '0.75px solid #DC2430' )
@@ -111,7 +144,25 @@ const ActionCard = (props: ActionCardProps) => {
 
     }
 
+
     return (
+        <>
+        <Dialog open={resultDialogState} onClose={() => setResultDialogState(false)} fullWidth maxWidth="xl">
+            <DialogTitle>
+                {props.actionName}
+            </DialogTitle>
+            <DialogContent>
+                {actionExecution?.Status === ActionExecutionStatus.FAILED ? (
+                    <ViewFailedActionExecution actionExecutionDetail={actionExecutionDetailQuery?.data || {}}/>
+                ) : (
+                    <Box sx={{maxWidth: '100%'}}>
+                        <SaveAndBuildChartContextProvider>
+                            <SaveAndBuildChartsFromExecution executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}/>
+                        </SaveAndBuildChartContextProvider>
+                    </Box>
+                )}
+            </DialogContent>
+        </Dialog>
         <HtmlTooltip title={
             (props.executionStaus === 'Completed' || props.executionStaus === 'Failed') ? (
                 <React.Fragment>
@@ -195,20 +246,26 @@ const ActionCard = (props: ActionCardProps) => {
                                     </Icon>
                                 </IconButton>
                             }
-                            {props.executionStaus === "Completed" ? (
+                            {props.executionStaus === "Completed" || actionExecution?.Status === "Completed" ? (
                                 <IconButton sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} onClick={(e: any) => {
                                     e.stopPropagation?.()
-                                    props.handlePreviewOutput(props.actionId)
+                                    if(props.executionStaus) {
+                                        props.handlePreviewOutput(props.actionId)
+                                    } else {
+                                        setResultDialogState(true)
+                                    }
                                 }}>
                                     <img src={viewResultIcon} alt='view result'/>
                                 </IconButton>
                             ) : (
                                 <></>
                             )}
-                            {props.executionStaus === "Failed" ? (
+                            {props.executionStaus === "Failed" || actionExecution?.Status === "Failed" ? (
                                 <IconButton sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} onClick={(e: any) => {
                                     e.stopPropagation?.()
-                                    props.handlePreviewOutput(props.actionId)
+                                    if(props.executionStaus){
+                                        props.handlePreviewOutput(props.actionId)
+                                    }
                                 }}>
                                     <img src={viewErrorIcon} alt='view result'/>
                                 </IconButton>
@@ -218,7 +275,7 @@ const ActionCard = (props: ActionCardProps) => {
                         </Box>
                     </Box>
                 </Box>
-                {props.executionStaus === "Started" ? (
+                {props.executionStaus === ActionExecutionStatus.STARTED || actionExecution?.Status === ActionExecutionStatus.STARTED ? (
                     <Box sx={{width: '100%'}}>
                         <LinearProgress/>
                     </Box>
@@ -227,6 +284,7 @@ const ActionCard = (props: ActionCardProps) => {
                 )}
             </Card>
         </HtmlTooltip>
+        </>
     )
 }
 
