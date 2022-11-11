@@ -5,10 +5,11 @@ import getDefaultCode from "../../../../custom_enums/DefaultCode";
 import ActionDefinitionPresentationFormat from "../../../../enums/ActionDefinitionPresentationFormat";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
 
-const ActionSummary = () => {
+const BuildActionForm = () => {
     const buildActionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
-    const [actionName, setActionName] = React.useState("")
+    const currentActionName = buildActionContext.actionDefinitionWithTags.actionDefinition.UniqueName
+    const [actionName, setActionName] = React.useState(currentActionName ?? "")
     const [actionDescription, setActionDescription] = React.useState("")
 
     const getInitialActionType = () => {
@@ -175,4 +176,4 @@ const ActionSummary = () => {
     )
 }
 
-export default ActionSummary;
+export default BuildActionForm;

@@ -3,7 +3,7 @@ import React from "react"
 import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler"
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext"
 import { BuildActionWizardStepProps } from "../BuildActionWizard"
-import ActionSummary from "../common-components/ActionSummary"
+import BuildActionForm from "../common-components/BuildActionForm"
 
 
 const WizardView1 = (props: BuildActionWizardStepProps) => {
@@ -51,7 +51,7 @@ const WizardView1 = (props: BuildActionWizardStepProps) => {
         <Grid container>
             
             <Grid item xs={12} px={5} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                <ActionSummary/>
+                <BuildActionForm/>
             </Grid>
             <Grid item xs={12} px={5} sx={{ display: "flex", flexDirection: "column", gap: 4}}>
                 {/* <Box>

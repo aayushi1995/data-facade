@@ -3,7 +3,7 @@ import { useContext } from "react";
 import VirtualTagHandler, { VirtualTagHandlerProps } from "../../../../common/components/tag-handler/VirtualTagHandler";
 import { Tag } from "../../../../generated/entities/Entities";
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext";
-import ActionSummary from "../common-components/ActionSummary";
+import BuildActionForm from "../common-components/BuildActionForm";
 import ConfigureActionVisibility from "../common-components/ConfigureActionVisibility";
 import WrapInHeader from "../common-components/WrapInHeader";
 
@@ -31,11 +31,6 @@ const TagsAndSummary = () => {
     return (
         <Grid container spacing={2} sx={{p: 5}}>
             <Grid container spacing={2} item xs={12} lg={12}>
-                <Grid item xs={12} lg={4}>
-                    <WrapInHeader header="Action Summary">
-                        <ActionSummary/>
-                    </WrapInHeader>
-                </Grid>
                 <Grid item spacing={2} xs={12} lg={4}>
                     <WrapInHeader header="Action Definition Behaviour">
                         <ConfigureActionVisibility/>
