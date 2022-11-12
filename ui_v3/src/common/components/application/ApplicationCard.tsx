@@ -2,7 +2,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import InstallDesktopIcon from '@mui/icons-material/InstallDesktop'
 import ShareIcon from '@mui/icons-material/Share'
-import { Box, Card,IconButton, Tooltip, Typography } from "@mui/material"
+import { Box, Button, Card,IconButton, Tooltip, Typography } from "@mui/material"
 import React from "react"
 import { generatePath, useHistory, useRouteMatch } from "react-router-dom"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
@@ -88,8 +88,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         handleMoreOptionsSpeedDialToggle()
     }
 
-    const promptDeleteApplication = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.stopPropagation() 
+    const promptDeleteApplication = () => {
         handleMoreOptionsSpeedDialClose()
         handleDialogOpen()
     }
@@ -134,8 +133,22 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                         </Tooltip>
                     </Box>
                     <Box>
-                        {deleteButton}
-                    </Box>
+
+                        <Tooltip arrow placement='top' title="Share">
+                            <IconButton sx={{
+                                height: "100%",
+                                width: "100%",
+                                backgroundColor: "cardIconButtonBackgroundColor.main",
+                                boxShadow: lightShadows[32],
+                                "&:hover": {
+                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
+                                    color: "cardIconBtn1HoverColor.main"
+                                }
+                            }} onClick={promptDeleteApplication}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+
 
                         {/* <Tooltip arrow placement='top' title="More Options">
                             <SpeedDial
@@ -176,6 +189,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 />
                             </SpeedDial>
                         </Tooltip> */}
+                </Box>
                 </Box>
             )
         } else {
@@ -235,7 +249,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 </Typography>
                             </Box>
                             <Box sx={{my:'10px', width:'90%'}}>
-                            <Tooltip placement='top' arrow title={application.ApplicationDescription}>
+                            <Tooltip placement='top' arrow title={application.ApplicationDescription || ""}>
                                 <Typography sx={{
                                     fontFamily: "SF Pro Display",
                                     fontStyle: "normal",

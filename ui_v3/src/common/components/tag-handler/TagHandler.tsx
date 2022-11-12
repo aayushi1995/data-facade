@@ -53,7 +53,7 @@ const TagHandler = (props: TagHandlerProps) => {
                                 }
                             }
                         }}
-                        renderInput={(params) => <TextField {...params} label="Add Tag"/>}
+                        renderInput={(params) => <TextField {...params} size="small" label="Add Tag"/>}
                         filterOptions={(options, params) => {
                             const filtered = filter(options, params);
                             if (params.inputValue !== '') {

@@ -285,6 +285,9 @@ const ViewWorkflowExecution = (match: MatchParams) => {
     const handleInputOpener = () =>{
         setuserInputOpener(userInputOpener=>!userInputOpener)
     }
+    const handleBoxIPopener = ()=>{
+        if(!userInputOpener) {setuserInputOpener(true)}
+    }
     const currentIndex = workflowContext.stages.findIndex(stage => stage.Id === workflowContext.currentSelectedStage)
 
     const handleGoNext = () => {
@@ -383,7 +386,7 @@ const ViewWorkflowExecution = (match: MatchParams) => {
                     <Box sx={{px:9, display:'flex',flexDirection:'row'}}>
                                     <Box sx={{display:'flex',flexDirection:'column',width:'50%'}}>
                                         <Typography sx={{fontSize:'2rem',fontWeight:700}}>{workflowActionExecutionData?.[0]?.WorkflowDefinition?.DisplayName}</Typography>
-                                        <Tooltip placement='top' arrow title={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description}>
+                                        <Tooltip placement='top' arrow title={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description || " "}>
                                         <Typography sx={{fontSize:'0.8rem',fontWeight:400,width:'70%'}}>
                                             <LinesEllipsis
                                                 text={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description}
@@ -402,7 +405,7 @@ const ViewWorkflowExecution = (match: MatchParams) => {
                                     </Box>
 
                     </Box>
-                                    <Box onClick={handleInputOpener} sx={{cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
+                                    <Box onClick={handleBoxIPopener} sx={{transitionDuration:'1s',cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
                                         <Box sx={{display:'flex',flexDirection:'row'}}>
                                             <Button onClick={handleInputOpener}>
                                                 {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
@@ -431,7 +434,7 @@ const ViewWorkflowExecution = (match: MatchParams) => {
                     <Box sx={{display:'flex',flexDirection:'row',height:'100%',gap:2}}>
                         <Box sx={{transitionDuration:'0.5s',ml:(workflowContext.currentSelectedStage?0:(flowOpener?10:0)), width:(!workflowContext.currentSelectedStage && flowOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && flowOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:(!workflowContext.currentSelectedStage &&flowOpener)? "":"-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
                             {(workflowContext.currentSelectedStage || !flowOpener)?
-                            <Button onClick={handleFlowOpener} ><img width='50px' height='50px' src={leftExpandIcon} alt="Open"/></Button>:<></>
+                            <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handleFlowOpener} ><img width='40px' height='40px' src={leftExpandIcon} alt="Open"/> <Typography sx={{p:1,transform:'rotate(270deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Detailed Output</Typography></Button>:<></>
                             }
                                 {(!workflowContext.currentSelectedStage && flowOpener)?
                                     <Box sx={{flex: 4, mb: 4,mx:1,px:1}}>
@@ -477,7 +480,7 @@ const ViewWorkflowExecution = (match: MatchParams) => {
                                     )}
                         <Box sx={{transitionDuration:'0.5s',mr:finalOutputOpener?10:0,width:(!workflowContext.currentSelectedStage && finalOutputOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && finalOutputOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:finalOutputOpener?"": "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
                             {workflowContext.currentSelectedStage ||!finalOutputOpener?
-                                <Button onClick={handlefinalOutputOpener} ><img width='50px' height='50px' src={RightExpandIcon} alt="Open"/></Button>:<></>
+                                <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handlefinalOutputOpener} ><img width='50px' height='50px' src={RightExpandIcon} alt="Open"/><Typography sx={{p:1,transform:'rotate(90deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Final Output</Typography></Button>:<></>
                             }
                             {!workflowContext.currentSelectedStage && finalOutputOpener?(
                                 <Box sx={{width:'100%'}}>

@@ -193,7 +193,7 @@ const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
                 <TextField 
                     {...params}
                     label={parameterName || "Parameter Name NA"}
-                    variant="standard"
+                    variant="outlined"
                     size="small"
                 />
             )}
@@ -221,7 +221,7 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
                     sx={{py:0}}
                     {...params}
                     label={parameterName || "Parameter Name NA"}
-                    variant="standard"
+                    variant="outlined"
                     size="small"
                 />
             )}
@@ -281,7 +281,7 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
                     <TextField
                         {...params}
                         label={props.inputProps.parameterName || "Parameter Name NA"}
-                        variant="standard"
+                        variant="outlined"
                         size="small"
                     />
                 )}
@@ -380,7 +380,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
                     }
                     return filtered;
                 }}
-                renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"} variant="standard" size="small"/>}
+                renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"} variant="outlined" size="small"/>}
             />
         </LoadingWrapper>   
     )
@@ -437,7 +437,7 @@ const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
                     onChange={(event, value, reason, details) => {
                         handleOptionSelect(value || undefined)
                     }}
-                    renderInput={(params) => <TextField {...params} label={"Select Upstream/Table"} variant="standard" size="small"/>}
+                     renderInput={(params) => <TextField {...params} label={"Select Upstream/Table"} variant="outlined" size="small"/>}
                 />
                 <HtmlTooltip sx={{display: 'flex', alignItems: 'center'}} title={
                     <React.Fragment>
@@ -489,6 +489,7 @@ const StringInput = (props: StringParameterInput) => {
                 // onChange={handleChange}
                 onBlur={() => onChange(input)}
                 variant="outlined"
+                size="small"
                 label={props.inputProps.parameterName || "Parameter Name NA"}
                 // placeholder={props.inputProps.parameterName || "Parameter Name NA"}
                 fullWidth
@@ -518,7 +519,7 @@ const IntInput = (props: IntParameterInput) => {
             onBlur={() => onChange(input)}
             label={props.inputProps.parameterName || "Parameter Name NA"}
             fullWidth
-            variant="standard"
+            variant="outlined"
             size="small"
         />
 }
@@ -553,7 +554,7 @@ const FloatInput = (props: FloatParameterInput) => {
             onBlur={() => onChange(input)}
             label={props.inputProps.parameterName || "Parameter Name NA"}
             fullWidth
-            variant="standard"
+            variant="outlined"
             size="small"
         />
 }
@@ -562,12 +563,12 @@ const BooleanInput = (props: BooleanParameterInput) => {
     const {value, parameterName, onChange} = props.inputProps
     
     return (
-        <FormControl variant="outlined" style={{ width: "100%" }}>
+        <FormControl size="small" variant="outlined" style={{ width: "100%" }}>
         <InputLabel>{props.inputProps.parameterName || "Parameter Name NA"}</InputLabel>
         <Select
             value={value || ""}
             onChange={(event) => onChange(event.target.value)}
-            variant="standard"
+            variant="outlined"
             size="small"
             label={props.inputProps.parameterName || "Parameter Name NA"}
             fullWidth
@@ -657,7 +658,7 @@ const TableInput = (props: TableParameterInput) => {
                     }
                     return filtered;
                 }}
-                renderInput={(params) => <TextField {...params}variant="standard" size="small" label={props.inputProps.parameterName || "Parameter Name NA"}/>}
+                renderInput={(params) => <TextField {...params}variant="outlined" size="small" label={props.inputProps.parameterName || "Parameter Name NA"}/>}
             />
         </LoadingWrapper>
     )
@@ -667,7 +668,7 @@ const TableInput = (props: TableParameterInput) => {
 const NoInput = () => {
     return (
         <Box>
-            <TextField variant="standard" size="small" disabled value="Default Value not valid for this type of parameter" fullWidth/>
+             <TextField variant="outlined" size="small" disabled value="Default Value not valid for this type of parameter" fullWidth/>
         </Box>
     )
 }

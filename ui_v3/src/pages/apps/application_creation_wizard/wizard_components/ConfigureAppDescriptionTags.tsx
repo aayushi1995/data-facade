@@ -60,7 +60,7 @@ const ConfigureAppDescriptionTags = (props: BuildApplicationWizardStepProps) => 
                     <TextField onBlur={setDescriptionInContext} variant="outlined" label="App Description" value={description} onChange={(event => setDescription(event.target.value))} fullWidth/>
                 </Box>
             </Box>
-            <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
+            <Box sx={{display: "flex", flexDirection: "column",width:'100%', alignItems: "center"}}>
                 <VirtualTagHandler {...tagHandlerProps}/>
             </Box>
             {/* <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", flexGrow: 1}}>
