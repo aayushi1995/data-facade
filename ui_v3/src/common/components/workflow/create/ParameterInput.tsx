@@ -486,7 +486,7 @@ const StringInput = (props: StringParameterInput) => {
       };
     return <TextField
                 defaultValue={input}
-                // onChange={handleChange}
+                onChange={handleChange}
                 onBlur={() => onChange(input)}
                 variant="outlined"
                 size="small"

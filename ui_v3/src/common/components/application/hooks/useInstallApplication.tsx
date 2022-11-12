@@ -22,7 +22,8 @@ const useInstallApplication = (params: UseInstallApplicationParams) => {
                     entityProperties: {
                         ArtifactLocation: varibles.ArtifactLocation
                     },
-                    LoadFromExternalSource: true
+                    LoadFromExternalSource: true,
+                    Marketplace: true
                 }
             )
         },
