@@ -14,7 +14,9 @@ export interface BuildWorkflowHomePageProps {
 
 const BuildWorkflowHomePage = (props: BuildWorkflowHomePageProps) => {
     const location = useLocation()
-    const applicationId = location.state as string
+    const applicationId = location.search ? new URLSearchParams(location.search).get("applicationId")
+                            : location.state
+
 
     return (
         <BuildActionContextProvider>

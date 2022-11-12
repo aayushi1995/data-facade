@@ -73,7 +73,11 @@ const formCreateRequestBodyFromContextState = (state: BuildActionContextState) =
         ActionDefinition: {
             model: {
                 ...state.actionDefinitionWithTags.actionDefinition,
-                ApplicationId: state.SourceApplicationId
+                ApplicationId: 
+                    state.SourceApplicationId ?
+                    state.SourceApplicationId :
+                    state.actionDefinitionWithTags.actionDefinition.ApplicationId
+                    
             },
             tags: state.actionDefinitionWithTags.tags
         },

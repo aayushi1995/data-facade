@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import ApplicationID from "../../enums/ApplicationID";
 import { ActionDefinition } from "../../generated/entities/Entities";
 import CreateActionWizardDialog from "./components/form-components/CreateActionWizardDialog";
@@ -21,10 +21,16 @@ const BuildActionHomePage = (props: BuildActionHomePageProps) => {
 const ContextWrappedHomePage = (props: {preSelectedActionDefiniitonId?: string}) => { 
     const history = useHistory()
     const [showWizard, setShowWizard] = React.useState(true)
+    const location = useLocation()
+
+    const applicationId = location.search ? new URLSearchParams(location.search).get("applicationId")
+                            : ApplicationID.DEFAULT_APPLICATION
+
+
     return (
         <Box>
             <CreateActionWizardDialog
-                applicationId={ApplicationID.DEFAULT_APPLICATION}
+                applicationId={applicationId}
                 onSuccessfulCreation={(createdActionDefinition: ActionDefinition) => {
                     if(!!createdActionDefinition?.Id) {
                         history.push(`/application/edit-action/${createdActionDefinition?.Id!}`)
