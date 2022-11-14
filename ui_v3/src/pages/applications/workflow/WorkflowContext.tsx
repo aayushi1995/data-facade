@@ -2,6 +2,7 @@ import _ from "lodash";
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
+import { calculateOffset } from "../../../common/components/workflow/create/util/MakeWorkflowTemplate";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
@@ -103,7 +104,8 @@ export type WorkflowContextType = {
     SelectedProviderInstance?: ProviderInstance,
     currentStageRunning?: string,
     TestInstance?: TestActionInstance,
-    currentActionForTesting?: WorkflowActionDefinition
+    currentActionForTesting?: WorkflowActionDefinition,
+    reRunActionIndex?: number
 }
 
 export const defaultWorkflowContext: WorkflowContextType = {
@@ -536,6 +538,14 @@ type SetTestActionLevelDetails = {
     }
 }
 
+type SetReRunActionIndexType = {
+    type: "SET_RE_RUN_ACTION_INDEX",
+    payload: {
+        stageId: string,
+        actionIndex: number
+    }
+}
+
 export type WorkflowAction = AddActionToWorfklowType | 
                              DeleteActionFromWorkflowType |
                              ReorderActionInWorkflowType |
@@ -586,7 +596,8 @@ export type WorkflowAction = AddActionToWorfklowType |
                              SetStageFailed |
                              TestAction |
                              SetTestGlobalParameters |
-                             SetTestActionLevelDetails
+                             SetTestActionLevelDetails |
+                             SetReRunActionIndexType
 
 export type SetWorkflowContextType = (action: WorkflowAction) => void
 
@@ -1169,6 +1180,13 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     ...state?.TestInstance,
                     actionDetails: action.payload.config
                 }
+            }
+        }
+
+        case 'SET_RE_RUN_ACTION_INDEX': {
+            return {
+                ...state,
+                reRunActionIndex: calculateOffset(state, action.payload.stageId) + action.payload.actionIndex
             }
         }
 

@@ -30,7 +30,8 @@ interface MatchParams {
 
 interface ExecuteWorkflowProps {
     workflowId?: string,
-    previousInstanceId?: string
+    previousInstanceId?: string,
+    onParameterInstancesChange?: (parameterInstances: ActionParameterInstance[]) => void
 }
 
 export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
@@ -111,7 +112,8 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                 DefinitionId: actionInstanceWithParameters.model?.DefinitionId || "definitionId",
                 Parameters: actionInstanceWithParameters.ParameterInstances,
                 ResultTableName: actionInstanceWithParameters.model?.ResultTableName,
-                ResultSchemaName: actionInstanceWithParameters.model?.ResultSchemaName
+                ResultSchemaName: actionInstanceWithParameters.model?.ResultSchemaName,
+                ReferenceId: actionInstanceWithParameters.model?.Config 
             } as WorkflowActionDefinition
             
             workflowContext.WorkflowParameters.forEach(globalParameter => {
@@ -142,6 +144,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
 
     const handleParameterInstancesChange = (newGlobalParameterInstances: ActionParameterInstance[]) => {
         setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {parameterInstances: newGlobalParameterInstances}})
+        props.onParameterInstancesChange?.(newGlobalParameterInstances)
     }
 
     const executeWorkflow = () => {

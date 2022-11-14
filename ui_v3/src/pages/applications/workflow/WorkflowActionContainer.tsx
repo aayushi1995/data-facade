@@ -179,6 +179,18 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             window.open(`/application/edit-action/${actionDefinition.Id}`)
         }
     }
+
+    const handleReRunAction = (stageId: string, actionIndex: number) => {
+        setWorkflowContext(
+            {
+                type: 'SET_RE_RUN_ACTION_INDEX',
+                payload: {
+                    stageId: stageId,
+                    actionIndex: actionIndex
+                }
+            }
+        )
+    }
     
     if(stageDetails) {
         return (
@@ -236,7 +248,14 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                                                                 <li {..._provided.draggableProps} ref={_provided.innerRef}>
                                                                     <Box px={1}>
                                                                     <ActionCard
-                                                                        {...{ ...action, dragHandleProps: { ..._provided.dragHandleProps }, onActionSelect: onActionSelect, handlePreviewOutput: handlePreviewOutput, handleActionClick: handleActionClick, stageId: props.stageId, handleActionNameChange: handleActionNameChange }}
+                                                                        {...{ ...action, 
+                                                                            dragHandleProps: { ..._provided.dragHandleProps }, 
+                                                                            onActionSelect: onActionSelect, 
+                                                                            handlePreviewOutput: handlePreviewOutput, 
+                                                                            handleActionClick: handleActionClick, 
+                                                                            stageId: props.stageId, 
+                                                                            handleActionNameChange: handleActionNameChange,
+                                                                            handleReRunAction: handleReRunAction }}
                                                                     />
                                                                     </Box>
                                                                 </li>

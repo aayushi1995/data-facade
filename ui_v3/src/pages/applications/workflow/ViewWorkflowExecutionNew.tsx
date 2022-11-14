@@ -184,18 +184,6 @@ const ViewWorkflowExecutionNew = (props: ViewWorkflowExecutionProps) => {
 
     }
 
-    const handleShowParameters = () => {
-        setShowParameters(showParameters => !showParameters)
-    }
-    const handleShowResults = () => {
-        setTabState(1)
-    }
-
-    const [opener , setopener] = useState();
-    
-    const drawerOpenHandler = (mp)=>{
-        setopener(mp)
-    }
     const numberOfActionINStage = ()=>{
         let ans = 0;
         for(var i=0;i<workflowContext.stages.length;i++){

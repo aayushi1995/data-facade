@@ -13,7 +13,7 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
             ParameterInstances: action.Parameters?.map((childParameterInstance) => {
                 const apdId = childParameterInstance.ActionParameterDefinitionId
                 const globalParameterInstance = workflowContext.WorkflowParameterInstance?.find(globalParameter => globalParameter.ActionParameterDefinitionId === childParameterInstance.GlobalParameterId)
-                if(!actionInstanceProvider && !!globalParameterInstance?.ProviderInstanceId) {
+                if(!!globalParameterInstance?.ProviderInstanceId) {
                     actionInstanceProvider = globalParameterInstance.ProviderInstanceId
                 }
                 return {
@@ -32,7 +32,8 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
                 RenderTemplate: true,
                 ProviderInstanceId: actionInstanceProvider,
                 ResultTableName: action.ResultTableName,
-                ResultSchemaName: action.ResultSchemaName
+                ResultSchemaName: action.ResultSchemaName,
+                Config: action.ReferenceId
             },
             
         } as ActionInstanceWithParameters

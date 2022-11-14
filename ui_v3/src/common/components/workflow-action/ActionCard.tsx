@@ -1,4 +1,4 @@
-import { Box, Card, Icon, IconButton, Typography, TextField, Dialog, DialogTitle, DialogContent } from "@mui/material"
+import { Box, Card, Icon, IconButton, Typography, TextField, Dialog, DialogTitle, DialogContent, Button } from "@mui/material"
 import LinearProgress from '@mui/material/LinearProgress'
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
 import { styled } from '@mui/styles'
@@ -38,7 +38,8 @@ export interface ActionCardProps {
     onActionSelect?: (actionId: string, actionIndex: number) => void
     handlePreviewOutput: (executionId: string) => void
     handleActionClick?: (actionId: string, actionIndex: number, stageId: string) => void
-    handleActionNameChange?: (actionId: string, actionIndex: number, stageId: string, name: string) => void
+    handleActionNameChange?: (actionId: string, actionIndex: number, stageId: string, name: string) => void,
+    handleReRunAction?: (stageId: string, actionIndex: number) => void
 }
 
 export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -144,6 +145,9 @@ const ActionCard = (props: ActionCardProps) => {
 
     }
 
+    const handleReRunFromAction = () => {
+        props.handleReRunAction?.(props.stageId || "stageId", props.index)
+    }
 
     return (
         <>
@@ -166,10 +170,13 @@ const ActionCard = (props: ActionCardProps) => {
         <HtmlTooltip title={
             (props.executionStaus === 'Completed' || props.executionStaus === 'Failed') ? (
                 <React.Fragment>
-                    <Box sx={{height: '50px', minWidth:'120px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Box sx={{height: '100%', minWidth:'120px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
                         <Typography>
                             <span>Run time: <b>{tooltipTitle}s</b></span>
                         </Typography>
+                        <Button variant="outlined" onClick={handleReRunFromAction}>
+                            Re-run from here
+                        </Button>
                     </Box>
                 </React.Fragment>
             ): ("")

@@ -27,7 +27,8 @@ import SaveAndBuildChartsFromExecution from '../../../common/components/charts/S
 import WorkflowActionContainer from './WorkflowActionContainer'
 import leftExpandIcon from '../../../../src/images/left expand.svg'
 import RightExpandIcon from '../../../../src/images/right expand.svg'
-import LinesEllipsis from 'react-lines-ellipsis'
+import { ActionParameterInstance } from '../../../generated/entities/Entities'
+import useReRunWorkflowAction from '../../../common/components/workflow/execute/hooks/useReRunWorkflowAction'
 
 interface MatchParams {
     workflowExecutionId: string
@@ -37,103 +38,13 @@ const ViewWorkflowExecution = (match: MatchParams) => {
     const workflowExecutionId = match.workflowExecutionId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const [actionParameterInstances, setActionParameterInstances] = React.useState<ActionParameterInstance[]>([])
+    const reRunWorkflowAction = useReRunWorkflowAction({mutationName: "ReRunFlowAction"})
 
-    const actionContext = React.useContext(BuildActionContext)
-    const setActionContext = React.useContext(SetBuildActionContext)
     const setModuleStateContext = React.useContext(SetModuleContextState)
     const [areChildActionsReady, setAreChildActionReady] = React.useState<boolean>(false)
-    const [areActionsCompleted, setAreActionsCompleted] = React.useState<boolean>(false)
-    const [resultsAvailable, setResultsAvailable] = React.useState<boolean>(true)
 
-    const checkIfActionsCompleted = (data: WorkflowActionExecutions[]) => {
-        var areActionsCompleted = true
-        data[0].ChildExecutionsWithDefinitions?.forEach(child => {
-            if(child?.ActionExecution?.Status !== 'Completed' && child?.ActionExecution?.Status !== 'Failed') {
-                areActionsCompleted = false;
-            }
-        })
-        
-        setAreActionsCompleted(areActionsCompleted)
-    }
 
-    // const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
-    //     if(data?.[0]?.ChildExecutionsWithDefinitions?.length || 0 > 0) {
-    //         if(areChildActionsReady === false) {
-    //             setWorkflowContext({type: 'DELETE_STAGE', payload: {stageId: workflowContext.stages[0].Id}})
-    //         }
-    //         const workflowExecutionStartedOn = data?.[0]?.WorkflowExecution?.ExecutionStartedOn || (new Date(Date.now()).getTime())
-    //         var currentStageId = ""
-    //         const totalChildExecutions = data?.[0]?.ChildExecutionsWithDefinitions?.length || 0
-    //         const childExecutions = data?.[0]?.ChildExecutionsWithDefinitions
-    //         for(let i = 0; i < totalChildExecutions; i++) {
-    //             currentStageId = childExecutions?.[i]?.stageId || "stageId"
-    //             const stageActions = []
-    //             while(i<totalChildExecutions && childExecutions?.[i]?.stageId === currentStageId) {
-    //                 stageActions.push({
-    //                     Id: childExecutions?.[i]?.ActionExecution?.Id || "executionId",
-    //                     ActionGroup: childExecutions?.[i]?.ActionDefinition?.ActionGroup || "Action Group NA",
-    //                     DisplayName: childExecutions?.[i]?.ActionDefinition?.DisplayName || "Name",
-    //                     DefaultActionTemplateId: childExecutions?.[i]?.ActionDefinition?.DefaultActionTemplateId || "templateId",
-    //                     Parameters: [],
-    //                     ExecutionStatus: childExecutions?.[i]?.ActionExecution?.Status || "Created",
-    //                     ExecutionStartedOn: childExecutions?.[i]?.ActionExecution?.ExecutionStartedOn,
-    //                     ExecutionCompletedOn: childExecutions?.[i]?.ActionExecution?.ExecutionCompletedOn,
-    //                     PresentationFormat: childExecutions?.[i]?.ActionDefinition?.PresentationFormat
-    //                 })
-    //                 i++;
-    //             }
-    //             i--;
-    //             const currentStage = workflowContext.stages.find(stage => stage.Id === currentStageId)
-    //             if(!!currentStage) {
-    //                 var completedActions = 0;
-    //                 stageActions.forEach((stageAction, index) => {
-    //                     setWorkflowContext({type: 'UPDATE_CHILD_STATUS', payload: {
-    //                         stageId: currentStageId,
-    //                         actionId: stageAction.Id,
-    //                         actionIndex: index,
-    //                         newStatus: stageAction.ExecutionStatus,
-    //                         ExecutionStartedOn: stageAction.ExecutionStartedOn,
-    //                         ExecutionCompletedOn: stageAction.ExecutionCompletedOn
-    //                     }})
-    //                     if(stageAction.ExecutionStatus === 'Completed' || stageAction.ExecutionStatus === 'Failed') {
-    //                         completedActions++;
-    //                     }
-    //                 })
-    //                 setWorkflowContext({type: 'CHANGE_STAGE_PERCENTAGE', payload: {
-    //                     stageId: currentStageId,
-    //                     percentage: (completedActions/stageActions.length) * 100
-    //                 }})
-    //             } else {
-    //                 setWorkflowContext({type: 'ADD_STAGE', payload: {
-    //                     Name: childExecutions?.[i]?.stageName || "stage",
-    //                     Id: currentStageId,
-    //                     Actions: stageActions
-    //                 }})
-    //             }
-
-    //         }
-    //         setWorkflowContext({type: 'SET_WORKFLOW_DETAILS', payload: {actionName: data?.[0]?.WorkflowDefinition?.DisplayName || "WorkflowName", description: data?.[0]?.WorkflowDefinition?.Description || "NA"}})
-    //         setWorkflowContext({type: 'CHANGE_EXECUTION_STATUS', payload: {status: data?.[0]?.WorkflowExecution?.Status || "NA"}})
-    //         setWorkflowContext({type: 'SET_DRAGGABLE_PROPERTY', payload: false})
-    //         setWorkflowContext({type: 'SET_APPLICATION_ID', payload: data?.[0]?.WorkflowDefinition?.ApplicationId })
-    //         setWorkflowContext({type: 'SET_ACTION_GROUP', payload: data?.[0]?.WorkflowDefinition?.ActionGroup })
-    //         setWorkflowContext({type: 'CHANGE_DESCRIPTION', payload: { newDescription: data?.[0]?.WorkflowDefinition?.Description||"NA" }})
-    //         setWorkflowContext({type: "SET_PUBLISHED_STATUS", payload: data?.[0]?.WorkflowDefinition?.PublishStatus })
-    //         setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_STARTED_ON', payload: workflowExecutionStartedOn})
-    //         setWorkflowContext({type: 'SET_MODE', payload: 'EXECUTING'})
-            
-    //         setActionContext({ type: "SetActionDefinition", payload: { newActionDefinition: data?.[0]?.WorkflowDefinition}})
-            
-    //         setAreChildActionReady(true)   
-    //         checkIfActionsCompleted(data || [])
-
-    //         if(data?.[0]?.WorkflowExecution?.Status === "Completed" || data?.[0]?.WorkflowExecution?.Status === "Failed") {
-    //             setResultsAvailable(true)
-    //             setWorkflowContext({type: 'SET_WORKFLOW_EXECUTION_COMPLETED_ON', payload: data?.[0]?.WorkflowExecution?.ExecutionCompletedOn || (new Date(Date.now()).getTime())})
-    //         }
-    //     }
-        
-    // }
 
     const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
         setModuleStateContext({
@@ -266,13 +177,11 @@ const ViewWorkflowExecution = (match: MatchParams) => {
 
     }
 
-    const handlePreviewDialogClose = () => {
-        setWorkflowContext({type: 'SET_EXECUTION_FOR_PREVIEW', payload: undefined})
+    const handleParameterInstancesChange = (newParameterInstances: ActionParameterInstance[]) => {
+        console.log(newParameterInstances)
+        setActionParameterInstances(newParameterInstances)
     }
 
-    const handleResultsDialogClose = () => {
-        setAreActionsCompleted(false)
-    }
     const numberOfActionINStage = ()=>{
         let ans = 0;
         for(var i=0;i<workflowContext.stages.length;i++){
@@ -344,10 +253,8 @@ const ViewWorkflowExecution = (match: MatchParams) => {
             }
         })
     }
-    const handleAllCollapse = ()=>{
-        setFinalOutputOpener(false);
-        setFlowOpener(false);
-    }
+
+
     const [workflowActionExecutionData, workflowActionExecutionError, workflowActionExecutionLoading] = useGetWorkflowStatus(workflowExecutionId, {enabled: (workflowContext.WorkflowExecutionStatus !== 'Completed' && workflowContext.WorkflowExecutionStatus !== 'Failed'), handleSuccess: handleRefreshQuery})
 
     React.useEffect(() => {
@@ -361,6 +268,34 @@ const ViewWorkflowExecution = (match: MatchParams) => {
 
     }, [workflowExecutionId])
 
+    React.useEffect(() => {
+        console.log("here")
+        if(workflowContext.reRunActionIndex !== undefined) {
+            reRunWorkflowAction.mutate({workflowExecutionId: workflowExecutionId, reRunActionindex: workflowContext.reRunActionIndex, globalParameterInstance: actionParameterInstances}, {
+                onSuccess: () => {
+                    // setWorkflowContext({
+                    //     type: 'CHANGE_EXECUTION_STATUS',
+                    //     payload: {
+                    //         status: "NA"
+                    //     }
+                    // })
+                    // setWorkflowContext({
+                    //     type: 'SET_ENTIRE_CONTEXT',
+                    //     payload: {
+                    //         ...workflowContext,
+                    //         reRunActionIndex: undefined
+                    //     }
+                    // })
+                    setWorkflowContext({
+                        type: 'SET_ENTIRE_CONTEXT',
+                        payload: defaultWorkflowContext
+                    })
+                    setAreChildActionReady(false)
+                }
+            })
+        }
+    }, [workflowContext.reRunActionIndex])
+
     if(!areChildActionsReady){
         return <LoadingIndicator/>
     } else if(workflowActionExecutionError) {
@@ -368,33 +303,28 @@ const ViewWorkflowExecution = (match: MatchParams) => {
     } else {
         return (
             <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center'}}>
-                
-
-                {/* <Dialog open={workflowContext.actionExecutionIdForPreview !== undefined} onClose={handleResultsDialogClose} fullWidth maxWidth="xl" scroll="paper">
-                    <Grid item xs={12} style={{display: 'flex', justifyContent: 'flex-end'}} onClick={handlePreviewDialogClose}>
-                        <IconButton aria-label="close" >
-                            <CloseIcon/>
-                        </IconButton>
-                    </Grid>
-                    <DialogTitle>Output preview</DialogTitle>
-                    <DialogContent sx={{overflow: 'auto', p: 1, display: 'flex', gap: 2, flexDirection: 'column'}}>
-                        <ViewActionExecution actionExecutionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"}/>
+                <Dialog open={reRunWorkflowAction.isLoading}>
+                    <DialogTitle>
+                        Creating new executions
+                    </DialogTitle>
+                    <DialogContent>
+                        <LoadingIndicator />
                     </DialogContent>
-                </Dialog> */}
+                </Dialog>
                 <Box sx={{display: 'flex',flexDirection:'column', minWidth: '100%',height:'100%'}}>
                     {/* <ActionDefinitionHeroActionContextWrapper mode="READONLY"/> */}
                     <Box sx={{px:9, display:'flex',flexDirection:'row'}}>
                                     <Box sx={{display:'flex',flexDirection:'column',width:'50%'}}>
                                         <Typography sx={{fontSize:'2rem',fontWeight:700}}>{workflowActionExecutionData?.[0]?.WorkflowDefinition?.DisplayName}</Typography>
-                                        <Tooltip placement='top' arrow title={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description || " "}>
+                                        <Tooltip placement='top' arrow title={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description || ""}>
                                         <Typography sx={{fontSize:'0.8rem',fontWeight:400,width:'70%'}}>
-                                            <LinesEllipsis
+                                            {/* <LinesEllipsis
                                                 text={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description}
                                                 maxLine='3'
                                                 ellipsis=' ...'
                                                 trimRight
                                                 basedOn='letters'
-                                            />
+                                            /> */}
                                              </Typography>
                                              </Tooltip>
                                     </Box>
@@ -405,29 +335,21 @@ const ViewWorkflowExecution = (match: MatchParams) => {
                                     </Box>
 
                     </Box>
-                                    <Box onClick={handleBoxIPopener} sx={{transitionDuration:'1s',cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
-                                        <Box sx={{display:'flex',flexDirection:'row'}}>
-                                            <Button onClick={handleInputOpener}>
-                                                {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
-                                            </Button>
-                                            <Typography sx={{color:'#f09124',py:1,fontSize:'1.1rem',fontWeight:500}}>Inputs</Typography>
-                                        </Box>
-                                        <Box sx={{px:'20vw'}}>{userInputOpener?
-                                                <WorkflowContextProvider>
-                                                    <ExecuteWorkflow workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId}/>
-                                                </WorkflowContextProvider>:<></>
-                                            }
-                                        </Box>
-                                    </Box>
-                    
-                
-                <Box sx={{display:'flex',flexDirection:'column',mx:-4}}>
-                    {/* {(!workflowContext.currentSelectedStage && flowOpener)?
-                    <></>:
-                    <Box sx={{mx:11,px:2,mr:9}}>
-                        <StagesWithActions showStage={true} showDet={false}/>
+                    <Box sx={{cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
+                        <Box sx={{display:'flex',flexDirection:'row'}}>
+                            <Button onClick={handleInputOpener}>
+                                {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
+                            </Button>
+                            <Typography sx={{color:'#f09124',py:1,fontSize:'1.1rem',fontWeight:500}}>Inputs</Typography>
+                        </Box>
+                        <Box sx={{px:'20vw'}}>{userInputOpener?
+                                <WorkflowContextProvider>
+                                    <ExecuteWorkflow  workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId} onParameterInstancesChange={handleParameterInstancesChange}/>
+                                </WorkflowContextProvider>:<></>
+                            }
+                        </Box>
                     </Box>
-                    } */}
+                <Box sx={{display:'flex',flexDirection:'column',mx:-4}}>
                     <Box sx={{mx:11}}>
                         <StagesWithActions showStage={true} showDet={false}/>
                     </Box>

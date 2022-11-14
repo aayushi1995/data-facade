@@ -62,7 +62,7 @@ export function makeWorkflowTemplate(workflowContext: WorkflowContextType): stri
     return JSON.stringify(workflowActionDefinitions)
 }
 
-function calculateOffset(workflowContext: WorkflowContextType, stageId: string): number {
+export function calculateOffset(workflowContext: WorkflowContextType, stageId: string): number {
     var offset = 0
     for(let i = 0; i < workflowContext.stages.length; i++) {
         if(workflowContext.stages[i].Id == stageId) {
