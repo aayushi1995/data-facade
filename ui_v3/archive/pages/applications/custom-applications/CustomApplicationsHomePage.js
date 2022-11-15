@@ -1,5 +1,4 @@
-import React from 'react'
-import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom';
+import { Route, Switch, useRouteMatch, withRouter } from 'react-router-dom';
 import CustomApplications from './components/CustomApplications';
 
 export const CustomApplicationsHomePage = withRouter(function CustomApplicationRoutes() {

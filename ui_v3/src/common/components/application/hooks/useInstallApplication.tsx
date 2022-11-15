@@ -3,11 +3,11 @@ import dataManager from "../../../../data_manager/data_manager"
 import { Application } from "../../../../generated/entities/Entities"
 import labels from "../../../../labels/labels"
 
-export interface UseInstallApplicationParams {
+interface UseInstallApplicationParams {
     mutationOptions: UseMutationOptions<Application[], unknown, InstallApplicationVariables, unknown>
 }
 
-export type InstallApplicationVariables = {
+type InstallApplicationVariables = {
     ArtifactLocation: string
 }
 
