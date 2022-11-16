@@ -639,7 +639,7 @@ const ConfigureParentParameter = (props: ConfigureParentParamProps) => {
     const onParentParameterSelection = (selectedParameter?: ActionParameterDefinition) => {
         if(selectedParameter === undefined) {
             props?.onParameterEdit?.({
-                ...props?.currentParamDef,
+                ...props?.currentParamDef, 
                 Config: JSON.stringify({})
             })
         } else {

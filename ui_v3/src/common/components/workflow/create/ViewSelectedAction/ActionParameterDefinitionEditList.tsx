@@ -1,5 +1,6 @@
-import { Autocomplete, Box, createFilterOptions, FormControl, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Autocomplete, Box, createFilterOptions, FormControl, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import { DataGrid, DataGridProps, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid';
+import React from 'react';
 import { useContext } from 'react';
 import { getInputTypeFromAttributesNew } from '../../../../../custom_enums/ActionParameterDefinitionInputMap';
 import ActionParameterDefinitionDatatype from '../../../../../enums/ActionParameterDefinitionDatatype';
@@ -13,7 +14,6 @@ import { TemplateWithParams } from './hooks/UseViewAction';
 
 
 const filter = createFilterOptions<ActionParameterDefinition>()
-
 
 export interface ActionParameterDefinitionEditListProps {
     templateWithParams?: TemplateWithParams,    
@@ -47,6 +47,24 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
                 valueGetter: (params: GridValueGetterParams<ActionParameterDefinitionEditListDatagridRow>) => params?.row?.parameter?.ParameterName
             },
             {
+                field: "Default Value",
+                flex: 5,
+                headerName: "Default Value",
+                renderCell: (params: GridRenderCellParams<ActionParameterDefinitionEditListDatagridRow>) => {
+                    const currentParameter = findIfParameterPresent(workflowContext, props.stageId, props.actionIndex, params?.row?.parameter?.Id || "id")
+                    const userInputRequiredValue = currentParameter?.userInputRequired || "No"
+
+                    return (
+                        
+                            <DefaultValueSelector
+                                parameter={params?.row?.parameter} 
+                                actionIndex={actionIndex} 
+                                stageId={stageId}
+                            />
+                    )
+                }
+            },
+            {
                 field: "Global Parameter",
                 flex: 5,
                 headerName: "Global Parameter",
@@ -56,11 +74,7 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
 
                     return (
                         userInputRequiredValue === "No" ? (
-                            <DefaultValueSelector
-                                parameter={params?.row?.parameter} 
-                                actionIndex={actionIndex} 
-                                stageId={stageId}
-                            />
+                            <Typography color="text.disabled">Disabled</Typography>
                             
                         ) : (
                             <GlobalParameterHandler
@@ -153,7 +167,9 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
 
 const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
     const {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter} = useGlobalParameterHandler(props)
-
+    if(!!!availableParameters.includes({ParameterName:props.parameter.ParameterName}) && !currentGlobalParameter.ParameterName){
+        addAndMapGlobalParameter(props.parameter)
+    }
     return (
         <Box sx={{display: 'flex', gap: 1, alignItems: 'center', width: "100%" }}>
             <Autocomplete
@@ -178,6 +194,9 @@ const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
                                     />}   
                 filterOptions={(options, params) => {
                     const filtered = filter(options, params);
+                    if(!availableParameters.includes(props.parameter) && !currentGlobalParameter.ParameterName && params.inputValue === ''){
+                        filtered.push({ParameterName: `Create Global Parameter: ${props.parameter.ParameterName}`});
+                    }
                     if(params.inputValue !== '') {
                         filtered.push({ParameterName: `Create Global Parameter: ${params.inputValue}`});
                     }
@@ -186,7 +205,12 @@ const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
                 onChange={(event, value, reason, details) => {
                     if(!!value) {
                         if(value?.ParameterName?.includes('Create Global Parameter:')) {
-                            addAndMapGlobalParameter(value)
+                           const newVal =  {
+                                    ...value,
+                                    ParameterName: value?.ParameterName?.substring(25)
+                                     }
+                            
+                            addAndMapGlobalParameter(newVal)
                         } else {
                             mapToGlobalParameter(value.Id || "ID")
                         }

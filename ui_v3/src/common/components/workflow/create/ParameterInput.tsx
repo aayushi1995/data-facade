@@ -484,6 +484,7 @@ const StringInput = (props: StringParameterInput) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput(event.target.value);
       };
+
     return <TextField
                 value={input}
                 onChange={handleChange}
@@ -491,7 +492,6 @@ const StringInput = (props: StringParameterInput) => {
                 variant="outlined"
                 size="small"
                 label={props.inputProps.parameterName || "Parameter Name NA"}
-                // placeholder={props.inputProps.parameterName || "Parameter Name NA"}
                 fullWidth
             />
 }

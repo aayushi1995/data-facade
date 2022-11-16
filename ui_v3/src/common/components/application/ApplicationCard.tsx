@@ -88,8 +88,8 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         handleMoreOptionsSpeedDialToggle()
     }
 
-    const promptDeleteApplication = () => {
-        handleMoreOptionsSpeedDialClose()
+    const promptDeleteApplication = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.stopPropagation()
         handleDialogOpen()
     }
 
@@ -105,12 +105,6 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const onShare = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.stopPropagation()
     }
-
-    const deleteButton = <Tooltip arrow placement='top' title="Delete">
-        <IconButton sx={getIconSxProperties()} onClick={promptDeleteApplication}>
-            <DeleteIcon />
-        </IconButton>
-    </Tooltip>
 
     const formActions = () => {
         if(props.isInstalled) {
@@ -134,67 +128,17 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                     </Box>
                     <Box>
 
-                        <Tooltip arrow placement='top' title="Share">
-                            <IconButton sx={{
-                                height: "100%",
-                                width: "100%",
-                                backgroundColor: "cardIconButtonBackgroundColor.main",
-                                boxShadow: lightShadows[32],
-                                "&:hover": {
-                                    backgroundColor: "cardIconBtn1HoverBgColor.main",
-                                    color: "cardIconBtn1HoverColor.main"
-                                }
-                            }} onClick={promptDeleteApplication}>
+                        <Tooltip arrow placement='top' title="Delete">
+                            <IconButton sx={getIconSxProperties()} onClick={promptDeleteApplication}>
                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
-
-
-                        {/* <Tooltip arrow placement='top' title="More Options">
-                            <SpeedDial
-                                ariaLabel={props.application.ApplicationId||""}
-                                direction="down"
-                                sx={{ 
-                                    height: "40px", 
-                                    width: "40px",
-                                }}
-                                FabProps={{
-                                    sx: { 
-                                        width: "100%",
-                                        backgroundColor: "cardIconButtonBackgroundColor.main",
-                                        boxShadow: lightShadows[32],
-                                        "&:hover": {
-                                            backgroundColor: "cardIconBtn1HoverBgColor.main"
-                                        }
-                                    }
-                                }}  
-                                open={moreOptionsSpeedDialState.isOpen}
-                                onClick = {toggleMoreOptionsSpeedDial}
-                                icon={<PlaylistAddIcon/>}
-                            >
-                                <SpeedDialAction
-                                    key="Delete"
-                                    icon={
-                                        <DeleteIcon />
-                                    }
-                                    tooltipTitle="Delete"
-                                    onClick={promptDeleteApplication}
-                                    sx={{
-                                        // height: "100%",
-                                        // width: "100%",
-                                        marginTop:'-5px',
-                                        // color:'cardIconBtn1HoverColor.main',
-                                        backgroundColor: "cardDeleteBtnBgColor.main"
-                                    }}
-                                />
-                            </SpeedDial>
-                        </Tooltip> */}
                 </Box>
                 </Box>
             )
         } else {
             return (
-                <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%" , alignItems:'center'}}>
+                <Box sx={{mx:'auto',width:'12%',display: "flex", flexDirection:"row", gap: 2, mt: "4%", mb: "4%"}}>
                         <Tooltip arrow title="Install">
                             <IconButton sx={getIconSxProperties()} onClick={onApplicationInstall}>
                                 <InstallDesktopIcon/>
@@ -282,7 +226,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                         }}>
                                             {formInfoString()}
                                         </Typography>
-                                        <Box sx={{display: "flex", alignItems: "center" , mt:2, justifyContent:'center'}}>
+                                        {/* <Box sx={{display: "flex", alignItems: "center" , mt:2, justifyContent:'center'}}>
                                                 <UsageStatus status={application.Status||"NA"}/>
                                                 { <Typography sx={{
                                                     fontFamily: "SF Pro Text",
@@ -296,7 +240,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                                     fontFeatureSettings: "'liga' off",
                                                     color: "cardNumUserTextColor.main"
                                                 }}>{application.NumberOfUsers||"No User"}</Typography>}
-                                            </Box>
+                                            </Box> */}
                                             <Typography sx={{
                                                     fontFamily: "SF Pro Text",
                                                     fontStyle: "normal",

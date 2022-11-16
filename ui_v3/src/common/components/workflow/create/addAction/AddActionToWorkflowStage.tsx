@@ -36,7 +36,7 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
         }
 
         setWorkflowContext({type: 'ADD_ACTION', payload: {stageId: props.stageId, Action: newWorkflowAction}})
-        setConfigureParameterStateDialog(true)
+        setConfigureParameterStateDialog(false)
 
     }
 
@@ -71,7 +71,6 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
                             <img src={CloseIcon} alt="close"/>
                         </IconButton>
                     </Grid>
-                    
                 </DialogTitle>
                 <DialogContent sx={{minHeight: '500px', mt: 2}}>
                     <ConfigureParametersContextProvider>

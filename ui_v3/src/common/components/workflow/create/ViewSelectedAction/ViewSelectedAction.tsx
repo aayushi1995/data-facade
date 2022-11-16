@@ -13,6 +13,7 @@ import { WrapInDialog } from '../../../../../pages/table_browser/components/AllT
 import CodeEditor from '../../../CodeEditor';
 import { ConfigureParametersContextProvider } from '../../context/ConfigureParametersContext';
 import ConfigureActionParameters from '../addAction/ConfigureActionParameters';
+import ShowGlobalParameters from "../ShowGlobalParameters";
 import ActionParameterDefinitionEditList from "./ActionParameterDefinitionEditList";
 import useViewAction, { ActionDetail } from './hooks/UseViewAction';
 
@@ -176,9 +177,20 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                             textAlign: "center",
                             opacity: 0.7
                     }}/>
+                    <Tab label="Global Parameters" value={2} sx={{
+                            fontFamily: "SF Pro Text",
+                            fontStyle: "normal",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                            lineHeight: "24px",
+                            display: "flex",
+                            alignItems: "center",
+                            textAlign: "center",
+                            opacity: 0.7
+                    }}/>
                 </Tabs>
                 </Box>
-                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '100%', alignItems: 'center', gap: 2}}>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '70%', alignItems: 'center', gap: 2}}>
                     <Button onClick={handleTestAction}>
                         Test
                     </Button>
@@ -199,6 +211,11 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
             </Box>
             
             <Box sx={{pt: 2}}>
+            <TabPanel value={activeTab} index={2}>
+                    <Box>
+                        <ShowGlobalParameters/>
+                    </Box>
+                </TabPanel>
                 <TabPanel value={activeTab} index={1}>
                     <Box>
                         <CodeEditor

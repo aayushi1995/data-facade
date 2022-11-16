@@ -50,6 +50,16 @@ const ShowGlobalParameters = () => {
         })
     }
 
+    // if(!params.row.MappedActionLevelParameters){
+    //     setWorkflowContext({
+    //         type: 'DELETE_GLOBAL_PARAMETER',
+    //         payload: {
+    //             parameterId: params.row.id
+    //         }
+    //     })
+    // }
+    
+
     const dataGridProps: DataGridProps = {
         columns: [
             {
@@ -151,6 +161,9 @@ const DeleteCell = (props: GlobalParametersRow) => {
     const deleleteParameterFunc = ()=>{
         deleteParameter(props?.id)
         handleDialogClose()
+    }
+    if(!props.MappedActionLevelParameters){
+        deleteParameter(props?.id)
     }
     return (
         <Box>

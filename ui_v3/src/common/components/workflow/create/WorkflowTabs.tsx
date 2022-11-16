@@ -64,7 +64,7 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
                                 textAlign: "center",
                                 opacity: 0.7
                             }}/>
-                            <Tab label="Parameters" value={1} sx={{
+                            <Tab label="Global Parameters" value={1} sx={{
                                 fontFamily: "SF Pro Text",
                                 fontStyle: "normal",
                                 fontWeight: 600,

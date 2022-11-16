@@ -22,8 +22,12 @@ export const StagesWithActions = (props :{showDet: boolean, showStage: boolean})
         setInterval(increaseTime, 1000)
     }, [])
     const currentStages = workflowContext.currentStageView === undefined ? workflowContext.stages.slice(0, 4) : workflowContext.stages.slice(workflowContext.currentStageView.startIndex, workflowContext.currentStageView.endIndex)
-
+    
     const stages = currentStages.map(stage => {
+        var runTime = 0;
+        for(var i=0;i<stage.Actions.length;i++){
+            runTime+= Math.abs(((stage.Actions[i].ExecutionCompletedOn || 0)-(stage.Actions[i].ExecutionStartedOn || 0))/1000)
+        }
         return {
             stageId: stage.Id,
             stageName: stage.Name,
@@ -31,7 +35,7 @@ export const StagesWithActions = (props :{showDet: boolean, showStage: boolean})
             numberOfActions: stage.Actions.length,
             failed: stage.stageFailed,
             completed: stage.completed,
-            totalRunTime: '00 MIN 34 SEC' //workflowContext.stages[1].
+            totalRunTime: runTime
         }
     })
 

@@ -324,34 +324,34 @@ export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParam
 
     const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Tag === parameter.Tag && wfParameter.Datatype === parameter.Datatype)
     
-
-    const addAndMapGlobalParameter = (globalParamToAdd: ActionParameterDefinition) => {
-        const paramterName = globalParamToAdd.ParameterName?.substring(25)
-        const id = uuidv4()
-        const newGlobalParamter: ActionParameterDefinition = {
-            ...globalParamToAdd,
-            Id: id,
-            ParameterName: paramterName,
-            Datatype: parameter.Datatype,
-            Tag: parameter.Tag,
-            OptionSetValues: parameter.OptionSetValues
-        }
-        setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: newGlobalParamter}})
-        mapToGlobalParameter(id)
+    
+    const addAndMapGlobalParameter = (globalParamToAdd: ActionParameterDefinition) => { 
+        const paramterName = globalParamToAdd.ParameterName
+        const id = uuidv4()  
+        const newGlobalParamter: ActionParameterDefinition = { 
+            ...globalParamToAdd, 
+            Id: id, 
+            ParameterName: paramterName, 
+            Datatype: parameter.Datatype, 
+            Tag: parameter.Tag, 
+            OptionSetValues: parameter.OptionSetValues 
+        } 
+        setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: newGlobalParamter}}) 
+        mapToGlobalParameter(id) 
     }
 
-    const mapToGlobalParameter = (workflowParameterId: string) => {
-        setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER', 
-                            payload: {
-                                stageId: stageId, 
-                                globalParameterId: workflowParameterId, 
-                                parameterDefinitionId: parameter.Id || "ID", 
-                                actionIndex: actionIndex, 
-                                parameterName: parameter.DisplayName || parameter.ParameterName || "parameterName"
-                            }
-                        })
-    }
-
+    const mapToGlobalParameter = (workflowParameterId: string) => { 
+        setWorkflowContext({type: 'MAP_PARAMETER_TO_GLOBAL_PARAMETER',  
+                            payload: { 
+                                stageId: stageId,  
+                                globalParameterId: workflowParameterId,  
+                                parameterDefinitionId: parameter.Id || "ID",  
+                                actionIndex: actionIndex,  
+                                parameterName: parameter.DisplayName || parameter.ParameterName || "parameterName" 
+                            } 
+                        }) 
+    } 
+ 
     return {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter}
 }
 
@@ -380,7 +380,12 @@ const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
                 onChange={(event, value, reason, details) => {
                     if(!!value) {
                         if(value?.ParameterName?.includes('Create Global Parameter:')) {
-                            addAndMapGlobalParameter(value)
+                            const newVal =  {
+                                ...value,
+                                ParameterName: value?.ParameterName?.substring(25)
+                                 }
+                        
+                            addAndMapGlobalParameter(newVal)
                         } else {
                             mapToGlobalParameter(value.Id || "ID")
                         }

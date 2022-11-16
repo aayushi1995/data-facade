@@ -156,7 +156,15 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
     }
 
     const handleAddAction = () => {
-        setWorkflowContext({type: 'CHANGE_CURRENT_SELECTED_STAGE', payload: {stageId: props.stageId}})
+        setWorkflowContext({type: 'CHANGE_CURRENT_SELECTED_STAGE', payload: {stageId: props.stageId}});
+        setWorkflowContext({
+            type: 'SET_SELECTED_ACTION',
+            payload: {
+                actionId: "",
+                actionIndex: -1
+            }
+        })
+
     }
 
     const handleDialogClose = (action?: ActionDefinition) => setIsBuildDialogOpen(false)
