@@ -237,7 +237,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         })
     }
 
-    if(isWorkflowFetched && !useWorkflowUpdate.isLoading) {
+    if(isWorkflowFetched) {
         return (
             <Box sx={{display: 'flex', gap: 1, flexDirection: 'row', width: '100%', height: '100%', overflowY: 'clip'}}>
                 <Dialog open={errorDialogState} onClose={handleErrorDialogClose} fullWidth maxWidth="sm">
@@ -253,7 +253,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                         <Button onClick={handleErrorDialogClose}>Okay</Button>
                     </DialogContent>
                 </Dialog>
-                <TestWorkflowActionDialog handleTestAction={handleTestSingleAction} isLoading={testActionMutation.isLoading}/>
+                <TestWorkflowActionDialog handleTestAction={handleTestSingleAction} isLoading={testActionMutation.isLoading} saving={useWorkflowUpdate.isLoading}/>
                 <Box sx={{maxHeight: '100%', py: 2}}>
                 <WorkflowSideDrawer/>
                 </Box>
@@ -265,6 +265,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                         {workflowContext.currentSelectedStage ? (
                             <AddingActionView
                                 onBack={handleAddingActionViewBack}
+                                saving={useWorkflowUpdate.isLoading}
                             />
                         ) : (
                             <WorkflowTabs
@@ -272,6 +273,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                                 onRun={handleRun}
                                 onSave={handleUpdate}
                                 onTest={handleTest}
+                                saving={useWorkflowUpdate.isLoading}
                             />
                         )}
                     </Box> 

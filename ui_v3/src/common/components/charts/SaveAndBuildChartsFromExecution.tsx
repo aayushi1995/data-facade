@@ -103,7 +103,8 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     }
 
 
-    const [executionTerminal, setExecutionTerminal] = React.useState(false)
+    const [executionTerminal, setExecutionTerminal] = React.useState(true)
+
     const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: props.executionId, queryOptions: {
         enabled: !executionTerminal
     }})
@@ -115,6 +116,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     }, [actionExecutionDetailQuery.data])
 
     React.useEffect(() => {
+        console.log(props.executionId)
         setExecutionTerminal(false)
     }, [props.executionId])
     

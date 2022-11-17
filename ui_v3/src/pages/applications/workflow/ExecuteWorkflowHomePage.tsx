@@ -1,6 +1,6 @@
 import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper, Tooltip, IconButton, Typography } from "@mui/material"
 import React from "react"
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom"
+import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom"
 import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import { SetModuleContextState } from "../../../common/components/ModuleContext"
@@ -23,6 +23,8 @@ import SelectProviderInstanceHook from "../../execute_action/components/SelectPr
 import { safelyParseJSON } from "../../execute_action/util"
 import { defaultWorkflowContext, SetWorkflowContext, WorkflowActionDefinition, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 import EditIcon from '@mui/icons-material/Edit';
+import {v4 as uuidv4} from "uuid"
+import { ViewWorkflowExecution } from "./ViewWorkflowExecutionHomePage"
 
 interface MatchParams {
     workflowId: string
@@ -40,6 +42,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const setModuleContextState = React.useContext(SetModuleContextState)
     const history = useHistory()
+    const location = useLocation()
     const [isReady, setIsReady] = React.useState(false)
     const [snackbarState, setSnackbarState] = React.useState(false)
     const [recurrenceConfig, setRecurrenceConfig] = React.useState<{
@@ -50,14 +53,16 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
         email?: string
     }>({actionInstance: {}, startDate: new Date(Date.now()), activeIndex: 0, slack: 'C01NSTT6AA3', email: userSettingsSingleton.userEmail})
 
-    
+    const workflowExecutionId = location.search ?  new URLSearchParams(location.search).get("flowExecution") : undefined
+    const workflowInstanceId = location.search ?  new URLSearchParams(location.search).get("flowInstance") : undefined
 
     const handleInstanceSaved = (data: any) => {
         if(recurrenceConfig.actionInstance.IsRecurring) {
             setSnackbarState(true)
             history.push(SCHEDULED_JOBS_ROUTE)
         } else {
-            history.push(`/application/workflow-execution/${data?.[0]?.Id}`)
+            console.log(data)
+            history.push(`/application/execute-workflow/${workflowId}?flowInstance=${data?.[0]?.InstanceId}&flowExecution=${data?.[0]?.Id}`)
         }
     }
 
@@ -103,7 +108,6 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
         const parametersArray: ActionParameterInstance[] = []
         data.forEach(actionInstanceWithParameters => {
             const workflowAction = {
-                Id: actionInstanceWithParameters.model?.Id || "id",
                 DisplayName: actionInstanceWithParameters.model?.DisplayName || "DisplayName",
                 Name: actionInstanceWithParameters.model?.Name || "Name",
                 ActionGroup: "test",
@@ -139,6 +143,10 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
             console.log(parametersArray)
             setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': parametersArray}})
         }
+        const actionInstanceDetails = actionInstanceDetailsQuery?.data?.[0]
+        if(!!actionInstanceDetails) {
+            setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': actionInstanceDetails.ActionParameterInstance || []}})
+        }
         setIsReady(true)
     }
 
@@ -152,24 +160,8 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     }
 
     const handlePreviousInstanceFetched = (data: ActionInstanceDetails[]) => {
-        const actionInstanceDetails = data?.[0]
-        if(!!actionInstanceDetails) {
-            setWorkflowContext({type: 'CHANGE_WORKFLOW_PARAMETER_INSTANCES', payload: {'parameterInstances': actionInstanceDetails.ActionParameterInstance || []}})
-        }
+        getWorkflowDetailsRefetch()
     }
-
-    React.useEffect(() => {
-        if(!!props.previousInstanceId && isReady) {
-            actionInstanceDetailsQuery.refetch()
-        }
-    }, [props.previousInstanceId, isReady])
-
-    React.useEffect(() => {
-        setWorkflowContext({
-            type: 'SET_ENTIRE_CONTEXT',
-            payload: defaultWorkflowContext
-        })
-    }, [props.workflowId])
 
     const handleRecurringChange = (actionInstance: ActionInstance) => {
         setRecurrenceConfig(config => ({
@@ -199,10 +191,24 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
             activeIndex: index + 1
         }))
     }
-    const actionInstanceDetailsQuery = useGetActionInstanceDetails({filter: {Id: props.previousInstanceId}, options: {enabled: false, onSuccess: handlePreviousInstanceFetched}})
-    const [workflowDefinition, error, loading] = useGetWorkflowDetails(workflowId, {enabled: workflowContext.Template === undefined, onSuccess: handleTemplate})
+
+    const actionInstanceDetailsQuery = useGetActionInstanceDetails({filter: {Id: props.previousInstanceId || workflowInstanceId === null ? undefined : workflowInstanceId}, options: {enabled: false, onSuccess: handlePreviousInstanceFetched}})
+    const [workflowDefinition, error, loading, getWorkflowDetailsRefetch] = useGetWorkflowDetails(workflowId, {enabled: false, onSuccess: handleTemplate})
     const [workflowInstances, instancesError, instancesLoading, refetchFunction, isRefetching] = useGetWorkflowChildInstances(workflowId, {enabled: false, onSuccess: handleInstances})
     
+    React.useEffect(() => {
+        setWorkflowContext({
+            type: 'SET_ENTIRE_CONTEXT',
+            payload: defaultWorkflowContext
+        })
+        if(workflowInstanceId !== undefined && workflowInstanceId !== null) {
+            actionInstanceDetailsQuery.refetch()
+        } else {
+            getWorkflowDetailsRefetch()
+        }
+
+    }, [props.workflowId])
+
     const handleEmailAndSlackChange = (slack?: string, email?: string) => {
         setRecurrenceConfig(config => ({
             ...config,
@@ -348,6 +354,12 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                         
                     </Box>
                 </Box>
+                {workflowExecutionId ? (
+                    <WorkflowContextProvider>
+                        <ViewWorkflowExecution workflowExecutionId={workflowExecutionId} />
+                    </WorkflowContextProvider>
+
+                ) : (<></>)}
                 <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/>
             </Box>
         )

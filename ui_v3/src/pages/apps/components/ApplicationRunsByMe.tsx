@@ -118,9 +118,9 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 }
             } else if(params?.colDef?.field === "Result") {
                 if(params?.row?.isWorkflow) {
-                    displayWorkflowOutput(params?.row?.ActionExecutionId)
+                    displayWorkflowOutput(params?.row?.ActionExecutionId, params?.row?.ActionDefinitionId, params?.row?.ActionInstanceId)
                 } else {
-                    displayActionOutput(params?.row?.ActionExecutionId)
+                    displayActionOutput(params?.row?.ActionExecutionId, params?.row?.ActionDefinitionId, params?.row?.ActionInstanceId)
                 }
             }
         }

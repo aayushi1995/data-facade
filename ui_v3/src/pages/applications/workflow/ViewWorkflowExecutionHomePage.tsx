@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button, Typography, Card, Divider, Tooltip } from "@mui/material"
 import React, { useState } from "react"
-import { RouteComponentProps, useRouteMatch } from "react-router-dom"
+import { RouteComponentProps, useLocation, useRouteMatch } from "react-router-dom"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import NoData from "../../../common/components/NoData"
 import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
@@ -31,11 +31,13 @@ import { ActionParameterInstance } from '../../../generated/entities/Entities'
 import useReRunWorkflowAction from '../../../common/components/workflow/execute/hooks/useReRunWorkflowAction'
 
 interface MatchParams {
-    workflowExecutionId: string
+    workflowExecutionId: string,
+    handleReceivePreviousInstanceId?: (previousInstanceId: string) => void
 }
 
-const ViewWorkflowExecution = (match: MatchParams) => {
-    const workflowExecutionId = match.workflowExecutionId
+export const ViewWorkflowExecution = (props: MatchParams) => {
+    const location = useLocation()
+    const workflowExecutionId = props.workflowExecutionId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const [actionParameterInstances, setActionParameterInstances] = React.useState<ActionParameterInstance[]>([])
@@ -47,19 +49,20 @@ const ViewWorkflowExecution = (match: MatchParams) => {
 
 
     const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
-        setModuleStateContext({
-            type: 'SetHeader',
-            payload: {
-                newHeader: {
-                    Title: data?.[0]?.WorkflowExecution?.ActionInstanceName,
-                    SubTitle: "Run on " + (new Date(data?.[0]?.WorkflowExecution?.ScheduledTime || Date.now()).toString())
-                }
-            }
-        })
+        // setModuleStateContext({
+        //     type: 'SetHeader',
+        //     payload: {
+        //         newHeader: {
+        //             Title: data?.[0]?.WorkflowExecution?.ActionInstanceName,
+        //             SubTitle: "Run on " + (new Date(data?.[0]?.WorkflowExecution?.ScheduledTime || Date.now()).toString())
+        //         }
+        //     }
+        // })
 
         if(data?.[0]?.ChildExecutionsWithDefinitions?.length || 0 > 0) {
             if(areChildActionsReady === false) {
                 setWorkflowContext({type: 'DELETE_STAGE', payload: {stageId: workflowContext.stages[0].Id}})
+                props?.handleReceivePreviousInstanceId?.(data?.[0]?.WorkflowExecution?.InstanceId || "ID")
             }
             const workflowExecutionStartedOn = data?.[0]?.WorkflowExecution?.ExecutionStartedOn || (new Date(Date.now()).getTime())
             var currentStageId = ""
@@ -269,23 +272,9 @@ const ViewWorkflowExecution = (match: MatchParams) => {
     }, [workflowExecutionId])
 
     React.useEffect(() => {
-        console.log("here")
         if(workflowContext.reRunActionIndex !== undefined) {
             reRunWorkflowAction.mutate({workflowExecutionId: workflowExecutionId, reRunActionindex: workflowContext.reRunActionIndex, globalParameterInstance: actionParameterInstances}, {
                 onSuccess: () => {
-                    // setWorkflowContext({
-                    //     type: 'CHANGE_EXECUTION_STATUS',
-                    //     payload: {
-                    //         status: "NA"
-                    //     }
-                    // })
-                    // setWorkflowContext({
-                    //     type: 'SET_ENTIRE_CONTEXT',
-                    //     payload: {
-                    //         ...workflowContext,
-                    //         reRunActionIndex: undefined
-                    //     }
-                    // })
                     setWorkflowContext({
                         type: 'SET_ENTIRE_CONTEXT',
                         payload: defaultWorkflowContext
@@ -313,29 +302,15 @@ const ViewWorkflowExecution = (match: MatchParams) => {
                 </Dialog>
                 <Box sx={{display: 'flex',flexDirection:'column', minWidth: '100%',height:'100%'}}>
                     {/* <ActionDefinitionHeroActionContextWrapper mode="READONLY"/> */}
-                    <Box sx={{px:9, display:'flex',flexDirection:'row'}}>
-                                    <Box sx={{display:'flex',flexDirection:'column',width:'50%'}}>
-                                        <Typography sx={{fontSize:'2rem',fontWeight:700}}>{workflowActionExecutionData?.[0]?.WorkflowDefinition?.DisplayName}</Typography>
-                                        <Tooltip placement='top' arrow title={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description || ""}>
-                                        <Typography sx={{fontSize:'0.8rem',fontWeight:400,width:'70%'}}>
-                                            {/* <LinesEllipsis
-                                                text={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Description}
-                                                maxLine='3'
-                                                ellipsis=' ...'
-                                                trimRight
-                                                basedOn='letters'
-                                            /> */}
-                                             </Typography>
-                                             </Tooltip>
-                                    </Box>
-                                    <Box sx={{textAlign:'right',display:'flex',flexDirection:'column',width:'50%',pt:5}}>
-                                        <Typography sx={{fontSize:'0.9rem',fontWeight:500}}>RUNNING : { workflowContext.stages.length} STAGES | {numberOfActionINStage()} ACTIONS</Typography>
-                                        <Typography sx={{color:'blue',fontSize:'0.9rem',fontWeight:500}}>RUN TIME : {getElapsedTime()}</Typography>
+                    <Box sx={{display:'flex',flexDirection:'row', pl: 2}}>
+                        <Box sx={{textAlign:'left',display:'flex',flexDirection:'column',width:'50%',pt:5}}>
+                            <Typography sx={{fontSize:'0.9rem',fontWeight:500}}>RUNNING : { workflowContext.stages.length} STAGES | {numberOfActionINStage()} ACTIONS</Typography>
+                            <Typography sx={{color:'blue',fontSize:'0.9rem',fontWeight:500}}>RUN TIME : {getElapsedTime()}</Typography>
 
-                                    </Box>
+                        </Box>
 
                     </Box>
-                    <Box sx={{cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
+                    {/* <Box sx={{cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
                         <Box sx={{display:'flex',flexDirection:'row'}}>
                             <Button onClick={handleInputOpener}>
                                 {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
@@ -348,7 +323,7 @@ const ViewWorkflowExecution = (match: MatchParams) => {
                                 </WorkflowContextProvider>:<></>
                             }
                         </Box>
-                    </Box>
+                    </Box> */}
                 <Box sx={{display:'flex',flexDirection:'column',mx:-4}}>
                     <Box sx={{mx:11}}>
                         <StagesWithActions showStage={true} showDet={false}/>

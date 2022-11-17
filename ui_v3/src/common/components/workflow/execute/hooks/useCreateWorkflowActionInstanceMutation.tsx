@@ -9,6 +9,7 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
     let actionInstanceProvider: string | undefined = workflowContext.SelectedProviderInstance?.Id
     const workflowInstancesWithParameterInstances = workflowContext.stages[0].Actions.map(action => {
+        const actionInstanceId = uuidv4()
         return {
             ParameterInstances: action.Parameters?.map((childParameterInstance) => {
                 const apdId = childParameterInstance.ActionParameterDefinitionId
@@ -20,11 +21,12 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
                     ...childParameterInstance,
                     ...globalParameterInstance,
                     ActionParameterDefinitionId: apdId,
-                    Id: uuidv4()
+                    Id: uuidv4(),
+                    ActionInstanceId: actionInstanceId
                 }
             }),
             model: {
-                Id: action.Id,
+                Id: actionInstanceId,
                 TemplateId: action.TemplateId,
                 DefinitionId: action.DefinitionId,
                 Name: action.Name,

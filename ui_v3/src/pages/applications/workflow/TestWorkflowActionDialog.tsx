@@ -9,7 +9,8 @@ import { SetWorkflowContext, WorkflowContext } from "./WorkflowContext"
 
 interface TestWorkflowActionDialogProps {
     handleTestAction?: () => void,
-    isLoading?: boolean
+    isLoading?: boolean,
+    saving?: boolean
 }
 
 const TestWorkflowActionDialog = (props: TestWorkflowActionDialogProps) => {
@@ -68,7 +69,7 @@ const TestWorkflowActionDialog = (props: TestWorkflowActionDialogProps) => {
     }
 
     return (
-        <Dialog open={!!workflowContext.currentActionForTesting} onClose={handleTestingDialogClose} maxWidth="lg" fullWidth>
+        <Dialog open={!!workflowContext.currentActionForTesting && !props.saving} onClose={handleTestingDialogClose} maxWidth="lg" fullWidth>
             <DialogTitle>
                 {workflowContext.currentActionForTesting?.DisplayName}
             </DialogTitle>

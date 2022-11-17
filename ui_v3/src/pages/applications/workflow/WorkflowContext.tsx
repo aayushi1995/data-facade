@@ -993,7 +993,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                                 return paramInstance?.ColumnId!==undefined && paramInstance?.TableId!==undefined
                             }
 
-                            const validatedParams = parameters.map(param => {
+                            const validatedParams = parameters?.map(param => {
                                 if(isColumnParam(param) && param?.GlobalParameterId===undefined) {
                                     const isTableStillValid = action.Parameters?.find(tableParam => isTableParam(tableParam) && tableParam?.TableId===param?.TableId)
                                     if(isTableStillValid!==undefined) {

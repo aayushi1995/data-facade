@@ -1,21 +1,24 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Alert, Box, Button, Card, Dialog, DialogContent, Divider, Grid, IconButton, Snackbar, Step, StepButton, Stepper, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
-import { generatePath, useHistory } from "react-router-dom";
+import { generatePath, useHistory, useLocation } from "react-router-dom";
 import CodeTabIcon from "../../../../src/images/CodeTab.svg";
 import ParametersIcon from "../../../../src/images/Parameters.svg";
 import CodeEditor from "../../../common/components/CodeEditor";
 import { ACTION_EXECUTION_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
+import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../../../generated/entities/Entities";
+import { ActionExecutionDetails } from '../../apps/components/ActionExecutionHomePage';
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
+import useGetExistingParameterInstances from '../hooks/useGetExistingParameterInstances';
 import useValidateActionInstance from '../hooks/useValidateActionInstance';
 import ConfigureActionRecurring from "./ConfigureActionRecurring";
 import ConfigureParameters, { isDefaultValueDefined } from "./ConfigureParameters";
@@ -71,11 +74,10 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
     const [tabValue, setTabValue] = React.useState(0)
     const validateActionInstance = useValidateActionInstance()
     const [validateErrorMessage, setValidationErrorMessage] = React.useState<string | undefined>()
-
+    const location = useLocation()
     const { createActionInstanceAsyncMutation, createActionInstanceSyncMutation, fetchActionExeuctionParsedOutputMutation } = useCreateActionInstance({
         asyncOptions: {
             onMutate: () => {
-                setDialogState({isOpen: true})
             }
         },
         syncOptions: {
@@ -84,7 +86,28 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             }
         }
     })
-    const {data, error, isLoading, refetch} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: { enabled: false }})
+    const actionInstanceId = location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
+    const {data, error, isLoading, refetch, isRefetching} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: { enabled: false, onSuccess(data) {
+        if(!!data && !!data[0]) {
+            setExecuteActionContext({
+                type: "SetFromActionDefinitionDetail",
+                payload: {
+                    ActionDefinitionDetail: data[0],
+                    existingParameterInstances: fetchExistingActionParameterInstancesQuery?.data
+                }
+            })
+        }
+    }, }})
+    const fetchExistingActionParameterInstancesQuery = useGetExistingParameterInstances({
+        filter: {ActionInstanceId: actionInstanceId === null ? undefined : actionInstanceId}, 
+        queryOptions: {
+            onSuccess: (data) => {
+                console.log("refetching")
+                refetch()
+            },
+            enabled: false
+        }
+    })
     const { availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook()
     const defaultProviderInstance = availableProviderInstanceQuery?.data?.find(prov => prov?.IsDefaultProvider)
 
@@ -115,27 +138,26 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
     }
 
     // TODO: WHY???
-    React.useEffect(() => {
-        refetch()
-    }, [])
 
     React.useEffect(() => {
-        if(!!data && !!data[0]) {
-            setExecuteActionContext({
-                type: "SetFromActionDefinitionDetail",
-                payload: {
-                    ActionDefinitionDetail: data[0],
-                    existingParameterInstances: props.existingParameterInstances
-                }
-            })
+        if(actionInstanceId === undefined || actionInstanceId === null) {
+            refetch()
+        } else {
+            fetchExistingActionParameterInstancesQuery.refetch()
         }
-    }, [data])
+        
+    }, [props.actionDefinitionId])
+
+    const actionExecutionId = location.search ? new URLSearchParams(location.search).get("executionId") : undefined
+
+    console.log(actionExecutionId, actionInstanceId)
 
     React.useEffect(() => {
         if(defaultProviderInstance!==undefined){
             setExecuteActionContext({ type: "SetProviderInstance", payload: { newProviderInstance: defaultProviderInstance } })
         }
     }, [defaultProviderInstance])
+
 
     React.useEffect(() => {
         setModuleContext({
@@ -159,7 +181,9 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                         if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
                             // setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
                             if(props.redirectToExecution !== false) { 
-                                history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: request?.actionExecutionToBeCreatedId}))
+                                // history.push(generatePath(APPLICATION_EXECUTE_ACTION_WITH_EXECUTION, {ActionDefinitionId: actionDefinitionId, ActionExecutionId: request?.actionExecutionToBeCreatedId}))
+                                history.push(`/application/execute-action/${actionDefinitionId}?instanceId=${request?.actionInstance?.Id}&executionId=${request?.actionExecutionToBeCreatedId}`)
+
                             } else {
                                 setDialogState({isOpen: false})
                                 props.onExecutionCreate?.(request?.actionExecutionToBeCreatedId!)
@@ -425,24 +449,31 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                                     </Button>
                                 ) : (
                                     <Box sx={{display: 'flex', flexDirection:'row',justifyContent: 'center'}}>
-                                        {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
-                                            <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
-                                                RUN
-                                            </Button>
+                                        {createActionInstanceAsyncMutation.isLoading ? (
+                                            <LoadingIndicator />
                                         ) : (
-                                            <Box sx={{display: 'flex', gap: 1}}>
-                                                {areAllParametersFilled() ? (
-                                                    <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
-                                                        RUN
-                                                    </Button>
-                                                ) : (
-                                                    <></>
-                                                )}
-                                                <Button onClick={handleGoNext} variant="contained" sx={{width: "250px"}}>
-                                                    NEXT
+                                            <>
+                                            {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
+                                                <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
+                                                    RUN
                                                 </Button>
-                                            </Box>
+                                            ) : (
+                                                <Box sx={{display: 'flex', gap: 1}}>
+                                                    {areAllParametersFilled() ? (
+                                                        <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
+                                                            RUN
+                                                        </Button>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                    <Button onClick={handleGoNext} variant="contained" sx={{width: "250px"}}>
+                                                        NEXT
+                                                    </Button>
+                                                </Box>
+                                            )}
+                                            </>
                                         )}
+                                        
                                         
                                     </Box>
                                 )}
@@ -470,6 +501,11 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     </Alert>
                 </Snackbar>
             </Card>
+            {!!actionExecutionId && !!data? (
+                <Box sx={{mb: 10}}>
+                    <ActionExecutionDetails actionExecutionId={actionExecutionId} showDescription={false}/>
+                </Box>
+            ) : (<></>)}
         </Box>
     )
 }

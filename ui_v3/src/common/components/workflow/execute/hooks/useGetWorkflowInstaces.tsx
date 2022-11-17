@@ -4,9 +4,9 @@ import { ActionDefinitionDetail, ActionInstanceWithParameters } from '../../../.
 import labels from '../../../../../labels/labels'
 
 
-export const useGetWorkflowDetails = (workflowId: string, options: {enabled: boolean, onSuccess: (data: ActionDefinitionDetail[]) => void}): [ActionDefinitionDetail[] | undefined, any, boolean] => {
+export const useGetWorkflowDetails = (workflowId: string, options: {enabled: boolean, onSuccess: (data: ActionDefinitionDetail[]) => void}): [ActionDefinitionDetail[] | undefined, any, boolean, Function] => {
 
-    const {data: workflowTemplate, error: workflowTemplateError, isLoading: workflowTemplateLoading} = useQuery(["GetWorkflowDetails", workflowId],
+    const {data: workflowTemplate, error: workflowTemplateError, isLoading: workflowTemplateLoading, refetch: refetch} = useQuery(["GetWorkflowDetails", workflowId],
         () => {
             return Fetcher.fetchData('GET', '/getActionDefinitionDetails', {Id: workflowId})
         },
@@ -15,7 +15,7 @@ export const useGetWorkflowDetails = (workflowId: string, options: {enabled: boo
             onSuccess: (data) => options.onSuccess(data)
         },
     )
-    return [workflowTemplate , workflowTemplateError, workflowTemplateLoading]
+    return [workflowTemplate , workflowTemplateError, workflowTemplateLoading, refetch]
 }
 
 export const useGetWorkflowChildInstances = (workflowId: string, options: {enabled: boolean, onSuccess: (data: ActionInstanceWithParameters[]) => void}): [ActionInstanceWithParameters[], any, boolean, Function, boolean] => {

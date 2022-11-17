@@ -211,8 +211,10 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
         <Autocomplete 
             options={availableOptions}
             fullWidth
+            key={parameterName}
             getOptionLabel={(option) => option.name}
             value={availableOptions.find(option => option.name === selectedOptions?.name)}
+            defaultValue={availableOptions.find(option => option.name === selectedOptions?.name)}
             clearOnBlur
             handleHomeEndKeys
             filterSelectedOptions

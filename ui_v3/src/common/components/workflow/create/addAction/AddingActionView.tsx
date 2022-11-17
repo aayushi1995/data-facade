@@ -6,7 +6,7 @@ import { SetWorkflowContext, WorkflowContext } from "../../../../../pages/applic
 import NoData from "../../../NoData"
 import { AddActionToWorkflowStage } from "./AddActionToWorkflowStage"
 
-export const AddingActionView = (props: { onBack: Function }) => {
+export const AddingActionView = (props: { onBack: Function, saving?: boolean }) => {
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
 
@@ -35,7 +35,10 @@ export const AddingActionView = (props: { onBack: Function }) => {
                             <img src={slideNext} style={{transform: 'rotate(180deg)'}} alt="go back"/>
                         </IconButton>
                     </Tooltip>
-                    <Typography sx={{fontFamily: 'SF Pro Text', fontWeight: 300}}>Go Back to Save </Typography>
+                    <Typography sx={{fontFamily: 'SF Pro Text', fontWeight: 300}}>
+                        {props.saving ? <>Saving...</> : <>Go Back to Save</> }
+                        
+                    </Typography>
                 </Box>
                 <Box sx={{flex: 1, minHeight: '100px'}}>
                     <WorkflowStagesWrapper stages={allStages} selectedStage={selectedStage} maxWidthInPixel={100} numberOfStages={1} fromAddActionsView={true}></WorkflowStagesWrapper>

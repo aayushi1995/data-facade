@@ -8,6 +8,7 @@ import ShowGlobalParameters from "./ShowGlobalParameters";
 import WorkflowSummary from "./WorkflowSummary";
 import ErrorIcon from '@mui/icons-material/Error';
 import DoneIcon from '@mui/icons-material/Done';
+import LoadingIndicator from "../../LoadingIndicator";
 
 
 interface TabPanelProps {
@@ -41,6 +42,7 @@ export interface WorfkflowTabsProps {
     onSave?: () => void,
     onDuplicate?: () => void,
     onTest?: () => void,
+    saving?: boolean
 }
 
 const WorkflowTabs = (props: WorfkflowTabsProps) => {
@@ -122,7 +124,7 @@ const WorkflowTabs = (props: WorfkflowTabsProps) => {
                         Duplicate
                     </Button>
                     <Box sx={{ display: "flex", alignItems: "center", px: 2 }}>
-                        {workflowContext.ErrorState ? <ErrorIcon sx={{transform: "scale(1.5)"}}/> : <DoneIcon sx={{ transform: "scale(1.5)"  }}/> }
+                        {workflowContext.ErrorState ? <ErrorIcon sx={{transform: "scale(1.5)"}}/> : <>{(props.saving) ? <LoadingIndicator/> : <DoneIcon sx={{ transform: "scale(1.5)"  }}/> }</> }
                     </Box>
                 </Box>
             </Box>

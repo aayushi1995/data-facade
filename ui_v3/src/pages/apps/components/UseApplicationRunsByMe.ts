@@ -2,6 +2,7 @@ import { useQuery, UseQueryResult } from "react-query"
 import { generatePath, useHistory } from "react-router"
 import { useCreateExecution } from "../../../common/components/application/hooks/useCreateExecution"
 import { ACTION_EXECUTION_ROUTE, WORKFLOW_EXECUTION_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
+import { APPLICATION_ROUTE } from "../../../common/components/header/data/RoutesConfig"
 import dataManager from "../../../data_manager/data_manager"
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType"
 import { Application } from "../../../generated/entities/Entities"
@@ -104,15 +105,16 @@ const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {
         return result
     }
 
-    const displayActionOutput = (executionId?: string) => {
+    const displayActionOutput = (executionId?: string, actionDefinitionId?: string, actionInstanceId?: string) => {
         if(!!executionId) {
-            history.push(generatePath(ACTION_EXECUTION_ROUTE, { ActionExecutionId: executionId}))
+            history.push(`${APPLICATION_ROUTE}/execute-action/${actionDefinitionId}?instanceId=${actionInstanceId}&executionId=${executionId}`)
         }
     }
 
-    const displayWorkflowOutput = (executionId?: string) => {
+    const displayWorkflowOutput = (executionId?: string, actionDefinitionId?: string, actionInstanceId?: string) => {
         if(!!executionId) {
-            const redirectUrl = generatePath(WORKFLOW_EXECUTION_ROUTE, { WorkflowExecutionId: executionId })
+            // const redirectUrl = generatePath(WORKFLOW_EXECUTION_ROUTE, { WorkflowExecutionId: executionId })
+            const redirectUrl = `${APPLICATION_ROUTE}/execute-workflow/${actionDefinitionId}?flowInstance=${actionInstanceId}&flowExecution=${executionId}`
             history.push(redirectUrl)
         }
     }

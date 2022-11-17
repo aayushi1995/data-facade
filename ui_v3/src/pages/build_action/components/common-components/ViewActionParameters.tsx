@@ -17,6 +17,7 @@ import { ActionContextActionParameterDefinitionWithTags } from "../../context/Bu
 import { ActionParameterDefinitionConfig } from "./EditActionParameter";
 import DefaultValueInput from "./parameter_input/DefaultValueInput";
 import SettingsIcon from '@mui/icons-material/Settings';
+import ActionParameterDefinitionInputType from '../../../../enums/ActionParameterDefinitionInputType';
 
 const tagFilter = createFilterOptions<Tag>()
 const stringFilter = createFilterOptions<string|undefined>()
@@ -159,7 +160,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 field: "InputType",
                 renderCell: (params?: GridRenderCellParams<ViewActionParametersDataGridRow>) => {
                     const parameter = getParamWithTags(params?.row?.ParameterId)?.parameter
-                    const inputAttribuuteValue = getInputTypeFromAttributesNew(templateLanguage, parameter.Tag, parameter.Type, parameter.Datatype)
+                    const inputAttribuuteValue = getInputTypeFromAttributesNew(templateLanguage, parameter?.Tag, parameter?.Type, parameter?.Datatype)
                     return <Box sx={{display:'flex', flexDirection:'row',width:'100%'}}>
                             <FormControl sx={{width: "8.854vw"}}>
                                 <Select
@@ -183,11 +184,13 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                 
                             </FormControl>
                             {
-                                inputAttribuuteValue === "String" || inputAttribuuteValue === "Integer" || inputAttribuuteValue === "Decimal" ?(
-                                        <>
-                                            <OptionSetSelector parameter={parameter} onParameterEdit={onParameterEdit} />
-                                        
-                                        </>
+                                inputAttribuuteValue === ActionParameterDefinitionInputType.STRING || 
+                                inputAttribuuteValue === ActionParameterDefinitionInputType.INTEGER || 
+                                inputAttribuuteValue === ActionParameterDefinitionInputType.DECIMAL ||
+                                inputAttribuuteValue === ActionParameterDefinitionInputType.STRING_NO_QUOTES ?(
+                                    <>
+                                        <OptionSetSelector parameter={parameter || {}} onParameterEdit={onParameterEdit} />
+                                    </>
                                 ):(
                                     <></>
                                 )
