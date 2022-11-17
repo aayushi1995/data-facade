@@ -68,12 +68,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-
-
-
-# Linting
-Open UI project (ui_v3) in Visual Studio.
-Install ESLint and Prettier Plugins 
-Go to Settings. Search for Editor: Format and select Prettier as Default Formatter.
-You can run `npm run lint` to run eslint 

@@ -1,20 +1,22 @@
+import React from 'react'
+import { Box, Container, Dialog, Grid, IconButton, Tooltip, Button, DialogTitle } from '@mui/material'
 import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from "@mui/icons-material/Delete";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PreviewIcon from "@mui/icons-material/Preview";
-import { Box, Button, Container, Dialog, DialogTitle, Grid, IconButton, TextField, Tooltip } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
+import { PageHeader } from "../../../../common/components/header/PageHeader";
+import { useHistory, useRouteMatch, Link } from 'react-router-dom'
 import { makeStyles } from "@mui/styles";
 import { DataGrid } from "@mui/x-data-grid";
-import React from 'react';
-import { useMutation } from 'react-query';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { CustomToolbar } from "../../../../common/components/CustomToolbar";
-import { PageHeader } from "../../../../common/components/header/PageHeader";
+import { TextField } from "@mui/material";
+import dataManagerInstance, { useRetreiveData } from '../../../../data_manager/data_manager';
 import LoadingIndicator from '../../../../common/components/LoadingIndicator';
 import NoData from '../../../../common/components/NoData';
-import dataManagerInstance, { useRetreiveData } from '../../../../data_manager/data_manager';
+import DeleteIcon from "@mui/icons-material/Delete";
+import {useMutation} from 'react-query'
+import CustomApplicationsHomePage from '../CustomApplicationsHomePage';
+import PreviewIcon from "@mui/icons-material/Preview";
 
 
 const useStyles = makeStyles((theme) => {

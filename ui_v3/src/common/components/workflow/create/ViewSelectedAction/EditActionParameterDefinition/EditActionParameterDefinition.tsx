@@ -17,14 +17,14 @@ import { HtmlTooltip } from '../../../../workflow-action/ActionCard';
 import getParameterInputField, { AutoCompleteOption, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
 
 
-interface EditActionParameterDefinitionProps {
+export interface EditActionParameterDefinitionProps {
     parameter?: ActionParameterDefinition,
     template: ActionTemplate,
     stageId: string,
     actionIndex: number
 }
 
-type DefaultValueSelectorProps = {
+export type DefaultValueSelectorProps = {
     parameter: ActionParameterDefinition, 
     actionIndex: number, 
     stageId: string
@@ -355,7 +355,7 @@ export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParam
     return {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter}
 }
 
-const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
+export const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
     const {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter} = useGlobalParameterHandler(props)
     return (
         <Box sx={{display: 'flex', gap: 1, alignItems: 'center', width: "100%" }}>
@@ -516,13 +516,13 @@ const EditActionParameterDefinition = (props: EditActionParameterDefinitionProps
     }
 }
 
-type UserInputRequiredProps = {
+export type UserInputRequiredProps = {
     userInputRequiredValue?: string,
     disabled?: boolean,
     handleUserInputRequiredChange?: (newValue?: string) => void
 }
 
-const UserInputRequired = (props: UserInputRequiredProps) => {
+export const UserInputRequired = (props: UserInputRequiredProps) => {
     const { userInputRequiredValue, disabled, handleUserInputRequiredChange } = props
     return (
         <>

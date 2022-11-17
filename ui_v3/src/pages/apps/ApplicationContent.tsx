@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
 import { useContext, useEffect } from 'react';
+import { Box} from "@mui/material";
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_ROUTE_MARKETPLACE, APPLICATION_SUB_TABS, APPPLICATION_CREATE_AUTO_FLOW, EXECUTION_HISTORY_ROUTE, SCHEDULED_JOBS_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
 import { findTab } from '../../common/components/header/data/DataRoutesConfig';
@@ -24,7 +24,7 @@ import ApplicationRunsByMe from './components/ApplicationRunsByMe';
 import ScheduledJobsView from './components/ScheduledJobsView';
 
 
-const ApplicationContent = withRouter(function TableBrowserRoutes() {
+export const ApplicationContent = withRouter(function TableBrowserRoutes() {
     const setModuleContext = useContext(SetModuleContextState)
 
     return (
@@ -40,8 +40,8 @@ const ApplicationContent = withRouter(function TableBrowserRoutes() {
             <Route path="/application/execute-action/:ActionDefinitionId" component={ExecuteActionHomePage}/>
             <Route path="/application/edit-workflow" component={EditWorkflowHomePage}/>
             <Route path="/application/execute-instance" component={ExecuteInstanceHomePage}/>
-            <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}/>
-            <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}/>
+            <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route>
+            <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}></Route>
             <Route path={ACTION_EXECUTION_ROUTE} component={ActionExecutionHomePage}/>
             <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
             <Route path={EXECUTION_HISTORY_ROUTE} component={ExecutionHistory}/>

@@ -4,7 +4,7 @@ import { ActionParameterInstance } from "../../../../../generated/entities/Entit
 import labels from "../../../../../labels/labels"
 
 
-const useReRunWorkflowAction = (props: {mutationName: string}) => {
+export const useReRunWorkflowAction = (props: {mutationName: string}) => {
 
     const fetchedDataManager = dataManager.getInstance as {retreiveData: Function}
 

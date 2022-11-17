@@ -11,7 +11,7 @@ import {
     DATA_ROUTE,
     DATA_SUB_TABS
 } from "./header/data/DataRoutesConfig";
-import { APPLICATION_DETAIL_ROUTE, APPLICATION_ROUTE, INSIGHTS_ROUTE } from "./header/data/RoutesConfig";
+import { APPLICATION_ROUTE, INSIGHTS_ROUTE , APPLICATION_DETAIL_ROUTE } from "./header/data/RoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
 import { ModuleContextState } from "./ModuleContext";
 

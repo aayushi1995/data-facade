@@ -8,12 +8,23 @@ import { ModuleSwitcher } from "./common/components/header/ModuleSwitcher"
 import LoadingIndicator from './common/components/LoadingIndicator'
 import ModuleContextStateProvider from "./common/components/ModuleContext"
 import { isNonProductionEnv } from './common/config/config'
+import Alerts from './pages/alerts/Alerts'
+import AutobookHomePage from './pages/applications/auto_book/AutobookHomePage'
+import { RunWorkflowHomePage } from './pages/applications/custom-applications/components/RunWorkflowHomePage'
+import CustomApplicationsHomePage from "./pages/applications/custom-applications/CustomApplicationsHomePage"
+import WorkflowEditorPage from './pages/applications/custom-applications/WorkflowEditorPage'
+import ViewWorkflowHomePage from './pages/applications/view-workflow/ViewWorkflowHomePage'
+import Configurations from './pages/configurations/Configurations'
+import { CreateActionPage } from "./pages/customizations/CreateActionPage"
+import Customizations from './pages/customizations/Customizations'
+import { RunActionPage } from "./pages/customizations/RunActionPage"
 import DevTestPage from './pages/dev_test_page/DevTestPage'
 import { EULA } from "./pages/home/EULA"
 import Home from './pages/home/Home'
 import NotRegistered from './pages/home/NotRegistered'
 import OrgUpdateInProgress from "./pages/home/OrgUpdateInProgress"
 import { SearchQueryProvider } from './pages/table_browser/TableBrowser'
+import TagHomePage from './pages/tag/TagHomePage'
 import { Users } from "./pages/users/Users"
 import { useAppInternal } from "./UseAppInternal"
 import AppContext from "./utils/AppContext"
@@ -77,8 +88,20 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                             <Grid item xs={12}>
                                 {isNonProductionEnv() && <EULA/>}
                                 <Switch>
+                                    <Route path='/customizations' component={Customizations}/>
+                                    {isNonProductionEnv() &&
+                                    <Route path='/configurations' component={Configurations}/>}
+                                    <Route path='/alerts' component={Alerts}/>
                                     <Route path='/testPage' component={DevTestPage}/>
                                     <Route path='/users' component={Users}/>
+                                    <Route path='/tag' component={TagHomePage}/>
+                                    <Route path='/create-action' component={CreateActionPage}/>
+                                    <Route path='/run-action' component={RunActionPage}/>
+                                    <Route path='/autobook/customers' component={AutobookHomePage}/>
+                                    <Route path='/custom-applications' component={CustomApplicationsHomePage}/>
+                                    <Route path='/workflow-editor' component={WorkflowEditorPage}/>
+                                    <Route path='/run-workflow' component={RunWorkflowHomePage}/>
+                                    <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
                                     <Redirect exact from="/" to="/application"/>
                                 </Switch>
                             </Grid>
