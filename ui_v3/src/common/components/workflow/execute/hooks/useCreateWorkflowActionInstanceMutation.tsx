@@ -8,8 +8,10 @@ import dataManagerInstance from './../../../../../data_manager/data_manager'
 const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContextType, handleOnSuccess: (data: any) => void) => {
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
     let actionInstanceProvider: string | undefined = workflowContext.SelectedProviderInstance?.Id
+    const oldIdToNewIdMap: Record<string, string> = {}
     const workflowInstancesWithParameterInstances = workflowContext.stages[0].Actions.map(action => {
         const actionInstanceId = uuidv4()
+        oldIdToNewIdMap[action.Id] = actionInstanceId
         return {
             ParameterInstances: action.Parameters?.map((childParameterInstance) => {
                 const apdId = childParameterInstance.ActionParameterDefinitionId
@@ -22,7 +24,8 @@ const useCreateWorkflowActioninstanceMutation = (workflowContext: WorkflowContex
                     ...globalParameterInstance,
                     ActionParameterDefinitionId: apdId,
                     Id: uuidv4(),
-                    ActionInstanceId: actionInstanceId
+                    ActionInstanceId: actionInstanceId,
+                    SourceExecutionId: oldIdToNewIdMap[childParameterInstance.SourceExecutionId as unknown as string]
                 }
             }),
             model: {
