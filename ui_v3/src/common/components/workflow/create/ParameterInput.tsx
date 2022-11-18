@@ -408,11 +408,6 @@ const UpstreamActionInput = (props: UpstreamActionParameterInput) => {
     ]
     const formLabel = (upstream: UpstreamAction) => `${upstream.stageName} | ${upstream.actionName} (${upstream.actionIndex+1})`
     const selectedOption = autoCompleteOptions.find(option => (option.type==="TableProperties" && option.value?.Id===selectedTableFilter?.Id) || (option.type==="UpstreamAction" && option.value===selectedAction))
-    React.useEffect(() => {
-        if(selectedOption===undefined && !!tables) {
-            handleOptionSelect(autoCompleteOptions?.[0])
-        }
-    }, [autoCompleteOptions])
 
     const handleOptionSelect = (value?: AutoCompleteOption) => {
         onChange(value)

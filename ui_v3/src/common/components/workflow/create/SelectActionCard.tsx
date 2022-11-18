@@ -39,7 +39,12 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                     userInputRequired: defaultParameterInstance?.ParameterValue===undefined ? "Yes" : "No",
                     ParameterName: parameter.model?.ParameterName,
                     ...defaultParameterInstance,
-                    SourceExecutionId: undefined
+                    SourceExecutionId: undefined,
+                    Tag: parameter?.model?.Tag,
+                    Datatype: parameter?.model?.Datatype,
+                    OptionSetValue: parameter?.model?.OptionSetValues,
+                    Id: parameter?.model?.Id,
+                    DisplayName: parameter?.model?.DisplayName
                 }
             }),
             ParameterAdditionalConfigs: props.parameters?.reduce((oldConfigs: Object, parameter: ActionParameterDefinitionWithTags) => {

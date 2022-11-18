@@ -89,8 +89,8 @@ export const AddActionToWorkflowStage = (props: AddActionToWorkflowStageProps) =
                         ></WorkflowActionContainer>
                     </Card>
                 </Grid>
-                <Grid item xs={9} sx={{overflowY: 'auto'}}>
-                    <Box p={1}>
+                <Grid item xs={9} sx={{height: '100%'}}>
+                    <Box p={1} sx={{height: '100%'}}>
                         {selectedAction.actionIndex === -1 ? (
                             <SelectAction groups={[]} onAddAction={addActionHandler}></SelectAction>
                         ) : (

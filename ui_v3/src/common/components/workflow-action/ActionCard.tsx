@@ -272,6 +272,8 @@ const ActionCard = (props: ActionCardProps) => {
                                     e.stopPropagation?.()
                                     if(props.executionStaus){
                                         props.handlePreviewOutput(props.actionId)
+                                    } else {
+                                        setResultDialogState(true)
                                     }
                                 }}>
                                     <img src={viewErrorIcon} alt='view result'/>

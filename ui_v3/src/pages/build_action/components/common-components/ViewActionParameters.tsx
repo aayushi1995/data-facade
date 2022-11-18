@@ -4,7 +4,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
-import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridToolbarContainer } from "@mui/x-data-grid";
+import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridToolbarContainer, useGridApiContext } from "@mui/x-data-grid";
 import { ChangeEvent, useState } from 'react';
 import ConfirmationDialog from '../../../../common/components/ConfirmationDialog';
 import useFetchVirtualTags from '../../../../common/components/tag-handler/hooks/useFetchVirtualTags';
@@ -96,6 +96,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
     const getParamWithTags = (paramId?: string) => paramsWithTag?.find(paramWithTag => paramWithTag?.parameter?.Id===paramId)
     const getAdditionalConfig = (paramId?: string) => paramsAdditionalConfig?.find(paramAdditionalConfig => paramAdditionalConfig?.parameterDefinitionId===paramId)
 
+    // const onEditCellCommit = ()
+
     const dataGridProps: DataGridProps = {
         columns: [
             {
@@ -143,15 +145,15 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                             {params?.row?.ParameterDisplayName}
                         </Typography>
                 },
-                renderEditCell: (params: GridRenderEditCellParams<ViewActionParametersDataGridRow>) => {
-                    return <DatagridTextEditCell
-                                key={`${params?.row?.ParameterId}-display-name`}
-                                value={params?.row?.ParameterDisplayName}
-                                setValue={(newValue?: string) => {
-                                    handleParameterChange(params?.row?.ParameterId, {DisplayName: newValue})
-                                }}
-                            />
-                },
+                // renderEditCell: (params: GridRenderEditCellParams<ViewActionParametersDataGridRow>) => {
+                //     return <DatagridTextEditCell
+                //                 key={`${params?.row?.ParameterId}`}
+                //                 value={params?.value?.ParameterDisplayName}
+                //                 setValue={(newValue?: string) => {
+                //                     handleParameterChange(params?.row?.ParameterId, {DisplayName: newValue})
+                //                 }}
+                //             />
+                // },
                 editable: true
             },
             {
@@ -270,6 +272,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 pageSize: 10
             }
         },
+        onCellEditCommit: (change) => {handleParameterChange(change?.id! as string, {DisplayName: change.value as string})},
         components: {
             Toolbar: () => {
                 const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -457,15 +460,17 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
 
 
 type DatagridTextEditCellProps = {
-    id?: string,
+    key?: string,
     value ?: string,
     setValue?: (newValue?: string) => void
 }
 const DatagridTextEditCell = (props: DatagridTextEditCellProps) => {
     // TODO: Find a way to get InputProps sx config from index.js
-    const {id, value, setValue} = props
+    const {key, value, setValue} = props
+    const dataGridRef = useGridApiContext()
+    console.log(value)
     return <TextField
-        key={id}
+        key={key}
         value={value}
         defaultValue="Hello World"
         variant='standard'
@@ -475,7 +480,10 @@ const DatagridTextEditCell = (props: DatagridTextEditCellProps) => {
                 ...textStyle
             }
         }}
-        onChange={(event: ChangeEvent<HTMLInputElement>) => setValue?.(event.target.value)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            dataGridRef.current.setEditCellValue({id: key!, field: "ParameterDisplayName", value: event.target.value})
+            setValue?.(event.target.value)
+        }}
     />
 }
 

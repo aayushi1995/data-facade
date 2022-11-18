@@ -67,9 +67,9 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         setInitialWorkflow(workflowContextObject)
     }
 
-    React.useEffect(() => {
-        setWorkflowContext({type: 'SET_ERROR_STATE', payload: isError})
-    }, [isError])
+    // React.useEffect(() => {
+    //     setWorkflowContext({type: 'SET_ERROR_STATE', payload: isError})
+    // }, [isError])
 
     const [workflowDetails, error, isLoading] = useGetWorkflowDetails(workflowId, {enabled: !isWorkflowFetched, onSuccess: handleSuccess})
     

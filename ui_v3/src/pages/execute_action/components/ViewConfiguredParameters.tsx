@@ -1,5 +1,14 @@
-import { Box, Grid, Typography, Card } from "@mui/material";
-import { ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities";
+import { Box, Grid, Typography, Card, Button, Dialog, DialogContent } from "@mui/material";
+import React from "react";
+import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
+import { ActionParameterDefinition, ActionParameterInstance, TableProperties } from "../../../generated/entities/Entities";
+import { TablePropertiesInfo } from "../../../generated/interfaces/Interfaces";
+import { UseGetTableModel } from "../../table_browser/components/AllTableViewHooks";
+import ActionDefinitionId from "../../../enums/ActionDefinitionId";
+import LoadingIndicator from "../../../common/components/LoadingIndicator";
+import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
+import ViewActionExecutionOutput from "../../view_action_execution/ViewActionExecutionOutput";
+import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat";
 
 export interface ViewConfiguredParametersProps {
     parameterDefinitions: ActionParameterDefinition[]
@@ -30,8 +39,58 @@ const ViewConfiguredParameters = (props: ViewConfiguredParametersProps) => {
 
 const ConfiguredParameter = (props: {definition: ActionParameterDefinition, instance: ActionParameterInstance}) => {
     const {definition, instance} = props
+    const [tablePreviewExecutionId, setTablePreviewExecutionId] = React.useState<string | undefined>()
+    const [tableName, setTableName] = React.useState<string | undefined>()
+    const [previewDialog, setPreviewDialog] = React.useState({isOpen: false})
+
+    const handleTableFetched = (data: TableProperties) => {
+        const tableInfo = JSON.parse(data?.Info || "{}") as TablePropertiesInfo
+        const executionId = tableInfo?.SyncOOBActionStatus?.find(oobAction => oobAction.ActionDefinitionId === ActionDefinitionId.TABLE_1000_ROWS)?.ActionExecutionId
+        setTablePreviewExecutionId(executionId)
+        setPreviewDialog({isOpen: true})
+    }
+
+    const tableModelQuery = UseGetTableModel({ options: {enabled: false, onSuccess: handleTableFetched}, tableName: tableName })
+    const handleViewTablePreview = () => {
+        const tableId = instance.TableId
+        if(!!tableId) {
+            setTableName(instance.ParameterValue || "NA")
+            
+        } else {
+            setTablePreviewExecutionId(instance.SourceExecutionId)
+            setPreviewDialog({isOpen: true})
+        }
+
+    }
+
+    React.useEffect(() => {
+        if(!!tableName) {
+            tableModelQuery.refetch()
+        }
+    }, [tableName])
+
+    const handlePreviewDialogClose = () => {
+        setPreviewDialog({isOpen: false})
+        setTableName(undefined)
+    }
+
+
     return (
         <Card sx={{px: 3, py: 3, maxHeight: '183px', overflowY: 'auto', minHeight: '183px'}}>
+            <Dialog open={previewDialog.isOpen} onClose={handlePreviewDialogClose} maxWidth="lg" fullWidth>
+                <DialogContent>
+                    {tableModelQuery.isLoading ? (
+                        <LoadingIndicator/>
+                    ) : (<>
+                        {tablePreviewExecutionId ? 
+                            <ViewActionExecutionOutput 
+                                ActionExecution={{Id: tablePreviewExecutionId}}
+                                ActionInstance={{Name: "Table Preview"}}
+                                ActionDefinition={{PresentationFormat: ActionDefinitionPresentationFormat.TABLE_VALUE}}
+                            /> : <>Can't load table preview</>}
+                    </>)}
+                </DialogContent>
+            </Dialog>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "120px", width: "100%"}}>
                 <Box sx={{width: "100%"}}>
                     <Typography sx={{
@@ -62,6 +121,13 @@ const ConfiguredParameter = (props: {definition: ActionParameterDefinition, inst
                     }}>
                         {instance.ParameterValue}
                     </Typography>
+                </Box>
+                <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    {definition.Tag === ActionParameterDefinitionTag.TABLE_NAME || definition.Tag === ActionParameterDefinitionTag.DATA ?  (
+                        <Button onClick={handleViewTablePreview}>Preview Table</Button>
+                    ) : (
+                        <></>
+                    )}
                 </Box>
             </Box>
         </Card>  

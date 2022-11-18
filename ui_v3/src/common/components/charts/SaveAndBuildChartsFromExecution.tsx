@@ -12,6 +12,8 @@ import ExportAsDashboard from "../workflow/execute/ExportAsDashboard"
 import { borderRadius } from "@mui/system"
 import FetchActionExecutionDetails from "../../../pages/view_action_execution/hooks/FetchActionExecutionDetails"
 import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
+import ParametersIcon from "../../../../src/images/Parameters.svg";
+import ViewConfiguredParameters from "../../../pages/execute_action/components/ViewConfiguredParameters"
 
 
 interface SaveAndBuildChartsFromExecutionProps {
@@ -105,7 +107,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
 
     const [executionTerminal, setExecutionTerminal] = React.useState(true)
 
-    const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: props.executionId, queryOptions: {
+    const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: props.executionId, refetch: false, queryOptions: {
         enabled: !executionTerminal
     }})
     React.useEffect(() => {
@@ -177,6 +179,17 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                                         </>}
                                     </ReactQueryWrapper>
                                 </TabPanel>
+                                <TabPanel value={activeTab} index={2}>
+                                    <ReactQueryWrapper {...chartQueriesState.fetchExecution}>
+                                        {() => <>
+                                            {saveAndBuildChartsState.ExecutionDetails ? 
+                                            <ViewConfiguredParameters 
+                                                parameterDefinitions={saveAndBuildChartsState.ExecutionDetails.ActionParameterDefinitions || []} 
+                                                parameterInstances={saveAndBuildChartsState.ExecutionDetails.ActionParameterInstances || []} /> : <LoadingIndicator />
+                                            }
+                                        </>}
+                                    </ReactQueryWrapper>
+                                </TabPanel>
                             </Box>}
                     />
                 </Grid>
@@ -234,6 +247,16 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
                     letterSpacing: "0.124808px",
                     color: "#353535"
                 }}/>
+                <Tab label="Parameters" value={2} sx={{
+                    fontFamily: "'SF Pro Text'",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    lineHeight: "157%",
+                    letterSpacing: "0.124808px",
+                    color: "#DB8C28",
+                }}
+                iconPosition="start" 
+                icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>
             </Tabs>
             
             {/* <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>

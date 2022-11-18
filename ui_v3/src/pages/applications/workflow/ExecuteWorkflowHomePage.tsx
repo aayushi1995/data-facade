@@ -108,6 +108,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
         const parametersArray: ActionParameterInstance[] = []
         data.forEach(actionInstanceWithParameters => {
             const workflowAction = {
+                Id: actionInstanceWithParameters?.model?.Id,
                 DisplayName: actionInstanceWithParameters.model?.DisplayName || "DisplayName",
                 Name: actionInstanceWithParameters.model?.Name || "Name",
                 ActionGroup: "test",
@@ -356,7 +357,9 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                 </Box>
                 {workflowExecutionId ? (
                     <WorkflowContextProvider>
-                        <ViewWorkflowExecution workflowExecutionId={workflowExecutionId} />
+                        <Card>
+                            <ViewWorkflowExecution workflowExecutionId={workflowExecutionId} />
+                        </Card>
                     </WorkflowContextProvider>
 
                 ) : (<></>)}

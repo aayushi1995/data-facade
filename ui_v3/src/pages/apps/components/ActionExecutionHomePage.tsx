@@ -32,7 +32,6 @@ export const ActionExecutionDetails = (props: {
 
     const actionExecutionId = props.actionExecutionId
     const [executionTerminal, setExecutionTerminal] = React.useState(true)
-    console.log(executionTerminal)
     const [executionError, setExecutionError] = React.useState(false)
     const [showParameters, setShowParameters] = React.useState(false)
     const resultsView = React.useRef<HTMLDivElement | null>(null)
@@ -121,7 +120,7 @@ export const ActionExecutionDetails = (props: {
         <>
             <ReactQueryWrapper {...actionExecutionDetailQuery}>
                 {() => (
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2}}>
+                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2, minHeight: '100%'}}>
                         {props.showDescription === false ? (<></>): (
                             <ActionDescriptionCard description={actionExecutionDetailQuery?.data?.ActionDefinition?.Description} mode="READONLY"/>
                         )}

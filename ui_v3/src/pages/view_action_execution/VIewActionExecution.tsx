@@ -20,15 +20,17 @@ import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOu
 import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput";
 
 export interface ViewActionExecutionProps {
-    actionExecutionId?: string
+    actionExecutionId?: string,
+    hideParams?: boolean
 }
 
 interface ResolvedActionExecutionProps {
-    actionExecutionDetail: ActionExecutionIncludeDefinitionInstanceDetailsResponse
+    actionExecutionDetail: ActionExecutionIncludeDefinitionInstanceDetailsResponse,
+    hideParams?: boolean
 }
 
 const ViewActionExecution = (props: ViewActionExecutionProps) => {
-    const { actionExecutionId } = props
+    const { actionExecutionId, hideParams } = props
     const queryClient = useQueryClient()
     const [executionTerminal, setExecutionTerminal] = React.useState(false)
 
@@ -57,7 +59,7 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
     const getToRenderComponent = () => {
         const data = actionExecutionDetailQuery?.data
         if(!!data){
-            const props = {actionExecutionDetail: data}
+            const props = {actionExecutionDetail: data, hideParams: hideParams}
             switch(actionExecutionDetailQuery.data?.ActionExecution?.Status) {
                 case ActionExecutionStatus.COMPLETED:
                     return <ViewCompletedActionExecution {...props}/>
@@ -141,7 +143,7 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
 }
 
 const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
-    const { actionExecutionDetail } = props
+    const { actionExecutionDetail, hideParams } = props
     const [dialogState, setDialogState] = React.useState(false)
     const [importTableDialog, setImportTableDialog] = React.useState(false)
     const [fileFetched, setFileFetched] = React.useState(false)
@@ -228,16 +230,24 @@ const ViewCompletedActionExecution = (props: ResolvedActionExecutionProps) => {
                     </SaveAndBuildChartContextProvider>
                 </DialogContent>
             </Dialog>
-            <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
-                <Typography variant="heroHeader">
-                    {actionExecutionDetail.ActionExecution?.ActionInstanceName}
-                </Typography>
-            </Box>
+            {hideParams ? (
+                <></>
+            ) : (
+                <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography variant="heroHeader">
+                        {actionExecutionDetail.ActionExecution?.ActionInstanceName}
+                    </Typography>
+                </Box>
+            )}
             <Box>
-                <ViewConfiguredParameters
-                    parameterDefinitions={actionExecutionDetail?.ActionParameterDefinitions||[]}
-                    parameterInstances={actionExecutionDetail?.ActionParameterInstances||[]}
-                />
+                {hideParams ? (
+                    <></>
+                ) : (
+                    <ViewConfiguredParameters
+                        parameterDefinitions={actionExecutionDetail?.ActionParameterDefinitions||[]}
+                        parameterInstances={actionExecutionDetail?.ActionParameterInstances||[]}
+                    />
+                )}
             </Box>
             <Box>
                 <ProgressBar {...progressBarProps}/>

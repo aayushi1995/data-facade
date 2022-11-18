@@ -31,16 +31,21 @@ import { ActionParameterInstance } from '../../../generated/entities/Entities'
 import useReRunWorkflowAction from '../../../common/components/workflow/execute/hooks/useReRunWorkflowAction'
 
 interface MatchParams {
+    workflowExecutionId: string
+}
+
+interface ViewWorkflowExecutionProps {
     workflowExecutionId: string,
     handleReceivePreviousInstanceId?: (previousInstanceId: string) => void
 }
 
-export const ViewWorkflowExecution = (props: MatchParams) => {
+export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
     const location = useLocation()
     const workflowExecutionId = props.workflowExecutionId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
     const [actionParameterInstances, setActionParameterInstances] = React.useState<ActionParameterInstance[]>([])
+    const resultsView = React.useRef<HTMLDivElement | null>(null)
     const reRunWorkflowAction = useReRunWorkflowAction({mutationName: "ReRunFlowAction"})
 
     const setModuleStateContext = React.useContext(SetModuleContextState)
@@ -49,15 +54,6 @@ export const ViewWorkflowExecution = (props: MatchParams) => {
 
 
     const handleRefreshQuery = (data?: WorkflowActionExecutions[]) => {
-        // setModuleStateContext({
-        //     type: 'SetHeader',
-        //     payload: {
-        //         newHeader: {
-        //             Title: data?.[0]?.WorkflowExecution?.ActionInstanceName,
-        //             SubTitle: "Run on " + (new Date(data?.[0]?.WorkflowExecution?.ScheduledTime || Date.now()).toString())
-        //         }
-        //     }
-        // })
 
         if(data?.[0]?.ChildExecutionsWithDefinitions?.length || 0 > 0) {
             if(areChildActionsReady === false) {
@@ -272,6 +268,18 @@ export const ViewWorkflowExecution = (props: MatchParams) => {
     }, [workflowExecutionId])
 
     React.useEffect(() => {
+        if(areChildActionsReady === true) {
+            const currentComponent: React.ReactNode = resultsView.current
+            if (currentComponent) {
+                (currentComponent as {scrollIntoView: Function})?.scrollIntoView?.({
+                    behavior: 'smooth',
+                    block: 'start',
+                })
+            }
+        }
+    }, [areChildActionsReady])
+
+    React.useEffect(() => {
         if(workflowContext.reRunActionIndex !== undefined) {
             reRunWorkflowAction.mutate({workflowExecutionId: workflowExecutionId, reRunActionindex: workflowContext.reRunActionIndex, globalParameterInstance: actionParameterInstances}, {
                 onSuccess: () => {
@@ -291,108 +299,106 @@ export const ViewWorkflowExecution = (props: MatchParams) => {
         return <NoData/>
     } else {
         return (
-            <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center'}}>
-                <Dialog open={reRunWorkflowAction.isLoading}>
-                    <DialogTitle>
-                        Creating new executions
-                    </DialogTitle>
-                    <DialogContent>
-                        <LoadingIndicator />
-                    </DialogContent>
-                </Dialog>
-                <Box sx={{display: 'flex',flexDirection:'column', minWidth: '100%',height:'100%'}}>
-                    {/* <ActionDefinitionHeroActionContextWrapper mode="READONLY"/> */}
-                    <Box sx={{display:'flex',flexDirection:'row', pl: 2}}>
-                        <Box sx={{textAlign:'left',display:'flex',flexDirection:'column',width:'50%',pt:5}}>
-                            <Typography sx={{fontSize:'0.9rem',fontWeight:500}}>RUNNING : { workflowContext.stages.length} STAGES | {numberOfActionINStage()} ACTIONS</Typography>
-                            <Typography sx={{color:'blue',fontSize:'0.9rem',fontWeight:500}}>RUN TIME : {getElapsedTime()}</Typography>
+            <div ref={resultsView}>
+                <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%', flexDirection: 'column', gap: 3, justifyContent: 'center'}}>
+                    <Dialog open={reRunWorkflowAction.isLoading}>
+                        <DialogTitle>
+                            Creating new executions
+                        </DialogTitle>
+                        <DialogContent>
+                            <LoadingIndicator />
+                        </DialogContent>
+                    </Dialog>
+                    <Box sx={{display: 'flex',flexDirection:'column', minWidth: '100%',height:'100%'}}>
+                        {/* <ActionDefinitionHeroActionContextWrapper mode="READONLY"/> */}
+                        <Box sx={{display:'flex',flexDirection:'row', pl: 2}}>
+                            <Box sx={{textAlign:'left',display:'flex',flexDirection:'column',width:'50%',pt:5}}>
+                                <Typography sx={{fontSize:'0.9rem',fontWeight:500}}>RUNNING : { workflowContext.stages.length} STAGES | {numberOfActionINStage()} ACTIONS</Typography>
+                                <Typography sx={{color:'blue',fontSize:'0.9rem',fontWeight:500}}>RUN TIME : {getElapsedTime()}</Typography>
+
+                            </Box>
 
                         </Box>
-
-                    </Box>
-                    {/* <Box sx={{cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
-                        <Box sx={{display:'flex',flexDirection:'row'}}>
-                            <Button onClick={handleInputOpener}>
-                                {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
-                            </Button>
-                            <Typography sx={{color:'#f09124',py:1,fontSize:'1.1rem',fontWeight:500}}>Inputs</Typography>
+                        {/* <Box sx={{cursor:'pointer',display:'flex',flexDirection:'column',mx:9,mt:4,py:2, backgroundColor:userInputOpener ? "#e3e1de":"#e0ecff" , borderRadius:'5px',boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }} >
+                            <Box sx={{display:'flex',flexDirection:'row'}}>
+                                <Button onClick={handleInputOpener}>
+                                    {userInputOpener ?<KeyboardArrowDownIcon/>:<ChevronRightIcon/>}
+                                </Button>
+                                <Typography sx={{color:'#f09124',py:1,fontSize:'1.1rem',fontWeight:500}}>Inputs</Typography>
+                            </Box>
+                            <Box sx={{px:'20vw'}}>{userInputOpener?
+                                    <WorkflowContextProvider>
+                                        <ExecuteWorkflow  workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId} onParameterInstancesChange={handleParameterInstancesChange}/>
+                                    </WorkflowContextProvider>:<></>
+                                }
+                            </Box>
+                        </Box> */}
+                    <Box sx={{display:'flex',flexDirection:'column'}}>
+                        <Box>
+                            <StagesWithActions showStage={true} showDet={false}/>
                         </Box>
-                        <Box sx={{px:'20vw'}}>{userInputOpener?
-                                <WorkflowContextProvider>
-                                    <ExecuteWorkflow  workflowId={workflowActionExecutionData?.[0]?.WorkflowDefinition?.Id} previousInstanceId={workflowActionExecutionData?.[0]?.WorkflowExecution?.InstanceId} onParameterInstancesChange={handleParameterInstancesChange}/>
-                                </WorkflowContextProvider>:<></>
-                            }
-                        </Box>
-                    </Box> */}
-                <Box sx={{display:'flex',flexDirection:'column',mx:-4}}>
-                    <Box sx={{mx:11}}>
-                        <StagesWithActions showStage={true} showDet={false}/>
-                    </Box>
-                    <Box sx={{display:'flex',flexDirection:'row',height:'100%',gap:2}}>
-                        <Box sx={{transitionDuration:'0.5s',ml:(workflowContext.currentSelectedStage?0:(flowOpener?10:0)), width:(!workflowContext.currentSelectedStage && flowOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && flowOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:(!workflowContext.currentSelectedStage &&flowOpener)? "":"-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
-                            {(workflowContext.currentSelectedStage || !flowOpener)?
-                            <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handleFlowOpener} ><img width='40px' height='40px' src={leftExpandIcon} alt="Open"/> <Typography sx={{p:1,transform:'rotate(270deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Detailed Output</Typography></Button>:<></>
-                            }
-                                {(!workflowContext.currentSelectedStage && flowOpener)?
-                                    <Box sx={{flex: 4, mb: 4,mx:1,px:1}}>
-                                        <StagesWithActions showStage={false} showDet={true}/>
-                                    </Box>
-                                :
-                                <></>
-                            }
-                        </Box>
-                        {workflowContext.currentSelectedStage ? (
-                                    //    <ViewWorkflowStageResults />
-                                    <>
-                                    <Box sx={{mt: 1, display: 'flex', flex: 1,gap:3,px:2}}>
-                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2,width:'20vw'}}>
-                                            <StepSlider label="Stage" currentIndex={currentIndex} maximumIndex={workflowContext.stages.length - 1} handleNext={handleGoNext} handleBack={handleGoBack}/>
-                                            <Box sx={{height:'9vh'}}>
-                                                <WorkflowStagesWrapper stages={selectedStage} allowEdit={false} percentageWidth='100%'/>
-                                            </Box>    
-                                            <Card sx={{
-                                                backgroundColor: '#f4f5f7',
-                                                border:'2px solid #fafcfc',
-                                                boxShadow:"-4px -6px 16px rgba(255, 255, 255, 0.5), 4px 6px 16px rgba(163, 177, 198, 0.5)",
-                                                borderRadius: "10px",
-                                                height:'100%',
-                                                mr:1,
-                                                mx:2,
-                                            }}>
-                                                <WorkflowActionContainer stageId={workflowContext.currentSelectedStage || "stageNA"} handleSelectAction={handleSelectAction}/>
-                                            </Card>
+                        <Box sx={{display:'flex',flexDirection:'row',height:'100%',gap:2}}>
+                            <Box sx={{transitionDuration:'0.5s',ml:(workflowContext.currentSelectedStage?0:(flowOpener?10:0)), width:(!workflowContext.currentSelectedStage && flowOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && flowOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:(!workflowContext.currentSelectedStage &&flowOpener)? "":"-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
+                                {(workflowContext.currentSelectedStage || !flowOpener)?
+                                <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handleFlowOpener} ><img width='40px' height='40px' src={leftExpandIcon} alt="Open"/> <Typography sx={{p:1,transform:'rotate(270deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Detailed Output</Typography></Button>:<></>
+                                }
+                                    {(!workflowContext.currentSelectedStage && flowOpener)?
+                                        <Box sx={{flex: 4, mb: 4}}>
+                                            <StagesWithActions showStage={false} showDet={true}/>
                                         </Box>
-                                        <Box sx={{display:'flex',flexDirection:'column',width:'68vw'}}>
-                                            <SaveAndBuildChartContextProvider>
-                                                <SaveAndBuildChartsFromExecution executionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
-                                            </SaveAndBuildChartContextProvider>
-                                            {workflowContext.actionExecutionIdForPreview?
-                                            <ViewActionExecution actionExecutionId={workflowContext.actionExecutionIdForPreview?.executionId || "executionId"}/>
-                                            :<></>}
-                                            </Box>
-                                    </Box>
-                                    </>
-                                    ) : (
-                                        <></>
-                                    )}
-                        <Box sx={{transitionDuration:'0.5s',mr:finalOutputOpener?10:0,width:(!workflowContext.currentSelectedStage && finalOutputOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && finalOutputOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:finalOutputOpener?"": "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
-                            {workflowContext.currentSelectedStage ||!finalOutputOpener?
-                                <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handlefinalOutputOpener} ><img width='50px' height='50px' src={RightExpandIcon} alt="Open"/><Typography sx={{p:1,transform:'rotate(90deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Final Output</Typography></Button>:<></>
-                            }
-                            {!workflowContext.currentSelectedStage && finalOutputOpener?(
-                                <Box sx={{width:'100%'}}>
-                                    <Box sx={{overflow: 'auto', px: 2}}>
-                                        <ShowWorkflowExecutionOutput/>
-                                    </Box>
-                                </Box>)
                                     :
                                     <></>
-                            }
-                        </Box> 
+                                }
+                            </Box>
+                            {workflowContext.currentSelectedStage ? (
+                                        //    <ViewWorkflowStageResults />
+                                        <>
+                                        <Box sx={{mt: 1, display: 'flex', flex: 1,gap:3,px:2}}>
+                                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2,width:'20vw'}}>
+                                                <StepSlider label="Stage" currentIndex={currentIndex} maximumIndex={workflowContext.stages.length - 1} handleNext={handleGoNext} handleBack={handleGoBack}/>
+                                                <Box sx={{height:'9vh'}}>
+                                                    <WorkflowStagesWrapper stages={selectedStage} allowEdit={false} percentageWidth='100%'/>
+                                                </Box>    
+                                                <Card sx={{
+                                                    backgroundColor: '#f4f5f7',
+                                                    border:'2px solid #fafcfc',
+                                                    boxShadow:"-4px -6px 16px rgba(255, 255, 255, 0.5), 4px 6px 16px rgba(163, 177, 198, 0.5)",
+                                                    borderRadius: "10px",
+                                                    height:'100%',
+                                                }}>
+                                                    <WorkflowActionContainer stageId={workflowContext.currentSelectedStage || "stageNA"} handleSelectAction={handleSelectAction}/>
+                                                </Card>
+                                            </Box>
+                                            <Box sx={{display:'flex',flexDirection:'column',width:'68vw'}}>
+                                                <SaveAndBuildChartContextProvider>
+                                                    <SaveAndBuildChartsFromExecution executionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
+                                                </SaveAndBuildChartContextProvider>
+                                                
+                                                </Box>
+                                        </Box>
+                                        </>
+                                        ) : (
+                                            <></>
+                                        )}
+                            <Box sx={{transitionDuration:'0.5s',mr:finalOutputOpener?10:0,width:(!workflowContext.currentSelectedStage && finalOutputOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && finalOutputOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:finalOutputOpener?"": "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
+                                {workflowContext.currentSelectedStage ||!finalOutputOpener?
+                                    <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handlefinalOutputOpener} ><img width='50px' height='50px' src={RightExpandIcon} alt="Open"/><Typography sx={{p:1,transform:'rotate(90deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Final Output</Typography></Button>:<></>
+                                }
+                                {!workflowContext.currentSelectedStage && finalOutputOpener?(
+                                    <Box sx={{width:'100%'}}>
+                                        <Box sx={{overflow: 'auto', px: 2}}>
+                                            <ShowWorkflowExecutionOutput/>
+                                        </Box>
+                                    </Box>)
+                                        :
+                                        <></>
+                                }
+                            </Box> 
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
-            </Box>
+                </Box>
+            </div>
         )
     }
 }

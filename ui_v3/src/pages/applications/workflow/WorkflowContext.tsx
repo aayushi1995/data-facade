@@ -3,6 +3,7 @@ import React from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { ActionParameterAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { calculateOffset } from "../../../common/components/workflow/create/util/MakeWorkflowTemplate";
+import { useGlobalParameterHandler } from "../../../common/components/workflow/create/ViewSelectedAction/EditActionParameterDefinition/EditActionParameterDefinition";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
@@ -21,7 +22,12 @@ export type WorkflowActionParameters = {
     ColumnId?: string,
     userInputRequired?: "Yes" | "No",
     GlobalParameterId?: string,
-    ParameterName?: string
+    ParameterName?: string,
+    Tag?: string,
+    Datatype?: string,
+    OptionSetValues?: string,
+    Id?: string,
+    DisplayName?: string
 }
 
 export type TestActionLevelDetails = {
@@ -610,14 +616,39 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
     // add logic here
     switch(action.type){
         case 'ADD_ACTION': {
+            console.log(action.payload)
+            const parametersToAdd: ActionParameterDefinition[] = []
             const newState = {
                 ...state,
                 stages: state.stages.map(stage => stage.Id!==action.payload.stageId ? stage : {
                     ...stage,
-                    Actions: [...stage.Actions, action.payload.Action]
+                    Actions: [...stage.Actions, {
+                        ...action.payload.Action,
+                        Parameters: action.payload.Action.Parameters.map(parameter => {
+                            if(!parameter.GlobalParameterId && parameter.userInputRequired === "Yes") {
+                                if(!searchIfParamExists(state, parameter.ParameterName!)) {
+                                    const newGlobalParamter: ActionParameterDefinition = { 
+                                        Id: uuidv4(), 
+                                        ParameterName: parameter.ParameterName, 
+                                        Datatype: parameter.Datatype, 
+                                        Tag: parameter.Tag, 
+                                        OptionSetValues: parameter.OptionSetValues 
+                                    } 
+                                    parametersToAdd.push(newGlobalParamter)
+                                    return {
+                                        ...parameter,
+                                        GlobalParameterId: newGlobalParamter.Id!
+                                    }
+                                }   
+                            }
+                            return parameter
+                        })
+                    }]
                 })
             }
-            return reducer(reducer(newState, {type: 'VALIDATE', payload: newState}), {type: 'SET_LATEST_ACTION_ADDED', payload: {
+            var finalState = newState
+            parametersToAdd.forEach(parameter => finalState = reducer(finalState, {type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: parameter}}))
+            return reducer(reducer(finalState, {type: 'VALIDATE', payload: finalState}), {type: 'SET_LATEST_ACTION_ADDED', payload: {
                 actionId: action.payload.Action.Id,
                 stageId: action.payload.stageId,
                 actionIndex: state.stages.find(stage => stage.Id === action.payload.stageId)?.Actions?.length || 0
@@ -632,8 +663,22 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     Actions: stage.Actions.filter((actionDefinition, index) => (actionDefinition.Id !== action.payload.actionId || index !== action.payload.actionIndex))
                 })
             })
+            const globalParametersMap: Record<string, boolean> = {}
+            newState.stages.forEach(stage => {
+                stage.Actions.forEach(actions => {
+                    actions.Parameters.forEach(parameter => {
+                        if(!!parameter.GlobalParameterId){
+                            globalParametersMap[parameter.GlobalParameterId] = true
+                        }
+                    })
+                })
+            });
+            const finalState: WorkflowContextType = {
+                ...newState,
+                WorkflowParameters: newState.WorkflowParameters.filter(parameter => globalParametersMap[parameter.Id!])
+            }
 
-            return reducer(newState, {type: 'VALIDATE', payload: newState})
+            return reducer(finalState, {type: 'VALIDATE', payload: finalState})
         }
 
         case 'REORDER_ACTION': 
@@ -963,8 +1008,8 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
         case 'VALIDATE': {
             const errorMessages = extractErrorMessages(action.payload)
             const newState: WorkflowContextType = {
-                ...state,
-                stages: state.stages.map(stage => {
+                ...action.payload,
+                stages: action.payload.stages.map(stage => {
                     return {
                         ...stage,
                         Actions: stage.Actions.map((action, index) => {
@@ -1194,6 +1239,12 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
             return state
     }
 }
+
+
+const searchIfParamExists = (state: WorkflowContextType, parameterName: string) => {
+    return state.WorkflowParameters.find(parameter => parameter.ParameterName === parameterName)
+}
+
 
 const findAction = (stageId: string, actionIndex: number, actionId: string, workflowContext: WorkflowContextType) => {
     var found = false

@@ -4,6 +4,7 @@ import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "../../.
 
 export interface FetchActionExecutionDetailsParams {
     actionExecutionId?: string,
+    refetch?: boolean
     queryOptions: UseQueryOptions<ActionExecutionIncludeDefinitionInstanceDetailsResponse[], unknown, ActionExecutionIncludeDefinitionInstanceDetailsResponse[], (string|undefined)[]>
 }
 
@@ -15,7 +16,7 @@ const FetchActionExecutionDetails = (params: FetchActionExecutionDetailsParams) 
     {
         ...queryOptions,
         enabled: (!!params.actionExecutionId) && queryOptions.enabled,
-        refetchInterval: 1000
+        refetchInterval: params.refetch === false ? undefined : 1000
     })
 
     return { 

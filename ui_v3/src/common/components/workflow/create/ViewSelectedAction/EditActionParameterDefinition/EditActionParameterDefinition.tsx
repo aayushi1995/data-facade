@@ -34,7 +34,7 @@ export const DefaultValueSelector = (props: DefaultValueSelectorProps) => {
     const {parameter} = props
     const workflowState = React.useContext(WorkflowContext)
     const setWorkflowState = React.useContext(SetWorkflowContext)
-    const parametersInstances = workflowState?.stages.find(stage => stage?.Id===props?.stageId)?.Actions?.[props?.actionIndex]?.Parameters || []
+    const parametersInstances = (workflowState?.stages.find(stage => stage?.Id===props?.stageId)?.Actions?.[props?.actionIndex]?.Parameters || [])
 
     const getCurrentParameterConfig = () => workflowState.stages.find(stage => stage.Id===props.stageId)?.Actions[props.actionIndex]?.Parameters.find(parameter => parameter.ActionParameterDefinitionId===props.parameter.Id)
 
@@ -318,9 +318,9 @@ export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParam
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
 
-    const currentParameterInContext = workflowContext.stages.filter(stage => stage.Id === stageId)[0].Actions.filter((action, index) => index === actionIndex)[0].Parameters.filter(param => param.ActionParameterDefinitionId === parameter?.Id)[0]
+    const currentParameterInContext = workflowContext.stages.filter(stage => stage.Id === stageId)?.[0]?.Actions.filter((action, index) => index === actionIndex)[0].Parameters.filter(param => param.ActionParameterDefinitionId === parameter?.Id)[0]
     const currentGlobalParameterIfPresent = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Id === currentParameterInContext?.GlobalParameterId )
-    const currentGlobalParameter = currentGlobalParameterIfPresent.length > 0 ? currentGlobalParameterIfPresent[0] : {}
+    const currentGlobalParameter = currentGlobalParameterIfPresent?.length > 0 ? currentGlobalParameterIfPresent[0] : {}
 
     const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Tag === parameter.Tag && wfParameter.Datatype === parameter.Datatype)
     

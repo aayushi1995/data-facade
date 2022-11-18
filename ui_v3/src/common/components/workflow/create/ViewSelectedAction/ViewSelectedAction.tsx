@@ -6,15 +6,18 @@ import { useQueryClient } from 'react-query';
 import CloseIcon from "../../../../../../src/images/close.svg";
 import { ActionParameterDefinition } from '../../../../../generated/entities/Entities';
 import labels from '../../../../../labels/labels';
-import { SetWorkflowContext } from '../../../../../pages/applications/workflow/WorkflowContext';
+import { SetWorkflowContext, WorkflowContext } from '../../../../../pages/applications/workflow/WorkflowContext';
+import { ActionExecutionDetails } from "../../../../../pages/apps/components/ActionExecutionHomePage";
 import EditActionForm from '../../../../../pages/build_action/components/BuildActionForm';
 import { BuildActionContextProvider } from '../../../../../pages/build_action/context/BuildActionContext';
 import { WrapInDialog } from '../../../../../pages/table_browser/components/AllTableView';
+import ViewActionExecution from "../../../../../pages/view_action_execution/VIewActionExecution";
 import CodeEditor from '../../../CodeEditor';
 import { ConfigureParametersContextProvider } from '../../context/ConfigureParametersContext';
 import ConfigureActionParameters from '../addAction/ConfigureActionParameters';
 import ShowGlobalParameters from "../ShowGlobalParameters";
 import ActionParameterDefinitionEditList from "./ActionParameterDefinitionEditList";
+import StyledTabs from "./components/StyledTab";
 import useViewAction, { ActionDetail } from './hooks/UseViewAction';
 
 
@@ -41,8 +44,8 @@ function TabPanel(props: TabPanelProps) {
             {...other}
             >
             {value === index && (
-                <Box>
-                    <Typography>{children}</Typography>
+                <Box sx={{overflowY: 'scroll', minHeight: '100%'}} id="myBox">
+                    <Typography sx={{overflow: 'auto', minHeight: '100%'}}>{children}</Typography>
                 </Box>
             )}
         </div>
@@ -53,11 +56,13 @@ function TabPanel(props: TabPanelProps) {
 const ViewSelectedAction = (props: ViewSelectedActionProps) => {
     const theme = useTheme();
     const setWorkflowContext = React.useContext(SetWorkflowContext)
+    const workflowContext = React.useContext(WorkflowContext)
     const queryClient = useQueryClient()
     const [activeTab, setActiveTab] = React.useState(0)
     const [guideEnabled, setGuideEnabled] = React.useState(false)
     const [selectedParameterForEdit, setSelectedParameterForEdit] = React.useState<ActionParameterDefinition|undefined>()
     const [editActionDialog, setEditActionDialog] = React.useState(false)
+    const selectedAction = workflowContext.stages.find(stage => stage.Id === props.stageId)?.Actions?.find((action, index) => index === props.actionDefinitionIndex)
 
     const {isLoading, error, data} = useViewAction({actionDefinitionId: props.actionDefinitionId, expectUniqueResult: true})
 
@@ -117,8 +122,10 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         if(!selectedParameterForEdit && !!selectedActionParams) {
             setSelectedParameterForEdit(selectedActionParams?.[0]?.model)
         }
+
+        const latestTestExecutionId = workflowContext?.TestInstance?.actionDetails?.[selectedAction?.ReferenceId || ""]?.LatestExecutionId
         return (
-        <Box>
+        <Box sx={{height: '100%'}}>
             <WrapInDialog showChild={false} dialogProps={{open: editActionDialog, label: "Edit Action", handleClose: handleEditActionDialogClose}}>
                 <BuildActionContextProvider>                
                     <EditActionForm actionDefinitionId={props.actionDefinitionId}/>
@@ -154,43 +161,14 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
             </Dialog>
             <Box sx={{display: 'flex', gap: 3}}>
                 <Box>
-                <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
-                    <Tab label="Parameters" value={0} sx={{
-                            fontFamily: "SF Pro Text",
-                            fontStyle: "normal",
-                            fontWeight: 600,
-                            fontSize: "14px",
-                            lineHeight: "24px",
-                            display: "flex",
-                            alignItems: "center",
-                            textAlign: "center",
-                            opacity: 0.7
-                    }}/>
-                    <Tab label="Code" value={1} sx={{
-                            fontFamily: "SF Pro Text",
-                            fontStyle: "normal",
-                            fontWeight: 600,
-                            fontSize: "14px",
-                            lineHeight: "24px",
-                            display: "flex",
-                            alignItems: "center",
-                            textAlign: "center",
-                            opacity: 0.7
-                    }}/>
-                    <Tab label="Global Parameters" value={2} sx={{
-                            fontFamily: "SF Pro Text",
-                            fontStyle: "normal",
-                            fontWeight: 600,
-                            fontSize: "14px",
-                            lineHeight: "24px",
-                            display: "flex",
-                            alignItems: "center",
-                            textAlign: "center",
-                            opacity: 0.7
-                    }}/>
-                </Tabs>
+                    <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
+                        <StyledTabs label="Parameters" value={0} />
+                        <StyledTabs label="Code" value={1} />
+                        <StyledTabs label="Global Parameters" value={2} />
+                        <StyledTabs label="Test Results" value={3} />
+                    </Tabs>
                 </Box>
-                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '70%', alignItems: 'center', gap: 2}}>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', width: '60%', alignItems: 'center', gap: 2}}>
                     <Button onClick={handleTestAction}>
                         Test
                     </Button>
@@ -210,8 +188,8 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                 </Box>
             </Box>
             
-            <Box sx={{pt: 2}}>
-            <TabPanel value={activeTab} index={2}>
+            <Box sx={{pt: 2, overflowY: 'scroll', height: '100%'}}>
+                <TabPanel value={activeTab} index={2}>
                     <Box>
                         <ShowGlobalParameters/>
                     </Box>
@@ -245,6 +223,14 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
                             </Box>
                         </Box>
                     </Card> 
+                </TabPanel>
+                <TabPanel value={activeTab} index={3}>
+                    {!!latestTestExecutionId ? 
+                        <Box sx={{overflow: 'auto', minHeight: '100%'}}><ActionExecutionDetails actionExecutionId={latestTestExecutionId} showDescription={false}/></Box> : (
+                        <Typography>
+                            This action has not been tested
+                        </Typography>
+                    )}
                 </TabPanel>
             </Box>
         </Box>

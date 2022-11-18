@@ -55,12 +55,13 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
                     const userInputRequiredValue = currentParameter?.userInputRequired || "No"
 
                     return (
-                        
+                        userInputRequiredValue === "No" ? 
                             <DefaultValueSelector
                                 parameter={params?.row?.parameter} 
                                 actionIndex={actionIndex} 
                                 stageId={stageId}
-                            />
+                            /> :
+                            <Typography color="text.disabled">Disabled</Typography>
                     )
                 }
             },
@@ -167,9 +168,9 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
 
 const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
     const {availableParameters, currentGlobalParameter, addAndMapGlobalParameter, mapToGlobalParameter} = useGlobalParameterHandler(props)
-    if(!!!availableParameters.includes({ParameterName:props.parameter.ParameterName}) && !currentGlobalParameter.ParameterName){
-        addAndMapGlobalParameter(props.parameter)
-    }
+    // if(!!!availableParameters.includes({ParameterName:props.parameter.ParameterName}) && !currentGlobalParameter.ParameterName){
+    //     addAndMapGlobalParameter(props.parameter)
+    // }
     return (
         <Box sx={{display: 'flex', gap: 1, alignItems: 'center', width: "100%" }}>
             <Autocomplete
@@ -206,9 +207,9 @@ const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
                     if(!!value) {
                         if(value?.ParameterName?.includes('Create Global Parameter:')) {
                            const newVal =  {
-                                    ...value,
-                                    ParameterName: value?.ParameterName?.substring(25)
-                                     }
+                                ...value,
+                                ParameterName: value?.ParameterName?.substring(25)
+                            }
                             
                             addAndMapGlobalParameter(newVal)
                         } else {
