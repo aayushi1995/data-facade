@@ -29,6 +29,7 @@ import leftExpandIcon from '../../../../src/images/left expand.svg'
 import RightExpandIcon from '../../../../src/images/right expand.svg'
 import { ActionParameterInstance } from '../../../generated/entities/Entities'
 import useReRunWorkflowAction from '../../../common/components/workflow/execute/hooks/useReRunWorkflowAction'
+import { ActionExecutionDetails } from '../../apps/components/ActionExecutionHomePage'
 
 interface MatchParams {
     workflowExecutionId: string
@@ -370,9 +371,10 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
                                                 </Card>
                                             </Box>
                                             <Box sx={{display:'flex',flexDirection:'column',width:'68vw'}}>
-                                                <SaveAndBuildChartContextProvider>
+                                                {/* <SaveAndBuildChartContextProvider>
                                                     <SaveAndBuildChartsFromExecution executionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
-                                                </SaveAndBuildChartContextProvider>
+                                                </SaveAndBuildChartContextProvider> */}
+                                                <ActionExecutionDetails actionExecutionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
                                                 
                                                 </Box>
                                         </Box>

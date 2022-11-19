@@ -93,9 +93,9 @@ const ViewActionExecution = (props: ViewActionExecutionProps) => {
 
 const getFailureMessage = (actionOutput: any): Object => {
     try {
-        return JSON.parse(actionOutput?.Message?.[0])
+        return actionOutput.Message[0]
     } catch (e) {
-        return actionOutput
+        return actionOutput.Message
     }
 }
 
@@ -103,6 +103,7 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
     const { actionExecutionDetail } = props
     const actionOutput = JSON.parse(actionExecutionDetail?.ActionExecution?.Output || "{}")
     const failureMessage = getFailureMessage(actionOutput)
+    const script = actionOutput?.script
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2}}>
             <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
@@ -118,20 +119,42 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
             </Box>
             <Box sx={{width:'100%', display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box>
-                    <Typography>
-                        Output
-                    </Typography>
-                </Box>
-                <Box>
                     <Card sx={{
                         p: 3,
                         background: "#F4F5F7",
                         width:'70vw',
                         height:'60vh',
                         boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)",
-                        overflow:'scroll'
+                        overflow:'scroll',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 3
                     }}>
-                        <ReactJson src={failureMessage} />
+                        {!!script ? (
+                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                                <Typography variant="heroHeader" sx={{fontSize: '2.5vh'}}>
+                                    SCRIPT
+                                </Typography>
+                                <Card sx={{p: 1}}>
+                                    <Typography variant="heroMeta" sx={{fontSize: '1.5vh', whiteSpace: 'pre-line'}}>
+                                        {(script || "NA")}
+                                    </Typography>
+                                </Card>
+                            </Box>
+                        ) : (
+                            <></>
+                        )}
+                        
+                        <Box sx={{display: 'flex', gap: 1, flexDirection: 'column'}}>
+                            <Typography variant="heroHeader" sx={{fontSize: '2.5vh'}}>
+                                ERROR
+                            </Typography>
+                            <Card sx={{p: 1}}>
+                                <Typography variant="heroMeta" sx={{fontSize: '1.5vh', whiteSpace: 'pre-line'}}>
+                                    {failureMessage}
+                                </Typography>
+                            </Card>
+                        </Box>
                     </Card>
                 </Box>
                 <Box>
