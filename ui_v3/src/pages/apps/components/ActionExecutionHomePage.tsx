@@ -18,6 +18,7 @@ import ActionExecutionCard from "./ActionExecutionCard"
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
+import ExecuteAction from "../../execute_action/components/ExecuteAction"
 
 type MatchParams = {
     ActionExecutionId?: string
@@ -125,7 +126,11 @@ export const ActionExecutionDetails = (props: {
                             <ActionDescriptionCard description={actionExecutionDetailQuery?.data?.ActionDefinition?.Description} mode="READONLY"/>
                         )}
                         <ActionExecutionCard elapsedTime={getElapsedTime()} actionExecution={actionExecutionDetailQuery?.data?.ActionExecution!} handleClickArrow={handleClickArrow} arrowState={showParameters ? "UP":"DOWN"} terminalState={executionTerminal} error={executionError}/>
-                        
+                        {showParameters ? (
+                            <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} />
+                        ) : (
+                            <></>
+                        )}
                         
                         {executionTerminal ? (
                             <div ref={resultsView}>
