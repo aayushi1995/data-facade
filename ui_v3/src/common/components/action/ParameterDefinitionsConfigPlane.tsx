@@ -118,7 +118,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             } as TableParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
-            const tableFilters = addtionalConfig?.availableTablesFilter !== undefined ? addtionalConfig?.availableTablesFilter : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
+            const tableFilters = addtionalConfig?.availableTablesFilter !== undefined 
+                ? addtionalConfig?.availableTablesFilter 
+                : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             return {
                 parameterType: "COLUMN",

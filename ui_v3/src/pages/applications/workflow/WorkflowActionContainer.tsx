@@ -147,7 +147,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                 Id: actionDefinition.actionId,
                 DefaultActionTemplateId: actionDefinition.defaultTemplateId,
                 Parameters: actionDefinition.parameters,
-                ActionGroup: 'Data Cleansing'
+                ActionGroup: ''
             }
         })
 
@@ -177,7 +177,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                     stageId: props.stageId,
                     Action: {
                         Id: actionDefinition.Id || "id",
-                        ActionGroup: "Data Cleansing",
+                        ActionGroup: "",
                         DisplayName: actionDefinition.DisplayName || "Action added",
                         DefaultActionTemplateId: actionDefinition.DefaultActionTemplateId || "defaultTemplateId",
                         Parameters: []

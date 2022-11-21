@@ -68,17 +68,7 @@ const SelectAction = (props: SelectActionProps) => {
                     <Tabs value={activeTab} onChange={((event, newValue) => setActiveTab(newValue))}>
                         {
                             tabs.map(tab => 
-                                <Tab label={tab.label} value={tab.value} sx={{
-                                    fontFamily: "SF Pro Text",
-                                    fontStyle: "normal",
-                                    fontWeight: 600,
-                                    fontSize: "14px",
-                                    lineHeight: "24px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    textAlign: "center",
-                                    opacity: 0.7
-                              }}/>
+                                <Tab label={tab.label} value={tab.value} sx={actionTabSx()}/>
                             )
                         }
                     </Tabs>
@@ -112,6 +102,20 @@ const SelectAction = (props: SelectActionProps) => {
                 </Box>
             </Box>
     )
+
+    function actionTabSx() {
+        return {
+            fontFamily: "SF Pro Text",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "14px",
+            lineHeight: "24px",
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            opacity: 0.7
+        };
+    }
 }
 
 

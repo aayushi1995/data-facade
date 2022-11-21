@@ -118,7 +118,7 @@ const ActionDefinitionHero = (props: ActionDefinitionHeroProps) => {
                                                         <Autocomplete
                                                             options={applicationQuery.data!}
                                                             getOptionLabel={(application: Application) => application.Name || "Name NA"}
-                                                            renderInput={(params) => <TextField {...params} label="Add to Application"/>}
+                                                            renderInput={(params) => <TextField {...params} label="Add to Package"/>}
                                                             filterSelectedOptions
                                                             fullWidth
                                                             selectOnFocus

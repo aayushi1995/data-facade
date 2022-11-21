@@ -22,7 +22,9 @@ export const isDefaultValueDefined = (parameterDefaultValue?: string) => {
 
 const ConfigureParameters = (props: ConfigureParametersProps) => {
 
-    const filteredParameters = props.mode === "GENERAL" ? props.ActionParameterDefinitions?.filter(apd => !isDefaultValueDefined(apd.DefaultParameterValue) ) : props.ActionParameterDefinitions?.filter(apd => isDefaultValueDefined(apd.DefaultParameterValue))
+    const filteredParameters = props.mode === "GENERAL" ? 
+            props.ActionParameterDefinitions?.filter(apd => !isDefaultValueDefined(apd.DefaultParameterValue) ) 
+            : props.ActionParameterDefinitions?.filter(apd => isDefaultValueDefined(apd.DefaultParameterValue))
         
     const [parameterSelected, setParameterSelected] = React.useState<ActionParameterDefinition | undefined>()
 
@@ -47,17 +49,7 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                                 <Box sx={{
                                     background: "#A4CAF0", display: 'flex', alignItems: 'center', minHeight: '100%'
                                 }}>
-                                    <Typography sx={{
-                                        fontFamily: "'SF Pro Display'",
-                                        fontStyle: "normal",
-                                        fontWeight: 700,
-                                        fontSize: "18px",
-                                        lineHeight: "24px",
-                                        mt: 1,
-                                        p: 2
-                                    }}>
-                                        User Inputs
-                                    </Typography>
+                                    {userInputHeader("User Input")}
                                 </Box>
                             </Grid>
                             <Grid item xs={9} mx={3}>
@@ -92,30 +84,12 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                                     <Box sx={{
                                         background: "#A4CAF0", display: 'flex', alignItems: 'center', minHeight: '100%'
                                     }}>
-                                        <Typography sx={{
-                                            fontFamily: "'SF Pro Display'",
-                                            fontStyle: "normal",
-                                            fontWeight: 700,
-                                            fontSize: "18px",
-                                            lineHeight: "24px",
-                                            mt: 1,
-                                            p: 2
-                                        }}>
-                                            What's this ?
-                                        </Typography>
+                                        {userInputHeader("What's this ?")}
                                     </Box>
                                 </Grid>
                                 <Grid item xs={9} mx={3}>
-                                    <Typography sx={{
-                                        fontFamily: "'SF Pro Text'",
-                                        fontStyle: "normal",
-                                        fontWeight: 400,
-                                        fontSize: "18px",
-                                        lineHeight: "143%",
-                                        letterSpacing: "0.15px",
-                                        color: "#353535"
-                                    }}>
-                                        {parameterSelected?.Description || "NA"}
+                                    <Typography sx={getTypogrpahySx()}>
+                                        {parameterSelected?.Description || parameterSelected?.DisplayName}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -129,3 +103,29 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
 }
 
 export default ConfigureParameters
+
+function userInputHeader(label: String) {
+    return <Typography sx={{
+        fontFamily: "'SF Pro Display'",
+        fontStyle: "normal",
+        fontWeight: 700,
+        fontSize: "18px",
+        lineHeight: "24px",
+        mt: 1,
+        p: 2
+    }}>
+        {label}
+    </Typography>
+}
+
+function getTypogrpahySx() {
+    return {
+        fontFamily: "'SF Pro Display'",
+        fontStyle: "normal",
+        fontWeight: 400,
+        fontSize: "18px",
+        lineHeight: "24px",
+        mt: 1,
+        p: 2
+    }
+}

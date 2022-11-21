@@ -14,11 +14,13 @@ import FetchActionExecutionDetails from "../../../pages/view_action_execution/ho
 import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
 import ParametersIcon from "../../../../src/images/Parameters.svg";
 import ViewConfiguredParameters from "../../../pages/execute_action/components/ViewConfiguredParameters"
+import DeepDive from "./DeepDive"
 
 
 interface SaveAndBuildChartsFromExecutionProps {
     executionId: string;
-    definitionName?: string
+    definitionName?: string;
+    onChildExecutionCreated?: (childExecutionId: string) => void;
 }
 
 interface TabPanelProps {
@@ -46,6 +48,7 @@ function TabPanel(props: TabPanelProps) {
         </div>);
 }
 
+const highLevelSxProps = { display: 'flex', flexDirection: 'column', gap: 2, mt: 2, mr: 2 }
 const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionProps) => {
 
     const saveAndBuildChartsState = React.useContext(SaveAndBuildChartContext)
@@ -122,39 +125,50 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         setExecutionTerminal(false)
     }, [props.executionId])
     
-    const handleMoreInfoClick = () => {
-        const actionExecutionId = actionExecutionDetailQuery.data?.ActionExecution?.Id
-        if(actionExecutionId !== undefined) {
-            window.open(`/application/jobs/${actionExecutionId}`)
-        }
+
+    function postExecutionTasksButton(buttonLabel :String, onClick: React.MouseEventHandler<HTMLButtonElement> | undefined){
+        return (
+            <Button
+            variant="outlined" 
+            color="success" 
+            sx={{ ml: 'auto', borderRadius: '5px' }} 
+                onClick={onClick}
+                >
+                {buttonLabel}
+            </Button>
+        )
     }
+
+    const getButtonSx = { width: '10vw', height: '100%', ml: 'auto' }
+    const postExecutionTasks = 
+    <>
+        <Box sx={{getLargerButtonSx: getButtonSx}}>
+            <ExportAsDashboard executionId={props.executionId} definitionName={props.definitionName || ""}/>
+        </Box>
+        <Box sx={{getLargerButtonSx: getButtonSx}}>
+            <DeepDive 
+                executionId={props.executionId} 
+                definitionName={props.definitionName || ""}
+                onChildExecutionCreated={props.onChildExecutionCreated}
+            />
+        </Box>
+        <Box sx={{getLargerButtonSx: getButtonSx}}>
+            {postExecutionTasksButton("Save", handleSaveCharts)}
+        </Box>
+    </>
+
+
     return (
-        <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2, mr: 2}}>
+        <Box sx={highLevelSxProps}>
             <Grid direction="column" ml={2}>
                 <Grid item xs={12} >
                     <WrapInCollapsable summary={
                         <>
                         <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>
-                        <Box sx={{display:'flex',flexDirection:'row',ml:'auto',gap:2,mt:'20px'}}>
-                            <Box sx={{width:'10vw', height:'100%',ml:'auto'}}>
-                                <ExportAsDashboard executionId={props.executionId} definitionName={props.definitionName || ""}/>
-                            </Box>
+                        <Box sx={{display:'flex',flexDirection:'row',ml:'auto',gap:1,mt:'20px'}}>
                             {chartQueriesState.fetchPresignedUrlMutation?.isLoading || chartQueriesState.uploadFileToS3Mutation?.isLoading || chartQueriesState.updateChart?.isLoading ? (
                                     <LoadingIndicator />
-                                ) : (
-                                    <Box sx={{width:'15vw', height:'100%',ml:'auto'}}>
-                                    <Button
-                                        onClick={handleSaveCharts}
-                                        variant="outlined"
-                                        color="success"
-                                        sx={{
-                                            ml:'auto',
-                                            borderRadius:'5px'
-                                        }}>
-                                            Save Chart
-                                    </Button>
-                                    <Button variant="outlined" color="success" sx={{ ml:'auto', borderRadius:'5px',px:2,mx:2 }} onClick={handleMoreInfoClick}>More Info</Button>
-                                    </Box>)
+                                ) : postExecutionTasks
                                 }
                         </Box>
                         </>
@@ -258,11 +272,8 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
                 iconPosition="start" 
                 icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>
             </Tabs>
-            
-            {/* <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-
-            </Box> */}
         </Box>
     )
 }
 export default SaveAndBuildChartsFromExecution
+

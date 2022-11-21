@@ -24,14 +24,28 @@ type MatchParams = {
     ActionExecutionId?: string
 }
 
+const executionHeaderSxProps = {
+    background: "#F8F8F8",
+    boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
+    borderRadius: "9.72px",
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 1,
+    p: 3
+}
 export const ActionExecutionDetails = (props: {
-        actionExecutionId: string, 
+        actionExecutionId: string,
+        childActionExecutionId: string, 
         showDescription?: boolean, 
-        showParametersOnClick?: boolean, fromTestAction?: boolean, onExecutionCreate?: (actionExecutionId: string) => void,
+        showParametersOnClick?: boolean, 
+        fromTestAction?: boolean, 
+        fromDeepDive?: boolean,
+        onExecutionCreate?: (actionExecutionId: string) => void,
         handleGetExistingParameterInstance?: (actionParameterInstances: ActionParameterInstance[]) => void}
     ) => {
 
     const actionExecutionId = props.actionExecutionId
+    const [childActionExecutionId, setChildActionExecutionId] = React.useState<string>(props.childActionExecutionId)
     const [executionTerminal, setExecutionTerminal] = React.useState(true)
     const [executionError, setExecutionError] = React.useState(false)
     const [showParameters, setShowParameters] = React.useState(false)
@@ -40,6 +54,10 @@ export const ActionExecutionDetails = (props: {
     const setModuleContextState = React.useContext(SetModuleContextState)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
     const [intervalId, setIntervalId] = React.useState<number | undefined>()
+
+    const onChildExecutionCreated = (actionExecutionId: string) => {
+        setChildActionExecutionId(actionExecutionId)
+    }
 
     const handleDataFetched = (data?: ActionExecutionIncludeDefinitionInstanceDetailsResponse[]) => {
         const actionExecutionDetails = data?.[0]
@@ -134,22 +152,16 @@ export const ActionExecutionDetails = (props: {
                         
                         {executionTerminal ? (
                             <div ref={resultsView}>
-                                <Card sx={{
-                                    background: "#F8F8F8",
-                                    boxShadow:
-                                    "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
-                                    borderRadius: "9.72px",
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 1,
-                                    p: 3
-                                }} >
+                                <Card sx={executionHeaderSxProps} >
                                     {executionError ? (
                                         <ViewFailedActionExecution actionExecutionDetail={actionExecutionDetailQuery?.data || {}}/>
                                     ) : (
                                         <Box sx={{maxWidth: '100%'}} >
                                             <SaveAndBuildChartContextProvider>
-                                                <SaveAndBuildChartsFromExecution executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}/>
+                                                <SaveAndBuildChartsFromExecution 
+                                                    executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}
+                                                    onChildExecutionCreated={onChildExecutionCreated}
+                                                    />
                                             </SaveAndBuildChartContextProvider>
                                         </Box>
                                     )}
@@ -162,6 +174,15 @@ export const ActionExecutionDetails = (props: {
                     </Box>
                 )}
             </ReactQueryWrapper>
+            {childActionExecutionId ?
+            (<ActionExecutionDetails 
+                actionExecutionId={childActionExecutionId} 
+                showDescription={true} 
+                fromDeepDive={true} 
+                fromTestAction={true}
+                />) :
+                <></>
+            }
         </>
     )
 }
@@ -181,38 +202,3 @@ const ActionExecutionHomePage = () => {
 
 export default ActionExecutionHomePage
 
-// function ActionInputHandler(
-//     executionTerminal: boolean, 
-//     actionExecutionDetailQuery: UseQueryResult<ActionExecutionIncludeDefinitionInstanceDetailsResponse, unknown>, 
-//     userInputOpener: boolean,
-//     handleInputOpener: () => void,
-//     props: { actionExecutionId: string; showDescription?: boolean | undefined; showParametersOnClick?: boolean | undefined; fromTestAction?: boolean | undefined; onExecutionCreate?: ((actionExecutionId: string) => void) | undefined }): React.ReactNode {
-//     return (
-//         // <Box sx={{
-//         //     background: "#F8F8F8",
-//         //     flexDirection: 'column',
-//         //     gap: 1,
-//         // }}>
-//         //     <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} />
-//         // </Box>
-
-//         <Box sx={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', mt: 4, py: 2, backgroundColor: userInputOpener ? "#e3e1de" : "#e0ecff", borderRadius: '5px', boxShadow: 'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px' }}>
-//         {!!actionExecutionDetailQuery?.data?.ActionDefinition?.Id ? (
-//             <>
-//                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-//                     <Button onClick={handleInputOpener}>
-//                         {userInputOpener ? <KeyboardArrowDownIcon /> : <ChevronRightIcon />}
-//                     </Button>
-//                     <Typography sx={{ color: '#f09124', py: 1, fontSize: '1.1rem', fontWeight: 500 }}>Inputs</Typography>
-//                 </Box>
-//                 <Box sx={{ px: '20vw' }}>{userInputOpener ?
-//                     <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} /> : <></>}
-//                 </Box>
-//             </>
-//         ) : (
-//             <LoadingIndicator/>
-//         )}
-        
-//     </Box>
-//     )
-// }

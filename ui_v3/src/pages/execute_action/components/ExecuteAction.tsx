@@ -64,7 +64,8 @@ interface ExecuteActionProps {
     redirectToExecution?: boolean,
     onExecutionCreate?: (executionId: string) => void,
     fromTestRun?: boolean,
-    showOnlyParameters?: boolean
+    showOnlyParameters?: boolean,
+    fromDeepDive?: boolean
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
@@ -148,9 +149,8 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         
     }, [props.actionDefinitionId])
 
-    const actionExecutionId = location.search ? new URLSearchParams(location.search).get("executionId") : undefined
+    const actionExecutionId = (!props.fromDeepDive || props.fromDeepDive == false) && location.search ? new URLSearchParams(location.search).get("executionId") : undefined
 
-    console.log(actionExecutionId, actionInstanceId)
 
     React.useEffect(() => {
         if(defaultProviderInstance!==undefined){
@@ -364,11 +364,15 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         )
     }
     
+    let description = executeActionContext.ExistingModels.ActionDefinition?.Description ?
+        executeActionContext.ExistingModels.ActionDefinition?.Description :
+        executeActionContext.ExistingModels.ActionDefinition?.DisplayName
+
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
             {props.showActionDescription ? (
                 <Box>
-                    <ActionDescriptionCard description={executeActionContext.ExistingModels.ActionDefinition?.Description} mode="READONLY" />
+                    <ActionDescriptionCard description={description} mode="READONLY" />
                 </Box>
             ) : (
                 <></>

@@ -65,7 +65,7 @@ const MakeWorkflowContextFromDetail = (props: MakeWorkflowContextPropsFromDetail
             })
             stageActions.push({
                 Id: workflowActions[i].Id,
-                ActionGroup: "Yet to define", // TODO: Remove Hard Coding after introduction of groups
+                ActionGroup: "", // TODO: Remove Hard Coding after introduction of groups
                 DisplayName: workflowActions[i].DisplayName,
                 DefaultActionTemplateId: workflowActions[i].DefaultActionTemplateId,
                 Parameters: parameters,
