@@ -24,9 +24,8 @@ export interface DeepDiveProps {
     onChildExecutionCreated: (executionId: string) => void,
 }
 
-
+// This compoment enable users to iteratively run all available application from the result of another action.
 const DeepDive = (props: DeepDiveProps) => {
-    // const history = useHistory()
     const [openDialog, setOpenDialog] = React.useState(false)
     const [executionId, setExecutionId] = React.useState<string | undefined>()
     const [selecedAction, setSelecedAction] = React.useState()
@@ -35,7 +34,6 @@ const DeepDive = (props: DeepDiveProps) => {
         setOpenDialog(true)
         setExecutionId(undefined)
         setSelecedAction(undefined)
-        setSelecedAction(null)
     }
 
     const handleDialogClose = () => {
@@ -65,33 +63,20 @@ const DeepDive = (props: DeepDiveProps) => {
                     <DialogContent>
                         <SelectAction groups={[]} onAddAction={addActionHandler}></SelectAction>
                     </DialogContent>
-            }
+                }
                 {/* Execute action on the selected action definition */}
                 {
                 selecedAction && 
                 <ExecuteActionContextProvider>
-                    {
-                        !! executionId ? (
-                            <ActionExecutionDetails 
-                                actionExecutionId={executionId} 
-                                showDescription={false} 
-                                fromDeepDive={true} 
-                                fromTestAction={true}
-                                onExecutionCreate={onExecutionCreated}/>
-                        ) : (
-                            <ExecuteActionNew 
-                                showOnlyParameters={true} 
-                                fromDeepDive={true}
-                                fromTestRun={true} 
-                                actionDefinitionId={selecedAction.Id} 
-                                showActionDescription={true} 
-                                redirectToExecution={false} 
-                                onExecutionCreate={onExecutionCreated}
-                            />
-                        )
-
-                    }
-                    
+                       <ExecuteActionNew 
+                       showOnlyParameters={true} 
+                       fromDeepDive={true}
+                       fromTestRun={true} 
+                       actionDefinitionId={selecedAction.Id} 
+                       showActionDescription={true} 
+                       redirectToExecution={false} 
+                       onExecutionCreate={onExecutionCreated}
+                   />
                 </ExecuteActionContextProvider>
                 }
             </Dialog>

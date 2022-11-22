@@ -135,20 +135,30 @@ export const ActionExecutionDetails = (props: {
         }
     }
 
+    let description = actionExecutionDetailQuery?.data?.ActionDefinition?.Description || 
+        actionExecutionDetailQuery?.data?.ActionDefinition?.DisplayName;
+
     return (
         <>
             <ReactQueryWrapper {...actionExecutionDetailQuery}>
                 {() => (
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2, minHeight: '100%'}}>
                         {props.showDescription === false ? (<></>): (
-                            <ActionDescriptionCard description={actionExecutionDetailQuery?.data?.ActionDefinition?.Description} mode="READONLY"/>
+                            <ActionDescriptionCard description={description} mode="READONLY"/>
                         )}
-                        <ActionExecutionCard elapsedTime={getElapsedTime()} actionExecution={actionExecutionDetailQuery?.data?.ActionExecution!} handleClickArrow={handleClickArrow} arrowState={showParameters ? "UP":"DOWN"} terminalState={executionTerminal} error={executionError}/>
+                        <ActionExecutionCard 
+                            elapsedTime={getElapsedTime()} 
+                            actionExecution={actionExecutionDetailQuery?.data?.ActionExecution!} 
+                            handleClickArrow={handleClickArrow} 
+                            arrowState={showParameters ? "UP":"DOWN"} 
+                            terminalState={executionTerminal} 
+                            error={executionError}/>
                         {showParameters ? (
                             <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} />
                         ) : (
                             <></>
                         )}
+                        
                         
                         {executionTerminal ? (
                             <div ref={resultsView}>
