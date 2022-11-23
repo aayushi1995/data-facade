@@ -7,6 +7,7 @@ import ApplicationHeader from "../../pages/apps/ApplicationHeader";
 import DataContent from "../../pages/data/DataContent";
 import DataHeader from "../../pages/data/DataHeader";
 import { InsightsContent } from "../../pages/insights/InsightsContent";
+import { HomePage } from "../../pages/home_page/HomePage"
 import {
     DATA_ROUTE,
     DATA_SUB_TABS
@@ -66,6 +67,7 @@ export const MainContent = () => {
                 <Route path={DATA_ROUTE} component={DataContent}/>
                 <Route path={APPLICATION_ROUTE} component={ApplicationContent}/>
                 <Route path={INSIGHTS_ROUTE} component={InsightsContent}/>
+                <Route exact path='/' component={HomePage}/>
             </Switch>
         </Box>
     )

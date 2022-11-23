@@ -102,7 +102,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Route path='/workflow-editor' component={WorkflowEditorPage}/>
                                     <Route path='/run-workflow' component={RunWorkflowHomePage}/>
                                     <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
-                                    <Redirect exact from="/" to="/application"/>
+                                    <Redirect exact from="/tableBrowser" to="/"/>
                                 </Switch>
                             </Grid>
                         </Grid>

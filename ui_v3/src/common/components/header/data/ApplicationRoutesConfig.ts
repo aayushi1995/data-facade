@@ -1,6 +1,6 @@
 import { TabsType } from "../schema";
 
-const APPLICATION_ROUTE = '/application'
+export const APPLICATION_ROUTE = '/application'
 
 export const APPLICATION_ROUTE_MARKETPLACE = `${APPLICATION_ROUTE}/marketplace`
 export const APPLICATION_ROUTE_ALL = `${APPLICATION_ROUTE}/all`
@@ -17,7 +17,10 @@ export const APPPLICATION_CREATE_AUTO_FLOW = `${APPLICATION_ROUTE}/create-autoFl
 export const SCHEDULED_JOBS_ROUTE = `${APPLICATION_ROUTE}/scheduled`
 export const EXECUTION_HISTORY_ROUTE = `${APPLICATION_ROUTE}/execution-history`
 export const APPLICATION_DETAIL_ROUTE = `${APPLICATION_ROUTE}/detail`
-
+export const APPLICATION_EXECUTE_WORKFLOW = `${APPLICATION_ROUTE}/execute-workflow`
+export const APPLICATION_JOBS = `${APPLICATION_ROUTE}/jobs`
+export const APPLICATION_EXECUTE_ACTION = `/application/execute-action/:ActionDefinitionId`
+export const WORKFLOW_EDIT_ROUTE_ROUTE = `${APPLICATION_ROUTE}/edit-workflow`
 export const APPLICATION_SUB_TABS: TabsType = [
     {
         id: 'Packages',
