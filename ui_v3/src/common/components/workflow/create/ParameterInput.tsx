@@ -70,7 +70,8 @@ export interface TableParameterInput {
         selectedTableFilter: TableProperties | undefined,
         availableTablesFilter: TableProperties | undefined,
         onChange: (newTable?: TableProperties) => void,
-        parameterDefinitionId?: string
+        parameterDefinitionId?: string,
+        parentExecutionId?: string
     }
 }
 
@@ -584,7 +585,15 @@ const TableInput = (props: TableParameterInput) => {
     const getTableSelectionInfo: (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => { AvailableTables: TableProperties[], SelectedTable?: TableProperties} = (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => {
         const tableById = availableTables?.find(table => table?.Id === selectedTableFilter?.Id)
         const tableByName = availableTables?.find(table => table?.UniqueName === selectedTableFilter?.UniqueName)
-
+        if (!!props.inputProps.parentExecutionId){
+            const upstreamTable: TableProperties = { UniqueName: "Previous Execution", 
+                Id: props.inputProps.parentExecutionId, 
+                ProviderInstanceName: "Upstream Action",
+                TableType: "UpstreamExecution",
+            }
+            availableTables?.push(upstreamTable)
+        }
+        
         if(tableById !== undefined) {
             return {
                 AvailableTables: availableTables || [], 
@@ -607,6 +616,7 @@ const TableInput = (props: TableParameterInput) => {
                 SelectedTable: undefined
             }
         }
+
     }
 
     const handleTablesReceived = (tables: TableProperties[]) => {

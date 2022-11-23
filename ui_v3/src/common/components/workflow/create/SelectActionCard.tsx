@@ -25,7 +25,8 @@ export interface SelectActionCardProps {
 
 const SelectActionCard = (props: SelectActionCardProps) => {
     const theme = useTheme();
-    const handleAdd = () => {
+    const handleAdd = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.stopPropagation() 
         const newAction: ActionDefinitionToAdd = {
             Id: props.actionId,
             DisplayName: props.actionName,

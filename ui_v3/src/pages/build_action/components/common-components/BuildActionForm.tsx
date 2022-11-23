@@ -92,25 +92,6 @@ const BuildActionForm = () => {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 4 ,minHeight:'180px'}}>
-            {/* 
-            TODO: Disabling action Type. Defaulting to Profiling. Keeping commented code in case this needs to be re-enabled 
-            <Box>
-                <FormControl variant="outlined" fullWidth>
-                    <InputLabel>Action Type</InputLabel>
-                    <Select
-                        value={actionType || "Select"}
-                        onChange={(event) => setActionType(event.target.value)}
-                        onBlur={(event) => setActionTypeInContext()}
-                        variant="outlined"
-                        label="Action Type"
-                        fullWidth
-                    >
-                        {Object.keys(ActionTypeToSupportedRuntimes).map((actionType) => {
-                            return <MenuItem value={actionType}>{actionType}</MenuItem>
-                        })}
-                    </Select>
-                </FormControl>
-            </Box> */}
             <Box sx={{ display: "flex", flexDirection: "column", width: "100%", justifyContent: "space-around", py: 3 }}>
                 <Box sx={{display: "flex", alignItems: "left", flexDirection: "column", gap: 4}}>
                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "left", gap: 1}}>
@@ -150,25 +131,6 @@ const BuildActionForm = () => {
                         {ActionTypeToSupportedRuntimes[buildActionContext.actionDefinitionWithTags.actionDefinition.ActionType!].map( runtime => {
                             return <MenuItem value={runtime}>{runtime}</MenuItem>
                         })}
-                    </Select>
-                </FormControl>
-            </Box>
-            <Box>
-                <FormControl variant="outlined" fullWidth>
-                    <InputLabel>Return Type</InputLabel>
-                    <Select
-                        value={returnType || "Select"}
-                        onChange={(event) => setReturnType(event.target.value)}
-                        onBlur={(event) => setReturnTypeInContext()}
-                        variant="outlined"
-                        label="Return Type"
-                        fullWidth
-                    >
-                        {/* <MenuItem value={ActionDefinitionPresentationFormat.SINGLE_VALUE}>Single Value</MenuItem>
-                        <MenuItem value={ActionDefinitionPresentationFormat.TIME_SERIES}>Time Series</MenuItem>
-                        <MenuItem value={ActionDefinitionPresentationFormat.FREQUENCY}>Frequency</MenuItem> */}
-                        <MenuItem value={ActionDefinitionPresentationFormat.TABLE_VALUE}>Table</MenuItem>
-                        {/* <MenuItem value={ActionDefinitionPresentationFormat.OBJECT}>Object</MenuItem> */}
                     </Select>
                 </FormControl>
             </Box>

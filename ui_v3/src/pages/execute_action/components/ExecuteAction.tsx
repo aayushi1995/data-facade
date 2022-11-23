@@ -65,12 +65,12 @@ interface ExecuteActionProps {
     onExecutionCreate?: (executionId: string) => void,
     fromTestRun?: boolean,
     showOnlyParameters?: boolean,
-    fromDeepDive?: boolean
+    fromDeepDive?: boolean,
+    parentExecutionId?: string,
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
     const actionDefinitionId = props.actionDefinitionId
-    console.log(actionDefinitionId)
     const setModuleContext = React.useContext(SetModuleContextState)
     const [tabValue, setTabValue] = React.useState(0)
     const validateActionInstance = useValidateActionInstance()
@@ -87,7 +87,10 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             }
         }
     })
-    const actionInstanceId = location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
+    const useUrlToFindId = (!props.fromDeepDive || props.fromDeepDive == false)
+    const actionExecutionId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("executionId") : undefined
+    const actionInstanceId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
+    
     const {data, error, isLoading, refetch, isRefetching} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: { enabled: false, onSuccess(data) {
         if(!!data && !!data[0]) {
             setExecuteActionContext({
@@ -148,9 +151,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         }
         
     }, [props.actionDefinitionId])
-
-    const actionExecutionId = (!props.fromDeepDive || props.fromDeepDive == false) && location.search ? new URLSearchParams(location.search).get("executionId") : undefined
-
 
     React.useEffect(() => {
         if(defaultProviderInstance!==undefined){
@@ -292,6 +292,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
                     handleParametersChange={handleChange}
                     showOnlyParameters={props.showOnlyParameters}
+                    parentExecutionId={props.parentExecutionId}
                 />
             </Box>,
             label: "Required Inputs"
@@ -309,6 +310,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
                     ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
                     handleParametersChange={handleChange}
+                    parentExecutionId={props.parentExecutionId}
                 />
             </Box>,
             label: "Inputs Advanced"
@@ -477,8 +479,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                                             )}
                                             </>
                                         )}
-                                        
-                                        
                                     </Box>
                                 )}
                                 

@@ -11,7 +11,8 @@ interface ConfigureParametersProps {
     ActionParameterInstances: ActionParameterInstance[],
     ParameterAdditionalConfig: ActionParameterAdditionalConfig[],
     showOnlyParameters?: boolean
-    handleParametersChange: (newActionParameterInstances: ActionParameterInstance[]) => void
+    handleParametersChange: (newActionParameterInstances: ActionParameterInstance[]) => void,
+    parentExecutionId?: string,
 }
 
 export const isDefaultValueDefined = (parameterDefaultValue?: string) => {
@@ -60,6 +61,7 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                                         parameterAdditionalConfigs={props.ParameterAdditionalConfig || []}
                                         handleChange={props.handleParametersChange}
                                         onParameterClick={onParameterClick}
+                                        parentExecutionId={props.parentExecutionId}
                                     />
                                 </Box>
                             </Grid>

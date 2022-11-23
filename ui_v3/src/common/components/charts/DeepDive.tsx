@@ -27,7 +27,7 @@ export interface DeepDiveProps {
 // This compoment enable users to iteratively run all available application from the result of another action.
 const DeepDive = (props: DeepDiveProps) => {
     const [openDialog, setOpenDialog] = React.useState(false)
-    const [executionId, setExecutionId] = React.useState<string | undefined>()
+    const [executionId, setExecutionId] = React.useState<string | undefined>(props.executionId)
     const [selecedAction, setSelecedAction] = React.useState()
 
     const handleDialogOpen = () => {
@@ -55,6 +55,7 @@ const DeepDive = (props: DeepDiveProps) => {
             <Dialog 
                 open={openDialog}
                 onClose={handleDialogClose} 
+                onClick={(e)=>{e.stopPropagation()}}
                 maxWidth="md" 
                 fullWidth>
                 {dialogTitle()}
@@ -69,13 +70,15 @@ const DeepDive = (props: DeepDiveProps) => {
                 selecedAction && 
                 <ExecuteActionContextProvider>
                        <ExecuteActionNew 
-                       showOnlyParameters={true} 
-                       fromDeepDive={true}
-                       fromTestRun={true} 
-                       actionDefinitionId={selecedAction.Id} 
-                       showActionDescription={true} 
-                       redirectToExecution={false} 
-                       onExecutionCreate={onExecutionCreated}
+                            showOnlyParameters={true} 
+                            fromDeepDive={true}
+                            fromTestRun={true} 
+                            actionDefinitionId={selecedAction.Id} 
+                            showActionDescription={true} 
+                            redirectToExecution={false} 
+                            onExecutionCreate={onExecutionCreated}
+                            parentExecutionId={props.executionId}
+                            existingParameterInstances={[]}
                    />
                 </ExecuteActionContextProvider>
                 }

@@ -357,21 +357,6 @@ const formColumnAdditionalConfigs = (actionParameterInstances: ActionParameterIn
 
 const resetStateFromActionDefinitionDetail = (state: ExecuteActionContextState, actionDetail: ActionDefinitionDetail) => {
     const newActionParameterDefinitions = getDefaultTemplateParameters(actionDetail)
-    // const columnAdditionalConfig = newActionParameterDefinitions
-    //     ?.filter(ap => ap.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
-    //     ?.filter(ap => { 
-    //         const config = safelyParseJSON(ap.Config) as ActionParameterDefinitionConfig;
-    //         return config?.ParentParameterDefinitionId!==undefined
-    //     })
-    //     ?.map(ap => {
-    //         const config = safelyParseJSON(ap.Config) as ActionParameterDefinitionConfig
-    //         const columnAdditionalConfig: ActionParameterColumnAdditionalConfig = {
-    //             type: "Column",
-    //             parameterDefinitionId: ap?.Id,
-    //             parentTableId: config?.ParentParameterDefinitionId
-    //         }
-    //         return columnAdditionalConfig
-    //     })
 
     return {
         ...state,

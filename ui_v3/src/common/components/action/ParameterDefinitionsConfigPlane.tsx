@@ -12,7 +12,8 @@ interface ParameterDefinitionsConfigPlaneProps {
     parameterInstances: ActionParameterInstance[],
     parameterAdditionalConfigs?: ActionParameterAdditionalConfig[],
     handleChange: (parameterInstances: ActionParameterInstance[]) => void,
-    onParameterClick?: (parameterDefinitionId: string) => void
+    onParameterClick?: (parameterDefinitionId: string) => void,
+    parentExecutionId?: string,
 }
 
 
@@ -74,7 +75,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         const parameterAdditionalConfig = getparameterAdditionalConfig(parameterDefinition.Id || "na")
         const existingParameterValue = getExistingParameterValue(parameterDefinition.Id || "na")
 
-        if(parameterDefinition.Tag === ActionParameterDefinitionTag.DATA || parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME) {
+        if(parameterDefinition.Tag === ActionParameterDefinitionTag.DATA || 
+            parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME ||
+            parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
             return {
                 parameterType: "TABLE",
@@ -88,32 +91,16 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                             ActionParameterDefinitionId: parameterDefinition.Id,
                             ProviderInstanceId: selectedTable?.ProviderInstanceID
                         }
-                        onParameterValueChange(newParameterInstance)
-                    },
-                    selectedTableFilter: {Id: existingParameterInstance?.TableId, UniqueName: existingParameterInstance?.ParameterValue },
-                    availableTablesFilter: addtionalConfig?.availableTablesFilter,
-                    parameterDefinitionId: parameterDefinition.Id
-                }
-            } as TableParameterInput
-        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
-            const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
-            return {
-                parameterType: "TABLE",
-                parameterId: parameterDefinition.Id,
-                inputProps: {
-                    parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
-                    onChange: (selectedTable?: TableProperties) => {
-                        const newParameterInstance: ActionParameterInstance = {
-                            TableId: selectedTable?.Id,
-                            ParameterValue: selectedTable?.UniqueName,
-                            ActionParameterDefinitionId: parameterDefinition.Id,
-                            ProviderInstanceId: selectedTable?.ProviderInstanceID
+                        // If selectedTable type is upstream, then set the source execution id.
+                        if (selectedTable?.TableType === "UpstreamExecution") {
+                            newParameterInstance.SourceExecutionId = props.parentExecutionId
                         }
                         onParameterValueChange(newParameterInstance)
                     },
                     selectedTableFilter: {Id: existingParameterInstance?.TableId, UniqueName: existingParameterInstance?.ParameterValue },
                     availableTablesFilter: addtionalConfig?.availableTablesFilter,
-                    parameterDefinitionId: parameterDefinition.Id
+                    parameterDefinitionId: parameterDefinition.Id,
+                    parentExecutionId: props.parentExecutionId,
                 }
             } as TableParameterInput
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.COLUMN_NAME) {
@@ -281,6 +268,12 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
         }
     })
 
+
+    const onParameterSelectClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, parameter: ParameterInputProps) => {
+        props.onParameterClick?.(parameter?.parameterId!)
+        event.stopPropagation()
+    }
+
     return (
         <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%'}}>
             <Grid container spacing = {0} sx={{p: 1}}>
@@ -292,7 +285,11 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 {parameterDefinitions.map((parameter) => {
                     return (
                         <Box sx={{width:'100%'}}>
-                            <Box sx={{display: 'flex' ,py:0}} onClick={() => props.onParameterClick?.(parameter.parameterId!)}>
+                            <Box sx={{display: 'flex' ,py:0}} 
+                                onClick={ (e, parameter) => {
+                                    onParameterSelectClick(e, parameter)
+                                    }
+                                }>
                                 <ParameterInput {...parameter}/>
                             </Box>
                             
