@@ -13,7 +13,6 @@ export interface UseActionDefintionDetail {
 const useActionDefinitionDetail = (props: UseActionDefintionDetail) => {
     const { options, actionDefinitionId } = props
     const fetchedDataManagerInstance = dataManagerInstance.getInstance as {retreiveData: Function, deleteData: Function, saveData: Function}
-
     const actionDefinitionDetailQuery = useQuery(
         [labels.entities.ActionDefinition, "Detail", actionDefinitionId], (context) => {return Fetcher.fetchData("GET", "/getActionDefinitionDetails", {Id: actionDefinitionId})}, 
         {

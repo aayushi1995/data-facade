@@ -40,7 +40,8 @@ export type BuildActionContextState = {
     actionTemplateWithParams: {
         template: ActionTemplate,
         parameterWithTags: ActionContextActionParameterDefinitionWithTags[],
-        parameterAdditionalConfig?: ActionParameterAdditionalConfig[]
+        parameterAdditionalConfig?: ActionParameterAdditionalConfig[],
+        activeParameterId?: string
     }[],
     activeTemplateId?: string,
     lastSavedActionDefinition?: ActionDefinition,
@@ -121,7 +122,7 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
 export const BuildActionContext = React.createContext<BuildActionContextState>(formEmptyDefaultContext()) 
 
 // Set Build Action Context State
-type SetBuildActionContextState = (action: BuildActionAction) => void
+export type SetBuildActionContextState = (action: BuildActionAction) => void
 const defaultSetBuildActionContextState: SetBuildActionContextState = (action: BuildActionAction) => {}
 export const SetBuildActionContext = React.createContext<SetBuildActionContextState>(defaultSetBuildActionContextState)
 
@@ -136,7 +137,8 @@ export const UseActionHooks = React.createContext<UseActionHooksState>({})
 type SetModeAction = {
     type: "SetMode",
     payload: {
-        mode: ContextModes
+        mode: ContextModes,
+        saveOldContextCallback?: (oldContext?: BuildActionContextState) => void,
     }
 }
 // Action Types
@@ -329,7 +331,9 @@ type LoadActionForEditSettledAction = {
 type SetActionDefinitionToLoadIdAction = {
     type: "SetActionDefinitionToLoadId",
     payload: {
-        actionDefinitionToLoadId?: string
+        actionDefinitionToLoadId?: string,
+        saveOldContextCallback?: (oldContext?: BuildActionContextState) => void,
+        cachedContext?: BuildActionContextState
     }
 }
 
@@ -374,6 +378,21 @@ type SetChartConfigForIndex = {
     }
 }
 
+type SetActiveParameterId = {
+    type: 'SetActiveParameterId',
+    payload: {
+        newActiveParameterId?: string
+    }
+}
+
+type SetEntireState = {
+    type: "SetEntireState",
+    payload: {
+        newState: BuildActionContextState,
+        oldStateCallback?: (oldState?: BuildActionContextState) => void
+    }
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -412,7 +431,9 @@ SetTestMode |
 AddChartToConfig |
 ChangeChartKind |
 ChangeChartName |
-SetChartConfigForIndex
+SetChartConfigForIndex |
+SetActiveParameterId |
+SetEntireState
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -574,7 +595,13 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(at => at.template.Id!==action.payload.newParamConfig.TemplateId ? at : {
                     ...at,
-                    parameterWithTags: at.parameterWithTags.map(apwt => apwt.parameter.Id!==action.payload.newParamConfig.Id ? apwt : ({...apwt, parameter: { ...apwt.parameter, ...action.payload.newParamConfig}}))
+                    parameterWithTags: at.parameterWithTags.map(apwt => apwt.parameter.Id!==action.payload.newParamConfig.Id ? apwt : ({
+                        ...apwt, 
+                        parameter: { 
+                            ...apwt.parameter, 
+                            ...action.payload.newParamConfig
+                        }
+                    }))
                 })
             }
             return reducer(oldState, {type: "FormAdditionalConfig"})
@@ -673,6 +700,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             const activeTemplateId = state?.actionDefinitionWithTags?.actionDefinition?.DefaultActionTemplateId||state?.actionTemplateWithParams[0]?.template?.Id
             const newState = {
                 ...state,
+                mode: "UPDATE",
                 actionDefinitionWithTags: {
                     actionDefinition: {
                         ...action.payload?.ActionDefinition?.model!
@@ -690,19 +718,11 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 isLoadingAction: false,
                 activeTemplateId: activeTemplateId,
                 sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!,
-                charts: formChartsFromActionDefinitionConfig(action.payload?.ActionDefinition?.model?.Config || "{}")
+                charts: formChartsFromActionDefinitionConfig(action.payload?.ActionDefinition?.model?.Config || "{}"),
+                actionDefinitionToLoadId: undefined
             } as BuildActionContextState
         
-            const finalState = (state.mode==="CREATE") ? 
-                assignActiveTemplateId(refreshContextIds(newState))
-                : 
-                (
-                    (state.mode==="UPDATE") ? 
-                        assignActiveTemplateId(newState)
-                        : 
-                        assignActiveTemplateId(newState)
-                )
-            console.log(finalState)
+            const finalState = assignActiveTemplateId(newState)
             return reducer(finalState, {type: "FormAdditionalConfig"})
         }
 
@@ -720,6 +740,10 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
         }
 
         case "SetMode": {
+            if(state.mode==="UPDATE"){
+                action.payload?.saveOldContextCallback?.(state)
+            }
+            
             switch(action.payload.mode) {
                 case "CREATE":
                     return formDefaultCreateContext()
@@ -807,6 +831,14 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
         }
 
         case "SetActionDefinitionToLoadId": {
+            if(state.mode==="UPDATE") {
+                action?.payload?.saveOldContextCallback?.(state)
+            }
+            
+            if(action.payload.cachedContext) {
+                return action.payload.cachedContext
+            }
+
             return {
                 ...state,
                 actionDefinitionToLoadId: action.payload.actionDefinitionToLoadId
@@ -885,6 +917,24 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 ...state,
                 charts: state.charts?.map((chart, index) => index === action.payload.chartIndex ? action.payload.chartConfig : chart)
             }
+        }
+
+        case "SetActiveParameterId": {
+            const {newActiveParameterId} = action.payload
+
+            return {
+                ...state,
+                actionTemplateWithParams: (state?.actionTemplateWithParams || [])?.map(atwp => ({
+                    ...atwp,
+                    activeParameterId: (atwp?.parameterWithTags||[])?.find(apwp => apwp?.parameter?.Id===newActiveParameterId) ? newActiveParameterId : undefined
+                }))                
+            }
+        }
+
+        case "SetEntireState": {
+            const { newState, oldStateCallback } = action.payload
+            oldStateCallback?.(state)
+            return newState
         }
 
         default:
@@ -1178,7 +1228,7 @@ const getDefaultParameterWithTags: (definitionId: string, templateId: string) =>
 })
 
 
-export const BuildActionContextProvider = ({children, mode}: {children: React.ReactElement, mode?: ContextModes}) => {
+export const BuildActionContextProvider = ({children, mode, newActionCallback}: {children: React.ReactElement, mode?: ContextModes, newActionCallback?: (newAction: BuildActionContextState) => void}) => {
     const queryClient = useQueryClient()
     const getInitialState = (mode: ContextModes) => {
         switch(mode){
@@ -1236,10 +1286,10 @@ export const BuildActionContextProvider = ({children, mode}: {children: React.Re
     }, [loadActionForEditQuery.isLoading])
     
     React.useEffect(() => {
-        if(!!contextState?.actionDefinitionWithTags?.actionDefinition?.Id && contextState?.mode==="UPDATE"){
-            setContextState({type: "SaveActionToLastCreated"})
+        if(contextState?.mode==="UPDATE"){
+            newActionCallback?.(contextState)
         }
-    }, [contextState?.actionDefinitionWithTags?.actionDefinition?.Id]) 
+    }, [contextState?.actionDefinitionWithTags?.actionDefinition?.Id, contextState?.mode]) 
 
     // Hook to infer params on code change
     const activeTemplate = contextState?.actionTemplateWithParams.find(at => at.template.Id===contextState?.activeTemplateId)

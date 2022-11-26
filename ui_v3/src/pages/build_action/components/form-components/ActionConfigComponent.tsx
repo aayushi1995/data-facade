@@ -26,7 +26,7 @@ const ActionConfigComponent = () => {
 
     const OnRunAction = () => {
         onActionSave()
-        const actionId = buildActionContext?.lastSavedActionDefinition?.Id
+        const actionId = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id
         if(!!actionId) {
             history.push(`/application/execute-action/${actionId}`)
         }
@@ -49,10 +49,6 @@ const ActionConfigComponent = () => {
         })
         useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
             onSuccess: () => {
-                // const actionId = buildActionContext?.lastSavedActionDefinition?.Id
-                // if(!!actionId) {
-                //     history.push({pathname: `/application/execute-action/${actionId}`, state: 'fromTest'})
-                // }
                 setBuildActionContext({
                     type: 'SetTestMode',
                     payload: true
@@ -118,7 +114,7 @@ const ActionConfigComponent = () => {
                 <Box sx={{ display: "flex", flexDirection: "row-reverse", flexGrow: 1, gap: 3 }}>   
                     {buildActionContext.testMode ? <></> : (
                         <Button variant="contained" 
-                            disabled={(!!!buildActionContext?.lastSavedActionDefinition)||(buildActionContext?.actionDefinitionWithTags?.actionDefinition?.PublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE)} 
+                            disabled={buildActionContext?.actionDefinitionWithTags?.actionDefinition?.PublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE} 
                             onClick={OnRunAction} 
                             sx={{ 
                                 minWidth: "150px",

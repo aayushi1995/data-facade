@@ -1,11 +1,13 @@
 import CloseIcon from '@mui/icons-material/Close';
 import SyncIcon from "@mui/icons-material/Sync";
-import { Box, Button, Card, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Grid, IconButton, Switch, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Card, CardProps, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, Grid, IconButton, styled, Switch, TextField, Tooltip, Typography, TypographyProps } from "@mui/material";
+import Stack from '@mui/material/Stack';
 import { DataGrid, DataGridProps, GridCellParams } from "@mui/x-data-grid";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { generatePath, useHistory } from "react-router";
 import { v4 as uuidv4 } from 'uuid';
+import ConfirmationDialog from "../../../../src/common/components/ConfirmationDialog";
 import { DATA_CONNECTION_DETAIL_ROUTE } from "../../../common/components/header/data/DataRoutesConfig";
 import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
@@ -22,8 +24,6 @@ import { ViewFailedActionExecution } from "../../view_action_execution/VIewActio
 import { useDeleteActionInstance } from "./hooks/useDeleteActionInstance";
 import useSyncProviderInstance from "./hooks/useSyncProviderInstance";
 import useUpdateSyncActionInstance from "./hooks/useUpdateSyncActionInstance";
-import ConfirmationDialog from "../../../../src/common/components/ConfirmationDialog"
-import Stack from '@mui/material/Stack';
 
 type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 
@@ -512,29 +512,35 @@ const SyncStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
 export const StatusCard = (props: {background: string, text: string | number, title?: string}) => {
     return (
         <Tooltip title={props.title || ""}>
-            <Card sx={{  width: "100px",
-                height: "36px",
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: props.background,
-                border: "0.439891px solid #FFFFFF",
-                boxShadow: "0px 5px 10px rgba(54, 48, 116, 0.3)",
-                borderRadius: "26.3934px"}}>
-                    <Typography sx={{fontFamily: "'SF Pro Display'",
-                        fontStyle: "normal",
-                        fontWeight: 600,
-                        fontSize: "11.5435px",
-                        lineHeight: "160%",
-                        letterSpacing: "0.0961957px",
-                        color: "cardInfoFormCreatedByStringColor.main"}}
-                    >    
-                        {props.text} {props.title}
-                    </Typography>
-            </Card>
+            <StatusCardOnly sx={{ backgroundColor: props.background }}>
+                <StatusCardTypography>    
+                    {props.text} {props.title}
+                </StatusCardTypography>
+            </StatusCardOnly>
         </Tooltip>
     )
 }
+
+const StatusCardOnly = styled(Card)<CardProps>(({ theme }) => ({
+    width: "100px",
+    height: "36px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: "0.439891px solid #FFFFFF",
+    boxShadow: "0px 5px 10px rgba(54, 48, 116, 0.3)",
+    borderRadius: "26.3934px"
+}))
+
+const StatusCardTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
+    fontFamily: "'SF Pro Display'",
+    fontStyle: "normal",
+    fontWeight: 600,
+    fontSize: "11.5435px",
+    lineHeight: "160%",
+    letterSpacing: "0.0961957px",
+    color: "cardInfoFormCreatedByStringColor.main"
+}))
 
 export const DefaultProviderCell = (props: {providerInstance: ProviderInstance}) => {
     const queryClient = useQueryClient()

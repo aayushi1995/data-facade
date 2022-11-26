@@ -4,9 +4,9 @@
  * (c) Data Facade LLC.
  */  
 
+import { userSettingsSingleton } from '../../data_manager/userSettingsSingleton'
 import * as Entity from '../entities/Entities'
 import * as CustomInterface from '../interfaces/Interfaces'
-import { userSettingsSingleton } from '../../data_manager/userSettingsSingleton'
 
 const endPoint = require("../../common/config/config").FDSEndpoint
 

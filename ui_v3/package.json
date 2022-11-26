@@ -66,31 +66,18 @@
     "xlsx": "^0.17.1"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "ESLINT_NO_DEV_ERRORS='true' react-app-rewired start",
+    "start-windows": "set ESLINT_NO_DEV_ERRORS='true'&&react-app-rewired start",
     "prestart": "npm install",
-    "build": "react-app-rewired --max_old_space_size=4096 --optimize_for_size --stack_size=4096 build",
+    "build": "DISABLE_ESLINT_PLUGIN='true' react-app-rewired --max_old_space_size=4096 --optimize_for_size --stack_size=4096 build",
     "prebuild": "npm install",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "figma-theme": "cross-env FIGMA_TOKEN='48218-095f5cbb-3954-48b4-8c7f-d6c5fad4c9d5' figma-theme 'CyosX2UsPUoIbt48of5tIz'"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
+    "figma-theme": "cross-env FIGMA_TOKEN='48218-095f5cbb-3954-48b4-8c7f-d6c5fad4c9d5' figma-theme 'CyosX2UsPUoIbt48of5tIz'",
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix ."
   },
   "browserslist": {
     "production": [

@@ -150,6 +150,15 @@ export interface ActionTemplatesWithParameters {
 }
 
 
+export interface ActionDefinitionSelectorResponse {
+	ActionId?: string,
+    ActionDisplayName?: string
+	ActionOutputType?: string
+	ActionParameterCount?: number
+	ActionRuns?: number
+}
+
+
 export interface TableBrowserResponse {
     TableUniqueName?: string
 	TableId?: string

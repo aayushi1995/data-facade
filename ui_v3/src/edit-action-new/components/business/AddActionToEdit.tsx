@@ -1,0 +1,57 @@
+import React from "react";
+import { useHistory } from "react-router";
+import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../../pages/build_action/context/BuildActionContext";
+import ActionDefinitionSelector from "./ActionDefinitionSelector";
+import CreateNewAction, { CreateNewActionProps } from "./CreateNewAction";
+
+export type AddActionToEditProps = {
+    addActionWithId: (actionDefId?: string) => void
+}
+
+function AddActionToEdit(props: AddActionToEditProps) {
+    const { addActionWithId } = props
+    const history = useHistory()
+    const buildActionContext = React.useContext(BuildActionContext)
+    const setBuildActionContext = React.useContext(SetBuildActionContext)
+    const useActionHooks = React.useContext(UseActionHooks)
+    
+    const createNewActionProps: CreateNewActionProps = {
+        name: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName,
+        description: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Description,
+        group: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.ActionGroup,
+        applicationId: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.ApplicationId,
+        onChangeHandlers: {
+            onNameChange: (newName?: string) => setBuildActionContext({ type: "SetActionDefinitionName", payload: { newName: newName } }),
+            onDescriptionChange: (newDescription?: string) => setBuildActionContext({ type: "SetActionDefinitionDescription", payload: { newDescription: newDescription } }),
+            onGroupChange: (newGroupName?: string) => setBuildActionContext({ type: "SetActionGroup", payload: { newGroup: newGroupName } }),
+            onApplicationChange: (newApplicationId?: string) => setBuildActionContext({ type: "SetApplicationId", payload: { newApplicationId: newApplicationId } }),
+            onLanguageChange: (newSupportedRuntimeGroup?: string) => newSupportedRuntimeGroup && setBuildActionContext({
+                type: "SetActionTemplateSupportedRuntimeGroup",
+                payload: {
+                    templateId: buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId!,
+                    newSupportedRuntimeGroup: newSupportedRuntimeGroup
+                }
+            })
+        },
+        actionHandlers: {
+            onSaveAction: () => {
+                useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
+                    onSuccess: () => addActionWithId(buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id)
+                }) 
+            }
+        }
+    }
+    console.log(buildActionContext)
+    return (
+        <>
+            {buildActionContext.mode==="CREATE" &&
+                <CreateNewAction {...createNewActionProps}/>
+            }
+            <ActionDefinitionSelector
+                onActionDefinitionSelectionCallback={(actionDefinitionId?: string) =>  props?.addActionWithId(actionDefinitionId)}
+            />
+        </>
+    )
+}
+
+export default AddActionToEdit;

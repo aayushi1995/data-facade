@@ -2,20 +2,19 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import InstallDesktopIcon from '@mui/icons-material/InstallDesktop'
 import ShareIcon from '@mui/icons-material/Share'
-import { Box, Button, Card,IconButton, Tooltip, Typography } from "@mui/material"
+import { Box, Card, IconButton, Tooltip, Typography } from "@mui/material"
 import React from "react"
+import LinesEllipsis from 'react-lines-ellipsis'
 import { generatePath, useHistory, useRouteMatch } from "react-router-dom"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
 import PackageLogo from "../../../../src/images/package.svg"
-import UsageStatus from "../../../common/components/UsageStatus"
 import { lightShadows } from '../../../css/theme/shadows'
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import ConfirmationDialog from "../ConfirmationDialog"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
+import { getIconSxProperties } from './compomentCssProperties'
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 import useInstallApplication from './hooks/useInstallApplication'
-import LinesEllipsis from 'react-lines-ellipsis'
-import { getIconSxProperties } from './compomentCssProperties'
 
 
 interface ApplicationCardProps {
@@ -259,7 +258,6 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                         <Box sx={{width:'10%', alignItems:'center',borderRight:"0.439891px solid #FFFFFF",}}>    
                             <Box sx={{display: "flex", flexDirection: "column",alignItems:'center', justifyContent: "space-between",px:3,py:1,width:'100%', flexGrow: 1, mr: 3}}>
                                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", gap: 1}}>
-                                    
                                     <Box sx={{display: "flex", flexDirection: "row"}}>
                                         <Box sx={{display: "flex", flexDirection: "row"}}>
                                             <Box sx={{display:'flex', flexDirection:"column", alignItems:'center'}}>

@@ -2,22 +2,22 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
-import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridToolbarContainer, useGridApiContext } from "@mui/x-data-grid";
+import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridRowParams, GridToolbarContainer, useGridApiContext } from "@mui/x-data-grid";
 import { ChangeEvent, useState } from 'react';
 import ConfirmationDialog from '../../../../common/components/ConfirmationDialog';
 import useFetchVirtualTags from '../../../../common/components/tag-handler/hooks/useFetchVirtualTags';
 import { ActionParameterAdditionalConfig } from "../../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType, getInputTypeFromAttributesNew, InputMap } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
+import ActionParameterDefinitionInputType from '../../../../enums/ActionParameterDefinitionInputType';
 import ActionParameterDefinitionTag from "../../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, Tag } from "../../../../generated/entities/Entities";
 import { safelyParseJSON } from "../../../execute_action/util";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
 import { ActionParameterDefinitionConfig } from "./EditActionParameter";
 import DefaultValueInput from "./parameter_input/DefaultValueInput";
-import SettingsIcon from '@mui/icons-material/Settings';
-import ActionParameterDefinitionInputType from '../../../../enums/ActionParameterDefinitionInputType';
 
 const tagFilter = createFilterOptions<Tag>()
 const stringFilter = createFilterOptions<string|undefined>()
@@ -41,7 +41,8 @@ export interface ViewActionParametersProps {
     onParameterEdit: (newParameter: ActionParameterDefinition) => void,
     onParameterTypeEdit: (newParameter: ActionParameterDefinition) => void
     onCreateNewParameter?: () => void,
-    onParameterDuplicate: (parametersToDuplicate: ActionParameterDefinition[]) => void
+    onParameterDuplicate: (parametersToDuplicate: ActionParameterDefinition[]) => void,
+    onParameterClick?: (parameterId?: string) => void
 }
 
 type ViewActionParametersDataGridRow = {
@@ -54,8 +55,7 @@ type ViewActionParametersDataGridRow = {
 }
 
 const ViewActionParameters = (props: ViewActionParametersProps) => {
-    console.log("ReRendering")
-    const { templateLanguage, paramsWithTag, paramsAdditionalConfig, onParameterEdit, onParameterTypeEdit, onDeleteParameters, onCreateNewParameter, onParameterDuplicate, onTagsChange } = props
+    const { templateLanguage, paramsWithTag, paramsAdditionalConfig, onParameterEdit, onParameterTypeEdit, onDeleteParameters, onCreateNewParameter, onParameterDuplicate, onTagsChange, onParameterClick } = props
     const [selectedParams, setSelectedParams] = useState<string[]>([])
     const dataGridRows: ViewActionParametersDataGridRow[] = ( paramsWithTag || [] )?.sort(paramWithTag => paramWithTag?.parameter?.Index || 0)?.map(paramWithTag => {
         const parameter = paramWithTag?.parameter
@@ -65,8 +65,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
         const parameterDescription = parameter?.Description
         const parameterInputType = getInputTypeFromAttributesNew(templateLanguage, parameter?.Tag, parameter?.Type, parameter?.Datatype)
 
-        console.log(parameterName)
-        
         return {
             id: parameter?.Id,
             ParameterId: parameterId,
@@ -196,8 +194,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                 ):(
                                     <></>
                                 )
-
-                        }
+                            }
                         </Box>
                 }
             },
@@ -262,6 +259,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
             }
         ],
         rows: dataGridRows,
+        onRowClick: (params: GridRowParams<ViewActionParametersDataGridRow>) => onParameterClick?.(params?.row?.ParameterId),
         checkboxSelection: true,
         disableSelectionOnClick: true,
         selectionModel: selectedParams,
@@ -380,7 +378,6 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
     }
 
     return (
-        
         <>
         <Tooltip arrow title="Configure option set">
             <Button   onClick={openDialog}><SettingsIcon color={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE?"success":"error"}/></Button>
@@ -644,7 +641,7 @@ type ConfigureParentParamProps = {
     currentParamDef?: ActionParameterDefinition,
     onParameterEdit?: (editedParam: ActionParameterDefinition) => void
 }
-const ConfigureParentParameter = (props: ConfigureParentParamProps) => {
+export const ConfigureParentParameter = (props: ConfigureParentParamProps) => {
     const tableParams = props?.allParamDefs?.filter(parameter => parameter?.Tag===ActionParameterDefinitionTag.TABLE_NAME || parameter?.Tag===ActionParameterDefinitionTag.DATA) || []
     const paramConfig = safelyParseJSON(props?.currentParamDef?.Config) as ActionParameterDefinitionConfig
     const onParentParameterSelection = (selectedParameter?: ActionParameterDefinition) => {

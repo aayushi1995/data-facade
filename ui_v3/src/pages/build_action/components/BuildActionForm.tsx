@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Card, Dialog, DialogActions, DialogContent, IconButton, InputAdornment, Tab, Tabs, TextField, Divider, styled } from "@mui/material";
+import { Box, Card, Dialog, DialogActions, DialogContent, Divider, IconButton, InputAdornment, styled, Tab, Tabs, TextField } from "@mui/material";
 import React from "react";
 import { TabPanel } from "../../../common/components/workflow/create/SelectAction/SelectAction";
 import { BuildActionContext, SetBuildActionContext } from "../context/BuildActionContext";
@@ -156,38 +156,48 @@ const EditActionForm = (props: EditActionFormProps) => {
             <Box sx={{flexGrow: 1, px: buildActionContext.testMode ? 0 : 2, minHeight: "100%", maxWidth: buildActionContext.testMode ? "40%" : "100%"}}>
                 <ActionDetailForm/>
             </Box>
-            <CollapsibleDrawer
-                open={buildActionContext.testMode || false}
-                closedWidth="0px"
-                openWidth="60%"
-                showClosed={false}
-                openDrawer={() => {}}
-            >
-                <Card sx={{ 
-                    p: 2,
-                    boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', 
-                    minHeight: '100%', 
-                    maxWidth: '100%', 
-                    overflowY: 'auto', 
-                    overflowX: 'auto',
-                    borderRadius: '20px', 
-                    backgroundColor: 'buildActionDrawerCardBgColor.main'}}
-                >
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
-                        <Box sx={{display: 'flex', justifyContent: 'flex-start'}}>
-                            <IconButton onClick={() => setActionContext({type: 'SetTestMode', payload: false})}>
-                                <img src={DoubeLeftIcon} alt="NA"/>
-                            </IconButton>
-                        </Box>
-                        <Divider orientation="horizontal"/>
-                        <Box>
-                            <TestAction />
-                        </Box>
-                    </Box>
-                </Card>
-            </CollapsibleDrawer>
+            
         </Box>
     </>
+    )
+}
+
+
+export function TestDrawer() {
+    const buildActionContext = React.useContext(BuildActionContext)
+    const setActionContext = React.useContext(SetBuildActionContext)
+    
+    return (
+        <CollapsibleDrawer
+            open={buildActionContext.testMode || false}
+            closedWidth="0px"
+            openWidth="60%"
+            showClosed={false}
+            openDrawer={() => {}}
+        >
+            <Card sx={{ 
+                p: 2,
+                boxShadow: '-3.88725px -5.83088px 15.549px rgba(255, 255, 255, 0.5), 3.88725px 5.83088px 15.549px rgba(163, 177, 198, 0.5)', 
+                minHeight: '100%', 
+                maxWidth: '100%', 
+                overflowY: 'auto', 
+                overflowX: 'auto',
+                borderRadius: '20px', 
+                backgroundColor: 'buildActionDrawerCardBgColor.main'}}
+            >
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                    <Box sx={{display: 'flex', justifyContent: 'flex-start'}}>
+                        <IconButton onClick={() => setActionContext({type: 'SetTestMode', payload: false})}>
+                            <img src={DoubeLeftIcon} alt="NA"/>
+                        </IconButton>
+                    </Box>
+                    <Divider orientation="horizontal"/>
+                    <Box>
+                        <TestAction />
+                    </Box>
+                </Box>
+            </Card>
+        </CollapsibleDrawer>
     )
 }
 
