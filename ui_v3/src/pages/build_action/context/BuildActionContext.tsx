@@ -576,9 +576,21 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
 
         case "InferParameters": {
             const activeTemplate = state?.actionTemplateWithParams.find(at => at?.template?.Id===state?.activeTemplateId)
-            const inferredParameters = extractParameterNamesFromCode(activeTemplate?.template?.Text, activeTemplate?.template?.Language)
+            const inferredParameters = extractParametersFromCode(activeTemplate?.template?.Text, activeTemplate?.template?.Language)
             const existingParameters = activeTemplate?.parameterWithTags
-            const newParameters = inferredParameters.map(paramName => (existingParameters?.find(p => p?.parameter?.ParameterName===paramName) || getDefaultParameterDefinition(paramName, activeTemplate?.template?.Language, activeTemplate?.template?.Id, state?.actionDefinitionWithTags?.actionDefinition?.Id)))
+            const newParameters = inferredParameters.map(inferredParam => {
+                const existingParameterDefinition = existingParameters?.find(p => p?.parameter?.ParameterName===inferredParam?.ParameterName)?.parameter
+                if(existingParameterDefinition){
+                    return {
+                        parameter: {
+                            ...existingParameterDefinition,
+                            ...inferredParam
+                        },
+                        tags: []
+                    }
+                }
+                return getDefaultParameterDefinition(inferredParam, activeTemplate?.template?.Language, activeTemplate?.template?.Id, state?.actionDefinitionWithTags?.actionDefinition?.Id)
+            })
             const newState = {
                 ...state,
                 actionTemplateWithParams: state.actionTemplateWithParams.map(actionTemplate => actionTemplate.template.Id!==state.activeTemplateId ? actionTemplate : {
@@ -1052,7 +1064,7 @@ const formAdditionalConfForColumnParameters = (parameters: ActionParameterDefini
     return additionalConfForColumns
 }
 
-const extractParameterNamesFromCode = (code?: string, language?: string) => {
+const extractParametersFromCode = (code?: string, language?: string): ActionParameterDefinition[] => {
     if(!!code && !!language) {
         const parametersArray = []
         if (language === ActionDefinitionQueryLanguage.PYTHON) {
@@ -1076,7 +1088,7 @@ const extractParameterNamesFromCode = (code?: string, language?: string) => {
                             }
                             if (code.charAt(j) === ',' || code.charAt(j + 1) === ')') {
                                 if (parameter.length !== 0) {
-                                    parametersArray.push(parameter)
+                                    parametersArray.push({ParameterName: parameter})
                                     parameter = ""
                                 }
                                 isDataTypeOrValue = false
@@ -1086,6 +1098,27 @@ const extractParameterNamesFromCode = (code?: string, language?: string) => {
                     }
                 }
             }
+            if(parametersArray.length===0) {
+                code?.split("\n").map(line => {
+                    if(line.includes("df_helper.get")) {
+                        const reg = new RegExp('.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*,.*"(?<Description>.*)".*,.*\)', "gm")
+                        const match = reg.exec(line)
+                        console.log(match)
+                        const name = match?.groups?.["Name"]
+                        const description = match?.groups?.["Description"]
+                        const type = match?.groups?.["Type"]
+                        if(name && description && type) {
+                            parametersArray.push({
+                                ParameterName: name,
+                                Description: description,
+                                ...getAttributesFromInputType(inferInputType(type), language)
+
+                            } as ActionParameterDefinition)
+                        }
+                    }
+                })
+            }
+
         } else if (language === ActionDefinitionQueryLanguage.SQL) {
             for (let i = 0; i < code.length; i++) {
                 if (code.charAt(i) === '}') {
@@ -1095,7 +1128,7 @@ const extractParameterNamesFromCode = (code?: string, language?: string) => {
                         parameter = code.charAt(j) + parameter
                         j--
                     }
-                    parametersArray.push(parameter)
+                    parametersArray.push({ParamaeterName: parameter})
                 }
             }
         }
@@ -1104,29 +1137,43 @@ const extractParameterNamesFromCode = (code?: string, language?: string) => {
     return []
 }
 
-const getDefaultParameterDefinition = (parameterName: string, language?: string, templateId?: string, definitionId?: string): ActionContextActionParameterDefinitionWithTags => {
-    if (parameterName.search('table') >= 0 || parameterName === "df") {
+const inferInputType = (type?: string) => {
+        if(type?.includes?.("table"))
+            return ActionParameterDefinitionInputType.TABLE_NAME;
+        if(type?.includes?.("column"))
+            return ActionParameterDefinitionInputType.COLUMN_NAME
+        if(type?.includes?.("string"))
+            return ActionParameterDefinitionInputType.STRING
+        if(type?.includes?.("integer"))
+            return ActionParameterDefinitionInputType.INTEGER
+        return ActionParameterDefinitionInputType.STRING
+}
+
+const getDefaultParameterDefinition = (param: ActionParameterDefinition, language?: string, templateId?: string, definitionId?: string): ActionContextActionParameterDefinitionWithTags => {
+    if (param?.ParameterName?.includes('table') || param?.ParameterName?.includes("df")) {
         return {
             parameter: {
                 Id: uuidv4(),
-                ParameterName: parameterName,
+                ParameterName: param?.ParameterName,
                 TemplateId: templateId,
                 ActionDefinitionId: definitionId,
                 Index: 0,
-                ...getAttributesFromInputType(ActionParameterDefinitionInputType.TABLE_NAME, language)
+                ...getAttributesFromInputType(ActionParameterDefinitionInputType.TABLE_NAME, language),
+                ...param
             },
             tags: [],
             existsInDB: false
         }
-    } else if (parameterName.search('column') >= 0) {
+    } else if (param?.ParameterName?.includes('column')) {
         return {
             parameter: {
                 Id: uuidv4(),
-                ParameterName: parameterName,
+                ParameterName: param?.ParameterName,
                 TemplateId: templateId,
                 ActionDefinitionId: definitionId,
                 Index: 0,
-                ...getAttributesFromInputType(ActionParameterDefinitionInputType.COLUMN_NAME, language)
+                ...getAttributesFromInputType(ActionParameterDefinitionInputType.COLUMN_NAME, language),
+                ...param
             },
             tags: [],
             existsInDB: false
@@ -1135,11 +1182,12 @@ const getDefaultParameterDefinition = (parameterName: string, language?: string,
         return {
             parameter: {
                 Id: uuidv4(),
-                ParameterName: parameterName,
+                ParameterName: param?.ParameterName,
                 TemplateId: templateId,
                 ActionDefinitionId: definitionId,
                 Index: 0,
-                ...getAttributesFromInputType(ActionParameterDefinitionInputType.STRING, language)
+                ...getAttributesFromInputType(ActionParameterDefinitionInputType.STRING, language),
+                ...param
             },
             tags: [],
             existsInDB: false
