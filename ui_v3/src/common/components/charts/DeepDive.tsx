@@ -6,7 +6,7 @@ import SelectFromAllActions from "../workflow/create/SelectFromAllActions"
 
 // Create a compoment that can select any action definition from the drop down list of action definitions.
 
-import { Dialog, DialogTitle, DialogContent, Typography, Box, TextField } from "@mui/material"
+import { Dialog, DialogTitle, DialogContent, Typography, Box, TextField, Grid, IconButton } from "@mui/material"
 import { Button } from "@mui/material"
 import React from "react"
 import { useHistory } from "react-router"
@@ -16,6 +16,7 @@ import LoadingIndicator from "../LoadingIndicator"
 import ExecuteActionNew from "../../../pages/execute_action/components/ExecuteAction"
 import { ExecuteActionContextProvider } from "../../../pages/execute_action/context/ExecuteActionContext"
 import { ActionExecutionDetails } from "../../../pages/apps/components/ActionExecutionHomePage"
+import CloseIcon from '@mui/icons-material/Close';
 
 
 export interface DeepDiveProps {
@@ -54,11 +55,10 @@ const DeepDive = (props: DeepDiveProps) => {
         <React.Fragment>
             <Dialog 
                 open={openDialog}
-                onClose={handleDialogClose} 
                 onClick={(e)=>{e.stopPropagation()}}
                 maxWidth="md" 
                 fullWidth>
-                {dialogTitle()}
+                {dialogTitle(handleDialogClose)}
                 {
                     !selecedAction && 
                     <DialogContent>
@@ -94,11 +94,20 @@ const DeepDive = (props: DeepDiveProps) => {
         </React.Fragment>
     )
 
-    function dialogTitle() {
+    function dialogTitle(handleDialogClose: () => void) {
         return <DialogTitle>
-            <Typography variant="heroMeta" sx={{ fontSize: '20px' }}>
-                Deep Dive
-            </Typography>
+            <Grid container>
+                <Grid item xs={6}>
+                    <Typography variant="heroMeta" sx={{ fontSize: '20px' }}>
+                        Deep Dive
+                    </Typography>
+                </Grid>
+                <Grid item xs={6} justifyContent='flex-end'>
+                    <IconButton onClick={handleDialogClose}>
+                        <CloseIcon />
+                    </IconButton>
+                </Grid>
+            </Grid>
         </DialogTitle>
     }
 }

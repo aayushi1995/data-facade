@@ -2,8 +2,10 @@ import React from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton";
+import ActionDefinitionQueryLanguage from "../../../enums/ActionDefinitionQueryLanguage";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
+import WriteBackSchemaNames from "../../../enums/WriteBackSchemaNames";
 import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ActionTemplate, ProviderInstance, TableProperties, Tag } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
 import { ActionParameterDefinitionConfig } from "../../build_action/components/common-components/EditActionParameter";
@@ -435,7 +437,9 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
         TemplateId: ActionDefinition?.DefaultActionTemplateId,
         ProviderInstanceId: getProviderInstanceId(),
         ActionType: ActionDefinition?.ActionType,
-        CreatedBy: userSettingsSingleton.userEmail
+        CreatedBy: userSettingsSingleton.userEmail,
+        ResultTableName: ActionDefinition.DisplayName + uuidv4(),
+        ResultSchemaName: WriteBackSchemaNames.DF_TEMP_SCHEMA
     }
 
     const apis = ActionParameterInstances.map(api => ({

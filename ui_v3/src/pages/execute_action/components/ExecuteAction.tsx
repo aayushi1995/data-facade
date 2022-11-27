@@ -72,6 +72,7 @@ interface ExecuteActionProps {
 const ExecuteActionNew = (props: ExecuteActionProps) => {
     const actionDefinitionId = props.actionDefinitionId
     const setModuleContext = React.useContext(SetModuleContextState)
+    const actionExecutionView = React.useRef<HTMLDivElement | null>(null)
     const [tabValue, setTabValue] = React.useState(0)
     const validateActionInstance = useValidateActionInstance()
     const [validateErrorMessage, setValidationErrorMessage] = React.useState<string | undefined>()
@@ -158,6 +159,17 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         }
     }, [defaultProviderInstance])
 
+    React.useEffect(() => {
+        if(!! actionExecutionId && !!data) {
+            const currentComponent: React.ReactNode = actionExecutionView.current
+            if (currentComponent) {
+                (currentComponent as {scrollIntoView: Function})?.scrollIntoView?.({
+                    behavior: 'smooth',
+                    block: 'start',
+                })
+            }
+        }
+    }, [actionExecutionId, data])
 
     React.useEffect(() => {
         setModuleContext({
@@ -506,7 +518,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                 </Snackbar>
             </Card>
             {!!actionExecutionId && !!data? (
-                <Box sx={{mb: 10}}>
+                <Box sx={{mb: 10}} ref={actionExecutionView}>
                     <ActionExecutionDetails actionExecutionId={actionExecutionId} showDescription={false}/>
                 </Box>
             ) : (<></>)}
