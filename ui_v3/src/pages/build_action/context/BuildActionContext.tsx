@@ -1128,7 +1128,7 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                         parameter = code.charAt(j) + parameter
                         j--
                     }
-                    parametersArray.push({ParamaeterName: parameter})
+                    parametersArray.push({ParameterName: parameter})
                 }
             }
         }
