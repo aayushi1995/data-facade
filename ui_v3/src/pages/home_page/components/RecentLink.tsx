@@ -4,11 +4,11 @@ import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import sx from "@mui/system/sx"
 import { TimestampCell } from "../../table_browser/components/AllTableView"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-export const RecentLink = (props:{name: string , date: number})=>{
+export const RecentLink = (props:{name: string , date: number , to: string})=>{
 
     return(
         <>
-        <RouterLink style={{textDecoration: 'none'}} to="./application/execution-history">    
+        <RouterLink style={{textDecoration: 'none'}} to={props.to}>    
             <ListItem sx={{backgroundColor:'white',px:3,py:1,borderBottom:'1px solid gray'}}>
                 <Box  sx={{display:'flex', flexDirection:'column',textDecoration:'none'}} >
                     <Typography variant="h6" >{props.name} </Typography>

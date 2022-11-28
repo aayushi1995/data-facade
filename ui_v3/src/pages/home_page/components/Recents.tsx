@@ -26,8 +26,9 @@ export const Recents = (props: ApplicationRunsByMeProps)=>{
     const rows = fetchDataQuery?.data || []
     const rows5 =rows.slice(0, 5);
     const listitems =()=>{
+        
         return rows5.map(row =>
-            <RecentLink name={row?.ActionInstanceName || ""} date={row?.ActionExecutionCompletedOn || 1}/>
+            <RecentLink to={`./application/${row.isWorkflow?'edit-workflow':'edit-action'}/${row?.ActionDefinitionId}`} name={row?.ActionInstanceName || ""} date={row?.ActionExecutionCompletedOn || 1}/>
         )
     }
 

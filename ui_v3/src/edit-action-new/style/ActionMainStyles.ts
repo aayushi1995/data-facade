@@ -2,14 +2,17 @@ export const ActionMainBoxStyle = {
   background: "#F8F8F8",
   boxShadow:
     "inset 5.84023px 5.84023px 5.84023px rgba(0, 0, 0, 0.05), inset -5.84023px -5.84023px 11.6805px #FFFFFF",
-  borderRadius: "5.67671px"
+  borderRadius: "5.67671px",
+  marginTop:'5px',
+  padding:'3px'
+
 }
 
 export const CardBoxRootStyle = {
+  width:'100%',
   background: "#F3F3F3",
-  boxShadow:
-    "inset 2px 2px 2px rgba(0, 0, 0, 0.15), inset -6.93116px -6.93116px 13.8623px #9AA1A9",
-  borderRadius: "6.73709px"
+  borderRadius: "6.73709px",
+  padding: "10px"
 }
 
 export const TemplateParentBoxStyle = {

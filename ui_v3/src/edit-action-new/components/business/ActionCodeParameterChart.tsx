@@ -19,10 +19,10 @@ function ActionCodeParameterChart() {
 
     return (
         <Box>
-            <Box>
+            <Box sx={{mt:2,mx:3}}>
                 <ActionParameterChip/>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Box sx={{ display: "flex", flexDirection: "row" ,mx:3}}>
                 <Box sx={{ width: "100%" }}>
                     <Tabs
                         value={activeTab}

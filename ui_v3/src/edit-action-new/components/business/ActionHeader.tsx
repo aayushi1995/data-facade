@@ -57,28 +57,41 @@ function ActionHeader(props: ActionHeaderProps) {
                     <KeyboardArrowDownIcon/>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
-                    <Box sx={{ display: "flex", height: "70%", alignItems: "center" }}>
+                    <Box sx={{ display: "flex",pt:3, height: "80%", alignItems: "center" }}>
                             <ActionHeaderLanguageTypography>SQL</ActionHeaderLanguageTypography>
                     </Box>
-                    <Box sx={{ display: "flex", height: "30%", alignItems: "center" }}>
+                    <Box sx={{ display: "flex", height: "20%", alignItems: "center" }}>
                         <ActionPublishStatusBox publishStatus={props?.publishStatus}/>
                     </Box>
                 </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                <Box sx={{ display: "flex",width:'40vw', flexDirection: "column" }}>
                     <Box>
-                        <TextField fullWidth value={props?.actionName || ""} onChange={handleNameChange} />
+                        <TextField InputProps={{sx:{
+                                                    fontSize:'1.1rem',
+                                                    fontWeight:600
+                                                    },
+                                                    disableUnderline: true,
+                                                }} variant='standard' size='small' fullWidth value={props?.actionName || ""} onChange={handleNameChange} />
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column"}}>
+                        <Box sx={{ display: "flex", flexDirection: "row"}}>   
                             <Box>
                                 <ActionHeaderActionDescriptionLabelTypography>DESCRIPTION:</ActionHeaderActionDescriptionLabelTypography>
                             </Box>
-                            <Box>
-                                <ActionHeaderActionVisibilityTypography>PUBLIC</ActionHeaderActionVisibilityTypography>
-                            </Box>
+                            <TextField InputProps ={{
+                                                sx: {
+                                                    fontWeight: 500,
+                                                    fontSize: "0.8rem",
+                                                    color: "ActionDefinationHeroTextColor1.main",
+                                                    borderRadius: "5px",
+                                                    backgroundColor: "ActionCardBgColor.main",
+                                                    px:2
+                                                },
+                                                disableUnderline: true,
+                                            }} variant='standard' size='small' fullWidth multiline minRows={1} maxRows={3} value={props?.actionDescription || ""} onChange={handleDescriptionChange}/>
                         </Box>
-                        <Box sx={{ flex: 1 }}>   
-                            <TextField fullWidth multiline minRows={1} maxRows={3} value={props?.actionDescription || ""} onChange={handleDescriptionChange}/>
+                        <Box>
+                            <ActionHeaderActionVisibilityTypography>PUBLIC</ActionHeaderActionVisibilityTypography>
                         </Box>
                     </Box>
                 </Box>  

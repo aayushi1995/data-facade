@@ -23,6 +23,7 @@ export const ActionHeaderActionDescriptionLabelStyle = {
     fontWeight: 500,
     fontSize: "11.5px",
     lineHeight: "14px",
+    paddingTop:'3px',
     color: "#66748A"
 }
 // TODO: Add textTransform: "uppercase" to style
@@ -98,15 +99,18 @@ export const ActionHeaderCardStyle = {
 }
 
 export const ActionHeaderCardInputAreaStyle = {
+    width:'75vw',
     boxSizing: "border-box",
     background: "#F5F9FF",
     border: "1px solid #56D280",
     boxShadow: "0px 15px 25px rgba(54, 48, 116, 0.3)",
-    borderRadius: "15.62px"
+    borderRadius: "15.62px",
+    padding:"10px"
 }
 
 export const ActionHeaderCardActionAreaStyle = {
-    background: "#FFFFFF", 
+    width:'20vw',
+    background: "#565656", 
     borderRadius: "15.6169px"
 }
 

@@ -29,5 +29,5 @@ export const ActionPublishStatusBox = styled(Box)<ActionPublishStatusBoxProps>((
 export const ActionHeaderAutocompleteBox = styled(Box)<BoxProps>(({ theme }) => ({
     display: "flex", 
     alignItems: "center", 
-    width: "143px"
+    width:'15vw'
 }))
