@@ -30,6 +30,7 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
     const [parameterSelected, setParameterSelected] = React.useState<ActionParameterDefinition | undefined>()
 
     const onParameterClick = (parameterId: string) => {
+        console.log(parameterId)
         const parameter = filteredParameters.find(apd => apd.Id === parameterId)
         setParameterSelected(parameter)
     }

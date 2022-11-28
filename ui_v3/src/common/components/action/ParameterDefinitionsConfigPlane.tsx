@@ -107,7 +107,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
             const tableFilters = addtionalConfig?.availableTablesFilter !== undefined 
                 ? addtionalConfig?.availableTablesFilter 
-                : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
+                : props.parameterInstances.filter(api => api.TableId!==undefined || api.ParameterValue !==undefined).map(api => ({Id: api.TableId, UniqueName: api.ParameterValue} as TableProperties))
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             return {
                 parameterType: "COLUMN",
@@ -269,7 +269,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
     })
 
 
-    const onParameterSelectClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, parameter: ParameterInputProps) => {
+    const onParameterSelectClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, parameter: ParameterInputProps) => {
         props.onParameterClick?.(parameter?.parameterId!)
         event.stopPropagation()
     }
@@ -286,10 +286,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     return (
                         <Box sx={{width:'100%'}}>
                             <Box sx={{display: 'flex' ,py:0}} 
-                                onClick={ (e, parameter) => {
-                                    onParameterSelectClick(e, parameter)
-                                    }
-                                }>
+                                onClick={(event) => onParameterSelectClick(event, parameter)}>
                                 <ParameterInput {...parameter}/>
                             </Box>
                             
@@ -305,8 +302,8 @@ export const getUniqueFilters = (tableFilters: TableProperties[]) => {
     let tableIds: {[Id: string]: TableProperties} = {}
     const uniqueTableFilters: TableProperties[] = []
     tableFilters.forEach(table => {
-        if(tableIds[table.Id!] === undefined) {
-            tableIds[table.Id!] = table
+        if(tableIds[table.Id || table.UniqueName!] === undefined) {
+            tableIds[table.Id || table.UniqueName!] = table
             uniqueTableFilters.push(table)
         }
     })

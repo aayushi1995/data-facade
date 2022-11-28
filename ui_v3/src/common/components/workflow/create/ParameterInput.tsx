@@ -591,7 +591,15 @@ const TableInput = (props: TableParameterInput) => {
                 ProviderInstanceName: "Upstream Action",
                 TableType: "UpstreamExecution",
             }
-            availableTables?.push(upstreamTable)
+            if(!availableTables?.find(table => table.Id === props.inputProps.parentExecutionId)) {
+                (availableTables || []).push(upstreamTable)
+            }
+            if(selectedTableFilter?.Id === props.inputProps.parentExecutionId) {
+                return {
+                    AvailableTables: availableTables || [],
+                    SelectedTable: upstreamTable
+                }
+            }
         }
         
         if(tableById !== undefined) {

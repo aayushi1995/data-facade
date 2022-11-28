@@ -332,8 +332,8 @@ export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParam
             ...globalParamToAdd, 
             Id: id, 
             ParameterName: paramterName, 
-            Datatype: parameter.Datatype, 
-            Tag: parameter.Tag, 
+            Datatype: parameter.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME ? ActionParameterDefinitionDatatype.STRING : parameter.Datatype, 
+            Tag: parameter.Tag === ActionParameterDefinitionTag.DATA ? ActionParameterDefinitionTag.TABLE_NAME : parameter.Tag , 
             OptionSetValues: parameter.OptionSetValues 
         } 
         setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: newGlobalParamter}}) 

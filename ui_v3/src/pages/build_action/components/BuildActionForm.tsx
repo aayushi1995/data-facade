@@ -156,7 +156,7 @@ const EditActionForm = (props: EditActionFormProps) => {
             <Box sx={{flexGrow: 1, px: buildActionContext.testMode ? 0 : 2, minHeight: "100%", maxWidth: buildActionContext.testMode ? "40%" : "100%"}}>
                 <ActionDetailForm/>
             </Box>
-            
+            {TestDrawer()}
         </Box>
     </>
     )

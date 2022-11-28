@@ -66,7 +66,8 @@ export type SetFromActionDefinitionDetailAction = {
     type: "SetFromActionDefinitionDetail",
     payload: {
         ActionDefinitionDetail: ActionDefinitionDetail
-        existingParameterInstances?: ActionParameterInstance[]
+        existingParameterInstances?: ActionParameterInstance[],
+        parentExecutionId?: string
     }
 }
 
@@ -159,6 +160,25 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
             const newState = state?.ExistingModels?.ActionDefinition?.Id===action.payload.ActionDefinitionDetail?.ActionDefinition?.model?.Id ? safeMergeState(state, action.payload.ActionDefinitionDetail) : resetStateFromActionDefinitionDetail(state, action.payload.ActionDefinitionDetail)
             if(!!action.payload.existingParameterInstances) {
                 return reducer(newState, {type: 'SetActionParameterInstances', payload: {newActionParameterInstances: action.payload.existingParameterInstances}})
+            }
+            if(!!action.payload.parentExecutionId) {
+                return {
+                    ...newState,
+                    ToCreateModels: {
+                        ...newState.ToCreateModels,
+                        ActionParameterInstances: newState.ToCreateModels.ActionParameterInstances.map(api => {
+                            const apd = newState.ExistingModels.ActionParameterDefinitions.find(apd => apd.Id === api.ActionParameterDefinitionId)!
+                            if(apd.Tag === ActionParameterDefinitionTag.DATA || apd.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
+                                return {
+                                    ...api,
+                                    TableId: action.payload.parentExecutionId,
+                                    ParameterValue: "Previous Execution"
+                                }
+                            }
+                            return api
+                        })
+                    }
+                }
             }
             return newState
         }

@@ -35,7 +35,7 @@ const executionHeaderSxProps = {
 }
 export const ActionExecutionDetails = (props: {
         actionExecutionId: string,
-        childActionExecutionId: string, 
+        childActionExecutionId?: string, 
         showDescription?: boolean, 
         showParametersOnClick?: boolean, 
         fromTestAction?: boolean, 
