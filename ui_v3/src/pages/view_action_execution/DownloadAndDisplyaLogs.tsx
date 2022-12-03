@@ -71,13 +71,11 @@ const DownloadAndDisplayLogs = (props: DownloadAndDisplayLogsProps) => {
                 <LoadingIndicator/>
             ) : (
                 <>
-                    {executionLogStatus?.data?.[0]?.logsPresent ? (
+                    
                         <Button variant="outlined" onClick={handleViewLogs}>
                             View Logs
                         </Button>
-                    ) : (
-                        <></>
-                    )}
+                    
                 </>
             )}
             
