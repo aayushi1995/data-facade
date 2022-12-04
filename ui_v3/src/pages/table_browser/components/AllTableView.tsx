@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Box, Card, Dialog, DialogContent, IconButton, InputAdornment, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import Stack from '@mui/material/Stack';
 import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, DataGridProps, GridCellParams, GridRowParams, GridValueGetterParams } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from 'react';
@@ -18,7 +19,7 @@ import { TableBrowserResponse, TablePropertiesInfo } from "../../../generated/in
 import SyncOOBActionExecutionStatus from '../SyncOOBActionStatus';
 import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
 import { useDeleteTables, useGetTables, useReSyncTables } from "./AllTableViewHooks";
-import Stack from '@mui/material/Stack';
+import useFeatureConfig from './useFeatureConfig';
 
 export type AllTableViewProps = {
     tableFilter?: TableProperties,
@@ -28,6 +29,7 @@ export type AllTableViewProps = {
 type TableBrowserResponseAndCalculatedInfo = TableBrowserResponse & { Health?: number, SyncStatus?: string }
 
 const AllTableView = (props: AllTableViewProps) => {
+    const featureConfigQuery = useFeatureConfig()
     const history = useHistory()
     const tableQuery = useGetTables({ options: {}, tableFilter: props?.tableFilter})
     const [searchQuery, setSearchQuery] = useState<string|undefined>("")
@@ -35,8 +37,8 @@ const AllTableView = (props: AllTableViewProps) => {
     const reSyncTablesMutation = useReSyncTables({ options: {} })
     const [dialogProps, setDialogProps] = useState({ open: false, label: "All Tables" })
     const isMutating = deleteTableMutation.isLoading || reSyncTablesMutation.isLoading
-
     const [rows, setRows] = React.useState<TableBrowserResponseAndCalculatedInfo[]>([])
+
     React.useEffect(() => {
         if(!!tableQuery.data){
             setRows(
@@ -88,7 +90,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 minWidth: 200,
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.TableCreatedBy}/>
             },
-            {
+            featureConfigQuery?.data?.tableStats===true && {
                 field: "Sync Status",
                 flex: 1,
                 minWidth: 200,
@@ -101,7 +103,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 minWidth: 200,
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TimestampCell timestamp={params.row?.TableLastSyncedOn}/>
             },
-            {
+            featureConfigQuery?.data?.tableStats===true && {
                 field: "Health",
                 flex: 1,
                 minWidth: 200,
@@ -115,7 +117,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 minWidth: 100,
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <ActionCell {...params.row}/>
             }
-        ],
+        ].filter(c => c!==undefined),
         rows: (rows.map?.((x, index) => ({ ...x, id: index})) || []),
         sx: {
             "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
@@ -136,7 +138,8 @@ const AllTableView = (props: AllTableViewProps) => {
             const tableId = params?.row?.TableId
             const syncSuccessfully = params?.row?.SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE
             const tableDetail = tableQuery?.data?.find( table => table.TableId === tableId)
-            if(!!tableName && !!tableId && !!tableDetail && syncSuccessfully===true) { 
+
+            if(!!tableName && !!tableId && !!tableDetail && syncSuccessfully===true && featureConfigQuery?.data?.tableStats===true) { 
                 history.push(generatePath(DATA_TABLE_VIEW, { TableName: tableName }))
             }
         },
