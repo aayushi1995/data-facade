@@ -238,7 +238,7 @@ const DisplayData = (props) => {
                                 multiline
                                 minRows={3}
                                 maxRows={10}
-                                value={props.JobBase.Input.charAt(0) == '{' ? JSON.parse(props.JobBase.Input).script : props.JobBase.Input}
+                                value={props.JobBase.Input.charAt(0) == '{' ? JSON.parse(props.JobBase.Input).df_script : props.JobBase.Input}
                                 variant="outlined"
                                 InputProps={{readOnly: true}}
                                 fullWidth

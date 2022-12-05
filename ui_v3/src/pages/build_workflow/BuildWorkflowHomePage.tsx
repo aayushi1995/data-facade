@@ -58,9 +58,9 @@ const WorkflowEditor = (props: {applicationId?: string}) => {
     return (
         <>
             <Dialog open={dialogopen} fullWidth maxWidth="md">
-                    <Box sx={{minHeight: '400px' , padding:'0px'}}>
-                        <WorkflowDetails onContinue={handleSave}/>
-                    </Box>    
+                <Box sx={{minHeight: '400px' , padding:'0px'}}>
+                    <WorkflowDetails onContinue={handleSave}/>
+                </Box>    
             </Dialog>
         </>
     )

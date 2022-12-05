@@ -13,7 +13,7 @@ export const SideDrawer = () => {
     const theme = useTheme();
     return <Drawer
         anchor="left"
-        open
+        open={true}
         PaperProps={{
             sx: {
                 backgroundColor: 'background.paper',

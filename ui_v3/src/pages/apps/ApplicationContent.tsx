@@ -1,11 +1,13 @@
 import { Box } from "@mui/material";
 import { useContext, useEffect } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_NEW, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION, APPLICATION_EXECUTE_WORKFLOW, APPLICATION_JOBS, APPLICATION_ROUTE_MARKETPLACE, APPLICATION_SUB_TABS, APPPLICATION_CREATE_AUTO_FLOW, EXECUTE_INSTANCE_ROUTE, EXECUTION_HISTORY_ROUTE, SCHEDULED_JOBS_ROUTE, WORKFLOW_EDIT_ROUTE_ROUTE, WORKFLOW_EXECUTION_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
+import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_ROUTE_MARKETPLACE, APPLICATION_SUB_TABS, APPLICATION_WEB_APP_BUILD_ROUTE, APPLICATION_WEB_APP_EDIT_ROUTE, APPPLICATION_CREATE_AUTO_FLOW, EXECUTION_HISTORY_ROUTE, SCHEDULED_JOBS_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
 import { findTab } from '../../common/components/header/data/DataRoutesConfig';
 import { APPLICATION_ROUTE } from '../../common/components/header/data/RoutesConfig';
 import { SetModuleContextState } from '../../common/components/ModuleContext';
 import EditActionPageNew from "../../edit-action-new/EditActionPageNew";
+import BuildWebAppHomePage from "../../web-app/build/BuildWebAppHomePage";
+import WebAppEditHomePage from "../../web-app/edit/WebAppEditHomePage";
 import ExecuteInstanceHomePage from '../applications/execute-instance/ExecuteInstanceHomePage';
 import EditWorkflowHomePage from '../applications/workflow/EditWorkflowHomePage';
 import ExecuteWorkflowHomePage from '../applications/workflow/ExecuteWorkflowHomePage';
@@ -31,23 +33,24 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
     return (
         <Switch>
             <Box sx={{mx:6}}>
-            <Route path={APPLICATION_JOBS} component={Jobs}/>
+            <Route path='/application/jobs' component={Jobs}/>
             <Route path={APPLICATION_ROUTE_MARKETPLACE} component={ApplicationMarketplace}/>
-            <Route path={APPLICATION_BUILD_FLOW_ROUTE_ROUTE} component={BuildWorkflowHomePage}/>
+            <Route path="/application/build-workflow" component={BuildWorkflowHomePage}/>
             <Route path={APPLICATION_BUILD_ACTION_ROUTE_ROUTE} component={BuildActionHomePage}/>
             <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionHomePage}/>
-            <Route path={APPLICATION_EXECUTE_WORKFLOW} component={ExecuteWorkflowHomePage}/>
-            <Route path={WORKFLOW_EXECUTION_ROUTE} component={ViewWorkflowExecutionHomePage}/>
-            <Route path={APPLICATION_EXECUTE_ACTION} component={ExecuteActionHomePage}/>
-            <Route path={WORKFLOW_EDIT_ROUTE_ROUTE} component={EditWorkflowHomePage}/>
-            <Route path={EXECUTE_INSTANCE_ROUTE} component={ExecuteInstanceHomePage}/>
-            <Route path={APPLICATION_EDIT_ACTION_ROUTE_NEW} component={EditActionPageNew}/>
+            <Route path="/application/execute-workflow" component={ExecuteWorkflowHomePage}/>
+            <Route path="/application/workflow-execution/:workflowExecutionId" component={ViewWorkflowExecutionHomePage}/>
+            <Route path="/application/execute-action/:ActionDefinitionId" component={ExecuteActionHomePage}/>
+            <Route path="/application/edit-workflow" component={EditWorkflowHomePage}/>
+            <Route path="/application/execute-instance" component={ExecuteInstanceHomePage}/>
             <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route>
             <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}></Route>
             <Route path={ACTION_EXECUTION_ROUTE} component={ActionExecutionHomePage}/>
             <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
             <Route path={EXECUTION_HISTORY_ROUTE} component={ExecutionHistory}/>
             <Route path={SCHEDULED_JOBS_ROUTE} component={ScheduledJobsWrapper} />
+            <Route path={APPLICATION_WEB_APP_EDIT_ROUTE} component={WebAppEditHomePage} />
+            <Route path={APPLICATION_WEB_APP_BUILD_ROUTE} component={BuildWebAppHomePage} />
             <Route exact path={APPLICATION_ROUTE} component={AllApplicationViewWrapper}/>
             </Box>
         </Switch>

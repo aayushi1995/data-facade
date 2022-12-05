@@ -3,7 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Box, Card, Divider, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { useQueryClient } from "react-query";
-import { useHistory } from "react-router-dom";
+import { generatePath, useHistory } from "react-router-dom";
 import ExecuteImage from "../../../../src/images/Execute.png";
 import OptionIcon from "../../../../src/images/Options.png";
 import { lightShadows } from "../../../css/theme/shadows";
@@ -16,6 +16,7 @@ import ConfirmationDialog from "../ConfirmationDialog";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 import useDeleteAction from "./hooks/useDeleteActions";
 import DeleteIcon from '@mui/icons-material/Delete'
+import { APPLICATION_WEB_APP_EDIT_ROUTE } from '../header/data/ApplicationRoutesConfig';
 
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
@@ -59,7 +60,10 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                 onSuccess: (data) => {
                     if(props.action.model?.ActionType === ActionDefinitionActionType.WORKFLOW){
                         history.push(`/application/edit-workflow/${data?.[0]?.Id}`)
-                    } else {
+                    } else if(props.action.model?.ActionType === ActionDefinitionActionType.WEB_APP){
+                        history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, {WebAppId: data?.[0]?.Id}))
+                    } 
+                    else {
                         history.push(`/application/edit-action/${data?.[0]?.Id}`)
                     }
                 }
@@ -79,7 +83,11 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
 
     const edit = () => {
         if(!props.isWorkflow){
-            history.push(`/application/edit-action/${props.action.model?.Id || "idNotFound"}`)
+            if(props.action.model?.ActionType === ActionDefinitionActionType.WEB_APP){
+                history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, {WebAppId: props.action.model?.Id}))
+            } else {
+                history.push(`/application/edit-action/${props.action.model?.Id || "idNotFound"}`)
+            }
         } else {
             history.push(`/application/edit-workflow/${props.action.model?.Id || "Id"}`)
         }

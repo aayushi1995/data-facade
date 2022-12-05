@@ -7,7 +7,6 @@ export const APPLICATION_ROUTE_ALL = `${APPLICATION_ROUTE}/all`
 export const APPLICATION_CREATION_WIZARD_ROUTE = `${APPLICATION_ROUTE}/app-builder`
 export const APPLICATION_DETAIL_ROUTE_ROUTE = `${APPLICATION_ROUTE}/detail/:applicationId`
 export const APPLICATION_EDIT_ACTION_ROUTE_ROUTE = `${APPLICATION_ROUTE}/edit-action/:ActionDefinitionId`
-export const APPLICATION_EDIT_ACTION_ROUTE_NEW = `${APPLICATION_ROUTE}/edit-action-new/:ActionDefinitionId`
 export const APPLICATION_BUILD_ACTION_ROUTE_ROUTE = `${APPLICATION_ROUTE}/build-action`
 export const APPLICATION_BUILD_FLOW_ROUTE_ROUTE = `${APPLICATION_ROUTE}/build-workflow`
 export const WORKFLOW_EXECUTION_ROUTE = `/application/workflow-execution/:WorkflowExecutionId`
@@ -22,6 +21,9 @@ export const APPLICATION_EXECUTE_WORKFLOW = `${APPLICATION_ROUTE}/execute-workfl
 export const APPLICATION_JOBS = `${APPLICATION_ROUTE}/jobs`
 export const APPLICATION_EXECUTE_ACTION = `/application/execute-action/:ActionDefinitionId`
 export const WORKFLOW_EDIT_ROUTE_ROUTE = `${APPLICATION_ROUTE}/edit-workflow`
+export const APPLICATION_WEB_APP_EDIT_ROUTE = `${APPLICATION_ROUTE}/web-app/:WebAppId`
+export const APPLICATION_WEB_APP_BUILD_ROUTE = `${APPLICATION_ROUTE}/build-web-app`
+
 export const APPLICATION_SUB_TABS: TabsType = [
     {
         id: 'Packages',
