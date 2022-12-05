@@ -1,6 +1,6 @@
 import { TabContext } from "@mui/lab";
 import TabPanel from "@mui/lab/TabPanel";
-import { Box, Dialog, Tab, Tabs } from "@mui/material";
+import { Box, Dialog, DialogContent, Tab, Tabs } from "@mui/material";
 import EditActionChartConfig from "../../../pages/build_action/components/form-components/EditActionChartConfig";
 import useActionCodeParameter from "../../hooks/useActionCodeParameter";
 import ActionCode from "../presentation/custom/ActionCode";
@@ -48,18 +48,20 @@ function ActionCodeParameterChart() {
                     <EditActionChartConfig />
                 </TabPanel>
             </TabContext>
-            <Dialog open={activeParameterId!==undefined} onClose={closeDialog} maxWidth="md" fullWidth>
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Box sx={{ flex: 1}}>
-                        <ActiveParameterConfiguratorHeaderTypography>
-                            Parameter Configuration
-                        </ActiveParameterConfiguratorHeaderTypography>
+            <Dialog  open={activeParameterId!==undefined} onClose={closeDialog} maxWidth='sm' sx={{borderRadius:'0px'}}>
+                <DialogContent sx={{borderRadius:'0px'}}>
+                    <Box sx={{ display: "flex", flexDirection: "row" ,px:2}}>
+                        <Box sx={{ flex: 1}}>
+                            <ActiveParameterConfiguratorHeaderTypography>
+                                Parameter Configuration
+                            </ActiveParameterConfiguratorHeaderTypography>
+                        </Box>
+                        <ActionParamterOperationsTop {...actionParameterOperationsTopProps}/>
                     </Box>
-                    <ActionParamterOperationsTop {...actionParameterOperationsTopProps}/>
-                </Box>
-                <ActionParameterConfigurationStepper {...actionParameterConfigurationStepperProps}/>
-                <ActionActiveParameterConfigurator/>
-                <ActionParamterOperationsBottom {...actionParameterOperationsBottomProps}/>
+                    <ActionParameterConfigurationStepper {...actionParameterConfigurationStepperProps}/>
+                    <ActionActiveParameterConfigurator/>
+                    <ActionParamterOperationsBottom {...actionParameterOperationsBottomProps}/>
+                </DialogContent>
             </Dialog>
         </Box>
     )

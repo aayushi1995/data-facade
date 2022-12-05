@@ -28,30 +28,31 @@ function ActionActiveParameterConfigurator() {
         handleDefaultValueChange
     } = useActionActiveParameterConfigurator({})
     
+    const widthofip = '18vw'
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Parameter Name: </ActiveParameterConfiguratorLabelTypography>
+                    <ActiveParameterConfiguratorLabelTypography>Parameter Name : </ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box>
-                    <TextField value={activeParamDef?.ParameterName || ""} onChange={(event) => handleParameterNameChange(event.target.value)}/>
-                </Box>
-            </Box>
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Parameter Display Name:</ActiveParameterConfiguratorLabelTypography>
-                </Box>
-                <Box>
-                    <TextField value={activeParamDef?.DisplayName || ""} onChange={(event) => handleParameterDisplayNameChange(event.target.value)}/>
+                <Box sx={{width:widthofip}}>
+                    <TextField size="small" fullWidth value={activeParamDef?.ParameterName || ""} onChange={(event) => handleParameterNameChange(event.target.value)}/>
                 </Box>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Input Type:</ActiveParameterConfiguratorLabelTypography>
+                    <ActiveParameterConfiguratorLabelTypography>Parameter Display Name :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
+                <Box sx={{width:widthofip}}>
+                    <TextField size="small" fullWidth value={activeParamDef?.DisplayName || ""} onChange={(event) => handleParameterDisplayNameChange(event.target.value)}/>
+                </Box>
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
+                    <ActiveParameterConfiguratorLabelTypography>Input Type :</ActiveParameterConfiguratorLabelTypography>
+                </Box>
+                <Box sx={{width:widthofip}}>
                     <ActionParameterInputTypeSelector
                         parameter={activeParamDef}
                         templateLanguage={templateLanguage}
@@ -61,9 +62,9 @@ function ActionActiveParameterConfigurator() {
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Default Value:</ActiveParameterConfiguratorLabelTypography>
+                    <ActiveParameterConfiguratorLabelTypography>Default Value :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box>
+                <Box sx={{width:widthofip}}>
                     <DefaultValueInput
                         actionParameterDefinition={activeParamDef}
                         actionParameterDefinitionAdditionalConfig={activeParamAdditionalConfig}
@@ -73,9 +74,9 @@ function ActionActiveParameterConfigurator() {
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Option Set:</ActiveParameterConfiguratorLabelTypography>
+                    <ActiveParameterConfiguratorLabelTypography>Option Set :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box>
+                <Box sx={{width:widthofip}}>
                     <ActionParameterOptionSet 
                         parameter={activeParamDef}
                         handleParameterChange={handleParameterChange}
@@ -84,9 +85,9 @@ function ActionActiveParameterConfigurator() {
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Parent Parameter:</ActiveParameterConfiguratorLabelTypography>
+                    <ActiveParameterConfiguratorLabelTypography>Parent Parameter :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box>
+                <Box sx={{width:widthofip}}>
                     <ConfigureParentParameter
                         allParamDefs={allParamDefs}
                         currentParamDef={activeParamDef}
@@ -96,15 +97,15 @@ function ActionActiveParameterConfigurator() {
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Parmeter Description:</ActiveParameterConfiguratorLabelTypography>
+                    <ActiveParameterConfiguratorLabelTypography>Parmeter Description :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box>
-                    <TextField value={activeParamDef?.Description || ""} onChange={(event) => handleParameterDescriptionChange(event.target.value)}/>
+                <Box sx={{width:widthofip}}>
+                    <TextField size="small" fullWidth value={activeParamDef?.Description || ""} onChange={(event) => handleParameterDescriptionChange(event.target.value)}/>
                 </Box>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
-                    <ActiveParameterConfiguratorLabelTypography>Tags</ActiveParameterConfiguratorLabelTypography>
+                    <ActiveParameterConfiguratorLabelTypography>Tags :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
                 <Box>
                     <TagEditorView

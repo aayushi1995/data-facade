@@ -16,7 +16,7 @@ export const CardBoxRootStyle = {
 }
 
 export const TemplateParentBoxStyle = {
-  height: "162px",
+  height: "20vh",
   width: "390px",
   background: "#E7F7FF",
   opacity: 0.64,

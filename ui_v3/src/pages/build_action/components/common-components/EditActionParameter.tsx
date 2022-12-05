@@ -321,7 +321,7 @@ export const ConfigureParentParameter = (props: ConfigureParentParamProps) => {
             onChange={(event, value, reason, details) => {
                 onParentParameterSelection(value === null ? undefined : value)
             }}
-            renderInput={(params) => <TextField {...params} label="Parent Parameter"/>}
+            renderInput={(params) => <TextField {...params} size="small" label="Parent Parameter"/>}
         />
     )
 }

@@ -99,7 +99,7 @@ export const ActionHeaderCardStyle = {
 }
 
 export const ActionHeaderCardInputAreaStyle = {
-    width:'75vw',
+    width:'75%',
     boxSizing: "border-box",
     background: "#F5F9FF",
     border: "1px solid #56D280",
@@ -109,7 +109,7 @@ export const ActionHeaderCardInputAreaStyle = {
 }
 
 export const ActionHeaderCardActionAreaStyle = {
-    width:'20vw',
+    width:'20%',
     background: "#565656", 
     borderRadius: "15.6169px"
 }

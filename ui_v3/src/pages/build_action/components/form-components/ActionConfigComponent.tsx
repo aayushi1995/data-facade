@@ -1,17 +1,19 @@
 import DoneIcon from '@mui/icons-material/Done';
-import { Box, Button, Tab, Tabs } from "@mui/material";
-import React from "react";
+import { Box, Button, Tab, Tabs, Tooltip } from "@mui/material";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import LoadingIndicator from "../../../../common/components/LoadingIndicator";
 import useCopyAndSaveDefinition from '../../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition';
 import { TabPanel } from "../../../../common/components/workflow/create/SelectAction/SelectAction";
 import ActionDefinitionPublishStatus from '../../../../enums/ActionDefinitionPublishStatus';
 import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../context/BuildActionContext";
+import { TestDrawer } from '../BuildActionForm';
 import SetActionParameters from "../common-components/SetActionParameters";
 import EditActionChartConfig from './EditActionChartConfig';
 import EditActionTemplates from "./EditActionTemplates";
 import TagsAndSummary from "./TagsAndSummary";
-
+import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 const ActionConfigComponent = () => {
     const history = useHistory()
     const buildActionContext = React.useContext(BuildActionContext)
@@ -57,9 +59,12 @@ const ActionConfigComponent = () => {
         })
     }
 
-
-
+    const [testView, setTestView] = useState(false)
+    const testViewHandler = ()=>{
+        setTestView(!testView)
+    }
     return (
+        <Box sx={{display:'flex', flexDirection: buildActionContext.testMode? testView?'row':'column':'column'}}>
         <Box sx={{display: "flex", flexDirection: "column", gap: 1, minHeight: "100%"}} className="wa">
             <Box sx={{ display: "flex", flexDirection: "row" }}>
                 <Box>
@@ -136,12 +141,34 @@ const ActionConfigComponent = () => {
                             Save
                         </Button>
                     )}
+                    {
+                        buildActionContext.testMode?
+                            testView?
+                        <Tooltip title="Column View">
+                            <Button color='inherit' size="small" onClick={testViewHandler} sx={{ 
+                                minWidth: "150px",
+                                borderRadius: "64px",
+                            }}>
+                                <ViewWeekIcon/>
+                            </Button> 
+                        </Tooltip>:
+                            <Tooltip title="Inline View">
+                            <Button color='inherit' size="small" onClick={testViewHandler} sx={{ 
+                                minWidth: "150px",
+                                borderRadius: "64px",
+                            }}>
+                                <TableRowsIcon/>
+                            </Button> 
+                        </Tooltip>
+                        :
+                        <></>
+                    }
                     <Button variant="contained" onClick={onTestAction} sx={{ 
                         minWidth: "150px",
                         borderRadius: "64px",
                     }}>
                         Test
-                    </Button>  
+                    </Button> 
                     {buildActionContext.testMode ? <></> : (
                         <Button variant="contained" sx={{ 
                             minWidth: "150px",
@@ -171,7 +198,12 @@ const ActionConfigComponent = () => {
                     <EditActionChartConfig />
                 </TabPanel>
             </Box>
-        </Box>    
+        </Box>  
+            {buildActionContext.testMode ?
+            TestDrawer()
+            :<></>
+            }  
+        </Box>
     )
 }
 

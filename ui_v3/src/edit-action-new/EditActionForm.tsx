@@ -14,7 +14,7 @@ function EditActionForm() {
     
     return(
         <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
-            <CardBoxRoot sx={{ flex: 1 }}>
+            <CardBoxRoot >
                 <ActionHeader {...actionHeaderProps}/>
                 <ActionMain/>
             </CardBoxRoot>

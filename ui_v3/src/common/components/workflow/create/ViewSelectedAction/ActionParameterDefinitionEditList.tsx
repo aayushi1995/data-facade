@@ -147,14 +147,14 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
         rowsPerPageOptions: [5, 10, 15],
         initialState: {
             pagination: {
-                pageSize: 10
+                pageSize: 5
             }
         },
         disableSelectionOnClick: true
     }
 
     return(
-        <Box sx={{ height: "300px", width: "100%" }}>
+        <Box sx={{ height: "400px", width: "100%" }}>
             <DataGrid sx={{
                 "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
                 backgroundColor: 'ActionCardBgColor.main',

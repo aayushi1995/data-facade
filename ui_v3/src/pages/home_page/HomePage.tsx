@@ -8,7 +8,7 @@ import SearchComponent from './components/SearchComponent';
 import welcome from "../../images/welcomeToDF.svg"
 import { SetModuleContextState } from '../../common/components/ModuleContext';
 import records from "../../images/records.svg"
-import library from "../../images/library.svg"
+import library from "../../images/Library Icon.svg"
 import compile from "../../images/compile.svg"
 import ItemCards from './components/ItemCards';
 

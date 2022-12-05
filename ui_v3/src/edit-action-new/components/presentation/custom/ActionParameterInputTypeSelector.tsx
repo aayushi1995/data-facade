@@ -15,9 +15,10 @@ function ActionParameterInputTypeSelector(props: ActionParameterInputTypeSelecto
     return (!!parameter && !!parameterInputType && !!templateLanguage) ?
     (
         <Box sx={{display:'flex', flexDirection:'row',width:'100%'}}>
-            <FormControl sx={{width: "8.854vw"}}>
+            <FormControl sx={{width: "100%"}}>
                 <Select
-                    variant="standard"
+                    variant="outlined"
+                    size='small'
                     value={parameterInputType}
                     fullWidth
                     onChange={(event: SelectChangeEvent<string>) => {

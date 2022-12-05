@@ -1,3 +1,4 @@
+import { Box } from "@mui/system";
 import React from "react";
 import { useHistory } from "react-router";
 import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../../pages/build_action/context/BuildActionContext";
@@ -43,14 +44,14 @@ function AddActionToEdit(props: AddActionToEditProps) {
     }
     console.log(buildActionContext)
     return (
-        <>
+        <Box sx={{p:5}}>
             {buildActionContext.mode==="CREATE" &&
                 <CreateNewAction {...createNewActionProps}/>
             }
             <ActionDefinitionSelector
                 onActionDefinitionSelectionCallback={(actionDefinitionId?: string) =>  props?.addActionWithId(actionDefinitionId)}
             />
-        </>
+        </Box>
     )
 }
 

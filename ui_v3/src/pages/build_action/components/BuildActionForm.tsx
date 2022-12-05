@@ -49,7 +49,6 @@ const EditActionForm = (props: EditActionFormProps) => {
         setSelectedActionId(actionId)
         setShowSelectedActionInfoDialog(true)
     }
-
     const toggleSidebar = () => setSideBarOpen(old => !old)
 
     return (
@@ -70,7 +69,7 @@ const EditActionForm = (props: EditActionFormProps) => {
         </Dialog>
 
         
-        <Box sx={{display: "flex", flexDirection: "row", minWidth: "100%", pl: 1, height: '100%', pb: 5, overflowX: 'auto'}}>
+        <Box sx={{display: "flex", flexDirection:"row", minWidth: "100%", pl: 1, height: '100%', pb: 5, overflowX: 'auto'}}>
             {buildActionContext.testMode ? <></> : (
                 <CollapsibleDrawer
                     open={sideBarOpen}
@@ -153,10 +152,9 @@ const EditActionForm = (props: EditActionFormProps) => {
                 </CollapsibleDrawer>
             )}
             
-            <Box sx={{flexGrow: 1, px: buildActionContext.testMode ? 0 : 2, minHeight: "100%", maxWidth: buildActionContext.testMode ? "40%" : "100%"}}>
+            <Box sx={{flexGrow: 1, px: buildActionContext.testMode ? 0 : 2, minHeight: "100%", maxWidth:"100%"}}>
                 <ActionDetailForm/>
             </Box>
-            {TestDrawer()}
         </Box>
     </>
     )

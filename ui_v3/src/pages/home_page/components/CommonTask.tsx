@@ -21,9 +21,9 @@ type commonItems = {
 
 const packageItems: commonItems[]=[
     {Name:'Create - ',URL : APPLICATION_CREATION_WIZARD_ROUTE},
-    {Name:"Package " , URL : APPLICATION_CREATION_WIZARD_ROUTE},
-    {Name:'Action  ' , URL : APPLICATION_BUILD_ACTION_ROUTE_ROUTE},
-    {Name:'Flow  ' , URL : APPLICATION_BUILD_FLOW_ROUTE_ROUTE}
+    {Name:"Package. " , URL : APPLICATION_CREATION_WIZARD_ROUTE},
+    {Name:'Action. ' , URL : APPLICATION_BUILD_ACTION_ROUTE_ROUTE},
+    {Name:'Flow. ' , URL : APPLICATION_BUILD_FLOW_ROUTE_ROUTE}
 
 ]
 

@@ -15,6 +15,7 @@ import TabsListUnstyled from '@mui/base/TabUnstyled';
 import TabsUnstyled from '@mui/base/TabsUnstyled';
 import { SetModuleContextState } from '../common/components/ModuleContext';
 import AddIcon from '@mui/icons-material/Add';
+import { ActionTab } from './components/presentation/styled_native/ActionTab';
 interface EditActionPageMatchParams {
     ActionDefinitionId: string
 }
@@ -119,16 +120,16 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
     const addActionWithId = (actionDefId?: string) => actionDefId && setActiveTabId(actionDefId)
     
     const tabs = contextStore?.map(ac =>
-        <Tab sx={{border:'1px solid #b8b9ba',width:'8vw',borderTopRightRadius:'10px',borderTopLeftRadius:'10px',px:1,py:0,mr:1,my:2,fontSize:'10px'}}
+        <ActionTab 
             label={
-                <Box sx={{py:0,px:0, display: "flex", flexDirection:"row-reverse", alignItems: "center", width: "100%"}}>
+                <Box sx={{py:0,px:0, display: "flex", flexDirection:"row-reverse", alignItems: "center", width: "100%",height:'20px'}}>
                     <Box>
                         <IconButton onClick={(event) => {event.stopPropagation(); handleTabCloseButtonClick(ac)}}>
                             <CloseIcon sx={{fontSize:'15px'}}/>
                         </IconButton>
                     </Box>
                     <Box sx={{ overflowX: "scroll" }}>
-                        <Typography sx={{fontSize:'0.8rem',pt:1,color:'#4c4c4d'}} textOverflow="ellipsis">{ac?.actionDefinitionWithTags?.actionDefinition?.DisplayName}</Typography>
+                        <Typography sx={{fontSize:'0.8rem',pt:1,color:'Black'}} textOverflow="ellipsis">{ac?.actionDefinitionWithTags?.actionDefinition?.DisplayName}</Typography>
                     </Box>
 
                 </Box>
@@ -152,36 +153,39 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
     return (
         <Box sx={{px:1, boxShadow: "inset 2px 2px 2px rgba(0, 0, 0, 0.15), inset -2.93116px -2.93116px 13.8623px #9AA1A9",}}>
             <ConfirmationDialog {...getConfirmationDialogProps()}/>
-            <Box sx={{ display: "flex", flexDirection: "row", gap: 1}}>
-                <Box sx={{ flex: 1 ,py:1}}>
+            <Box sx={{pt:1, display: "flex", flexDirection: "row", gap: 1,borderBottom:'1px solid #b8b9ba',mx:-1}}>
+                <Box sx={{ flex: 1,px:1}}>
                     <Tabs 
                         value={activeTabId} 
                         onChange={(event, value) => setActiveTabId(value)}
                         >
-                            {tabs}
-                            <Tab sx={{height:'20px',border:'1px solid #b8b9ba',width:'8vw',borderTopRightRadius:'10px',borderTopLeftRadius:'10px',px:1,py:0,mr:1,my:2,fontSize:'10px',color:'#4c4c4d'}}  value="Add" 
-                                        label={
-                                            <Box sx={{py:0,px:0, display: "flex", flexDirection:"row", alignItems: "center", width: "100%"}}>
-                                                <Box>
-                                                    <IconButton>
-                                                        <AddIcon sx={{fontSize:'18px'}}/>
-                                                    </IconButton>
-                                                </Box>
-                                                <Box sx={{ overflowX: "scroll" }}>
-                                                    <Typography sx={{fontSize:'0.8rem',pt:1,color:'#4c4c4d'}} textOverflow="ellipsis">Add</Typography>
-                                                </Box>
+                                {tabs}
+                                <ActionTab  
+                                            value="Add" 
+                                            label={
+                                                <Box sx={{py:0,px:0, display: "flex", flexDirection:"row", alignItems: "center", width: "100%"}}>
+                                                    <Box>
+                                                        <IconButton>
+                                                            <AddIcon sx={{fontSize:'18px'}}/>
+                                                        </IconButton>
+                                                    </Box>
+                                                    <Box sx={{ overflowX: "scroll" }}>
+                                                        <Typography sx={{fontSize:'0.8rem',pt:1,color:'Black'}} textOverflow="ellipsis">Add</Typography>
+                                                    </Box>
 
-                                            </Box>}
-                                            />
+                                                </Box>}
+                                                />
+
                     </Tabs>
                 </Box>
                 {activeTabId !=="Add" &&
-                    <Box>
-                        <Button variant="contained" 
+                    <Box sx={{pt:0,px:1}}>
+                        <Button variant="outlined" 
                             disabled={buildActionContext?.actionDefinitionWithTags?.actionDefinition?.PublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE} 
                             onClick={OnRunAction} 
+                            size='small'
                             sx={{ 
-                                minWidth: "150px",
+                                minWidth: "90px",
                                 borderRadius: "64px" 
                             }}
                         >

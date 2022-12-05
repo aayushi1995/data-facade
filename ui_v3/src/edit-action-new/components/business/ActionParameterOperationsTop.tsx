@@ -2,6 +2,8 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { Box, IconButton } from "@mui/material";
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import TableViewOutlinedIcon from '@mui/icons-material/TableViewOutlined';
 
 export type ActionParameterOperationsTopProps = {
     addParam: () => void
@@ -14,22 +16,22 @@ function ActionParameterOperationsTop(props: ActionParameterOperationsTopProps) 
         <Box sx={{ display: "flex", flexDirection: "row", gap: 2}}>
             <Box>
                 <IconButton onClick={addParam}>
-                    <AddIcon/>
+                    <AddIcon color='warning'/>
                 </IconButton>
             </Box>
             <Box>
                 <IconButton>
-                    <DeleteIcon/>
+                    <DeleteForeverOutlinedIcon color='error'/>
                 </IconButton>
             </Box>
             <Box>
                 <IconButton>
-                    <FullscreenIcon/>
+                    <TableViewOutlinedIcon color='info'/>
                 </IconButton>
             </Box>
             <Box>
                 <IconButton>
-                    <FullscreenIcon/>
+                    <FullscreenIcon color='action'/>
                 </IconButton>
             </Box>
         </Box>
