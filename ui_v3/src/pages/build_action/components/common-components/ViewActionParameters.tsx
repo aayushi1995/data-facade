@@ -6,11 +6,12 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
 import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridRowParams, GridToolbarContainer, useGridApiContext } from "@mui/x-data-grid";
-import { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import ConfirmationDialog from '../../../../common/components/ConfirmationDialog';
 import useFetchVirtualTags from '../../../../common/components/tag-handler/hooks/useFetchVirtualTags';
 import { ActionParameterAdditionalConfig } from "../../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType, getInputTypeFromAttributesNew, InputMap } from "../../../../custom_enums/ActionParameterDefinitionInputMap";
+import ActionParameterDefinitionDatatype from '../../../../enums/ActionParameterDefinitionDatatype';
 import ActionParameterDefinitionInputType from '../../../../enums/ActionParameterDefinitionInputType';
 import ActionParameterDefinitionTag from "../../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, Tag } from "../../../../generated/entities/Entities";
@@ -377,9 +378,23 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
         }
     }
 
+    const handleStringNoQuotesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(!event.target.checked) {
+            props.onParameterEdit({
+                ...props.parameter,
+                Datatype: ActionParameterDefinitionDatatype.STRING_NO_QUOTES
+            })
+        } else {
+            props.onParameterEdit({
+                ...props.parameter,
+                Datatype: ActionParameterDefinitionDatatype.STRING
+            })
+        }
+    } 
+
     return (
         <>
-        <Tooltip arrow title="Configure option set">
+        <Tooltip arrow title="Configure parameter">
             <Button   onClick={openDialog}><SettingsIcon color={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE?"success":"error"}/></Button>
         </Tooltip>
         <Dialog onClose={closeDialog} open={dialogOpen} fullWidth={true} maxWidth="sm">
@@ -449,7 +464,13 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
                         <></>
                     )}
                     </Box>
-
+                {props.parameter.Datatype === ActionParameterDefinitionDatatype.STRING || props.parameter.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES ? (
+                    <FormGroup row={true} sx={{ display: 'webkit', minWidth: '400px',mx:'auto' }}>
+                        <FormControlLabel control={<Checkbox checked={props.parameter.Datatype === ActionParameterDefinitionDatatype.STRING} onChange={handleStringNoQuotesChange} />} label="Enclose within quotes" />
+                    </FormGroup>
+                ) : (
+                    <></>
+                )}
             </Box>
         </Dialog></>
     )

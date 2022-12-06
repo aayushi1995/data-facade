@@ -57,7 +57,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                             })
                 }
             } as ColumnParameterInput 
-        } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.STRING) {
+        } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.STRING || actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES) {
             return {
                 parameterType: "STRING",
                 inputProps: {

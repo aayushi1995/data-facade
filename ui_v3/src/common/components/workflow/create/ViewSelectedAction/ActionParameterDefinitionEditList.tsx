@@ -85,7 +85,7 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
                             />
                         )
                     )
-                }
+                },
             },
             {
                 field: "ParameterInputType",
@@ -192,6 +192,7 @@ const GlobalParameterHandler = (props: UseGlobalParameterHandlerParams) => {
                                                 ...textStyle
                                             }
                                         }}
+                                        onKeyDown={(event) => event.stopPropagation()}
                                     />}   
                 filterOptions={(options, params) => {
                     const filtered = filter(options, params);

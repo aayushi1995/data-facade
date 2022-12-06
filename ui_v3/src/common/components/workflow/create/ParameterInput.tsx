@@ -383,7 +383,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
                     }
                     return filtered;
                 }}
-                renderInput={(params) => <TextField {...params} label={props.inputProps.parameterName || "Parameter Name NA"} variant="outlined" size="small"/>}
+                renderInput={(params) => <TextField {...params} onKeyDown={(event) => event.stopPropagation()} label={props.inputProps.parameterName || "Parameter Name NA"} variant="outlined" size="small"/>}
             />
         </LoadingWrapper>   
     )
@@ -491,6 +491,7 @@ const StringInput = (props: StringParameterInput) => {
                 size="small"
                 label={props.inputProps.parameterName || "Parameter Name NA"}
                 fullWidth
+                onKeyDown={(event) => event.stopPropagation()}
             />
 }
 

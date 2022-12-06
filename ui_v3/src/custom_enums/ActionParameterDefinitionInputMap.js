@@ -34,10 +34,6 @@ const InputMap = {
         [ActionParameterDefinitionInputType.COLUMN_LIST]: {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
-        },
-        [ActionParameterDefinitionInputType.STRING_NO_QUOTES]: {
-            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
-            [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING_NO_QUOTES
         }
     },
     [TemplateLanguage.SQL]: {
@@ -74,10 +70,6 @@ const InputMap = {
         [ActionParameterDefinitionInputType.COLUMN_LIST]: {
             [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
             [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST,
-        },
-        [ActionParameterDefinitionInputType.STRING_NO_QUOTES]: {
-            [ActionParameterDefinitionAttribute.TAG]: ActionParameterDefinitionTag.OTHER,
-            [ActionParameterDefinitionAttribute.DATATYPE]: ActionParameterDefinitionDatatype.STRING_NO_QUOTES
         }
     }
 }
@@ -96,7 +88,8 @@ const getInputTypeFromAttributes = (language, tag, type, datatype) => {
 const getInputTypeFromAttributesNew = (language, tag, type, datatype) => {
     if (language in InputMap) {
         for (const [key, value] of Object.entries(InputMap[language])) {
-            if (value[ActionParameterDefinitionAttribute.TAG] === tag & value[ActionParameterDefinitionAttribute.DATATYPE] === datatype) {
+            const finalTag = (tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) ? ActionParameterDefinitionTag.OTHER : tag
+            if (value[ActionParameterDefinitionAttribute.TAG] === finalTag & value[ActionParameterDefinitionAttribute.DATATYPE] === datatype) {
                 return key;
             }
         }
