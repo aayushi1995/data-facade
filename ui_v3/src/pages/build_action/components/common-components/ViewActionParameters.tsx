@@ -4,7 +4,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, DialogContent, DialogTitle, FormControl, FormControlLabel, FormGroup, Grid, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
 import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridRowParams, GridToolbarContainer, useGridApiContext } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from 'react';
 import ConfirmationDialog from '../../../../common/components/ConfirmationDialog';
@@ -19,6 +19,7 @@ import { safelyParseJSON } from "../../../execute_action/util";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
 import { ActionParameterDefinitionConfig } from "./EditActionParameter";
 import DefaultValueInput from "./parameter_input/DefaultValueInput";
+import CloseIcon from "@mui/icons-material/Close"
 
 const tagFilter = createFilterOptions<Tag>()
 const stringFilter = createFilterOptions<string|undefined>()
@@ -184,18 +185,14 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                 </Select>
                                 
                             </FormControl>
-                            {
+                
+                            <OptionSetSelector parameter={parameter || {}} onParameterEdit={onParameterEdit} optionSetEnabled={
                                 inputAttribuuteValue === ActionParameterDefinitionInputType.STRING || 
                                 inputAttribuuteValue === ActionParameterDefinitionInputType.INTEGER || 
                                 inputAttribuuteValue === ActionParameterDefinitionInputType.DECIMAL ||
-                                inputAttribuuteValue === ActionParameterDefinitionInputType.STRING_NO_QUOTES ?(
-                                    <>
-                                        <OptionSetSelector parameter={parameter || {}} onParameterEdit={onParameterEdit} />
-                                    </>
-                                ):(
-                                    <></>
-                                )
-                            }
+                                inputAttribuuteValue === ActionParameterDefinitionInputType.STRING_NO_QUOTES 
+                            }/>
+                        
                         </Box>
                 }
             },
@@ -324,7 +321,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
     )
 }
 
-const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void}) => {
+const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void, optionSetEnabled: boolean}) => {
 
     const filter = createFilterOptions<string>()
     const handleChange = (newOptions: string[]) => {
@@ -378,6 +375,13 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
         }
     }
 
+    const handleMakeOptionalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        props.onParameterEdit({
+            ...props.parameter,
+            IsOptional: event.target.checked
+        })
+    }
+
     const handleStringNoQuotesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if(!event.target.checked) {
             props.onParameterEdit({
@@ -397,7 +401,7 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
         <Tooltip arrow title="Configure parameter">
             <Button   onClick={openDialog}><SettingsIcon color={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE?"success":"error"}/></Button>
         </Tooltip>
-        <Dialog onClose={closeDialog} open={dialogOpen} fullWidth={true} maxWidth="sm">
+        <Dialog onClose={closeDialog} open={dialogOpen} fullWidth={true} maxWidth="md">
             <Box sx={{ display: 'flex', gap: 1 ,flexDirection:'column'}}>
             <Box sx={{
                         background: "#66748A",
@@ -431,8 +435,10 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
                         </Box>
                     </Box>
                 <FormGroup row={true} sx={{ display: 'webkit', minWidth: '400px',mx:'auto' }}>
-                    <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE} onChange={handleOptionSingleChange} />} label="Option Set Single" />
-                    <FormControlLabel control={<Checkbox checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE} onChange={handleOptionMultipleChange} />} label="Option Set Multiple" />
+                    <FormControlLabel control={<Checkbox disabled={!props.optionSetEnabled} checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE} onChange={handleOptionSingleChange} />} label="Option Set Single" />
+                    <FormControlLabel control={<Checkbox disabled={!props.optionSetEnabled} checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE} onChange={handleOptionMultipleChange} />} label="Option Set Multiple" />
+                    <FormControlLabel control={<Checkbox checked={props.parameter?.IsOptional} onChange={handleMakeOptionalChange} disabled={props.parameter?.Tag === ActionParameterDefinitionTag.DATA || props.parameter?.Tag === ActionParameterDefinitionTag.TABLE_NAME}/>} label="Make Optional" />
+
                 </FormGroup>
                 <Box sx={{px:6,py:3}}>
                 {props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE ?
@@ -476,6 +482,11 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
     )
 }
 
+export const ExtraParameterConfig = ({parameter, onParameterEdit}: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void}) => {
+    const [dialogState, setDialogState] = React.useState(false)
+
+
+}
 
 type DatagridTextEditCellProps = {
     key?: string,
@@ -877,10 +888,12 @@ export const TagEditorView = (props: TagEditorViewProps) => {
 type ActionCellProps = {
     parameterId?: string,
     onParameterDelete: (parameterId?: string) => void,
-    onParameterDuplicate: (parameterId?: string) => void
+    onParameterDuplicate: (parameterId?: string) => void,
 }
 const ActionCell = (props: ActionCellProps) => {
     const { parameterId, onParameterDelete, onParameterDuplicate } = props
+
+
     return (
         <Box sx={{ display: "flex", flexDirection: "row-reverse", width: "100%", py: 1 }}>
             <Box>

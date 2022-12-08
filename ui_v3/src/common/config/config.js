@@ -2,8 +2,8 @@ exports.FDSEndpoint =
 	process.env.REACT_APP_FDS_ENDPOINT !== undefined
 		? process.env.REACT_APP_FDS_ENDPOINT
 		: // 'https://datafacade.io/fds/v1'
-		 "https://stage.datafacade.io/fds/v1";
-		//  'http://localhost:9000/v1'
+		//  "https://stage.datafacade.io/fds/v1";
+		 'http://localhost:9000/v1'
 
 
 exports.auth0ClientId = (process.env.REACT_APP_AUTH0_CLIENT_ID !== undefined) ?

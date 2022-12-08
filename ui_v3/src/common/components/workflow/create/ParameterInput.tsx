@@ -630,6 +630,7 @@ const TableInput = (props: TableParameterInput) => {
 
     const handleTablesReceived = (tables: TableProperties[]) => {
         if(!!tables) {
+            const { SelectedTable } = getTableSelectionInfo(tables, selectedTableFilter)
             if(selectedTableFilter !== undefined) {
                 if(SelectedTable !== undefined) {
                     onChange(SelectedTable)

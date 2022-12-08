@@ -185,7 +185,20 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         })
     }, [executeActionContext.ExistingModels?.ActionDefinition?.DisplayName])
 
+    const isOptional = (actionParameterInstance: ActionParameterInstance) => {
+        return executeActionContext.ExistingModels?.ActionParameterDefinitions?.find(apd => apd.Id === actionParameterInstance.ActionParameterDefinitionId)?.IsOptional
+    }
+
+    const areAllParametersFilled = () => {
+        return executeActionContext.ToCreateModels?.ActionParameterInstances?.filter(wpi => !!wpi.ParameterValue || !!wpi.TableId || !!wpi.ColumnId || isOptional(wpi))?.length === executeActionContext.ToCreateModels.ActionParameterInstances?.length
+    }
+
     const handleAsyncCreate = () => {
+        const parametersFilled = areAllParametersFilled()
+        if(!parametersFilled) {
+            setValidationErrorMessage("Please Fill All Required Parameters")
+            return
+        }
         const request = constructCreateActionInstanceRequest(executeActionContext)
         validateActionInstance.validate(request, executeActionContext.ExistingModels.ActionTemplates?.[0]?.SupportedRuntimeGroup || "python", {
             onSuccess: () => {
@@ -287,10 +300,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             type: 'SetWriteBackTableName',
             payload: tableName
         })
-    }
-
-    const areAllParametersFilled = () => {
-        return executeActionContext.ToCreateModels?.ActionParameterInstances?.filter(wpi => !!wpi.ParameterValue || !!wpi.TableId || !!wpi.ColumnId)?.length === executeActionContext.ToCreateModels.ActionParameterInstances?.length
     }
 
     const StepNumberToComponent: {component: React.ReactNode, label: string}[] = []

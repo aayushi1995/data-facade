@@ -1,4 +1,4 @@
-import { Card, Divider, Grid, Box, Button, Dialog, DialogTitle, IconButton, DialogContent } from "@mui/material"
+import { Card, Divider, Grid, Box, Button, Dialog, DialogTitle, IconButton, DialogContent, Typography } from "@mui/material"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import ComponentTypes from "../../../enums/ComponentTypes"
 import useWebAppEditHomePage from "../hooks/useGetWebAppEditHomePage"
@@ -6,6 +6,7 @@ import AddComponentCard from "./AddComponentCard"
 import CloseIcon from "@mui/icons-material/Close"
 import SelectFromAllActions from "../../../common/components/workflow/create/SelectFromAllActions"
 import AddingAllActionView from "./AddingAllActionView"
+import AddedActionsList from "./AddedActionsList"
 
 interface ComponetsTrayProps{
     webAppId: string
@@ -43,7 +44,10 @@ const ComponentsTray = ({webAppId}: ComponetsTrayProps) => {
                             Save
                         </Button>
                     }
-                    
+                    <Typography>
+                        Added Actions
+                    </Typography>
+                    <AddedActionsList />
                 </Box>
             </Card>
             
