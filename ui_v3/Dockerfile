@@ -23,7 +23,7 @@ ENV ENDPOINT="https://${endpoint}"
 ENV REACT_APP_FDS_ENDPOINT="${ENDPOINT}/fds/v1"
 ENV REACT_APP_AUTH0_CLIENT_ID="${client_id}"
 ENV APPLICATION_RUNNING_MODE="production"
-RUN PUBLIC_URL=ENDPOINT npm run-script build
+RUN PUBLIC_URL="${ENDPOINT}" npm run-script build
 
 EXPOSE 3000
 # start app
