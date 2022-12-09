@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import VirtualTagHandler, { VirtualTagHandlerProps } from "../../../../common/components/tag-handler/VirtualTagHandler";
 import { Tag } from "../../../../generated/entities/Entities";
 
@@ -19,11 +19,13 @@ function ActionTag(props: ActionTagProps) {
     }
     
     return (
-        <Box>
-            <Box>
-
+        <Box sx={{py:1}}>
+            <Box sx={{py:1,borderBottom:'3px solid #e3e3e3',px:3}}>
+                <Typography sx={{fontSize:'1.2rem',fontWeight:600}}>
+                    Action Tags
+                </Typography>
             </Box>
-            <Box>
+            <Box sx={{pr:5,pl:2,mt:1,py:2}}>
                 <VirtualTagHandler {...virtualTagHandlerProps}/>
             </Box>
         </Box>

@@ -1,4 +1,4 @@
-import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, Typography } from "@mui/material";
 import ActionTypeToSupportedRuntimes from "../../../../custom_enums/ActionTypeToSupportedRuntimes";
 
 export type ActionConfigProps = {
@@ -16,12 +16,14 @@ export type ActionConfigProps = {
 function ActionConfig(props: ActionConfigProps) {
     const { pinned, published, onPinToggle, onPublishToggle, language, onLanguageChange, actionType } = props
     return (
-        <Box>
-            <Box>
-                
+        <Box sx={{py:1}}>
+            <Box sx={{py:1,borderBottom:'3px solid #e3e3e3',px:3}}>
+                <Typography sx={{fontSize:'1.2rem',fontWeight:600}}>
+                    Action config
+                </Typography>
             </Box>
-            <Box>
-                <Box>
+            <Box sx={{px:3,borderBottom:'3px solid #e3e3e3',py:2}}>
+                <Box sx={{mt:2}}>
                     <FormControl variant="outlined" fullWidth>
                         <InputLabel>Select your Scripting Language</InputLabel>
                         <Select
@@ -41,7 +43,7 @@ function ActionConfig(props: ActionConfigProps) {
                     {/* <Autocomplete/> */}
                 </Box>
             </Box>
-            <Box>
+            <Box sx={{display:'flex',flexDirection:'row',px:3,gap:4}}>
                 <Box>
                 <FormControlLabel
                     control={

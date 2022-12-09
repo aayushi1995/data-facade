@@ -191,7 +191,20 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
             <Box sx={{pt: 2, overflowY: 'scroll', height: '100%'}}>
                 <TabPanel value={activeTab} index={2}>
                     <Box>
-                        <ShowGlobalParameters/>
+                        <Card
+                        sx={{
+                            borderRadius: 1,
+                            p: 2,
+                            height: "100%"
+                        }}
+                        variant={'outlined'} 
+                        >
+                        <Box sx={{display: "flex", flexDirection: "column", gap: 5}}>
+                            <Box sx={{ height: "400px", width: "100%", overflow:'scroll' }}>
+                                <ShowGlobalParameters/>
+                            </Box>
+                        </Box>
+                    </Card> 
                     </Box>
                 </TabPanel>
                 <TabPanel value={activeTab} index={1}>

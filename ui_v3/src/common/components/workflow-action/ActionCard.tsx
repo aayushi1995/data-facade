@@ -118,7 +118,16 @@ const ActionCard = (props: ActionCardProps) => {
         }
     }, [props.latestExecutionId])
 
-    const tooltipTitle = (props?.executionStaus === 'Completed' || props?.executionStaus === 'Failed') ? props.runTime : "";
+    const getElapsedTime = () => {
+    
+        const timeInSeconds = props.runTime  || 0
+        const m = Math.floor(timeInSeconds / 60).toString().padStart(2,'0')
+        const s = Math.floor(timeInSeconds % 60).toString().padStart(2,'0');
+
+        return m + ' MIN ' + s + ' SEC'  
+
+    }
+    const tooltipTitle = (props?.executionStaus === 'Completed' || props?.executionStaus === 'Failed') ? getElapsedTime(): "";
     const border: string | undefined = (props?.executionStaus !== undefined  ? undefined : (props.errorMessages || []).length === 0 ? '0.75px solid #00AA11' : '0.75px solid #DC2430' )
 
     const handleNameClick = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -172,7 +181,7 @@ const ActionCard = (props: ActionCardProps) => {
                 <React.Fragment>
                     <Box sx={{height: '100%', minWidth:'120px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
                         <Typography>
-                            <span>Run time: <b>{tooltipTitle}s</b></span>
+                            <span>Run time: <b>{tooltipTitle}</b></span>
                         </Typography>
                         <Button variant="outlined" onClick={handleReRunFromAction}>
                             Re-run from here

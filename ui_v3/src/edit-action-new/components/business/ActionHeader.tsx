@@ -11,6 +11,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import pythonLogo from "../../../../src/images/python.svg";
 import sqlLogo from "../../../../src/images/SQL.svg"
 import { BuildActionContext } from '../../../pages/build_action/context/BuildActionContext';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 export type ActionHeaderProps = {
     actionName?: string,
     actionDescription?: string,
@@ -54,7 +55,7 @@ function ActionHeader(props: ActionHeaderProps) {
     const buildActionContext = React.useContext(BuildActionContext)
     return (
         <ActionHeaderCard sx={{ display: "flex", flexDirection: "row" }}>
-            <ActionHeaderCardInputArea sx={{ display: "flex", flexDirection: "row", height: "100%", gap: 2}}>
+            <ActionHeaderCardInputArea sx={{ display: "flex", flexDirection: "row", height: "100%", gap: 2,px:2,py:3}}>
                 <Box sx={{ display: "flex", alignItems: "center"}}>
                     <KeyboardArrowDownIcon/>
                 </Box>
@@ -62,7 +63,7 @@ function ActionHeader(props: ActionHeaderProps) {
                     <Box sx={{ display: "flex",pt:3, height: "80%", alignItems: "center" }}>
                         <img width='30px' src={props.language=='python'?pythonLogo:sqlLogo} alt="" />
                     </Box>
-                    <Box sx={{ display: "flex", height: "20%", alignItems: "center" }}>
+                    <Box sx={{ display: "flex", height: "20%", alignItems: "center",mt:1 }}>
                         <ActionPublishStatusBox publishStatus={props?.publishStatus}/>
                     </Box>
                 </Box>
@@ -93,7 +94,7 @@ function ActionHeader(props: ActionHeaderProps) {
                                             }} variant='standard' size='small' fullWidth multiline minRows={1} maxRows={3} value={props?.actionDescription || ""} onChange={handleDescriptionChange}/>
                         </Box>
                         <Box>
-                            <ActionHeaderActionVisibilityTypography>PUBLIC</ActionHeaderActionVisibilityTypography>
+                            <ActionHeaderActionVisibilityTypography sx={{mt:1}}>PUBLIC</ActionHeaderActionVisibilityTypography>
                         </Box>
                     </Box>
                 </Box>  
@@ -105,14 +106,14 @@ function ActionHeader(props: ActionHeaderProps) {
                 </ActionHeaderAutocompleteBox>
             </ActionHeaderCardInputArea>
             <ActionHeaderCardActionArea sx={{ display: "flex", alignItems: "center" }}>
-                <Box sx={{mr:4}}>
+                <Box sx={{mr:buildActionContext.testMode?0:4}}>
                     <FormGroup>
                         <FormControlLabel
                             sx={{color:'white'}}
                             control={
                                 <Switch checked={props?.visibility === ActionDefinitionVisibility.ORG} onClick={toggleVisibility}/> 
                             }
-                            label={<Typography sx={{fontSize:'0.7rem'}}>Make Public</Typography>} 
+                            label={<Typography sx={{fontSize:'0.7rem',alignItems:'center'}}>Make Public</Typography>} 
                             labelPlacement="bottom"
                         />
                     </FormGroup>
@@ -125,6 +126,9 @@ function ActionHeader(props: ActionHeaderProps) {
                     <Box>
                         <Button size='small' sx={{minWidth:'4vw',color:'white',borderColor:'lime'}} color='success' variant='outlined' onClick={props?.actionHandler?.onSave}>Save</Button>
                     </Box>
+                </Box>
+                <Box>
+                    <MoreVertIcon sx={{color:'white',transform:'scale(1.5)',ml:buildActionContext.testMode?0:10,mt:1}}/>
                 </Box>
             </ActionHeaderCardActionArea>
         </ActionHeaderCard>

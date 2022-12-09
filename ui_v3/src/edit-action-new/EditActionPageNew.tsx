@@ -3,7 +3,7 @@ import { Box, Button, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import { generatePath, RouteComponentProps, useHistory } from "react-router";
 import ConfirmationDialog from '../common/components/ConfirmationDialog';
-import { APPLICATION_EDIT_ACTION_ROUTE_NEW } from "../common/components/header/data/ApplicationRoutesConfig";
+import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE } from "../common/components/header/data/ApplicationRoutesConfig";
 import LoadingIndicator from "../common/components/LoadingIndicator";
 import ActionDefinitionPublishStatus from '../enums/ActionDefinitionPublishStatus';
 import { BuildActionContext, BuildActionContextProvider, BuildActionContextState, SetBuildActionContext, UseActionHooks } from "../pages/build_action/context/BuildActionContext";
@@ -82,7 +82,7 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
     React.useEffect(() => {
         console.log("WADAWDWADWA", activeTabId)
         if(!!activeTabId){
-            history.replace(generatePath(APPLICATION_EDIT_ACTION_ROUTE_NEW, {
+            history.replace(generatePath(APPLICATION_EDIT_ACTION_ROUTE_ROUTE, {
                 ActionDefinitionId: activeTabId,
             }))
         }

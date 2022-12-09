@@ -95,7 +95,8 @@ const EditActionChartConfig = () => {
                     </Box>
                 </Grid>
                 <Divider orientation="vertical" flexItem sx={{ mr: "-1px" }} />
-                <Grid item xs={4} sx={{p: 1}}>
+                <Grid container xs={11}>
+                <Grid item xs={buildActionContext.testMode?12:5} sx={{p: 1}}>
                     <Card sx={{minHeight: '100%', minWidth: '100%',   
                         boxShadow: "0px 0px 0px 0.691186px rgba(0, 0, 0, 0.05)",
                         filter: "drop-shadow(0px 0.691186px 1.38237px rgba(0, 0, 0, 0.12))",
@@ -106,8 +107,8 @@ const EditActionChartConfig = () => {
                         <ChartOptionConfigurator selectedChartIndex={selectedChart} />
                     </Card>
                 </Grid>
-                <Divider orientation="vertical" flexItem sx={{ mr: "-1px" }} />
-                <Grid item xs={7}>
+                
+                <Grid item xs={buildActionContext.testMode?12:7}>
                     {buildActionContext.charts?.map?.((chartConfig, index) => {
                         if(selectedChart===index){
                             switch(chartConfig.kind){
@@ -148,6 +149,7 @@ const EditActionChartConfig = () => {
                             
                         }
                     })}
+                </Grid>
                 </Grid>
             </Grid>
 

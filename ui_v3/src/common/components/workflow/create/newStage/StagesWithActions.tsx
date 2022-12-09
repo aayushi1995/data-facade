@@ -24,9 +24,20 @@ export const StagesWithActions = (props :{showDet: boolean, showStage: boolean})
     const currentStages = workflowContext.currentStageView === undefined ? workflowContext.stages.slice(0, 4) : workflowContext.stages.slice(workflowContext.currentStageView.startIndex, workflowContext.currentStageView.endIndex)
     
     const stages = currentStages.map(stage => {
-        var runTime = 0;
+        var runTime = 0
+        // var runTime = Math.abs(((stage.Actions[stage.Actions.length-1].ExecutionCompletedOn||0) - (stage.Actions[0].ExecutionStartedOn||0) )/1000);
         for(var i=0;i<stage.Actions.length;i++){
-            runTime+= Math.abs(((stage.Actions[i].ExecutionCompletedOn || 0)-(stage.Actions[i].ExecutionStartedOn || 0))/1000)
+            runTime= Math.floor(((stage.Actions[i].ExecutionCompletedOn || initialTime)))
+        }
+        runTime-=stage.StartedOn||0;
+        const getElapsedTime = () => {
+    
+            const timeInSeconds = runTime/1000 || 0
+            const m = Math.floor(timeInSeconds / 60).toString().padStart(2,'0')
+            const s = Math.floor(timeInSeconds % 60).toString().padStart(2,'0');
+    
+            return m + ' MIN ' + s + ' SEC'  
+    
         }
         return {
             stageId: stage.Id,
@@ -35,7 +46,7 @@ export const StagesWithActions = (props :{showDet: boolean, showStage: boolean})
             numberOfActions: stage.Actions.length,
             failed: stage.stageFailed,
             completed: stage.completed,
-            totalRunTime: runTime
+            totalRunTime: getElapsedTime()
         }
     })
 

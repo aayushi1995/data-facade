@@ -117,24 +117,19 @@ const ShowGlobalParameters = () => {
             }
         ].map(column => { return {...column, width: column.field.length*20}}),
         rows: getRows(),
-        rowsPerPageOptions: [5, 10, 15, 20, 50],
         disableSelectionOnClick: true,
         hideFooterSelectedRowCount: true,
         sx: {
             "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
-            backgroundColor: 'ActionCardBgColor.main',
-            backgroundBlendMode: "soft-light, normal",
-            border: "2px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-            borderRadius: "10px"
+                backgroundColor: 'ActionCardBgColor.main',
+                backgroundBlendMode: "soft-light, normal",
+                border: "2px solid rgba(255, 255, 255, 0.4)",
+                boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
         },
         autoHeight: true,
         headerHeight: 70,
-        initialState: {
-            pagination: {
-                pageSize: 20
-            }
-        },
+        
+        
     }
 
     return (

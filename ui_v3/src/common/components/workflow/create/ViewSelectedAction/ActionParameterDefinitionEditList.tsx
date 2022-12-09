@@ -143,18 +143,13 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
             }
         ],
         rows: datagridRows,
-        autoPageSize: true,
-        rowsPerPageOptions: [5, 10, 15],
-        initialState: {
-            pagination: {
-                pageSize: 5
-            }
-        },
-        disableSelectionOnClick: true
+        disableSelectionOnClick: true,
+        autoHeight: true,
+        headerHeight: 70,
     }
 
     return(
-        <Box sx={{ height: "400px", width: "100%" }}>
+        <Box sx={{ height: "400px", width: "100%" ,overflow:'scroll'}}>
             <DataGrid sx={{
                 "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
                 backgroundColor: 'ActionCardBgColor.main',

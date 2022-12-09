@@ -5,8 +5,10 @@ export const ActionTabStyle = {
     width:'6vw',
     borderTopRightRadius:'8px',
     borderTopLeftRadius:'8px',
-    px:1,
-    py:0,
+    paddingLeft:'3px',
+    paddingRight:'3px',
     marginRight:'5px',
-    fontSize:'10px'
+    fontSize:'10px',
+    overflowY:'hidden',
+    overflowX:'scroll'
 }

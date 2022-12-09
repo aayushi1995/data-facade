@@ -105,11 +105,10 @@ export const ActionHeaderCardInputAreaStyle = {
     border: "1px solid #56D280",
     boxShadow: "0px 15px 25px rgba(54, 48, 116, 0.3)",
     borderRadius: "15.62px",
-    padding:"10px"
 }
 
 export const ActionHeaderCardActionAreaStyle = {
-    width:'20%',
+    width:'25%',
     background: "#565656", 
     borderRadius: "15.6169px"
 }

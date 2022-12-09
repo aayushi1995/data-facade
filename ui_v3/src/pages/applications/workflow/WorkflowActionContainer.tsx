@@ -198,6 +198,16 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                 }
             }
         )
+        const timenow = new Date(Date.now()).getTime()
+        setWorkflowContext(
+            {
+                type: 'SET_STAGE_STARTED_TIME',
+                payload: {
+                    stageId: stageId,
+                    startedOn: timenow 
+                }
+            }
+        )
     }
     
     if(stageDetails) {
