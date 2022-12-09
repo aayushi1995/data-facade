@@ -42,8 +42,8 @@ for env_name in args.env_name:
         image_tag = image_conf.image_tag if image_conf.image_tag is not None else f"{image_conf.env_name}_{args.image_tag}"
         script = f"""
 sudo docker build --build-arg endpoint={image_conf.endpoint} --build-arg client_id={image_conf.client_id} -t df-uiapp:{image_tag} . -f Dockerfile
-sudo docker tag df-uiapp:{image_tag} $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/df-uiapp:{image_tag}
-sudo docker push $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/df-uiapp:{image_tag} 
+sudo docker tag df-uiapp:{image_tag} ${{AWS_ACCOUNT_ID}}.dkr.ecr.${{AWS_REGION}}.amazonaws.com/df-uiapp:{image_tag}
+sudo docker push ${{AWS_ACCOUNT_ID}}.dkr.ecr.${{AWS_REGION}}.amazonaws.com/df-uiapp:{image_tag} 
 """
         print(f'echo  " {script} "')
         print(script)
