@@ -4,7 +4,7 @@ import { ActionDefinitionDetail, WebAppDetails } from "../../../generated/interf
 import { v4 as uuidv4 } from "uuid"
 import { Layout } from "react-grid-layout";
 import { getDefaultTemplateParameters } from "../../../pages/execute_action/util";
-import { ComponentConfig, InputComponentDetails } from "../../types/ComponentConfigTypes";
+import { ComponentConfig, InputComponentDetails, TextBoxComponentDetails } from "../../types/ComponentConfigTypes";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ComponentTypes from "../../../enums/ComponentTypes";
@@ -18,7 +18,9 @@ type WebAppTemplateTextType = Record<string, WebAppActionDefition>
 export type WebAppActionDefition = {
     ActionReference: string,
     ActionDefinition: ActionDefinition,
-    ParameterMappings: WebAppActionParameter
+    ParameterMappings: WebAppActionParameter,
+    DownstreamDependencies: string[],
+    ParameterDependencies: string[]
 }
 
 export type WebAppComponent = ComponentDefinition & {UILayout: {x: number, y: number, w: number, h: number}}
@@ -91,6 +93,36 @@ type ChangeWebAppModel = {
     }
 }
 
+type UpdateActionParameters = {
+    type: 'UpdateActionParameters',
+    payload: {
+        actionReference: string,
+        ParameterMappings: WebAppActionParameter
+    }
+}
+
+type ResolveDependences = {
+    type: 'ResolveDependences',
+    payload: {}
+}
+
+type EditTextOfTextBoxComponent = {
+    type: 'EditTextOfTextBoxComponent',
+    payload: {
+        componentId: string,
+        details: TextBoxComponentDetails
+    }
+}
+
+type MapParameterToGlobalParameter = {
+    type: 'MapParameterToGlobalParameter',
+    payload: {
+        actionReference: string,
+        childParameterId: string,
+        globalParameterId: string
+    }
+}
+
 export type SetEditWebAppContextType = (action: EditWebAppActionType) => void
 
 export type EditWebAppActionType = SetContextWithDetails |
@@ -100,7 +132,11 @@ export type EditWebAppActionType = SetContextWithDetails |
                                     AddActionToWebApp |
                                     AddGlobalParameter |
                                     ChangeComponentLabel |
-                                    ChangeWebAppModel
+                                    ChangeWebAppModel |
+                                    UpdateActionParameters |
+                                    ResolveDependences |
+                                    EditTextOfTextBoxComponent |
+                                    MapParameterToGlobalParameter
 
 const defaultWebAppContext: EditWebAppContextType = {
     webApp: {},
@@ -235,7 +271,9 @@ const reducer = (state: EditWebAppContextType, action: EditWebAppActionType): Ed
                     DisplayName: action.payload.actionDefinitionToAdd.ActionDefinition?.model?.DisplayName,
                     DefaultActionTemplateId: action.payload.actionDefinitionToAdd.ActionDefinition?.model?.DefaultActionTemplateId
                 },
-                ParameterMappings: parameterMappings
+                ParameterMappings: parameterMappings,
+                DownstreamDependencies: [],
+                ParameterDependencies: []
             }
             const chartsOfActions = JSON.parse(action.payload.actionDefinitionToAdd.ActionDefinition?.model?.Config || "{}")?.charts as ChartOptionType[]
             chartsOfActions?.forEach?.((chart, index) => {
@@ -319,6 +357,84 @@ const reducer = (state: EditWebAppContextType, action: EditWebAppActionType): Ed
             }
         }
 
+        case 'UpdateActionParameters': {
+            return reducer({
+                ...state,
+                Actions: state.Actions.map(actionDef => actionDef.ActionReference === action.payload.actionReference ? {
+                    ...actionDef,
+                    ParameterMappings: action.payload.ParameterMappings
+                } : actionDef)
+            }, {
+                type: "ResolveDependences",
+                payload: {}
+            })
+        }
+
+        case 'ResolveDependences': {
+            
+            const downstreamDependencies: Record<string, string[]> = state.Actions.reduce((downstreamDependencies: Record<string, string[]>, webActionDef) => {
+                return Object.entries(webActionDef.ParameterMappings).reduce((downstreams: Record<string, string[]>, [parameterDefId, parameterInstance]) => {
+                    if(!!parameterInstance.SourceExecutionId) {
+                        return {
+                            ...downstreams,
+                            [parameterInstance.SourceExecutionId]: [...(downstreams[parameterInstance.SourceExecutionId!] || []), webActionDef.ActionReference]
+                        }
+                    }
+                    return downstreams
+                }, downstreamDependencies)
+            }, {})
+            const parameterDependencies: Record<string, string[]> = state.Actions.reduce((parameterDependencies: Record<string, string[]>, webActionDef) => {
+                return Object.entries(webActionDef.ParameterMappings).reduce((params: Record<string, string[]>, [paramDefId, parameterInstance]) => {
+                    if(!!parameterInstance.GlobalParameterId){
+                        return {
+                            ...params,
+                            [webActionDef.ActionReference]: [...(params[webActionDef.ActionReference] || []), parameterInstance.GlobalParameterId]
+                        }
+                    }
+                    return parameterDependencies
+                }, parameterDependencies)
+            }, {})
+            return {
+                ...state,
+                Actions: state.Actions.map(webAppAction => {
+                    return {
+                        ...webAppAction,
+                        DownstreamDependencies: [... new Set(downstreamDependencies[webAppAction.ActionReference] || [])],
+                        ParameterDependencies: [... new Set(parameterDependencies[webAppAction.ActionReference] || [])]
+                    } 
+                })
+            }
+        }
+
+        case 'EditTextOfTextBoxComponent': {
+            return {
+                ...state,
+                Components: state.Components.map(component => component.Id !== action.payload.componentId ? component : {
+                    ...component,
+                    Config: JSON.stringify(action.payload.details)
+                })
+            }
+        }
+
+        case 'MapParameterToGlobalParameter': {
+            return reducer({
+                ...state,
+                Actions: state.Actions.map(webAppAction => webAppAction.ActionReference !== action.payload.actionReference ? webAppAction : {
+                    ...webAppAction,
+                    ParameterMappings: {
+                        ...webAppAction.ParameterMappings,
+                        [action.payload.childParameterId]: {
+                            ...webAppAction.ParameterMappings[action.payload.childParameterId],
+                            GlobalParameterId: action.payload.globalParameterId
+                        }
+                    }
+                })
+            }, {
+                type: 'ResolveDependences',
+                payload: {}
+            })
+        }
+
         default:
             return state
     }
@@ -377,7 +493,9 @@ const makeActionsFromWebAppTemplate = (webAppTemplate: ActionTemplate) => {
         return {
             ActionReference: actionReference,
             ActionDefinition: actionDetails.ActionDefinition,
-            ParameterMappings: actionDetails.ParameterMappings
+            ParameterMappings: actionDetails.ParameterMappings,
+            DownstreamDependencies: actionDetails.DownstreamDependencies || [],
+            ParameterDependencies: actionDetails.DownstreamDependencies || []
         }
     })
 

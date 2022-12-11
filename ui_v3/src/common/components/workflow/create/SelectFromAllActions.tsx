@@ -24,7 +24,7 @@ const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
                     <Grid item xs={12} md={6} lg={6} xl={4} sm={12}>
                         <SelectActionCard
                             actionId={actionDefinition?.ActionDefinition?.model?.Id||"NA"}
-                            actionName={actionDefinition?.ActionDefinition?.model?.UniqueName||"NAME NA"}
+                            actionName={actionDefinition?.ActionDefinition?.model?.DisplayName || actionDefinition?.ActionDefinition?.model?.UniqueName||"NAME NA"}
                             actionDescription={actionDefinition?.ActionDefinition?.model?.Description||"DESCRIPTION NA"}
                             onAddAction={props.onAddAction}
                             defaultTemplateId={actionDefinition?.ActionDefinition?.model?.DefaultActionTemplateId||"TEMPLATE NA"}

@@ -322,7 +322,10 @@ export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParam
     const currentGlobalParameterIfPresent = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Id === currentParameterInContext?.GlobalParameterId )
     const currentGlobalParameter = currentGlobalParameterIfPresent?.length > 0 ? currentGlobalParameterIfPresent[0] : {}
 
-    const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => wfParameter.Tag === parameter.Tag && wfParameter.Datatype === parameter.Datatype)
+    const availableParameters = workflowContext.WorkflowParameters.filter(wfParameter => 
+        (wfParameter.Tag === parameter.Tag || wfParameter.Tag === ActionParameterDefinitionTag.TABLE_NAME && parameter.Tag === ActionParameterDefinitionTag.DATA) && 
+        (wfParameter.Datatype === parameter.Datatype || wfParameter.Datatype === ActionParameterDefinitionDatatype.STRING && parameter.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME)
+    )
     
     
     const addAndMapGlobalParameter = (globalParamToAdd: ActionParameterDefinition) => { 

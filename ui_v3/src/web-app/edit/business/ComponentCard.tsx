@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import useComponentCard from "../hooks/useComponentCard";
 import ComponentTypes from "../../../enums/ComponentTypes";
 import InputComponentCard from "./component_cards/InputComponentCard";
+import TextBoxComponentCard from "./component_cards/TextBoxComponentCard";
 
 interface ComponentCardProps {
     component: WebAppComponent
@@ -16,6 +17,7 @@ const ComponentCard = ({component}: ComponentCardProps) => {
     const renderComponentType = (): React.ReactFragment => {
         switch(component.Type) {
             case ComponentTypes.INPUT : return <InputComponentCard component={component}/>
+            case ComponentTypes.TEXT_BOX: return <TextBoxComponentCard component={component} />
             default: return <Typography>This is component of type {component.Type} </Typography>
         }
     }

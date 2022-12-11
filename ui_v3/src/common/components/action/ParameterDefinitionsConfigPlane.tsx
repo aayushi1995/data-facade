@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
-import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../workflow/create/ParameterInput";
+import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput, WebAppAutocompleteOption } from "../workflow/create/ParameterInput";
 
 
 
@@ -14,6 +14,8 @@ interface ParameterDefinitionsConfigPlaneProps {
     handleChange: (parameterInstances: ActionParameterInstance[]) => void,
     onParameterClick?: (parameterDefinitionId: string) => void,
     parentExecutionId?: string,
+    fromWebAppDefaultValue?: boolean,
+    upstreamWebAppActions?: string[]
 }
 
 
@@ -79,6 +81,43 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME ||
             parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
+            console.log(existingParameterInstance)
+            if(props.fromWebAppDefaultValue) {
+                return {
+                    parameterType: "UPSTREAM_ACTION_WEB_APP",
+                    parameterId: parameterDefinition.Id,
+                    inputProps: {
+                        parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
+                        selectedAction: existingParameterInstance?.SourceExecutionId || "",
+                        upstreamActions: props.upstreamWebAppActions || [],
+                        selectedTableFilter: {Id: existingParameterInstance?.TableId, UniqueName: existingParameterInstance?.ParameterValue},
+                        availableTableFilter: addtionalConfig?.availableTablesFilter || {},
+                        onChange: (selectedOption: WebAppAutocompleteOption) => {
+                            if(selectedOption?.type==="UpstreamAction") {
+                                onParameterValueChange({
+                                    ...existingParameterInstance,
+                                    SourceExecutionId: selectedOption.value
+                                })
+                            } else if(selectedOption?.type==="TableProperties") {
+                                onParameterValueChange({
+                                    ...existingParameterInstance,
+                                    ParameterValue: selectedOption?.value?.UniqueName,
+                                    TableId: selectedOption?.value?.Id,
+                                    ProviderInstanceId: selectedOption?.value?.ProviderInstanceID
+                                })
+                            } else {
+                                onParameterValueChange({
+                                    ...existingParameterInstance,
+                                    ParameterValue: undefined,
+                                    TableId: undefined,
+                                    ProviderInstanceId: undefined,
+                                    SourceExecutionId: undefined
+                                })
+                            }
+                        }
+                    }
+                }
+            }
             return {
                 parameterType: "TABLE",
                 parameterId: parameterDefinition.Id,

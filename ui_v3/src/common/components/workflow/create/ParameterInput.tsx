@@ -1,4 +1,5 @@
 import { Autocomplete, Box, createFilterOptions, FormControl, Icon, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { table } from "console"
 import React, { ChangeEvent } from "react"
 import InfoIcon from "../../../../../src/images/info.svg"
 import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
@@ -130,6 +131,18 @@ export interface NAInput {
     parameterId?: string
 }
 
+export interface UpstreamActionWebAppInput {
+    parameterType: "UPSTREAM_ACTION_WEB_APP",
+    parameterId?: string,
+    inputProps: {
+        parameterName: string,
+        upstreamActions: string[],
+        selectedAction: string,
+        selectedTableFilter: TableProperties,
+        availableTableFilter: TableProperties,
+        onChange: Function
+    }
+}
 
 export type ParameterInputProps = UpstreamActionParameterInput 
                                 | StringParameterInput 
@@ -141,7 +154,8 @@ export type ParameterInputProps = UpstreamActionParameterInput
                                 | ColumnParameterInput 
                                 | ColumnListParameterInput 
                                 | OptionSetStringParameterInput
-                                | OptionSetMultipleParameterInput
+                                | OptionSetMultipleParameterInput 
+                                | UpstreamActionWebAppInput
 
 
 export type ActionParameterColumnAdditionalConfig = {
@@ -171,8 +185,55 @@ const getParameterInputField = (props: ParameterInputProps) => {
         case "COLUMN_LIST": return <ColumnListInput {...props}/>
         case "OPTION_SET_SINGLE": return <OptionSetSingleInput {...props}/>
         case "OPTION_SET_MULTIPLE": return <OptionSetMultipleInput {...props}/>
+        case "UPSTREAM_ACTION_WEB_APP": return <UpstreamActionWebApp {...props} />
         default: return <NoInput/>
     }
+}
+type WebAppUpstreamActionOption = {
+    type: 'UpstreamAction',
+    value: string
+}
+type WebAppTableOption = {
+    type: 'TableProperties',
+    value: TableProperties
+}
+
+export type WebAppAutocompleteOption = WebAppTableOption | WebAppUpstreamActionOption
+
+const UpstreamActionWebApp = (props: UpstreamActionWebAppInput) => {
+
+    const {upstreamActions, selectedAction, selectedTableFilter, availableTableFilter, onChange} = props.inputProps
+    const {tables, loading, error}  = useTables({ tableFilter: availableTableFilter || {} })
+
+    const autoCompleteOptions: WebAppAutocompleteOption[] = [
+        ...upstreamActions.map(upstreamAction => ({value: upstreamAction, type: "UpstreamAction"} as WebAppAutocompleteOption)),
+        ...(tables?.map(table => ({ value: table, type: "TableProperties" } as WebAppAutocompleteOption)) || [])
+    ]
+
+    const selectedOption = autoCompleteOptions.find(option => (option.type==="TableProperties" && option.value?.Id===selectedTableFilter?.Id) || (option.type==="UpstreamAction" && option.value===selectedAction))
+
+    return (
+        <Autocomplete 
+            options={autoCompleteOptions}
+            fullWidth
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label={props.inputProps.parameterName || "Parameter Name NA"}
+                    variant="outlined"
+                    size="small"
+                />
+            )}
+            value={selectedOption}
+            getOptionLabel={(option: WebAppAutocompleteOption) => option.type==="UpstreamAction" ? option.value : (option.value?.UniqueName || "NA")}
+            groupBy={(option: WebAppAutocompleteOption) => option.type}
+            filterSelectedOptions
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            onChange={(event, value, reason, details) => onChange(value)}
+        />
+    )
 }
 
 const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
@@ -650,7 +711,7 @@ const TableInput = (props: TableParameterInput) => {
         >
             <Autocomplete
                 key={SelectedTable?.UniqueName || "NA"}
-                options={AvailableTables}
+                options={AvailableTables.sort((table1, table2) => (table1.ProviderInstanceID || "id").localeCompare(table2.ProviderInstanceID || "id"))}
                 getOptionLabel={(table: TableProperties) => table.UniqueName!}
                 defaultValue={SelectedTable}
                 groupBy={(table) => table.ProviderInstanceName||"Provider NA"}

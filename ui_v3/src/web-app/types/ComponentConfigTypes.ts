@@ -31,7 +31,17 @@ export type OutputComponentDetails = {
     flowIndex?: number
 }
 
+export type TextBoxComponentConfig = {
+    type: 'text_box',
+    details: TextBoxComponentDetails
+}
+
+export type TextBoxComponentDetails = {
+    Text: string
+}
+
 export type ComponentConfig = 
 InputComponentConfig |
 ChartComponentConfig |
-OutputComponentConfig
+OutputComponentConfig |
+TextBoxComponentConfig

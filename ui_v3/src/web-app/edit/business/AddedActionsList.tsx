@@ -11,7 +11,7 @@ const AddedActionsList = () => {
     return (
         <>
         <Dialog open={!!selectedAction} onClose={handleDialogClose} maxWidth="lg" fullWidth>
-            {selectedAction ? <ConfigureWebActionParameters action={selectedAction!} /> : <></>}
+            {selectedAction ? <ConfigureWebActionParameters actionReference={selectedAction!.ActionReference} /> : <></>}
             
         </Dialog>
         <List>

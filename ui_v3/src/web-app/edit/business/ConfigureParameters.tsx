@@ -1,17 +1,29 @@
 import { Step, StepButton, Stepper, Box, FormControl, Select, MenuItem } from "@mui/material"
+import React from "react"
+import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
-import { WebAppActionDefition } from "../context/EditWebAppContextProvider"
+import { GlobalParameterHandler } from "../../../common/components/workflow/create/ViewSelectedAction/EditActionParameterDefinition/EditActionParameterDefinition"
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype"
+import { EditWebAppContext, WebAppActionDefition } from "../context/EditWebAppContextProvider"
 import useConfigureWebAppActionParameters from "../hooks/useConfigureWebAppActionParameters"
+import WebAppGlobalParameterHandler from "./WebAppGlobalParameterHandler"
 
 
 interface ConfigureParameterProps {
-    action: WebAppActionDefition
+    actionReference: string
 }
 
-const ConfigureWebActionParameters = ({action}: ConfigureParameterProps) => {
-    console.log(action)
+const ConfigureWebActionParameters = ({actionReference}: ConfigureParameterProps) => {
 
-    const {parameters, changeParameterIndex, fetchActionDetailsQuery, activeParameterIndex} = useConfigureWebAppActionParameters({action: action})
+    const {
+        parameters, 
+        changeParameterIndex, 
+        fetchActionDetailsQuery, 
+        activeParameterIndex, 
+        findParameterReferenceInAction, 
+        handleUserInputRequiredChange, 
+        getUpstreamWebAppActions,
+        handleDefaultValueChange} = useConfigureWebAppActionParameters({actionReference: actionReference})
 
     return (
         <ReactQueryWrapper {...fetchActionDetailsQuery}>
@@ -31,17 +43,27 @@ const ConfigureWebActionParameters = ({action}: ConfigureParameterProps) => {
                     <Box sx={{display: 'flex', width: '100%', gap: 2, flexDirection: 'column', mt: 2}}>
                         <FormControl sx={{width: '100%', mt: 1}}>
                             <Select
-                                value={"Yes"}
+                                value={findParameterReferenceInAction(parameters[activeParameterIndex])?.UserInputRequired}
                                 fullWidth
-                                // onChange={(event?: SelectChangeEvent<string>) => handleUserInputRequiredChange?.(event?.target?.value)}
-                                // disabled={params?.row?.parameter?.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST}
-                                placeholder="Not Configured"
+                                onChange={handleUserInputRequiredChange}
+                                disabled={parameters[activeParameterIndex]?.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST}
                                 label="User Input Required"
                             >
                                 <MenuItem value={"Yes"}>Yes</MenuItem>
                                 <MenuItem value={"No"}>No</MenuItem>
                             </Select>
                         </FormControl>
+                        {findParameterReferenceInAction(parameters[activeParameterIndex])?.UserInputRequired === "No" ? (
+                            <ParameterDefinitionsConfigPlane 
+                                parameterDefinitions={[parameters[activeParameterIndex]]} 
+                                parameterInstances={[{...findParameterReferenceInAction(parameters[activeParameterIndex]), ActionParameterDefinitionId: parameters[activeParameterIndex].Id} || {}]}
+                                handleChange={handleDefaultValueChange}
+                                fromWebAppDefaultValue={true}
+                                upstreamWebAppActions={getUpstreamWebAppActions()}
+                            />
+                        ) : (
+                            <WebAppGlobalParameterHandler actionReference={actionReference} currentParameter={parameters[activeParameterIndex]} currentParameterInstance={findParameterReferenceInAction(parameters[activeParameterIndex]) || {}} />
+                        )}
                     </Box>
                 </Box>
             )}
