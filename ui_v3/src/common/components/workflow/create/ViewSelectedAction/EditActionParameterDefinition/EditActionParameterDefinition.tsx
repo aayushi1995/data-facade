@@ -252,6 +252,13 @@ export const DefaultValueSelector = (props: DefaultValueSelectorProps) => {
                 }
             } as BooleanParameterInput
         } else if(parameter.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST) {
+            const addtionalConfig = safelyParseJSON(parameter?.Config) as (undefined | ActionParameterDefinitionConfig)
+            const parentTableId = parametersInstances?.find(paramInstance => paramInstance?.ActionParameterDefinitionId === addtionalConfig?.ParentParameterDefinitionId)?.TableId
+            const tableFilters = parentTableId!==undefined ? 
+                [{Id: parentTableId} as TableProperties]
+                :
+                parametersInstances?.filter(paramInstance => paramInstance?.GlobalParameterId===undefined && paramInstance?.TableId!==undefined)?.map(paramInstance => ({ Id: paramInstance?.TableId } as TableProperties))
+            const uniqueTableFilters = getUniqueFilters(tableFilters)
             const parameterConfig = getCurrentParameterConfig()
             return {
                 parameterType: "COLUMN_LIST",
@@ -259,7 +266,7 @@ export const DefaultValueSelector = (props: DefaultValueSelectorProps) => {
                     parameterName: props.parameter.DisplayName || props.parameter.ParameterName || "NAME NA",
                     selectedColumnFiltersWithNameOnly: parameterConfig?.ParameterValue?.split(',').map(name => ({UniqueName: name})) || [],
                     filters: {
-                        tableFilters: [{Id: parameterConfig?.TableId}],
+                        tableFilters: uniqueTableFilters,
                         parameterDefinitionId: props.parameter.Id!
                     },
                     onChange: (newValue: ColumnProperties[] | undefined) => {
@@ -337,7 +344,8 @@ export const useGlobalParameterHandler = (params: UseGlobalParameterHandlerParam
             ParameterName: paramterName, 
             Datatype: parameter.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME ? ActionParameterDefinitionDatatype.STRING : parameter.Datatype, 
             Tag: parameter.Tag === ActionParameterDefinitionTag.DATA ? ActionParameterDefinitionTag.TABLE_NAME : parameter.Tag , 
-            OptionSetValues: parameter.OptionSetValues 
+            OptionSetValues: parameter.OptionSetValues,
+            IsOptional: parameter.IsOptional
         } 
         setWorkflowContext({type: 'ADD_WORKFLOW_PARAMETER', payload: {parameter: newGlobalParamter}}) 
         mapToGlobalParameter(id) 

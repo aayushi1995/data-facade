@@ -580,12 +580,13 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             const existingParameters = activeTemplate?.parameterWithTags
             const newParameters = inferredParameters.map(inferredParam => {
                 const existingParameterDefinition = existingParameters?.find(p => p?.parameter?.ParameterName===inferredParam?.ParameterName)?.parameter
+                const parameterTag = inferredParam.Tag === ActionParameterDefinitionTag.OTHER ? existingParameterDefinition?.Tag : inferredParam.Tag
                 if(existingParameterDefinition){
                     return {
                         parameter: {
+                            ...existingParameterDefinition,
                             ...inferredParam,
-                            ...existingParameterDefinition
-                            
+                            Tag: parameterTag
                         },
                         tags: []
                     }

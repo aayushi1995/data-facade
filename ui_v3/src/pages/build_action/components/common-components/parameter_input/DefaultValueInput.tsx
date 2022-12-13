@@ -1,5 +1,5 @@
 import { getUniqueFilters } from "../../../../../common/components/action/ParameterDefinitionsConfigPlane"
-import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, FloatParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../../common/components/workflow/create/ParameterInput"
+import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, FloatParameterInput, IntParameterInput, OptionSetMultipleParameterInput, OptionSetStringParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../../common/components/workflow/create/ParameterInput"
 import ActionParameterDefinitionDatatype from "../../../../../enums/ActionParameterDefinitionDatatype"
 import ActionParameterDefinitionTag from "../../../../../enums/ActionParameterDefinitionTag"
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../../../generated/entities/Entities"
@@ -21,7 +21,7 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
     
     const getParameterInputProps: () => ParameterInputProps = () => {
         const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
-   
+        
         if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.DATA || actionParameterDefinition?.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             return {
                 parameterType: "TABLE",
@@ -57,6 +57,36 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                             })
                 }
             } as ColumnParameterInput 
+        } else if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
+            return {
+                parameterType: "OPTION_SET_SINGLE",
+                parameterId: actionParameterDefinition.Id,
+                inputProps: {
+                    parameterName: actionParameterDefinition.ParameterName,
+                    selectedOptions: {name: defaultActionParameterInstance?.ParameterValue},
+                    availableOptions: actionParameterDefinition?.OptionSetValues?.split(',')?.map(option => ({name: option})) || [],
+                    onChange: (newOption: {name: string}) => {
+                        updateDefaultActionParameterInstance({
+                            ParameterValue: newOption.name
+                        })
+                    }
+                } 
+            } as OptionSetStringParameterInput
+        } else if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE) {
+            return {
+                parameterType: 'OPTION_SET_MULTIPLE',
+                parameterId: actionParameterDefinition.Id,
+                inputProps: {
+                    parameterName: actionParameterDefinition.ParameterName || "string",
+                    availableOptions: actionParameterDefinition?.OptionSetValues?.split(',')?.map(option => ({name: option})) || [],
+                    selectedOptions: defaultActionParameterInstance?.ParameterValue?.split(',')?.map(option => ({name: option})) || [],
+                    onChange: (newOptions: {name: string}[]) => {
+                        updateDefaultActionParameterInstance({
+                            ParameterValue: newOptions.map(option => option.name).join(',')
+                        })
+                    }
+                }
+            } as OptionSetMultipleParameterInput
         } else if(actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.STRING || actionParameterDefinition?.Datatype === ActionParameterDefinitionDatatype.STRING_NO_QUOTES) {
             return {
                 parameterType: "STRING",

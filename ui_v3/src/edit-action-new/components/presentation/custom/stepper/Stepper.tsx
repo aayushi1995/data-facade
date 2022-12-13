@@ -2,7 +2,7 @@
 Custom Stepper implementation to match design requirements
 */
 import { Box, Button } from "@mui/material";
-import StepperConnectorBox from "../../styled_native/StepperConnectorBox";
+import StepperConnectorBox, { StepperNonSelectedConnectorBox } from "../../styled_native/StepperConnectorBox";
 
 export type StepStatus = "COMPLETED" | "NOT COMPLETED"
 export type StepperStep = {
@@ -24,7 +24,12 @@ function Stepper(props: StepperProps) {
             return [
                 ...prevComponents,
                 <Box sx={{ width: "100%", pl: 1}}>
-                    <StepperConnectorBox/>
+                    {currentStep.stepId === activeStepId ? (
+                        <StepperConnectorBox/>    
+                    ) : (
+                        <StepperNonSelectedConnectorBox />
+                    )}
+                    
                     <Button onClick={() => onStepSelect?.(currentStep?.stepId)}>{currentStep?.stepName || ""}</Button>
                 </Box>,
                 

@@ -117,7 +117,6 @@ const ActionParameterDefinitionEditList = (props: ActionParameterDefinitionEditL
                                 value={userInputRequiredValue}
                                 fullWidth
                                 onChange={(event?: SelectChangeEvent<string>) => handleUserInputRequiredChange?.(event?.target?.value)}
-                                disabled={params?.row?.parameter?.Datatype === ActionParameterDefinitionDatatype.COLUMN_NAMES_LIST}
                                 placeholder="Not Configured"
                                 disableUnderline={true}
                                 sx={{

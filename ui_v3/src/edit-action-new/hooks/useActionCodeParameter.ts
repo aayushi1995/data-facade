@@ -93,9 +93,10 @@ function getActionParameterOperationsBottomProps(buildActionContext: BuildAction
 
 function getActionParameterOperationsTopProps(buildActionContext: BuildActionContextState, setBuildActionContext: SetBuildActionContextState): ActionParameterOperationsTopProps {
     const addParam = () => getAddParamFunction(buildActionContext, setBuildActionContext)
-
+    const handleClose = () => setBuildActionContext({ type: "SetActiveParameterId", payload: { newActiveParameterId: undefined }})
     return {
-        addParam
+        addParam,
+        handleClose
     }
 }
 
