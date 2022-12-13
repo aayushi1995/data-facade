@@ -88,7 +88,7 @@ const SelectActionCard = (props: SelectActionCardProps) => {
                             </Icon>
                         </Box>
                         <Box sx={{display: "flex", flexDirection: "column", gap: 1, flexGrow: 1}}>
-                            <Box sx={{display: "flex", flexDirection: "column"}}>
+                            <Box sx={{display: "flex",width:'140px',overflowX:'scroll' ,flexDirection: "column"}}>
                                 <Box>
                                     <Typography variant="actionCardHeader">
                                         {props.actionName}

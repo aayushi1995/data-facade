@@ -13,10 +13,7 @@ function EditActionForm() {
     const [actionHeaderProps, actionMainProps] = useEditActionForm()
     
     return(
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 1 ,mt:5}}>
-            <Box sx={{pl:2,mt:5}}>
-                <img width='30px' src={sixDot} alt="" />
-            </Box>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 1 ,mt:2,pl:2}}>
             <CardBoxRoot >
                 <ActionHeader {...actionHeaderProps}/>
                 <ActionMain/>

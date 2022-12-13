@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { TemplateSelectorParentBox } from "./styled_native/ActionMainBox";
 import pythonLogo from "../../../../src/images/python.svg";
-import sqlLogo from "../../../../src/images/SQL.svg"
+import sqlLogo from "../../../../src/images/sqlcard.svg"
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 export type TemplateLanguageBoxProps = {
     name?: string,
@@ -13,8 +13,8 @@ function TemplateSelector(props: TemplateLanguageBoxProps) {
     const { name, description, onClick } = props
     return (
         <TemplateSelectorParentBox sx={{ display: "flex", flexDirection: "column", gap: 2 , alignItems: "center"}} onClick={props?.onClick}>
-            <Box sx={{height:'80px',p:2}}>
-              <img width='50px' src={name=="SQL"?sqlLogo:pythonLogo} alt="" />  
+            <Box sx={{height:'80px',p:2,pt:name=="SQL"?5:3}}>
+              <img width={name=="SQL"?85:65} src={name=="SQL"?sqlLogo:pythonLogo} alt="" />  
             </Box>
             <Box>
                 <Typography sx={{color:"black",fontSize:'1.2rem',fontWeight:600}}>{name=="SQL"?"SQL Action":"Python cell"}</Typography>

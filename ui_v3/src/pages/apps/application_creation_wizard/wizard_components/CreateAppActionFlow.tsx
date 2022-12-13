@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Radio, Typography } from "@mui/material";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_WEB_APP_BUILD_ROUTE, APPPLICATION_CREATE_AUTO_FLOW } from "../../../../common/components/header/data/ApplicationRoutesConfig";
+import { APPLICATION_ADD_ACTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_WEB_APP_BUILD_ROUTE, APPPLICATION_CREATE_AUTO_FLOW } from "../../../../common/components/header/data/ApplicationRoutesConfig";
 import { BuildApplicationWizardStepProps } from "../ApplicationCreationWizard";
 
 
@@ -34,7 +34,7 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
             props.nextStep()
         } else if(selectedOption===createOptions[1].value){
             history.push({
-                pathname: APPLICATION_BUILD_ACTION_ROUTE_ROUTE
+                pathname: APPLICATION_ADD_ACTION_ROUTE
             })
         } else if(selectedOption===createOptions[2].value){
             history.push({

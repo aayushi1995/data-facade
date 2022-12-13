@@ -12,6 +12,8 @@ import pythonLogo from "../../../../src/images/python.svg";
 import sqlLogo from "../../../../src/images/SQL.svg"
 import { BuildActionContext } from '../../../pages/build_action/context/BuildActionContext';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import InfoIcon from '@mui/icons-material/Info';
 export type ActionHeaderProps = {
     actionName?: string,
     actionDescription?: string,
@@ -124,7 +126,7 @@ function ActionHeader(props: ActionHeaderProps) {
                         <Button size='small' variant='outlined' sx={{gap:1,minWidth:'4vw',color:'white',borderColor:'white',borderRadius:'0px',borderTopLeftRadius:'10px',borderTopRightRadius:'10px',mr:2}} color="info" onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</Button>
                     </Box>
                     <Box>
-                        <Button size='small' sx={{minWidth:'4vw',color:'white',borderColor:'lime'}} color='success' variant='outlined' onClick={props?.actionHandler?.onSave}>Save</Button>
+                        <Button size='small' sx={{minWidth:'4vw',color:'white',borderColor:'lime'}} color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <InfoIcon sx={{ transform: "scale(0.7)"}}/> : <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }Save</Button>
                     </Box>
                 </Box>
                 <Box>

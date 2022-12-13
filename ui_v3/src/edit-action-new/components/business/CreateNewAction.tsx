@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import TemplateSupportedRuntimeGroup from "../../../enums/TemplateSupportedRuntimeGroup";
 import { Application } from "../../../generated/entities/Entities";
 import ActionHeroApplicationSelector from "../presentation/custom/ActionHeroApplicationSelector";
@@ -35,7 +35,7 @@ function CreateNewAction(props: CreateNewActionProps) {
             description: "Query your data connections or dataframes.",
             onClick: () => {
                 onLanguageChange(TemplateSupportedRuntimeGroup.COMMON)
-                onSaveAction()
+                // onSaveAction()
             }
         },
         {
@@ -43,7 +43,7 @@ function CreateNewAction(props: CreateNewActionProps) {
             description: "Transform your data using python.",
             onClick: () => {
                 onLanguageChange(TemplateSupportedRuntimeGroup.PYTHON)
-                onSaveAction()
+                // onSaveAction()
             }
         }
     ]
@@ -106,6 +106,7 @@ function CreateNewAction(props: CreateNewActionProps) {
                     <TemplateSelector {...t}/>    
                 )}
             </Box>
+            <Button onClick={onSaveAction}>Create</Button>
         </Box>
     )
 }

@@ -2,7 +2,7 @@ import { Grid , Box, Link, Typography, ListItem, List} from "@mui/material";
 import React from "react";
 import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import {HeadeCssOfCard, TypographyForCommon} from './CSS/CssProperties';
-import {APPLICATION_ROUTE ,APPLICATION_CREATION_WIZARD_ROUTE ,APPPLICATION_CREATE_AUTO_FLOW, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE } from '../../../../src/common/components/header/data/ApplicationRoutesConfig';
+import {APPLICATION_ROUTE ,APPLICATION_CREATION_WIZARD_ROUTE ,APPPLICATION_CREATE_AUTO_FLOW, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_ADD_ACTION_ROUTE } from '../../../../src/common/components/header/data/ApplicationRoutesConfig';
 import { DATA_ALL_TABLES_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTION_CHOOSE } from "../../../common/components/header/data/DataRoutesConfig";
 import { INSIGHTS_ROUTE } from "../../../common/components/header/data/RoutesConfig";
 import {ReactComponent as Connection} from "../../../images/database.svg";
@@ -21,9 +21,9 @@ type commonItems = {
 
 const packageItems: commonItems[]=[
     {Name:'Create - ',URL : APPLICATION_CREATION_WIZARD_ROUTE},
-    {Name:"Package. " , URL : APPLICATION_CREATION_WIZARD_ROUTE},
-    {Name:'Action. ' , URL : APPLICATION_BUILD_ACTION_ROUTE_ROUTE},
-    {Name:'Flow. ' , URL : APPLICATION_BUILD_FLOW_ROUTE_ROUTE}
+    {Name:"Package " , URL : APPLICATION_CREATION_WIZARD_ROUTE},
+    {Name:'Action ' , URL : APPLICATION_ADD_ACTION_ROUTE},
+    {Name:'Flow ' , URL : APPLICATION_BUILD_FLOW_ROUTE_ROUTE}
 
 ]
 
