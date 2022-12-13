@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ChartOptionType, { ChartKindsType } from "../../../common/components/charts/types/ChartTypes";
 import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType } from "../../../custom_enums/ActionParameterDefinitionInputMap";
+import getDefaultCode from "../../../custom_enums/DefaultCode";
 import { getLanguage } from "../../../custom_enums/SupportedRuntimeGroupToLanguage";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat";
@@ -105,7 +106,7 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
                     DefinitionId: actionDefinitionId,
                     Language: TemplateLanguage.PYTHON,
                     SupportedRuntimeGroup: TemplateSupportedRuntimeGroup.PYTHON,
-                    Text: "def execute(self, df): # FILL IN CODE"
+                    Text: getDefaultCode(ActionDefinitionActionType.PROFILING, TemplateSupportedRuntimeGroup.PYTHON)
                 },
                 parameterWithTags: [],
                 parameterAdditionalConfig: []

@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../../pages/build_action/context/BuildActionContext";
 import ActionDefinitionSelector from "./ActionDefinitionSelector";
 import CreateNewAction, { CreateNewActionProps } from "./CreateNewAction";
-import getDefaultCode from "../../../../src/custom_enums/DefaultCode"
+
 export type AddActionToEditProps = {
     addActionWithId: (actionDefId?: string) => void
 }
@@ -15,30 +15,7 @@ function AddActionToEdit(props: AddActionToEditProps) {
     const buildActionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
     const useActionHooks = React.useContext(UseActionHooks)
-    const currentActionName = buildActionContext.actionDefinitionWithTags.actionDefinition.UniqueName
-    const [actionName, setActionName] = React.useState(currentActionName ?? "")
-    const activeTemplate = (buildActionContext?.actionTemplateWithParams || []).find(at => at.template.Id===buildActionContext.activeTemplateId)?.template
-    const getInitialActionType = () => {
-        return buildActionContext.actionDefinitionWithTags.actionDefinition.ActionType
-    }
-    const getInitialTemplateLanguage = () => {
-        return buildActionContext.actionTemplateWithParams.find(at => at.template.Id===buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId)!.template?.SupportedRuntimeGroup
-    }
-
-    const getInitialReturnType = () => {
-        return buildActionContext.actionDefinitionWithTags.actionDefinition.PresentationFormat
-    }
-
-    const [actionType, setActionType] = React.useState(getInitialActionType())
-    const [templateSupportedRuntimeGroup, setTemplateSupportedRuntimeGroup] = React.useState(getInitialTemplateLanguage())
-    React.useEffect(() => {
-        setBuildActionContext({
-            type: "SetActionTemplateText",
-            payload: {
-                newText: getDefaultCode(actionType, activeTemplate?.SupportedRuntimeGroup)
-            }
-        })
-    }, [actionType, actionName, activeTemplate?.SupportedRuntimeGroup])
+    
     const createNewActionProps: CreateNewActionProps = {
         name: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName,
         description: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Description,
@@ -59,7 +36,6 @@ function AddActionToEdit(props: AddActionToEditProps) {
         },
         actionHandlers: {
             onSaveAction: () => {
-                console.log(buildActionContext)
                 useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
                     onSuccess: () => addActionWithId(buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id)
                 }) 
@@ -80,4 +56,3 @@ function AddActionToEdit(props: AddActionToEditProps) {
 }
 
 export default AddActionToEdit;
-

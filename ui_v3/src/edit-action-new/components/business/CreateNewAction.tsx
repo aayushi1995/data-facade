@@ -35,7 +35,7 @@ function CreateNewAction(props: CreateNewActionProps) {
             description: "Query your data connections or dataframes.",
             onClick: () => {
                 onLanguageChange(TemplateSupportedRuntimeGroup.COMMON)
-                // onSaveAction()
+                onSaveAction()
             }
         },
         {
@@ -43,7 +43,7 @@ function CreateNewAction(props: CreateNewActionProps) {
             description: "Transform your data using python.",
             onClick: () => {
                 onLanguageChange(TemplateSupportedRuntimeGroup.PYTHON)
-                // onSaveAction()
+                onSaveAction()
             }
         }
     ]

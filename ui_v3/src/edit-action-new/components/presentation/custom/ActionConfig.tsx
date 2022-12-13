@@ -1,8 +1,5 @@
 import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, Typography } from "@mui/material";
-import React from "react";
 import ActionTypeToSupportedRuntimes from "../../../../custom_enums/ActionTypeToSupportedRuntimes";
-import getDefaultCode from "../../../../custom_enums/DefaultCode";
-import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../../../pages/build_action/context/BuildActionContext";
 
 export type ActionConfigProps = {
     pinned?: boolean,
@@ -18,32 +15,6 @@ export type ActionConfigProps = {
 
 function ActionConfig(props: ActionConfigProps) {
     const { pinned, published, onPinToggle, onPublishToggle, language, onLanguageChange, actionType } = props
-    const buildActionContext = React.useContext(BuildActionContext)
-    const setBuildActionContext = React.useContext(SetBuildActionContext)
-    const useActionHooks = React.useContext(UseActionHooks)
-    const currentActionName = buildActionContext.actionDefinitionWithTags.actionDefinition.UniqueName
-    const [actionName, setActionName] = React.useState(currentActionName ?? "")
-    const activeTemplate = (buildActionContext?.actionTemplateWithParams || []).find(at => at.template.Id===buildActionContext.activeTemplateId)?.template
-    const getInitialActionType = () => {
-        return buildActionContext.actionDefinitionWithTags.actionDefinition.ActionType
-    }
-    const getInitialTemplateLanguage = () => {
-        return buildActionContext.actionTemplateWithParams.find(at => at.template.Id===buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId)!.template?.SupportedRuntimeGroup
-    }
-
-    const getInitialReturnType = () => {
-        return buildActionContext.actionDefinitionWithTags.actionDefinition.PresentationFormat
-    }
-    const [templateSupportedRuntimeGroup, setTemplateSupportedRuntimeGroup] = React.useState(getInitialTemplateLanguage())
-    const [returnType, setReturnType] = React.useState(getInitialReturnType())
-    React.useEffect(() => {
-        setBuildActionContext({
-            type: "SetActionTemplateText",
-            payload: {
-                newText: getDefaultCode(actionType, activeTemplate?.SupportedRuntimeGroup)
-            }
-        })
-    }, [actionType, actionName, activeTemplate?.SupportedRuntimeGroup])
     return (
         <Box sx={{py:1}}>
             <Box sx={{py:1,borderBottom:'3px solid #e3e3e3',px:3}}>
