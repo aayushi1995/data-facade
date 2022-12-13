@@ -583,8 +583,9 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 if(existingParameterDefinition){
                     return {
                         parameter: {
-                            ...existingParameterDefinition,
-                            ...inferredParam
+                            ...inferredParam,
+                            ...existingParameterDefinition
+                            
                         },
                         tags: []
                     }
@@ -1142,15 +1143,19 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
 }
 
 const inferInputType = (type?: string) => {
-        if(type?.includes?.("table"))
-            return ActionParameterDefinitionInputType.TABLE_NAME;
-        if(type?.includes?.("column"))
-            return ActionParameterDefinitionInputType.COLUMN_NAME
-        if(type?.includes?.("string"))
-            return ActionParameterDefinitionInputType.STRING
-        if(type?.includes?.("integer"))
-            return ActionParameterDefinitionInputType.INTEGER
-        return ActionParameterDefinitionInputType.STRING
+        console.log(type)
+        const inputTypeMapping = [
+            ["table", ActionParameterDefinitionInputType.TABLE_NAME],
+            ["column_list", ActionParameterDefinitionInputType.COLUMN_LIST],
+            ["column", ActionParameterDefinitionInputType.COLUMN_NAME],
+            ["string", ActionParameterDefinitionInputType.STRING],
+            ["integer", ActionParameterDefinitionInputType.INTEGER],
+            ["decimal", ActionParameterDefinitionInputType.DECIMAL],
+            ["boolean", ActionParameterDefinitionInputType.BOOLEAN]
+        ]
+
+        const detectedType = inputTypeMapping.find(([key, val]) => type?.includes(key))?.[1]
+        return detectedType || ActionParameterDefinitionInputType.STRING
 }
 
 const getDefaultParameterDefinition = (param: ActionParameterDefinition, language?: string, templateId?: string, definitionId?: string): ActionContextActionParameterDefinitionWithTags => {
