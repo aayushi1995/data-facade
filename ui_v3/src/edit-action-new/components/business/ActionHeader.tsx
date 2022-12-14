@@ -31,7 +31,8 @@ export type ActionHeaderProps = {
     },
     actionHandler?: {
         onTest: () => void,
-        onSave: () => void
+        onSave: () => void,
+        onDuplicate: () => void
     }
 }
 
@@ -127,6 +128,9 @@ function ActionHeader(props: ActionHeaderProps) {
                     </Box>
                     <Box>
                         <Button size='small' sx={{minWidth:'4vw',color:'white',borderColor:'lime'}} color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <InfoIcon sx={{ transform: "scale(0.7)"}}/> : <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }Save</Button>
+                    </Box>
+                    <Box>
+                        <Button size='small' sx={{minWidth: '4vw', color: 'white',}} color='error' variant='outlined' onClick={props.actionHandler?.onDuplicate}>Duplicate</Button>
                     </Box>
                 </Box>
                 <Box>

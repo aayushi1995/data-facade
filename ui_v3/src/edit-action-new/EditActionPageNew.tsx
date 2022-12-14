@@ -111,9 +111,8 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
                 })
             }
             
-            if(activeTabId===undefined) {
                 setActiveTabId(props.actionDefinitionId)
-            }
+            
         }
     }, [props.actionDefinitionId])
 

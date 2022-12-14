@@ -3,6 +3,8 @@ Business logic for ui_v3/src/edit-action-new/EditActionForm.tsx
 */
 
 import React from "react"
+import { generatePath, useHistory } from "react-router"
+import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE } from "../../common/components/header/data/ApplicationRoutesConfig"
 import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../pages/build_action/context/BuildActionContext"
 import { ActionHeaderProps } from "../components/business/ActionHeader"
 
@@ -20,6 +22,7 @@ function getActionHeaderProps(): ActionHeaderProps {
     const buildActionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
     const useActionHooks = React.useContext(UseActionHooks)
+    const history = useHistory()
 
     const onTest = () => {
         setBuildActionContext({
@@ -32,6 +35,14 @@ function getActionHeaderProps(): ActionHeaderProps {
                     type: 'SetTestMode',
                     payload: true
                 })
+            }
+        })
+    }
+
+    const onDuplicate = () => {
+        useActionHooks.duplicateActionMutation?.mutate({actionDefinitionId: buildActionContext.actionDefinitionWithTags.actionDefinition.Id!}, {
+            onSuccess: (data) => {
+                history.push(generatePath(APPLICATION_EDIT_ACTION_ROUTE_ROUTE, {ActionDefinitionId: data?.[0]?.Id}))
             }
         })
     }
@@ -54,6 +65,7 @@ function getActionHeaderProps(): ActionHeaderProps {
         actionHandler: {
             onTest: onTest,
             onSave: () => useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext),
+            onDuplicate: onDuplicate
         }
     }
 

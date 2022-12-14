@@ -2,6 +2,7 @@ import React from "react";
 import { UseMutationResult, useQueryClient } from "react-query";
 import { v4 as uuidv4 } from 'uuid';
 import ChartOptionType, { ChartKindsType } from "../../../common/components/charts/types/ChartTypes";
+import useCopyAndSaveDefinition from "../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition";
 import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput";
 import { getAttributesFromInputType } from "../../../custom_enums/ActionParameterDefinitionInputMap";
 import getDefaultCode from "../../../custom_enums/DefaultCode";
@@ -131,7 +132,8 @@ export const SetBuildActionContext = React.createContext<SetBuildActionContextSt
 // Data Query Hooks Context
 type UseActionHooksState = {
     useActionDefinitionFormSave?: UseMutationResult<ActionDefinitionFormPayload, unknown, BuildActionContextState, unknown>,
-    refreshActionDefinitionToLoad?: () => void
+    refreshActionDefinitionToLoad?: () => void,
+    duplicateActionMutation?: UseMutationResult<ActionDefinition[], unknown, {actionDefinitionId: string}, unknown>
 }
 export const UseActionHooks = React.createContext<UseActionHooksState>({})
 
@@ -1317,6 +1319,8 @@ export const BuildActionContextProvider = ({children, mode, newActionCallback}: 
         mode: contextState.mode
     })
 
+    const duplicateActionMutation = useCopyAndSaveDefinition({mutationName: "DuplicateWhileEditing"})
+
 
     const loadActionForEditQuery = useActionDefinitionDetail({
         options: {
@@ -1357,11 +1361,12 @@ export const BuildActionContextProvider = ({children, mode, newActionCallback}: 
             setContextState({ type: "InferParameters" })
         }
     }, [activeTemplate?.template?.Text])
-
+    
 
     const actionHooks: UseActionHooksState = {
         useActionDefinitionFormSave: saveMutation,
-        refreshActionDefinitionToLoad: () => { loadActionForEditQuery.refetch() }
+        refreshActionDefinitionToLoad: () => { loadActionForEditQuery.refetch() },
+        duplicateActionMutation: duplicateActionMutation
     }
 
     return (
