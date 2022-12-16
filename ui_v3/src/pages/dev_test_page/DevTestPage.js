@@ -61,7 +61,7 @@ const DevTestPage = () => {
     const handleNuke = () => {
         nukeMutation.mutate({})
     }
-
+    
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap:10}}>
             <Box>
@@ -72,9 +72,6 @@ const DevTestPage = () => {
             </Box>
             <Box>
                 <Button onClick={handleNuke}>Nuke</Button>
-            </Box>
-            <Box>
-                <TagHandler entityType={labels.entities.TABLE_PROPERTIES} entityId={""} allowAdd={true} allowDelete={true}/>
             </Box>
         </Box>
     )

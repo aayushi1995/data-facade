@@ -19,6 +19,7 @@ import { CreateActionPage } from "./pages/customizations/CreateActionPage"
 import Customizations from './pages/customizations/Customizations'
 import { RunActionPage } from "./pages/customizations/RunActionPage"
 import DevTestPage from './pages/dev_test_page/DevTestPage'
+import SlackRedirect from "./pages/dev_test_page/SlackRedirect"
 import { EULA } from "./pages/home/EULA"
 import Home from './pages/home/Home'
 import NotRegistered from './pages/home/NotRegistered'
@@ -92,6 +93,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     {isNonProductionEnv() &&
                                     <Route path='/configurations' component={Configurations}/>}
                                     <Route path='/alerts' component={Alerts}/>
+                                    <Route path="/slackredirect" component={SlackRedirect}/>
                                     <Route path='/testPage' component={DevTestPage}/>
                                     <Route path='/users' component={Users}/>
                                     <Route path='/tag' component={TagHomePage}/>

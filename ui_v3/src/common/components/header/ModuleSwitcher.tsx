@@ -11,6 +11,8 @@ import ModuleSwitcherIcon from './images/module-switcher.svg';
 import SettingsIcon from './images/settings.svg';
 import { TabsContainerType, TabsTreePropType } from "./schema";
 
+const redirectUrl = require("../../../common/config/config").SLACK_REDIRECT_URL
+
 
 export function findCurrentSelectedTabIndex({tabs, pathname, level}: Pick<TabsTreePropType, "tabs" | "pathname" | "level">) {
     return tabs.findIndex(({href}) => {
@@ -30,7 +32,10 @@ export function TabsContainer(props: TabsContainerType) {
     const anchorRef = useRef(null);
 
 
-
+    const slackUrlSearchParams = new URLSearchParams();
+    slackUrlSearchParams.append("scope", "files:write,chat:write");
+    slackUrlSearchParams.append("redirect_uri", redirectUrl);
+    slackUrlSearchParams.append("client_id", process.env.SLACK_APP_CLIENT_ID !== undefined ? process.env.SLACK_APP_CLIENT_ID : "4513646714033.4511061531412"); 
     
     return (
         <Box sx={{
@@ -107,6 +112,9 @@ export function TabsContainer(props: TabsContainerType) {
                                 <RouterLink to="/users">
                                     <Button variant="contained">Users </Button>
                                 </RouterLink>
+                            </Box>
+                            <Box sx={{display: "flex"}}>
+                            <a href={"https://slack.com/oauth/v2/authorize?"+slackUrlSearchParams.toString()}>Connect Slack</a>
                             </Box>
                         </Box>
                     </Popover>

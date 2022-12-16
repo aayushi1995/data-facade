@@ -15,3 +15,4 @@ exports.isNonProductionEnv = function () {
     return origin.includes('stage') || origin.includes('localhost')
 }
 
+exports.SLACK_REDIRECT_URL = (origin + "/slackredirect").replace("http://", "https://")
