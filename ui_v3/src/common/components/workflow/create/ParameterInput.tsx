@@ -2,7 +2,7 @@ import { Autocomplete, Box, createFilterOptions, FormControl, Icon, InputLabel, 
 import { table } from "console"
 import React, { ChangeEvent } from "react"
 import InfoIcon from "../../../../../src/images/info.svg"
-import { ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
+import { ActionExecution, ColumnProperties, TableProperties } from "../../../../generated/entities/Entities"
 import { FilteredColumnsResponse } from "../../../../generated/interfaces/Interfaces"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
@@ -84,7 +84,8 @@ export interface ColumnParameterInput {
         selectedColumnFilter: ColumnProperties | undefined,
         filters: {
             tableFilters: TableProperties[] | undefined,
-            parameterDefinitionId: string
+            parameterDefinitionId: string,
+            availableExecutionIds: string[]
         },
         onChange: (newColumn?: ColumnProperties) => void
     }
@@ -369,7 +370,8 @@ const ColumnInput = (props: ColumnParameterInput) => {
     const fetchTableQuery = useFetchColumnsForTableAndTags({
         filters: {
             tableFilters: filters.tableFilters,
-            parameterDefinitionId: filters.parameterDefinitionId
+            parameterDefinitionId: filters.parameterDefinitionId,
+            availableExecutionIds: filters.availableExecutionIds
         },
         queryOptions: {
             enabled: filters?.tableFilters!==undefined,
@@ -378,7 +380,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
     })    
     
     const getColumnSelectionInfo: (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => { AvailableColumns: ColumnProperties[], SelectedColumn?: ColumnProperties} = (availableColumns?: ColumnProperties[], selectedColumnFilter?: ColumnProperties) => {
-        const columnById = availableColumns?.find(column => column?.Id === selectedColumnFilter?.Id)
+        const columnById = availableColumns?.find(column => column?.Id === selectedColumnFilter?.Id && !!selectedColumnFilter?.Id)
         const columnByName = availableColumns?.find(column => column?.UniqueName === selectedColumnFilter?.UniqueName)
         if(columnById !== undefined) {
             return {

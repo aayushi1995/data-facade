@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
-import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
+import { ActionExecution, ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
 import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput, WebAppAutocompleteOption } from "../workflow/create/ParameterInput";
 
 
@@ -147,6 +147,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const tableFilters = addtionalConfig?.availableTablesFilter !== undefined 
                 ? addtionalConfig?.availableTablesFilter 
                 : props.parameterInstances.filter(api => api.TableId!==undefined || api.ParameterValue !==undefined).map(api => ({Id: api.TableId, UniqueName: api.ParameterValue} as TableProperties))
+            
+            const availableExecutionIds = props.parameterInstances.filter(api => api.SourceExecutionId !== undefined)?.map(api => (api.SourceExecutionId)) || []
+            console.log(props.parameterInstances, availableExecutionIds)
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             return {
                 parameterType: "COLUMN",
@@ -155,6 +158,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     parameterName: parameterDefinition.DisplayName || parameterDefinition.ParameterName || "parameterName",
                     selectedColumnFilter: {Id: existingParameterInstance?.ColumnId, UniqueName: existingParameterInstance?.ParameterValue },
                     filters: {
+                        availableExecutionIds: availableExecutionIds,
                         tableFilters: uniqueTableFilters,
                         parameterDefinitionId: parameterDefinition.Id!
                     },

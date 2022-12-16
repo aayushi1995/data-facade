@@ -4,7 +4,7 @@ import ParameterDefinitionsConfigPlane from "../../../common/components/action/P
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
 import ConfigureParameters from "../../execute_action/components/ConfigureParameters"
-import { SetWorkflowContext, WorkflowContext } from "./WorkflowContext"
+import { SetWorkflowContext, UpstreamAction, WorkflowContext } from "./WorkflowContext"
 
 
 interface TestWorkflowActionDialogProps {
@@ -35,16 +35,29 @@ const TestWorkflowActionDialog = (props: TestWorkflowActionDialogProps) => {
             globalParameterIds.push(parameter.GlobalParameterId)
         }
     })
-    console.log(globalParameterIds)
     const globalParametersToShow = workflowContext.WorkflowParameters.filter(parameter => globalParameterIds?.includes(parameter.Id || "id"))
 
+    const getLatestExecutionId = (upstreamAction: UpstreamAction) => {
+        const upstreamStage = workflowContext.stages.find(stage => stage.Id === upstreamAction.stageId)
+
+        const referenceId = upstreamStage?.Actions?.[upstreamAction.actionIndex]?.ReferenceId
+        return  workflowContext?.TestInstance?.actionDetails?.[referenceId || ""]?.LatestExecutionId
+    }
+
     const formParameterInstances = () => {
-        return Object.entries(workflowContext?.TestInstance?.parameterDetails || {})?.map?.(([globalParameterId, globalParameterInstance]) => {
-            return {
-                ...globalParameterInstance,
-                ActionParameterDefinitionId: globalParameterId
+        const parameterInstances = currentActionForTesting?.Parameters.map(actionParameter => {
+            if(!!actionParameter.GlobalParameterId) {
+                return {
+                    ...(workflowContext?.TestInstance?.parameterDetails || {})[actionParameter.GlobalParameterId],
+                    ActionParameterDefinitionId: actionParameter.GlobalParameterId
+                }
+            } else if(!!actionParameter.SourceExecutionId) {
+                return {
+                    SourceExecutionId: getLatestExecutionId(actionParameter.SourceExecutionId)
+                } as ActionParameterInstance
             }
-        })
+        }) || []
+        return parameterInstances
     }
 
     const handleParameterInstancesChange = (newParameterInstances: ActionParameterInstance[]) => {

@@ -1,5 +1,5 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import { TableProperties } from '../../../../../generated/entities/Entities';
+import { ActionExecution, TableProperties } from '../../../../../generated/entities/Entities';
 import { FilteredColumnsResponse } from '../../../../../generated/interfaces/Interfaces';
 import labels from '../../../../../labels/labels';
 import dataManagerInstance from './../../../../../data_manager/data_manager'
@@ -7,7 +7,8 @@ import dataManagerInstance from './../../../../../data_manager/data_manager'
 export interface UseFetchColumnsForTablesProps {
     filters?: undefined | {
         tableFilters?: TableProperties[],
-        parameterDefinitionId: string
+        parameterDefinitionId: string,
+        availableExecutionIds?: string[]
     },
     queryOptions?: UseQueryOptions<FilteredColumnsResponse[], unknown, FilteredColumnsResponse[],[string, undefined | TableProperties[], string]>
 }
@@ -25,7 +26,9 @@ const useFetchColumnsForTableAndTags = (params: UseFetchColumnsForTablesProps) =
                 GetColumnsForMultipleTables: true,
                 TableFilters: params.filters?.tableFilters,
                 withParameterId: params.filters?.parameterDefinitionId,
-                GetColumnsForGivenParameterTags: true
+                GetColumnsForGivenParameterTags: true,
+                availableExecutionIds: params.filters?.availableExecutionIds,
+                GetColumnsForExecutionIds: true
             })
         }, {
             ...params.queryOptions,
