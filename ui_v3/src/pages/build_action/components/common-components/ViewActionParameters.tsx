@@ -118,7 +118,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                 }}
                             />
                 },
-                editable: true
+                editable: true,
+                minWidth: 100
             },
             {
                 headerName: "Description",
@@ -134,7 +135,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                     handleParameterChange(params?.row?.ParameterId, { Description: newParameterDescription })
                                 }}
                             />
-                }
+                },
+                minWidth: 100
             },
             {
                 headerName: "Display Name",
@@ -154,7 +156,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                 //                 }}
                 //             />
                 // },
-                editable: true
+                editable: true,
+                minWidth: 200
             },
             {
                 headerName: "Input Type",
@@ -194,7 +197,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                             }/>
                         
                         </Box>
-                }
+                },
+                minWidth: 200
             },
             {
                 headerName: "Default Value",
@@ -211,7 +215,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                     }}
                                 />
                             </Box>)
-                }
+                },
+                minWidth: 250
             },
             {
                 headerName: "Parent",
@@ -223,7 +228,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                 currentParamDef={getParamWithTags(params?.row?.ParameterId)?.parameter}
                                 onParameterEdit={(editedParam: ActionParameterDefinition) => handleParameterChange(params?.row?.ParameterId, editedParam)}
                             />
-                }
+                },
+                minWidth: 150
             },
             {
                 headerName: "Tags",
@@ -238,7 +244,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                             onTagsChange={onChange}
                         />
                     )
-                }
+                },
+                minWidth: 150
             },
             {
                 headerName: "Actions",
@@ -253,7 +260,8 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                             onParameterDuplicate={(parameterId?: string) => onParameterDuplicate?.([{Id: parameterId}])}
                         />
                     )
-                }
+                },
+                minWidth: 100
             }
         ],
         rows: dataGridRows,

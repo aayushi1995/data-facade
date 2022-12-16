@@ -583,8 +583,9 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             const existingParameters = activeTemplate?.parameterWithTags
             const newParameters = inferredParameters.map(inferredParam => {
                 const existingParameterDefinition = existingParameters?.find(p => p?.parameter?.ParameterName===inferredParam?.ParameterName)?.parameter
-                const parameterTag = inferredParam.Tag === ActionParameterDefinitionTag.OTHER ? existingParameterDefinition?.Tag : inferredParam.Tag
+                const parameterTag = ( inferredParam.Tag === ActionParameterDefinitionTag.OTHER || inferredParam.Tag === undefined ) ? existingParameterDefinition?.Tag : inferredParam.Tag
                 if(existingParameterDefinition){
+                    console.log(inferredParam, parameterTag, existingParameterDefinition)
                     return {
                         parameter: {
                             ...existingParameterDefinition,
@@ -1105,6 +1106,10 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
             }
             if(parametersArray.length===0) {
                 code?.split("\n").map(line => {
+                    // removing lines which starts with #
+                    if(line.trim().length > 0 && line.trim().charAt(0) === '#') {
+                        return;
+                    }
                     if(line.includes("df_helper.get")) {
                         const reg = new RegExp('.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*,.*"(?<DisplayName>.*)".*,.*"(?<Description>.*)".*,.*\)', "gm")
                         const match = reg.exec(line)

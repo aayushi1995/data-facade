@@ -47,6 +47,10 @@ function getActionHeaderProps(): ActionHeaderProps {
         })
     }
 
+    const onSave = () => {
+        useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext)
+    }
+
     const actionHeaderProps: ActionHeaderProps = {
         actionName: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName,
         actionDescription: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Description,
@@ -64,8 +68,16 @@ function getActionHeaderProps(): ActionHeaderProps {
         },
         actionHandler: {
             onTest: onTest,
-            onSave: () => useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext),
-            onDuplicate: onDuplicate
+            onSave: onSave,
+            onDuplicate: onDuplicate,
+            onRun: () => {
+                onSave()
+                const actionId = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id
+                if(!!actionId) {
+                    history.push(`/application/execute-action/${actionId}`)
+                }
+                
+            }
         }
     }
 

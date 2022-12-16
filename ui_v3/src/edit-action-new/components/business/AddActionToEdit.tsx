@@ -1,6 +1,8 @@
 import { Box } from "@mui/system";
 import React from "react";
 import { useHistory } from "react-router";
+import getDefaultCode from "../../../custom_enums/DefaultCode";
+import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../../pages/build_action/context/BuildActionContext";
 import ActionDefinitionSelector from "./ActionDefinitionSelector";
 import CreateNewAction, { CreateNewActionProps } from "./CreateNewAction";
@@ -35,8 +37,19 @@ function AddActionToEdit(props: AddActionToEditProps) {
             })
         },
         actionHandlers: {
-            onSaveAction: () => {
-                useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
+            onSaveAction: (newSupportedRuntimeGroup: string, language: string) => {
+                useActionHooks.useActionDefinitionFormSave?.mutate({
+                    ...buildActionContext,
+                    actionTemplateWithParams: buildActionContext.actionTemplateWithParams.map(templateWithParam => templateWithParam.template.Id === buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId ? {
+                        ...templateWithParam,
+                        template: {
+                            ...templateWithParam.template,
+                            SupportedRuntimeGroup: newSupportedRuntimeGroup,
+                            Language: language,
+                            Text: getDefaultCode(ActionDefinitionActionType.PROFILING, newSupportedRuntimeGroup)
+                        }
+                    }: templateWithParam)
+                }, {
                     onSuccess: () => addActionWithId(buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id)
                 }) 
             }

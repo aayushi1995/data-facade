@@ -14,7 +14,7 @@ function EditActionForm() {
     
     return(
         <Box sx={{ display: "flex", flexDirection: "row", gap: 1 ,mt:2,pl:2}}>
-            <CardBoxRoot >
+            <CardBoxRoot sx={{width: buildActionContext.testMode ? "50%" : "100%"}}>
                 <ActionHeader {...actionHeaderProps}/>
                 <ActionMain/>
             </CardBoxRoot>

@@ -49,7 +49,8 @@ function getActionCodeProps(buildActionContext: BuildActionContextState, setBuil
             }
         }),
         language: activeTemplateWithParams?.template?.Language || ActionDefinitionQueryLanguage.SQL,
-        hidden: !activeTemplateWithParams
+        hidden: !activeTemplateWithParams,
+        actionDefinitionId: activeTemplateWithParams?.template?.DefinitionId
     }
     return actionCodeProps;
 }

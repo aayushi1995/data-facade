@@ -67,6 +67,7 @@ interface ExecuteActionProps {
     showOnlyParameters?: boolean,
     fromDeepDive?: boolean,
     parentExecutionId?: string,
+    hideExecution?: boolean
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
@@ -395,7 +396,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
 
     return (
         <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
-            {props.showActionDescription ? (
+            {props.showActionDescription && !!description ? (
                 <Box>
                     <ActionDescriptionCard description={description} mode="READONLY" />
                 </Box>
@@ -528,7 +529,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     </Alert>
                 </Snackbar>
             </Card>
-            {!!actionExecutionId && !!data? (
+            {!!actionExecutionId && !!data && !props.hideExecution? (
                 <Box sx={{mb: 10}} ref={actionExecutionView}>
                     <ActionExecutionDetails actionExecutionId={actionExecutionId} showDescription={false}/>
                 </Box>

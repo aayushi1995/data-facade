@@ -109,7 +109,6 @@ export const ActionExecutionDetails = (props: {
     }, [executionTerminal])
 
     const increaseTime = () => {
-        console.log("time increased")
         setCurrentTime(time => time + 1000)
     }
 
@@ -154,7 +153,7 @@ export const ActionExecutionDetails = (props: {
                             terminalState={executionTerminal} 
                             error={executionError}/>
                         {showParameters ? (
-                            <ExecuteAction disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} />
+                            <ExecuteAction hideExecution={true} disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} />
                         ) : (
                             <></>
                         )}

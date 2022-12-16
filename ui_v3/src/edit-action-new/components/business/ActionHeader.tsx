@@ -32,7 +32,8 @@ export type ActionHeaderProps = {
     actionHandler?: {
         onTest: () => void,
         onSave: () => void,
-        onDuplicate: () => void
+        onDuplicate: () => void,
+        onRun: () => void
     }
 }
 
@@ -109,7 +110,7 @@ function ActionHeader(props: ActionHeaderProps) {
                 </ActionHeaderAutocompleteBox>
             </ActionHeaderCardInputArea>
             <ActionHeaderCardActionArea sx={{ display: "flex", alignItems: "center" }}>
-                <Box sx={{mr:buildActionContext.testMode?0:4}}>
+                {/* <Box sx={{mr:buildActionContext.testMode?0:4}}>
                     <FormGroup>
                         <FormControlLabel
                             sx={{color:'white'}}
@@ -121,20 +122,19 @@ function ActionHeader(props: ActionHeaderProps) {
                         />
                     </FormGroup>
                     
-                </Box>
-                <Box sx={{display:'flex',flexDirection: buildActionContext.testMode?'column':'row',gap:1}}>
-                    <Box>
-                        <Button size='small' variant='outlined' sx={{gap:1,minWidth:'4vw',color:'white',borderColor:'white',borderRadius:'0px',borderTopLeftRadius:'10px',borderTopRightRadius:'10px',mr:2}} color="info" onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</Button>
-                    </Box>
-                    <Box>
-                        <Button size='small' sx={{minWidth:'4vw',color:'white',borderColor:'lime'}} color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <InfoIcon sx={{ transform: "scale(0.7)"}}/> : <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }Save</Button>
-                    </Box>
-                    <Box>
+                </Box> */}
+                <Box sx={{display:'flex',flexDirection: buildActionContext.testMode?'column':'row', gap: 1}}>
+                    <Button size='small' variant='outlined' sx={{gap: 1, minWidth: '4vw', color: 'white', borderColor: 'white',borderRadius:'0px',borderTopLeftRadius:'10px',borderTopRightRadius:'10px', ml: 1}} color="info" onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</Button>
+                    <Button size='small' sx={{minWidth:'4vw',color:'white',borderColor:'lime'}} color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <InfoIcon sx={{ transform: "scale(0.7)"}}/> : <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }Save</Button>
+                    <Button sx={{ color: 'white', borderColor: 'white' }} size="small" variant='outlined' onClick={props?.actionHandler?.onRun}>
+                        Run
+                    </Button>
+                    {buildActionContext.testMode ? (
+                        <></>
+                    ) : (
                         <Button size='small' sx={{minWidth: '4vw', color: 'white',}} color='error' variant='outlined' onClick={props.actionHandler?.onDuplicate}>Duplicate</Button>
-                    </Box>
-                </Box>
-                <Box>
-                    <MoreVertIcon sx={{color:'white',transform:'scale(1.5)',ml:buildActionContext.testMode?0:10,mt:1}}/>
+                    )}
+                    
                 </Box>
             </ActionHeaderCardActionArea>
         </ActionHeaderCard>

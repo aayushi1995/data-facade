@@ -140,14 +140,6 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
     const onActionSave = () => {
         useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext)
     }
-
-    const OnRunAction = () => {
-        onActionSave()
-        const actionId = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id
-        if(!!actionId) {
-            history.push(`/application/execute-action/${actionId}`)
-        }
-    }
     
     return (
         <Box sx={{px:1, boxShadow: "inset 2px 2px 2px rgba(0, 0, 0, 0.15), inset -2.93116px -2.93116px 13.8623px #9AA1A9",}}>
@@ -177,21 +169,6 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
 
                     </Tabs>
                 </Box>
-                {activeTabId !=="Add" &&
-                    <Box sx={{pt:0,px:1}}>
-                        <Button variant="outlined" 
-                            disabled={buildActionContext?.actionDefinitionWithTags?.actionDefinition?.PublishStatus!==ActionDefinitionPublishStatus.READY_TO_USE} 
-                            onClick={OnRunAction} 
-                            size='small'
-                            sx={{ 
-                                minWidth: "90px",
-                                borderRadius: "64px" 
-                            }}
-                        >
-                            Run
-                        </Button>
-                    </Box>
-                }
             </Box>
             {
                 activeTabId === "Add" ?

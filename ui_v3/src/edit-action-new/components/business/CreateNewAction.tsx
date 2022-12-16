@@ -6,6 +6,7 @@ import ActionHeroGroupSelector from "../presentation/custom/ActionHeroGroupSelec
 import { ActionHeaderAutocompleteBox } from "../presentation/styled_native/ActionHeaderBox";
 import TemplateSelector from "../presentation/TemplateSelector";
 import CodeIcon from '@mui/icons-material/Code';
+import TemplateLanguage from "../../../enums/TemplateLanguage";
 
 export type CreateNewActionProps = {
     name?: string,
@@ -20,7 +21,7 @@ export type CreateNewActionProps = {
         onLanguageChange: (newSupportedRuntimeGroup?: string) => void
     },
     actionHandlers: {
-        onSaveAction: () => void
+        onSaveAction: (templateSupportedRuntimeGroup: string, language: string) => void
     }
 }
 
@@ -34,16 +35,14 @@ function CreateNewAction(props: CreateNewActionProps) {
             name: "SQL",
             description: "Query your data connections or dataframes.",
             onClick: () => {
-                onLanguageChange(TemplateSupportedRuntimeGroup.COMMON)
-                onSaveAction()
+                onSaveAction(TemplateSupportedRuntimeGroup.COMMON, TemplateLanguage.SQL)
             }
         },
         {
             name: "Python",
             description: "Transform your data using python.",
             onClick: () => {
-                onLanguageChange(TemplateSupportedRuntimeGroup.PYTHON)
-                onSaveAction()
+                onSaveAction(TemplateSupportedRuntimeGroup.PYTHON, TemplateLanguage.PYTHON)
             }
         }
     ]
@@ -106,7 +105,6 @@ function CreateNewAction(props: CreateNewActionProps) {
                     <TemplateSelector {...t}/>    
                 )}
             </Box>
-            <Button onClick={onSaveAction}>Create</Button>
         </Box>
     )
 }
