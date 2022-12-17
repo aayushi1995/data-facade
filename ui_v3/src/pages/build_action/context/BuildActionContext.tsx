@@ -1139,15 +1139,13 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                     return;
                 }
                 for (let i = 0; i < line.length; i++) {
-                    if (code.charAt(i) === '}') {
-                        let j = i - 1
-                        let parameter = ""
-                        while (j >= 0 && code.charAt(j) != '{' && code.charAt(j) != '}') {
-                            parameter = code.charAt(j) + parameter
-                            j--
-                        }
+                    
+                    let matches = line.match(/{([^}]+)}/g)
+                    matches?.forEach(parameter => {
+                        parameter = parameter.replace('{','')
+                        parameter = parameter.replace('}','')
                         parametersArray.push({ParameterName: parameter})
-                    }
+                    })
                 }
             })
         }
@@ -1400,10 +1398,14 @@ function get_match_for_df_helper(line: string) {
     ]
 
     for (let i=0, len=expressions.length, text=""; i<len; i++){
-        let expression = expressions[i]
-        const reg = new RegExp(expression, "gm");
-        const match = reg.exec(line);
+        const match = get_match_from_regx(expressions[i], line);
         if (match != null)
             return match;
     }
 }
+function get_match_from_regx(expression: string, line: string) {
+    const reg = new RegExp(expression, "gm");
+    const match = reg.exec(line);
+    return match;
+}
+
