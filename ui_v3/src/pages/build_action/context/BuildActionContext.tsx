@@ -1111,7 +1111,7 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                         return;
                     }
                     if(line.includes("df_helper.get")) {
-                        const reg = new RegExp('.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*,.*"(?<DisplayName>.*)".*,.*"(?<Description>.*)".*,.*\)', "gm")
+                        const reg = new RegExp('.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*,.*"(?<DisplayName>.*)".*,.*"(?<Description>.*)".*\)', "gm")
                         const match = reg.exec(line)
                         console.log(match)
                         const name = match?.groups?.["Name"]
