@@ -17,8 +17,8 @@ For eg to plot column1 against column2 as a line chart for dataframe df use:
 '''
 import pandas as pd
 
-df = df_helper.get_table(parameter_name="input_table", parameter_display_name="Input Table", parameter_description="Input Raw Table",default_value="")
-time_columns = df_helper.get_column(parameter_name="timestamp_column",parameter_display_name="Timestamp Column", parameter_description="Timestamp Column", default_value="")
+df = df_helper.get_table(parameter_name="input_table", parameter_display_name="Input Table", parameter_description="Input Raw Table")
+time_columns = df_helper.get_column(parameter_name="timestamp_column",parameter_display_name="Timestamp Column", parameter_description="Timestamp Column")
 #
 # Write your logic 
 #
@@ -81,7 +81,7 @@ const getDefaultCode = (actionType, supportedRuntimeGroup) => {
             if (supportedRuntimeGroup === TemplateSupportedRuntimeGroup.PYTHON) {
                 return `# Enter Python Code\n# Default Code Sample Not Available`
             } else {
-                return `-- Enter SQL Code\n-- Select count(*), {column1} from {table} where {column2} = {val} group by {column1}`
+                return `-- Enter SQL Code\nSelect count(*), {column1} from {table} where {column2} = {val} group by {column1}`
             }
         }
     } else {

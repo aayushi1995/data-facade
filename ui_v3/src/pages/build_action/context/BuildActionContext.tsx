@@ -1111,14 +1111,16 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                         return;
                     }
                     if(line.includes("df_helper.get")) {
-                        const reg = new RegExp('.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*,.*"(?<DisplayName>.*)".*,.*"(?<Description>.*)".*\)', "gm")
-                        const match = reg.exec(line)
+                        const match = get_match_for_df_helper(line);
+                        if(match == null){
+                            return;
+                        }
                         console.log(match)
                         const name = match?.groups?.["Name"]
-                        const displayName = match?.groups?.["DisplayName"]
-                        const description = match?.groups?.["Description"]
+                        const displayName = match?.groups?.["DisplayName"] ?? name
+                        const description = match?.groups?.["Description"] ?? name
                         const type = match?.groups?.["Type"]
-                        if(name && description && type) {
+                        if(name && type) {
                             parametersArray.push({
                                 ParameterName: name,
                                 DisplayName: displayName,
@@ -1130,19 +1132,24 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                     }
                 })
             }
-
         } else if (language === ActionDefinitionQueryLanguage.SQL) {
-            for (let i = 0; i < code.length; i++) {
-                if (code.charAt(i) === '}') {
-                    let j = i - 1
-                    let parameter = ""
-                    while (j >= 0 && code.charAt(j) != '{' && code.charAt(j) != '}') {
-                        parameter = code.charAt(j) + parameter
-                        j--
-                    }
-                    parametersArray.push({ParameterName: parameter})
+            code?.split("\n").map(line => {
+                // Ignoring commented lines. Ideally we should use something else like using editor itself or parser
+                if (line.trim().length > 0 && line.trim().charAt(0) === '-'){
+                    return;
                 }
-            }
+                for (let i = 0; i < line.length; i++) {
+                    if (code.charAt(i) === '}') {
+                        let j = i - 1
+                        let parameter = ""
+                        while (j >= 0 && code.charAt(j) != '{' && code.charAt(j) != '}') {
+                            parameter = code.charAt(j) + parameter
+                            j--
+                        }
+                        parametersArray.push({ParameterName: parameter})
+                    }
+                }
+            })
         }
         // https://stackoverflow.com/questions/45439961/remove-duplicate-values-from-an-array-of-objects-in-javascript
         const deDupedParams = parametersArray.filter((v,i,a)=>a.findIndex(v2=> v.ParameterName === v2.ParameterName)===i)
@@ -1383,4 +1390,20 @@ export const BuildActionContextProvider = ({children, mode, newActionCallback}: 
             </BuildActionContext.Provider>
         </UseActionHooks.Provider>
     )
+}
+
+function get_match_for_df_helper(line: string) {
+    const expressions = [
+        '.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*,.*"(?<DisplayName>.*)".*,.*"(?<Description>.*)".*\)',
+        '.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*,.*"(?<DisplayName>.*)".*".*\)',
+        '.*= *df_helper.get_(?<Type>.*)\(.*"(?<Name>.*)".*\)'
+    ]
+
+    for (let i=0, len=expressions.length, text=""; i<len; i++){
+        let expression = expressions[i]
+        const reg = new RegExp(expression, "gm");
+        const match = reg.exec(line);
+        if (match != null)
+            return match;
+    }
 }

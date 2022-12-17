@@ -35,7 +35,7 @@ export function TabsContainer(props: TabsContainerType) {
     const slackUrlSearchParams = new URLSearchParams();
     slackUrlSearchParams.append("scope", "files:write,chat:write");
     slackUrlSearchParams.append("redirect_uri", redirectUrl);
-    slackUrlSearchParams.append("client_id", process.env.SLACK_APP_CLIENT_ID !== undefined ? process.env.SLACK_APP_CLIENT_ID : "4513646714033.4511061531412"); 
+    slackUrlSearchParams.append("client_id", process.env.SLACK_APP_CLIENT_ID !== undefined ? process.env.SLACK_APP_CLIENT_ID : "1627334649444.1789524260661"); 
     
     return (
         <Box sx={{
