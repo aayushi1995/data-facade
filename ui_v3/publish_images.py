@@ -27,7 +27,7 @@ image_confs = [
         client_id="coI8Q8LGjdCRqDe6XkE82CmZNcOKOHL1"
     ),
     ImageConf(
-        env_name="Prod",
+        env_name="Production",
         endpoint="datafacade.io",
         client_id="jRiHIABIhr6YvGhGd5pBDUEntuugritH"
     )
