@@ -1,0 +1,23 @@
+ /* header Styles */
+ .headerContainer {
+    padding: 0px 5%;
+  } 
+  
+ .headerText {
+    font-weight: 600;
+    font-size: 30px;
+    margin: 10px 0px;
+    text-align: left;
+  }
+  .headerContent {
+    text-align: left;
+    font-style: normal;
+    font-weight: 400;
+    width: 80%;
+    font-size: 15px;
+    line-height: 20px;
+    color: #050505;
+  }
+  .headerContainer hr {
+    margin:30px 0px;
+  }

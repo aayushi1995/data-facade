@@ -1,0 +1,46 @@
+.ChartConfiguration {
+    padding: 10px;
+}
+.ChartConfigOption > *:not(.colorContainer) {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 0px;
+    font-size: 12px;
+    margin: 10px 0px;
+}
+.ChartConfigOption > label {
+    display: block;
+    width: 100%;
+    font-weight: 800;
+    font-size: 14px;
+}
+.chartOptionModal > .square{
+    background: none;
+    margin: 5px;
+    border: 1px solid lightgrey;
+}
+.chartOptionModal > .square:hover {
+    border:1px solid #5664D2;
+    box-shadow: inset 0px 0px 1px 1px #5664D2;
+}
+.chartOptionModal > .square:focus{
+    box-shadow: inset 0px 0px 1px 1px #5664D2;
+} 
+.ChartConfigOption > select {
+    border: none;
+    background-color: #f0f2f6;
+}
+
+select::-ms-expand {
+    display: none;
+}
+.ChartConfigOption:last-child{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ChartConfigOption:last-child > input[type="checkbox"] {
+    padding: 0px;
+    font-size: 20px;
+}

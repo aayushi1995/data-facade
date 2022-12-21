@@ -1,0 +1,27 @@
+.fileUploadSectionContainer {
+    font-size: 15px;
+    color:#65676B;
+    margin: 0px 30px;
+    padding: 10px;
+    border-bottom: 1px solid #CED0D4;
+
+}
+.fileUploadSectionContainer input[type="file"]{
+    display:none;   
+}
+.fileUploadSectionContainerLeft{
+    cursor: pointer;
+    display: flex;
+    padding: 5px;
+    border: 2px solid #5664D2;
+    width: 150px;
+    border-radius: 10px;
+    font-size: 14px;
+    align-items: center;
+    color: #5664D2;
+    justify-content: space-around;
+}
+.fileUploadSectionContainerLeft:hover {
+    box-shadow: inset 0px 0px 5px 0px #5664d2;
+    
+}
