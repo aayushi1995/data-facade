@@ -21,9 +21,6 @@ You can also filter the data by enabling the chart filter checkbox and based on 
  ` react `, ` react-dom `, `recharts` ,
 `react-scripts`,`react-papaparse`
 
-### - Project is deployed at the below location
-
-https://aayushi1995.github.io/data-visualization/
 
 ### - Developer :
 
