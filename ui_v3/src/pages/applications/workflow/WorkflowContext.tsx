@@ -822,7 +822,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 }
                 return reducer(newState, {type: 'VALIDATE', payload: newState})
             }
-            const newState = {
+            const changedUserInputState = {
                 ...state,
                 stages: state.stages.map(stage => stage.Id !== action.payload.stageId ? stage: {
                     ...stage,
@@ -837,8 +837,24 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                     })
                 })
             }
-            console.log(newState)
-            return reducer(newState, {type: 'VALIDATE', payload: newState})
+            const stateWithFilteredGlobalParams: WorkflowContextType = {
+                ...changedUserInputState,
+                WorkflowParameters: changedUserInputState.WorkflowParameters.filter(globalParameter => {
+                    var found = false;
+                    changedUserInputState.stages.forEach(stage => {
+                        stage.Actions.forEach(stageAction => {
+                            stageAction.Parameters.forEach(parameter => {
+                                if(parameter.GlobalParameterId === globalParameter.Id) {
+                                    found = true;
+                
+                                }
+                            })
+                        })
+                    })
+                    return found
+                })
+            }
+            return reducer(stateWithFilteredGlobalParams, {type: 'VALIDATE', payload: stateWithFilteredGlobalParams})
         }
 
         case 'ADD_WORKFLOW_PARAMETER': {
@@ -846,7 +862,7 @@ const reducer = (state: WorkflowContextType, action: WorkflowAction): WorkflowCo
                 ...state,
                 WorkflowParameters: assignIndex([...state.WorkflowParameters, action.payload.parameter])
             }
-            return reducer(newState, {type: 'VALIDATE', payload: newState})
+            return newState
         }
         
         case 'MAP_PARAMETER_TO_GLOBAL_PARAMETER': {
