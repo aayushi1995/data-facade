@@ -93,7 +93,9 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
         }
     }
 
-    
+    const infoTextStyle = {
+        fontSize:'0.65rem'
+    }
 
     const background = !props.isWorkflow ? 'ActionCardBgColor2.main' : 'ActionCardBgColor.main'
     return (
@@ -125,27 +127,27 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <Divider orientation="vertical" sx={{height: "100%"}}/>
                     </Box>
                     
-                    <Box sx={{flex: 6, width: '100%',height:'100%'}}>
-                        <Typography variant="heroMeta">
+                    <Box sx={{flex: 8,p:1, width: '100%',height:'100%'}}>
+                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
                                 <b>Created By : </b>{props.action.model?.CreatedBy || ""}
                         </Typography>
                         <br></br>
-                        <Typography variant="heroMeta">
+                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
                                 <b>Updated By : </b>{props.action.model?.UpdatedBy || "Creator"}
                         </Typography>
                         <br></br>
-                        <Typography variant="heroMeta">
+                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
                                 <b>Created On : </b>{new Date(props.action.model?.CreatedOn).toDateString()}
                         </Typography>
                         <br></br>
-                        <Typography variant="heroMeta">
+                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
                                 <b>Updated On : </b>{new Date(props.action.model?.UpdatedOn || props.action.model?.CreatedOn).toDateString()}
                         </Typography>
                     </Box>
                     <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
                         <Divider orientation="vertical" sx={{height: "100%"}}/>
                     </Box> 
-                    <Box sx={{flex: 3, display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
+                    <Box sx={{flex: 4, display: 'flex', flexDirection: 'column', width: '100%', height: '100%',p:1 }}>
                         {props.isWorkflow ? (
                             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Box mb={3}>
@@ -176,14 +178,14 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                     variant="actionCardHeader"
                                     sx={{
                                     fontWeight: 'normal', 
-                                    fontSize: '12px', 
+                                    fontSize: '11px', 
                                     lineHeight: '166%'}}>
                                         Output Type: 
                                     </Typography>
                                     <Typography sx={{
                                         fontFamily: 'SF Pro Display',
                                         fontStyle: 'normal',
-                                        fontSize: '12px',
+                                        fontSize: '11px',
                                         lineHeight: '133.4%',
                                         color: 'ActionDefinationHeroTextColor1.main'
                                     }}>
@@ -197,7 +199,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                         fontWeight: 'normal', 
                                         fontSize: '12px', 
                                         lineHeight: '166%'}}>
-                                            Average Run Time: 
+                                            Run Time: 
                                         </Typography>
                                         <Typography sx={{
                                             fontFamily: 'SF Pro Display',
@@ -241,14 +243,14 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                                 EXECUTE
                             </Typography>
                             <IconButton sx={{flex: 2, height: '50%'}} onClick={handleExecute}>
-                                <img src={ExecuteImage} style={{width: '50px', height: '50px'}} alt="Execute"/>
+                                <img src={ExecuteImage} style={{width: '40px', height: '40px'}} alt="Execute"/>
                             </IconButton>
                         </Box>
                     </Box>
                     <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
                         <Divider orientation="vertical" sx={{height: "100%"}}/>
                     </Box>
-                    <Box sx={{flex: 1, width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '100%', overflowY: 'auto'}}>
+                    <Box sx={{flex: 2, width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '100%', overflowY: 'auto'}}>
                         {/* <IconButton>
                             <img src={FavouriteIcon} alt="favoutite"/>
                         </IconButton> */}

@@ -108,7 +108,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const formActions = () => {
         if(props.isInstalled) {
             return (
-                <Box sx={{mx:'auto',width:'100%',display: "flex", flexDirection:"row", gap: 2, mt: "4%", mb: "4%",alignItems:'center',justifyContent:'center'}}>
+                <Box sx={{mx:'auto',px:5,width:'100%',display: "flex", flexDirection:"row", gap: 2,alignItems:'center',justifyContent:'center'}}>
                     <Box>
                         <Tooltip arrow placement='top' title="Add to Favorites">
                             <IconButton sx={getIconSxProperties()} onClick={onFavorite}>
@@ -148,9 +148,9 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         }
     }
     const InfoBoxStyle = {
-        px:3,
+        px:1,
         py:2,
-        width:'30%', 
+        width:'40%', 
         display:'flex',
         flexDirection:'column' ,
         justifyContent:'center',
@@ -160,7 +160,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const HeadingBoxStyle = {
         display: "flex", 
         flexDirection: "column" ,
-        width:'35%',
+        width:'40%',
         px:2, 
         borderRight:"0.439891px solid #FFFFFF"
     }
@@ -199,7 +199,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     {application.ApplicationName}
                                 </StyledTypographyApplicationName >
                             </Box>
-                            <Box sx={{my:'10px', width:'90%'}}>
+                            <Box sx={{ width:'90%'}}>
                             <Tooltip placement='top' arrow title={application.ApplicationDescription || ""}>
                                 <StyledTypographyApplicationDescription>
                                     <LinesEllipsis
@@ -222,7 +222,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 {formCreatedOnString()}
                             </StyledTypographyApplicationformCreatedOnString>
                         </Box>
-                        <Box sx={{width:'30%',display:'flex',justifyContent:'center'}}>
+                        <Box sx={{width:'20%',display:'flex',justifyContent:'center'}}>
                             {formActions()}
                         </Box>
                     </Box>

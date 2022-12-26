@@ -14,7 +14,7 @@ const NumberStat = (props: NumberStatProp) => {
                 <Typography 
                 variant="heroHeader"
                 sx={{
-                    fontSize: "24px",
+                    fontSize: "1.2rem",
                     lineHeight: "133.4%"
                 }}>
                     {props.value}

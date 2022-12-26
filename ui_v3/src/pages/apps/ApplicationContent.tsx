@@ -76,7 +76,7 @@ export const AllApplicationViewWrapper = () => {
     }, [])
     const panelStyle = {
         width:'50%',
-        height:'85vh',
+        height:'97vh',
         overflow:'scroll',
         p:1,
         boxShadow: "0px 8.5956px 10.3934px rgba(54, 48, 116, 0.3)"
