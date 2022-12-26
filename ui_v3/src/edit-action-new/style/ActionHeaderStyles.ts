@@ -127,3 +127,24 @@ export const ActionHeaderLanguageTextStyle = {
     lineHeight: "16px",
     color: "#303234"
 }
+export const ActionTestButtonStyle = {
+    gap: 1, 
+    minWidth: '4vw', 
+    color: 'white', 
+    borderColor: 'white',
+    borderRadius:'0px',
+    borderTopLeftRadius:'10px',
+    borderTopRightRadius:'10px'
+}
+
+export const ActionSaveButtonStyle = {
+    gap: 1,
+    minWidth:'4vw',
+    color:'white',
+    borderColor:'lime'
+}
+
+export const ActionRunButtonStyle = {
+    gap: 1,
+    minWidth:'4vw'
+}

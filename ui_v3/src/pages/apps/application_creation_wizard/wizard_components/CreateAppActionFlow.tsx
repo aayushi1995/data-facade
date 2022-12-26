@@ -9,10 +9,6 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
     const history = useHistory()
     const createOptions = [
         {
-            value: "Create a Package",
-            description: "A package can contain multiple flows and actions with Multiple Dashboards and visualization schema "
-        },
-        {
             value: "Create an Action",
             description: "Atomic steps to create a flow or a standalone output (Micro App)"
         },
@@ -23,6 +19,10 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
         {
             value: "Create a web app",
             description: "An interractive web app"
+        },
+        {
+            value: "Create a Package",
+            description: "A package can contain multiple flows and actions with Multiple Dashboards and visualization schema "
         }
     ]
 
@@ -30,23 +30,23 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
     const [aiFlowButtoVisible, setAiFlowButtonVisible] = React.useState(false)
 
     const onContinue = () => {
-        if(selectedOption===createOptions[0].value){
+        if(selectedOption===createOptions[3].value){
             props.nextStep()
-        } else if(selectedOption===createOptions[1].value){
+        } else if(selectedOption===createOptions[0].value){
             history.push({
                 pathname: APPLICATION_ADD_ACTION_ROUTE
             })
-        } else if(selectedOption===createOptions[2].value){
+        } else if(selectedOption===createOptions[1].value){
             history.push({
                 pathname: `/application/build-workflow`
             })
-        } else if(selectedOption===createOptions[3].value) {
+        } else if(selectedOption===createOptions[2].value) {
             history.push(APPLICATION_WEB_APP_BUILD_ROUTE)
         }
     }
 
     React.useEffect(() => {
-        if(selectedOption===createOptions[2].value) {
+        if(selectedOption===createOptions[1].value) {
             setAiFlowButtonVisible(true)
         } else {
             setAiFlowButtonVisible(false)
@@ -60,35 +60,12 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
     return (
         <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", px:4}}>
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", flexGrow: 1}}>
-                
-                    <Box>
-                        <Typography variant="wizardText" sx={{
-                            color: 'dialogueTextColor1.main',
-                            fontFamily: "'SF Compact Display'",
-                            fontWeight: 800,
-                            fontSize: '25px'
-                        }}>
-                            Welcome to Data Facade APP-Creation widget.
-                            
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <Typography variant="wizardText" sx={{
-                            color: 'dialogueTextColor1.main',
-                            fontFamily: "'SF Compact Display'",
-                            fontWeight: 800,
-                            fontSize: '22px'
-                        }}>
-                            Experience a new way of creating data-apps
-                        </Typography>
-                    </Box>
-                
                 <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Typography sx={{
                         fontFamily: "'SF Compact Display'",
                         fontStyle: "normal",
-                        fontWeight: 300,
-                        fontSize: "25px",
+                        fontWeight: 600,
+                        fontSize: "30px",
                         lineHeight: "35px",
                         display: "flex",
                         alignItems: "center",
@@ -96,18 +73,6 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                         color: "dialogueTextColor1.main"
                     }}>
                         Please select an option
-                    </Typography>
-                    <Typography sx={{
-                        fontFamily: "'SF Compact Display'",
-                        fontStyle: "normal",
-                        fontWeight: 300,
-                        fontSize: "25px",
-                        lineHeight: "25px",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                        color: "dialogueTextColor1.main"
-                    }}>
                     </Typography>
                 </Box>
             </Box>
@@ -118,12 +83,12 @@ const CreateAppActionFlow = (props: BuildApplicationWizardStepProps) => {
                     </Grid>
                 )}
             </Grid>
-            <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-end", width: "100%", gap: 3}}>
+            <Box sx={{display: "flex", flexDirection: "row",py:1, justifyContent: "center", width: "100%", gap: 3}}>
                 <Box>
-                    <Button variant="contained" onClick={onContinue}>Continue</Button>
+                    <Button variant="contained" sx={{width:'10vw'}} onClick={onContinue}>Continue</Button>
                 </Box>
                 <Box>
-                    {aiFlowButtoVisible && <Button variant="contained" onClick={handleCreateAutoFlow}>Auto Flow</Button>}
+                    {aiFlowButtoVisible && <Button sx={{width:'10vw'}} variant="contained" onClick={handleCreateAutoFlow}>Auto Flow</Button>}
                 </Box>
             </Box>
         </Box>
@@ -140,7 +105,7 @@ interface CreateOptionProps {
 const CreateOption = (props: CreateOptionProps) => {
     const {value, selectedValue, description, onSelect} = props
     return (
-        <Box onClick={()=> onSelect(value)} sx={{ display: "flex", flexDirection: "row", gap: 3 , borderRadius:'10px',boxShadow: '0 0 2px 0 rgba(0,0,0,0.31), 5px 8px 10px -5px rgba(0,0,0,0.25)' , backgroundColor: 'ActionCardBgColor.main', padding:'5px',cursor:'pointer'}}>
+        <Box onClick={()=> onSelect(value)} sx={{ display: "flex", flexDirection: "row",py:1, gap: 3 , borderRadius:'10px',boxShadow: '0 0 2px 0 rgba(0,0,0,0.31), 5px 8px 10px -5px rgba(0,0,0,0.25)' , backgroundColor: 'ActionCardBgColor.main',cursor:'pointer'}}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2}}>
                 <Radio id="myRadio" checked={value===selectedValue} onClick={() => onSelect(value)}/>
             </Box>

@@ -72,18 +72,6 @@ export const ActionExecutionDetails = (props: {
                 setExecutionError(false)
             }
         }
-
-        if(!!actionExecutionDetails) {
-            setModuleContextState({
-                type: 'SetHeader',
-                payload: {
-                    newHeader: {
-                        Title: actionExecutionDetails?.ActionExecution?.ActionInstanceName,
-                        SubTitle: `Run On ${new Date(actionExecutionDetails?.ActionExecution?.ScheduledTime || Date.now()).toString()}`
-                    }
-                }
-            })
-        }
     }
 
     const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: actionExecutionId, queryOptions: {
@@ -141,7 +129,7 @@ export const ActionExecutionDetails = (props: {
         <>
             <ReactQueryWrapper {...actionExecutionDetailQuery}>
                 {() => (
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2, minHeight: '100%'}}>
+                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, minHeight: '100%'}}>
                         {props.showDescription === false ? (<></>): (
                             <ActionDescriptionCard description={description} mode="READONLY"/>
                         )}
@@ -165,7 +153,7 @@ export const ActionExecutionDetails = (props: {
                                     {executionError ? (
                                         <ViewFailedActionExecution actionExecutionDetail={actionExecutionDetailQuery?.data || {}}/>
                                     ) : (
-                                        <Box sx={{maxWidth: '100%'}} >
+                                        <Box>
                                             <SaveAndBuildChartContextProvider>
                                                 <SaveAndBuildChartsFromExecution 
                                                     executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}

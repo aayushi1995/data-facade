@@ -19,10 +19,20 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         props.setSearchQuery?.(e.target.value)
     }
-
+    const SearchBarStyle = {
+        width: '100%',
+        backgroundColor: 'allTableTextfieldbgColor1.main',
+        boxSizing: 'border-box',
+        boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
+        backgroundBlendMode: 'soft-light, normal',
+        borderRadius: '26px',
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: '50px'
+    }
     return (
 
-        <Box p={1}>
+        <Box>
             <Grid container spacing={4}>
                 <Grid item xs={12} container>
                     <Grid item xs={8}>
@@ -60,21 +70,12 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                     <></>
                 ) : (
                     <Grid item xs={12}>
-                        <Box>
                             <TextField variant="standard" 
                             value={props.searchQuery}
                             onChange={handleSearchChange}
                             placeholder="Search Apps/Flows/Actions"
                             multiline={true}
-                            sx={{width: '40%', 
-                                backgroundColor: 'allTableTextfieldbgColor1.main',
-                                boxSizing: 'border-box', 
-                                boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
-                                backgroundBlendMode: 'soft-light, normal', 
-                                borderRadius: '26px',
-                                display: 'flex', 
-                                justifyContent: 'center', 
-                                minHeight: '50px'}}
+                            sx={{...SearchBarStyle}}
                             InputProps={{
                                 disableUnderline: true,
                                 startAdornment: (
@@ -83,7 +84,6 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                                     </InputAdornment>
                                 )
                             }}/>
-                        </Box>
                     </Grid>
                 )} 
                 

@@ -50,7 +50,7 @@ function ActionCodeParameterChart() {
             </TabContext>
             <Dialog  open={activeParameterId!==undefined} onClose={closeDialog} maxWidth='sm' sx={{borderRadius:'0px'}}>
                 <DialogContent sx={{borderRadius:'0px'}}>
-                    <Box sx={{ display: "flex", flexDirection: "row" ,px:2}}>
+                    <Box sx={{ display: "flex", flexDirection: "row" ,pl:2}}>
                         <Box sx={{ flex: 1}}>
                             <ActiveParameterConfiguratorHeaderTypography>
                                 Parameter Configuration

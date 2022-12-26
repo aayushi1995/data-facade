@@ -24,7 +24,7 @@ const TestAction = () => {
 
     return (
         <Box>
-            <IconButton onClick={handleTestCollapse}>
+            <IconButton sx={{transform: 'rotate(180deg)'}} onClick={handleTestCollapse}>
                 <img src={DoubleLeftIcon} alt="collapse"/>
             </IconButton>
             {!!executionId ? (

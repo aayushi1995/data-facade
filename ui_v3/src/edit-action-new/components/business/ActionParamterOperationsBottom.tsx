@@ -12,12 +12,7 @@ export type ActionParameterOperationsBottomProps = {
 function ActionParameterOperationsBottom(props: ActionParameterOperationsBottomProps) {
     const { stepText, nextParam, prevParam } = useActionParameterOperationsBottom({})
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <Box>
-                <Button startIcon={<AddIcon/>}>
-                    Add New Parameter
-                </Button>
-            </Box>
+        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
             <Box sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center" }}>
                 <ActiveParameterConfiguratorFieldNameBox>
                     <Box>

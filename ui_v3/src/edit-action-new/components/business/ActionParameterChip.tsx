@@ -31,8 +31,9 @@ function ActionParameterChip() {
 
     const allParameterCountChip = < Chip
                                         label={`Parameters  ( ${parameters?.length || 0} )`}
-                                        variant="outlined"
+                                        variant="filled"
                                         onClick={() => openParameterConfigurator(parameters?.[0]?.Id)}
+                                        color='primary'
                                     />
     
     const parameterChips = parameters?.map(param => <Chip

@@ -8,11 +8,11 @@ export const RecentLink = (props:{name: string , date: number , to: string})=>{
 
     return(
         <>
-        <RouterLink style={{textDecoration: 'none'}} to={props.to}>    
+        <RouterLink style={{textDecoration: 'none' , color:'#367BF5'}} to={props.to}>    
             <ListItem sx={{backgroundColor:'white',px:3,py:1,borderBottom:'1px solid gray'}}>
                 <Box  sx={{display:'flex', flexDirection:'column',textDecoration:'none'}} >
                     <Typography variant="h6" >{props.name} </Typography>
-                    <Typography variant="subtitle2">Completed on <TimestampCell timestamp={props.date}/></Typography>
+                    <Typography sx={{color:'#2e2e2e'}} variant="subtitle2">Completed on <TimestampCell timestamp={props.date}/></Typography>
                 </Box>
                 <Box sx={{display:'flex',ml:'auto'}}>
                     <MoreVertIcon/>

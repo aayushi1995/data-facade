@@ -3,6 +3,7 @@ import React from "react"
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import { ActionParameterAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput"
 import { ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities"
+import { StyledIPCard } from "./StyledComponents"
 
 
 interface ConfigureParametersProps {
@@ -38,24 +39,18 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
     return (
         <Grid container spacing={2}>
             <Grid item xs={props.showOnlyParameters ? 12 : 6}>
-                <Card sx={{
-                    background: "#FFFFFF",
-                    boxShadow:
-                        "-2.49615px -2.49615px 7.48846px rgba(255, 255, 255, 0.5), 2.49615px 2.49615px 7.48846px rgba(163, 177, 198, 0.5)",
-                    borderRadius: "16px",
-                    minWidth: '100%'
-                }}>
-                    <Box sx={{maxHeight: '550px', height: '450px'}}>
+                <StyledIPCard>
+                    <Box sx={{ height: '450px'}}>
                         <Grid container spacing={2} direction="column" justifyContent="center">
                             <Grid item xs={3}>
                                 <Box sx={{
-                                    background: "#A4CAF0", display: 'flex', alignItems: 'center', minHeight: '100%'
+                                    background: "#A4CAF0", display: 'flex', alignItems: 'center'
                                 }}>
                                     {userInputHeader("User Input")}
                                 </Box>
                             </Grid>
                             <Grid item xs={9} mx={3}>
-                                <Box sx={{height:'350px',overflow:'scroll'}}>
+                                <Box sx={{height:'350px',overflowY:'scroll',overflowX:'auto'}}>
                                     <ParameterDefinitionsConfigPlane 
                                         parameterDefinitions={filteredParameters}
                                         parameterInstances={props.ActionParameterInstances}
@@ -68,24 +63,18 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                             </Grid>
                         </Grid>
                     </Box>
-                </Card>
+                </StyledIPCard>
             </Grid>
             {props.showOnlyParameters ? (
                 <></>
             ) : (
                 <Grid item xs={6}>
-                    <Card sx={{
-                        background: "#FFFFFF",
-                        boxShadow:
-                            "-2.49615px -2.49615px 7.48846px rgba(255, 255, 255, 0.5), 2.49615px 2.49615px 7.48846px rgba(163, 177, 198, 0.5)",
-                        borderRadius: "16px",
-                        minWidth: '100%'
-                    }}>
-                        <Box sx={{maxHeight: '550px', overflowY: 'auto', height: '450px'}}>
+                    <StyledIPCard>
+                        <Box sx={{ overflowY: 'auto', height: '450px'}}>
                             <Grid container spacing={2} direction="column" justifyContent="center">
                                 <Grid item xs={3}>
                                     <Box sx={{
-                                        background: "#A4CAF0", display: 'flex', alignItems: 'center', minHeight: '100%'
+                                        background: "#A4CAF0", display: 'flex', alignItems: 'center'
                                     }}>
                                         {userInputHeader("What's this ?")}
                                     </Box>
@@ -97,7 +86,7 @@ const ConfigureParameters = (props: ConfigureParametersProps) => {
                                 </Grid>
                             </Grid>
                         </Box>
-                    </Card>
+                    </StyledIPCard>
                 </Grid>
             )}
             

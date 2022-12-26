@@ -11,7 +11,8 @@ function ActionDefinitionSelectorRow(props: ActionDefinitionSelectorRowProps) {
         <Box sx={{
             display:'flex', 
             flexDirection:'row',
-            width:'100%',
+            margin:'auto',
+            width:'90%',
             boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5),  4px 6px 16px rgba(163, 177, 198, 0.5)',
             borderRadius:'16px',
             px:2,

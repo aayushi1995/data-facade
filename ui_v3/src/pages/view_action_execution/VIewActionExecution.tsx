@@ -122,8 +122,7 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
                     <Card sx={{
                         p: 3,
                         background: "#F4F5F7",
-                        width:'70vw',
-                        height:'60vh',
+                        width:'100%',
                         boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)",
                         overflow:'scroll',
                         display: 'flex',

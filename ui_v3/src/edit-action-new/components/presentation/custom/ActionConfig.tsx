@@ -1,5 +1,7 @@
 import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, Typography } from "@mui/material";
-import ActionTypeToSupportedRuntimes from "../../../../custom_enums/ActionTypeToSupportedRuntimes";
+import React from "react";
+import { BuildActionContext, SetBuildActionContext } from "../../../../pages/build_action/context/BuildActionContext";
+import ActionHeroGroupSelector from "./ActionHeroGroupSelector";
 
 export type ActionConfigProps = {
     pinned?: boolean,
@@ -14,7 +16,11 @@ export type ActionConfigProps = {
 }
 
 function ActionConfig(props: ActionConfigProps) {
+    const buildActionContext = React.useContext(BuildActionContext)
+    const setBuildActionContext = React.useContext(SetBuildActionContext)
     const { pinned, published, onPinToggle, onPublishToggle, language, onLanguageChange, actionType } = props
+    const group = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.ActionGroup
+    const handleGroupChange =  (newGroupName?: string) => setBuildActionContext({ type: "SetActionGroup", payload: { newGroup: newGroupName } })
     return (
         <Box sx={{py:1}}>
             <Box sx={{py:1,borderBottom:'3px solid #e3e3e3',px:3}}>
@@ -24,20 +30,7 @@ function ActionConfig(props: ActionConfigProps) {
             </Box>
             <Box sx={{px:3,borderBottom:'3px solid #e3e3e3',py:2}}>
                 <Box sx={{mt:2}}>
-                    <FormControl variant="outlined" fullWidth>
-                        <InputLabel>Select your Scripting Language</InputLabel>
-                        <Select
-                            value={language|| "Select"}
-                            onChange={(event) => onLanguageChange?.(event.target.value)}
-                            variant="outlined"
-                            label="Select your Scripting Language"
-                            fullWidth
-                        >
-                            {ActionTypeToSupportedRuntimes[actionType].map( runtime => {
-                                return <MenuItem value={runtime}>{runtime}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
+                    <ActionHeroGroupSelector selectedGroup={group} onSelectedGroupChange={handleGroupChange}/>
                 </Box>
                 <Box>
                     {/* <Autocomplete/> */}

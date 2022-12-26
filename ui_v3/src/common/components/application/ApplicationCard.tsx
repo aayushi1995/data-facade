@@ -12,7 +12,7 @@ import { lightShadows } from '../../../css/theme/shadows'
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import ConfirmationDialog from "../ConfirmationDialog"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
-import { getIconSxProperties } from './compomentCssProperties'
+import { getIconSxProperties, StyledApplicationCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedByString, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName } from './compomentCssProperties'
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 import useInstallApplication from './hooks/useInstallApplication'
 
@@ -108,7 +108,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     const formActions = () => {
         if(props.isInstalled) {
             return (
-                <Box sx={{mx:'auto',width:'35%',display: "flex", flexDirection:"row", gap: 2, mt: "4%", mb: "4%"}}>
+                <Box sx={{mx:'auto',width:'100%',display: "flex", flexDirection:"row", gap: 2, mt: "4%", mb: "4%",alignItems:'center',justifyContent:'center'}}>
                     <Box>
                         <Tooltip arrow placement='top' title="Add to Favorites">
                             <IconButton sx={getIconSxProperties()} onClick={onFavorite}>
@@ -147,6 +147,23 @@ const ApplicationCard = (props: ApplicationCardProps) => {
             )
         }
     }
+    const InfoBoxStyle = {
+        px:3,
+        py:2,
+        width:'30%', 
+        display:'flex',
+        flexDirection:'column' ,
+        justifyContent:'center',
+        borderRight:"0.439891px solid #FFFFFF"
+    }
+
+    const HeadingBoxStyle = {
+        display: "flex", 
+        flexDirection: "column" ,
+        width:'35%',
+        px:2, 
+        borderRight:"0.439891px solid #FFFFFF"
+    }
     
     return (
         <>
@@ -161,47 +178,30 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                 onDecline={handleDialogClose}
             />
             <Box>
-            <Card onClick={onApplicationSelect} sx={{
-                        width: "100%", 
-                        height: "130px",
-                        borderRadius: '10px', 
-                        px: 2,
-                        py:0, 
-                        boxSizing: "content-box",
+            <StyledApplicationCard  onClick={onApplicationSelect} sx={{
                         backgroundColor: disableCardActions ? 'disableBackgroundColor.main' : 'cardBackgroundColor.main',
-                        border: "0.439891px solid #FFFFFF",
-                        boxShadow: "0px 8.5956px 10.3934px rgba(54, 48, 116, 0.3)",
                         cursor: props.isInstalled ? 'pointer' : undefined
                 }}>
                     <Box sx={{display: "flex", flexDirection: "row", height: "100%"}}>
-                        
-                    
-                        <Box sx={{display: "flex", flexDirection: "column" ,width:'40%', borderRight:"0.439891px solid #FFFFFF"}}>
+                        <Box sx={{display:'flex',width:'10%', alignItems:'center',borderRight:"0.439891px solid #FFFFFF",justifyContent:'center'}}>    
+                            <Box sx={{ display: 'flex', flexDirection: "column", alignItems: 'center'}}>
+                                <Box sx={{ alignItems: 'center' }}>
+                                    <img width='35px' height="35px" src={DataFacadeLogo} alt="Data Facade" />
+                                </Box>
+                                <StyledTypographyApplicationformCreatedByString>
+                                    {formCreatedByString()}
+                                </StyledTypographyApplicationformCreatedByString >
+                            </Box>
+                        </Box>
+                        <Box sx={{...HeadingBoxStyle}}>
                             <Box>
-                                <Typography sx={{
-                                    fontFamily: "SF Pro Text",
-                                    fontStyle: "normal",
-                                    fontWeight: 600,
-                                    fontSize: "18px",
-                                    color: 'cardHeaderColor.main',
-                                    lineHeight: "266%",
-                                    letterSpacing: "0.5px",
-                                    textTransform: "uppercase"
-                                }}>
+                                <StyledTypographyApplicationName  >
                                     {application.ApplicationName}
-                                </Typography>
+                                </StyledTypographyApplicationName >
                             </Box>
                             <Box sx={{my:'10px', width:'90%'}}>
                             <Tooltip placement='top' arrow title={application.ApplicationDescription || ""}>
-                                <Typography sx={{
-                                    fontFamily: "SF Pro Display",
-                                    fontStyle: "normal",
-                                    fontWeight: "normal",
-                                    fontSize: "16px",
-                                    color: 'cardTextColor.main',
-                                    lineHeight: "133.4%",
-                                    display: "flex",
-                                }}>
+                                <StyledTypographyApplicationDescription>
                                     <LinesEllipsis
                                         text={application.ApplicationDescription}
                                         maxLine='2'
@@ -210,110 +210,23 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                         basedOn='letters'
                                     />
                                     {/* {application.ApplicationDescription} */}
-                                </Typography>
+                                </StyledTypographyApplicationDescription>
                             </Tooltip>      
                             </Box>
                         </Box>
-                        <Box sx={{px:3,py:2,width:'25%', display:'flex',flexDirection:'column' , borderRight:"0.439891px solid #FFFFFF"}}>
-                            <Typography sx={{
-                                            fontFamily: "SF Pro Display",
-                                            fontStyle: "normal",
-                                            fontWeight: 600,
-                                            fontSize: "16px",
-                                            color: 'cardInfoColor.main',
-                                            textAlign:'center'
-                                        }}>
+                        <Box sx={{...InfoBoxStyle}}>
+                            <StyledTypographyApplicationformInfoString>
                                             {formInfoString()}
-                                        </Typography>
-                                        {/* <Box sx={{display: "flex", alignItems: "center" , mt:2, justifyContent:'center'}}>
-                                                <UsageStatus status={application.Status||"NA"}/>
-                                                { <Typography sx={{
-                                                    fontFamily: "SF Pro Text",
-                                                    fontStyle: "normal",
-                                                    fontWeight: 500,
-                                                    fontSize: "15px",
-                                                    lineHeight: "14px",
-                                                    mx:5,
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    fontFeatureSettings: "'liga' off",
-                                                    color: "cardNumUserTextColor.main"
-                                                }}>{application.NumberOfUsers||"No User"}</Typography>}
-                                            </Box> */}
-                                            <Typography sx={{
-                                                    fontFamily: "SF Pro Text",
-                                                    fontStyle: "normal",
-                                                    fontWeight: "normal",
-                                                    fontSize: "13px",
-                                                    textAlign:'center',
-                                                    mt:2,
-                                                    lineHeight: "166%",
-                                                    letterSpacing: "0.4px",
-                                                    color: "cardInfoFormatCreatedOnString.main"
-                                                }}>
-                                                    {formCreatedOnString()}
-                                                </Typography>
-
+                            </StyledTypographyApplicationformInfoString>
+                            <StyledTypographyApplicationformCreatedOnString>
+                                {formCreatedOnString()}
+                            </StyledTypographyApplicationformCreatedOnString>
                         </Box>
-                        <Box sx={{width:'10%', alignItems:'center',borderRight:"0.439891px solid #FFFFFF",}}>    
-                            <Box sx={{display: "flex", flexDirection: "column",alignItems:'center', justifyContent: "space-between",px:3,py:1,width:'100%', flexGrow: 1, mr: 3}}>
-                                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", gap: 1}}>
-                                    <Box sx={{display: "flex", flexDirection: "row"}}>
-                                        <Box sx={{display: "flex", flexDirection: "row"}}>
-                                            <Box sx={{display:'flex', flexDirection:"column", alignItems:'center'}}>
-                                                <Box sx={{alignItems:'center'}}>
-                                                    <img width='35px' height="35px" src={DataFacadeLogo} alt="Data Facade"/>
-                                                </Box>
-                                                <Typography sx={{
-                                                    fontFamily: "SF Pro Text",
-                                                    fontStyle: "normal",
-                                                    fontWeight: 500,
-                                                    fontSize: "10px",
-                                                    lineHeight: "157%",
-                                                    letterSpacing: "0.1px",
-                                                    color: "cardInfoFormCreatedByStringColor.main"
-                                                }}>
-                                                    {formCreatedByString()}
-                                                </Typography>
-                                            </Box>
-                                            <Box>
-                                                
-                                            </Box>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                                {props.isInstalled &&
-                                    <Box sx={{display: "flex", alignItems: "flex-end",m:1}}>
-                                        <Box sx={{
-                                                width: "45px",
-                                                height: "45px",
-                                                borderRadius: "50%",
-                                                //As the color of background is similar as card background color so we put here cardBackgroun Color
-                                                backgroundColor: "cardBackgroundColor.main",
-                                                boxShadow: lightShadows[32],
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center"
-                                            }}>
-                                            <IconButton sx={{
-                                                    height: "35px",
-                                                    width: "35px",
-                                                //As the color of background is similar as card background color so we put here cardBackgroun Color
-                                                    background: "cardBackgroundColor.main",
-                                                    boxShadow: "1px 1px 1px rgba(0, 0, 0, 0.25), -1px -1px 1px #C8EEFF"
-                                                }}>
-                                                    <img width="30px" height="30px" src={PackageLogo} alt="Package"/>
-                                            </IconButton>
-                                        </Box>
-                                    </Box>
-                                }
-                            </Box>
-                        </Box>
-                        <Box sx={{p:2, alignItems:'center',width:'30%'}}>
+                        <Box sx={{width:'30%',display:'flex',justifyContent:'center'}}>
                             {formActions()}
                         </Box>
                     </Box>
-                </Card>
+                </StyledApplicationCard >
             </Box>
         </>
     )

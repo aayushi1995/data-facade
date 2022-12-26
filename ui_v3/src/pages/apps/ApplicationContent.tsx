@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useContext, useEffect } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION, APPLICATION_EXECUTE_WORKFLOW, APPLICATION_ROUTE_MARKETPLACE, APPLICATION_SUB_TABS, APPLICATION_WEB_APP_BUILD_ROUTE, APPLICATION_WEB_APP_EDIT_ROUTE, APPPLICATION_CREATE_AUTO_FLOW, EXECUTE_INSTANCE_ROUTE, EXECUTION_HISTORY_ROUTE, SCHEDULED_JOBS_ROUTE, WORKFLOW_EDIT_ROUTE_ROUTE, WORKFLOW_EXECUTION_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
 import { findTab } from '../../common/components/header/data/DataRoutesConfig';
 import { APPLICATION_ROUTE } from '../../common/components/header/data/RoutesConfig';
@@ -44,7 +44,7 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
             <Route path={WORKFLOW_EDIT_ROUTE_ROUTE} component={EditWorkflowHomePage}/>
             <Route path={EXECUTE_INSTANCE_ROUTE} component={ExecuteInstanceHomePage}/>
             <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionPageNew}/>
-            <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route>
+            {/* <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route> */}
             <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}></Route>
             <Route path={ACTION_EXECUTION_ROUTE} component={ActionExecutionHomePage}/>
             <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
@@ -52,7 +52,8 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
             <Route path={SCHEDULED_JOBS_ROUTE} component={ScheduledJobsWrapper} />
             <Route path={APPLICATION_WEB_APP_EDIT_ROUTE} component={WebAppEditHomePage} />
             <Route path={APPLICATION_WEB_APP_BUILD_ROUTE} component={BuildWebAppHomePage} />
-            <Route exact path={APPLICATION_ROUTE} component={AllApplicationViewWrapper}/>
+            <Route exact path={APPLICATION_ROUTE} component={AllApplicationView}/>
+            <Route exact path={APPLICATION_DETAIL_ROUTE_ROUTE} component={AllApplicationViewWrapper}/>
             </Box>
         </Switch>
     )
@@ -73,8 +74,23 @@ export const AllApplicationViewWrapper = () => {
             }
         })
     }, [])
-
-    return <Box sx={{mx:-6}}> <AllApplicationView/></Box>
+    const panelStyle = {
+        width:'50%',
+        height:'85vh',
+        overflow:'scroll',
+        p:1,
+        boxShadow: "0px 8.5956px 10.3934px rgba(54, 48, 116, 0.3)"
+    }
+    return <Box sx={{mx:-3,display:'flex',flexDirection:'row',gap:2,}}> 
+                <Box sx={{...panelStyle}}>
+                <AllApplicationView/>
+                </Box>
+                <Box sx={panelStyle}>
+                <Switch>       
+                    <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}/>
+                </Switch>
+                </Box>
+            </Box>
 }
 
 export const ScheduledJobsWrapper = () => {

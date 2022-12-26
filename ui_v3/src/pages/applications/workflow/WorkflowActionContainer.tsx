@@ -116,7 +116,7 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
             deleteButtonAction: handleDeleteAction,
             onActionSelect: onActionSelect,
             executionStaus: action.ExecutionStatus,
-            runTime: runTime,
+            runTime: action.ExecutionStartedOn?runTime:-1,
             errorMessages: action.ErrorInParametersConfigured,
             latestExecutionId: workflowContext?.TestInstance?.actionDetails?.[action.ReferenceId || ""]?.LatestExecutionId
         }
@@ -195,16 +195,6 @@ const WorkflowActionContainer = (props: WorkflowActionContainerProps) => {
                 payload: {
                     stageId: stageId,
                     actionIndex: actionIndex
-                }
-            }
-        )
-        const timenow = new Date(Date.now()).getTime()
-        setWorkflowContext(
-            {
-                type: 'SET_STAGE_STARTED_TIME',
-                payload: {
-                    stageId: stageId,
-                    startedOn: timenow 
                 }
             }
         )

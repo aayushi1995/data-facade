@@ -15,7 +15,7 @@ export type ActionParameterOperationsTopProps = {
 function ActionParameterOperationsTop(props: ActionParameterOperationsTopProps) {
     const { addParam, handleClose } = props
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2}}>
+        <Box sx={{ display: "flex", flexDirection: "row"}}>
             
             {/*
             DISABLING ALL AS IT WAS NON FUNCTIONAL 

@@ -142,7 +142,7 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
     }
     
     return (
-        <Box sx={{px:1, boxShadow: "inset 2px 2px 2px rgba(0, 0, 0, 0.15), inset -2.93116px -2.93116px 13.8623px #9AA1A9",}}>
+        <Box sx={{px:1}}>
             <ConfirmationDialog {...getConfirmationDialogProps()}/>
             <Box sx={{pt:1, display: "flex", flexDirection: "row", gap: 1,borderBottom:'1px solid #b8b9ba',mx:-1}}>
                 <Box sx={{ flex: 1,px:1}}>

@@ -4,6 +4,8 @@ import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import useFetchActionDefinitionForSelector from "../../hooks/useFetchActionDefinitionForSelector";
 import ActionDefinitionSelectorRow from "../presentation/ActionDefinitionSelectorRow";
 import SearchIcon from '@mui/icons-material/Search';
+import labels from "../../../labels/labels";
+import { SearchBarTextField } from "../presentation/styled_native/ActionAddCodeIconBox";
 export type ActionDefinitionSelectorProps = {
     onActionDefinitionSelectionCallback?: (actionDefinitionId?: string) => void
 }
@@ -13,7 +15,7 @@ function ActionDefinitionSelector(props: ActionDefinitionSelectorProps) {
     const [searchQuery, setSearchQuery] = React.useState("")
     const filteredData = (data || [])?.filter(ad => ad?.ActionDisplayName?.includes?.(searchQuery))
 
-    const actionDefinitionRows = searchQuery==="" ? [] : filteredData?.map?.(ad => 
+    const actionDefinitionRows = filteredData?.map?.(ad => 
         <Box>
             <ActionDefinitionSelectorRow 
                 data={ad} 
@@ -24,26 +26,12 @@ function ActionDefinitionSelector(props: ActionDefinitionSelectorProps) {
 
     return (
         <Box sx={{m:'auto',width:'40vw',my:2}}>
-            <Box>
-                <Typography sx={{fontSize:'1.3rem',fontWeight:600,color:'#9e9e98',textAlign:'center'}}>
-                    Search and Add existing action from library
-                </Typography>
-            </Box>
-            <Box sx={{width:'20vw'}}>
-                <TextField variant="standard" 
+            <Box sx={{width:'40vw'}}>
+                <SearchBarTextField variant="standard" 
                             value={searchQuery}
                             onChange={(event) => setSearchQuery(event.target.value)}
-                            placeholder="Search Actions"
+                            placeholder={labels.AddActionPage.searchText}
                             multiline={true}
-                            sx={{width: '40vw', 
-                                backgroundColor: 'allTableTextfieldbgColor1.main',
-                                boxSizing: 'border-box', 
-                                boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
-                                backgroundBlendMode: 'soft-light, normal', 
-                                borderRadius: '16px',
-                                display: 'flex', 
-                                justifyContent: 'center', 
-                                minHeight: '50px'}}
                             InputProps={{
                                 disableUnderline: true,
                                 startAdornment: (
@@ -53,7 +41,7 @@ function ActionDefinitionSelector(props: ActionDefinitionSelectorProps) {
                                 )
                             }}/>
             </Box>
-            <Box>
+            <Box sx={{height:'30vh',overflow:'scroll'}}>
                 <ReactQueryWrapper
                     isLoading={isLoading}
                     error={error}

@@ -302,7 +302,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
                 <Box sx={{flex: 1}}>
                     {/* <ActionDescriptionCard description={workflowContext.Description}  mode="READONLY" /> */}
                 </Box>
-                <Box sx={{flex: 4, mb: 2}}>
+                <Box sx={{flex: 4}}>
                     <ReactQueryWrapper data={workflowContext.WorkflowParameterInstance} isLoading={!isReady} error={instancesError} children={
                         () => (
                             <Box sx={{display: 'flex', flexDirection: 'column', gap: 3}}>

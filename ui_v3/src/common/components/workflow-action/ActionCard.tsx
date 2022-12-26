@@ -119,7 +119,9 @@ const ActionCard = (props: ActionCardProps) => {
     }, [props.latestExecutionId])
 
     const getElapsedTime = () => {
-    
+        if(props.runTime==-1){
+            return  "N/A min N/A Sec" 
+        }
         const timeInSeconds = props.runTime  || 0
         const m = Math.floor(timeInSeconds / 60).toString().padStart(2,'0')
         const s = Math.floor(timeInSeconds % 60).toString().padStart(2,'0');

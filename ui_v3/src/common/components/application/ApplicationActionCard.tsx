@@ -125,7 +125,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                         <Divider orientation="vertical" sx={{height: "100%"}}/>
                     </Box>
                     
-                    <Box sx={{flex: 4, width: '100%',height:'100%'}}>
+                    <Box sx={{flex: 6, width: '100%',height:'100%'}}>
                         <Typography variant="heroMeta">
                                 <b>Created By : </b>{props.action.model?.CreatedBy || ""}
                         </Typography>

@@ -179,8 +179,10 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             type: 'SetHeader',
             payload: {
                 'newHeader': {
-                    Title: executeActionContext.ExistingModels?.ActionDefinition?.DisplayName,
-                    SubTitle: 'Last Updated On ' + (new Date(executeActionContext.ExistingModels?.ActionDefinition?.UpdatedOn || executeActionContext.ExistingModels?.ActionDefinition?.CreatedOn || Date.now()).toString())
+                    // Title: executeActionContext.ExistingModels?.ActionDefinition?.DisplayName,
+                    // SubTitle: 'Last Updated On ' + (new Date(executeActionContext.ExistingModels?.ActionDefinition?.UpdatedOn || executeActionContext.ExistingModels?.ActionDefinition?.CreatedOn || Date.now()).toString())
+                    Title: "",
+                    SubTitle: ""
                 }
             }
         })
@@ -403,11 +405,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             ) : (
                 <></>
             )}
-            <Card sx={{
-                background: "#F8F8F8",
-                boxShadow:
-                "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
-                borderRadius: "9.72px",
+            <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 1,
@@ -445,7 +443,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                         </Box>
                     </Box>
                 )}
-                <Divider orientation="horizontal" sx={{mt: 1, transform: "matrix(-1, 0, 0, -1, 0, 0)"}}/>
                 <Box m={1}>
                     <TabPanel value={tabValue} index={0}>
                         <Box sx={{display: 'flex', flexDirection: 'column', gap: 4}}>
@@ -528,7 +525,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                         {validateErrorMessage}
                     </Alert>
                 </Snackbar>
-            </Card>
+            </Box>
             {!!actionExecutionId && !!data && !props.hideExecution? (
                 <Box sx={{mb: 10}} ref={actionExecutionView}>
                     <ActionExecutionDetails actionExecutionId={actionExecutionId} showDescription={false}/>

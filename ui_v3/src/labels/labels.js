@@ -151,6 +151,11 @@ const labels = {
         "delete": "Delete",
         "clean": "Start Transform",
         NO_CLEANUP_AVAILABLE: "No Transformation Step Configured"
+    },
+    "AddActionPage":{
+        "searchText": "Search and Add existing action from library",
+        "addActionMsg1": "Add your action here",
+        "addActionMsg2": "Flow gives you flexibility of the notebook format but the power of DF Platform"
     }
 }
 

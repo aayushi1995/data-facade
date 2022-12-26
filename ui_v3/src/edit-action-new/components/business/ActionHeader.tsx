@@ -1,19 +1,23 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Box, Button, FormControlLabel, FormGroup, Switch, TextField, Typography } from "@mui/material";
+import { Box, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField} from "@mui/material";
 import React from 'react';
 import ActionDefinitionVisibility from '../../../enums/ActionDefinitionVisibility';
 import { Application } from '../../../generated/entities/Entities';
 import ActionHeroApplicationSelector from '../presentation/custom/ActionHeroApplicationSelector';
 import ActionHeroGroupSelector from '../presentation/custom/ActionHeroGroupSelector';
 import { ActionHeaderAutocompleteBox, ActionHeaderCard, ActionHeaderCardActionArea, ActionHeaderCardInputArea, ActionPublishStatusBox } from "../presentation/styled_native/ActionHeaderBox";
-import { ActionHeaderActionDescriptionLabelTypography, ActionHeaderActionVisibilityTypography, ActionHeaderLanguageTypography } from '../presentation/styled_native/ActionHeaderTypography';
+import { ActionHeaderActionDescriptionLabelTypography, ActionHeaderActionVisibilityTypography } from '../presentation/styled_native/ActionHeaderTypography';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import pythonLogo from "../../../../src/images/python.svg";
 import sqlLogo from "../../../../src/images/SQL.svg"
-import { BuildActionContext } from '../../../pages/build_action/context/BuildActionContext';
+import { BuildActionContext, SetBuildActionContext } from '../../../pages/build_action/context/BuildActionContext';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import InfoIcon from '@mui/icons-material/Info';
+import { RunButton, SaveButton, TestButton } from '../presentation/styled_native/ActionHeaderButton';
+import ActionTypeToSupportedRuntimes from '../../../custom_enums/ActionTypeToSupportedRuntimes';
 export type ActionHeaderProps = {
     actionName?: string,
     actionDescription?: string,
@@ -50,13 +54,32 @@ function ActionHeader(props: ActionHeaderProps) {
     const handleApplicationChange = (newApplication?: Application) => {
         props?.onChangeHandlers?.onApplicationChange?.(newApplication?.Id)
     }
-
-    const handleGroupChange = (newGroup?: string) => {
-        props?.onChangeHandlers?.onGroupChange?.(newGroup)
+    const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+    const open = Boolean(menuAnchor)
+    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation()
+        setMenuAnchor(event.currentTarget)
+        
+    }
+    
+    const buildActionContext = React.useContext(BuildActionContext)
+    const setBuildActionContext = React.useContext(SetBuildActionContext)
+    const onLanguageChange = (newLanguage?: string) => {
+        if (!!newLanguage && newLanguage !== "Select") {
+            setBuildActionContext({
+                type: "SetActionTemplateSupportedRuntimeGroup",
+                payload: {
+                    templateId: buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId!,
+                    newSupportedRuntimeGroup: newLanguage
+                }
+            })
+        }
     }
 
-    const toggleVisibility = () => props?.onChangeHandlers?.onVisibilityToggle?.()
-    const buildActionContext = React.useContext(BuildActionContext)
+    const activeTemplateWithParams = buildActionContext.actionTemplateWithParams.find(at => at.template.Id===buildActionContext.activeTemplateId)
+    const language = activeTemplateWithParams?.template?.SupportedRuntimeGroup
+    const actionType = buildActionContext.actionDefinitionWithTags.actionDefinition.ActionType || "Check"
+
     return (
         <ActionHeaderCard sx={{ display: "flex", flexDirection: "row" }}>
             <ActionHeaderCardInputArea sx={{ display: "flex", flexDirection: "row", height: "100%", gap: 2,px:2,py:3}}>
@@ -73,7 +96,7 @@ function ActionHeader(props: ActionHeaderProps) {
                 </Box>
                 <Box sx={{ display: "flex",width:'50%', flexDirection: "column" }}>
                     <Box>
-                        <TextField InputProps={{sx:{
+                        <TextField required placeholder='Add action name here' InputProps={{sx:{
                                                     fontSize:'1.1rem',
                                                     fontWeight:600
                                                     },
@@ -82,17 +105,12 @@ function ActionHeader(props: ActionHeaderProps) {
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column"}}>
                         <Box sx={{ display: "flex", flexDirection: "row"}}>   
-                            <Box>
-                                <ActionHeaderActionDescriptionLabelTypography>DESCRIPTION:</ActionHeaderActionDescriptionLabelTypography>
-                            </Box>
-                            <TextField InputProps ={{
+                            <TextField placeholder='Add action description here' InputProps ={{
                                                 sx: {
                                                     fontWeight: 500,
                                                     fontSize: "0.8rem",
                                                     color: "ActionDefinationHeroTextColor1.main",
-                                                    borderRadius: "5px",
                                                     backgroundColor: "ActionCardBgColor.main",
-                                                    px:2
                                                 },
                                                 disableUnderline: true,
                                             }} variant='standard' size='small' fullWidth multiline minRows={1} maxRows={3} value={props?.actionDescription || ""} onChange={handleDescriptionChange}/>
@@ -101,15 +119,28 @@ function ActionHeader(props: ActionHeaderProps) {
                             <ActionHeaderActionVisibilityTypography sx={{mt:1}}>PUBLIC</ActionHeaderActionVisibilityTypography>
                         </Box>
                     </Box>
-                </Box>  
+                </Box>
+                <ActionHeaderAutocompleteBox>
+                    <FormControl variant="outlined" fullWidth>
+                        <InputLabel>Select your Scripting Language</InputLabel>
+                        <Select
+                            value={language|| "Select"}
+                            onChange={(event) => onLanguageChange?.(event.target.value)}
+                            variant="outlined"
+                            label="Select your Scripting Language"
+                            fullWidth
+                        >
+                            {ActionTypeToSupportedRuntimes[actionType].map( runtime => {
+                                return <MenuItem value={runtime}>{runtime}</MenuItem>
+                            })}
+                        </Select>
+                    </FormControl>
+                </ActionHeaderAutocompleteBox>
                 <ActionHeaderAutocompleteBox>
                     <ActionHeroApplicationSelector selectedApplicationId={props?.applicationId} onSelectedApplicationChange={handleApplicationChange}/>
                 </ActionHeaderAutocompleteBox>
-                <ActionHeaderAutocompleteBox>
-                    <ActionHeroGroupSelector selectedGroup={props?.group} onSelectedGroupChange={handleGroupChange}/>
-                </ActionHeaderAutocompleteBox>
             </ActionHeaderCardInputArea>
-            <ActionHeaderCardActionArea sx={{ display: "flex", alignItems: "center" }}>
+            <ActionHeaderCardActionArea sx={{ display: "flex", alignItems: "center",justifyContent:'center' }}>
                 {/* <Box sx={{mr:buildActionContext.testMode?0:4}}>
                     <FormGroup>
                         <FormControlLabel
@@ -123,19 +154,46 @@ function ActionHeader(props: ActionHeaderProps) {
                     </FormGroup>
                     
                 </Box> */}
-                <Box sx={{display:'flex',flexDirection: buildActionContext.testMode?'column':'row', gap: 1}}>
-                    <Button size='small' variant='outlined' sx={{gap: 1, minWidth: '4vw', color: 'white', borderColor: 'white',borderRadius:'0px',borderTopLeftRadius:'10px',borderTopRightRadius:'10px', ml: 1}} color="info" onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</Button>
-                    <Button size='small' sx={{minWidth:'4vw',color:'white',borderColor:'lime'}} color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <InfoIcon sx={{ transform: "scale(0.7)"}}/> : <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }Save</Button>
-                    <Button sx={{ color: 'white', borderColor: 'white' }} size="small" variant='outlined' onClick={props?.actionHandler?.onRun}>
-                        Run
-                    </Button>
-                    {buildActionContext.testMode ? (
-                        <></>
-                    ) : (
-                        <Button size='small' sx={{minWidth: '4vw', color: 'white',}} color='error' variant='outlined' onClick={props.actionHandler?.onDuplicate}>Duplicate</Button>
-                    )}
-                    
+
+                <Box sx={{display:'flex',flexDirection: buildActionContext.testMode?'column':'row', gap:buildActionContext.testMode?1:3}}>
+                    <TestButton size='small' variant='outlined' color="info" onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</TestButton>
+                    <Box sx={{display:'flex',flexDirection:'row',gap:buildActionContext.testMode?1:3}}>
+                        <SaveButton size='small' color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {
+                            (buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? 
+                                <InfoIcon sx={{ transform: "scale(0.7)"}}/> 
+                                :
+                                <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }
+                                    Save
+                        </SaveButton>
+                        <RunButton size="small" color='primary' variant='contained' onClick={props?.actionHandler?.onRun}> <PlayCircleOutlineIcon sx={{ transform: "scale(0.8)"}}/>Run</RunButton>
+                    </Box>
                 </Box>
+                <Box sx={{mr:1}}>
+                <IconButton onClick={handleMenuOpen}>
+                    <MoreVertIcon sx={{color:'white'}}/>
+                </IconButton>
+                        <Menu
+                            anchorEl={menuAnchor} 
+                            open={open} 
+                            onClose={() => {setMenuAnchor(null)}}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                        }}>
+                            <MenuItem sx={{gap:2}} onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</MenuItem>
+                            <MenuItem sx={{gap:2}} onClick={props?.actionHandler?.onSave}> {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <InfoIcon sx={{ transform: "scale(0.7)"}}/> : <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }Save</MenuItem>
+                            <MenuItem sx={{gap:2}}  onClick={props?.actionHandler?.onRun}> <PlayCircleOutlineIcon sx={{ transform: "scale(0.8)"}}/> Run </MenuItem>
+                            {buildActionContext.testMode ? (
+                                <></>
+                            ) : (
+                                <MenuItem sx={{gap:2}}  onClick={props.actionHandler?.onDuplicate}><ContentCopyIcon/>Duplicate</MenuItem>
+                            )}
+                        </Menu>
+                </Box>        
             </ActionHeaderCardActionArea>
         </ActionHeaderCard>
     )

@@ -31,12 +31,11 @@ export const StagesWithActions = (props :{showDet: boolean, showStage: boolean})
         }
         runTime-=stage.StartedOn||0;
         const getElapsedTime = () => {
-    
             const timeInSeconds = runTime/1000 || 0
             const m = Math.floor(timeInSeconds / 60).toString().padStart(2,'0')
             const s = Math.floor(timeInSeconds % 60).toString().padStart(2,'0');
     
-            return m + ' MIN ' + s + ' SEC'  
+            return stage.StartedOn?(m + ' MIN ' + s + ' SEC'):'N/A min N/A sec'  
     
         }
         return {

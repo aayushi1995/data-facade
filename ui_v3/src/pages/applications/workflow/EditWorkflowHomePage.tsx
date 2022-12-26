@@ -1,8 +1,9 @@
 import ErrorIcon from '@mui/icons-material/Error'
 import { Box, Button, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material"
-import React from "react"
+import React, { useContext, useEffect } from "react"
 import { generatePath, Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
+import { SetModuleContextState } from '../../../common/components/ModuleContext'
 import NoData from "../../../common/components/NoData"
 import { AddingActionView } from "../../../common/components/workflow/create/addAction/AddingActionView"
 import useCopyAndSaveDefinition from "../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition"
@@ -66,6 +67,18 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         handleSetContexts(workflowContextObject)
         setInitialWorkflow(workflowContextObject)
     }
+    const setModuleContext = useContext(SetModuleContextState)
+    useEffect(() => {
+        setModuleContext({
+            type: "SetHeader",
+            payload: {
+                newHeader: {
+                    Title: "",
+                    SubTitle: ""
+                }
+            }
+        })
+    }, [])
 
     // React.useEffect(() => {
     //     setWorkflowContext({type: 'SET_ERROR_STATE', payload: isError})

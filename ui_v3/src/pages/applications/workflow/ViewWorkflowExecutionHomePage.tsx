@@ -338,7 +338,7 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
                         <Box>
                             <StagesWithActions showStage={true} showDet={false}/>
                         </Box>
-                        <Box sx={{display:'flex',flexDirection:'row',height:'100%',gap:2}}>
+                        <Box sx={{display:'flex',flexDirection:'row',minHeight:'60vh',gap:2,px:2}}>
                             <Box sx={{transitionDuration:'0.5s',ml:(workflowContext.currentSelectedStage?0:(flowOpener?10:0)), width:(!workflowContext.currentSelectedStage && flowOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && flowOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:(!workflowContext.currentSelectedStage &&flowOpener)? "":"-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
                                 {(workflowContext.currentSelectedStage || !flowOpener)?
                                 <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handleFlowOpener} ><img width='40px' height='40px' src={leftExpandIcon} alt="Open"/> <Typography sx={{p:1,transform:'rotate(270deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Detailed Output</Typography></Button>:<></>
@@ -356,10 +356,6 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
                                         <>
                                         <Box sx={{mt: 1, display: 'flex', flex: 1,gap:3,px:2}}>
                                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2,width:'20vw'}}>
-                                                <StepSlider label="Stage" currentIndex={currentIndex} maximumIndex={workflowContext.stages.length - 1} handleNext={handleGoNext} handleBack={handleGoBack}/>
-                                                <Box sx={{height:'9vh'}}>
-                                                    <WorkflowStagesWrapper stages={selectedStage} allowEdit={false} percentageWidth='100%'/>
-                                                </Box>    
                                                 <Card sx={{
                                                     backgroundColor: '#f4f5f7',
                                                     border:'2px solid #fafcfc',
@@ -368,9 +364,11 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
                                                     height:'100%',
                                                 }}>
                                                     <WorkflowActionContainer stageId={workflowContext.currentSelectedStage || "stageNA"} handleSelectAction={handleSelectAction}/>
+                                                    <StepSlider label="Stage" currentIndex={currentIndex} maximumIndex={workflowContext.stages.length - 1} handleNext={handleGoNext} handleBack={handleGoBack}/>
                                                 </Card>
+                                                
                                             </Box>
-                                            <Box sx={{display:'flex',flexDirection:'column',width:'68vw'}}>
+                                            <Box sx={{display:'flex',flexDirection:'column',width:'62vw'}}>
                                                 {/* <SaveAndBuildChartContextProvider>
                                                     <SaveAndBuildChartsFromExecution executionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
                                                 </SaveAndBuildChartContextProvider> */}
@@ -382,7 +380,7 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
                                         ) : (
                                             <></>
                                         )}
-                            <Box sx={{transitionDuration:'0.5s',mr:finalOutputOpener?10:0,width:(!workflowContext.currentSelectedStage && finalOutputOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && finalOutputOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:finalOutputOpener?"": "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD",}}>
+                            <Box sx={{transitionDuration:'0.5s',mr:finalOutputOpener?10:0,width:(!workflowContext.currentSelectedStage && finalOutputOpener)?"100%":"3vw",minHeight:'100%',backgroundColor:(!workflowContext.currentSelectedStage && finalOutputOpener)?"#f4f5f7":"#8dcce3", borderRadius:'10px',boxShadow:finalOutputOpener?"": "-5px -5px 10px #FAFBFF, 5px 5px 10px #A6ABBD"}}>
                                 {workflowContext.currentSelectedStage ||!finalOutputOpener?
                                     <Button sx={{display:'flex',flexDirection:'column',p:0,mt:2}} onClick={handlefinalOutputOpener} ><img width='50px' height='50px' src={RightExpandIcon} alt="Open"/><Typography sx={{p:1,transform:'rotate(90deg)',fontSize:'0.9rem',fontWeight:'600',color:'#575757'}}>Final Output</Typography></Button>:<></>
                                 }

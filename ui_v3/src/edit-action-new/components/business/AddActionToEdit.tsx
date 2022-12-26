@@ -6,7 +6,6 @@ import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionTyp
 import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../../../pages/build_action/context/BuildActionContext";
 import ActionDefinitionSelector from "./ActionDefinitionSelector";
 import CreateNewAction, { CreateNewActionProps } from "./CreateNewAction";
-
 export type AddActionToEditProps = {
     addActionWithId: (actionDefId?: string) => void
 }
@@ -17,7 +16,7 @@ function AddActionToEdit(props: AddActionToEditProps) {
     const buildActionContext = React.useContext(BuildActionContext)
     const setBuildActionContext = React.useContext(SetBuildActionContext)
     const useActionHooks = React.useContext(UseActionHooks)
-    
+  
     const createNewActionProps: CreateNewActionProps = {
         name: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName,
         description: buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Description,

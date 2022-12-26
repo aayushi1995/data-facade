@@ -113,16 +113,19 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                             </AvatarGroup>
                         </Box>
                     </Box>
-                    <Box sx={{display: "flex", justifyContent: "flex-start", overflowX: "auto", gap: 3}}className="stats">
+                    <Box sx={{display: "flex",flexDirection:'column', justifyContent: "flex-start", overflowX: "auto",width:'100%',alignItems:'start'}} className="stats">
+                        <Box sx={{display: 'flex',flexDirection:'row',gap: 3}}>
                         {props.numberStats.map((numberStat) => 
                             <Box>
                                 <NumberStat {...numberStat}/>
                             </Box>
                         )}
+                        </Box>
+                        <Box sx={{display:'flex', flexDirection:'row', gap:3,justifyContent:'center'}}>
                         {props.gitSyncStatus !== undefined ? (
-                            <div>
+                            <Box>
                                 {props.gitSyncStatus ? (
-                                    <Button variant="PackageActionButton1" sx={{
+                                    <Button size='small' variant="contained" sx={{
                                         backgroundColor: 'statusCardBgColor2.main',
                                         ":hover": {
                                             backgroundColor: '#8C0000'
@@ -133,13 +136,13 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                         Sync With GIT Repo
                                     </Button>
                                 ) : (
-                                    <Button variant="PackageActionButton1" sx={{
+                                    <Button size='small' variant="contained" sx={{
                                         wordWrap: 'break-word'
                                     }}>In Sync With Git Repo</Button>
                                 )}
-                            </div>
+                            </Box>
                         ) : (
-                            <Button variant="PackageActionButton1" sx={{
+                            <Button size='small' variant="contained" sx={{
                                 backgroundColor: 'statusCardBgColor2.main',
                                 ":hover": {
                                     backgroundColor: '#8C0000'
@@ -150,12 +153,13 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                 Sync With GIT Repo
                             </Button>
                         )}
-                        <Button variant="PackageActionButton1" onClick={() => handleActionBuilder()}>
+                        <Button size='small' variant="outlined" onClick={() => handleActionBuilder()}>
                                 Action <AddIcon sx={{marginLeft: 2}}/>
                         </Button>
-                        <Button variant="PackageActionButton1" onClick={() => handleFlowBuilder()}>
+                        <Button size='small' variant="outlined" onClick={() => handleFlowBuilder()}>
                                 Flow <AddIcon sx={{marginLeft: 2}}/>
                         </Button>
+                        </Box>
                     </Box>
                 </Box>    
             </Box>
