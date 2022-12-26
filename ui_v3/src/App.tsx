@@ -6,8 +6,10 @@ import ErrorBoundary from "./common/components/ErrorBoundry"
 import DashboardNavbar from "./common/components/header/DashboardNavbar"
 import { ModuleSwitcher } from "./common/components/header/ModuleSwitcher"
 import LoadingIndicator from './common/components/LoadingIndicator'
+import { ModuleContent } from "./common/components/ModuleContent"
 import ModuleContextStateProvider from "./common/components/ModuleContext"
 import { isNonProductionEnv } from './common/config/config'
+import Layout from "./layout"
 import Alerts from './pages/alerts/Alerts'
 import AutobookHomePage from './pages/applications/auto_book/AutobookHomePage'
 import { RunWorkflowHomePage } from './pages/applications/custom-applications/components/RunWorkflowHomePage'
@@ -26,7 +28,6 @@ import NotRegistered from './pages/home/NotRegistered'
 import OrgUpdateInProgress from "./pages/home/OrgUpdateInProgress"
 import { SearchQueryProvider } from './pages/table_browser/TableBrowser'
 import TagHomePage from './pages/tag/TagHomePage'
-import { Users } from "./pages/users/Users"
 import { useAppInternal } from "./UseAppInternal"
 import AppContext from "./utils/AppContext"
 import history from "./utils/history"
@@ -43,73 +44,69 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
 
     if (isLoading || dummyDataPending === 1) {
         return (
-            <LoadingIndicator/>
+            <LoadingIndicator />
         )
     } else if (user === undefined) {
         return (
             <Switch>
-                <Route path="/" component={Home}/>
+                <Route path="/" component={Home} />
             </Switch>
         )
     } else {
         if (!userEmail) {
             return (
-                <LoadingIndicator/>
+                <LoadingIndicator />
             )
         } else if (dummyData?.status == 426) {
             return (
                 <Switch>
-                    <Route path="/" component={OrgUpdateInProgress}/>
+                    <Route path="/" component={OrgUpdateInProgress} />
                 </Switch>
             )
         } else if (dummyData?.status >= 400) {
             return (
                 <Switch>
-                    <Route path="/" component={NotRegistered}/>
+                    <Route path="/" component={NotRegistered} />
                 </Switch>
             )
-        }  else {
+        } else {
 
             return (
-                <Grid container style={{justifyContent: "flex-start"}}>
-                    <Box sx={{position: 'relative', display: 'flex', flex: 1, width: "100%"}}>
-                        <DashboardNavbar/>
-                        <Box sx={{position: 'relative', top: '64px', display: 'flex', flex: 1, width: "100%"}}>
-                            <Grid container>
-                                <Grid item xs={12 }>
-                                    <ModuleContextStateProvider>
-                                        <ModuleSwitcher/>
-                                    </ModuleContextStateProvider>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Box>
+                <>
+                    <Layout>
+                        <ModuleContextStateProvider>
+                            <>
+                                <ModuleContent.Header />
+                                <ModuleContent.MainContent />
+                            </>
+
+                        </ModuleContextStateProvider>
+                    </Layout>
                     <div className={classes.mainContainer}>
                         <Grid container>
                             <Grid item xs={12}>
-                                {isNonProductionEnv() && <EULA/>}
+                                {isNonProductionEnv() && <EULA />}
                                 <Switch>
-                                    <Route path='/customizations' component={Customizations}/>
+                                    <Route path='/customizations' component={Customizations} />
                                     {isNonProductionEnv() &&
-                                    <Route path='/configurations' component={Configurations}/>}
-                                    <Route path='/alerts' component={Alerts}/>
-                                    <Route path="/slackredirect" component={SlackRedirect}/>
-                                    <Route path='/testPage' component={DevTestPage}/>
-                                    <Route path='/users' component={Users}/>
-                                    <Route path='/tag' component={TagHomePage}/>
-                                    <Route path='/create-action' component={CreateActionPage}/>
-                                    <Route path='/run-action' component={RunActionPage}/>
-                                    <Route path='/autobook/customers' component={AutobookHomePage}/>
-                                    <Route path='/custom-applications' component={CustomApplicationsHomePage}/>
-                                    <Route path='/workflow-editor' component={WorkflowEditorPage}/>
-                                    <Route path='/run-workflow' component={RunWorkflowHomePage}/>
-                                    <Route path='/view-workflow' component={ViewWorkflowHomePage}/>
-                                    <Redirect exact from="/tableBrowser" to="/"/>
+                                        <Route path='/configurations' component={Configurations} />}
+                                    <Route path='/alerts' component={Alerts} />
+                                    <Route path="/slackredirect" component={SlackRedirect} />
+                                    <Route path='/testPage' component={DevTestPage} />
+                                    <Route path='/tag' component={TagHomePage} />
+                                    <Route path='/create-action' component={CreateActionPage} />
+                                    <Route path='/run-action' component={RunActionPage} />
+                                    <Route path='/autobook/customers' component={AutobookHomePage} />
+                                    <Route path='/custom-applications' component={CustomApplicationsHomePage} />
+                                    <Route path='/workflow-editor' component={WorkflowEditorPage} />
+                                    <Route path='/run-workflow' component={RunWorkflowHomePage} />
+                                    <Route path='/view-workflow' component={ViewWorkflowHomePage} />
+                                    <Redirect exact from="/tableBrowser" to="/" />
                                 </Switch>
                             </Grid>
                         </Grid>
                     </div>
-                </Grid>
+                </>
             )
         }
     }
@@ -118,15 +115,15 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
 type ApplicationType = (props: any) => ReactJSXElement | null;
 
 const noop: ApplicationType = (restProps) => null;
-const App = ({children = noop}) => {
+const App = ({ children = noop }) => {
     const {
         theme,
         userSettings,
         ...restProps
     } = useAppInternal();
     return <ThemeProvider theme={theme}>
-        {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false}/>}
-        <CssBaseline/>
+        {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}
+        <CssBaseline />
         <AppContext.Provider value={userSettings}>
             <Router history={history}>
                 <SearchQueryProvider>

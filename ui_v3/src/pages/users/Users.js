@@ -1,14 +1,16 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState,useContext,useEffect} from "react";
 import { makeStyles } from '@mui/styles';
 import Modal from '@mui/material/Modal';
-import {Button, Grid, Typography} from "@mui/material";
+import {Box, Button, Grid, Typography} from "@mui/material";
 import {UserEdit} from "../../common/components/UserEdit";
 import {useMutation, useQuery, useQueryClient} from "react-query";
 import dataManager from "../../data_manager/data_manager";
+import { SetModuleContextState } from '../../common/components/ModuleContext'
 import {Error} from "@mui/icons-material";
 import {DataGrid} from '@mui/x-data-grid';
 import {useRouteMatch} from "react-router-dom";
 import {PageHeader} from "../../common/components/header/PageHeader";
+
 
 const columns = [
     {
@@ -112,9 +114,25 @@ export const Users = () => {
         }
     }
 
+    //hide header
+
+    const setModuleContext = useContext(SetModuleContextState)
+    useEffect(() => {
+        setModuleContext({
+            type: "SetHeader",
+            payload: {
+                newHeader: {
+                    Title: "Users",
+                    SubTitle: "users & permissions"
+                }
+            }
+        })
+    }, [])
+
     return (
-        <Grid xs={12}>
-            <PageHeader path={match.path} url={match.url}/>
+        <Box sx={{p:7}}>
+            <Grid xs={12}>
+            {/* <PageHeader path={match.path} url={match.url}/> */}
             <Grid container style={{
                 marginBottom: "20px",
             }} spacing={3}>
@@ -160,5 +178,6 @@ export const Users = () => {
                         }}
                     /> : <Typography>No users found</Typography>)}
         </Grid>
+        </Box>
     );
 }

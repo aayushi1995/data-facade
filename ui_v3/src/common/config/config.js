@@ -16,3 +16,13 @@ exports.isNonProductionEnv = function () {
 }
 
 exports.SLACK_REDIRECT_URL = (origin + "/slackredirect").replace("http://", "https://")
+
+exports.SLACK_URL = 'https://slack.com/oauth/v2/authorize'
+
+exports.GENERATE_URL_PARAMS = () => {
+	const slackUrlSearchParams = new URLSearchParams();
+    slackUrlSearchParams.append("scope", "files:write,chat:write");
+    slackUrlSearchParams.append("redirect_uri", exports.SLACK_REDIRECT_URL);
+    slackUrlSearchParams.append("client_id", process.env.SLACK_APP_CLIENT_ID !== undefined ? process.env.SLACK_APP_CLIENT_ID : "1627334649444.1789524260661");
+	return slackUrlSearchParams
+}

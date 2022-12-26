@@ -57,7 +57,8 @@ export const DATA_SUB_TABS: TabsType = [
         href: DATA_CERTIFIED_ROUTE,
         title: "Certified Tables",
         subTitle: "Your collection of gold standard data"
-    }
+    },
+
 ];
 
 export const findTab = (tabs: TabsType, toMatchUrl: string) => {

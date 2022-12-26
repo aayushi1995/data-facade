@@ -10,11 +10,12 @@ import { InsightsContent } from "../../pages/insights/InsightsContent";
 import { HomePage } from "../../pages/home_page/HomePage"
 import {
     DATA_ROUTE,
-    DATA_SUB_TABS
+    DATA_SUB_TABS,
 } from "./header/data/DataRoutesConfig";
-import { APPLICATION_ROUTE, INSIGHTS_ROUTE , APPLICATION_DETAIL_ROUTE } from "./header/data/RoutesConfig";
+import { APPLICATION_ROUTE, INSIGHTS_ROUTE , APPLICATION_DETAIL_ROUTE, USER_ROUTE } from "./header/data/RoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
 import { ModuleContextState } from "./ModuleContext";
+import { Users } from "../../pages/users/Users";
 
 
 export const SubHeader = () => <Switch>{
@@ -67,6 +68,7 @@ export const MainContent = () => {
                 <Route path={DATA_ROUTE} component={DataContent}/>
                 <Route path={APPLICATION_ROUTE} component={ApplicationContent}/>
                 <Route path={INSIGHTS_ROUTE} component={InsightsContent}/>
+                <Route path={USER_ROUTE} component={Users}/>
                 <Route exact path='/' component={HomePage}/>
             </Switch>
         </Box>

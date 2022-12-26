@@ -6,6 +6,7 @@ export const BLANK_STRING = '';
 export const APPLICATION_ROUTE = '/application';
 export const APPLICATION_DETAIL_ROUTE = '/application/detail';
 export const INSIGHTS_ROUTE = '/insights';
+export const USER_ROUTE = '/users';
 
 export const TOP_TAB_ROUTES: TabsType = [
     {
@@ -31,4 +32,5 @@ export const TOP_TAB_ROUTES: TabsType = [
         title: "Insights",
         subTitle: "Create, Manage Insights from here"
     },
+
 ]
