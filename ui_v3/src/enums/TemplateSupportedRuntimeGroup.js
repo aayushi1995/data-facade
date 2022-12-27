@@ -12,7 +12,8 @@ const TemplateSupportedRuntimeGroup = {
     JSON: "json",
     SAGEMAKER: "sagemaker",
     SALESFORCE_OBJECT_QUERY_LANGUAGE: "soql",
-    NO_TEMPLATE: "no_template"
+    NO_TEMPLATE: "no_template",
+    CLICKHOUSE_SQL: "clickhouse_sql"
 }
 
 export default TemplateSupportedRuntimeGroup;

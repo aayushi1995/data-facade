@@ -7,7 +7,7 @@ const endPoint = require("../../common/config/config").FDSEndpoint
 const redirectUrl = require("../../common/config/config").SLACK_REDIRECT_URL
 
 function useSlackRedirect() {
-    const query = useMutation<ProviderInstance, any, { slackCode: string }, string[]>(["CreateSlack"],
+    const query = useMutation<ProviderInstance, any, { slackCode: string }, string[]>(["Slack", "Create"],
         async ({ slackCode }) => {
             const requestSpec = {
                 method: "POST",

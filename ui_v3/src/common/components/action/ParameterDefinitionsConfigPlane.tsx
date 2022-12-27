@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionExecution, ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../generated/entities/Entities";
-import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput, WebAppAutocompleteOption } from "../workflow/create/ParameterInput";
+import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, ColumnListParameterInput, ColumnParameterInput, ParameterInputProps, SlackChannelMultipleInput, SlackChannelSingleInput, StringParameterInput, TableParameterInput, WebAppAutocompleteOption } from "../workflow/create/ParameterInput";
 
 
 
@@ -172,6 +172,34 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     }
                 }
             } as ColumnParameterInput
+        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_SINGLE) {
+            const allOptions = parameterDefinition.OptionSetValues?.split(',')
+            return {
+                parameterType: "SLACK_CHANNEL_SINGLE",
+                parameterId: parameterDefinition.Id,
+                inputProps: {
+                    selectedChannelID: existingParameterValue,
+                    onSelectedChannelIdChange: (selectedChannelId) => onParameterValueChange({
+                        ActionParameterDefinitionId: parameterDefinition.Id,
+                        ParameterValue: selectedChannelId
+                    })
+                }
+            } as SlackChannelSingleInput
+
+        } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_MULTIPLE) {
+            const allOptions = parameterDefinition.OptionSetValues?.split(',')
+            return {
+                parameterType: "SLACK_CHANNEL_MULTIPLE",
+                parameterId: parameterDefinition.Id,
+                inputProps: {
+                    selectedChannelIDs: existingParameterValue,
+                    onSelectedChannelIdsChange: (selectedChannelId) => onParameterValueChange({
+                        ActionParameterDefinitionId: parameterDefinition.Id,
+                        ParameterValue: selectedChannelId?.join(',')
+                    })
+                }
+            } as SlackChannelMultipleInput
+
         } else if(parameterDefinition.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
             const allOptions = parameterDefinition.OptionSetValues?.split(',')
             return {

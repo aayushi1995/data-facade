@@ -72,7 +72,6 @@ interface ExecuteActionProps {
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
     const actionDefinitionId = props.actionDefinitionId
-    console.log('here')
     const setModuleContext = React.useContext(SetModuleContextState)
     const actionExecutionView = React.useRef<HTMLDivElement | null>(null)
     const [tabValue, setTabValue] = React.useState(0)
@@ -110,7 +109,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         filter: {ActionInstanceId: actionInstanceId === null ? undefined : actionInstanceId}, 
         queryOptions: {
             onSuccess: (data) => {
-                console.log("refetching")
                 refetch()
             },
             enabled: false

@@ -1,8 +1,10 @@
 
 import { Card, Grid, TextField } from "@mui/material"
 import React from "react"
+import { SlackChannelSingle } from "../../../common/components/workflow/create/ParameterInput"
 import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat"
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
+import useDefaultSlackErrorChannel from "./useDefaultSlackErrorChannel"
 
 
 interface ConfigureSlackAndEmailProps {
@@ -16,13 +18,19 @@ interface ConfigureSlackAndEmailProps {
 }
 
 const ConfigureSlackAndEmail = (props: ConfigureSlackAndEmailProps) => {
+    const defaultErrorChannelQuery = useDefaultSlackErrorChannel()
 
+    React.useEffect(() => {
+        if(props?.slack===undefined && defaultErrorChannelQuery?.data!==undefined) {
+            handleSlackChange(defaultErrorChannelQuery?.data)
+        }
+    }, [defaultErrorChannelQuery?.data, props?.slack])
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement> ) => {
         props.handleEmailAndSlackChange?.(props.slack, e.target.value)
     }
 
-    const handleSlackChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        props.handleEmailAndSlackChange(e.target.value, props.email)
+    const handleSlackChange = (selectedChannelId?: string) => {
+        props.handleEmailAndSlackChange(selectedChannelId, props.email)
     }
 
     const checkIfValid = () => {
@@ -48,7 +56,13 @@ const ConfigureSlackAndEmail = (props: ConfigureSlackAndEmailProps) => {
                     <TextField fullWidth label="Email" value={props.email} onChange={handleEmailChange}/>
                 </Grid>
                 <Grid item xs={4}>
-                    <TextField fullWidth label="Slack" value={props.slack} onChange={handleSlackChange}/>
+                    <SlackChannelSingle
+                        parameterType='SLACK_CHANNEL_SINGLE'
+                        inputProps={{
+                            selectedChannelID: props.slack,
+                            onSelectedChannelIdChange: (selectedChannelId) => handleSlackChange(selectedChannelId)
+                        }}
+                    />
                 </Grid>
                 <Grid item xs={4}>
                     <TextField fullWidth label="Write Back Table Name" value={props.writeBackTableName} disabled={checkIfValid()} onChange={handleTableNameChange}/>

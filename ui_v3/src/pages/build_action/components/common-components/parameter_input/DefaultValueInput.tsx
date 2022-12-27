@@ -1,5 +1,5 @@
 import { getUniqueFilters } from "../../../../../common/components/action/ParameterDefinitionsConfigPlane"
-import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, FloatParameterInput, IntParameterInput, OptionSetMultipleParameterInput, OptionSetStringParameterInput, ParameterInputProps, StringParameterInput, TableParameterInput } from "../../../../../common/components/workflow/create/ParameterInput"
+import ParameterInput, { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, FloatParameterInput, IntParameterInput, OptionSetMultipleParameterInput, OptionSetStringParameterInput, ParameterInputProps, SlackChannelMultipleInput, SlackChannelSingleInput, StringParameterInput, TableParameterInput } from "../../../../../common/components/workflow/create/ParameterInput"
 import ActionParameterDefinitionDatatype from "../../../../../enums/ActionParameterDefinitionDatatype"
 import ActionParameterDefinitionTag from "../../../../../enums/ActionParameterDefinitionTag"
 import { ActionParameterDefinition, ActionParameterInstance, ColumnProperties, TableProperties } from "../../../../../generated/entities/Entities"
@@ -57,6 +57,32 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
                             })
                 }
             } as ColumnParameterInput 
+        } else if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_SINGLE) {
+            return {
+                parameterType: "SLACK_CHANNEL_SINGLE",
+                parameterId: actionParameterDefinition.Id,
+                inputProps: {
+                    selectedChannelID: defaultActionParameterInstance?.ParameterValue,
+                    onSelectedChannelIdChange: (selectedChannelId?: string) => {
+                        selectedChannelId && updateDefaultActionParameterInstance({
+                            ParameterValue: selectedChannelId
+                        })
+                    }
+                } 
+            } as SlackChannelSingleInput
+        } else if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_MULTIPLE) {
+            return {
+                parameterType: "SLACK_CHANNEL_MULTIPLE",
+                parameterId: actionParameterDefinition.Id,
+                inputProps: {
+                    selectedChannelIDs: defaultActionParameterInstance?.ParameterValue?.split(','),
+                    onSelectedChannelIdsChange: (selectedChannelIds?: string[]) => {
+                        selectedChannelIds && updateDefaultActionParameterInstance({
+                            ParameterValue: selectedChannelIds?.join(',')
+                        })
+                    }
+                } 
+            } as SlackChannelMultipleInput
         } else if(actionParameterDefinition?.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
             return {
                 parameterType: "OPTION_SET_SINGLE",

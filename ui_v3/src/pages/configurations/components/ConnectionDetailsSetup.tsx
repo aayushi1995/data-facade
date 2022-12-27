@@ -1,8 +1,12 @@
-import { Box } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
+import { channel } from "diagnostics_channel";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
+import useSlackChannelIDInput from "../../../common/components/common/useSlackChannelIDInput";
+import useSlackChannelIDInputProps from "../../../common/components/common/useSlackChannelIDInput";
 import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
+import ProviderDefinitionId from "../../../enums/ProviderDefinitionId";
 import { ConnectionQueryContext, ConnectionSetStateContext, ConnectionStateContext } from "../context/ConnectionsContext";
 import ProviderParameterInput, { ProviderParameterInputProps } from "./ProviderParameterInput";
 import UpdateProviderOptions from "./UpdateProviderOptions";
@@ -19,13 +23,9 @@ const ConnectionDetailsSetup = (props: {ProviderInstanceId: string}) => {
     const connectionQuery = React.useContext(ConnectionQueryContext)
 
     React.useEffect(() => {
-        console.log("Here")
         setConnectionState({ type: "SetMode", payload: { mode: "UPDATE" }})
         setConnectionState({ type: "SetProviderInstanceId", payload: { newProviderInstanceId: props.ProviderInstanceId } })
     }, [])
-
-
-    console.log(connectionState)
 
     return (
         <ReactQueryWrapper

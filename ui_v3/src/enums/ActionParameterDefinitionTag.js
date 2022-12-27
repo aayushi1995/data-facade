@@ -21,7 +21,9 @@ const ActionParameterDefinitionTag = {
     SAGEMAKER_MODEL_URI: "sagemaker_model_uri",
     OPTION_SET_SINGLE: "option_set_single",
     OPTION_SET_MULTIPLE: "option_set_multiple",
-    DISTINCT_COLUMN_VALUES: "distinct_column_values"
+    DISTINCT_COLUMN_VALUES: "distinct_column_values",
+    SLACK_CHANNEL_SINGLE: "slack_channel_single",
+    SLACK_CHANNEL_MULTIPLE: "slack_channel_multiple"
 }
 
 export default ActionParameterDefinitionTag;

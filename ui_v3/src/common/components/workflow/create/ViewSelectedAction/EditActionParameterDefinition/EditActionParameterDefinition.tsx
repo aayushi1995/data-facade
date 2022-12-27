@@ -14,7 +14,7 @@ import { safelyParseJSON } from '../../../../../../pages/execute_action/util';
 import { getUniqueFilters } from '../../../../action/ParameterDefinitionsConfigPlane';
 import TagHandler from '../../../../tag-handler/TagHandler';
 import { HtmlTooltip } from '../../../../workflow-action/ActionCard';
-import getParameterInputField, { AutoCompleteOption, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, IntParameterInput, ParameterInputProps, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
+import getParameterInputField, { AutoCompleteOption, BooleanParameterInput, ColumnListParameterInput, ColumnParameterInput, IntParameterInput, ParameterInputProps, SlackChannelMultipleInput, SlackChannelSingleInput, StringParameterInput, UpstreamActionParameterInput } from '../../ParameterInput';
 
 
 export interface EditActionParameterDefinitionProps {
@@ -149,6 +149,42 @@ export const DefaultValueSelector = (props: DefaultValueSelectorProps) => {
                     })
                 }
             } as ColumnParameterInput 
+        } else if(parameter.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_SINGLE) {
+            const parameterConfig = getCurrentParameterConfig()
+            return {
+                parameterType: "SLACK_CHANNEL_SINGLE",
+                inputProps: {
+                    selectedChannelID: parameterConfig?.ParameterValue,
+                    onSelectedChannelIdChange: (selectedChannelId) => setWorkflowState({
+                        type: "ASSIGN_DEFAULT_VALUE",
+                        payload: {
+                            stageId: props.stageId,
+                            actionDefinitionId: props.parameter.ActionDefinitionId!,
+                            actionIndex: props.actionIndex,
+                            actionParameterDefinitionId: props.parameter.Id!,
+                            parameterValue: selectedChannelId
+                        }
+                    })
+                }
+            } as SlackChannelSingleInput
+        } else if(parameter.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_MULTIPLE) {
+            const parameterConfig = getCurrentParameterConfig()
+            return {
+                parameterType: "SLACK_CHANNEL_MULTIPLE",
+                inputProps: {
+                    selectedChannelIDs: parameterConfig?.ParameterValue,
+                    onSelectedChannelIdsChange: (selectedChannelIds) => setWorkflowState({
+                        type: "ASSIGN_DEFAULT_VALUE",
+                        payload: {
+                            stageId: props.stageId,
+                            actionDefinitionId: props.parameter.ActionDefinitionId!,
+                            actionIndex: props.actionIndex,
+                            actionParameterDefinitionId: props.parameter.Id!,
+                            parameterValue: selectedChannelIds?.join(',')
+                        }
+                    })
+                }
+            } as SlackChannelMultipleInput
         } else if(parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE) {
             const parameterConfig = getCurrentParameterConfig()
             return {

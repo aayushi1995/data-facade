@@ -3,9 +3,10 @@
     (c) Data Facade LLC.
     */
     
-const JobBaseRelatedEntityName = {
-    ACTION_EXECUTION: "ActionExecution"
+const ServiceName = {
+    PROVIDER: "Provider",
+    PRESENTATION: "Presentation"
 }
 
-export default JobBaseRelatedEntityName;
+export default ServiceName;
 

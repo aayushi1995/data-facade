@@ -2,6 +2,7 @@ import { Box, Button, Popover, Tab, Tabs } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { ButtonIconWithToolTip } from "../ButtonIconWithToolTip";
+import SlackInstallButton from "../common/SlackInstallButton";
 import { ModuleContent } from "../ModuleContent";
 import { ModuleContextState } from "../ModuleContext";
 import { APPLICATION_ROUTE_MARKETPLACE } from "./data/ApplicationRoutesConfig";
@@ -31,12 +32,6 @@ export function TabsContainer(props: TabsContainerType) {
     const [settingPopOverVisibile, setSettingPopOverVisible] = useState(false);
     const anchorRef = useRef(null);
 
-
-    const slackUrlSearchParams = new URLSearchParams();
-    slackUrlSearchParams.append("scope", "files:write,chat:write");
-    slackUrlSearchParams.append("redirect_uri", redirectUrl);
-    slackUrlSearchParams.append("client_id", process.env.SLACK_APP_CLIENT_ID !== undefined ? process.env.SLACK_APP_CLIENT_ID : "1627334649444.1789524260661"); 
-    
     return (
         <Box sx={{
             display: "flex",
@@ -114,7 +109,7 @@ export function TabsContainer(props: TabsContainerType) {
                                 </RouterLink>
                             </Box>
                             <Box sx={{display: "flex"}}>
-                            <a href={"https://slack.com/oauth/v2/authorize?"+slackUrlSearchParams.toString()}>Connect Slack</a>
+                                <SlackInstallButton/>
                             </Box>
                         </Box>
                     </Popover>

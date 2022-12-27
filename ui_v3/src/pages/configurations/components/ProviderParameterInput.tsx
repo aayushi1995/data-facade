@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControlLabel, TextField, Grid, Divider, Typography, Card } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, TextField, Grid, Divider, Typography, Card, Autocomplete, avatarClasses } from '@mui/material';
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
@@ -6,6 +6,9 @@ import { ProviderDefinitionDetail, ProviderInformation } from '../../../generate
 import { ProviderIcon } from '../../data/components/connections/ConnectionDialogContent';
 import { ConnectionQueryContext, ConnectionSetStateContext, ConnectionStateContext } from '../context/ConnectionsContext';
 import CreateProviderOptions from "../../../../src/pages/configurations/components/CreateProviderOptions";
+import useSlackChannelIDInput from '../../../common/components/common/useSlackChannelIDInput';
+import ProviderParameterDefinitionId from '../../../enums/ProviderParameterDefinitionId';
+import { SlackChannelSingle } from '../../../common/components/workflow/create/ParameterInput';
 
 export type ProviderParameterInputProps = { 
     ProviderDefinition?: ProviderDefinitionDetail,
@@ -21,7 +24,7 @@ export type ProviderParameterInputProps = {
 const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
     const [showHidden, setShowHidden] = React.useState(false)
     const connectionQueryState = React.useContext(ConnectionQueryContext)
-    console.log(props.recurrenceInterval)
+
     return (
         <Box>
             {connectionQueryState?.loadProviderDefinitionQuery?.isLoading ? (
@@ -40,7 +43,27 @@ const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
                                     return (
                                         <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
                                             <Box sx={{ display: "flex", flex: 1 }}>
-                                                <TextField sx={{ height: "100%" }} fullWidth variant="outlined" type={hidden ? "password" : undefined} label={paramDef?.ParameterName} value={paramInstance?.ParameterValue} required onChange={(event) => props?.onParameterValueChange?.(paramDef?.Id, event.target.value)}/>
+                                                {paramInstance?.ProviderParameterDefinitionId===ProviderParameterDefinitionId.SLACK_ERROR_CHANNEL
+                                                    ?
+                                                        <SlackChannelSingle
+                                                            parameterType='SLACK_CHANNEL_SINGLE'
+                                                            inputProps={{
+                                                                selectedChannelID: paramInstance?.ParameterValue,
+                                                                onSelectedChannelIdChange: (selectedChannelId) => selectedChannelId && props?.onParameterValueChange?.(paramDef?.Id, selectedChannelId)
+                                                            }}
+                                                        />
+                                                    :
+                                                        <TextField 
+                                                            sx={{ height: "100%" }} 
+                                                            fullWidth 
+                                                            variant="outlined" 
+                                                            type={hidden ? "password" : undefined} 
+                                                            label={paramDef?.ParameterName} 
+                                                            value={paramInstance?.ParameterValue} 
+                                                            required 
+                                                            onChange={(event) => props?.onParameterValueChange?.(paramDef?.Id, event.target.value)}
+                                                        />
+                                                }
                                             </Box>
                                         </Box>
                                     )
@@ -125,6 +148,5 @@ export const ProviderInputConnectionStateWrapper = ({ match }: RouteComponentPro
         return <></>
     }
 }
-
 
 export default ProviderParameterInput;

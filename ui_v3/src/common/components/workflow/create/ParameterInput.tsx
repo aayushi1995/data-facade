@@ -6,6 +6,8 @@ import { ActionExecution, ColumnProperties, TableProperties } from "../../../../
 import { FilteredColumnsResponse } from "../../../../generated/interfaces/Interfaces"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
+import { SlackChannelInput } from "../../../../pages/configurations/components/ProviderParameterInput"
+import useSlackChannelIDInput from "../../common/useSlackChannelIDInput"
 import LoadingWrapper from "../../LoadingWrapper"
 import { HtmlTooltip } from "../../workflow-action/ActionCard"
 import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
@@ -145,6 +147,24 @@ export interface UpstreamActionWebAppInput {
     }
 }
 
+export interface SlackChannelSingleInput {
+    parameterType: "SLACK_CHANNEL_SINGLE",
+    parameterId?: string,
+    inputProps: {
+        selectedChannelID?: string, 
+        onSelectedChannelIdChange?: (selectedChannelId?: string) => void
+    }
+}
+
+export interface SlackChannelMultipleInput {
+    parameterType: "SLACK_CHANNEL_MULTIPLE",
+    parameterId?: string,
+    inputProps: {
+        selectedChannelIDs?: string[], 
+        onSelectedChannelIdsChange?: (selectedChannelId?: string[]) => void
+    }
+}
+
 export type ParameterInputProps = UpstreamActionParameterInput 
                                 | StringParameterInput 
                                 | IntParameterInput 
@@ -157,6 +177,8 @@ export type ParameterInputProps = UpstreamActionParameterInput
                                 | OptionSetStringParameterInput
                                 | OptionSetMultipleParameterInput 
                                 | UpstreamActionWebAppInput
+                                | SlackChannelSingleInput
+                                | SlackChannelMultipleInput
 
 
 export type ActionParameterColumnAdditionalConfig = {
@@ -187,6 +209,8 @@ const getParameterInputField = (props: ParameterInputProps) => {
         case "OPTION_SET_SINGLE": return <OptionSetSingleInput {...props}/>
         case "OPTION_SET_MULTIPLE": return <OptionSetMultipleInput {...props}/>
         case "UPSTREAM_ACTION_WEB_APP": return <UpstreamActionWebApp {...props} />
+        case "SLACK_CHANNEL_SINGLE": return <SlackChannelSingle {...props}/>
+        case "SLACK_CHANNEL_MULTIPLE": return <SlackChannelMultiple {...props}/>
         default: return <NoInput/>
     }
 }
@@ -294,6 +318,76 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
                     onChange(value ?? undefined)
                 } 
             }
+        />
+    )
+}
+
+export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
+    const { selectedChannelID, onSelectedChannelIdChange } = props?.inputProps
+    const { selectedChannels, avialableChannels, onSelectedChannelChange } = useSlackChannelIDInput({
+        selectedChannelIds: [selectedChannelID],
+        onSelectedIDChange(selectedChannelIds) {
+            onSelectedChannelIdChange?.(selectedChannelIds?.[0])
+        },
+    })
+
+    return (
+        <Autocomplete
+            options={avialableChannels}
+            getOptionLabel={channel => `${channel?.Name} (${channel?.Id})`}
+            groupBy={channel => channel?.Type || "NA"}
+            value={selectedChannels?.[0] || null}
+            filterSelectedOptions
+            fullWidth
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            onChange={(event, value, reason, details) => {
+                onSelectedChannelChange(!!value ? [value] : undefined)
+            }}
+            isOptionEqualToValue={(option, value) => value?.Id!==undefined  && option?.Id === value?.Id}
+            renderInput={(params) => 
+                <TextField 
+                    {...params} 
+                    variant="outlined" 
+                    size="small"
+                />}
+        />
+    )
+}
+
+
+const SlackChannelMultiple = (props: SlackChannelMultipleInput) => {
+    const { selectedChannelIDs, onSelectedChannelIdsChange } = props?.inputProps
+    const { selectedChannels, avialableChannels, onSelectedChannelChange } = useSlackChannelIDInput({
+        selectedChannelIds: selectedChannelIDs,
+        onSelectedIDChange(selectedChannelIds) {
+            onSelectedChannelIdsChange?.(selectedChannelIds)
+        },
+    })
+
+    return (
+        <Autocomplete
+            options={avialableChannels}
+            multiple
+            getOptionLabel={channel => `${channel?.Name} (${channel?.Id})`}
+            groupBy={channel => channel?.Type || "NA"}
+            value={selectedChannels || null}
+            filterSelectedOptions
+            fullWidth
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            onChange={(event, value, reason, details) => {
+                onSelectedChannelChange(!!value ? value : undefined)
+            }}
+            isOptionEqualToValue={(option, value) => value?.Id!==undefined  && option?.Id === value?.Id}
+            renderInput={(params) => 
+                <TextField 
+                    {...params} 
+                    variant="outlined" 
+                    size="small"
+                />}
         />
     )
 }

@@ -14,7 +14,9 @@ const ActionParameterDefinitionInputType = {
     FIXED_DATE: "Fixed Date",
     LIVE_DATE: "Live Date",
     COLUMN_LIST: "Column List",
-    STRING_NO_QUOTES: "String With No Quotes"
+    STRING_NO_QUOTES: "String With No Quotes",
+    SLACK_CHANNEL_SINGLE: "Slack Channel Single",
+    SLACK_CHANNEL_MULTIPLE: "Slack Channel Multiple"
 }
 
 export default ActionParameterDefinitionInputType;

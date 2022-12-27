@@ -186,7 +186,6 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
                                         return <MenuItem value={inputType}>{inputType}</MenuItem>
                                     })}
                                 </Select>
-                                
                             </FormControl>
                 
                             <OptionSetSelector parameter={parameter || {}} onParameterEdit={onParameterEdit} optionSetEnabled={
@@ -390,6 +389,20 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
         })
     }
 
+    const handleMakeSlackChannelSingle = (event: React.ChangeEvent<HTMLInputElement>) => {
+        props.onParameterEdit({
+            ...props.parameter,
+            Tag: event.target.checked ? ActionParameterDefinitionTag.SLACK_CHANNEL_SINGLE : ActionParameterDefinitionTag.OTHER
+        })
+    }
+
+    const handleMakeSlackChannelMultiple = (event: React.ChangeEvent<HTMLInputElement>) => {
+        props.onParameterEdit({
+            ...props.parameter,
+            Tag: event.target.checked ? ActionParameterDefinitionTag.SLACK_CHANNEL_MULTIPLE : ActionParameterDefinitionTag.OTHER
+        })
+    }
+
     const handleStringNoQuotesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if(!event.target.checked) {
             props.onParameterEdit({
@@ -446,8 +459,13 @@ const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParam
                     <FormControlLabel control={<Checkbox disabled={!props.optionSetEnabled} checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE} onChange={handleOptionSingleChange} />} label="Option Set Single" />
                     <FormControlLabel control={<Checkbox disabled={!props.optionSetEnabled} checked={props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE} onChange={handleOptionMultipleChange} />} label="Option Set Multiple" />
                     <FormControlLabel control={<Checkbox checked={props.parameter?.IsOptional} onChange={handleMakeOptionalChange} disabled={props.parameter?.Tag === ActionParameterDefinitionTag.DATA || props.parameter?.Tag === ActionParameterDefinitionTag.TABLE_NAME}/>} label="Make Optional" />
-
                 </FormGroup>
+                {props?.parameter?.Datatype===ActionParameterDefinitionDatatype.STRING && 
+                    <FormGroup row={true} sx={{ display: 'webkit', minWidth: '400px',mx:'auto' }}>
+                        <FormControlLabel control={<Checkbox disabled={!props.optionSetEnabled} checked={props.parameter.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_SINGLE} onChange={handleMakeSlackChannelSingle} />} label="Slack Channe Single" />
+                        <FormControlLabel control={<Checkbox disabled={!props.optionSetEnabled} checked={props.parameter.Tag === ActionParameterDefinitionTag.SLACK_CHANNEL_MULTIPLE} onChange={handleMakeSlackChannelMultiple} />} label="Slack Channel Multiple" />
+                    </FormGroup>
+                }
                 <Box sx={{px:6,py:3}}>
                 {props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_MULTIPLE || props.parameter.Tag === ActionParameterDefinitionTag.OPTION_SET_SINGLE ?
                     (

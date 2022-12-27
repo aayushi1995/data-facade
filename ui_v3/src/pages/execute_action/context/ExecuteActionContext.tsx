@@ -402,7 +402,6 @@ const resetStateFromActionDefinitionDetail = (state: ExecuteActionContextState, 
         },
         creatingModels: false,
         currentStep: 0,
-        slack: 'C01NSTT6AA3',
         email: userSettingsSingleton.userEmail,
 
     } as ExecuteActionContextState

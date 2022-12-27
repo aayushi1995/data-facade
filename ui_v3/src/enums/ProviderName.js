@@ -15,7 +15,8 @@ const ProviderName = {
     LAMBDA: "AWS-Lambda",
     SAGEMAKER: "Sagemaker",
     SALESFORCE: "Salesforce",
-    DBT_REPO: "DBTRepo"
+    DBT_REPO: "DBTRepo",
+    CLICKHOUSE: "Clickhouse"
 }
 
 export default ProviderName;
