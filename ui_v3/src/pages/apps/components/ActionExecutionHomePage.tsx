@@ -45,7 +45,7 @@ export const ActionExecutionDetails = (props: {
     ) => {
 
     const actionExecutionId = props.actionExecutionId
-    const [childActionExecutionId, setChildActionExecutionId] = React.useState<string>(props.childActionExecutionId)
+    const [childActionExecutionId, setChildActionExecutionId] = React.useState<string | undefined>(props.childActionExecutionId)
     const [executionTerminal, setExecutionTerminal] = React.useState(true)
     const [executionError, setExecutionError] = React.useState(false)
     const [showParameters, setShowParameters] = React.useState(false)
@@ -129,7 +129,7 @@ export const ActionExecutionDetails = (props: {
         <>
             <ReactQueryWrapper {...actionExecutionDetailQuery}>
                 {() => (
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, minHeight: '100%'}}>
+                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, height: '100%'}}>
                         {props.showDescription === false ? (<></>): (
                             <ActionDescriptionCard description={description} mode="READONLY"/>
                         )}

@@ -122,6 +122,26 @@ export function JobsFiltered(props) {
             "filter": {
                 Status
             },
+            "columnsToRetrieve": [
+                {
+                    UniqueName: "ActionInstanceName"
+                },
+                {
+                    UniqueName: "ScheduledTime"
+                },
+                {
+                    UniqueName: "ExecutionCompletedOn"
+                },
+                {
+                    UniqueName: "Id"
+                },
+                {
+                    UniqueName: "InstanceId"
+                },
+                {
+                    UniqueName: "Status"
+                }
+            ],
             "excludeExecutionOutput": true
         }
     ]), !!isFetched);

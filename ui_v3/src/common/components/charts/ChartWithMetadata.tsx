@@ -45,7 +45,8 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
             newProperties: {
                 Name: props.chart.model.Name,
                 Type: props.chart.model.Type,
-                DashboardId: props.chart.model.DashboardId
+                DashboardId: props.chart.model.DashboardId,
+                Layout: props.chart.model.Layout
             }
         })
     }

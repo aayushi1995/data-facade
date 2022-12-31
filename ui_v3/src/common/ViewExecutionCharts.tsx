@@ -29,7 +29,7 @@ const ViewExecutionCharts = (props: ViewExecutionChartsProps) => {
             error={error}
             data={data}
         >
-            <ShowCharts chartWithData={data}/>
+            <ShowCharts chartWithData={data || []}/>
         </LoadingWrapper>
     )
 

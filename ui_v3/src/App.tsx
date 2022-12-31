@@ -70,7 +70,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                 </Switch>
             )
         } else {
-            document.body.style.zoom = "85%"; // our product looks better in 85% zoom out state .....#### temporary soln #####
+            // document.body.style.zoom = "85%"; // our product looks better in 85% zoom out state .....#### temporary soln #####
             return (
                 <>
                     <Layout>

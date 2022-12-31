@@ -9,7 +9,7 @@ interface GetExecutionChartProps {
     enabled?: boolean
 }
 
-export const useGetExecutionCharts = (props: GetExecutionChartProps): [ChartWithData[], boolean, object] => {
+export const useGetExecutionCharts = (props: GetExecutionChartProps): [ChartWithData[] | undefined, boolean, object] => {
     const {data, isLoading, error} = useQuery(["chartData", props.filter], 
         () => Fetcher.fetchData("GET", "/getChartData", props.filter),
         {
@@ -20,6 +20,6 @@ export const useGetExecutionCharts = (props: GetExecutionChartProps): [ChartWith
         }
     )
 
-    return [data || [], isLoading, error as object]
+    return [data, isLoading, error as object]
 
-}
+} 

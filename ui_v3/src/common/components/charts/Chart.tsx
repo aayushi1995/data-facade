@@ -13,5 +13,5 @@ export const Chart = ({config, uiConfig}: {
         ...uiConfig
     };
     
-    return <ReactECharts style={{minHeight: '500px', minWidth: '500px'}} option={eChartOptions}/>;
+    return <ReactECharts style={{height: '100%', minWidth: '100%'}} option={eChartOptions}/>;
 }

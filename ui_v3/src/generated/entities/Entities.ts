@@ -24,6 +24,8 @@ export interface ProviderParameterInstance extends BaseEntity{
 }
 
 
+export type ProviderParameterInstanceColumns = keyof ProviderParameterInstance
+
 export interface ProviderParameterDefinition extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -36,6 +38,8 @@ export interface ProviderParameterDefinition extends BaseEntity{
 }
 
 
+export type ProviderParameterDefinitionColumns = keyof ProviderParameterDefinition
+
 export interface PredictionModel extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -47,6 +51,8 @@ export interface PredictionModel extends BaseEntity{
 	Config?: string
 }
 
+
+export type PredictionModelColumns = keyof PredictionModel
 
 export interface ProfileRequests extends BaseEntity{
     Id?: string
@@ -62,6 +68,8 @@ export interface ProfileRequests extends BaseEntity{
 }
 
 
+export type ProfileRequestsColumns = keyof ProfileRequests
+
 export interface Alert extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -73,6 +81,8 @@ export interface Alert extends BaseEntity{
 	TableId?: string
 }
 
+
+export type AlertColumns = keyof Alert
 
 export interface Chart extends BaseEntity{
     Id?: string
@@ -86,8 +96,11 @@ export interface Chart extends BaseEntity{
 	S3Path?: string
 	Config?: string
 	ExposeRawData?: boolean
+	Layout?: string
 }
 
+
+export type ChartColumns = keyof Chart
 
 export interface JobBase extends BaseEntity{
     Id?: string
@@ -116,6 +129,8 @@ export interface JobBase extends BaseEntity{
 }
 
 
+export type JobBaseColumns = keyof JobBase
+
 export interface OptimisticTag extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -127,6 +142,8 @@ export interface OptimisticTag extends BaseEntity{
 	EntityType?: string
 }
 
+
+export type OptimisticTagColumns = keyof OptimisticTag
 
 export interface DownloadTable extends BaseEntity{
     Id?: string
@@ -141,6 +158,8 @@ export interface DownloadTable extends BaseEntity{
 	UploadActionInstanceId?: string
 }
 
+
+export type DownloadTableColumns = keyof DownloadTable
 
 export interface ActionExecution extends BaseEntity{
     Id?: string
@@ -169,6 +188,8 @@ export interface ActionExecution extends BaseEntity{
 }
 
 
+export type ActionExecutionColumns = keyof ActionExecution
+
 export interface TableProperties extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -192,6 +213,8 @@ export interface TableProperties extends BaseEntity{
 }
 
 
+export type TablePropertiesColumns = keyof TableProperties
+
 export interface ProviderInstance extends BaseEntity{
     Id?: string
 	DeleteStatus?: string
@@ -205,6 +228,8 @@ export interface ProviderInstance extends BaseEntity{
 	IsDefaultProvider?: boolean
 }
 
+
+export type ProviderInstanceColumns = keyof ProviderInstance
 
 export interface Tag extends BaseEntity{
     Id?: string
@@ -220,6 +245,8 @@ export interface Tag extends BaseEntity{
 }
 
 
+export type TagColumns = keyof Tag
+
 export interface Dashboard extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -229,8 +256,11 @@ export interface Dashboard extends BaseEntity{
 	CreatedOn?: number
 	FlowId?: string
 	Description?: string
+	Config?: string
 }
 
+
+export type DashboardColumns = keyof Dashboard
 
 export interface ProviderDefinition extends BaseEntity{
     Id?: string
@@ -245,6 +275,8 @@ export interface ProviderDefinition extends BaseEntity{
 	IsVisibleOnUI?: boolean
 }
 
+
+export type ProviderDefinitionColumns = keyof ProviderDefinition
 
 export interface ActionDefinition extends BaseEntity{
     Id?: string
@@ -276,6 +308,8 @@ export interface ActionDefinition extends BaseEntity{
 	IsUpdatedAfterSync?: boolean
 }
 
+
+export type ActionDefinitionColumns = keyof ActionDefinition
 
 export interface ActionInstance extends BaseEntity{
     Id?: string
@@ -312,6 +346,8 @@ export interface ActionInstance extends BaseEntity{
 }
 
 
+export type ActionInstanceColumns = keyof ActionInstance
+
 export interface ColumnProperties extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -327,6 +363,8 @@ export interface ColumnProperties extends BaseEntity{
 	ColumnIndex?: number
 }
 
+
+export type ColumnPropertiesColumns = keyof ColumnProperties
 
 export interface ActionParameterDefinition extends BaseEntity{
     Id?: string
@@ -348,6 +386,8 @@ export interface ActionParameterDefinition extends BaseEntity{
 }
 
 
+export type ActionParameterDefinitionColumns = keyof ActionParameterDefinition
+
 export interface ActionTemplate extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -358,6 +398,8 @@ export interface ActionTemplate extends BaseEntity{
 	SupportedRuntimeGroup?: string
 }
 
+
+export type ActionTemplateColumns = keyof ActionTemplate
 
 export interface ComponentDefinition extends BaseEntity{
     Id?: string
@@ -371,6 +413,8 @@ export interface ComponentDefinition extends BaseEntity{
 	ActionDefinitionId?: string
 }
 
+
+export type ComponentDefinitionColumns = keyof ComponentDefinition
 
 export interface ActionParameterInstance extends BaseEntity{
     Id?: string
@@ -386,6 +430,8 @@ export interface ActionParameterInstance extends BaseEntity{
 	GlobalParameterId?: string
 }
 
+
+export type ActionParameterInstanceColumns = keyof ActionParameterInstance
 
 export interface ProfileData extends BaseEntity{
     Id?: string
@@ -404,6 +450,8 @@ export interface ProfileData extends BaseEntity{
 }
 
 
+export type ProfileDataColumns = keyof ProfileData
+
 export interface TagMap extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -416,6 +464,8 @@ export interface TagMap extends BaseEntity{
 }
 
 
+export type TagMapColumns = keyof TagMap
+
 export interface DataCheckDefinition extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -424,6 +474,8 @@ export interface DataCheckDefinition extends BaseEntity{
 	CheckType?: string
 }
 
+
+export type DataCheckDefinitionColumns = keyof DataCheckDefinition
 
 export interface Application extends BaseEntity{
     Id?: string
@@ -440,4 +492,6 @@ export interface Application extends BaseEntity{
 	UniqueName?: string
 }
 
+
+export type ApplicationColumns = keyof Application
 

@@ -368,7 +368,7 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
                                                 </Card>
                                                 
                                             </Box>
-                                            <Box sx={{display:'flex',flexDirection:'column',width:'62vw'}}>
+                                            <Box sx={{display:'flex',flexDirection:'column',width:'62vw', overflow: 'auto'}}>
                                                 {/* <SaveAndBuildChartContextProvider>
                                                     <SaveAndBuildChartsFromExecution executionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
                                                 </SaveAndBuildChartContextProvider> */}
