@@ -334,7 +334,7 @@ export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
     return (
         <Autocomplete
             options={avialableChannels}
-            getOptionLabel={channel => `${channel?.Name} (${channel?.Id})`}
+            getOptionLabel={channel => `${channel?.Name}`}
             groupBy={channel => channel?.Type || "NA"}
             value={selectedChannels?.[0] || null}
             filterSelectedOptions

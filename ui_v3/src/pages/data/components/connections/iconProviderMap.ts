@@ -6,6 +6,7 @@ import PostgreSql from './images/PostgreSQL-Logo.wine.svg';
 import Salesforce from './images/Salesforce.com-Logo.wine.svg';
 import Snowflake from './images/snowflake.svg';
 import Clickhouse from './images/clickhouse.svg'
+import Slack from './images/slack.svg'
 
 
 export const iconProviderMap = {
@@ -16,5 +17,6 @@ export const iconProviderMap = {
     PostgreSql,
     Snowflake,
     DBTRepo,
-    Clickhouse
+    Clickhouse,
+    Slack
 }

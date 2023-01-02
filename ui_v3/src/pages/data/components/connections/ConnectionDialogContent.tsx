@@ -3,7 +3,9 @@ import { makeStyles } from "@mui/styles";
 import React from "react";
 import { useQuery } from "react-query";
 import { generatePath, Route, useHistory } from "react-router-dom";
+import useSlackInstallURL from "../../../../common/components/common/useSlackInstallURL";
 import { ReactQueryWrapper } from "../../../../common/components/ReactQueryWrapper";
+import ProviderDefinitionId from "../../../../enums/ProviderDefinitionId";
 import { Fetcher } from "../../../../generated/apis/api";
 import { ProviderDefinitionDetail } from "../../../../generated/interfaces/Interfaces";
 import labels from "../../../../labels/labels";
@@ -66,6 +68,7 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
     const [searchText, setSearchText] = React.useState<string>('');
     const providerDefinitionQuery = useQuery([labels.entities.ProviderDefinition, "Detail"], () => Fetcher.fetchData("GET", "/providerDefinitionDetail", { IsVisibleOnUI: true }))
     const history = useHistory();
+    const { url: slackInstallUrl } = useSlackInstallURL()
     const searchPredicate = (provider: ProviderDefinitionDetail) => !!searchText && provider?.ProviderDefinition ?
         (provider?.ProviderDefinition?.UniqueName||"").toLowerCase().includes(searchText.toLowerCase()) : true;
     return (
@@ -98,12 +101,18 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
                         {() => <Grid container gap={2} alignItems={'space-between'} justifyContent={'space-between'}>
                             {providerDefinitionQuery.data?.filter(searchPredicate)?.map((provider, i: number) =>
                                 <Grid item key={i}>
-                                    <ConnectorCard onClick={() => {
-                                        if(!!provider?.ProviderDefinition?.Id) {
-                                            history.push(generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: provider?.ProviderDefinition?.Id}))
-                                        }
-                                    }} provider={provider}/>
-                                </Grid>)}
+                                    {provider?.ProviderDefinition?.Id === ProviderDefinitionId.SLACK ?
+                                        slackInstallUrl && <ConnectorCard onClick={() => window.open(slackInstallUrl)} provider={provider}/>
+                                        :
+                                        <ConnectorCard onClick={() => {
+                                                if(!!provider?.ProviderDefinition?.Id) {
+                                                    history.push(generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: provider?.ProviderDefinition?.Id}))
+                                                }
+                                            }} provider={provider}
+                                        />
+                                    }
+                                </Grid>)
+                            }
                         </Grid>}
                     </ReactQueryWrapper>
                 </Route>
