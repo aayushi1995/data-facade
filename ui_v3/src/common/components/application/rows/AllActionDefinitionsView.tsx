@@ -21,8 +21,8 @@ const AllActionDefinitionsView = (props: AllApplicationRowProps) => {
                 return show
             })
             .map(actionDefinition => 
-                <Grid item xs={12} lg={4} md={6} xl={3}>
-                    <Box sx={{ height: '100%', p: 2}}  key={actionDefinition.DefinitionId}>
+                <Grid item xs={12} lg={6} md={6} xl={6}>
+                    <Box sx={{ height: '100%', p: 5,mr:2}}  key={actionDefinition.DefinitionId}>
                         <ActionDefinitionCard actionDefinition={actionDefinition}/>
                     </Box>
                 </Grid>

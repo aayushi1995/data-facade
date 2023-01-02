@@ -117,20 +117,19 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
     }, [props.actionDefinitionId])
 
     const addActionWithId = (actionDefId?: string) => actionDefId && setActiveTabId(actionDefId)
-    
+    const totalTab = contextStore?.length || 1
     const tabs = contextStore?.map(ac =>
         <ActionTab 
             label={
-                <Box sx={{py:0,px:0, display: "flex", flexDirection:"row-reverse", alignItems: "center", width: "100%",height:'20px'}}>
+                <Box sx={{py:0,px:0, display: "flex", flexDirection:"row-reverse", alignItems: "center", maxWidth:'10vw',width: `${75/totalTab}vw`,height:'20px'}}>
                     <Box>
                         <IconButton onClick={(event) => {event.stopPropagation(); handleTabCloseButtonClick(ac)}}>
                             <CloseIcon sx={{fontSize:'15px'}}/>
                         </IconButton>
                     </Box>
-                    <Box sx={{ overflowX: "scroll" }}>
+                    <Box sx={{ overflowX: "hidden" }}>
                         <Typography sx={{fontSize:'0.8rem',pt:1,color:'Black'}} textOverflow="ellipsis">{ac?.actionDefinitionWithTags?.actionDefinition?.DisplayName}</Typography>
                     </Box>
-
                 </Box>
             }
             value={ac?.actionDefinitionWithTags?.actionDefinition?.Id}

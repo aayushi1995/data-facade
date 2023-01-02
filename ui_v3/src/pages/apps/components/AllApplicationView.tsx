@@ -37,18 +37,18 @@ const AllApplicationView = () => {
 
     return (
         <Box sx={{p: 0, overflowY: 'auto', minHeight: '100%', display: 'flex', gap: 2, flexDirection: 'column'}}>
-            <Box sx={{flex: 1,ml:2 }}>
+            <Box sx={{ml:2 }}>
                 <ApplicationHeader pageHeader="Application" subHeading="Create, Manage Applications from here" searchQuery={searchQuery} setSearchQuery={handleApplicationSearchQuery}></ApplicationHeader>
             </Box>
-            <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 4}}>
+            <Box sx={{ gap: 4}}>
                 {rows.map(row => 
-                    <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', gap: 1}}>
+                    <Box sx={{ gap: 1}}>
                         <Box>
                             <Typography variant="allApplicationViewSectionHeader">
                                 {row.label}
                             </Typography>
                         </Box>
-                        <Box sx={{ display: "flex", flexDirection: "row", overflowX: 'auto'}}>
+                        <Box sx={{ overflowX: 'auto'}}>
                             {row.component(rowProp)}
                         </Box>
                     </Box>    

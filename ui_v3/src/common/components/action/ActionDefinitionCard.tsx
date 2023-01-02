@@ -104,7 +104,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
     return (
         <Box>
             <Card sx={{
-                width: "350px", 
+                width: "100%", 
                 borderRadius: 2, 
                 p: 2, 
                 boxSizing: "content-box",
@@ -113,7 +113,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                 boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
             }}>
                 <Box sx={{display: "flex", flexDirection: "row", height: "100%"}}>
-                    <Box sx={{display: "flex", flexDirection: "column", width: "100%", pt: 2}}>
+                    <Box sx={{display: "flex", flexDirection: "column", width: "90%", pt: 2}}>
                         <Box>
                             <Typography sx={{
                                 fontFamily: "SF Pro Text",
@@ -123,6 +123,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                 lineHeight: "266%",
                                 letterSpacing: "0.5px",
                                 textTransform: "uppercase",
+                                width:'70%',
+                                overflow:'hidden',
                                 color: 'rgba(66, 82, 110, 0.86)'
                             }}>
                                 {actionDefinition.DefinitionName}
@@ -134,6 +136,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
                                 fontStyle: "normal",
                                 fontWeight: "normal",
                                 fontSize: "11px",
+                                width:'70%',
+                                overflow:'hidden',
                                 lineHeight: "133.4%",
                                 display: "flex",
                                 alignItems: "center"
