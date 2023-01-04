@@ -79,7 +79,8 @@ export const AllApplicationViewWrapper = () => {
         height:'80vh',
         overflow:'scroll',
         p:1,
-        boxShadow: "0px 8.5956px 10.3934px rgba(54, 48, 116, 0.3)"
+        backgroundColor:'#FBFCFF',
+        boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.15)"
     }
     return <Box sx={{mx:-3,display:'flex',flexDirection:'row',gap:2,}}> 
                 <Box sx={{...panelStyle}}>

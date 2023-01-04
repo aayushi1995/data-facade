@@ -422,7 +422,7 @@ const themesOptions = {
             }),
             cardBackgroundColor: palette.augmentColor({
                 color:{
-                    main: '#A4CAF0'
+                    main: '#FFFFFF;'
                 }
             }),
             disableCardBackgroundColor: palette.augmentColor({
@@ -479,12 +479,12 @@ const themesOptions = {
             }),
             ActionCardBgColor: palette.augmentColor({
                 color:{
-                    main: '#F8F8F8'
+                    main: '#FFFFFF'
                 }
             }),
             ActionCardBgColor2: palette.augmentColor({
                 color:{
-                    main: '#EEEEFF'
+                    main: '#CDE1ED'
                 }
             }),
             ActionDefinationHeroCardBgColor: palette.augmentColor({

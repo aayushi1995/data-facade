@@ -59,13 +59,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
             <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                 <SyncWithGitDialog open={syncWithGitDialogState} onClose={handleDialogClose} applicationId={applicationId} attatchNewProvider={attatchNewProvider}/>
                 <Box sx={{flex: 1}}>
-                    <Card sx={{background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), #EBECF0',
-                            backgroundBlendMode: 'soft-light, normal',
-                            border: '2px solid rgba(255, 255, 255, 0.4)',
-                            boxShadow: '-10px -10px 20px #FAFBFF, 10px 10px 20px #A6ABBD',
-                            borderRadius: '10px',
-                            p: 1, marginBottom: 1}}
-                    >
+                    <Box sx={{borderRadius: '10px'}}>
                         <ApplicationHeroInfo 
                             mode='EDIT' 
                             applicationName={application?.model?.Name || "Name"}
@@ -84,7 +78,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                             <ActionDefinitionHeroActionContextWrapper/>
                         </Box> */}
                         
-                    </Card>
+                    </Box>
                 </Box>
                 <Box>
                     <Tabs value={tabValue} onChange={((event, newValue) => setTableValue(newValue))}>

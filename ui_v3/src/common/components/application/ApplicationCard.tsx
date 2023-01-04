@@ -2,8 +2,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import InstallDesktopIcon from '@mui/icons-material/InstallDesktop'
 import ShareIcon from '@mui/icons-material/Share'
-import { Box, Card, IconButton, Tooltip, Typography } from "@mui/material"
-import React from "react"
+import { Box, Button, Card, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material"
+import React, { useState } from "react"
 import LinesEllipsis from 'react-lines-ellipsis'
 import { generatePath, useHistory, useRouteMatch } from "react-router-dom"
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
@@ -11,11 +11,13 @@ import PackageLogo from "../../../../src/images/package.svg"
 import { lightShadows } from '../../../css/theme/shadows'
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import ConfirmationDialog from "../ConfirmationDialog"
-import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
-import { getIconSxProperties, StyledApplicationCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedByString, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName } from './compomentCssProperties'
+import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
+import { getIconSxProperties, HeadingBoxStyle, InfoBoxStyle, StyledApplicationCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedByString, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName, viewButton } from './compomentCssProperties'
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 import useInstallApplication from './hooks/useInstallApplication'
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import AddIcon from "@mui/icons-material/Add";
 
 interface ApplicationCardProps {
     application: ApplicationCardViewResponse,
@@ -65,7 +67,15 @@ const ApplicationCard = (props: ApplicationCardProps) => {
 
     const formCreatedOnString = () => {
         const createdOnTimestamp = application.ApplicationCreatedOn||Date.now()
-        return `Created On ${new Date(createdOnTimestamp).toDateString()}`
+        const createdby = application.ApplicationCreatedBy
+        return `Created by ${createdby} | Last Updated On : ${new Date(createdOnTimestamp).toDateString()}`
+    }
+
+    const runs_downloadString = ()=>{
+
+        const Runs = 1
+        const Download = 20
+        return `Runs: ${Runs} | Downloads: ${Download}`
     }
 
     const onApplicationInstall = () => {
@@ -105,66 +115,27 @@ const ApplicationCard = (props: ApplicationCardProps) => {
         event.stopPropagation()
     }
 
-    const formActions = () => {
-        if(props.isInstalled) {
-            return (
-                <Box sx={{mx:'auto',px:5,width:'100%',display: "flex", flexDirection:"row", gap: 2,alignItems:'center',justifyContent:'center'}}>
-                    <Box>
-                        <Tooltip arrow placement='top' title="Add to Favorites">
-                            <IconButton sx={getIconSxProperties()} onClick={onFavorite}>
-                                <FavoriteIcon/>
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
-
-
-                    <Box>
-                        <Tooltip arrow placement='top' title="Share">
-                            <IconButton sx={getIconSxProperties()} onClick={onShare}>
-                                <ShareIcon/>
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
-                    <Box>
-
-                        <Tooltip arrow placement='top' title="Delete">
-                            <IconButton sx={getIconSxProperties()} onClick={promptDeleteApplication}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                </Box>
-                </Box>
-            )
-        } else {
-            return (
-                <Box sx={{mx:'auto',width:'12%',display: "flex", flexDirection:"row", gap: 2, mt: "4%", mb: "4%"}}>
-                        <Tooltip arrow title="Install">
-                            <IconButton sx={getIconSxProperties()} onClick={onApplicationInstall}>
-                                <InstallDesktopIcon/>
-                            </IconButton>
-                        </Tooltip>
-                </Box>
-            )
-        }
-    }
-    const InfoBoxStyle = {
-        px:1,
-        py:2,
-        width:'40%', 
-        display:'flex',
-        flexDirection:'column' ,
-        justifyContent:'center',
-        borderRight:"0.439891px solid #FFFFFF"
+    const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+    const open = Boolean(menuAnchor)
+    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation()
+        setMenuAnchor(event.currentTarget)
+        
     }
 
-    const HeadingBoxStyle = {
-        display: "flex", 
-        flexDirection: "column" ,
-        width:'40%',
-        px:2, 
-        borderRight:"0.439891px solid #FFFFFF"
+    const handleActionBuilder= () => {
+        const ActionBuilderPath = generatePath(APPLICATION_BUILD_ACTION_ROUTE_ROUTE +"?applicationId=:AppId", {AppId: props.application.ApplicationId});
+        window.open(ActionBuilderPath, "_self");
     }
+
+    const handleFlowBuilder= () => {
+        const flowBuilderPath = generatePath(APPLICATION_BUILD_FLOW_ROUTE_ROUTE+"?applicationId=:AppId", {AppId: props.application.ApplicationId});
+        window.open(flowBuilderPath, "_self");
+    }
+
     
+
+    const [collapsedView , setCollapsedView] = useState(false)    
     return (
         <>
             <ConfirmationDialog
@@ -178,52 +149,78 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                 onDecline={handleDialogClose}
             />
             <Box>
-            <StyledApplicationCard  onClick={onApplicationSelect} sx={{
+            <StyledApplicationCard onClick={onApplicationSelect} sx={{
                         backgroundColor: disableCardActions ? 'disableBackgroundColor.main' : 'cardBackgroundColor.main',
                         cursor: props.isInstalled ? 'pointer' : undefined
                 }}>
-                    <Box sx={{display: "flex", flexDirection: "row", height: "100%"}}>
-                        <Box sx={{display:'flex',width:'10%', alignItems:'center',borderRight:"0.439891px solid #FFFFFF",justifyContent:'center'}}>    
-                            <Box sx={{ display: 'flex', flexDirection: "column", alignItems: 'center'}}>
-                                <Box sx={{ alignItems: 'center' }}>
-                                    <img width='35px' height="35px" src={DataFacadeLogo} alt="Data Facade" />
-                                </Box>
-                                <StyledTypographyApplicationformCreatedByString>
-                                    {formCreatedByString()}
-                                </StyledTypographyApplicationformCreatedByString >
-                            </Box>
-                        </Box>
+                    <Box sx={{display: "flex", flexDirection: "column"}}>
                         <Box sx={{...HeadingBoxStyle}}>
-                            <Box>
-                                <StyledTypographyApplicationName  >
+                            <Box sx={{display:'flex',flexDirection:'row',}}>
+                                    <ExpandMoreIcon onClick={()=> setCollapsedView(!collapsedView)} sx={{mr:2,alignSelf:'center',transform:`scale(1.5) rotate(${!collapsedView?'270':'0'}deg)`,ml:1}}/>
+                                <Box sx={{display:'flex',justifyContent:'center', flexDirection:'column'}}>
+                                    <img width='25px' height='25px' src={PackageLogo} alt="" />
+                                </Box>
+                                <StyledTypographyApplicationName sx={{lineHeight:'266%',p:'5px'}} >
                                     {application.ApplicationName}
                                 </StyledTypographyApplicationName >
+                                <IconButton sx={{ml:'auto'}} onClick={handleMenuOpen}>
+                                    <MoreHorizIcon/>
+                                </IconButton>
+                                        <Menu
+                                            anchorEl={menuAnchor} 
+                                            open={open} 
+                                            onClose={() => {setMenuAnchor(null)}}
+                                            anchorOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                                }}
+                                                transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'left',
+                                        }}>
+                                            <MenuItem sx={{gap:2}} onClick={onShare}><ShareIcon/> Share</MenuItem>
+                                            <MenuItem sx={{gap:2}} onClick={promptDeleteApplication}><DeleteIcon/> Delete</MenuItem>
+                                        </Menu>
                             </Box>
-                            <Box sx={{ width:'90%'}}>
-                            <Tooltip placement='top' arrow title={application.ApplicationDescription || ""}>
-                                <StyledTypographyApplicationDescription>
-                                    <LinesEllipsis
-                                        text={application.ApplicationDescription}
-                                        maxLine='2'
-                                        ellipsis=' ...'
-                                        trimRight
-                                        basedOn='letters'
-                                    />
-                                    {/* {application.ApplicationDescription} */}
-                                </StyledTypographyApplicationDescription>
-                            </Tooltip>      
+                            <Box sx={{ml:6,display:collapsedView?'flex':'none',transform:'transition(2s)'}}>
+                                <Tooltip placement='top' arrow title={application.ApplicationDescription || ""}>
+                                    <StyledTypographyApplicationDescription>
+                                        <LinesEllipsis
+                                            text={application.ApplicationDescription}
+                                            maxLine='5'
+                                            ellipsis=' ...'
+                                            trimRight
+                                            basedOn='letters'
+                                        />
+                                        {/* {application.ApplicationDescription} */}
+                                    </StyledTypographyApplicationDescription>
+                                </Tooltip>      
                             </Box>
+
                         </Box>
                         <Box sx={{...InfoBoxStyle}}>
-                            <StyledTypographyApplicationformInfoString>
-                                            {formInfoString()}
-                            </StyledTypographyApplicationformInfoString>
-                            <StyledTypographyApplicationformCreatedOnString>
-                                {formCreatedOnString()}
-                            </StyledTypographyApplicationformCreatedOnString>
+                            <Box sx={{display:'flex',flexDirection:'column',ml:5}}>
+                                <StyledTypographyApplicationformCreatedOnString>
+                                    {formCreatedOnString()}
+                                </StyledTypographyApplicationformCreatedOnString>
+                                <StyledTypographyApplicationformInfoString>
+                                    {formInfoString()}
+                                </StyledTypographyApplicationformInfoString>
+                                <StyledTypographyApplicationformCreatedOnString>
+                                    {runs_downloadString()}
+                                </StyledTypographyApplicationformCreatedOnString>
+                            </Box>
+                            <Button onClick={onApplicationSelect} variant='contained' color='info' sx={{...viewButton}}>
+                                View
+                            </Button>
                         </Box>
-                        <Box sx={{width:'20%',display:'flex',justifyContent:'center'}}>
-                            {formActions()}
+                        <Box sx={{display:collapsedView?'flex':'none',justifyContent:'center',ml:'auto',gap:2,mr:1}}>
+                            <Button size='small'  onClick={() => handleActionBuilder()}>
+                            <AddIcon sx={{transform:'scale(0.7)'}}/>Action 
+                            </Button>
+                            <Button size='small'  onClick={() => handleFlowBuilder()}>
+                            <AddIcon sx={{transform:'scale(0.7)'}}/>Flow 
+                            </Button>
                         </Box>
                     </Box>
                 </StyledApplicationCard >

@@ -21,12 +21,10 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
     }
     const SearchBarStyle = {
         width: '100%',
-        backgroundColor: 'allTableTextfieldbgColor1.main',
+        border:'1px solid #AFAFAF',
         boxSizing: 'border-box',
-        boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
         backgroundBlendMode: 'soft-light, normal',
-        borderRadius: '26px',
-        display: 'flex',
+        borderRadius: '5px',
         justifyContent: 'center',
         minHeight: '50px'
     }
@@ -69,13 +67,13 @@ const ApplicationHeader = (props: ApplicationHeaderProps) => {
                 {props.fromApplicationDetail ? (
                     <></>
                 ) : (
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sx={{pr:4}}>
                             <TextField variant="standard" 
                             value={props.searchQuery}
                             onChange={handleSearchChange}
                             placeholder="Search Apps/Flows/Actions"
                             multiline={true}
-                            sx={{...SearchBarStyle}}
+                            sx={{...SearchBarStyle,ml:1}}
                             InputProps={{
                                 disableUnderline: true,
                                 startAdornment: (

@@ -4,8 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import PeopleIcon from '@mui/icons-material/People';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import { Box, Card, IconButton, SpeedDial, SpeedDialAction, Tooltip, Typography } from "@mui/material";
-import React from "react";
+import { Box, Button, Card, IconButton, Menu, MenuItem, SpeedDial, SpeedDialAction, Tooltip, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { generatePath, useHistory, useRouteMatch } from "react-router-dom";
 import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png";
@@ -13,10 +13,14 @@ import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionTyp
 import ActionDefinitionPublishStatus from "../../../enums/ActionDefinitionPublishStatus";
 import ActionDefinitionVisibility from "../../../enums/ActionDefinitionVisibility";
 import { ActionDefinitionCardViewResponse } from "../../../generated/interfaces/Interfaces";
+import { StyledTypographyApplicationName, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationDescription, StyledButtonActionCard, StyledTypographyApplicationformInfoString } from '../application/compomentCssProperties';
 import useDeleteAction from "../application/hooks/useDeleteActions";
 import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE } from '../header/data/ApplicationRoutesConfig';
 import UsageStatus from "../UsageStatus";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ActionLogo from "../../../../src/images/action.svg"
 
 
 export interface ActionDefinitionCardProps {
@@ -33,10 +37,8 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
     const queryClient = useQueryClient()
     const {actionDefinition} = props
     const history = useHistory()
-    const match = useRouteMatch()
     const saveAndCopyWorkflow = useCopyAndSaveDefinition({mutationName: "SaveAndCopyDefinition"})
 
-    const handleMoreOptionsSpeedDialToggle = () => setMoreOptionsSpeedDialState(oldState => ({ ...oldState, isOpen: !oldState.isOpen }))
     const formCreatedByString = () => {
         return `${actionDefinition.DefinitionCreatedBy||"No Author"}`
     }
@@ -47,10 +49,7 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
         return `Created On ${new Date(createdOnTimestamp).toDateString()}`
     }
 
-    const toggleMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>) => {
-        event.stopPropagation()
-        handleMoreOptionsSpeedDialToggle()
-    }
+    
 
     const handleCopyAction = () => {
         saveAndCopyWorkflow.mutate({actionDefinitionId: props.actionDefinition.DefinitionId!}, 
@@ -98,211 +97,81 @@ const ActionDefinitionCard = (props: ActionDefinitionCardProps) => {
             })
         }
     }
-
+    const [collapsedView, setCollapsedView] = useState(false)
     const actionReadyToUse = actionDefinition.DefinitionPublishStatus===ActionDefinitionPublishStatus.READY_TO_USE
+    const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+    const open = Boolean(menuAnchor)
+    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation()
+        setMenuAnchor(event.currentTarget)
 
+    }
     return (
         <Box>
-            <Card sx={{
-                width: "100%", 
-                borderRadius: 2, 
-                p: 2, 
-                boxSizing: "content-box",
-                backgroundColor: !deletingState ? "cardDeleteBtnBgColor.main": "cardBackgroundColor.main",
-                border: "0.439891px solid #FFFFFF",
-                boxShadow: "0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)"
-            }}>
-                <Box sx={{display: "flex", flexDirection: "row", height: "100%"}}>
-                    <Box sx={{display: "flex", flexDirection: "column", width: "90%", pt: 2}}>
-                        <Box>
-                            <Typography sx={{
-                                fontFamily: "SF Pro Text",
-                                fontStyle: "normal",
-                                fontWeight: 600,
-                                fontSize: "12px",
-                                lineHeight: "266%",
-                                letterSpacing: "0.5px",
-                                textTransform: "uppercase",
-                                width:'70%',
-                                overflow:'hidden',
-                                color: 'rgba(66, 82, 110, 0.86)'
-                            }}>
-                                {actionDefinition.DefinitionName}
-                            </Typography>
+            <Card >
+                    <Box sx={{display: "flex", flexDirection: "column",  pt: 2}}>
+                        <Box sx={{ display: 'flex' }}>
+                        <ExpandMoreIcon onClick={() => setCollapsedView(!collapsedView)} sx={{ mr: 2, alignSelf: 'center', transform: `scale(1.5) rotate(${!collapsedView ? '270' : '0'}deg)`, ml: 1 }} />
+                        <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                            <img width='25px' height='25px' src={ActionLogo} alt="" />
                         </Box>
-                        <Box>
-                            <Typography sx={{
-                                fontFamily: "SF Pro Display",
-                                fontStyle: "normal",
-                                fontWeight: "normal",
-                                fontSize: "11px",
-                                width:'70%',
-                                overflow:'hidden',
-                                lineHeight: "133.4%",
-                                display: "flex",
-                                alignItems: "center"
+                        <Box sx={{display:'flex',flexDirection:'column',pl:1}}>
+                            <StyledTypographyApplicationName sx={{lineHeight:'266%',p:'5px'}}>
+                            {actionDefinition.DefinitionName}
+                            </StyledTypographyApplicationName >
+                        </Box>    
+                        <IconButton sx={{ ml: 'auto' }} onClick={handleMenuOpen}>
+                            <MoreHorizIcon />
+                        </IconButton>
+                        <Menu
+                            anchorEl={menuAnchor}
+                            open={open}
+                            onClose={() => { setMenuAnchor(null) }}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
                             }}>
-                                {actionDefinition.DefinitionDescription}
-                            </Typography>
+                            <MenuItem sx={{ gap: 2 }} onClick={handleCopyAction}><ContentCopyIcon /> Duplicate</MenuItem>
+                            <MenuItem sx={{ gap: 2 }} onClick={handleDelete}><DeleteIcon /> Delete</MenuItem>
+                            <MenuItem sx={{ gap: 2 }} onClick={handleEdit}><EditIcon /> Edit</MenuItem>
+                        </Menu>
+                    </Box>
+                    <Box sx={{ ml:6 ,my:1}}>
+                        {collapsedView?
+                        <StyledTypographyApplicationDescription>
+                            {actionDefinition.DefinitionDescription}
+                        </StyledTypographyApplicationDescription>
+                        :<></>}
+                    </Box>
+                    <Box sx={{ p: 1, display: 'flex', backgroundColor: '#DDDDDD' }}>
+                        <Box sx={{ml:5}}>
+                            <StyledTypographyApplicationformCreatedOnString>
+                                Created By : <b>{formCreatedByString()}  </b>
+                            </StyledTypographyApplicationformCreatedOnString>
+                            <StyledTypographyApplicationformCreatedOnString>
+                              reated On : <b>{formCreatedOnString()}</b>
+                            </StyledTypographyApplicationformCreatedOnString>
                         </Box>
-                        <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", flexGrow: 1, mr: 3}}>
-                            <Box sx={{display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: 1}}>
-                                <Box sx={{display: "flex", flexDirection: "column"}}>
-                                    <Box sx={{display: "flex", flexDirection: "row", width: "100%", gap: 1, alignContent: "center"}}>
-                                        <Box sx={{
-                                            display: "flex", 
-                                            alignContent: "center", 
-                                            width: "30px",
-                                            height: "30px",
-                                            backgroundColor: "cardDeleteBtnBgColor.main",
-                                            boxShadow: "inset 8px 8px 8px rgba(0, 0, 0, 0.25), inset -8px -8px 8px #B8DBFF",
-                                            borderRadius: "50%",
-                                            p: "3px"
-                                        }}>
-                                            <img src={DataFacadeLogo} alt="Data Facade"/>
-                                        </Box>
-                                        <Box sx={{display: "flex", alignContent: "center"}}>
-                                            <PeopleIcon/>
-                                        </Box>
-                                        <Box sx={{display: "flex", alignContent: "center"}}>
-                                            <Typography sx={{
-                                                fontFamily: "SF Pro Text",
-                                                fontStyle: "normal",
-                                                fontWeight: 500,
-                                                fontSize: "12px",
-                                                lineHeight: "14px",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                fontFeatureSettings: "'liga' off",
-                                                color: "cardNumUserTextColor.main"
-                                            }}>{actionDefinition.NumberOfUsers||"-"}</Typography>
-                                        </Box>
-                                        <Box sx={{display: "flex", alignContent: "center"}}>
-                                            <UsageStatus status={actionDefinition.DefinitionPublishStatus}/>
-                                        </Box>
-                                    </Box>
-                                    <Box sx={{display: "flex", flexDirection: "row", gap: 2}}>
-                                        <Box>
-                                            <Typography sx={{
-                                                fontFamily: "SF Pro Text",
-                                                fontStyle: "normal",
-                                                fontWeight: 500,
-                                                fontSize: "10px",
-                                                lineHeight: "157%",
-                                                letterSpacing: "0.1px",
-                                                color: "ActionDefinationHeroTextColor1.main"
-                                            }}>
-                                                {formCreatedByString()}
-                                            </Typography>
-                                        </Box>
-                                        <Box>
-                                            <Typography sx={{
-                                                fontFamily: "SF Pro Text",
-                                                fontStyle: "normal",
-                                                fontWeight: "normal",
-                                                fontSize: "9px",
-                                                lineHeight: "166%",
-                                                letterSpacing: "0.4px",
-                                                color: "rgba(66, 82, 110, 0.86)"
-                                            }}>
-                                                {formCreatedOnString()}
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                            </Box>
-                            <Box sx={{display: "flex", alignItems: "flex-end"}}>
-                                <Tooltip title={actionReadyToUse ? "Run Action" : "Action Not Ready To Use"}>
-                                    <Box sx={{
-                                        width: "60px",
-                                        height: "60px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "cardDeleteBtnBgColor.main",
-                                        boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}>
-                                        
-                                        <IconButton sx={{
-                                                height: "42px",
-                                                width: "42px",
-                                                background: "linear-gradient(159.16deg, #917CE4 26.46%, rgba(63, 45, 137, 0) 116.55%)",
-                                                boxShadow: "inset 10px 10px 15px rgba(255, 255, 255, 0.2)",
-                                                filter: "drop-shadow(0px 5px 10px rgba(55, 46, 152, 0.65))"
-                                            }} onClick={createActionInstance} disabled={!actionReadyToUse}>
-                                                <PlayArrowIcon sx={{color: "white", width: '100%', height: '100%'}}/>
-                                        </IconButton>
-                                    </Box>
-                                </Tooltip>
-                            </Box>
+                        <Button onClick={createActionInstance} disabled={!actionReadyToUse} variant='contained' color='info' sx={{ ml: 'auto', height: '30px', borderRadius: '5px', alignSelf: 'center'}}>
+                            Run
+                        </Button>
+                    </Box>
+                    <Box>
+                        <Box sx={{display:'flex',justifyContent:'flex-end'}}>
+                            <StyledButtonActionCard  onClick={handleEdit} >
+                                Edit
+                            </StyledButtonActionCard >
+                            <StyledButtonActionCard  onClick={handleDelete}>
+                                Delete
+                            </StyledButtonActionCard >
                         </Box>
                     </Box>
-                    <Box sx={{display: "flex", flexDirection:"column", gap: 2, mt: "4%", mb: "4%"}}>
-                        <Box>
-                            <SpeedDial
-                                ariaLabel={props.actionDefinition.DefinitionId||""}
-                                direction="down"
-                                sx={{ 
-                                    height: "42px", 
-                                    width: "42px",
-                                }}
-                                FabProps={{
-                                    sx: {
-                                        minHeight: "42px", 
-                                        width: "42px",
-                                        backgroundColor: "cardDeleteBtnBgColor.main",
-                                        boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
-                                    }
-                                }}  
-                                open={moreOptionsSpeedDialState.isOpen}
-                                onClick = {toggleMoreOptionsSpeedDial}
-                                icon={<PlaylistAddIcon sx={{color: 'black'}}/>}
-                            >
-                                <SpeedDialAction
-                                    key="Delete"
-                                    icon={
-                                        <DeleteIcon/>
-                                    }
-                                    tooltipTitle="Delete"
-                                    onClick={handleDelete}
-                                    sx={{
-                                        height: "42px",
-                                        width: "42px",
-                                        backgroundColor: "cardDeleteBtnBgColor.main"
-                                    }}
-                                />
-                                
-                            </SpeedDial>
-                        </Box>
                         
-                        <Box>
-                            <IconButton sx={{
-                                height: "42px",
-                                width: "42px",
-                                backgroundColor: "cardDeleteBtnBgColor.main",
-                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
-                            }} onClick={handleEdit}>
-                                <EditIcon/>
-                            </IconButton>
-                        </Box>
-                        {/* <Box>
-                            <IconButton sx={{
-                                height: "42px",
-                                width: "42px",
-                                backgroundColor: "cardDeleteBtnBgColor.main",
-                                boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 15px rgba(0, 0, 0, 0.05)"
-                            }}>
-                                <FavoriteIcon sx={{color: 'rgba(150, 142, 241, 1)'}}/>
-                            </IconButton>
-                        </Box> */}
-                        <Tooltip title="Duplicate">
-                            <IconButton>
-                                <ContentCopyIcon onClick={handleCopyAction}/>
-                            </IconButton>
-                        </Tooltip>
                     </Box>
-                </Box>
             </Card>
             
         </Box>

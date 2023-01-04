@@ -1,12 +1,16 @@
 import React from 'react';
 import { Route, Switch, useHistory } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import {Box, Avatar, AvatarGroup, Button, Divider,Tooltip,TextField} from "@mui/material"
+import { Box, Avatar, AvatarGroup, Button, Divider, Tooltip, TextField } from "@mui/material"
 import UserAvatar from '../../types/UserAvatar';
 import NumberStat, { NumberStatProp } from '../NumberStat';
 import ProviderAvatar from '../../types/ProviderAvatar';
 import Typography from '@mui/material/Typography';
 import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE } from '../header/data/ApplicationRoutesConfig';
+import PackageLogo from "../../../../src/images/package.svg"
+import ShareIcon from '@mui/icons-material/Share';
+import { StyledButtonPackageHeader, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedByString, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName, StyledTypographyPackageHeader } from '../application/compomentCssProperties';
+import WatchLaterIcon from '@mui/icons-material/WatchLater';
 
 type HeroComponentMode = "EDIT" | "READONLY"
 
@@ -32,11 +36,11 @@ export interface ApplicationHeroInfoProps {
 const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
     const history = useHistory()
 
-    const handleActionBuilder= () => {
+    const handleActionBuilder = () => {
         window.open(APPLICATION_BUILD_ACTION_ROUTE_ROUTE + "?applicationId=" + props.id, "_self");
     }
 
-    const handleFlowBuilder= () => {
+    const handleFlowBuilder = () => {
         window.open(APPLICATION_BUILD_FLOW_ROUTE_ROUTE + "?applicationId=" + props.id, "_self");
     }
 
@@ -45,159 +49,98 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
     }
 
     return (
-        <Box p={1} sx={{display: 'flex', maxHeight: '350px'}}>
-            <Box sx={{display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '50%'}}>
-                <Box className="header">
-                    <Box className="name">
-                        <Tooltip title={props.mode==="READONLY" ? "Edit not permitted" : "Edit"} placement="left">
-                            <TextField value={props.applicationName} 
-                                variant="standard"
-                                fullWidth
-                                onChange={(event) => props?.onChangeHandlers?.onNameChange?.(event.target.value)} 
-                                placeholder={props.mode==="EDIT" ? "Enter Name Here" : "NA"}
-                                InputProps ={{
-                                    sx: {
-                                        fontFamily: "SF Pro Display",
-                                        fontStyle: "normal",
-                                        fontWeight: 600,
-                                        fontSize: "32px",
-                                        color: "ActionDefinationHeroTextColor1.main",
-                                        borderStyle: "solid",
-                                        borderColor: "transparent",
-                                        borderRadius: "10px",
-                                        px:'10px',
-                                        backgroundColor: "ActionDefinationTextPanelBgColor.main",
-                                        ":hover": {
-                                            ...(props.mode==="READONLY" ? {
-                                                
-                                            } : {
-                                                background: "ActionDefinationTextPanelBgHoverColor.main"
-                                            })
-                                        }
-                                    },
-                                    disableUnderline: true,
-                                    readOnly: props?.mode==="READONLY"
-                                }}
-                            />
-                        </Tooltip>
+        <Box p={1}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '50%' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                        <img width='30px' height='30px' src={PackageLogo} alt="" />
                     </Box>
-                    <Box className="meta" sx={{mx:2}}>
-                        <Typography variant="heroMeta">
-                            <span>Created By <b>{props.createdBy.name}</b></span>
-                            <span> | </span>
-                            <span>Last updated on {formTimestampHumanReadable(props.lastUpdatedTimestamp || new Date())}</span>
-                        </Typography>
-                    </Box>
-                </Box>
-                <Box sx={{display:'flex', flexDirection:'row'}}>
-                    <Box sx={{display: "flex"}} className="related-users">
-                        <Box className="created-by">
-                            {/* <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.createdBy.name} src={props.createdBy.url}/> */}
-                        </Box>
-                        <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                            {/* <Divider orientation="vertical" sx={{height: "75%"}}/> */}
-                        </Box>
-                        <Box className="used-by">
-                            <AvatarGroup max={9}>
-                                {props.usedBy?.map?.(user => <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={user.name} src={user.url}/>)}
-                            </AvatarGroup>
-                        </Box>
-                    </Box>
-                    <Box className="status-and-providers" sx={{display: "flex", flexDirection: "row", alignItems: "center", gap: 1}}>
-                        <Box className="status">
-                            {/* <UsageStatus status={props.status}/> */}
-                        </Box>
-                        <Box className="provider">
-                            <AvatarGroup max={9}>
-                                {props.providers?.map?.(provider => <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={provider.name} src={provider.url}/>)}
-                            </AvatarGroup>
-                        </Box>
-                    </Box>
-                    <Box sx={{display: "flex",flexDirection:'column', justifyContent: "flex-start", overflowX: "auto",width:'100%',alignItems:'start'}} className="stats">
-                        <Box sx={{display: 'flex',flexDirection:'row',gap: 3}}>
-                        {props.numberStats.map((numberStat) => 
-                            <Box>
-                                <NumberStat {...numberStat}/>
-                            </Box>
-                        )}
-                        </Box>
-                        <Box sx={{display:'flex', flexDirection:'row', gap:3,justifyContent:'center'}}>
+                    <StyledTypographyPackageHeader sx={{ lineHeight: '266%', p: '5px' }}>
+                        {props.applicationName}
+                    </StyledTypographyPackageHeader>
+                    <Box sx={{ ml: 'auto', gap: 2, display: 'flex' }}>
+                        <StyledButtonPackageHeader color='info' size='small' variant="outlined" onClick={() => handleActionBuilder()}>
+                            <ShareIcon sx={{fontSize:'15px'}}/>
+                        </StyledButtonPackageHeader>
+                        <StyledButtonPackageHeader color='info' size='small' variant="outlined" onClick={() => handleActionBuilder()}>
+                            Action <AddIcon sx={{ marginLeft: 1, fontSize:'15px' }} />
+                        </StyledButtonPackageHeader>
+                        <StyledButtonPackageHeader color='info' size='small' variant="outlined" onClick={() => handleFlowBuilder()}>
+                            Flow <AddIcon sx={{ marginLeft: 1, fontSize:'15px' }} />
+                        </StyledButtonPackageHeader>
                         {props.gitSyncStatus !== undefined ? (
-                            <Box>
+                            <>
                                 {props.gitSyncStatus ? (
-                                    <Button size='small' variant="contained" sx={{
+                                    <StyledButtonPackageHeader size='small' variant="contained" sx={{
                                         backgroundColor: 'statusCardBgColor2.main',
                                         ":hover": {
                                             backgroundColor: '#8C0000'
-                                        }  
+                                        }
                                     }}
-                                        onClick={() => {props.handleSyncWithGit?.(false)}}
+                                        onClick={() => { props.handleSyncWithGit?.(false) }}
                                     >
                                         Sync With GIT Repo
-                                    </Button>
+                                    </StyledButtonPackageHeader>
                                 ) : (
                                     <Button size='small' variant="contained" sx={{
                                         wordWrap: 'break-word'
                                     }}>In Sync With Git Repo</Button>
                                 )}
-                            </Box>
+                            </>
                         ) : (
-                            <Button size='small' variant="contained" sx={{
+                            <StyledButtonPackageHeader size='small' variant="contained" sx={{
                                 backgroundColor: 'statusCardBgColor2.main',
                                 ":hover": {
                                     backgroundColor: '#8C0000'
-                                }  
+                                }
                             }}
-                                onClick={() => {props.handleSyncWithGit?.(true)}}
+                                onClick={() => { props.handleSyncWithGit?.(true) }}
                             >
                                 Sync With GIT Repo
-                            </Button>
+                            </StyledButtonPackageHeader>
                         )}
-                        <Button size='small' variant="outlined" onClick={() => handleActionBuilder()}>
-                                Action <AddIcon sx={{marginLeft: 2}}/>
-                        </Button>
-                        <Button size='small' variant="outlined" onClick={() => handleFlowBuilder()}>
-                                Flow <AddIcon sx={{marginLeft: 2}}/>
-                        </Button>
-                        </Box>
                     </Box>
-                </Box>    
-            </Box>
-            <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                <Divider orientation="vertical" sx={{height: "100%"}}/>
-            </Box>
-            <Box sx={{display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: '40%', marginLeft: 1, padding: '5px'}}>
-                <Box className="created-by">
-                    <Box sx={{display: 'flex', gap: 1, maxHeight: '45px', alignItems: 'center'}}>
-                        <Avatar sx={{ cursor: "pointer", height: 40, width: 40 }} alt={props.createdBy.name} src={props.createdBy.url}/>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>  
-                            <Box>
-                                <Typography sx={{fontFamily: 'SF Pro Text', fontWeight: 400, fontSize: '16px', lineHeight: '175%', letterSpacing: '0.15px'}}>
-                                    Application Description
-                                </Typography>
-                            </Box>
-                            <Box sx={{display: 'flex'}}>
-                                <Box>
-                                    <Typography sx={{fontSize: '14px'}}>By {props.createdBy.name}</Typography>
-                                </Box>
-                                
-                                <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                                    <Divider orientation="vertical" sx={{height: "100%"}}/>
-                                </Box>
-                                <Typography sx={{fontSize: '14px'}}>Updated 0 min ago</Typography>
-                            </Box>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, ml: 4 }}>
+                    {props.numberStats.map((numberStat) =>
+                        <StyledTypographyApplicationformCreatedOnString>
+                            {numberStat.value + " " + numberStat.label+" |"}
+                        </StyledTypographyApplicationformCreatedOnString>
+                    )}
+                </Box>
 
-                        </Box>
-                        
-                    </Box>
-                </Box>
-                <Box sx={{overflowY: 'auto' , padding: "10px"}}>
-                    <Typography sx={{fontWeight: 400, fontSize: '14px'}}>
-                        {props.description}
-                    </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center', ml: 4 }}>
+                    <Avatar sx={{ cursor: "pointer", height: 25, width: 25 }} alt={props.createdBy.name} src={props.createdBy.url} />
+                    <StyledTypographyApplicationformInfoString>
+                        {props.createdBy.name}
+                    </StyledTypographyApplicationformInfoString>
+                    <WatchLaterIcon sx={{ alignSelf: 'center', color: '#687A92',ml:2 }} />
+                    <StyledTypographyApplicationformCreatedByString>
+                        Last updated on <br />{formTimestampHumanReadable(props.lastUpdatedTimestamp || new Date())}
+                    </StyledTypographyApplicationformCreatedByString>
                 </Box>
             </Box>
-        
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1,ml:2,mt:3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box>
+                        <StyledTypographyApplicationName>
+                            Application Description
+                        </StyledTypographyApplicationName>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Box>
+                            <Typography sx={{ fontSize: '14px' }}>By {props.createdBy.name + " | "} </Typography>
+                        </Box>
+                        <Typography sx={{ fontSize: '14px' }}> Updated 0 min ago</Typography>
+                    </Box>
+                </Box>
+                <Box sx={{ overflowY: 'auto',ml:2}}>
+                    <StyledTypographyApplicationDescription>
+                        {props.description}
+                    </StyledTypographyApplicationDescription>
+                </Box>
+            </Box>
+
         </Box>
     )
 }

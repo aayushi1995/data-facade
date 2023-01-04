@@ -1,7 +1,7 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Card, Divider, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
-import React from "react";
+import { Box, Button, Card, Divider, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { generatePath, useHistory } from "react-router-dom";
 import ExecuteImage from "../../../../src/images/Execute.png";
@@ -17,7 +17,11 @@ import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDef
 import useDeleteAction from "./hooks/useDeleteActions";
 import DeleteIcon from '@mui/icons-material/Delete'
 import { APPLICATION_WEB_APP_EDIT_ROUTE } from '../header/data/ApplicationRoutesConfig';
-
+import { StyledApplicationCard, StyledButtonActionCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName } from './compomentCssProperties';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import FlowLogo from "../../../../src/images/flow.svg"
+import ActionLogo from "../../../../src/images/action.svg"
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
     action: ActionDetailsForApplication,
@@ -29,10 +33,10 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
     const open = Boolean(menuAnchor)
     const history = useHistory()
     const queryClient = useQueryClient()
-    const copyAndSaveDefinition = useCopyAndSaveDefinition({mutationName: "CopyActionDefinition"})
-    const deleteActionDefintion = useDeleteAction({mutationName: "DeleteApplicationActionDefinition"})
+    const copyAndSaveDefinition = useCopyAndSaveDefinition({ mutationName: "CopyActionDefinition" })
+    const deleteActionDefintion = useDeleteAction({ mutationName: "DeleteApplicationActionDefinition" })
     const handleExecute = () => {
-        if(props.isWorkflow === true) {
+        if (props.isWorkflow === true) {
             history.push(`/application/execute-workflow/${props.action.model?.Id || "idNotFound"}`)
         } else {
             history.push(`/application/execute-action/${props.action.model?.Id || "id"}`)
@@ -44,47 +48,47 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
     const handleDialogOpen = () => setDialogOpen(true)
 
     const promptDeleteApplication = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        event.stopPropagation() 
+        event.stopPropagation()
         handleDialogOpen()
     }
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation()
         setMenuAnchor(event.currentTarget)
-        
+
     }
 
     const handleCopy = () => {
         copyAndSaveDefinition.mutate(
-            ({actionDefinitionId: props.action.model?.Id!}), {
-                onSuccess: (data) => {
-                    if(props.action.model?.ActionType === ActionDefinitionActionType.WORKFLOW){
-                        history.push(`/application/edit-workflow/${data?.[0]?.Id}`)
-                    } else if(props.action.model?.ActionType === ActionDefinitionActionType.WEB_APP){
-                        history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, {WebAppId: data?.[0]?.Id}))
-                    } 
-                    else {
-                        history.push(`/application/edit-action/${data?.[0]?.Id}`)
-                    }
+            ({ actionDefinitionId: props.action.model?.Id! }), {
+            onSuccess: (data) => {
+                if (props.action.model?.ActionType === ActionDefinitionActionType.WORKFLOW) {
+                    history.push(`/application/edit-workflow/${data?.[0]?.Id}`)
+                } else if (props.action.model?.ActionType === ActionDefinitionActionType.WEB_APP) {
+                    history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, { WebAppId: data?.[0]?.Id }))
+                }
+                else {
+                    history.push(`/application/edit-action/${data?.[0]?.Id}`)
                 }
             }
+        }
         )
     }
 
     const handleDelete = () => {
         deleteActionDefintion.mutate(
-            {idsToDelete: [props.action.model?.Id!]}, {
-                onSuccess: (data) => {
-                    props.handleDeleteAction?.(props.action.model?.Id!, props.action.model?.ApplicationId || "1")
-                }
+            { idsToDelete: [props.action.model?.Id!] }, {
+            onSuccess: (data) => {
+                props.handleDeleteAction?.(props.action.model?.Id!, props.action.model?.ApplicationId || "1")
+            }
         })
         handleDialogClose();
     }
 
     const edit = () => {
-        if(!props.isWorkflow){
-            if(props.action.model?.ActionType === ActionDefinitionActionType.WEB_APP){
-                history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, {WebAppId: props.action.model?.Id}))
+        if (!props.isWorkflow) {
+            if (props.action.model?.ActionType === ActionDefinitionActionType.WEB_APP) {
+                history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, { WebAppId: props.action.model?.Id }))
             } else {
                 history.push(`/application/edit-action/${props.action.model?.Id || "idNotFound"}`)
             }
@@ -94,12 +98,19 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
     }
 
     const infoTextStyle = {
-        fontSize:'0.65rem'
+        fontSize: '0.65rem'
     }
 
-    const background = !props.isWorkflow ? 'ActionCardBgColor2.main' : 'ActionCardBgColor.main'
+    const ApplicationInfoString = () => {
+        const flowInfo = `${props.action.stagesOrParameters || 0} Stages  |  ${props.action.numberOfWorkflowActions || 0} Actions  |  ${props.action.numberOfRuns || 0} Runs`
+        const actionInfo = `${props.action.stagesOrParameters || 0} Parameters  |  ${props.action.numberOfRuns || 0} Runs`
+        return props.isWorkflow ?flowInfo:actionInfo
+    }
+    const [collapsedView, setCollapsedView] = useState(false)
+
+    const background = !props.isWorkflow ? 'ActionCardBgColor2.main' : '#EEEEFF'
     return (
-        <Box sx={{minheight: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1}}>
+        <Box sx={{ minheight: '127px', marginLeft: 2, marginRight: 2, marginBottom: 1 }}>
             <ConfirmationDialog
                 messageHeader={'Delete Application'}
                 messageToDisplay={`Application ${props.action.model?.DisplayName} will be deleted permanently. Proceed with deletion ?`}
@@ -110,180 +121,84 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                 onAccept={handleDelete}
                 onDecline={handleDialogClose}
             />
-            <Card sx={{backgroundColor: background, boxShadow: lightShadows[27], borderRadius: '10.2px', Width: '100%', height:'120px'}}>
-                <Box sx={{display: 'flex'}}>
-                    <Box sx={{flex: 4, width: '100%',height:'100%'}}>
-                        <Box sx={{display: 'flex', flexDirection: 'column',alignItems: 'flex-start', gap: 2, p: 1, height:'120px', overflow:'scroll' }}>
-                            <Typography variant="actionCardHeader">
+            <StyledApplicationCard sx={{ backgroundColor: background}}>
+                <Box sx={{}}>
+                    <Box sx={{ display: 'flex' }}>
+                        <ExpandMoreIcon onClick={() => setCollapsedView(!collapsedView)} sx={{ mr: 2, alignSelf: 'center', transform: `scale(1.5) rotate(${!collapsedView ? '270' : '0'}deg)`, ml: 1 }} />
+                        <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                            <img width='25px' height='25px' src={props.isWorkflow?FlowLogo:ActionLogo} alt="" />
+                        </Box>
+                        <Box sx={{display:'flex',flexDirection:'column',pl:1}}>
+                            <StyledTypographyApplicationName >
                                 {props.action.model?.DisplayName || "Name"}
-                            </Typography>
-                            <Typography sx={{wordWrap: 'break-word', fontFamily: 'SF Pro Display', fontStyle: 'normal', fontWeight: 'normal', fontSize: '12px', lineHeight: '133.4%'}}> 
-                                {props.action.model?.Description || "Description"}
-                            </Typography>
-                        </Box>
-                    </Box>
-
-                    <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "100%"}}/>
-                    </Box>
-                    
-                    <Box sx={{flex: 8,p:1, width: '100%',height:'100%'}}>
-                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
-                                <b>Created By : </b>{props.action.model?.CreatedBy || ""}
-                        </Typography>
-                        <br></br>
-                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
-                                <b>Updated By : </b>{props.action.model?.UpdatedBy || "Creator"}
-                        </Typography>
-                        <br></br>
-                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
-                                <b>Created On : </b>{new Date(props.action.model?.CreatedOn).toDateString()}
-                        </Typography>
-                        <br></br>
-                        <Typography sx={{...infoTextStyle}} variant="heroMeta">
-                                <b>Updated On : </b>{new Date(props.action.model?.UpdatedOn || props.action.model?.CreatedOn).toDateString()}
-                        </Typography>
-                    </Box>
-                    <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "100%"}}/>
-                    </Box> 
-                    <Box sx={{flex: 4, display: 'flex', flexDirection: 'column', width: '100%', height: '100%',p:1 }}>
-                        {props.isWorkflow ? (
-                            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                <Box mb={3}>
-                                    <Typography variant="heroMeta" sx={{lineHeight: '266%', textTransform: 'uppercase'}}>
-                                        Details
-                                    </Typography>
-                                </Box>
-                                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2}}>
-                                    <NumberStat {...{value: props.action.stagesOrParameters || 0, label: "Stages"}}/>
-                                    <NumberStat {...{value: props.action.numberOfWorkflowActions || 0, label: "Actions"}}/>
-                                    <NumberStat {...{value: props.action.numberOfRuns || 0, label: "Runs"}}/>
-                                </Box>
-                            </Box>
-                        ) : (
-                            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2}}>
-                                    <NumberStat {...{value: props.action.stagesOrParameters || 0, label: "Parameters"}}/>
-                                    <NumberStat {...{value: props.action.numberOfRuns || 0, label: "Runs"}}/>
-                                </Box>
-                            </Box>
-                        )}
-                        {props.isWorkflow ? (
-                            <></>
-                        ) : (
-                            <Box sx={{display: 'flex', alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'column', mt: 1}}>
-                                <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2}}>
-                                    <Typography 
-                                    variant="actionCardHeader"
-                                    sx={{
-                                    fontWeight: 'normal', 
-                                    fontSize: '11px', 
-                                    lineHeight: '166%'}}>
-                                        Output Type: 
-                                    </Typography>
-                                    <Typography sx={{
-                                        fontFamily: 'SF Pro Display',
-                                        fontStyle: 'normal',
-                                        fontSize: '11px',
-                                        lineHeight: '133.4%',
-                                        color: 'ActionDefinationHeroTextColor1.main'
-                                    }}>
-                                        {props.action.model?.PresentationFormat || ""}
-                                    </Typography>
-                                </Box>
-                                <Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 2}}>
-                                    <Typography 
-                                        variant="actionCardHeader"
-                                        sx={{
-                                        fontWeight: 'normal', 
-                                        fontSize: '12px', 
-                                        lineHeight: '166%'}}>
-                                            Run Time: 
-                                        </Typography>
-                                        <Typography sx={{
-                                            fontFamily: 'SF Pro Display',
-                                            fontStyle: 'normal',
-                                            fontSize: '12px',
-                                            lineHeight: '133.4%',
-                                            color: 'ActionDefinationHeroTextColor1.main'
-                                        }}>
-                                            {(props.action.averageRunTime || 0)/1000 } sec
-                                        </Typography>
-                                </Box>
-                            </Box>
-                        )}
-                        
-                    </Box>
-                    <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "200%"}}/>
-                    </Box>
-                    <Box sx={{flex: 3, display: 'flex', width: '100%'}}>
-                        <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'flex-start', width: '100%',height:'120px',overflow:'scroll'}}>
-                            <Typography
-                                sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase'}}>
-                                    TAGS
-                             </Typography>
-                            <Box p={1} sx={{overflowY: 'auto', maxHeight: '72px', width: '100%'}}>
-                                <TagHandler entityType="ActionDefinition" entityId={props.action?.model?.Id || "ID"} allowAdd={false} allowDelete={true} tagFilter={{ Scope: labels.entities.ActionDefinition }} inputFieldLocation="TOP"/>
-                            </Box>
-                        </Box>
-                    </Box>
-                    <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "200%"}}/>
-                    </Box>
-                    {/* <Box sx={{flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%'}}>
-                        <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase'}}>
-                            Data Sources
-                        </Typography>
-                    </Box> */}
-                    <Box sx={{flex: 2, width: '100%'}}>
-                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 1, width: '100%', height: '100%'}}>
-                            <Typography sx={{fontFamily: 'SF Pro Text', fontStyle: 'normal', fontSize: '14px', lineHeight: '266%', textTransform: 'uppercase', flex: 1}}>
-                                EXECUTE
-                            </Typography>
-                            <IconButton sx={{flex: 2, height: '50%'}} onClick={handleExecute}>
-                                <img src={ExecuteImage} style={{width: '40px', height: '40px'}} alt="Execute"/>
-                            </IconButton>
-                        </Box>
-                    </Box>
-                    <Box sx={{margin: "0px 4px 0px 4px", display: "flex", alignItems: "center"}}>
-                        <Divider orientation="vertical" sx={{height: "100%"}}/>
-                    </Box>
-                    <Box sx={{flex: 2, width: '100%', display: 'flex', flexDirection: 'column', maxHeight: '100%', overflowY: 'auto'}}>
-                        {/* <IconButton>
-                            <img src={FavouriteIcon} alt="favoutite"/>
-                        </IconButton> */}
-                        <Tooltip arrow title="Edit">
-                            <IconButton onClick={edit}>
-                                <EditIcon/>
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip arrow title="Duplicate">
-                            <IconButton onClick={handleCopy}>
-                                <ContentCopyIcon/>
-                            </IconButton>
-                        </Tooltip>
-                        <IconButton onClick={handleMenuOpen}>
-                            <img src={OptionIcon} alt="Options"/>
+                            </StyledTypographyApplicationName >
+                            {props.isWorkflow ?
+                            <StyledTypographyApplicationformCreatedOnString>
+                                Output : <b>{props.action.model?.PresentationFormat || ""}</b> 
+                            </StyledTypographyApplicationformCreatedOnString>:
+                            <StyledTypographyApplicationformCreatedOnString>
+                                Output : <b>{props.action.model?.PresentationFormat || ""}</b> 
+                            </StyledTypographyApplicationformCreatedOnString>
+                            }
+                        </Box>    
+                        <IconButton sx={{ ml: 'auto' }} onClick={handleMenuOpen}>
+                            <MoreHorizIcon />
                         </IconButton>
                         <Menu
-                            anchorEl={menuAnchor} 
-                            open={open} 
-                            onClose={() => {setMenuAnchor(null)}}
+                            anchorEl={menuAnchor}
+                            open={open}
+                            onClose={() => { setMenuAnchor(null) }}
                             anchorOrigin={{
                                 vertical: 'top',
                                 horizontal: 'left',
-                                }}
-                                transformOrigin={{
+                            }}
+                            transformOrigin={{
                                 vertical: 'top',
                                 horizontal: 'left',
-                        }}>
-                            <MenuItem onClick={handleDialogOpen} value={0}><DeleteIcon /> Delete </MenuItem>
+                            }}>
+                            <MenuItem sx={{ gap: 2 }} onClick={handleCopy}><ContentCopyIcon /> Duplicate</MenuItem>
+                            <MenuItem sx={{ gap: 2 }} onClick={handleDialogOpen}><DeleteIcon /> Delete</MenuItem>
+                            <MenuItem sx={{ gap: 2 }} onClick={edit}><EditIcon /> Edit</MenuItem>
                         </Menu>
                     </Box>
+                    <Box sx={{ ml:6 ,my:1}}>
+                        {collapsedView?
+                        <StyledTypographyApplicationDescription>
+                            {props.action.model?.Description || "Description"}
+                        </StyledTypographyApplicationDescription>
+                        :<></>}
+                    </Box>
+
+
+                    <Box sx={{ p: 1, display: 'flex', backgroundColor: '#DDDDDD' }}>
+                        <Box sx={{ml:5}}>
+                            <StyledTypographyApplicationformCreatedOnString>
+                                Created By : <b>{props.action.model?.CreatedBy || ""} | </b>Created On : <b>{new Date(props.action.model?.CreatedOn || "").toDateString()}</b>
+                            </StyledTypographyApplicationformCreatedOnString>
+                            <StyledTypographyApplicationformInfoString>
+                                {ApplicationInfoString()}
+                            </StyledTypographyApplicationformInfoString>
+                            <StyledTypographyApplicationformCreatedOnString>
+                                Updated By : <b>{props.action.model?.UpdatedBy || "Creator"} | </b>Updated On : <b>{new Date(props.action.model?.UpdatedOn || props.action.model?.CreatedOn || "").toDateString()}</b>
+                            </StyledTypographyApplicationformCreatedOnString>
+                        </Box>
+                        <Button onClick={handleExecute} variant='contained' color='info' sx={{ ml: 'auto', height: '30px', borderRadius: '5px', alignSelf: 'center'}}>
+                            Run
+                        </Button>
+                    </Box>
+                    <Box>
+                        <Box sx={{display:'flex',justifyContent:'flex-end'}}>
+                            <StyledButtonActionCard  onClick={edit} >
+                                Edit
+                            </StyledButtonActionCard >
+                            <StyledButtonActionCard  onClick={handleDialogOpen}>
+                                Delete
+                            </StyledButtonActionCard >
+                        </Box>
+                    </Box>
+
                 </Box>
-            </Card>
+            </StyledApplicationCard>
         </Box>
     )
 }
