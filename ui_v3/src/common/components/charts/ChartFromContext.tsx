@@ -12,11 +12,13 @@ import ChartGroups from "../../../enums/ChartGroups"
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
 import { v4 as uuidv4 } from 'uuid'
 import useCreateDashboard from "./hooks/useCreateDashboard"
+import useGetDashboardsForChart from "./hooks/useGetDashboardsForChart"
 
 
 interface ChartFromContextProps {
     chart: ChartWithDataAndOptions,
-    onChartModelChange: (chartId: string, chartModel: ChartModel) => void
+    onChartModelChange: (chartId: string, chartModel: ChartModel) => void,
+    onAssignedDashboardsChange: (chartId: string, dashboards: Dashboard[]) => void
 }
 
 const ChartFromContext = (props: ChartFromContextProps) => {
@@ -24,6 +26,7 @@ const ChartFromContext = (props: ChartFromContextProps) => {
     const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
     const open = Boolean(menuAnchor)
     const filter = createFilterOptions<Dashboard>()
+    const [assignedDashboards, setAssignedDashboard] = React.useState<Dashboard[] | undefined>()
     
     React.useEffect(() => {
         console.log("HERE")
@@ -31,6 +34,14 @@ const ChartFromContext = (props: ChartFromContextProps) => {
     }, [props.chart.options])
 
     const [dashboardData, isDashboardLoading, dashboardDataError, refetchDashboards] = useGetDashboardDetails({filter: {}})
+
+    const handleGetAssignedDashboards = (dashboards: Dashboard[]) => {
+        if(!assignedDashboards) {
+            setAssignedDashboard(dashboards)
+        }
+    }
+
+    const fetchAssignedDashboardsQuery = useGetDashboardsForChart({filter: {Id: props.chart.data.model?.Id}, queryParams: {onSuccess: handleGetAssignedDashboards}})
     console.log(props.chart)
 
     const handleMenuOpenClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,25 +53,29 @@ const ChartFromContext = (props: ChartFromContextProps) => {
     }
     const saveDashboard = useCreateDashboard({})
 
-    const handleDashboardChange = (newDashboard: Dashboard) => {
-        const isNewDashboard = newDashboard.Name?.includes("New Dashboard: ")
-        if(isNewDashboard) {
-            const newDashboardModel: Dashboard = {
-                Name: newDashboard.Name?.substring(15),
-                CreatedOn: Date.now(),
-                CreatedBy: userSettingsSingleton.userEmail,
-                Id: uuidv4()
-            }
-
-            saveDashboard.mutate(newDashboardModel, {
-                onSuccess: () => {
-                    props.onChartModelChange(props.chart?.data?.model?.Id || "ID", {...props.chart.data.model, DashboardId: newDashboardModel.Id})
-                    refetchDashboards()
+    const handleDashboardChange = (newDashboards: Dashboard[]) => {
+        const finalDashboards = newDashboards.map(newDashboard => {
+            const isNewDashboard = newDashboard.Name?.includes("New Dashboard: ")
+            if(isNewDashboard) {
+                const newDashboardModel: Dashboard = {
+                    Name: newDashboard.Name?.substring(15),
+                    CreatedOn: Date.now(),
+                    CreatedBy: userSettingsSingleton.userEmail,
+                    Id: uuidv4()
                 }
-            })
-        } else {
-            props.onChartModelChange(props.chart?.data?.model?.Id || "ID", {...props.chart.data.model, DashboardId: newDashboard.Id})
-        }
+
+                saveDashboard.mutate(newDashboardModel, {
+                    onSuccess: () => {
+                        refetchDashboards()
+                    }
+                })
+                return newDashboardModel
+            } else {
+                return newDashboard
+            }
+        })
+        setAssignedDashboard(finalDashboards)
+        props.onAssignedDashboardsChange(props.chart.data.model?.Id!, finalDashboards)
     }
 
     return (
@@ -94,7 +109,8 @@ const ChartFromContext = (props: ChartFromContextProps) => {
                     <LoadingWrapper isLoading={isDashboardLoading} data={dashboardData} error={dashboardDataError}>
                         <Autocomplete
                             fullWidth
-                            value={dashboardData.find(dashboard => dashboard?.model?.Id === props.chart.data.model?.DashboardId)?.model}
+                            multiple={true}
+                            value={assignedDashboards}
                             onChange={(event, value, reason, details) => {
                                 if(!!value){
                                     handleDashboardChange(value)
@@ -111,6 +127,8 @@ const ChartFromContext = (props: ChartFromContextProps) => {
                                 }
                                 return filtered;
                             }}
+                            disableCloseOnSelect
+                            filterSelectedOptions
                             renderInput={(params) => (
                                 <TextField
                                     {...params}

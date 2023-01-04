@@ -65,7 +65,8 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
             })
             chartQueriesState.updateChart?.mutate({
                 filter: {Id: chart.data.model?.Id},
-                newProperties: {...chart.data.model}
+                newProperties: {...chart.data.model},
+                assignedDashboards: chart.assignedDasboards
             })
             // {
             //     onSuccess: (data) => {

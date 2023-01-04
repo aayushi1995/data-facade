@@ -107,6 +107,12 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "GET", endpoint: "/getChartData", inputPayload: Entity.Chart): Promise<CustomInterface.ChartWithData[]>; 
 	
 	/**
+	Gives you the list of chart with it's data and layout for a given dashboard
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getChartsForDashboard", inputPayload: Entity.Dashboard): Promise<CustomInterface.DashboardChartWithData[]>; 
+	
+	/**
 	Gives you the dashboards based on filter
 	*/
 	
@@ -117,6 +123,12 @@ export class Fetcher {
 	*/
 	
 	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboardDetails", inputPayload: Entity.Dashboard): Promise<CustomInterface.DashboardDetails[]>; 
+	
+	/**
+	Gives you the list of dashboards for a chart. Filter should always point to a unique chart for this API
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboardForChart", inputPayload: Entity.Chart): Promise<Entity.Dashboard[]>; 
 	
 	/**
 	Gives you the the action definitions of the types that should be visible to the user.

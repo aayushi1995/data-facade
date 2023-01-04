@@ -102,7 +102,26 @@ JobsHeader.propTypes = {
 
 
 export function JobsFiltered(props) {
-    const actionProperties = {...props.actionProperties, "excludeExecutionOutput": true}
+    const actionProperties = {...props.actionProperties, "excludeExecutionOutput": true, "columnsToRetrieve": [
+        {
+            UniqueName: "ActionInstanceName"
+        },
+        {
+            UniqueName: "ScheduledTime"
+        },
+        {
+            UniqueName: "ExecutionCompletedOn"
+        },
+        {
+            UniqueName: "Id"
+        },
+        {
+            UniqueName: "InstanceId"
+        },
+        {
+            UniqueName: "Status"
+        }
+    ]}
     console.log(actionProperties)
     const jobsKey = [labels.entities.ActionExecution,
         actionProperties];

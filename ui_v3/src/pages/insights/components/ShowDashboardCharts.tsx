@@ -8,14 +8,28 @@ import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import { ShowChartsProps } from "../../../common/components/charts/types/ShowChartsProps";
 import '../presentation/react-grid.css'
 import { DashboardTextBoxConfig } from "../SingleDashboardView";
+import { DashboardChartWithData } from "../../../generated/interfaces/Interfaces";
+import { useShowDashboardCharts } from "../hooks/useShowDashboardCharts";
 
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-const ShowDashboardCharts = (props: ShowChartsProps & {textBoxes?: DashboardTextBoxConfig[], onTextBoxValueChange?: (id: string, prop: string, value: string) => void}) => {
-    const {chartDataOptions, onChartTypeChange, onChartNameChange, onChartDashboardChange, updateLayout, getUILayout, onTextBoxValueChange} = useShowCharts(props);
+export type ShowDashboardChartProps = {
+    chartWithDataAndLayout: DashboardChartWithData[],
+    onChartChange?: (chartWithData: DashboardChartWithData[]) => void 
+    textBoxes?: DashboardTextBoxConfig[], 
+    onTextBoxValueChange?: (id: string, prop: string, value: string) => void,
+    handleUpdateChartLayout?: (chartId: string, layout: string) => void
+}
 
-    if (chartDataOptions) {
+const ShowDashboardCharts = (props: ShowDashboardChartProps) => {
+    const {chartWithDataAndLayout, onChartTypeChange, onChartNameChange, onChartDashboardChange, updateLayout, onTextBoxValueChange, formCharts} = useShowDashboardCharts(props);
+
+    React.useEffect(() => {
+        formCharts()
+    }, [props.chartWithDataAndLayout])
+
+    if (chartWithDataAndLayout) {
         return (
             <ResponsiveReactGridLayout 
                 rowHeight={2}
@@ -25,12 +39,12 @@ const ShowDashboardCharts = (props: ShowChartsProps & {textBoxes?: DashboardText
                 onDragStop={updateLayout}
                 onResizeStop={updateLayout}
             >
-                {chartDataOptions?.map((chart, index) => {
+                {chartWithDataAndLayout?.map((chart, index) => {
                     if(!!chart) {
-                        console.log(getUILayout(chart.model, index))
-                        return <div key={chart.model.Id} data-grid={{...getUILayout(chart.model, index), i: chart.model.Id}}>
+                        const layout = chart.layout ? chart.layout : {x: index % 2 === 0 ? 0 : 7, y: (index/2)*40, w: 7, h: 40}
+                        return <div key={chart?.model?.Id} data-grid={{...layout, i: chart?.model?.Id}}>
                             <Card sx={{height: '100%', width: '100%', boxShadow: lightShadows[27]}}>
-                                <ChartWithMetadata onChartTypeChange={onChartTypeChange} chart={chart}
+                                <ChartWithMetadata onChartTypeChange={onChartTypeChange} chart={chart || {}}
                                                 onChartNameChange={onChartNameChange}
                                                 onChartDashboardChange={onChartDashboardChange}/>
                             </Card>

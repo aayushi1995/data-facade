@@ -1,7 +1,7 @@
 import { Grid, Card } from "@mui/material"
 import React from "react"
 import { lightShadows } from "../../../css/theme/shadows"
-import { Chart as ChartModel } from "../../../generated/entities/Entities"
+import { Chart as ChartModel, Dashboard } from "../../../generated/entities/Entities"
 import NoData from "../NoData"
 import ChartFromContext from "./ChartFromContext"
 import { ChartQueriesContext, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext"
@@ -23,6 +23,16 @@ const ShowChartsFromContext = () => {
         })
     }
 
+    const onAssignedDashboardsChange = (chartId: string, dashboards: Dashboard[]) => {
+        setAndBuildChartsState({
+            type: "ChangeAssignedDashboard",
+            payload: {
+                chartId: chartId,
+                dashboards: dashboards
+            }
+        })
+    }
+
     return (
         <Grid container spacing={1} sx={{padding: 2}}>
             {saveAndBuildChartsState.Charts?.map(chart => {
@@ -30,7 +40,7 @@ const ShowChartsFromContext = () => {
                     return (
                         <Grid item xs={12} sx={{minHeight: '400px'}}>
                             <Card sx={{height: '100%', width: '100%'}}>
-                                <ChartFromContext chart={chart} onChartModelChange={onChartModelChange}/>
+                                <ChartFromContext chart={chart} onChartModelChange={onChartModelChange} onAssignedDashboardsChange={onAssignedDashboardsChange}/>
                             </Card>
                         </Grid>
                     )

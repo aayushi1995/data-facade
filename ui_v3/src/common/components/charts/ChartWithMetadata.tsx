@@ -2,7 +2,7 @@
 import { Box, Autocomplete, TextField, Button, IconButton, Popover, Dialog } from "@mui/material";
 import { BaseChartsConfig } from "./BaseChartsConfig";
 import { Chart} from "./Chart";
-import { Chart as ChartModel } from "../../../generated/entities/Entities";
+import { Chart as ChartModel, Dashboard } from "../../../generated/entities/Entities";
 import OptionsIcon from "../../../../src/images/more-horizontal.svg"
 import getChartTypeOptions from "../../util/getChartTypeOptions";
 import React from "react"
@@ -13,6 +13,7 @@ import ViewActionExecution from "../../../pages/view_action_execution/VIewAction
 import useGetDashboardDetails from "../../../pages/insights/hooks/useGetDashboardDetails";
 import LoadingWrapper from "../LoadingWrapper";
 import {EChartUISpecificConfig} from "./types/EChartUISpecificConfig";
+import useGetDashboardsForChart from "./hooks/useGetDashboardsForChart";
 
 interface ChartWithMetadataProps {
     chart: {config: BaseChartsConfig, uiConfig: EChartUISpecificConfig, model: ChartModel},
@@ -24,10 +25,19 @@ interface ChartWithMetadataProps {
 const ChartWithMetadata = (props: ChartWithMetadataProps) => {
     
     const [menuAnchor, setMenuAnchor] = React.useState<null | HTMLElement>(null)
+    const [assignedDashboards, setAssignedDashboards] = React.useState<Dashboard[] | undefined>()
     const [dialogState, setDialogState] = React.useState(false)
     const open = Boolean(menuAnchor)
     const updateChart = useUpdateChart()
     const [dashboardData, isDashboardLoading, dashboardDataError] = useGetDashboardDetails({filter: {}})
+
+    const handleGetAssignedDashbords = (dashboards: Dashboard[]) => {
+        if(!assignedDashboards){
+            setAssignedDashboards(dashboards)
+        }
+    }
+
+    const fetchChartsForDashboard = useGetDashboardsForChart({filter: {Id: props.chart.model.Id}, queryParams: {onSuccess: handleGetAssignedDashbords}})
 
     const handlePopoverClose = () => {
         setMenuAnchor(null)
@@ -45,9 +55,10 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
             newProperties: {
                 Name: props.chart.model.Name,
                 Type: props.chart.model.Type,
-                DashboardId: props.chart.model.DashboardId,
                 Layout: props.chart.model.Layout
-            }
+            },
+            dashboardIds: assignedDashboards?.map(dashboard => dashboard.Id || "noId")
+
         })
     }
 
@@ -103,15 +114,17 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
                                 />
                             )}
                         />
-                        <LoadingWrapper isLoading={isDashboardLoading} data={dashboardData} error={dashboardDataError}>
+                        <LoadingWrapper isLoading={fetchChartsForDashboard.isLoading || isDashboardLoading} data={assignedDashboards} error={dashboardDataError}>
                             <Autocomplete
                                 fullWidth
-                                value={dashboardData.find(dashboard => dashboard?.model?.Id === props.chart.model.DashboardId)?.model}
+                                multiple={true}
+                                value={assignedDashboards}
                                 onChange={(event, value, reason, details) => {
                                     if(!!value){
-                                        props.onChartDashboardChange?.(props.chart.model.Id || "id", value.Id || "NA")
+                                        setAssignedDashboards(value)
                                     }
                                 }}
+                                filterSelectedOptions
                                 getOptionLabel={(dashboardDataElement) => dashboardDataElement?.Name || "NA"}
                                 options={dashboardData.map((dashboard) => {return dashboard.model || {}})}
                                 renderInput={(params) => (
@@ -122,6 +135,7 @@ const ChartWithMetadata = (props: ChartWithMetadataProps) => {
                                         placeholder=""
                                     />
                                 )}
+                                disableCloseOnSelect
                             />
                         </LoadingWrapper>
                        

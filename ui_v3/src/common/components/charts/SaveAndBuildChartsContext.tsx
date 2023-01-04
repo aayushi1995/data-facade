@@ -2,7 +2,7 @@ import React from "react";
 import { useMutation, UseMutationResult, useQuery, UseQueryResult } from "react-query";
 import dataManager from "../../../data_manager/data_manager";
 import { Fetcher } from "../../../generated/apis/api";
-import { Chart } from "../../../generated/entities/Entities";
+import { Chart, Dashboard } from "../../../generated/entities/Entities";
 import { ActionExecutionIncludeDefinitionInstanceDetailsResponse, ChartWithData } from "../../../generated/interfaces/Interfaces";
 import labels from "../../../labels/labels";
 import formChartOptions from "../../util/formChartOptionsFromContext";
@@ -18,7 +18,7 @@ type Filters = {
 type ChartsQueriesType = {
     fetchExecution?: UseQueryResult<ActionExecutionIncludeDefinitionInstanceDetailsResponse[], unknown>,
     fetchCharts?: UseQueryResult<ChartWithData[], unknown>,
-    updateChart?: UseMutationResult<Chart[], unknown, {filter: Chart, newProperties: Chart}, unknown>,
+    updateChart?: UseMutationResult<unknown, unknown, {filter: Chart, newProperties: Chart, assignedDashboards: Dashboard[] | undefined}, unknown>,
     uploadFileToS3Mutation?: UseMutationResult<unknown, unknown, {requestUrl: string, headers: any, chart: ChartWithData}, unknown>,
     fetchPresignedUrlMutation?: UseMutationResult<unknown, unknown, {expirationDurationInMinutes: number, uploadPath: string, chart: ChartWithData}, unknown>
 }
@@ -35,7 +35,8 @@ export type ChartWithDataAndOptions = {
     columns?: {
         name: string,
         values: (string | number | boolean)[]
-    }[]
+    }[],
+    assignedDasboards?: Dashboard[]
 }
 
 type SaveAndBuildChartsContextType = {
@@ -121,6 +122,14 @@ export type AssignYAxisToChart = {
     }
 }
 
+export type ChangeAssignedDashboard = {
+    type: 'ChangeAssignedDashboard',
+    payload: {
+        chartId: string,
+        dashboards: Dashboard[]
+    }
+}
+
 type SaveAndBuildChartContextAction = SetExecutionId |
                                       SetExecutionDetails |
                                       SetChartsWithDataAndOptions |
@@ -128,7 +137,8 @@ type SaveAndBuildChartContextAction = SetExecutionId |
                                       SwitchAxes |
                                       ChangeLabel |
                                       AssignXAxisToChart |
-                                      AssignYAxisToChart
+                                      AssignYAxisToChart |
+                                      ChangeAssignedDashboard
 
 const reducer = (state: SaveAndBuildChartsContextType, action: SaveAndBuildChartContextAction): SaveAndBuildChartsContextType => {
 
@@ -314,6 +324,17 @@ const reducer = (state: SaveAndBuildChartsContextType, action: SaveAndBuildChart
                 })
             }
         }
+        case 'ChangeAssignedDashboard': {
+            return {
+                ...state,
+                Charts: state.Charts.map(chart => chart.data.model?.Id !== action.payload.chartId ? chart : {
+                    ...chart,
+                    assignedDasboards: action.payload.dashboards
+                })
+            }
+        }
+
+
         default: {
             return state
         }
@@ -344,7 +365,7 @@ const SaveAndBuildChartContextProvider = ({children}: {children: React.ReactElem
         }
     )
 
-    const fetchedDataManager = dataManager.getInstance as {s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function}
+    const fetchedDataManager = dataManager.getInstance as {s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, patchData: Function}
     const fetchPresignedUrlMutation = useMutation(
         "GetS3PreSignedUrl",
         (config: {expirationDurationInMinutes: number, uploadPath: string, chart: ChartWithData}) => {
@@ -373,7 +394,12 @@ const SaveAndBuildChartContextProvider = ({children}: {children: React.ReactElem
 
     const updateChart = useMutation(
         "UpdateChart",
-        (config: {filter: Chart, newProperties: Chart}) => Fetcher.fetchData("PATCH", "/updateChart", {filter: config.filter, newProperties: config.newProperties})
+        (config: {filter: Chart, newProperties: Chart, assignedDashboards?: Dashboard[]}) => fetchedDataManager.patchData("Chart", {
+            filter: config.filter,
+            newProperties: config.newProperties,
+            "assignChartToDashboard": true,
+            withDashboardIds: config.assignedDashboards?.map(dashboard => dashboard.Id)
+        })
     )
 
 

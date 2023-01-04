@@ -8,26 +8,34 @@ import LoadingIndicator from "../../common/components/LoadingIndicator"
 import LoadingWrapper from "../../common/components/LoadingWrapper"
 import { TabPanel } from "../../common/components/workflow/create/SelectAction/SelectAction"
 import { useGetExecutionCharts } from "../../common/hooks/useGetExecutionCharts"
-import { ChartWithData, DashboardDetails } from "../../generated/interfaces/Interfaces"
+import { ChartWithData, DashboardChartWithData, DashboardDetails } from "../../generated/interfaces/Interfaces"
 import DashboardHero from "./components/DashboardHero"
 import ShowDashboardCharts from "./components/ShowDashboardCharts"
 import useGetDashboardDetails from "./hooks/useGetDashboardDetails"
 import {v4 as uuidv4} from "uuid"
 import useSaveDashboard from "./hooks/useSaveDashboard"
+import useGetDashboardChart from "./hooks/useGetDashboardChart"
+import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper"
 
 export interface DashboardTextBoxConfig {
     layout: string,
     text: string,
     id: string
 }
+
+export interface ChartsConfig {
+    layout?: string,
+    Id: string
+}
 export interface DashboardConfig {
-    textBoxes?: DashboardTextBoxConfig[]
+    textBoxes?: DashboardTextBoxConfig[],
+    charts?: ChartsConfig[]
 }
 
 const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>) => {
     const dashboardId = match.params.dashboardId
     const [chartFetched, setChartFetched] = React.useState(false)
-    const [chartWithData, setChartWithData] = React.useState<ChartWithData[] | undefined>()
+    const [chartWithData, setChartWithData] = React.useState<DashboardChartWithData[] | undefined>()
     const [dashboardDetails, setDashboardDetails] = React.useState<DashboardDetails | undefined>()
     const updateDashboard = useSaveDashboard()
 
@@ -37,20 +45,19 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
         setChartFetched(true)
     }
 
+    const fetchDashboardChartQuery = useGetDashboardChart({filter: {Id: dashboardId}, queryParams: {enabled: dashboardData !== undefined && !chartFetched, onSuccess: handleChartFetched}})
+
     React.useEffect(() => {
         refetch()
     }, [dashboardId]) 
 
-    const [chartData, isChartDataLoading, isChartError] = useGetExecutionCharts({filter: {DashboardId: dashboardId}, handleSucess: handleChartFetched, enabled: dashboardData !== undefined && !chartFetched})
-
     const updateChart = useUpdateChart()
 
     React.useEffect(() => {
-        if(!!chartData) {
-            console.log(chartData)
-            setChartWithData(chartData)
+        if(!!fetchDashboardChartQuery.data) {
+            setChartWithData(fetchDashboardChartQuery.data)
         }
-    }, [chartData])
+    }, [fetchDashboardChartQuery.data])
 
     React.useEffect(() => {
         if(!!dashboardData && dashboardData.length) {
@@ -58,7 +65,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
         }
     }, [dashboardData])
 
-    const onChartChange = (chartData: ChartWithData[]) => {
+    const onChartChange = (chartData: DashboardChartWithData[]) => {
         setChartWithData(chartData)
     }
 
@@ -66,20 +73,23 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
         chartWithData?.forEach(chart => {
             updateChart.mutate({
                 filter: {
-                    Id: chart?.model?.Id || "NA"
+                    Id: chart?.chartWithData?.model?.Id || "NA"
                 }, 
                 newProperties: {
-                    Name: chart?.model?.Name,
-                    Type: chart?.model?.Type,
-                    DashboardId: chart?.model?.DashboardId,
-                    Layout: chart?.model?.Layout
+                    Name: chart?.chartWithData?.model?.Name,
+                    Type: chart?.chartWithData?.model?.Type,
+                    DashboardId: chart?.chartWithData?.model?.DashboardId
                 }
             })
+        })
+        const finalConfig = JSON.stringify({
+            ...JSON.parse(dashboardDetails?.model?.Config || "{}") as DashboardConfig,
+            charts: chartWithData?.map(chart => ({Id: chart.chartWithData?.model?.Id, layout: chart.layout}))
         })
 
         updateDashboard.mutate({
             filter: {Id: dashboardDetails?.model?.Id},
-            newProperties: dashboardDetails?.model || {}
+            newProperties: {...dashboardDetails?.model, Config: finalConfig} || {}
         })
     }
 
@@ -89,7 +99,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
 
     const handleAddTextBox = () => {
         const id = uuidv4()
-        const items = chartData?.length || 0 + (getTextBoxes()?.length || 0)
+        const items = chartWithData?.length || 0 + (getTextBoxes()?.length || 0)
         const newTextBox: DashboardTextBoxConfig = {
             text: "",
             id: id,
@@ -102,7 +112,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
             })
         }
         const finalTextBoxes = [...getTextBoxes() || [], newTextBox]
-        assignNewConfig(finalTextBoxes)
+        assignNewConfigTextBoxes(finalTextBoxes)
     }
 
     const onTextBoxValueChange = (id: string, prop: string, value: string) => {
@@ -110,13 +120,38 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
             ...textBox,
             [prop]: value
         } : textBox)
-        assignNewConfig(newTextBoxes)
+        assignNewConfigTextBoxes(newTextBoxes)
     }
 
-    const assignNewConfig = (newTextBoxes: DashboardTextBoxConfig[] | undefined) => {
+    const assignNewConfigTextBoxes = (newTextBoxes: DashboardTextBoxConfig[] | undefined) => {
         const config = JSON.stringify({
             ...JSON.parse(dashboardDetails?.model?.Config || "{}") as DashboardConfig,
             textBoxes: newTextBoxes
+        })
+        setDashboardDetails(dashboard => ({
+            ...dashboard,
+            model: {
+                Config: config
+            }
+        }))
+    }
+
+    const handleUpdateChartLayout = (chartId: string, layout: string) => {
+        const newCharts = chartWithData?.map(chartWithDataAndLayout => chartWithDataAndLayout.chartWithData?.model?.Id === chartId ? {
+            Id: chartWithDataAndLayout?.chartWithData?.model?.Id!,
+            layout: layout
+        } : {
+            Id: chartWithDataAndLayout?.chartWithData?.model?.Id!,
+            layout: chartWithDataAndLayout?.layout
+        })
+        assignNewConfigCharts(newCharts)
+
+    }
+
+    const assignNewConfigCharts = (newCharts: ChartsConfig[] | undefined) => {
+        const config = JSON.stringify({
+            ...JSON.parse(dashboardDetails?.model?.Config || "{}") as DashboardConfig,
+            charts: newCharts
         })
         setDashboardDetails(dashboard => ({
             ...dashboard,
@@ -155,9 +190,9 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
                     
                 </Box>
                 <Box sx={{pt: 2, minHeight: "100%"}}>
-                    <LoadingWrapper data={chartData} isLoading={isChartDataLoading} error={isChartError}>
-                        <ShowDashboardCharts chartWithData={chartData || []} onChartChange={onChartChange} textBoxes={getTextBoxes()} onTextBoxValueChange={onTextBoxValueChange}/>
-                    </LoadingWrapper>
+                    <ReactQueryWrapper {...fetchDashboardChartQuery}>
+                        {() => <ShowDashboardCharts chartWithDataAndLayout={chartWithData || []} onChartChange={onChartChange} textBoxes={getTextBoxes()} onTextBoxValueChange={onTextBoxValueChange} handleUpdateChartLayout={handleUpdateChartLayout}/>}
+                    </ReactQueryWrapper>
                 </Box>
             </Box>
         </React.Fragment>
