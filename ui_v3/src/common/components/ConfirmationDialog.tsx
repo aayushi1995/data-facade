@@ -7,10 +7,10 @@ export interface ConfirmationDialogProps {
     messageToDisplay: string,
     acceptString:string,
     declineString:string,
-    onAccept: Function,
-    onDecline: Function,
+    onAccept?: Function,
+    onDecline?: Function,
     dialogOpen: boolean,
-    onDialogClose: ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
+    onDialogClose?: ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
 }
  
 const ConfirmationDialog = (props: ConfirmationDialogProps) => {
@@ -28,7 +28,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
                 </Box>
                 <Box sx={{textAlign:'right',width:'55%'}}>
                     <Button color="error" >
-                        <CloseIcon onClick={props.onDecline}/>
+                        <CloseIcon onClick={() => props?.onDecline?.()}/>
                     </Button>
                 </Box>
             </Box>
@@ -41,10 +41,10 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
                     {props.messageToDisplay}
                 </Box>
                 <Box sx={{display: 'flex', alignItems: 'end', justifyContent: 'end', mt:3,gap: 3}}>
-                    <Button sx={{width:"150px", borderRadius:'7px'}} variant="outlined" color="primary" onClick={() => props.onDecline()}>
+                    <Button sx={{width:"150px", borderRadius:'7px'}} variant="outlined" color="primary" onClick={() => props?.onDecline?.()}>
                         {props.declineString}
                     </Button>
-                    <Button sx={{width:"150px", borderRadius:'7px'}}  variant="contained" color="error" onClick={() => props.onAccept()}>
+                    <Button sx={{width:"150px", borderRadius:'7px'}}  variant="contained" color="error" onClick={() => props?.onAccept?.()}>
                         {props.acceptString}
                     </Button>
                     

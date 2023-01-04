@@ -1,7 +1,8 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Box, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField} from "@mui/material";
+import { Box, Dialog, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField} from "@mui/material";
 import React from 'react';
 import ActionDefinitionVisibility from '../../../enums/ActionDefinitionVisibility';
+import CodeIcon from '@mui/icons-material/Code';
 import { Application } from '../../../generated/entities/Entities';
 import ActionHeroApplicationSelector from '../presentation/custom/ActionHeroApplicationSelector';
 import ActionHeroGroupSelector from '../presentation/custom/ActionHeroGroupSelector';
@@ -18,6 +19,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import InfoIcon from '@mui/icons-material/Info';
 import { RunButton, SaveButton, TestButton } from '../presentation/styled_native/ActionHeaderButton';
 import ActionTypeToSupportedRuntimes from '../../../custom_enums/ActionTypeToSupportedRuntimes';
+import ConfirmationDialog from '../../../common/components/ConfirmationDialog';
+import { triggerAsyncId } from 'async_hooks';
 export type ActionHeaderProps = {
     actionName?: string,
     actionDescription?: string,
@@ -26,6 +29,7 @@ export type ActionHeaderProps = {
     publishStatus?: string,
     language?: string,
     visibility?: string,
+    generatedCodeDialogState: {open: boolean, text: string, loading: boolean},
     onChangeHandlers?: {
         onNameChange?: (newName?: string) => void,
         onDescriptionChange?: (newDescription?: string) => void,
@@ -37,12 +41,16 @@ export type ActionHeaderProps = {
         onTest: () => void,
         onSave: () => void,
         onDuplicate: () => void,
-        onRun: () => void
+        onRun: () => void,
+        onGenerateCode: () => void,
+        onAppendGeneratedCode: () => void,
+        onCloseGeneratedCodeDialog: () => void
     }
 }
 
 
 function ActionHeader(props: ActionHeaderProps) {
+    const { generatedCodeDialogState } = props
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         props?.onChangeHandlers?.onNameChange?.(event.target.value)
     }
@@ -82,6 +90,17 @@ function ActionHeader(props: ActionHeaderProps) {
 
     return (
         <ActionHeaderCard sx={{ display: "flex", flexDirection: "row" }}>
+            <ConfirmationDialog
+                dialogOpen={generatedCodeDialogState.open}
+                messageHeader="Generated Code"
+                messageToDisplay={generatedCodeDialogState.loading ? "Loading..." : generatedCodeDialogState.text}
+                acceptString="Append to Code"
+                declineString="Close"
+                onAccept={props?.actionHandler?.onAppendGeneratedCode}
+                onDecline={props?.actionHandler?.onCloseGeneratedCodeDialog}
+                onDialogClose={props?.actionHandler?.onCloseGeneratedCodeDialog}
+                
+            />
             <ActionHeaderCardInputArea sx={{ display: "flex", flexDirection: "row", height: "100%", gap: 2,px:2,py:3}}>
                 <Box sx={{ display: "flex", alignItems: "center"}}>
                     <KeyboardArrowDownIcon/>
@@ -184,6 +203,7 @@ function ActionHeader(props: ActionHeaderProps) {
                                 vertical: 'top',
                                 horizontal: 'left',
                         }}>
+                            <MenuItem sx={{gap:2}} onClick={props?.actionHandler?.onGenerateCode}><CodeIcon/>Generate Code</MenuItem>
                             <MenuItem sx={{gap:2}} onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</MenuItem>
                             <MenuItem sx={{gap:2}} onClick={props?.actionHandler?.onSave}> {(buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? <InfoIcon sx={{ transform: "scale(0.7)"}}/> : <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }Save</MenuItem>
                             <MenuItem sx={{gap:2}}  onClick={props?.actionHandler?.onRun}> <PlayCircleOutlineIcon sx={{ transform: "scale(0.8)"}}/> Run </MenuItem>

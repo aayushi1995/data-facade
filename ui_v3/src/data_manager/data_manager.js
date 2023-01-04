@@ -161,15 +161,15 @@ const parseApplicationRequestHeader = function (config, token) {
     }
 }
 
-const getTableAndColumnTags = function (tableData, token) {
+const createPostRequestBody = function (bodyContent) {
     return {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${userSettingsSingleton.token}`
         },
-        body: tableData
+        body: bodyContent
     }
 }
 
@@ -286,7 +286,17 @@ dataManager.getInstance.getTableAndColumnTags = async function (tableData) {
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/getTags?email=' + userSettingsSingleton.userEmail, getTableAndColumnTags(tableData, userSettingsSingleton.token))
+    const response = await fetch(endPoint + '/getTags?email=' + userSettingsSingleton.userEmail, 
+        createPostRequestBody(tableData))
+    return response.json()
+}
+
+dataManager.getInstance.getGeneratedCode = async function (requestBody) {
+    if (!isValidUserSettings()) {
+        return;
+    }
+    const response = await fetch(endPoint + '/getGeneratedSql?email=' + userSettingsSingleton.userEmail, 
+        createPostRequestBody(JSON.stringify(requestBody)))
     return response.json()
 }
 

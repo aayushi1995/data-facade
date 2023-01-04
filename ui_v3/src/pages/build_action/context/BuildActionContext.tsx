@@ -212,6 +212,13 @@ type SetActionTemplateTextAction = {
     }
 }
 
+type AddGenerateCodeAction = {
+    type: "AddGenerateCode",
+    payload: {
+        generatedCode: string
+    }
+}
+
 type SetActionGroupAction = {
     type: "SetActionGroup",
     payload: {
@@ -406,6 +413,7 @@ RemoveActionDefinitionTagAction |
 ReAssignActionDefinitionTagAction |
 SetActionTemplateSupportedRuntimeGroupAction |
 SetActionTemplateTextAction |
+AddGenerateCodeAction |
 SetParameterDetailsAction |
 SetParameterTypeAction |
 SetActionDefinitionAction |
@@ -577,6 +585,18 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
+        case "AddGenerateCode": {
+            const activeTemplateCode = state.actionTemplateWithParams.find(actionTemplate => actionTemplate.template.Id===state.activeTemplateId)?.template?.Text
+            const newTemplateCode = activeTemplateCode + "\n\n" + action.payload.generatedCode
+            
+            return reducer(state, {
+                type: "SetActionTemplateText",
+                payload: {
+                    newText: newTemplateCode
+                }
+            })
+        }
+
         case "InferParameters": {
             const activeTemplate = state?.actionTemplateWithParams.find(at => at?.template?.Id===state?.activeTemplateId)
             const inferredParameters = extractParametersFromCode(activeTemplate?.template?.Text, activeTemplate?.template?.Language)
@@ -585,7 +605,6 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 const existingParameterDefinition = existingParameters?.find(p => p?.parameter?.ParameterName===inferredParam?.ParameterName)?.parameter
                 const parameterTag = ( inferredParam.Tag === ActionParameterDefinitionTag.OTHER || inferredParam.Tag === undefined ) ? existingParameterDefinition?.Tag : inferredParam.Tag
                 if(existingParameterDefinition){
-                    console.log(inferredParam, parameterTag, existingParameterDefinition)
                     return {
                         parameter: {
                             ...existingParameterDefinition,
@@ -1115,7 +1134,6 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                         if(match == null){
                             return;
                         }
-                        console.log(match)
                         const name = match?.groups?.["Name"]
                         const displayName = match?.groups?.["DisplayName"] ?? name
                         const description = match?.groups?.["Description"] ?? name
@@ -1157,7 +1175,6 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
 }
 
 const inferInputType = (type?: string) => {
-        console.log(type)
         const inputTypeMapping = [
             ["table", ActionParameterDefinitionInputType.TABLE_NAME],
             ["column_list", ActionParameterDefinitionInputType.COLUMN_LIST],

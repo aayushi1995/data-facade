@@ -37,7 +37,7 @@ const CodeEditor = (props) => {
                     height={"100%"}
                     defaultLanguage={languageToSyntaxMap[props.language || TemplateLanguage.SQL]}
                     onChange={props.onCodeChange || (() => {})}
-                    defaultValue={props.code}
+                    value={props.code}
                     theme={editorTheme}
                     highlight={true}
                     path={props?.actionDefinitionId || "" + fontSize.toString()}
