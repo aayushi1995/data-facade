@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 import Header from './header';
 import Sidebar from './sidebar';
+import BrowserMenu from './browser-menu';
 
 
 
@@ -13,12 +14,15 @@ interface ChildrenProps {
 
 
 const Layout = ({ children }: ChildrenProps) => {
+    const [toggle, setToggle] = React.useState<boolean>(true)
+    const toggleBrowser = () => setToggle(!toggle)
+
     return (
         <Box sx={{ display: 'flex' }}>
             <Header />
-            <Sidebar />
-            <Box component="main" sx={{ flexGrow: 1, pt: 10, pl:5 }}>
-
+            <Sidebar toggle={toggle} toggleBrowser={toggleBrowser} />
+            <Box component="main" sx={{ flexGrow: 1, pt: 10, pl: toggle ? 40 : 2 }}>
+                <BrowserMenu toggle={toggle} toggleBrowser={toggleBrowser}/>
                 {children}
 
             </Box>

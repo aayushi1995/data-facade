@@ -77,6 +77,8 @@ const TableDetailsView = () => {
 
   const data = result.data;
 
+  console.log('data',data)
+
   return (
     <TabContext value={tabState}>
       <React.Fragment>
@@ -102,18 +104,18 @@ const TableDetailsView = () => {
                 <Box sx={{ mt: 3 }}>
                   <TabPanel value={DATA_TABLE_TAB_SUMMARY}>
                     <TableRowExpanded
-                      TableId={data[0].Id}
+                      TableId={data[0] && data[0].Id}
                     />
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_TABLE_VIEW}>
-                    <TableView TableId={data[0].Id}/>
+                    <TableView TableId={data[0] && data[0].Id}/>
                   </TabPanel>
                   <TabPanel value={DATA_TABLE_TAB_COLUMN_VIEW}>
-                    <ColumnView TableId={data[0].Id} />
+                    <ColumnView TableId={data[0] && data[0].Id} />
                   </TabPanel>
                   {/* **** Action Instance And Intermediary Tabs are comnt out for temporary bcz these are not required now */}
                   <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
-                    <ActionInstances TableId={data[0].Id} />
+                    <ActionInstances TableId={data[0] && data[0].Id} />
                   </TabPanel>
                   {/* <TabPanel value={DATA_TABLE_TAB_INTERMEDIARY_TABLES}>
                       <IntermediaryTables TableId={data[0].Id}/>

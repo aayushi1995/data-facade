@@ -163,9 +163,10 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
 
     return (
         <React.Fragment>
-            <Box sx={{display: 'flex', gap: 2, flexDirection: 'column'}}>
+            <Box sx={{p:7}}>
                 <LoadingWrapper isLoading={isDashboardLoading} error={dashboardError} data={dashboardData}>
-                    <Box mt={3}>
+                   
+                       
                         <DashboardHero 
                             mode="EDIT" 
                             name={dashboardData?.[0]?.model?.Name} 
@@ -175,7 +176,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
                             numberOfCharts={dashboardData?.[0]?.numberOfCharts}
                             flowExecutionId={dashboardData?.[0]?.model?.FlowId}    
                         />
-                    </Box>
+                  
                 </LoadingWrapper>
                 <Box sx={{display: 'flex', flexDirection: 'row-reverse', width: '100%', px: 2, gap: 2}}>
                     {updateChart.isLoading ? <LoadingIndicator/> : (

@@ -1,11 +1,13 @@
 
-import { CssBaseline, Drawer, List, ListItemButton, ListItemIcon, ListItem, Collapse, Typography, Divider, Fade, Paper, Popper, PopperPlacementType, Menu, MenuItem, ListItemText, Box } from '@mui/material';
+import { CssBaseline, Drawer, List, ListItemButton, ListItemIcon, ListItem, Collapse, Typography, Divider, Fade, Paper, Popper, PopperPlacementType, Menu, MenuItem, ListItemText, Box, Tooltip, IconButton } from '@mui/material';
 import { withStyles } from "@material-ui/core";
 import { Link, NavLink as RouterLink, useLocation } from 'react-router-dom';
 import items from './menuItems'
 import COLORS from '../assets/theme.color';
 import React, { useState } from 'react';
 import { ConnectWithoutContact, PersonAddAlt1Outlined } from '@mui/icons-material';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import { SLACK_URL, GENERATE_URL_PARAMS } from '../common/config/config';
 import { fontSize } from '@mui/system';
 
@@ -16,6 +18,7 @@ const StyledListItem = withStyles({
         }
     }
 })(ListItemButton);
+
 
 
 const listItemStyle = {
@@ -38,7 +41,25 @@ const routeStyle = {
 const textStyle = {
     fontSize: 12,
 }
-const Sidebar = () => {
+
+const floatStyle = {
+    borderRadius: 0,
+    height: 10,
+    top: 64,
+    left: 45,
+    padding: 0,
+    minHeight: 20,
+    width: 25,
+    background: '#000',
+    color: '#fff'
+}
+
+interface SidebarProps {
+    toggle?: boolean,
+    toggleBrowser?: () => void | undefined
+}
+
+const Sidebar: React.FunctionComponent<SidebarProps> = ({ toggle, toggleBrowser }) => {
     const location = useLocation();
     const collapsibleItems: any = items.filter(item => item.subMenu);
     collapsibleItems.forEach((item: any) => { item['open'] = false })
@@ -56,6 +77,11 @@ const Sidebar = () => {
 
     }
 
+    const toggleButton =  <Tooltip title={toggle ? `Close  Browser` : 'Open Browser'}>
+        <IconButton sx={{ position: 'absolute', bottom: 0, right: 30, color: '#fff' }} onClick={() => toggleBrowser()}>
+            {!toggle ? <ArrowForwardIosOutlinedIcon /> : <ArrowBackIosNewOutlinedIcon />}
+        </IconButton>
+    </Tooltip>
     const handleClick =
         (newPlacement: PopperPlacementType, subMenu: any) =>
             (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -204,7 +230,9 @@ const Sidebar = () => {
                 }}>
                     {users}
                     {slackConnect}
+                   
                 </List>
+                {toggleButton}
             </Drawer></>
     );
 

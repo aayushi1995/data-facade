@@ -328,6 +328,14 @@ dataManager.getInstance.generateUniqueQueryKey = function () {
     return queryKey
 }
 
+
+
+export const fetchEntityBrowser = async (path) => {
+    const res = await fetch(endPoint + `/entityBrowser?path=${path}&email=${userSettingsSingleton.userEmail}`, dummyDataHeader(userSettingsSingleton.token))
+    return res.json();
+};
+
+
 export const useRetreiveData = (entityName, actionProperties, options) => useQuery(
     [entityName, actionProperties],
     () => dataManager.getInstance.retreiveData(entityName, actionProperties),
@@ -355,6 +363,8 @@ export const useFetchMultipleRetreiveData = (keys, options) => {
     const queries = keys?.map(key=>({queryKey: key, queryFn: ()=>dataManager.getInstance.retreiveData(...key), options}));
     return useQueries(queries || dummyQuery);
 }
+
+
 
 
 export default dataManager;
