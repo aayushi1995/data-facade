@@ -8,13 +8,25 @@ import PivotTableChartIcon from "@mui/icons-material/PivotTableChart";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import LockClockIcon from "@mui/icons-material/LockClock";
 import HistoryIcon from "@mui/icons-material/History";
-import HubIcon from '@mui/icons-material/Hub';
-import StorefrontIcon from '@mui/icons-material/Storefront';
+import HubIcon from "@mui/icons-material/Hub";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import {
+  IconApplication,
+  IconCertified,
+  IconConnection,
+  IconHistory,
+  IconHome,
+  IconInsights,
+  IconJob,
+  IconPackage,
+  IconScheduled,
+  IconTable,
+} from "../assets/theme.icon";
 const items = [
   {
     key: "/",
     name: "Home",
-    icon: HomeOutlinedIcon,
+    icon: IconHome,
     url: "/",
   },
   {
@@ -26,50 +38,50 @@ const items = [
         key: "data",
         name: "Connections",
         url: "/data/connections",
-        icon: CollectionsIcon,
+        icon: IconConnection,
       },
       {
         key: "data",
         name: "All Tables",
         url: "/data/all",
-        icon: TableViewIcon,
+        icon: IconTable,
       },
       {
         key: "data",
         name: "Certified",
         url: "/data/certified",
-        icon: PivotTableChartIcon,
+        icon: IconCertified,
       },
     ],
   },
   {
     key: "application",
     name: "Applications",
-    icon: GridViewOutlinedIcon,
+    icon: IconApplication,
     subMenu: [
       {
         key: "application",
         name: "Packages",
         url: "/application",
-        icon: AccountTreeIcon,
+        icon: IconPackage,
       },
       {
         key: "application",
         name: "Scheduled",
         url: "/application/scheduled",
-        icon: LockClockIcon,
+        icon: IconScheduled,
       },
       {
         key: "application",
         name: "History",
         url: "/application/execution-history",
-        icon: HistoryIcon,
+        icon: IconHistory,
       },
       {
         key: "application",
         name: "Jobs &Logs ",
         url: "/application/jobs",
-        icon: HubIcon,
+        icon: IconJob,
       },
       {
         key: "application",
@@ -83,7 +95,7 @@ const items = [
   {
     key: "insights",
     name: "Insights",
-    icon: InsertChartOutlinedSharpIcon,
+    icon: IconInsights,
     url: "/insights",
   },
 ];
