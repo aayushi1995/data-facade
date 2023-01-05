@@ -72,41 +72,38 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
         } else {
             // document.body.style.zoom = "85%"; // our product looks better in 85% zoom out state .....#### temporary soln #####
             return (
-                <>
                     <Layout>
                         <ModuleContextStateProvider>
-                            <>
+                            <Box sx={{ p: 2}}>
                                 <ModuleContent.Header />
                                 <ModuleContent.MainContent />
-                            </>
-
+                                <div className={classes.mainContainer}>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            {isNonProductionEnv() && <EULA />}
+                                            <Switch>
+                                                <Route path='/customizations' component={Customizations} />
+                                                {isNonProductionEnv() &&
+                                                    <Route path='/configurations' component={Configurations} />}
+                                                <Route path='/alerts' component={Alerts} />
+                                                <Route path="/slackredirect" component={SlackRedirect} />
+                                                <Route path='/testPage' component={DevTestPage} />
+                                                <Route path='/tag' component={TagHomePage} />
+                                                <Route path='/create-action' component={CreateActionPage} />
+                                                <Route path='/run-action' component={RunActionPage} />
+                                                <Route path='/autobook/customers' component={AutobookHomePage} />
+                                                <Route path='/custom-applications' component={CustomApplicationsHomePage} />
+                                                <Route path='/workflow-editor' component={WorkflowEditorPage} />
+                                                <Route path='/run-workflow' component={RunWorkflowHomePage} />
+                                                <Route path='/view-workflow' component={ViewWorkflowHomePage} />
+                                                <Redirect exact from="/tableBrowser" to="/" />
+                                            </Switch>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            </Box>
                         </ModuleContextStateProvider>
                     </Layout>
-                    <div className={classes.mainContainer}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                {isNonProductionEnv() && <EULA />}
-                                <Switch>
-                                    <Route path='/customizations' component={Customizations} />
-                                    {isNonProductionEnv() &&
-                                        <Route path='/configurations' component={Configurations} />}
-                                    <Route path='/alerts' component={Alerts} />
-                                    <Route path="/slackredirect" component={SlackRedirect} />
-                                    <Route path='/testPage' component={DevTestPage} />
-                                    <Route path='/tag' component={TagHomePage} />
-                                    <Route path='/create-action' component={CreateActionPage} />
-                                    <Route path='/run-action' component={RunActionPage} />
-                                    <Route path='/autobook/customers' component={AutobookHomePage} />
-                                    <Route path='/custom-applications' component={CustomApplicationsHomePage} />
-                                    <Route path='/workflow-editor' component={WorkflowEditorPage} />
-                                    <Route path='/run-workflow' component={RunWorkflowHomePage} />
-                                    <Route path='/view-workflow' component={ViewWorkflowHomePage} />
-                                    <Redirect exact from="/tableBrowser" to="/" />
-                                </Switch>
-                            </Grid>
-                        </Grid>
-                    </div>
-                </>
             )
         }
     }

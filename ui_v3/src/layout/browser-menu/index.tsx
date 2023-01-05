@@ -7,9 +7,6 @@ import { styled } from '@mui/material/styles';
 import EntityBrowser from './entityBrowser';
 
 
-
-const drawerWidth = 300;
-
 interface BrowserMenuProps {
     toggle?: boolean,
     toggleBrowser?: () => void
@@ -55,53 +52,35 @@ function TabPanel(props: TabPanelProps) {
     );
 }
 
-const BrowserMenu: React.FunctionComponent<BrowserMenuProps> = ({ toggle, toggleBrowser }) => {
+const BrowserMenu: React.FunctionComponent<BrowserMenuProps> = () => {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', width: "100%", height: "100%"}}>
             <CssBaseline />
-            <Drawer
-                sx={{
-                    left: 103,
-                    zIndex: 1,
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: toggle ? drawerWidth : 0,
-                        boxSizing: 'border-box',
-                        left: 103
-                    },
-                }}
-                variant="permanent"
-                open={false}
-
-            >
-                <Box sx={{ width: '100%', marginTop: 8 }}>
-                    <Box sx={{ borderBottom: 1 }}>
-                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered sx={{position:'absolute',zIndex:1,background:'#fff'}}>
-                            <Tab label="Data" />
-                            <Tab label="Apps" />
-                            <Tab label="Dashboard" />
-                        </Tabs>
-                    </Box>
-
-                    <div style={{marginTop:30}}>
-                        <TabPanel value={value} index={0}>
-                            <EntityBrowser type="data" />
-                        </TabPanel>
-                        <TabPanel value={value} index={1}>
-                            <EntityBrowser type="packages" />
-                        </TabPanel>
-                        <TabPanel value={value} index={2}>
-                            <EntityBrowser type="dashboards" />
-                        </TabPanel>
-                    </div>
+            <Box sx={{background:'#fff', width: "100%", height: "100%" }}>
+                <Box sx={{ height: "50px", width: "auto"}}>
+                    <Tabs value={value} onChange={handleChange}>
+                        <Tab label="Data" />
+                        <Tab label="Apps" />
+                        <Tab label="Dashboard" />
+                    </Tabs>
                 </Box>
-            </Drawer>
+                <Box sx={{ height: "calc(100% - 50px)", width: "100%", overflowY: "auto" }}>
+                    <TabPanel value={value} index={0}>
+                        <EntityBrowser type="data" />
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        <EntityBrowser type="packages" />
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <EntityBrowser type="dashboards" />
+                    </TabPanel>
+                </Box>
+            </Box>
         </Box>
     );
 }

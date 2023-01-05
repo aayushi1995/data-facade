@@ -34,7 +34,7 @@ export const Header = ({tab}: ModuleHeaderPropType) => {
     const subTitle = moduleState?.Header?.SubTitle || ""
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "row",mx:6 }}>
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Box sx={{display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: "space-between", mb: 3}}>
                     <Box sx={{display: 'flex', flexDirection: 'column'}}>

@@ -115,7 +115,7 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
       className={classes.root}
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ p: 2, flexGrow: 1, overflowY: 'auto' }}
+      sx={{ p: 2, pt: 0, flexGrow: 1, overflowY: 'auto' }}
       multiSelect={false}
       expanded={expandedNodes}
     >

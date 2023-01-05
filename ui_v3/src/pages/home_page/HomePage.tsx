@@ -49,7 +49,7 @@ export const HomePage = ()=>{
 
     return(
         <>
-            <Grid container sx={{display:'flex', flexDirection:'column',px:8}}>
+            <Grid container sx={{display:'flex', flexDirection:'column'}}>
 
                 {/* Welcome and search Part of the page */}
                 <Grid container xs={12} sx={{mb:2}}>

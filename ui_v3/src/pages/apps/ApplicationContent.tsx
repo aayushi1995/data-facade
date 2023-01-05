@@ -32,28 +32,28 @@ export const ApplicationContent = withRouter(function TableBrowserRoutes() {
 
     return (
         <Switch>
-            <Box sx={{mx:6}}>
-            <Route path='/application/jobs' component={Jobs}/>
-            <Route path={APPLICATION_ROUTE_MARKETPLACE} component={ApplicationMarketplace}/>
-            <Route path="/application/build-workflow" component={BuildWorkflowHomePage}/>
-            <Route path={APPLICATION_BUILD_ACTION_ROUTE_ROUTE} component={BuildActionHomePage}/>
-            {/* <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionHomePage}/> */}
-            <Route path={APPLICATION_EXECUTE_WORKFLOW} component={ExecuteWorkflowHomePage}/>
-            <Route path={WORKFLOW_EXECUTION_ROUTE} component={ViewWorkflowExecutionHomePage}/>
-            <Route path={APPLICATION_EXECUTE_ACTION} component={ExecuteActionHomePage}/>
-            <Route path={WORKFLOW_EDIT_ROUTE_ROUTE} component={EditWorkflowHomePage}/>
-            <Route path={EXECUTE_INSTANCE_ROUTE} component={ExecuteInstanceHomePage}/>
-            <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionPageNew}/>
-            {/* <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route> */}
-            <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}></Route>
-            <Route path={ACTION_EXECUTION_ROUTE} component={ActionExecutionHomePage}/>
-            <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
-            <Route path={EXECUTION_HISTORY_ROUTE} component={ExecutionHistory}/>
-            <Route path={SCHEDULED_JOBS_ROUTE} component={ScheduledJobsWrapper} />
-            <Route path={APPLICATION_WEB_APP_EDIT_ROUTE} component={WebAppEditHomePage} />
-            <Route path={APPLICATION_WEB_APP_BUILD_ROUTE} component={BuildWebAppHomePage} />
-            <Route exact path={APPLICATION_ROUTE} component={AllApplicationView}/>
-            <Route exact path={APPLICATION_DETAIL_ROUTE_ROUTE} component={AllApplicationViewWrapper}/>
+            <Box>
+                <Route path='/application/jobs' component={Jobs}/>
+                <Route path={APPLICATION_ROUTE_MARKETPLACE} component={ApplicationMarketplace}/>
+                <Route path="/application/build-workflow" component={BuildWorkflowHomePage}/>
+                <Route path={APPLICATION_BUILD_ACTION_ROUTE_ROUTE} component={BuildActionHomePage}/>
+                {/* <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionHomePage}/> */}
+                <Route path={APPLICATION_EXECUTE_WORKFLOW} component={ExecuteWorkflowHomePage}/>
+                <Route path={WORKFLOW_EXECUTION_ROUTE} component={ViewWorkflowExecutionHomePage}/>
+                <Route path={APPLICATION_EXECUTE_ACTION} component={ExecuteActionHomePage}/>
+                <Route path={WORKFLOW_EDIT_ROUTE_ROUTE} component={EditWorkflowHomePage}/>
+                <Route path={EXECUTE_INSTANCE_ROUTE} component={ExecuteInstanceHomePage}/>
+                <Route path={APPLICATION_EDIT_ACTION_ROUTE_ROUTE} component={EditActionPageNew}/>
+                {/* <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}></Route> */}
+                <Route path={APPLICATION_CREATION_WIZARD_ROUTE} component={ApplicationCreationWizardDialog}></Route>
+                <Route path={ACTION_EXECUTION_ROUTE} component={ActionExecutionHomePage}/>
+                <Route path={APPPLICATION_CREATE_AUTO_FLOW} component={BuildAutoFlow}/>
+                <Route path={EXECUTION_HISTORY_ROUTE} component={ExecutionHistory}/>
+                <Route path={SCHEDULED_JOBS_ROUTE} component={ScheduledJobsWrapper} />
+                <Route path={APPLICATION_WEB_APP_EDIT_ROUTE} component={WebAppEditHomePage} />
+                <Route path={APPLICATION_WEB_APP_BUILD_ROUTE} component={BuildWebAppHomePage} />
+                <Route exact path={APPLICATION_ROUTE} component={AllApplicationView}/>
+                <Route exact path={APPLICATION_DETAIL_ROUTE_ROUTE} component={AllApplicationViewWrapper}/>
             </Box>
         </Switch>
     )

@@ -9,7 +9,11 @@ import { ConnectWithoutContact, PersonAddAlt1Outlined } from '@mui/icons-materia
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import { SLACK_URL, GENERATE_URL_PARAMS } from '../common/config/config';
-import { fontSize } from '@mui/system';
+import BrowserMenu from './browser-menu';
+
+
+const navBarWidth = 100
+const fileBrowserWidth = 300
 
 const StyledListItem = withStyles({
     root: {
@@ -59,7 +63,9 @@ interface SidebarProps {
     toggleBrowser?: () => void | undefined
 }
 
-const Sidebar: React.FunctionComponent<SidebarProps> = ({ toggle, toggleBrowser }) => {
+const Sidebar: React.FunctionComponent<SidebarProps> = () => {
+    const [toggle, setToggle] = React.useState<boolean>(true)
+    const toggleBrowser = () => setToggle(!toggle)
     const location = useLocation();
     const collapsibleItems: any = items.filter(item => item.subMenu);
     collapsibleItems.forEach((item: any) => { item['open'] = false })
@@ -78,7 +84,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = ({ toggle, toggleBrowser 
     }
 
     const toggleButton =  <Tooltip title={toggle ? `Close  Browser` : 'Open Browser'}>
-        <IconButton sx={{ position: 'absolute', bottom: 0, right: 30, color: '#fff' }} onClick={() => toggleBrowser()}>
+        <IconButton sx={{ color: '#fff' }} onClick={() => toggleBrowser?.()}>
             {!toggle ? <ArrowForwardIosOutlinedIcon /> : <ArrowBackIosNewOutlinedIcon />}
         </IconButton>
     </Tooltip>
@@ -202,38 +208,67 @@ const Sidebar: React.FunctionComponent<SidebarProps> = ({ toggle, toggleBrowser 
         )}
     </Popper>
 
+    const drawerWidth = toggle ? navBarWidth + fileBrowserWidth : navBarWidth
     return (
-        <><CssBaseline />
+        <>
+            <CssBaseline />
             {HoverMenu}
-            <Drawer variant="permanent" open={true} style={{ zIndex: 0 }} PaperProps={{
-                sx: {
-                    background: COLORS.SIDEBAR,
-                }
-            }}>
-                <List sx={{ mt: 7 }} component="nav">
-                    {
-                        items.map((item) => <ListItem key={item.key} disablePadding sx={{ display: 'block' }}>
+            <Drawer
+                variant="permanent"
+                anchor="left"
+                PaperProps={{
+                    sx: {
+                        pt: 8,
+                        width: drawerWidth,
+                        display: "flex",
+                        flexDirection: "row"
+                    }
+                }}
+                sx={{ 
+                    zIndex: 0,
+                    width: drawerWidth
+                }}
+            >
+                <Box sx={{
+                        background: COLORS.SIDEBAR,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        height: "100%",
+                        overflowY: "auto",
+                        width: navBarWidth}}>
+                    <Box>
+                        <List component="nav" disablePadding>
                             {
-                                item.subMenu ?
-                                    collapsibleMenu(item)
-                                    :
-                                    mainMenuItems(item)
+                                items.map((item) => <ListItem key={item.key} disablePadding sx={{ display: 'block' }}>
+                                    {
+                                        item.subMenu ?
+                                            collapsibleMenu(item)
+                                            :
+                                            mainMenuItems(item)
+                                    }
+
+                                </ListItem>)
                             }
 
-                        </ListItem>)
-                    }
-
-                </List>
-                <List component="nav" sx={{
-                    position: 'absolute',
-                    bottom: 80
-                }}>
-                    {users}
-                    {slackConnect}
-                   
-                </List>
-                {toggleButton}
-            </Drawer></>
+                        </List>
+                    </Box>
+                    <Box>
+                        <List component="nav">
+                            {users}
+                            {slackConnect}
+                        
+                        </List>
+                        <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            {toggleButton}
+                        </Box>
+                    </Box>
+                </Box>
+                {toggle && <Box sx={{ width: fileBrowserWidth, height: "100%" }}>
+                    <BrowserMenu toggle={toggle} toggleBrowser={toggleBrowser}/>
+                </Box>}
+            </Drawer>
+        </>
     );
 
     function mainMenuItems(item: any): React.ReactNode {

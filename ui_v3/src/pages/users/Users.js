@@ -130,7 +130,7 @@ export const Users = () => {
     }, [])
 
     return (
-        <Box sx={{p:7}}>
+        <Box>
             <Grid xs={12}>
             {/* <PageHeader path={match.path} url={match.url}/> */}
             <Grid container style={{

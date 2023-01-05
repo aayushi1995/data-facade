@@ -163,7 +163,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
 
     return (
         <React.Fragment>
-            <Box sx={{p:7}}>
+            <Box>
                 <LoadingWrapper isLoading={isDashboardLoading} error={dashboardError} data={dashboardData}>
                    
                        

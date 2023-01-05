@@ -12,19 +12,19 @@ const DataContent = () => {
     const setModuleContext = useContext(SetModuleContextState)
 
     return (
-        <Box sx={{mx:6}}>
-        <Switch>
-            <Redirect exact from={DATA_CONNECTIONS_UPLOAD_ROUTE} to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE}/>
-            <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
-            <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
-            <Route path={DATA_TABLE_VIEW} component={TableDetails}/>
-            <Route path={DATA_ALL_TABLES_ROUTE}>
-                <AllTables/>
-            </Route>
-            <Route path={DATA_CERTIFIED_ROUTE}>
-                <CertifiedTables/>
-            </Route>
-        </Switch>
+        <Box>
+            <Switch>
+                <Redirect exact from={DATA_CONNECTIONS_UPLOAD_ROUTE} to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE}/>
+                <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
+                <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
+                <Route path={DATA_TABLE_VIEW} component={TableDetails}/>
+                <Route path={DATA_ALL_TABLES_ROUTE}>
+                    <AllTables/>
+                </Route>
+                <Route path={DATA_CERTIFIED_ROUTE}>
+                    <CertifiedTables/>
+                </Route>
+            </Switch>
         </Box>
     )
 }
