@@ -1158,7 +1158,8 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                     return;
                 }
                 for (let i = 0; i < line.length; i++) {
-                    let matches = line.match(/(?<=(?<!\{)\{)[^{}]*(?=\}(?!\}))/g)
+                    //let matches = line.match(/(?<=(?<!\{)\{)[^{}]*(?=\}(?!\}))/g)
+                    let matches = line.match(/(?:(?:!\{)\{)[^{}]*(?=\}(?!\}))/g)
                     matches?.forEach(parameter => {
                         parameter = parameter.replace('{','')
                         parameter = parameter.replace('}','')
