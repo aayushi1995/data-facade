@@ -427,7 +427,7 @@ const themesOptions = {
             }),
             disableCardBackgroundColor: palette.augmentColor({
                 color:{
-                    main: '#F3F3F3'
+                    main: '#BFEAF5'
                 }
             }),
             cardInfoColor: palette.augmentColor({

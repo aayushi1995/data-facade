@@ -12,7 +12,7 @@ import { lightShadows } from '../../../css/theme/shadows'
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import ConfirmationDialog from "../ConfirmationDialog"
 import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
-import { getIconSxProperties, HeadingBoxStyle, InfoBoxStyle, StyledApplicationCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedByString, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName, viewButton } from './compomentCssProperties'
+import { ButtonBoxStyle, getIconSxProperties, HeadingBoxStyle, InfoBoxStyle, StyledApplicationCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedByString, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName, viewButton } from './compomentCssProperties'
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 import useInstallApplication from './hooks/useInstallApplication'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -25,7 +25,7 @@ interface ApplicationCardProps {
 }
 
 const ApplicationCard = (props: ApplicationCardProps) => {
-    const {application} = props
+    const {application, isInstalled} = props
     const history = useHistory()
     const match = useRouteMatch()
     const [disableCardActions, setDisableCardActions] = React.useState(false)
@@ -87,14 +87,9 @@ const ApplicationCard = (props: ApplicationCardProps) => {
     }
 
     const onApplicationSelect = () => {
-        if(props.isInstalled) {
+        if(isInstalled) {
             history.push(generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, { applicationId: props.application.ApplicationId}))            
         }
-    }
-
-    const toggleMoreOptionsSpeedDial = (event: React.SyntheticEvent<{}, Event>) => {
-        event.stopPropagation()
-        handleMoreOptionsSpeedDialToggle()
     }
 
     const promptDeleteApplication = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -150,7 +145,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
             />
             <Box>
             <StyledApplicationCard onClick={onApplicationSelect} sx={{
-                        backgroundColor: disableCardActions ? 'disableBackgroundColor.main' : 'cardBackgroundColor.main',
+                        backgroundColor: disableCardActions ? 'disableCardBackgroundColor.main' : 'cardBackgroundColor.main',
                         cursor: props.isInstalled ? 'pointer' : undefined
                 }}>
                     <Box sx={{display: "flex", flexDirection: "column"}}>
@@ -210,9 +205,14 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                     {runs_downloadString()}
                                 </StyledTypographyApplicationformCreatedOnString>
                             </Box>
-                            <Button onClick={onApplicationSelect} variant='contained' color='info' sx={{...viewButton}}>
-                                View
-                            </Button>
+                            <Box sx={{...ButtonBoxStyle}}>
+                                <Button onClick={onApplicationSelect} variant='contained' color='info' sx={{...viewButton}}>
+                                    View
+                                </Button>
+                                <Button onClick={onApplicationInstall} variant='contained' color='info' sx={{...viewButton}}>
+                                    Install
+                                </Button>
+                            </Box>
                         </Box>
                         <Box sx={{display:collapsedView?'flex':'none',justifyContent:'center',ml:'auto',gap:2,mr:1}}>
                             <Button size='small'  onClick={() => handleActionBuilder()}>

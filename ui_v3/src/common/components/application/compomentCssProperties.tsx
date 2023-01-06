@@ -109,7 +109,14 @@ export const InfoBoxStyle = {
     py:2,
     display:'flex',
     flexDirection:'row' ,
-    backgroundColor:"#F0F2F5"
+    backgroundColor:"#F0F2F5",
+    justifyContent: "space-between"
+}
+
+export const ButtonBoxStyle = {
+    display: "flex",
+    flexDirection: "row",
+    gap: 2
 }
 
 export const HeadingBoxStyle = {
