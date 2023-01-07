@@ -1157,14 +1157,22 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                     return;
                 }
                 // const reg = new RegExp(/(?<=(?<!\{)\{)[^{}]*(?=\}(?!\}))/, "g");
-                const reg = new RegExp(/{(?<ParameterName>[^}]*)}/, "g");
-                var match;
-                while ((match = reg.exec(line)) != null) {
-                    const paramName = match?.groups?.ParameterName
-                    if(!paramName?.includes?.("{")){
-                        parametersArray.push({ParameterName: paramName?.replace?.(/ /g,'')})
-                    }
+                const regex = /{([^}]*)}/g;
+
+                const matches = line.match(regex);
+                if(matches !== null) {
+                    matches.map((match) => match.slice(1, -1)).forEach(paramName => {
+                        if(!paramName.includes("{")) {
+                            parametersArray.push({ParameterName: paramName})
+                        }
+                    });   
                 }
+                // while ((match = reg.exec(line)) != null) {
+                //     const paramName = match?.groups?.ParameterName
+                //     if(!paramName?.includes?.("{")){
+                //         parametersArray.push({ParameterName: paramName?.replace?.(/ /g,'')})
+                //     }
+                // }
             })
         }
         // https://stackoverflow.com/questions/45439961/remove-duplicate-values-from-an-array-of-objects-in-javascript
