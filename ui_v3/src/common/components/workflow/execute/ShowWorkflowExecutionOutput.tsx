@@ -4,6 +4,7 @@ import React from "react"
 import ActionDefinitionPresentationFormat from "../../../../enums/ActionDefinitionPresentationFormat"
 import ActionExecutionStatus from "../../../../enums/ActionExecutionStatus"
 import { WorkflowContext } from "../../../../pages/applications/workflow/WorkflowContext"
+import { ActionExecutionDetails } from "../../../../pages/apps/components/ActionExecutionHomePage"
 import ViewExecutionCharts from "../../../ViewExecutionCharts"
 import SaveAndBuildChartContextProvider from "../../charts/SaveAndBuildChartsContext"
 import SaveAndBuildChartsFromExecution from "../../charts/SaveAndBuildChartsFromExecution"
@@ -19,9 +20,7 @@ const ShowWorkflowExecutionOutput = () => {
             (lastAction.PresentationFormat === undefined || 
                 lastAction.PresentationFormat === ActionDefinitionPresentationFormat.SINGLE_VALUE || 
                 lastAction.ExecutionStatus === ActionExecutionStatus.FAILED)?(<Box>Please Check. Something Went wrong</Box>):
-                <SaveAndBuildChartContextProvider>
-                    <SaveAndBuildChartsFromExecution definitionName={workflowContext.Name} executionId={lastAction.Id}/>
-                </SaveAndBuildChartContextProvider>
+                <ActionExecutionDetails actionExecutionId={lastAction.Id}/>
                 
 )}
         </Box>
