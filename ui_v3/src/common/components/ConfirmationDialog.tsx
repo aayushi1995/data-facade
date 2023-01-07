@@ -1,6 +1,7 @@
 import { Box, Button, Dialog, DialogContent } from "@mui/material"
 import errorLogo from "../../../src/images/error.svg"
 import CloseIcon from '@mui/icons-material/Close';
+import ReactMarkdown from 'react-markdown'
 
 export interface ConfirmationDialogProps {
     messageHeader:string;
@@ -38,7 +39,9 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
                     ml:8,
                     pr:'30px'
                 }}>
-                    {props.messageToDisplay}
+                    <ReactMarkdown>
+                        {props.messageToDisplay}
+                    </ReactMarkdown> 
                 </Box>
                 <Box sx={{display: 'flex', alignItems: 'end', justifyContent: 'end', mt:3,gap: 3}}>
                     <Button sx={{width:"150px", borderRadius:'7px'}} variant="outlined" color="primary" onClick={() => props?.onDecline?.()}>

@@ -52,6 +52,7 @@
     "react-json-view": "latest",
     "react-lazyload": "^3.2.0",
     "react-lines-ellipsis": "^0.15.3",
+    "react-markdown": "^8.0.4",
     "react-papaparse": "^3.16.1",
     "react-perfect-scrollbar": "^1.5.8",
     "react-query": "^3.8.3",

@@ -206,12 +206,12 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 </StyledTypographyApplicationformCreatedOnString>
                             </Box>
                             <Box sx={{...ButtonBoxStyle}}>
-                                <Button onClick={onApplicationSelect} variant='contained' color='info' sx={{...viewButton}}>
+                                {isInstalled && <Button onClick={onApplicationSelect} disabled={disableCardActions} variant='contained' color='info' sx={{...viewButton}}>
                                     View
-                                </Button>
-                                <Button onClick={onApplicationInstall} variant='contained' color='info' sx={{...viewButton}}>
+                                </Button>}
+                                {!isInstalled && <Button onClick={onApplicationInstall} disabled={disableCardActions} variant='contained' color='info' sx={{...viewButton}}>
                                     Install
-                                </Button>
+                                </Button>}
                             </Box>
                         </Box>
                         <Box sx={{display:collapsedView?'flex':'none',justifyContent:'center',ml:'auto',gap:2,mr:1}}>

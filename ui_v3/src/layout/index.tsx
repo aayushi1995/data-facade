@@ -12,9 +12,9 @@ const Layout = ({ children }: ChildrenProps) => {
 
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: "column" }}>
+        <Box sx={{ width: "100%", height: "100%", display: 'flex', flexDirection: "column" }}>
             <Header />
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "row" }}>
                 <Sidebar/>
                 <Box sx={{ width: "100%", height: "100%", overflowX: "auto" }}>
                     {children}

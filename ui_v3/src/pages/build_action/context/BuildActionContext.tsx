@@ -1151,23 +1151,21 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                 })
             }
         } else if (language === ActionDefinitionQueryLanguage.SQL) {
-            console.log("Wo")
             code?.split("\n").map(line => {
                 // Ignoring commented lines. Ideally we should use something else like using editor itself or parser
                 if (line.trim().length > 0 && line.trim().charAt(0) === '-'){
                     return;
                 }
-                for (let i = 0; i < line.length; i++) {
-                    //let matches = line.match(/(?<=(?<!\{)\{)[^{}]*(?=\}(?!\}))/g)
-                    let matches = line.match(/(?:(?:!\{)\{)[^{}]*(?=\}(?!\}))/g)
-                    matches?.forEach(parameter => {
-                        parameter = parameter.replace('{','')
-                        parameter = parameter.replace('}','')
-                        parametersArray.push({ParameterName: parameter})
-                    })
+                // const reg = new RegExp(/(?<=(?<!\{)\{)[^{}]*(?=\}(?!\}))/, "g");
+                const reg = new RegExp(/{(?<ParameterName>[^}]*)}/, "g");
+                var match;
+                while ((match = reg.exec(line)) != null) {
+                    const paramName = match?.groups?.ParameterName
+                    if(!paramName?.includes?.("{")){
+                        parametersArray.push({ParameterName: paramName?.replace?.(/ /g,'')})
+                    }
                 }
             })
-            console.log(parametersArray)
         }
         // https://stackoverflow.com/questions/45439961/remove-duplicate-values-from-an-array-of-objects-in-javascript
         const deDupedParams = parametersArray.filter((v,i,a)=>a.findIndex(v2=> v.ParameterName === v2.ParameterName)===i)
