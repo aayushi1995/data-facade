@@ -80,9 +80,8 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
     })
    
     React.useEffect(() => {
-        console.log("WADAWDWADWA", activeTabId)
         if(!!activeTabId){
-            history.replace(generatePath(APPLICATION_EDIT_ACTION_ROUTE_ROUTE, {
+            history.push(generatePath(APPLICATION_EDIT_ACTION_ROUTE_ROUTE, {
                 ActionDefinitionId: activeTabId,
             }))
         }

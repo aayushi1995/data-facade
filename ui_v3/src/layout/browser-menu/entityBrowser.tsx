@@ -77,9 +77,9 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
     }
   }
 
-  const navigate = (item: any) => {
+  const navigate = (item: any, hideparam = false) => {
     if (NAVIGATE_URL.hasOwnProperty(item.type)) {
-      const URL = `${NAVIGATE_URL[`${item.type}`]}/${item.type === "table" ? item.name : item.id}`;
+      const URL = `${NAVIGATE_URL[`${item.type}`]}/${item.type === "table" ? item.name : item.id}${!hideparam ? `?source=browser&name=${item.name}` : ``}`;
       history.push(URL)
     }
   }
@@ -98,14 +98,14 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
         onClick={() =>
           item.IsExpandable
             ? fetchNodeData(item.path, item)
-            : navigate(item)
+            : navigate(item, item.type === "dashboard" ? false : true)
         }
         nodeId={item.path}
         label={item.name}
       >
         {item.IsExpandable && treeData[item.path] ? (renderTree(treeData[item.path])
         ) : null}
-      </TreeItem>,loader[item.path] && <CircularProgress size={15}/>,]
+      </TreeItem>, loader[item.path] && <CircularProgress size={15} />,]
     ));
   };
 
@@ -119,7 +119,7 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
       multiSelect={false}
       expanded={expandedNodes}
     >
-      {isLoading &&  <CircularProgress size={30}/>}
+      {isLoading && <CircularProgress size={30} />}
       {entityBrowsers && renderTree(entityBrowsers)}
     </TreeView>
   );
