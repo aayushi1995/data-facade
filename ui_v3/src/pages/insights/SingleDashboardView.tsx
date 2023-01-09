@@ -16,6 +16,7 @@ import {v4 as uuidv4} from "uuid"
 import useSaveDashboard from "./hooks/useSaveDashboard"
 import useGetDashboardChart from "./hooks/useGetDashboardChart"
 import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper"
+import useRefreshDashboard from "./hooks/useRefreshDashboards"
 
 export interface DashboardTextBoxConfig {
     layout: string,
@@ -25,7 +26,8 @@ export interface DashboardTextBoxConfig {
 
 export interface ChartsConfig {
     layout?: string,
-    Id: string
+    chartName: string,
+    ActionInstanceId: string
 }
 export interface DashboardConfig {
     textBoxes?: DashboardTextBoxConfig[],
@@ -40,6 +42,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
     const updateDashboard = useSaveDashboard()
 
     const [dashboardData, isDashboardLoading, dashboardError, refetch] = useGetDashboardDetails({filter: {Id: dashboardId}, enabled: false})
+    const refreshDashboard = useRefreshDashboard()
 
     const handleChartFetched = () => {
         setChartFetched(true)
@@ -84,7 +87,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
         })
         const finalConfig = JSON.stringify({
             ...JSON.parse(dashboardDetails?.model?.Config || "{}") as DashboardConfig,
-            charts: chartWithData?.map(chart => ({Id: chart.chartWithData?.model?.Id, layout: chart.layout}))
+            charts: chartWithData?.map(chart => ({chartName: chart.chartWithData?.model?.Name, layout: chart.layout, ActionInstanceId: chart.ActionInstanceId}))
         })
 
         updateDashboard.mutate({
@@ -136,13 +139,19 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
         }))
     }
 
+    const handleRefreshDashboards = () => {
+        refreshDashboard.mutate({filter: {Id: dashboardId}})
+    }
+
     const handleUpdateChartLayout = (chartId: string, layout: string) => {
         const newCharts = chartWithData?.map(chartWithDataAndLayout => chartWithDataAndLayout.chartWithData?.model?.Id === chartId ? {
-            Id: chartWithDataAndLayout?.chartWithData?.model?.Id!,
-            layout: layout
+            chartName: chartWithDataAndLayout?.chartWithData?.model?.Name!,
+            layout: layout,
+            ActionInstanceId: chartWithDataAndLayout.ActionInstanceId!
         } : {
-            Id: chartWithDataAndLayout?.chartWithData?.model?.Id!,
-            layout: chartWithDataAndLayout?.layout
+            chartName: chartWithDataAndLayout?.chartWithData?.model?.Name!,
+            layout: chartWithDataAndLayout?.layout,
+            ActionInstanceId: chartWithDataAndLayout.ActionInstanceId!
         })
         assignNewConfigCharts(newCharts)
 
@@ -188,6 +197,13 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
                     <Button variant="text" onClick={handleAddTextBox}>
                         Add Text Box
                     </Button>
+                    {refreshDashboard.isLoading ? (
+                        <LoadingIndicator />
+                    ) : (
+                        <Button onClick={handleRefreshDashboards}>
+                            Refresh Dashboards
+                        </Button>
+                    )}
                     
                 </Box>
                 <Box sx={{pt: 2, minHeight: "100%"}}>

@@ -14,214 +14,214 @@ export interface UpdateRequest<T> {
 
 export interface TableBrowserResponse {
    TableUniqueName?: string
-   TableId?: string
-   TableCreatedBy?: string
-   TableLastSyncedOn?: number
-   ProviderInstanceName?: string
-   ProviderInstanceId?: string
-   ProviderDefinitionName?: string
-   ProviderDefinitionId?: string
-   TableSchemaName?: string
-   TableInfo?: string
+  TableId?: string
+  TableCreatedBy?: string
+  TableLastSyncedOn?: number
+  ProviderInstanceName?: string
+  ProviderInstanceId?: string
+  ProviderDefinitionName?: string
+  ProviderDefinitionId?: string
+  TableSchemaName?: string
+  TableInfo?: string
 }
 
 
 export interface ProviderInformation {
    ProviderInstance?: ProviderInstanceWithTags
-   ProviderParameterInstance?: Entity.ProviderParameterInstance[]
+  ProviderParameterInstance?: Entity.ProviderParameterInstance[]
 }
 
 
 export interface ActionInstanceWithParameters {
    model?: Entity.ActionInstance
-   ParameterInstances?: Entity.ActionParameterInstance[]
+  ParameterInstances?: Entity.ActionParameterInstance[]
 }
 
 
 export interface ActionDefinitionWithTags {
    model?: Entity.ActionDefinition
-   tags?: Entity.Tag[]
+  tags?: Entity.Tag[]
 }
 
 
 export interface ProviderInstanceStat {
    NumberOfExecutions?: number
-   NumberOfTables?: number
-   LastSyncedOn?: number
-   NumberOfCompletedExecutions?: number
-   NumberOfRunningExecutions?: number
-   NumberOfFailedExecutions?: number
-   SyncRunning?: number
-   SyncCompleted?: number
-   SyncFailed?: number
+  NumberOfTables?: number
+  LastSyncedOn?: number
+  NumberOfCompletedExecutions?: number
+  NumberOfRunningExecutions?: number
+  NumberOfFailedExecutions?: number
+  SyncRunning?: number
+  SyncCompleted?: number
+  SyncFailed?: number
 }
 
 
 export interface WorkflowActionExecutions {
    WorkflowDefinition?: Entity.ActionDefinition
-   WorkflowExecution?: Entity.ActionExecution
-   ChildExecutionsWithDefinitions?: WorkflowDefinitionWithExecutionDetails[]
+  WorkflowExecution?: Entity.ActionExecution
+  ChildExecutionsWithDefinitions?: WorkflowDefinitionWithExecutionDetails[]
 }
 
 
 export interface ActionDefinitionSelectorResponse {
    ActionId?: string
-   ActionDisplayName?: string
-   ActionOutputType?: string
-   ActionParameterCount?: number
-   ActionRuns?: number
+  ActionDisplayName?: string
+  ActionOutputType?: string
+  ActionParameterCount?: number
+  ActionRuns?: number
 }
 
 
 export interface ActionDefinitionDetail {
    ActionDefinition?: ActionDefinitionWithTags
-   ActionTemplatesWithParameters?: ActionTemplatesWithParameters[]
+  ActionTemplatesWithParameters?: ActionTemplatesWithParameters[]
 }
 
 
 export interface SlackConversation {
    Name?: string
-   Id?: string
-   Type?: string
+  Id?: string
+  Type?: string
 }
 
 
 export interface GetSlackChannelsResponse {
    entity?: Entity.ProviderInstance
-   channels?: SlackConversation[]
+  channels?: SlackConversation[]
 }
 
 
 export interface TagDetails {
    Id?: string
-   Name?: string
-   TagGroup?: string
-   ParentTagName?: string
-   Scope?: string
-   CreatedBy?: string
-   Description?: string
-   CountOfLinkedTableProperties?: number
-   CountOfLinkedActionDefinition?: number
-   CountOfLinkedActionParameterDefinition?: number
-   CountOfLinkedColumnProperties?: number
-   TotalLinkedEntities?: number
-   LinkedSubsidiaries?: Entity.Tag[]
+  Name?: string
+  TagGroup?: string
+  ParentTagName?: string
+  Scope?: string
+  CreatedBy?: string
+  Description?: string
+  CountOfLinkedTableProperties?: number
+  CountOfLinkedActionDefinition?: number
+  CountOfLinkedActionParameterDefinition?: number
+  CountOfLinkedColumnProperties?: number
+  TotalLinkedEntities?: number
+  LinkedSubsidiaries?: Entity.Tag[]
 }
 
 
 export interface OOBActionStatus {
    ActionDefinitionId?: string
-   ActionExecutionId?: string
-   ActionExecutionStatus?: string
+  ActionExecutionId?: string
+  ActionExecutionStatus?: string
 }
 
 
 export interface ChartWithData {
    model?: Entity.Chart
-   chartData?: object
-   rawData?: object
+  chartData?: object
+  rawData?: object
 }
 
 
 export interface WorkflowStagesWithActions {
    Actions?: Entity.ActionDefinition[]
-   stageName?: string
+  stageName?: string
 }
 
 
 export interface ProviderHistoryStat {
    ActionRunHistory?: number[]
-   FailedActionCount?: number
+  FailedActionCount?: number
 }
 
 
 export interface ColumnInfo {
    ColumnProperties?: Entity.ColumnProperties
-   NumberOfActions?: number
+  NumberOfActions?: number
 }
 
 
 export interface RecurringActionInstanceDetails {
    model?: Entity.ActionInstance
-   NumberOfRuns?: number
-   NumberOfFailed?: number
-   Status?: string
-   NextScheduledTime?: number
-   StartTime?: number
-   ProviderInstance?: Entity.ProviderInstance
-   AverageRunTime?: number
-   HistoricalActionExecutions?: Entity.ActionExecution[]
-   ProviderName?: string
-   ActionType?: string
+  NumberOfRuns?: number
+  NumberOfFailed?: number
+  Status?: string
+  NextScheduledTime?: number
+  StartTime?: number
+  ProviderInstance?: Entity.ProviderInstance
+  AverageRunTime?: number
+  HistoricalActionExecutions?: Entity.ActionExecution[]
+  ProviderName?: string
+  ActionType?: string
 }
 
 
 export interface ActionInstanceCardViewResponse {
    InstanceId?: string
-   InstanceName?: string
-   DefinitionId?: string
-   DefinitionName?: string
-   DefinitionActionType?: string
-   DefinitionDescription?: string
-   Status?: string
-   DefinitionCreatedBy?: string
-   DefinitionCreatedOn?: number
-   NumberOfUsers?: number
+  InstanceName?: string
+  DefinitionId?: string
+  DefinitionName?: string
+  DefinitionActionType?: string
+  DefinitionDescription?: string
+  Status?: string
+  DefinitionCreatedBy?: string
+  DefinitionCreatedOn?: number
+  NumberOfUsers?: number
 }
 
 
 export interface DashboardDetails {
    numberOfCharts?: number
-   model?: Entity.Dashboard
+  model?: Entity.Dashboard
 }
 
 
 export interface ActionParameterDefinitionWithTags {
    model?: Entity.ActionParameterDefinition
-   tags?: Entity.Tag[]
+  tags?: Entity.Tag[]
 }
 
 
 export interface ProviderDefinitionDetail {
    ProviderDefinition?: Entity.ProviderDefinition
-   ProviderParameterDefinition?: Entity.ProviderParameterDefinition[]
+  ProviderParameterDefinition?: Entity.ProviderParameterDefinition[]
 }
 
 
 export interface WorkflowDefinitionWithExecutionDetails {
    ActionDefinition?: Entity.ActionDefinition
-   ActionExecution?: Entity.ActionExecution
-   stageId?: string
-   stageName?: string
+  ActionExecution?: Entity.ActionExecution
+  stageId?: string
+  stageName?: string
 }
 
 
 export interface TablePropertiesInfo {
    Health?: number
-   SyncStatus?: string
-   ReSyncInProgress?: boolean
-   SyncOOBActionStatus?: OOBActionStatus[]
+  SyncStatus?: string
+  ReSyncInProgress?: boolean
+  SyncOOBActionStatus?: OOBActionStatus[]
 }
 
 
 export interface ProviderInstanceWithTags {
    model?: Entity.ProviderInstance
-   tags?: Entity.Tag[]
+  tags?: Entity.Tag[]
 }
 
 
 export interface ApplicationCardViewResponse {
    ApplicationId?: string
-   ApplicationName?: string
-   ApplicationDescription?: string
-   ApplicationCreatedBy?: string
-   Status?: string
-   ApplicationArtifactLocation?: string
-   ApplicationCreatedOn?: number
-   NumberOfFlows?: number
-   NumberOfActions?: number
-   NumberOfDashboards?: number
-   NumberOfUsers?: number
+  ApplicationName?: string
+  ApplicationDescription?: string
+  ApplicationCreatedBy?: string
+  Status?: string
+  ApplicationArtifactLocation?: string
+  ApplicationCreatedOn?: number
+  NumberOfFlows?: number
+  NumberOfActions?: number
+  NumberOfDashboards?: number
+  NumberOfUsers?: number
 }
 
 
@@ -232,56 +232,57 @@ export interface ExecutionLogsStatus {
 
 export interface FilteredColumnsResponse {
    Columns?: Entity.ColumnProperties[]
-   FilteredBasedOnTags?: boolean
+  FilteredBasedOnTags?: boolean
 }
 
 
 export interface DashboardChartWithData {
    chartWithData?: ChartWithData
-   layout?: string
+  layout?: string
+  ActionInstanceId?: string
 }
 
 
 export interface ActionDetailsForApplication {
    model?: Entity.ActionDefinition
-   stagesOrParameters?: number
-   numberOfRuns?: number
-   numberOfWorkflowActions?: number
-   averageRunTime?: number
+  stagesOrParameters?: number
+  numberOfRuns?: number
+  numberOfWorkflowActions?: number
+  averageRunTime?: number
 }
 
 
 export interface ActionInstanceDetails {
    ActionDefinition?: Entity.ActionDefinition
-   ActionInstance?: Entity.ActionInstance
-   ActionParameterDefinition?: Entity.ActionParameterDefinition[]
-   ActionParameterInstance?: Entity.ActionParameterInstance[]
+  ActionInstance?: Entity.ActionInstance
+  ActionParameterDefinition?: Entity.ActionParameterDefinition[]
+  ActionParameterInstance?: Entity.ActionParameterInstance[]
 }
 
 
 export interface ActionDefinitionCardViewResponse {
    DefinitionId?: string
-   DefinitionName?: string
-   DefinitionActionType?: string
-   DefinitionDescription?: string
-   DefinitionCreatedBy?: string
-   UsageStatus?: string
-   DefinitionCreatedOn?: number
-   NumberOfUsers?: number
-   DefinitionPublishStatus?: string
+  DefinitionName?: string
+  DefinitionActionType?: string
+  DefinitionDescription?: string
+  DefinitionCreatedBy?: string
+  UsageStatus?: string
+  DefinitionCreatedOn?: number
+  NumberOfUsers?: number
+  DefinitionPublishStatus?: string
 }
 
 
 export interface TableView {
    Columns?: ColumnInfo[]
-   TableData?: Entity.ActionExecution
+  TableData?: Entity.ActionExecution
 }
 
 
 export interface UpdateActionDefinitionWithTemplate {
    filter?: Entity.ActionDefinition
-   newProperties?: Entity.ActionDefinition
-   ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
+  newProperties?: Entity.ActionDefinition
+  ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
 }
 
 
@@ -292,13 +293,13 @@ export interface PossibleAutoFlows {
 
 export interface TableOOBActionStatus {
    OOBActionsStatus?: OOBActionStatus[]
-   TableId?: string
+  TableId?: string
 }
 
 
 export interface WebAppDetails {
    WebApp?: ActionDefinitionDetail
-   Components?: Entity.ComponentDefinition[]
+  Components?: Entity.ComponentDefinition[]
 }
 
 
@@ -309,55 +310,55 @@ export interface CopyActionDefinitionPayload {
 
 export interface CreateApplicationRequest {
    model?: Entity.Application
-   tags?: Entity.Tag[]
+  tags?: Entity.Tag[]
 }
 
 
 export interface ApplicationDetails {
    numberOfActions?: number
-   numberOfFlows?: number
-   actions?: ActionDetailsForApplication[]
-   workflows?: ActionDetailsForApplication[]
-   model?: Entity.Application
-   gitSyncStatus?: boolean
+  numberOfFlows?: number
+  actions?: ActionDetailsForApplication[]
+  workflows?: ActionDetailsForApplication[]
+  model?: Entity.Application
+  gitSyncStatus?: boolean
 }
 
 
 export interface ApplicationRunsByMe {
    ApplicationModel?: Entity.Application
-   ActionDefinitions?: Entity.ActionDefinition[]
-   ActionInstances?: Entity.ActionInstance[]
-   ActionExecutions?: Entity.ActionExecution[]
+  ActionDefinitions?: Entity.ActionDefinition[]
+  ActionInstances?: Entity.ActionInstance[]
+  ActionExecutions?: Entity.ActionExecution[]
 }
 
 
 export interface ActionExecutionIncludeDefinitionInstanceDetailsResponse {
    ActionDefinition?: Entity.ActionDefinition
-   ActionInstance?: Entity.ActionInstance
-   ActionExecution?: Entity.ActionExecution
-   ActionParameterDefinitions?: Entity.ActionParameterDefinition[]
-   ActionParameterInstances?: Entity.ActionParameterInstance[]
+  ActionInstance?: Entity.ActionInstance
+  ActionExecution?: Entity.ActionExecution
+  ActionParameterDefinitions?: Entity.ActionParameterDefinition[]
+  ActionParameterInstances?: Entity.ActionParameterInstance[]
 }
 
 
 export interface SaveDashboardForExecution {
    entityProperties?: Entity.Dashboard
-   withExecutionId?: string
+  withExecutionId?: string
 }
 
 
 export interface ProviderCardView {
    ProviderInstance?: Entity.ProviderInstance
-   ProviderDefinition?: Entity.ProviderDefinition
-   ProviderInstanceStat?: ProviderInstanceStat
-   SyncActionInstance?: Entity.ActionInstance
+  ProviderDefinition?: Entity.ProviderDefinition
+  ProviderInstanceStat?: ProviderInstanceStat
+  SyncActionInstance?: Entity.ActionInstance
 }
 
 
 export interface ActionTemplatesWithParameters {
    model?: Entity.ActionTemplate
-   tags?: Entity.Tag[]
-   actionParameterDefinitions?: ActionParameterDefinitionWithTags[]
+  tags?: Entity.Tag[]
+  actionParameterDefinitions?: ActionParameterDefinitionWithTags[]
 }
 
 
