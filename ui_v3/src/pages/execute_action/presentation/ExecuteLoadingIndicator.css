@@ -1,0 +1,2266 @@
+.wrap {
+    height: 300px;
+    width: 300px;
+    position: relative;
+    -webkit-animation: 15s ease infinite normal wrap-spin;
+            animation: 15s ease infinite normal wrap-spin;
+    /* the below animation moves the spinner to the corner of the page */
+    /* animation: $circleWrapSpinDuration ease infinite alternate circle-wrap-spin; */
+  }
+  .wrap .box-type1 {
+    height: 200px;
+    width: 200px;
+    border: 1px solid deeppink;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Box Type 1 Keyframes */
+    /* Box Type 1 Keyframes END*/
+  }
+  .wrap .box-type1:nth-child(1) {
+    background: rgba(156, 184, 46, 0.2);
+    -webkit-animation: 15s ease-out infinite alternate box-anim-type1-1;
+            animation: 15s ease-out infinite alternate box-anim-type1-1;
+    transform: translate(-50%, -50%);
+  }
+  .wrap .box-type1:nth-child(2) {
+    background: rgba(46, 184, 101, 0.2);
+    -webkit-animation: 15s ease-out infinite alternate box-anim-type1-2;
+            animation: 15s ease-out infinite alternate box-anim-type1-2;
+    transform: translate(-50%, -50%);
+  }
+  .wrap .box-type1:nth-child(3) {
+    background: rgba(46, 101, 184, 0.2);
+    -webkit-animation: 15s ease-out infinite alternate box-anim-type1-3;
+            animation: 15s ease-out infinite alternate box-anim-type1-3;
+    transform: translate(-50%, -50%);
+  }
+  .wrap .box-type1:nth-child(4) {
+    background: rgba(156, 46, 184, 0.2);
+    -webkit-animation: 15s ease-out infinite alternate box-anim-type1-4;
+            animation: 15s ease-out infinite alternate box-anim-type1-4;
+    transform: translate(-50%, -50%);
+  }
+  .wrap .box-type1:nth-child(5) {
+    background: rgba(184, 46, 46, 0.2);
+    -webkit-animation: 15s ease-out infinite alternate box-anim-type1-5;
+            animation: 15s ease-out infinite alternate box-anim-type1-5;
+    transform: translate(-50%, -50%);
+  }
+  @-webkit-keyframes box-anim-type1-1 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+  }
+  @keyframes box-anim-type1-1 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(72deg);
+    }
+  }
+  @-webkit-keyframes box-anim-type1-2 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+  }
+  @keyframes box-anim-type1-2 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(144deg);
+    }
+  }
+  @-webkit-keyframes box-anim-type1-3 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(216deg);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(216deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(216deg);
+    }
+  }
+  @keyframes box-anim-type1-3 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(216deg);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(216deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(216deg);
+    }
+  }
+  @-webkit-keyframes box-anim-type1-4 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(288deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(288deg);
+    }
+  }
+  @keyframes box-anim-type1-4 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(288deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(288deg);
+    }
+  }
+  @-webkit-keyframes box-anim-type1-5 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  @keyframes box-anim-type1-5 {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    20% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    40% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    60% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    80% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  .wrap .circle-wrap {
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-animation: 15s ease infinite alternate circle-wrap-spin;
+            animation: 15s ease infinite alternate circle-wrap-spin;
+  }
+  .wrap .circle-wrap .circle-type1 {
+    height: 100px;
+    width: 100px;
+    border: 1px solid white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center bottom;
+    transform: translate(-50px, -100px);
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(1) {
+    background: rgba(184, 101, 46, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-1;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-1;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(2) {
+    background: rgba(184, 156, 46, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-2;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-2;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(3) {
+    background: rgba(156, 184, 46, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-3;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-3;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(4) {
+    background: rgba(101, 184, 46, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-4;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-4;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(5) {
+    background: rgba(46, 184, 46, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-5;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-5;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(6) {
+    background: rgba(46, 184, 101, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-6;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-6;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(7) {
+    background: rgba(46, 184, 156, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-7;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-7;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(8) {
+    background: rgba(46, 156, 184, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-8;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-8;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(9) {
+    background: rgba(46, 101, 184, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-9;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-9;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(10) {
+    background: rgba(46, 46, 184, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-10;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-10;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(11) {
+    background: rgba(101, 46, 184, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-11;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-11;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(12) {
+    background: rgba(156, 46, 184, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-12;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-12;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(13) {
+    background: rgba(184, 46, 156, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-13;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-13;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(14) {
+    background: rgba(184, 46, 101, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-14;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-14;
+  }
+  .wrap .circle-wrap .circle-type1:nth-child(15) {
+    background: rgba(184, 46, 46, 0.2);
+    -webkit-animation: 5s ease-in-out infinite alternate circle-anim-type1-15;
+            animation: 5s ease-in-out infinite alternate circle-anim-type1-15;
+  }
+  @-webkit-keyframes circle-anim-type1-1 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+  }
+  @keyframes circle-anim-type1-1 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(24deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-2 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+  }
+  @keyframes circle-anim-type1-2 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(48deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-3 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+  }
+  @keyframes circle-anim-type1-3 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(72deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-4 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+  }
+  @keyframes circle-anim-type1-4 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(96deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-5 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+  }
+  @keyframes circle-anim-type1-5 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(120deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-6 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+  }
+  @keyframes circle-anim-type1-6 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(144deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-7 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+  }
+  @keyframes circle-anim-type1-7 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(168deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-8 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+  }
+  @keyframes circle-anim-type1-8 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(192deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-9 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+  }
+  @keyframes circle-anim-type1-9 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(216deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-10 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+  }
+  @keyframes circle-anim-type1-10 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(240deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-11 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+  }
+  @keyframes circle-anim-type1-11 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(264deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-12 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(288deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(288deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(288deg);
+    }
+  }
+  @keyframes circle-anim-type1-12 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(288deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(288deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(288deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-13 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(312deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(312deg);
+    }
+  }
+  @keyframes circle-anim-type1-13 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(312deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(312deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-14 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(336deg);
+    }
+  }
+  @keyframes circle-anim-type1-14 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(336deg);
+    }
+  }
+  @-webkit-keyframes circle-anim-type1-15 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+  }
+  @keyframes circle-anim-type1-15 {
+    /* $circleType1Count - 1 causes a contract and stretch effect */
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    0% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    7% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    13% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    20% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    27% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    33% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    40% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    47% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    53% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    60% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    67% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    73% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    80% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    87% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+    /* 6.66 is 100 / 15 (i.e., 100% for 15 circles:- 100/$circleType1Count)   */
+    93% {
+      transform: translate(-50px, -100px) rotate(0deg);
+    }
+  }
+  @-webkit-keyframes circle-wrap-spin {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  @keyframes circle-wrap-spin {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  @-webkit-keyframes wrap-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+  @keyframes wrap-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    }
+  }

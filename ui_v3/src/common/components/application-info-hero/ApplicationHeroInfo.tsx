@@ -37,11 +37,11 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
     const history = useHistory()
 
     const handleActionBuilder = () => {
-        window.open(APPLICATION_BUILD_ACTION_ROUTE_ROUTE + "?applicationId=" + props.id, "_self");
+        history.push(APPLICATION_BUILD_ACTION_ROUTE_ROUTE + "?applicationId=" + props.id, "_self");
     }
 
     const handleFlowBuilder = () => {
-        window.open(APPLICATION_BUILD_FLOW_ROUTE_ROUTE + "?applicationId=" + props.id, "_self");
+        history.push(APPLICATION_BUILD_FLOW_ROUTE_ROUTE + "?applicationId=" + props.id, "_self");
     }
 
     const formTimestampHumanReadable = (date: Date) => {

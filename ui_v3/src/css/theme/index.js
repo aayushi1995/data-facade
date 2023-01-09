@@ -333,6 +333,38 @@ const baseOptions = {
             fontWeight: 400, 
             fontSize: "16px", 
             lineHeight: "116.7%"
+        },
+        executeActionName: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "15px",
+            lineHeight: "20px",
+            color: "#050505"
+        },
+        executeActionSubtext: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "13px",
+            lineHeight: "20px",
+            color: "#65676B"
+        },
+        executeActionDescription: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "15px",
+            lineHeight: "20px",
+            color: "#050505"
+        },
+        parameterInputField: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "13px",
+            lineHeight: "20px",
+            color: "#050505"
         }
     }
 };

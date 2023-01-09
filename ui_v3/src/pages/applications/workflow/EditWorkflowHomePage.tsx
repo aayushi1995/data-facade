@@ -80,6 +80,10 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
         })
     }, [])
 
+    React.useEffect(() => {
+        setIsWorkflowFetched(false)
+    }, [workflowId])
+
     // React.useEffect(() => {
     //     setWorkflowContext({type: 'SET_ERROR_STATE', payload: isError})
     // }, [isError])

@@ -129,7 +129,7 @@ export const StagesWithActions = (props :{showDet: boolean, showStage: boolean})
             <></>
 }
             {props.showDet?
-            <Box sx={{flex: 1, display: 'flex', mt: 1, p: 1, flexDirection: 'row', gap: 1}}>
+            <Grid container>
                 {/* <Card sx={{display: 'flex', boxShadow: lightShadows[27], flexDirection: 'column', p: 1, flex: 1}}> */}
                     {currentStages.map(stage => {
                         return (
@@ -140,7 +140,7 @@ export const StagesWithActions = (props :{showDet: boolean, showStage: boolean})
                             </Grid>)
                     })}
                 
-            </Box>:<></>
+            </Grid>:<></>
             }
         </Box>
     )

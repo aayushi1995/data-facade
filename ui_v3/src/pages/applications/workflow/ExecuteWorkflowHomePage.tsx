@@ -1,4 +1,4 @@
-import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper, Tooltip, IconButton, Typography } from "@mui/material"
+import { Box, Button, Card, Grid, Snackbar, Step, StepButton, Stepper, Tooltip, IconButton, Typography, Divider } from "@mui/material"
 import React from "react"
 import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom"
 import { SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
@@ -25,6 +25,11 @@ import { defaultWorkflowContext, SetWorkflowContext, WorkflowActionDefinition, W
 import EditIcon from '@mui/icons-material/Edit';
 import {v4 as uuidv4} from "uuid"
 import { ViewWorkflowExecution } from "./ViewWorkflowExecutionHomePage"
+import { ExecuteActionMainBox } from "../../execute_action/styled_components/ExecuteActionMainBox"
+import ActionLevelInfo from "../../execute_action/presentation/ActionLevelInfo"
+import ConfigureParametersNew from "../../execute_action/components/ConfigureParametersNew"
+import { ExecuteActionStyledTab, ExecuteActionStyledTabs } from "../../execute_action/styled_components/StyledTab"
+import { TabPanel } from "../../../common/components/workflow/create/SelectAction/SelectAction"
 
 interface MatchParams {
     workflowId: string
@@ -56,13 +61,15 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     const workflowExecutionId = location.search ?  new URLSearchParams(location.search).get("flowExecution") : undefined
     const workflowInstanceId = location.search ?  new URLSearchParams(location.search).get("flowInstance") : undefined
 
+    const [tabValue, setTabValue] = React.useState(!!workflowExecutionId ? 1 : 0)
+
     const handleInstanceSaved = (data: any) => {
         if(recurrenceConfig.actionInstance.IsRecurring) {
             setSnackbarState(true)
             history.push(SCHEDULED_JOBS_ROUTE)
         } else {
-            console.log(data)
             history.push(`/application/execute-workflow/${workflowId}?flowInstance=${data?.[0]?.InstanceId}&flowExecution=${data?.[0]?.Id}`)
+            setTabValue(1)
         }
     }
 
@@ -76,15 +83,6 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     const saveWorkflowMutation = useCreateWorkflowActionInstanceMutation(workflowContext, handleInstanceSaved)
     const workflowId = props.workflowId || match.params.workflowId
     const handleTemplate = (data: ActionDefinitionDetail[]) => {
-        setModuleContextState({
-            type: 'SetHeader',
-            payload: {
-                newHeader: {
-                    Title: data?.[0]?.ActionDefinition?.model?.DisplayName,
-                    SubTitle: 'Last Updated On ' + (new Date(data?.[0]?.ActionDefinition?.model?.UpdatedOn || data?.[0]?.ActionDefinition?.model?.CreatedOn || Date.now()).toString())
-                }
-            }
-        })
 
         setWorkflowContext({type: 'ADD_ACTION_TEMPLATE', payload: {template: data?.[0]?.ActionTemplatesWithParameters?.[0].model}})
         setWorkflowContext({type: 'CHANGE_NAME', payload: {newName: data?.[0]?.ActionDefinition?.model?.DisplayName || "workflow"}})
@@ -223,7 +221,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     if(workflowContext.WorkflowParameters.filter(apd => !isDefaultValueDefined(apd.DefaultParameterValue)).length > 0) {
         IndexToComponent.push(
             {
-                component: <ConfigureParameters 
+                component: <ConfigureParametersNew
                     ActionParameterDefinitions={workflowContext.WorkflowParameters} 
                     ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
                     ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
@@ -238,7 +236,7 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
     if(workflowContext.WorkflowParameters.filter(apd => isDefaultValueDefined(apd.DefaultParameterValue)).length > 0) {
         IndexToComponent.push(
             {
-                component: <ConfigureParameters 
+                component: <ConfigureParametersNew
                     ActionParameterDefinitions={workflowContext.WorkflowParameters} 
                     ActionParameterInstances={workflowContext.WorkflowParameterInstance || []} 
                     ParameterAdditionalConfig={workflowContext.WorkflowParameterAdditionalConfigs || []}
@@ -250,6 +248,17 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
         )
     }
     
+    React.useEffect(() => {
+        setModuleContextState({
+            type: 'SetHeader',
+            payload: {
+                'newHeader': {
+                    Title: "",
+                    SubTitle: ""
+                }
+            }
+        })
+    }, [])
 
     IndexToComponent.push(
         {
@@ -295,76 +304,85 @@ export const ExecuteWorkflow = (props: ExecuteWorkflowProps) => {
             }
         )
     }
+
+    const getSubTexts = () => {
+        return [
+            workflowContext.stages?.[0]?.Actions.length + " Actions",
+            workflowContext.WorkflowParameters.length + " Parameters"
+        ]
+    }
+    
     if(workflowContext.Template !== undefined && workflowContext.stages[0].Actions.length > 0 && isReady && !actionInstanceDetailsQuery.isRefetching)
     {
         return (
-            <Box sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center',p:3}}>
-                <Box sx={{flex: 1}}>
-                    {/* <ActionDescriptionCard description={workflowContext.Description}  mode="READONLY" /> */}
-                </Box>
-                <Box sx={{flex: 4}}>
+            <ExecuteActionMainBox sx={{display: 'flex', gap: 2, flexDirection: 'column', justifyContent: 'center',p:3}}>
+               <Box sx={{flex: 1}}>
+                    <ActionLevelInfo actionDefinition={workflowDefinition?.[0]?.ActionDefinition?.model || {}} subTexts={getSubTexts()} isFlow={true}/>
+               </Box>
+               <Divider orientation="horizontal" sx={{width: '100%'}} />
+                <Box sx={{flex: 4, p: 2}}>
                     <ReactQueryWrapper data={workflowContext.WorkflowParameterInstance} isLoading={!isReady} error={instancesError} children={
                         () => (
-                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 3}}>
-                                <Grid container sx={{mt: 0}}>
-                                    <Grid item xs={2} />
-                                    <Grid item xs= {8} >
-                                        <Stepper nonLinear activeStep={recurrenceConfig.activeIndex} alternativeLabel>
-                                            {IndexToComponent.map((component, index) => (
-                                                <Step key={index}>
-                                                    <StepButton onClick={() => handleGoToStep(index)}>
-                                                        <Typography sx={{fontWeight:500}}>{IndexToComponent[index].label}</Typography>
-                                                    </StepButton>
-                                                </Step>
-                                            ))}
-                                        </Stepper>
-                                    </Grid>
-                                    <Grid item xs={2} sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                                        <Tooltip title="Edit Flow">
-                                            <IconButton onClick={handleEditFlow}>
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                </Grid>
-                                <Box> 
-                                    {IndexToComponent[recurrenceConfig.activeIndex].component}
+                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 3, m: 1}}>
+                                <Box sx={{display: 'flex', gap: 1}}>
+                                    <ExecuteActionStyledTabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
+                                        <ExecuteActionStyledTab label="Input" value={0} />
+                                        <ExecuteActionStyledTab label="Output" value={1} disabled={!(!!workflowExecutionId)}/>
+                                    </ExecuteActionStyledTabs>
                                 </Box>
+                                <Box sx={{mt: 1}}>
+                                    <TabPanel value={tabValue} index={0}>
+                                        <Grid container sx={{mt: 0}}>
+                                            <Grid item xs={6} />
+                                            <Grid item xs= {6} >
+                                                <Stepper nonLinear activeStep={recurrenceConfig.activeIndex} alternativeLabel>
+                                                    {IndexToComponent.map((component, index) => (
+                                                        <Step key={index}>
+                                                            <StepButton onClick={() => handleGoToStep(index)}>
+                                                                <Typography>{IndexToComponent[index].label}</Typography>
+                                                            </StepButton>
+                                                        </Step>
+                                                    ))}
+                                                </Stepper>
+                                            </Grid>
+                                        </Grid>
+                                        <Box sx={{mt: '10px'}}> 
+                                            {IndexToComponent[recurrenceConfig.activeIndex].component}
+                                        </Box>
+                                        <Box sx={{flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2}}>
+                                            {saveWorkflowMutation.isLoading ? (
+                                                <LoadingIndicator/>
+                                            ) : (
+                                                <>
+                                                {recurrenceConfig.activeIndex ===  (IndexToComponent.length - 1)? (
+                                                    <Button onClick={executeWorkflow}>EXECUTE</Button>
+                                                ) : (
+                                                    <Box sx={{display: 'flex', flexDirection:'row', width:'90%', gap: 2,justifyContent: 'flex-end'}}>
+                                                        <Button  variant="contained" disabled={!areAllParametersFilled()} onClick={executeWorkflow}>EXECUTE</Button>
+                                                        <Button variant="contained" onClick={handleGoNext}>NEXT</Button>
+                                                    </Box>
+                                                )}
+                                                
+                                                </>
+                                            )}
+                                        </Box>
+                                    </TabPanel>
+                                    <TabPanel value={tabValue} index={1}>
+                                    <WorkflowContextProvider>
+                                        <Card sx={{overflow: 'auto'}}>
+                                            <ViewWorkflowExecution workflowExecutionId={workflowExecutionId!} />
+                                        </Card>
+                                    </WorkflowContextProvider>
+                                    </TabPanel>
+                                </Box>
+                                
                             </Box>
                         )
                     }/>
                     
                 </Box>
-                <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', mt: 0,}}>
-                    <Box sx={{flex: 1, maxWidth: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2}}>
-                        {saveWorkflowMutation.isLoading ? (
-                            <LoadingIndicator/>
-                        ) : (
-                            <>
-                            {recurrenceConfig.activeIndex ===  (IndexToComponent.length - 1)? (
-                                <Button sx={{width: '200px',backgroundColor: 'ActionConfigComponentBtnColor2.main',justifyContent: 'center'}} variant="contained" onClick={executeWorkflow}>EXECUTE</Button>
-                            ) : (
-                                <Box sx={{display: 'flex', flexDirection:'row', width:'25vw',justifyContent: 'center'}}>
-                                    <Button sx={{mx:1, minWidth: '45%',position:'relative',left:0 ,backgroundColor: 'ActionConfigComponentBtnColor1.main'}} variant="contained" disabled={!areAllParametersFilled()} onClick={executeWorkflow}>EXECUTE</Button>
-                                    <Button sx={{mx:1, minWidth: '45%',position:'relative',right:0 ,backgroundColor: 'ActionConfigComponentBtnColor2.main'}} variant="contained" onClick={handleGoNext}>NEXT</Button>
-                                </Box>
-                            )}
-                            
-                            </>
-                        )}
-                        
-                    </Box>
-                </Box>
-                {workflowExecutionId ? (
-                    <WorkflowContextProvider>
-                        <Card>
-                            <ViewWorkflowExecution workflowExecutionId={workflowExecutionId} />
-                        </Card>
-                    </WorkflowContextProvider>
-
-                ) : (<></>)}
                 <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/>
-            </Box>
+            </ExecuteActionMainBox>
         )
     } else if(loading || instancesLoading || !isReady || actionInstanceDetailsQuery.isRefetching){
         return <LoadingIndicator/>

@@ -9,6 +9,7 @@ import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 import ViewActionExecutionOutput from "../../view_action_execution/ViewActionExecutionOutput";
 import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat";
+import ViewTablePreview from "./ViewTablePreview";
 
 export interface ViewConfiguredParametersProps {
     parameterDefinitions: ActionParameterDefinition[]
@@ -41,16 +42,9 @@ const ConfiguredParameter = (props: {definition: ActionParameterDefinition, inst
     const {definition, instance} = props
     const [tablePreviewExecutionId, setTablePreviewExecutionId] = React.useState<string | undefined>()
     const [tableName, setTableName] = React.useState<string | undefined>()
-    const [previewDialog, setPreviewDialog] = React.useState({isOpen: false})
+    const [showPreview, setShowPreview] = React.useState(false)
+    console.log(showPreview)
 
-    const handleTableFetched = (data: TableProperties) => {
-        const tableInfo = JSON.parse(data?.Info || "{}") as TablePropertiesInfo
-        const executionId = tableInfo?.SyncOOBActionStatus?.find(oobAction => oobAction.ActionDefinitionId === ActionDefinitionId.TABLE_1000_ROWS)?.ActionExecutionId
-        setTablePreviewExecutionId(executionId)
-        setPreviewDialog({isOpen: true})
-    }
-
-    const tableModelQuery = UseGetTableModel({ options: {enabled: false, onSuccess: handleTableFetched}, tableName: tableName })
     const handleViewTablePreview = () => {
         const tableId = instance.TableId
         if(!!tableId) {
@@ -58,39 +52,13 @@ const ConfiguredParameter = (props: {definition: ActionParameterDefinition, inst
             
         } else {
             setTablePreviewExecutionId(instance.SourceExecutionId)
-            setPreviewDialog({isOpen: true})
         }
-
+        setShowPreview(true)
     }
-
-    React.useEffect(() => {
-        if(!!tableName) {
-            tableModelQuery.refetch()
-        }
-    }, [tableName])
-
-    const handlePreviewDialogClose = () => {
-        setPreviewDialog({isOpen: false})
-        setTableName(undefined)
-    }
-
 
     return (
         <Card sx={{px: 3, py: 3, maxHeight: '183px', overflowY: 'auto', minHeight: '183px'}}>
-            <Dialog open={previewDialog.isOpen} onClose={handlePreviewDialogClose} maxWidth="lg" fullWidth>
-                <DialogContent>
-                    {tableModelQuery.isLoading ? (
-                        <LoadingIndicator/>
-                    ) : (<>
-                        {tablePreviewExecutionId ? 
-                            <ViewActionExecutionOutput 
-                                ActionExecution={{Id: tablePreviewExecutionId}}
-                                ActionInstance={{Name: "Table Preview"}}
-                                ActionDefinition={{PresentationFormat: ActionDefinitionPresentationFormat.TABLE_VALUE}}
-                            /> : <>Can't load table preview</>}
-                    </>)}
-                </DialogContent>
-            </Dialog>
+            {!!tableName || !!tablePreviewExecutionId ? <ViewTablePreview showPreview={showPreview} setShowPreview={setShowPreview} tableName={tableName} tablePreviewExecutionId={tablePreviewExecutionId}/> : <></>}
             <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "120px", width: "100%"}}>
                 <Box sx={{width: "100%"}}>
                     <Typography sx={{

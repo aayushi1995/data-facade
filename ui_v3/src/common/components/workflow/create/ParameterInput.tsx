@@ -1,4 +1,4 @@
-import { Autocomplete, Box, createFilterOptions, FormControl, Icon, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, createFilterOptions, FormControl, Icon, IconButton, InputBase, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material"
 import { table } from "console"
 import React, { ChangeEvent } from "react"
 import InfoIcon from "../../../../../src/images/info.svg"
@@ -6,11 +6,15 @@ import { ActionExecution, ColumnProperties, TableProperties } from "../../../../
 import { FilteredColumnsResponse } from "../../../../generated/interfaces/Interfaces"
 import { UpstreamAction } from "../../../../pages/applications/workflow/WorkflowContext"
 import useTables from "../../../../pages/build_action/hooks/useTables"
-import { SlackChannelInput } from "../../../../pages/configurations/components/ProviderParameterInput"
 import useSlackChannelIDInput from "../../common/useSlackChannelIDInput"
 import LoadingWrapper from "../../LoadingWrapper"
 import { HtmlTooltip } from "../../workflow-action/ActionCard"
+import AddIcon from '@mui/icons-material/Add';
 import useFetchColumnsForTableAndTags from "./hooks/useFetchColumnsForTableAndTags"
+import { StyledInputBase } from "./styled/StyledInputBase"
+import StyledInputPaper from "./styled/StyledInputPaper"
+import PreviewIcon from '@mui/icons-material/Preview';
+import ViewTablePreview from "../../../../pages/execute_action/components/ViewTablePreview"
 
 
 export interface UpstreamActionParameterInput {
@@ -101,7 +105,8 @@ export interface ColumnListParameterInput {
         selectedColumnFiltersWithNameOnly: ColumnProperties[] | undefined,
         filters: {
             tableFilters: TableProperties[] | undefined,
-            parameterDefinitionId: string
+            parameterDefinitionId: string,
+            availableExecutionIds: string[]
         },
         onChange?: (newColumnList?: ColumnProperties[]) => void
     }
@@ -276,14 +281,14 @@ const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
             limitTags={2}
             filterSelectedOptions
             disableCloseOnSelect
-            renderInput={(params) => (
-                <TextField 
-                    {...params}
-                    label={parameterName || "Parameter Name NA"}
-                    variant="outlined"
-                    size="small"
-                />
-            )}
+            renderInput={(params) => {
+                const {InputLabelProps,InputProps,...rest} = params;
+                return (
+                    <StyledInputPaper>
+                        <StyledInputBase {...params.InputProps}  {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"}/>
+                    </StyledInputPaper>
+                )
+            }}
             onChange={(event, value, reason, details) => {
                     onChange(value ?? undefined)
                 } 
@@ -305,15 +310,14 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
             clearOnBlur
             handleHomeEndKeys
             filterSelectedOptions
-            renderInput={(params) => (
-                <TextField 
-                    sx={{py:0}}
-                    {...params}
-                    label={parameterName || "Parameter Name NA"}
-                    variant="outlined"
-                    size="small"
-                />
-            )}
+            renderInput={(params) => {
+                const {InputLabelProps, InputProps, ...rest} = params;
+                return (
+                    <StyledInputPaper>
+                        <StyledInputBase {...params.InputProps}  {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"}/>
+                    </StyledInputPaper>
+                )
+            }}
             onChange={(event, value, reason, details) => {
                     onChange(value ?? undefined)
                 } 
@@ -396,7 +400,8 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
     const {parameterName, selectedColumnFiltersWithNameOnly, filters, onChange} = props.inputProps
     const fetchColumnsQuery = useFetchColumnsForTableAndTags({filters: {
         tableFilters: filters.tableFilters,
-        parameterDefinitionId: filters.parameterDefinitionId
+        parameterDefinitionId: filters.parameterDefinitionId,
+        availableExecutionIds: filters.availableExecutionIds
     }})
     const allColumns = fetchColumnsQuery?.data?.[0]?.Columns
 
@@ -436,14 +441,14 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
                 getOptionLabel={(column: ColumnProperties) => column.UniqueName || "Un-named column"}
                 groupBy={(column) => column.TableName || "Table NA"}
                 value={getAutoCompleteValue()}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={props.inputProps.parameterName || "Parameter Name NA"}
-                        variant="outlined"
-                        size="small"
-                    />
-                )}
+                renderInput={(params) => {
+                    const {InputLabelProps,InputProps,...rest} = params;
+                    return (
+                        <StyledInputPaper>
+                            <StyledInputBase {...params.InputProps}  {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"}/>
+                        </StyledInputPaper>
+                    )
+                }}
                 disableCloseOnSelect
                 clearOnBlur
                 handleHomeEndKeys
@@ -540,7 +545,12 @@ const ColumnInput = (props: ColumnParameterInput) => {
                     }
                     return filtered;
                 }}
-                renderInput={(params) => <TextField {...params} onKeyDown={(event) => event.stopPropagation()} label={props.inputProps.parameterName || "Parameter Name NA"} variant="outlined" size="small"/>}
+                renderInput={(params) => {
+                    const {InputLabelProps,InputProps,...rest} = params;
+                    return <StyledInputPaper>
+                        <StyledInputBase {...params.InputProps}  {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"}/>
+                    </StyledInputPaper>
+                }}
             />
         </LoadingWrapper>   
     )
@@ -640,16 +650,18 @@ const StringInput = (props: StringParameterInput) => {
         setInput(event.target.value);
       };
 
-    return <TextField
+    return (
+        <StyledInputPaper >
+            <StyledInputBase 
                 value={input}
                 onChange={handleChange}
                 onBlur={() => onChange(input)}
-                variant="outlined"
                 size="small"
-                label={props.inputProps.parameterName || "Parameter Name NA"}
-                fullWidth
-                onKeyDown={(event) => event.stopPropagation()}
-            />
+                placeholder={props.inputProps.parameterName || "Parameter Name NA"}
+                
+                onKeyDown={(event) => event.stopPropagation()}/>
+        </StyledInputPaper>
+    )
 }
 
 const IntInput = (props: IntParameterInput) => {
@@ -669,15 +681,16 @@ const IntInput = (props: IntParameterInput) => {
         }
     }
 
-    return <TextField
+    return <StyledInputPaper >
+        <StyledInputBase 
             value={input}
             onChange={onValueChange}
             onBlur={() => onChange(input)}
-            label={props.inputProps.parameterName || "Parameter Name NA"}
-            fullWidth
-            variant="outlined"
             size="small"
-        />
+            placeholder={props.inputProps.parameterName || "Parameter Name NA"}
+            
+            onKeyDown={(event) => event.stopPropagation()}/>
+    </StyledInputPaper>
 }
 
 const FloatInput = (props: FloatParameterInput) => {
@@ -704,15 +717,16 @@ const FloatInput = (props: FloatParameterInput) => {
         }
     }
 
-    return <TextField
-            value={input}
-            onChange={onValueChange}
-            onBlur={() => onChange(input)}
-            label={props.inputProps.parameterName || "Parameter Name NA"}
-            fullWidth
-            variant="outlined"
-            size="small"
-        />
+    return <StyledInputPaper >
+            <StyledInputBase 
+                value={input}
+                onChange={onValueChange}
+                onBlur={() => onChange(input)}
+                size="small"
+                placeholder={props.inputProps.parameterName || "Parameter Name NA"}
+                
+                onKeyDown={(event) => event.stopPropagation()}/>
+        </StyledInputPaper>
 }
 
 const BooleanInput = (props: BooleanParameterInput) => {
@@ -738,6 +752,7 @@ const BooleanInput = (props: BooleanParameterInput) => {
 
 const TableInput = (props: TableParameterInput) => {
     const filter = createFilterOptions<TableProperties>()
+    const [tablePreview, setTablePreview] = React.useState(false)
     // TODO: Instead of selected table name, get selected table id
     const {parameterName, selectedTableFilter, onChange, parameterDefinitionId} = props.inputProps
     const getTableSelectionInfo: (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => { AvailableTables: TableProperties[], SelectedTable?: TableProperties} = (availableTables?: TableProperties[], selectedTableFilter?: TableProperties) => {
@@ -796,6 +811,10 @@ const TableInput = (props: TableParameterInput) => {
         }
     }
 
+    const onTablePreview = () => {
+        setTablePreview(state => !state)
+    }
+
     const {tables, loading, error}  = useTables({tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived})
     const { AvailableTables, SelectedTable } = getTableSelectionInfo(tables, selectedTableFilter)
     
@@ -805,6 +824,7 @@ const TableInput = (props: TableParameterInput) => {
             error={error}
             data={tables}
         >
+            <ViewTablePreview tableName={SelectedTable?.UniqueName} tablePreviewExecutionId={SelectedTable?.Id} showPreview={tablePreview} setShowPreview={setTablePreview}/>
             <Autocomplete
                 key={SelectedTable?.UniqueName || "NA"}
                 options={AvailableTables.sort((table1, table2) => (table1.ProviderInstanceID || "id").localeCompare(table2.ProviderInstanceID || "id"))}
@@ -832,7 +852,24 @@ const TableInput = (props: TableParameterInput) => {
                     }
                     return filtered;
                 }}
-                renderInput={(params) => <TextField {...params}variant="outlined" size="small" label={props.inputProps.parameterName || "Parameter Name NA"}/>}
+                renderInput={(params) => {
+                    const {InputLabelProps,InputProps,...rest} = params;
+                    return (
+                        <StyledInputPaper>
+                            <>
+                            {!SelectedTable ? (
+                                <IconButton aria-label="menu">
+                                    <AddIcon />
+                                </IconButton>
+                            ) : <IconButton onClick={onTablePreview}>
+                                    <PreviewIcon/>
+                                </IconButton>}
+                            <StyledInputBase {...params.InputProps} {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"} />
+                            </>
+                        </StyledInputPaper>
+                        
+                    )
+                }}
             />
         </LoadingWrapper>
     )

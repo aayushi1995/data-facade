@@ -1,3 +1,4 @@
+import React from "react";
 
 
 declare module '@mui/styles' {
@@ -38,7 +39,8 @@ declare module '@mui/styles' {
       higlLevelInfoHeader: React.CSSProperties,
       tableBrowserContent: React.CSSProperties,
       tableBrowserHealthCell: React.CSSProperties,
-      parameterGrid: React.CSSProperties
+      parameterGrid: React.CSSProperties,
+      executeActionName: React.CSSProperties
     }
 }
 declare module '@mui/material/Typography' {
@@ -59,7 +61,11 @@ declare module '@mui/material/Typography' {
         higlLevelInfoHeader: true,
         tableBrowserContent: true,
         tableBrowserHealthCell: true,
-        parameterGrid: true
+        parameterGrid: true,
+        executeActionName: true,
+        executeActionSubtext: true,
+        executeActionDescription: true,
+        parameterInputField: true
     }
 }
 

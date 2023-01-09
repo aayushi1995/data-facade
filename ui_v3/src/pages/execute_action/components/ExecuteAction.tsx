@@ -20,8 +20,13 @@ import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteA
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
 import useGetExistingParameterInstances from '../hooks/useGetExistingParameterInstances';
 import useValidateActionInstance from '../hooks/useValidateActionInstance';
+import ActionLevelInfo from '../presentation/ActionLevelInfo';
+import CircularDot from '../presentation/CircularDot';
+import { ExecuteActionMainBox } from '../styled_components/ExecuteActionMainBox';
+import { ExecuteActionStyledTab, ExecuteActionStyledTabs } from '../styled_components/StyledTab';
 import ConfigureActionRecurring from "./ConfigureActionRecurring";
 import ConfigureParameters, { isDefaultValueDefined } from "./ConfigureParameters";
+import ConfigureParametersNew from './ConfigureParametersNew';
 import ConfigureSlackAndEmail from "./ConfigureSlackAndEmail";
 import SelectProviderInstance from "./SelectProviderInstance";
 import SelectProviderInstanceHook from "./SelectProviderInstanceHook";
@@ -74,10 +79,13 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
     const actionDefinitionId = props.actionDefinitionId
     const setModuleContext = React.useContext(SetModuleContextState)
     const actionExecutionView = React.useRef<HTMLDivElement | null>(null)
-    const [tabValue, setTabValue] = React.useState(0)
+    const useUrlToFindId = (props.fromDeepDive === undefined || props.fromDeepDive == false)
+    const location = useLocation()
+    const actionExecutionId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("executionId") : undefined
+    const actionInstanceId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
+    const [tabValue, setTabValue] = React.useState(!!actionExecutionId ? 1 : 0)
     const validateActionInstance = useValidateActionInstance()
     const [validateErrorMessage, setValidationErrorMessage] = React.useState<string | undefined>()
-    const location = useLocation()
     const { createActionInstanceAsyncMutation, createActionInstanceSyncMutation, fetchActionExeuctionParsedOutputMutation } = useCreateActionInstance({
         asyncOptions: {
             onMutate: () => {
@@ -89,9 +97,8 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             }
         }
     })
-    const useUrlToFindId = (!props.fromDeepDive || props.fromDeepDive == false)
-    const actionExecutionId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("executionId") : undefined
-    const actionInstanceId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
+
+
     
     const {data, error, isLoading, refetch, isRefetching} = useActionDefinitionDetail({actionDefinitionId: actionDefinitionId, options: { enabled: false, onSuccess(data) {
         if(!!data && !!data[0]) {
@@ -206,6 +213,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                 createActionInstanceAsyncMutation.mutate(request, {
                     onSuccess: () => {
                         setSnackbarState(true)
+                        setTabValue(1)
                         if(!(executeActionContext.ToCreateModels.ActionInstance.IsRecurring)) {
                             // setResultActionExecutionId(request?.actionExecutionToBeCreatedId)
                             if(props.redirectToExecution !== false) { 
@@ -309,7 +317,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         StepNumberToComponent.unshift({
             component: 
             <Box sx={{ mx: 15 }}>
-                <ConfigureParameters 
+                <ConfigureParametersNew
                     mode="GENERAL"
                     ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
                     ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
@@ -327,7 +335,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         StepNumberToComponent.push({
             component: 
             <Box sx={{ mx: 15 }}>
-                <ConfigureParameters 
+                <ConfigureParametersNew
                     showOnlyParameters={props.showOnlyParameters}
                     mode="ADVANCED"
                     ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
@@ -395,14 +403,15 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         executeActionContext.ExistingModels.ActionDefinition?.DisplayName
 
     return (
-        <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+        <ExecuteActionMainBox sx={{display: "flex", flexDirection: "column", gap: 2, p: 3}}>
             {props.showActionDescription && !!description ? (
                 <Box>
-                    <ActionDescriptionCard description={description} mode="READONLY" />
+                    <ActionLevelInfo actionDefinition={executeActionContext.ExistingModels.ActionDefinition} subTexts={[executeActionContext.ExistingModels.ActionParameterDefinitions.length + " Parameters"]}/>
                 </Box>
             ) : (
                 <></>
             )}
+            <Divider orientation='horizontal' sx={{width: '100%'}} />
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -414,39 +423,18 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     <></>
                 ) : (
                     <Box sx={{display: 'flex', gap: 1}}>
-                        <Tabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
-                            <Tab label="Parameters" value={0} sx={{
-                                fontFamily: "'SF Pro Text'",
-                                fontStyle: "normal",
-                                fontWeight: 500,
-                                lineHeight: "157%",
-                                letterSpacing: "0.124808px",
-                                color: "#DB8C28",
-                            }}
-                            iconPosition="start" 
-                            icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>
-                            <Tab label="Code" value={1} sx={{
-                                fontFamily: "'SF Pro Text'",
-                                fontStyle: "normal",
-                                fontWeight: 500,
-                                lineHeight: "157%",
-                                letterSpacing: "0.124808px",
-                                color: "#353535",
-                            }} icon={<img src={CodeTabIcon} alt=""/>} iconPosition="start"/>
-                        </Tabs>
-                        <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2, flex: 1}}>
-                            <IconButton onClick={handleEdit}>
-                                <EditIcon/>
-                            </IconButton>
-                        </Box>
+                        <ExecuteActionStyledTabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
+                            <ExecuteActionStyledTab label="Input" value={0} />
+                            <ExecuteActionStyledTab label="Output" value={1} disabled={!(!!actionExecutionId && !!data && !props.hideExecution)}/>
+                        </ExecuteActionStyledTabs>
                     </Box>
                 )}
                 <Box m={1}>
                     <TabPanel value={tabValue} index={0}>
                         <Box sx={{display: 'flex', flexDirection: 'column', gap: 4}}>
                             <Grid container>
-                                <Grid item xs={4} />
-                                <Grid item xs= {4} >
+                                <Grid item xs={7} />
+                                <Grid item xs= {5} >
                                     <Stepper nonLinear activeStep={executeActionContext.currentStep} alternativeLabel>
                                         {StepNumberToComponent.map((component, index) => (
                                             <Step key={index}>
@@ -505,11 +493,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                         </Box>
                     </TabPanel>
                     <TabPanel value={tabValue} index={1}>
-                        <CodeEditor 
-                            code={executeActionContext?.ExistingModels?.ActionTemplates?.[0]?.Text || "NA"}
-                            readOnly={true}
-                            language={executeActionContext?.ExistingModels?.ActionTemplates?.[0]?.Language}
-                        />
+                        <ActionExecutionDetails actionExecutionId={actionExecutionId!} showDescription={false}/>
                     </TabPanel>
                 </Box>
                 <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
@@ -524,12 +508,12 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                     </Alert>
                 </Snackbar>
             </Box>
-            {!!actionExecutionId && !!data && !props.hideExecution? (
+            {/* {!!actionExecutionId && !!data && !props.hideExecution? (
                 <Box sx={{mb: 10}} ref={actionExecutionView}>
                     <ActionExecutionDetails actionExecutionId={actionExecutionId} showDescription={false}/>
                 </Box>
-            ) : (<></>)}
-        </Box>
+            ) : (<></>)} */}
+        </ExecuteActionMainBox>
     )
 }
 

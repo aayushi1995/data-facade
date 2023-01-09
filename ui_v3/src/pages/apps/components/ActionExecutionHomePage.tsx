@@ -19,6 +19,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import ExecuteAction from "../../execute_action/components/ExecuteAction"
+import ExecutionLoadingIndicator from "../../execute_action/presentation/ExecuteLoadingIndicator"
 
 type MatchParams = {
     ActionExecutionId?: string
@@ -133,13 +134,28 @@ export const ActionExecutionDetails = (props: {
                         {props.showDescription === false ? (<></>): (
                             <ActionDescriptionCard description={description} mode="READONLY"/>
                         )}
-                        <ActionExecutionCard 
+                        <Box sx={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
+                            <Typography variant="executeActionSubtext">
+                                Runtime: {getElapsedTime()}
+                            </Typography>
+                        </Box>
+                        {executionTerminal ? (
+                            <ActionExecutionCard 
                             elapsedTime={getElapsedTime()} 
                             actionExecution={actionExecutionDetailQuery?.data?.ActionExecution!} 
                             handleClickArrow={handleClickArrow} 
                             arrowState={showParameters ? "UP":"DOWN"} 
                             terminalState={executionTerminal} 
                             error={executionError}/>
+                        ) : (
+                            <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, alignItems: 'center'}}>
+                                <ExecutionLoadingIndicator />
+                                <Typography>
+                                    Executing {actionExecutionDetailQuery?.data?.ActionDefinition?.DisplayName}. Please Wait
+                                </Typography>
+                            </Box>
+                        )}
+                        
                         {showParameters ? (
                             <ExecuteAction hideExecution={true} disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} />
                         ) : (

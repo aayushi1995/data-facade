@@ -309,6 +309,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
             const tableFilters = addtionalConfig?.availableTablesFilter !== undefined ? addtionalConfig?.availableTablesFilter : props.parameterInstances.filter(api => api.TableId!==undefined).map(api => ({Id: api.TableId} as TableProperties))
             const uniqueTableFilters = getUniqueFilters(tableFilters)
+            const availableExecutionIds = props.parameterInstances.filter(api => api.SourceExecutionId !== undefined)?.map(api => (api.SourceExecutionId)) || []
             return {
                 parameterType: "COLUMN_LIST",
                 parameterId: parameterDefinition.Id,
@@ -327,7 +328,8 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     }) || [],
                     filters: {
                         tableFilters: uniqueTableFilters,
-                        parameterDefinitionId: parameterDefinition?.Id!
+                        parameterDefinitionId: parameterDefinition?.Id!,
+                        availableExecutionIds: availableExecutionIds
                     }
                 }
             } as ColumnListParameterInput
@@ -346,25 +348,23 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
     }
 
     return (
-        <Box sx={{display: 'flex', minWidth: '100%', minHeight: '100%'}}>
-            <Grid container spacing = {0} sx={{p: 1}}>
-                {parameterDefinitions.length === 0 && 
-                    <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        <Typography> No Parameters Present</Typography>
-                    </Grid>
-                }
-                {parameterDefinitions.map((parameter) => {
-                    return (
-                        <Box sx={{width:'100%'}}>
-                            <Box sx={{display: 'flex' ,py:0}} 
-                                onClick={(event) => onParameterSelectClick(event, parameter)}>
-                                <ParameterInput {...parameter}/>
-                            </Box>
-                            
+        <Box sx={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', gap: 2, overflow: 'auto', minWidth: '120px'}}>
+            {parameterDefinitions.length === 0 && 
+                <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Typography> No Parameters Present</Typography>
+                </Grid>
+            }
+            {parameterDefinitions.map((parameter) => {
+                return (
+                    <Box sx={{width:'100%', minWidth: '100px'}}>
+                        <Box
+                            onClick={(event) => onParameterSelectClick(event, parameter)}>
+                            <ParameterInput {...parameter}/>
                         </Box>
-                    )
-                })}
-            </Grid>
+                        
+                    </Box>
+                )
+            })}
         </Box>
     )
 }
