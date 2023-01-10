@@ -1156,16 +1156,13 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                 if (line.trim().length > 0 && line.trim().charAt(0) === '-'){
                     return;
                 }
-                // const reg = new RegExp(/(?<=(?<!\{)\{)[^{}]*(?=\}(?!\}))/, "g");
-                const regex = /{([^}]*)}/g;
-
-                const matches = line.match(regex);
-                if(matches !== null) {
-                    matches.map((match) => match.slice(1, -1)).forEach(paramName => {
-                        if(!paramName.includes("{")) {
-                            parametersArray.push({ParameterName: paramName})
+                for (let i = 0; i < line.length; i++) {
+                    let matches = line.match(/{{(?<ParameterName>[^{}]*)}}/g)
+                    matches?.forEach(parameter => {
+                        if(!parameter.includes("df_helper")){
+                            parametersArray.push({ParameterName: parameter.replaceAll("{", "").replaceAll("}", "")})
                         }
-                    });   
+                    })
                 }
                 // while ((match = reg.exec(line)) != null) {
                 //     const paramName = match?.groups?.ParameterName
