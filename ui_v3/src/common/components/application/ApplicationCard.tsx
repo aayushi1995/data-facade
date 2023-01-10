@@ -158,7 +158,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 <StyledTypographyApplicationName sx={{lineHeight:'266%',p:'5px'}} >
                                     {application.ApplicationName}
                                 </StyledTypographyApplicationName >
-                                <IconButton sx={{ml:'auto'}} onClick={handleMenuOpen}>
+                                <IconButton sx={{ml:'auto',mr:3}} onClick={handleMenuOpen}>
                                     <MoreHorizIcon/>
                                 </IconButton>
                                         <Menu
@@ -214,7 +214,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 </Button>}
                             </Box>
                         </Box>
-                        <Box sx={{display:collapsedView?'flex':'none',justifyContent:'center',ml:'auto',gap:2,mr:1}}>
+                        <Box sx={{display:collapsedView?'flex':'none',justifyContent:'center',ml:'auto',gap:2,mr:4}}>
                             <Button size='small'  onClick={() => handleActionBuilder()}>
                             <AddIcon sx={{transform:'scale(0.7)'}}/>Action 
                             </Button>

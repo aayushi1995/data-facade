@@ -99,23 +99,24 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
             };
 
     const collapsibleMenu = (item: any) => <React.Fragment>
-
-        <StyledListItem
-            selected={checkActive(item.key)}
-            onClick={() => toggleOpen(item.key)}
-            sx={listItemStyle}
-            onMouseEnter={handleClick('right-end', item.subMenu)}
-            onMouseLeave={() => {
-                setOpen(false)
-            }}
-        >
-            <ListItemIcon
-                sx={listItemIconStyle}
+        <RouterLink to={item.url} style={routeStyle}>
+            <StyledListItem
+                selected={checkActive(item.key)}
+                onClick={() => toggleOpen(item.key)}
+                sx={listItemStyle}
+                onMouseEnter={handleClick('right-end', item.subMenu)}
+                onMouseLeave={() => {
+                    setOpen(false)
+                }}
             >
-                {<item.icon />}
-            </ListItemIcon>
-            <Typography sx={textStyle}> {item.name}</Typography>
-        </StyledListItem>
+                <ListItemIcon
+                    sx={listItemIconStyle}
+                >
+                    {<item.icon />}
+                </ListItemIcon>
+                <Typography sx={textStyle}> {item.name}</Typography>
+            </StyledListItem>
+        </RouterLink>
         <Collapse
             in={collapse.find((x: any) => x.key === item.key).open || checkActive(item.key)}
             timeout="auto"
@@ -130,7 +131,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
                                 sx={listItemIconStyle}
 
                             >
-                                {<subData.icon sx={{fontSize:18}}/>}
+                                {<subData.icon sx={{ fontSize: 18 }} />}
                             </ListItemIcon>
                             <Typography sx={textStyle}> {subData.name}</Typography>
                         </StyledListItem>

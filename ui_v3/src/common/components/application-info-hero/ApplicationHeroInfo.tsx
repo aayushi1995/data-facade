@@ -82,9 +82,9 @@ const ApplicationheroInfo = (props: ApplicationHeroInfoProps) => {
                                         Sync With GIT Repo
                                     </StyledButtonPackageHeader>
                                 ) : (
-                                    <Button size='small' variant="contained" sx={{
+                                    <StyledButtonPackageHeader size='small' variant="contained" sx={{
                                         wordWrap: 'break-word'
-                                    }}>In Sync With Git Repo</Button>
+                                    }}>In Sync With Git Repo</StyledButtonPackageHeader>
                                 )}
                             </>
                         ) : (

@@ -32,6 +32,7 @@ const items = [
   {
     key: "data",
     name: "Data",
+    url: "/data",
     icon: StorageOutlinedIcon,
     subMenu: [
       {
@@ -57,6 +58,7 @@ const items = [
   {
     key: "application",
     name: "Applications",
+    url: "/application",
     icon: IconApplication,
     subMenu: [
       {
