@@ -1,4 +1,4 @@
-import { Autocomplete, Box, createFilterOptions, FormControl, Icon, IconButton, InputBase, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, createFilterOptions, FormControl, Icon, IconButton, InputBase, InputLabel, MenuItem, Paper, Select, TextField, Tooltip, Typography } from "@mui/material"
 import { table } from "console"
 import React, { ChangeEvent } from "react"
 import InfoIcon from "../../../../../src/images/info.svg"
@@ -157,7 +157,8 @@ export interface SlackChannelSingleInput {
     parameterId?: string,
     inputProps: {
         selectedChannelID?: string, 
-        onSelectedChannelIdChange?: (selectedChannelId?: string) => void
+        onSelectedChannelIdChange?: (selectedChannelId?: string) => void,
+        parameterName: string
     }
 }
 
@@ -166,7 +167,8 @@ export interface SlackChannelMultipleInput {
     parameterId?: string,
     inputProps: {
         selectedChannelIDs?: string[], 
-        onSelectedChannelIdsChange?: (selectedChannelId?: string[]) => void
+        onSelectedChannelIdsChange?: (selectedChannelId?: string[]) => void,
+        parameterName: string
     }
 }
 
@@ -350,12 +352,14 @@ export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
                 onSelectedChannelChange(!!value ? [value] : undefined)
             }}
             isOptionEqualToValue={(option, value) => value?.Id!==undefined  && option?.Id === value?.Id}
-            renderInput={(params) => 
-                <TextField 
-                    {...params} 
-                    variant="outlined" 
-                    size="small"
-                />}
+            renderInput={(params) => {
+                const {InputLabelProps, InputProps, ...rest} = params;
+                return (
+                    <StyledInputPaper>
+                        <StyledInputBase {...params.InputProps}  {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"}/>
+                    </StyledInputPaper>
+                )
+            }}
         />
     )
 }
@@ -386,12 +390,14 @@ const SlackChannelMultiple = (props: SlackChannelMultipleInput) => {
                 onSelectedChannelChange(!!value ? value : undefined)
             }}
             isOptionEqualToValue={(option, value) => value?.Id!==undefined  && option?.Id === value?.Id}
-            renderInput={(params) => 
-                <TextField 
-                    {...params} 
-                    variant="outlined" 
-                    size="small"
-                />}
+            renderInput={(params) => {
+                const {InputLabelProps, InputProps, ...rest} = params;
+                return (
+                    <StyledInputPaper>
+                        <StyledInputBase {...params.InputProps}  {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"}/>
+                    </StyledInputPaper>
+                )
+            }}
         />
     )
 }
@@ -861,9 +867,10 @@ const TableInput = (props: TableParameterInput) => {
                                 <IconButton aria-label="menu">
                                     <AddIcon />
                                 </IconButton>
-                            ) : <IconButton onClick={onTablePreview}>
+                            ) : <Tooltip title="Preview Table"><IconButton onClick={onTablePreview}>
                                     <PreviewIcon/>
-                                </IconButton>}
+                                </IconButton>
+                                </Tooltip>}
                             <StyledInputBase {...params.InputProps} {...rest} placeholder={props.inputProps.parameterName || "Parameter Name NA"} />
                             </>
                         </StyledInputPaper>

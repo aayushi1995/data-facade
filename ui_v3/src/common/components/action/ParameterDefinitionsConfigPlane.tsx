@@ -182,7 +182,8 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     onSelectedChannelIdChange: (selectedChannelId) => onParameterValueChange({
                         ActionParameterDefinitionId: parameterDefinition.Id,
                         ParameterValue: selectedChannelId
-                    })
+                    }),
+                    parameterName: parameterDefinition.ParameterName || "Parameter Name NA"
                 }
             } as SlackChannelSingleInput
 
@@ -195,8 +196,9 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     selectedChannelIDs: existingParameterValue,
                     onSelectedChannelIdsChange: (selectedChannelId) => onParameterValueChange({
                         ActionParameterDefinitionId: parameterDefinition.Id,
-                        ParameterValue: selectedChannelId?.join(',')
-                    })
+                        ParameterValue: selectedChannelId?.join(','),
+                    }),
+                    parameterName: parameterDefinition.ParameterName || "Parameter Name NA"
                 }
             } as SlackChannelMultipleInput
 

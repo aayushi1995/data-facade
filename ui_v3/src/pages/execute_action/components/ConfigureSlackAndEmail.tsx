@@ -60,7 +60,8 @@ const ConfigureSlackAndEmail = (props: ConfigureSlackAndEmailProps) => {
                         parameterType='SLACK_CHANNEL_SINGLE'
                         inputProps={{
                             selectedChannelID: props.slack,
-                            onSelectedChannelIdChange: (selectedChannelId) => handleSlackChange(selectedChannelId)
+                            onSelectedChannelIdChange: (selectedChannelId) => handleSlackChange(selectedChannelId),
+                            parameterName: "Slack Alert"
                         }}
                     />
                 </Grid>
