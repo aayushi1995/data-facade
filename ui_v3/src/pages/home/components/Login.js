@@ -2,27 +2,19 @@ import React from "react";
 import {Button} from '@mui/material'
 import {useAuth0} from "@auth0/auth0-react";
 import { makeStyles } from '@mui/styles'
-import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {LOGIN_STATE_KEY, LOGIN_STATE_PROGRESS_VALUE} from "../EULA";
+import COLORS from "../../../assets/theme.color";
+import { ArrowForwardIosOutlined } from "@mui/icons-material";
 
 const useStyles = makeStyles(() => ({
 
     button: {
         height: 50,
-        width: 200,
-        alignContent: 'center',
-        alignItems: 'center',
-        display: 'flex',
-        backgroundColor: 'orange',
-        color: 'white',
-        border: 'orange',
-        borderRadius: 0,
+        width: 140,
+        backgroundColor: `${COLORS.PRIMARY}!important`,
+        color: `${COLORS.WHITE}!important`,
+        borderRadius: '8px!important',
         fontSize: 18,
-        letterSpacing: 0.3,
-        '&:hover': {
-            color: 'orange',
-            border: '1px solid orange'
-        }
     }
 }));
 
@@ -38,7 +30,7 @@ const LoginButton = () => {
             }}
             variant="outlined"
             className={classes.button}
-            endIcon={<LockOpenIcon/>}
+            endIcon={<ArrowForwardIosOutlined/>}
         >
             Log In
         </Button>

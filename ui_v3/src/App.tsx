@@ -1,5 +1,6 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace"
 import { Box, CssBaseline, Grid, ThemeProvider } from "@mui/material"
+import React from "react"
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Redirect, Route, Router, Switch } from 'react-router-dom'
 import ErrorBoundary from "./common/components/ErrorBoundry"
@@ -41,7 +42,10 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
         isLoading,
         user
     } = props;
-
+    React.useEffect(() => {
+        if (user && user.name)
+            localStorage.setItem('user', JSON.stringify(user))
+    }, [user])
     if (isLoading || dummyDataPending === 1) {
         return (
             <LoadingIndicator />
@@ -72,38 +76,38 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
         } else {
             // document.body.style.zoom = "85%"; // our product looks better in 85% zoom out state .....#### temporary soln #####
             return (
-                    <Layout>
-                        <ModuleContextStateProvider>
-                            <Box sx={{ p: 2}}>
-                                <ModuleContent.Header />
-                                <ModuleContent.MainContent />
-                                <div className={classes.mainContainer}>
-                                    <Grid container>
-                                        <Grid item xs={12}>
-                                            {isNonProductionEnv() && <EULA />}
-                                            <Switch>
-                                                <Route path='/customizations' component={Customizations} />
-                                                {isNonProductionEnv() &&
-                                                    <Route path='/configurations' component={Configurations} />}
-                                                <Route path='/alerts' component={Alerts} />
-                                                <Route path="/slackredirect" component={SlackRedirect} />
-                                                <Route path='/testPage' component={DevTestPage} />
-                                                <Route path='/tag' component={TagHomePage} />
-                                                <Route path='/create-action' component={CreateActionPage} />
-                                                <Route path='/run-action' component={RunActionPage} />
-                                                <Route path='/autobook/customers' component={AutobookHomePage} />
-                                                <Route path='/custom-applications' component={CustomApplicationsHomePage} />
-                                                <Route path='/workflow-editor' component={WorkflowEditorPage} />
-                                                <Route path='/run-workflow' component={RunWorkflowHomePage} />
-                                                <Route path='/view-workflow' component={ViewWorkflowHomePage} />
-                                                <Redirect exact from="/tableBrowser" to="/" />
-                                            </Switch>
-                                        </Grid>
+                <Layout>
+                    <ModuleContextStateProvider>
+                        <Box sx={{ p: 2 }}>
+                            <ModuleContent.Header />
+                            <ModuleContent.MainContent />
+                            <div className={classes.mainContainer}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        {isNonProductionEnv() && <EULA />}
+                                        <Switch>
+                                            <Route path='/customizations' component={Customizations} />
+                                            {isNonProductionEnv() &&
+                                                <Route path='/configurations' component={Configurations} />}
+                                            <Route path='/alerts' component={Alerts} />
+                                            <Route path="/slackredirect" component={SlackRedirect} />
+                                            <Route path='/testPage' component={DevTestPage} />
+                                            <Route path='/tag' component={TagHomePage} />
+                                            <Route path='/create-action' component={CreateActionPage} />
+                                            <Route path='/run-action' component={RunActionPage} />
+                                            <Route path='/autobook/customers' component={AutobookHomePage} />
+                                            <Route path='/custom-applications' component={CustomApplicationsHomePage} />
+                                            <Route path='/workflow-editor' component={WorkflowEditorPage} />
+                                            <Route path='/run-workflow' component={RunWorkflowHomePage} />
+                                            <Route path='/view-workflow' component={ViewWorkflowHomePage} />
+                                            <Redirect exact from="/tableBrowser" to="/" />
+                                        </Switch>
                                     </Grid>
-                                </div>
-                            </Box>
-                        </ModuleContextStateProvider>
-                    </Layout>
+                                </Grid>
+                            </div>
+                        </Box>
+                    </ModuleContextStateProvider>
+                </Layout>
             )
         }
     }
