@@ -1,8 +1,6 @@
-import { TabContext, TabPanel } from '@mui/lab';
 import { Tabs, Tab, IconButton } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles } from '@mui/styles';
 import { CloseOutlined } from '@mui/icons-material';
 
@@ -31,22 +29,22 @@ const TabRenderer = ({ children }: ChildrenProps) => {
     const search = location.search;
     const source = new URLSearchParams(search).get('source');
     const name = new URLSearchParams(search).get('name');
-    
+
     useEffect(() => {
         const route = routes.find((route: any) => route.path === location.pathname);
-        console.log('route',route)
-
         if (!route && source === "browser") {
-            setRoutes([...routes, { id: Date.now(), path: location.pathname, name: name }]);  
+            const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
+
+            setRoutes([...permanentRoutes, { id: Date.now(), path: location.pathname, name: name, isPermanent: false }]);
             setActiveTab(location.pathname)
         }
 
-        if(route && source==="browser"){
+        if (route && source === "browser") {
             setActiveTab(location.pathname)
         }
-    }, [location.pathname , source]);
+    }, [location.pathname, source]);
 
-    
+
     const handleChange = (event: React.SyntheticEvent, value: string) => {
         setActiveTab(value)
         history.push(value)
@@ -57,16 +55,25 @@ const TabRenderer = ({ children }: ChildrenProps) => {
         const index = routes.findIndex((route: any) => route.path == path);
         if (index > -1) {
             const updatedRoutes = [...routes.slice(0, index), ...routes.slice(index + 1)];
+            const permanentRoutes = updatedRoutes.filter((route: any) => route.isPermanent === true);
             setRoutes(updatedRoutes)
-            history.push('/')
+            if (permanentRoutes.length > 0) {
+                const lastIndex = permanentRoutes.length-1
+                setActiveTab(permanentRoutes[lastIndex].path)
+                history.push(permanentRoutes[lastIndex].path)
+            }
+            else {
+                history.push('/')
+            }
+
         }
     }
 
 
-    const renderLabel = (path: string,name:string) => {
+    const renderLabel = (path: string, name: string,isPermanent:boolean) => {
         const label = path === "/" ? 'home' : path.slice(1).replace("/", ' > ');
         return (
-            <span style={{ fontSize: 12, textTransform: 'capitalize' }}>
+            <span style={{ fontSize: 12, textTransform: 'capitalize',fontStyle:isPermanent?'normal':'italic' }}>
                 {" "}
                 {name}
                 {
@@ -84,7 +91,9 @@ const TabRenderer = ({ children }: ChildrenProps) => {
         )
     }
 
-
+    const makeParmanent = (path: string) => {
+        setRoutes((oldRoutes:any) => oldRoutes.map((route:any) => route.path === path ? {...route, isPermanent: true} : route))
+    }
 
     return (
 
@@ -94,7 +103,7 @@ const TabRenderer = ({ children }: ChildrenProps) => {
                 <Tabs value={activeTab} className={classes.root} aria-label="basic tabs example" onChange={handleChange} variant="scrollable"
                     scrollButtons>
                     {routes.map((route: any) => (
-                        <Tab label={renderLabel(route.path,route.name)} key={route.path} value={route.path} />
+                        <Tab  onDoubleClick={() => makeParmanent(route.path)} label={renderLabel(route.path, route.name, route.isPermanent)} key={route.path} value={route.path} />
                     ))}
 
                 </Tabs>

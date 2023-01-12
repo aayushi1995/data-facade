@@ -40,7 +40,7 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
   const classes = useStyles();
   const [treeData, setTreeData] = React.useState<any>({})
   const [loader, setLoader] = React.useState<any>({})
-  const [expandedNodes, setExpandedNodes] = React.useState<any>([])
+  const [expandedNodes, setExpandedNodes] = React.useState<string[]>([])
   let history = useHistory();
   const { data: entityBrowsers, error, isLoading } = useQuery(['entityBrowser', type], () => fetchEntityBrowser(type))
 
@@ -50,7 +50,11 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
       [path]: true,
     }));
     fetchEntityBrowser(path).then((res) => {
+      
+      res.length === 1 && fetchNodeData(res[0]?.path, res[0])
+      
       checkIfExpanded(path)
+      
       setLoader((prevState: any) => ({
         ...prevState,
         [path]: false,
@@ -69,13 +73,14 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
   const checkIfExpanded = (nodeId: string) => {
     if (expandedNodes.includes(nodeId)) {
       const index = expandedNodes.indexOf(nodeId);
-      expandedNodes.splice(index, 1);
-      setExpandedNodes(expandedNodes)
+      setExpandedNodes((oldState:any) => oldState.splice(index, 1))
     }
     else {
-      setExpandedNodes([...expandedNodes, nodeId])
+      setExpandedNodes((oldState:any) => ([...oldState, nodeId]))
     }
   }
+
+  
 
   const navigate = (item: any, hideparam = false) => {
     if (NAVIGATE_URL.hasOwnProperty(item.type)) {
@@ -89,6 +94,8 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
       return <span><Icon /></span>
     } else return <Default />
   }
+
+  
 
   const renderTree = (items: any) => {
     return items.map((item: any) => ([
