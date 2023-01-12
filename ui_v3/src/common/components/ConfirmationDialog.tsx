@@ -1,9 +1,12 @@
 import { Box, Button, Dialog, DialogContent } from "@mui/material"
-import errorLogo from "../../../src/images/error.svg"
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import ErrorIcon from '@mui/icons-material/Error';
 import CloseIcon from '@mui/icons-material/Close';
 import ReactMarkdown from 'react-markdown'
+import React from "react";
 
 export interface ConfirmationDialogProps {
+    mode?: "ERROR" | "INFO",
     messageHeader:string;
     messageToDisplay: string,
     acceptString:string,
@@ -15,20 +18,21 @@ export interface ConfirmationDialogProps {
 }
  
 const ConfirmationDialog = (props: ConfirmationDialogProps) => {
+    const mode = props?.mode || "ERROR"
+    const styling = stylings?.[mode]
     return (
         <Dialog open={props.dialogOpen} onClose={props.onDialogClose}fullWidth maxWidth="md" scroll="paper">
-            
             <Box sx={{display: 'flex' , px:1,pt:1}}>    
                 <Box sx={{display: 'flex', width:'45%'}}>
-                    <Button color="error">
-                        <img src={errorLogo}/>
-                    </Button>
+                    <Box sx={{ px: 2, display: "flex", alignItems: "center" }}>
+                        {React.createElement(styling.icon, {color: styling.color})}
+                    </Box>
                     <Box sx={{m:2, fontSize:"20px", fontWeight:'700'}}>
                         {props.messageHeader}
                     </Box>
                 </Box>
                 <Box sx={{textAlign:'right',width:'55%'}}>
-                    <Button color="error" >
+                    <Button color={styling?.color} >
                         <CloseIcon onClick={() => props?.onDecline?.()}/>
                     </Button>
                 </Box>
@@ -47,7 +51,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
                     <Button sx={{width:"150px", borderRadius:'7px'}} variant="outlined" color="primary" onClick={() => props?.onDecline?.()}>
                         {props.declineString}
                     </Button>
-                    <Button sx={{width:"150px", borderRadius:'7px'}}  variant="contained" color="error" onClick={() => props?.onAccept?.()}>
+                    <Button sx={{width:"150px", borderRadius:'7px'}}  variant="contained" color={styling?.color} onClick={() => props?.onAccept?.()}>
                         {props.acceptString}
                     </Button>
                     
@@ -55,6 +59,17 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
             </DialogContent>
         </Dialog>
     )
+}
+
+const stylings = {
+    "ERROR": {
+        icon: ErrorIcon,
+        color: "error"
+    },
+    "INFO": {
+        icon: LightbulbIcon,
+        color: "primary"
+    }
 }
 
 export default ConfirmationDialog

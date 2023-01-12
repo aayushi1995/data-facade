@@ -91,6 +91,7 @@ function ActionHeader(props: ActionHeaderProps) {
     return (
         <ActionHeaderCard sx={{ display: "flex", flexDirection: "row" }}>
             <ConfirmationDialog
+                mode="INFO"
                 dialogOpen={generatedCodeDialogState.open}
                 messageHeader="Generated Code"
                 messageToDisplay={generatedCodeDialogState.loading ? "Loading..." : generatedCodeDialogState.text}
