@@ -226,6 +226,7 @@ export interface ProviderInstance extends BaseEntity{
 	IsVisibleOnUI?: boolean
 	Config?: string
 	IsDefaultProvider?: boolean
+	IsConfigurable?: boolean
 }
 
 

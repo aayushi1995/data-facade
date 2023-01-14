@@ -74,7 +74,7 @@ export const ActionCardConatier = {
     backgroundColor: '#EBF1FA',
     px: 3,
     py: 2,
-    height: '46vh',
+    height: '48vh',
     overflowY: 'scroll'
 }
 
@@ -93,7 +93,8 @@ export const appCardContainer = {
 }
 export const PackagesNameStyle = {
     color: 'rgba(0, 0, 0, 0.87)',
-    fontFamily: 'Sans'
+    fontFamily: 'Sans',
+    mr:3
 }
 export const NumberofItemInPackage = {
     ml: 'auto',

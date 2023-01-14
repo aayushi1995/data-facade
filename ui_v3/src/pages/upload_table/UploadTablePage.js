@@ -9,14 +9,15 @@ import SelectFileStep from './components/SelectFileStep';
 import SelectTableStep from './components/SelectTableStep';
 import { SetModuleContextState } from "../../../src/common/components/ModuleContext";
 import { useContext , useEffect} from 'react';
+import RecommendedApps from './components/RecommendedApps';
 
 
 
 
 export const UploadTablePage = (props) => {
     const uploadButtonRef = React.useRef(null)
+    const [lastUploadedTableId, setLastUploadedTableId] = React.useState()
     const [uploadState, setUploadState] = React.useState(S3UploadState.NO_FILE_SELECTED)
-    const [selectedFile, setSelectedFile] = React.useState()
     const [activeStep, setActiveStep] = React.useState({
         stepIndex: 0,
         stepProps: {}
@@ -24,16 +25,17 @@ export const UploadTablePage = (props) => {
 
     const setModuleContext = useContext(SetModuleContextState)
     useEffect(() => {
-    setModuleContext({
-        type: "SetHeader",
-        payload: {
-            newHeader: {
-                Title: "Upload Wizard",
-                SubTitle: "Upload your CSV, Excel files from here"
+        setModuleContext({
+            type: "SetHeader",
+            payload: {
+                newHeader: {
+                    Title: "Upload Wizard",
+                    SubTitle: "Upload your CSV, Excel files from here"
+                }
             }
-        }
-    })
-}, [])
+        })
+    }, [])
+
     const nextStep = (nextStepProps, nextStepIndex) => {
         setActiveStep(oldActiveStep => {
             const getNewStepIndex = () => {
@@ -50,10 +52,7 @@ export const UploadTablePage = (props) => {
             }
         })
     }
-
-    const prevStep = () => {
-
-    }
+    const prevStep = () => {}
 
     const changeHandler = (event) => {
         const file = event.target.files[0];
@@ -97,7 +96,8 @@ export const UploadTablePage = (props) => {
                     <SelectTableStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
                 </Grid> }
                 { (activeStep.stepIndex===2) &&<Grid item xs={12}>
-                    <ConfigureTableMetadata nextStep={nextStep} prevStep={prevStep} stateData={uploadState.message} setUploadState={setUploadState} {...activeStep.stepProps}/>
+                    <ConfigureTableMetadata nextStep={nextStep} prevStep={prevStep} stateData={uploadState.message} setUploadState={setUploadState} setLastUploadedTableId={setLastUploadedTableId} {...activeStep.stepProps}/>
+                    <RecommendedApps tableId={lastUploadedTableId}/>
                 </Grid> }
                 
             </Grid>

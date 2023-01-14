@@ -81,7 +81,6 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             parameterDefinition.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME ||
             parameterDefinition.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
             const addtionalConfig = parameterAdditionalConfig as (undefined | ActionParameterTableAdditionalConfig)
-            console.log(existingParameterInstance)
             if(props.fromWebAppDefaultValue) {
                 return {
                     parameterType: "UPSTREAM_ACTION_WEB_APP",
@@ -149,7 +148,6 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                 : props.parameterInstances.filter(api => api.TableId!==undefined || api.ParameterValue !==undefined).map(api => ({Id: api.TableId, UniqueName: api.ParameterValue} as TableProperties))
             
             const availableExecutionIds = props.parameterInstances.filter(api => api.SourceExecutionId !== undefined)?.map(api => (api.SourceExecutionId)) || []
-            console.log(props.parameterInstances, availableExecutionIds)
             const uniqueTableFilters = getUniqueFilters(tableFilters)
             return {
                 parameterType: "COLUMN",

@@ -40,8 +40,8 @@ export const AppCard = (props: AppCardProps) => {
                 </Typography>
             </Box>
             <Box sx={{ ...ActionCardButtonContainer }}>
-                <Box sx={{...CursorPointer}} to={generatePath(`../${APPLICATION_EDIT_ACTION_ROUTE_ROUTE}`, { ActionDefinitionId: props.ID || "" })} component={RouterLink}><img width='25px' height='25px' src={SettingIcon} alt="" /></Box>
-                <Box sx={{...CursorPointer}} to={generatePath(`../${APPLICATION_EXECUTE_ACTION}`, { ActionDefinitionId: props.ID || "" })} component={RouterLink}><img width='25px' height='25px' src={RunIcon} alt="" /></Box>
+                <Box sx={{...CursorPointer}} to={generatePath(`${APPLICATION_EDIT_ACTION_ROUTE_ROUTE}`, { ActionDefinitionId: props.ID || "" })} component={RouterLink}><img width='25px' height='25px' src={SettingIcon} alt="" /></Box>
+                <Box sx={{...CursorPointer}} onClick={() => { window.open(generatePath(`${APPLICATION_EXECUTE_ACTION}`, { ActionDefinitionId: props.ID || "" })) }}><img width='25px' height='25px' src={RunIcon} alt="" /></Box>
                 <Box sx={{...CursorPointer}}><img width='25px' height='25px' src={SaveIcon} alt="" /></Box>
             </Box>
         </Card>

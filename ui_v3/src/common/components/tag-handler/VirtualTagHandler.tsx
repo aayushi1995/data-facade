@@ -51,7 +51,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                         options={availableTagsForEntity}
                         getOptionLabel={tag => tag.Name!}
                         filterSelectedOptions
-                        fullWidth
+                        size='small'
                         selectOnFocus
                         clearOnBlur
                         handleHomeEndKeys
@@ -76,7 +76,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                             }
                             return filtered;
                         }}
-                        renderInput={(params) => <TextField sx={{width:'100%'}} {...params}  label="Add Tag"/>}
+                        renderInput={(params) => <TextField sx={{}} {...params}  label="Add Tag"/>}
                     />
                 </Grid>}
                 <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:12, lg:12} )}>
@@ -104,8 +104,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                                                 alignItems: "center",
                                                 letterSpacing: "0.073125px",
                                                 color: "cardInfoFormCreatedByStringColor.main",
-                                                pt: 2,
-                                                pb: 2
+                                                
                                             }}
                                         />
                                         ) : (

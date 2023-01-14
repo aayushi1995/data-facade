@@ -7,6 +7,21 @@ import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import LoadingIndicator from '../common/components/LoadingIndicator';
 
 const S3UploadState = {
+    CREATING_TABLE_IN_SYSTEM_SUCCESS: {
+        message: "Table Synced into System",
+        colour: "#F3C583",
+        icon: <CheckOutlinedIcon style={{fontSize: 45}}/>
+    },
+    CREATING_TABLE_IN_SYSTEM_FAILURE: {
+        message: "Error while syncing Table into System",
+        colour: "#F3C583",
+        icon: <ErrorOutlineOutlinedIcon style={{fontSize: 45}}/>
+    },
+    CREATING_TABLE_IN_SYSTEM: {
+        message: "Table Sync in Progress",
+        colour: "#F3C583",
+        icon: <LoadingIndicator style={{width: 40, height: 40}}/>
+    },
     BUIDING_FILE_FOR_UPLOAD: {
         message: "Preparing File",
         colour: "#F3C583",
@@ -53,17 +68,17 @@ const S3UploadState = {
         icon: <ErrorOutlineOutlinedIcon style={{fontSize: 45}}/>
     },
     FDS_TABLE_FETCH_LOADING: {
-        message: "Creating Load Table into System Action",
+        message: "Loading Table into System",
         colour: "#F3C583",
         icon: <LoadingIndicator style={{width: 40, height: 40}}/>
     },
     FDS_TABLE_FETCH_ERROR: {
-        message: "Load Table into System Action Creation Failed",
+        message: "Loading Table into System Failed",
         colour: "#E99497",
         icon: <ErrorOutlineOutlinedIcon style={{fontSize: 45}}/>
     },
     FDS_TABLE_FETCH_SUCCESS: {
-        message: "Loading table into System",
+        message: "Loading Table into System Success",
         colour: "#B3E283",
         icon: <DoneOutlineOutlinedIcon style={{fontSize: 45}}/>
     },
@@ -91,7 +106,6 @@ const S3UploadState = {
             colour: "#E99497",
             icon: <ErrorOutlineOutlinedIcon style={{fontSize: 45}}/>
         }
-        
     },
     SELECTED_FILE_OK: (fileName, fileSize) => {
         function formatBytes(bytes, decimals = 2) {

@@ -1,15 +1,16 @@
 import {
     Box,
     Button, Card, Divider,
-    FormControl, Grid, InputLabel,
+    FormControl, Grid, InputLabel,Typography,
     List,
     ListItem, MenuItem,
     Select, TextField,
     IconButton,
-    InputAdornment
+    InputAdornment,
+    SelectChangeEvent
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, DataGridProps } from "@mui/x-data-grid";
 import Papa from 'papaparse';
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
@@ -17,22 +18,29 @@ import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import { DATA_ALL_TABLES_ROUTE } from '../../../common/components/header/data/DataRoutesConfig';
 import VirtualTagHandler from '../../../common/components/tag-handler/VirtualTagHandler';
-import SelectTags from './../../../common/components/SelectTags.js';
+import SelectTags from '../../../common/components/SelectTags.js';
 import './../../../css/table_browser/TableBrowser.css';
-import S3UploadState from './../../../custom_enums/S3UploadState';
-import dataManagerInstance from './../../../data_manager/data_manager';
-import ColumnDataType from './../../../enums/ColumnDataType';
-import ExternalStorageUploadRequestContentType from './../../../enums/ExternalStorageUploadRequestContentType';
-import TagGroups from './../../../enums/TagGroups';
-import TagScope from './../../../enums/TagScope';
+import S3UploadState from '../../../custom_enums/S3UploadState';
+import dataManager from '../../../data_manager/data_manager';
+import ColumnDataType from '../../../enums/ColumnDataType';
+import ExternalStorageUploadRequestContentType from '../../../enums/ExternalStorageUploadRequestContentType';
+import TagGroups from '../../../enums/TagGroups';
+import TagScope from '../../../enums/TagScope';
 import SelectHeaderRowsButton from './SelectHeaderRowsButton';
 import { findHeaderRows } from './util';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CollapsibleDrawer from "../../../../src/pages/build_action/components/form-components/CollapsibleDrawer"
+import CollapsibleDrawer from "../../build_action/components/form-components/CollapsibleDrawer"
 import DoubeLeftIcon from '../../../../src/images/Group 691.svg';
 import {Link } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search'; 
 import TableIcon from '../../../../src/images/table_2.svg'
+import { TableProperties, Tag } from '../../../generated/entities/Entities';
+import { TableAndColumns } from '../../../generated/interfaces/Interfaces';
+import labels from '../../../labels/labels';
+import DatafacadeDatatype from '../../../enums/DatafacadeDatatype';
+
+const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function}
+
 const useStyles = makeStyles(() => ({
     requiredTags: {
         width: "100%",
@@ -74,17 +82,60 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+type ColumnSchema = {
+    Id: string,
+    columnDatatype: string,
+    columnIndex: number,
+    columnName: string,
+    columnTags: Tag[],
+    duplicateColor: any,
+    isDuplicate: boolean,
+    isValid: boolean,
+}
 
-export const ConfigureTableMetadata = (props) => {
+type FileSchema = {
+    columnSchema?: ColumnSchema[],
+    dataStartsFromRow?: number,
+    requiredTableTags?: Tag[],
+    tableName?: string,
+    tableId?: string,
+    tableTags?: Tag[]
+}
+
+type ParsedFileResult = {
+    columnNames?: string[],
+    headerRows?: number[],
+    dataStartsFromRow?: number,
+    data?: any[]
+}
+
+export type ConfigureTableMetadataProps = {
+    isApplication?: boolean,
+    nextStep?: Function,
+    prevStep?: Function,
+    setUploadState?: Function,
+    stateData?: string,
+    file: File,
+    setLastUploadedTableId: React.Dispatch<React.SetStateAction<string|undefined>>
+}
+
+type S3UploadInformation = {
+    requestUrl: string, 
+    headers: any, 
+    file: File
+}
+
+export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
     const classes = useStyles();
     let history = useHistory();
     // States
     const selectedFile = props.file
-    const [selectedFileSchema, setSelectedFileSchema] = React.useState({ requiredTableTags: [] });
-    const [uploadButtonState, setUploadButtonState] = React.useState({
+    const [fileStatusInformation, setFileStatusInformation] = React.useState<{ autoUpload: Boolean, errors: string[] }>({ autoUpload: true, errors: []})
+    const [selectedFileSchema, setSelectedFileSchema] = React.useState<FileSchema>({ requiredTableTags: [], tableId: uuidv4() })
+    const [uploadButtonState, setUploadButtonState] = React.useState<{ currentEnabled: number, requiredEnabled: number}>({
         currentEnabled: 5,
         requiredEnabled: 15
-    });
+    })
 
     // Upload Button is enabled if all bits are set
     // 2^0: File type/size valid
@@ -92,7 +143,20 @@ export const ConfigureTableMetadata = (props) => {
     // 2^2: No Upload already in progress
     // 2^3: All Column Names are Valid and Distinct
     // 2^4: All Required Table Tags Configured
-    const enableUploadButton = (value) => {
+    React.useEffect(() => {
+        if(fileStatusInformation.autoUpload) {
+            if(uploadButtonState.currentEnabled === uploadButtonState.requiredEnabled) {
+                setFileStatusInformation(old => ({ ...old, autoUpload: false }))
+                uploadSelectedFiles()
+            }
+        }
+    }, [uploadButtonState.currentEnabled])
+
+    React.useEffect(() => {
+        setFileStatusInformation(old => ({ ...old, autoUpload: true }))
+    }, [props.file])
+
+    const enableUploadButton = (value: number) => {
         setUploadButtonState(old => {
             return {
                 ...old,
@@ -101,7 +165,7 @@ export const ConfigureTableMetadata = (props) => {
         });
     };
 
-    const disableUploadButton = (value) => {
+    const disableUploadButton = (value: number) => {
         setUploadButtonState(old => {
             return {
                 ...old,
@@ -110,64 +174,92 @@ export const ConfigureTableMetadata = (props) => {
         });
     };
 
-    const fetchPresignedUrlMutation = useMutation(
+    const fetchPresignedUrlMutation = useMutation<S3UploadInformation, unknown, {file: File, expirationDurationInMinutes: number}, unknown>(
         "GetS3PreSignedUrl",
-        (config) => dataManagerInstance.getInstance.s3PresignedUploadUrlRequest(config.file, config.expirationDurationInMinutes, ExternalStorageUploadRequestContentType.TABLE),
+        (config) => dataManagerInstance.s3PresignedUploadUrlRequest(config.file, config.expirationDurationInMinutes, ExternalStorageUploadRequestContentType.TABLE),
         {
             onMutate: variables => {
-                props.setUploadState(S3UploadState.PRESIGNED_URL_FETCH_LOADING);
+                props?.setUploadState?.(S3UploadState.PRESIGNED_URL_FETCH_LOADING);
                 disableUploadButton(4);
             }
         }
     );
 
-    const uploadToS3Mutation = useMutation(
+    const uploadToS3Mutation = useMutation<unknown, unknown, S3UploadInformation, unknown>(
         "UploadToS3",
-        (config) => dataManagerInstance.getInstance.s3UploadRequest(config.requestUrl, config.headers, config.file),
+        (config) => dataManagerInstance.s3UploadRequest(config.requestUrl, config.headers, config.file),
         {
             onMutate: variables => {
-                props.setUploadState(S3UploadState.S3_UPLOAD_LOADING);
+                props?.setUploadState?.(S3UploadState.S3_UPLOAD_LOADING);
                 disableUploadButton(4);
             }
         }
     );
 
-    const loadTableFromS3Action = useMutation(
+    const loadTableFromS3Action = useMutation<unknown, unknown, {entityName: string, actionProperties: any}, unknown>(
         "LoadTableFromS3",
-        (config) => dataManagerInstance.getInstance.saveData(config.entityName, config.actionProperties),
+        (config) => dataManagerInstance.saveData(config.entityName, config.actionProperties),
         {
             onMutate: () => {
-                props.setUploadState(S3UploadState.FDS_TABLE_FETCH_LOADING);
+                props?.setUploadState?.(S3UploadState.FDS_TABLE_FETCH_LOADING);
                 disableUploadButton(4);
             }
         }
     );
 
-    const setSelectedFileColumnSchema = React.useCallback((columnSchema) => {
-        setSelectedFileSchema(old => {
-            return { ...old, "columnSchema": columnSchema };
-        });
-    });
+    const createTableColumnMutation = useMutation<TableProperties, unknown, FileSchema, unknown>(
+        "CreateTableColumn",
+        (config) => {
+            const entities: TableAndColumns = {
+                Table: {
+                    TableEntity: {
+                        Id: config?.tableId,
+                        UniqueName: config?.tableName,
+                        DisplayName: config?.tableName
+                    },
+                    Tags: config?.tableTags
+                },
+                Columns: selectedFileSchema?.columnSchema?.map(columnSchema => ({
+                    ColumnEntity: {
+                        Id: columnSchema?.Id,
+                        Datatype: columnSchema?.columnDatatype,
+                        ColumnIndex: columnSchema?.columnIndex,
+                        UniqueName: columnSchema?.columnName,
+                    },
+                    Tags: columnSchema?.columnTags
+                }))
+            }
 
-    const setSelectedFileTableName = React.useCallback((tableName) => {
-        setSelectedFileSchema(old => {
-            return { ...old, "tableName": tableName };
-        });
-    });
+            return dataManagerInstance?.saveData(labels.entities.TABLE_PROPERTIES, {
+                CreateTableColumnFromUpload: true,
+                TableColumnEntities: entities
+            })
+        }, {
+            onMutate: (variables) => props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM),
+        }
+    )
 
-    const setSelectedFileTableTags = React.useCallback((tableTags) => {
-        setSelectedFileSchema(old => {
-            return { ...old, "tableTags": tableTags };
-        });
-    });
+    const setSelectedFileColumnSchema = React.useCallback((columnSchema: ColumnSchema[]) =>
+        setSelectedFileSchema(old => ({ ...old, columnSchema: columnSchema })),
+        []
+    );
 
-    const setSelectedFileDataStartsFromRow = React.useCallback((dataStartsFromRow) => {
-        setSelectedFileSchema(old => {
-            return { ...old, "dataStartsFromRow": dataStartsFromRow };
-        });
-    });
+    const setSelectedFileTableName = React.useCallback((tableName) =>
+        setSelectedFileSchema(old => ({ ...old, tableName: tableName })),
+        []
+    );
 
-    const setTag = (tagModel) => {
+    const setSelectedFileTableTags = React.useCallback((tableTags) => 
+        setSelectedFileSchema(old => ({ ...old, "tableTags": tableTags })),
+        []
+    );
+
+    const setSelectedFileDataStartsFromRow = React.useCallback((dataStartsFromRow) =>
+        setSelectedFileSchema(old => ({ ...old, "dataStartsFromRow": dataStartsFromRow })),
+        []
+    );
+
+    const setTag = (tagModel: Tag) => {
         setSelectedFileSchema(oldSchema => {
             const oldRequiredTableTags = (oldSchema?.requiredTableTags || []);
             const newRequiredTableTags = oldRequiredTableTags.some(oldTag => oldTag.TagGroup === tagModel.TagGroup) ?
@@ -185,12 +277,13 @@ export const ConfigureTableMetadata = (props) => {
             };
         });
     };
-    const getTag = (tagGroupName) => {
+
+    const getTag = (tagGroupName: string) => {
         return ((selectedFileSchema?.requiredTableTags || []).filter(tagModel => tagModel.TagGroup === tagGroupName)[0]) || { Name: "" };
     };
 
     const uploadSelectedFiles = () => {
-        props.setUploadState(S3UploadState.BUIDING_FILE_FOR_UPLOAD);
+        props?.setUploadState?.(S3UploadState.BUIDING_FILE_FOR_UPLOAD);
         Papa.parse(selectedFile,
             {
                 dynamicTyping: true,
@@ -198,34 +291,44 @@ export const ConfigureTableMetadata = (props) => {
                 complete: (result) => {
                     const newCsvFileJson = {
                         data: result.data.slice(selectedFileSchema.dataStartsFromRow),
-                        fields: selectedFileSchema.columnSchema.map(col => col.columnName)
+                        fields: selectedFileSchema?.columnSchema?.map?.(col => col.columnName)
                     }
                     const fileName = selectedFileSchema.tableName + ".csv";
                     const newCsvFileContent = Papa.unparse(newCsvFileJson)
                     const newCsvFile = new File([newCsvFileContent], fileName, {type: selectedFile.type})
-                    props.setUploadState(S3UploadState.FILE_BUILT_FOR_UPLOAD);
+                    props?.setUploadState?.(S3UploadState.FILE_BUILT_FOR_UPLOAD);
                     uploadGivenFile(newCsvFile)
                 },
                 error: (errors, file) => {
                     console.log(errors)
                 }
-            })
+            }
+        )
     }
-    const uploadGivenFile = (newFile) => {
-        // const fileName = selectedFileSchema.tableName + ".csv";
-        // const newFile = new File([selectedFile], fileName, { type: selectedFile.type });
 
+    const refreshIds = () => {
+        setSelectedFileSchema(oldSchema => ({
+            ...oldSchema,
+            tableId: uuidv4(),
+            columnSchema: oldSchema?.columnSchema?.map(column => ({
+                ...column,
+                Id: uuidv4()
+            }))
+        }))
+    }
+
+    const uploadGivenFile = (newFile: File) => {
         fetchPresignedUrlMutation.mutate(
             { file: newFile, expirationDurationInMinutes: 5 },
             {
                 onSuccess: (data, variables, context) => {
-                    props.setUploadState(S3UploadState.PRESIGNED_URL_FETCH_SUCCESS);
+                    props?.setUploadState?.(S3UploadState.PRESIGNED_URL_FETCH_SUCCESS);
                     disableUploadButton(4);
                     uploadToS3Mutation.mutate(
                         { requestUrl: data.requestUrl, headers: data.headers, file: variables.file },
                         {
                             onSuccess: () => {
-                                props.setUploadState(S3UploadState.S3_UPLOAD_SUCCESS);
+                                props?.setUploadState?.(S3UploadState.S3_UPLOAD_SUCCESS);
                                 disableUploadButton(4);
                                 loadTableFromS3Action.mutate(
                                     {
@@ -234,27 +337,40 @@ export const ConfigureTableMetadata = (props) => {
                                     },
                                     {
                                         onSuccess: () => {
-                                            props.setUploadState(S3UploadState.FDS_TABLE_FETCH_SUCCESS);
-                                            enableUploadButton(4);
-                                            history.push(DATA_ALL_TABLES_ROUTE)
+                                            props?.setUploadState?.(S3UploadState.FDS_TABLE_FETCH_SUCCESS);
+                                            createTableColumnMutation.mutate(
+                                                selectedFileSchema,
+                                                {
+                                                    onSuccess: (data, variables, context) => {
+                                                        props?.setLastUploadedTableId?.(selectedFileSchema.tableId)
+                                                        refreshIds()
+                                                        props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS)
+                                                        enableUploadButton(4);
+                                                    },
+                                                    onError: (error, variables, context) => {
+                                                        props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM_FAILURE)
+                                                        enableUploadButton(4);
+                                                    }
+                                                }
+                                            )
                                         },
                                         onError: (err, variables, context) => {
                                             console.log(err, variables, context)
-                                            props.setUploadState(S3UploadState.FDS_TABLE_FETCH_ERROR);
+                                            props?.setUploadState?.(S3UploadState.FDS_TABLE_FETCH_ERROR);
                                             enableUploadButton(4);
                                         }
                                     }
                                 );
                             },
                             onError: (data, variables, context) => {
-                                props.setUploadState(S3UploadState.S3_UPLOAD_ERROR);
+                                props?.setUploadState?.(S3UploadState.S3_UPLOAD_ERROR);
                                 enableUploadButton(4);
                             }
                         }
                     );
                 },
                 onError: (data, variables, context) => {
-                    props.setUploadState(S3UploadState.PRESIGNED_URL_FETCH_ERROR);
+                    props?.setUploadState?.(S3UploadState.PRESIGNED_URL_FETCH_ERROR);
                     enableUploadButton(4);
                 }
             }
@@ -266,7 +382,7 @@ export const ConfigureTableMetadata = (props) => {
     // TODO: Apply colour to disbaled Upload Button
     return (
         <Grid sx={{m:-4 , mt:-5}}>
-            {props.isApplication &&
+            {props?.isApplication &&
                 <Grid item xs={12}>
                     <Box m={2}>
                         <Grid container spacing={3}>
@@ -314,9 +430,9 @@ export const ConfigureTableMetadata = (props) => {
                 <Grid container item xs={12} direction="row">
                         <Box  sx={{width:'100%',mx:1,px:2,pb:2, display:'flex' , flexDirection:'row', justifyContent:'flex-end'}}>
                             <Link to="/data/connections" style={{textDecoration: 'none'}}>
-                            <Button  sx={{borderRadius:'5px',width:'115px',mr:2,textDecoration:'none'}} variant="outlined" color="error">
-                                Cancel
-                            </Button>
+                                <Button  sx={{borderRadius:'5px',width:'115px',mr:2,textDecoration:'none'}} variant="outlined" color="error">
+                                    Cancel
+                                </Button>
                             </Link>
 
                             <Button color="success" variant="contained" sx={{borderRadius:'5px', width:'115px'}} component="label" onClick={uploadSelectedFiles}
@@ -333,14 +449,26 @@ export const ConfigureTableMetadata = (props) => {
                     enableUploadButton={enableUploadButton} disableUploadButton={disableUploadButton}
                     setSelectedFileTablTags={setSelectedFileTableTags}
                     setSelectedFileDataStartsFromRow={setSelectedFileDataStartsFromRow} 
-                    statusMSG = {props.stateData}/>
+                    statusMSG = {props.stateData}
+                />
             </Grid>
-            <p></p>
         </Grid>
     );
 };
 
-const TableSchemaSelection = (props) => {
+type TableSchemaSelectionProps = {
+    selectedFile: File,
+    setSelectedFileColumnSchema: Function,
+    setSelectedFileTableName: Function,
+    enableUploadButton: Function,
+    disableUploadButton: Function,
+    setSelectedFileTablTags: Function,
+    setSelectedFileDataStartsFromRow: Function, 
+    statusMSG?: string
+    mode?: "READONLY"
+}
+
+const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
     const classes = useStyles()
     /**
      * parsedFileResult
@@ -349,17 +477,17 @@ const TableSchemaSelection = (props) => {
      *      dataStartsFromRow
      *      data
      */
-    const [parsedFileResult, setParsedFileResult] = React.useState({})
-    const [columnProperties, setColumnProperties] = React.useState()
-    const [displayColumnProperties, setDisplayColumnProperties] = React.useState()
-    const [columnSearchQuery, setColumnSearchQuery] = React.useState("")
-    const [tableProperties, setTableProperties] = React.useState({
+    const [parsedFileResult, setParsedFileResult] = React.useState<ParsedFileResult>({})
+    const [columnProperties, setColumnProperties] = React.useState<ColumnSchema[]>()
+    const [displayColumnProperties, setDisplayColumnProperties] = React.useState<ColumnSchema[]>()
+    const [columnSearchQuery, setColumnSearchQuery] = React.useState<string>("")
+    const [tableProperties, setTableProperties] = React.useState<{tableName: string, tags: Tag[], isValid: boolean}>({
         tableName: "",
         tags: [],
         isValid: true
     })
 
-    const setColumnAndDataCallback = (columnNames, dataStartsFromRow, data, headerRows) => {
+    const setColumnAndDataCallback = (columnNames: string[], dataStartsFromRow: number, data: any[], headerRows: number[]) => {
         props.setSelectedFileDataStartsFromRow(dataStartsFromRow)
         setParsedFileResult(oldResult => {
             return {
@@ -387,8 +515,9 @@ const TableSchemaSelection = (props) => {
     React.useEffect(() => {
         if (!!parsedFileResult && !!parsedFileResult?.columnNames && !!parsedFileResult?.data) {
             const colProps = parsedFileResult.columnNames.map((columnName, columnIndex) => {
-                const calculatedDataType = getTypeOfValue(parsedFileResult.data.map(x => x[columnIndex]))
+                const calculatedDataType = getTypeOfValue(parsedFileResult?.data?.map?.(x => x[columnIndex]))
                 return {
+                    Id: uuidv4(),
                     columnName: formCloseValidObjectName(columnName),
                     columnDatatype: calculatedDataType,
                     columnIndex: columnIndex,
@@ -396,7 +525,7 @@ const TableSchemaSelection = (props) => {
                     isValid: true,
                     isDuplicate: false,
                     duplicateColor: undefined
-                }
+                } as ColumnSchema
             })
             setColumnProperties(colProps)
         
@@ -407,20 +536,20 @@ const TableSchemaSelection = (props) => {
 
     const fetchTags = useMutation(
         "FetchTags",
-        (config) => dataManagerInstance.getInstance.getTableAndColumnTags(config),
+        (config) => dataManagerInstance.getTableAndColumnTags(config),
         {
             onMutate: variables => {
             }
         }
     )
 
-    const setTableName = (tableName) => {
+    const setTableName = (tableName: string) => {
         setTableProperties(old => {
             return {...old, tableName: tableName}
         })
     }
 
-    const handleTableTagChange = (newTags) => {
+    const handleTableTagChange = (newTags: Tag[]) => {
         setTableProperties((oldProps) => {
             return {
                 ...oldProps,
@@ -447,9 +576,9 @@ const TableSchemaSelection = (props) => {
     }, [columnSearchQuery, JSON.stringify(columnProperties)])
 
 
-    const finalColumnProperties = (columnProperties) => {
+    const finalColumnProperties = (columnProperties: ColumnSchema[]) => {
         if (columnProperties !== undefined) {
-            const newColumnPropertiesConfig = {}
+            const newColumnPropertiesConfig: any = {}
             for (var i = 0; i < columnProperties.length; i++) {
                 var columnName = columnProperties[i].columnName
                 if (columnName in newColumnPropertiesConfig) {
@@ -489,7 +618,7 @@ const TableSchemaSelection = (props) => {
             const allColumnNamesValid = columnProperties.map(columnProperty => columnProperty.isValid).every(x => x === true)
             const allColumnNamesDistinct = !((new Set(columnNames)).size !== columnNames.length)
 
-            if (allColumnNamesValid & allColumnNamesDistinct) {
+            if (allColumnNamesValid && allColumnNamesDistinct) {
                 props.enableUploadButton(8)
             } else {
                 props.disableUploadButton(8)
@@ -578,45 +707,28 @@ const TableSchemaSelection = (props) => {
 
 
     const setColumnProperty = React.useCallback(
-        (columnIndex, newProperty) => {
-            setColumnProperties(old => {
-                return [
-                    ...old.slice(0, columnIndex),
-                    {
-                        ...old[columnIndex],
-                        ...newProperty
-                    },
-                    ...old.slice(columnIndex + 1)
-                ]
-            })
-        }, [])
+        (columnIndex: number, newProperty: ColumnSchema) =>
+            setColumnProperties(old => old?.map((col, index) => index===columnIndex ? { ...col, ...newProperty} : col)), 
+            []
+    )
 
     const schemaDataSelector = (displayColumnProperties || []).map((columnProperty, columnIndex) =>
         <>
-            <ListItem sx={{px:1}}
+            <Box sx={{px:1,display:'flex'}}
                 style={((columnProperty.duplicateColor !== undefined) ? {background: columnProperty.duplicateColor} : {})} key={`ColumnIndex-${columnIndex}`}>
                 <MemoizedColumnPropertiesSelector columnIndex={columnIndex} columnProperty={columnProperty}
                                                   setColumnProperty={setColumnProperty} key={columnIndex}/>
-            </ListItem>
+            </Box>
             
         </>
     )
 
-    const whyTableNameNotValid = () => {
-        if (tableProperties.isValid) {
-            return "Table Name Valid"
-        } else {
-            return `Non Empty except '"'`
-        }
-    }
-    const [opener , setopener] = useState(true);
+    const [opener , setopener] = React.useState<boolean>(true);
+    const drawerOpenHandler = (mp: boolean) => setopener(mp)
     
-    const drawerOpenHandler = (mp)=>{
-        setopener(mp)
-    }
     return (
         <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 0 }}>
-                <CollapsibleDrawer
+                {/* <CollapsibleDrawer
                 open={opener || false}
                 openWidth="400px"
                 closedWidth="50px"
@@ -657,34 +769,28 @@ const TableSchemaSelection = (props) => {
                             <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
                         </Box>
                     </Box>
-                    <Box sx={{}}>
-                        <List sx={{ height: 700, overflow: 'auto', width: "100%" ,p:0}}>
+                    <Box sx={{display:'flex',flexDirection:'row'}}>
+                        <Box sx={{ height: 700, overflow: 'auto', width: "100%" ,p:0}}>
                             {schemaDataSelector}
-                        </List>
+                        </Box>
                     </Box>
                 </Box>
-                </CollapsibleDrawer>
+                </CollapsibleDrawer> */}
             <Box sx={{  display: "flex",
                         flexDirection: "column", 
                         width: "100%", 
-                        gap: 1 ,
                         }}>
                 <Box sx={{ display: "flex", 
                             flexDirection: "row", 
-                            gap: 1, 
                             backgroundColor: 'ActionDefinationHeroCardBgColor.main',
-                            boxShadow: '0px 17.5956px 26.3934px rgba(54, 48, 116, 0.3)',
-                            borderRadius: "10px",
-                            padding: "10px",
-                            mx:3
+                            
                             // boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF' 
                         }}>
                     <Box sx={{ width: "50%",p:2, display:'flex', flexDirection:'column'}}>
                         <TextField
                             variant="standard"
-                            fullWidth
                             value={tableProperties.tableName}
-                            error={tableProperties.tableName && !tableProperties.isValid}
+                            error={!!tableProperties.tableName && !tableProperties.isValid}
                             // label={tableProperties.tableName && whyTableNameNotValid()}
                             onChange={(event) => {
                                 setTableName(event.target.value)
@@ -694,17 +800,11 @@ const TableSchemaSelection = (props) => {
                                     fontFamily: "SF Pro Display",
                                     fontStyle: "normal",
                                     fontWeight: 600,
-                                    fontSize: "36px",
-                                    lineHeight: "116.7%",
+                                    fontSize: "1.2rem",
                                     color: "ActionDefinationHeroTextColor1.main",
-                                    borderStyle: "solid",
-                                    borderColor: "transparent",
-                                    borderRadius: "5px",
-                                    boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF',
                                     backgroundColor: "ActionCardBgColor.main",
-                                    padding:'10px', 
                                     ":hover": {
-                                        ...(props.mode==="READONLY" ? {
+                                        ...(props?.mode==="READONLY" ? {
                                             
                                         } : {
                                             backgroundColor: "ActionDefinationTextPanelBgHoverColor.main"
@@ -714,14 +814,14 @@ const TableSchemaSelection = (props) => {
                                 disableUnderline: true,
                                 startAdornment: (
                                     <InputAdornment position="end">
-                                        <CheckCircleIcon sx={{ color: "syncStatusColor1.main" ,fontSize:'40px', m:2}}/>
+                                        <CheckCircleIcon sx={{ color: "syncStatusColor1.main" ,fontSize:'1.2rem', mx:1}}/>
                                     </InputAdornment>
                                 )
                             }}
                             
                         />
                             <Box  sx={{mt:2, display:'flex', flexDirection:'row'}}>
-                                <img src={TableIcon} alt="table" sx={{width:'40px' , height:'40px'}}/>
+                                <img src={TableIcon} alt="table" style={{width:'40px' , height:'40px'}}/>
                                 <Box sx={{px:2,ml:2, borderLeft:'3px solid black'}}>
                                     <Box sx={{display:'inline',fontWeight:'600' , color:'gray'}}>Status : </Box>{props.statusMSG}
                                 </Box>
@@ -750,9 +850,9 @@ const TableSchemaSelection = (props) => {
                                 />
                             </Box>
                         
+                            <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
                     </Box>
                 </Box>
-
                 <Box>
                     <TablePreview 
                         selectedFile={props.selectedFile}
@@ -760,6 +860,7 @@ const TableSchemaSelection = (props) => {
                         columns={columnProperties}
                         tableName={tableProperties?.tableName}
                         data={parsedFileResult.data}
+                        columnSelector = {schemaDataSelector}
                     />
                 </Box>
             </Box>
@@ -767,29 +868,20 @@ const TableSchemaSelection = (props) => {
     )
 }
 
-/* 
- * props:
- * selectedFile: 
- *      File()
- *      CsvFile that is to be uploaded
- * dataStartsFromRow:
- *      Integer
- *      Row rom which data starts in the file
- * data
- *      Array[]
- *      The data to be shown
- * columns
- *      Array[Object]
- *      Definition of the columns
- * tableName
- *      String
- *      Name of the Table
-*/
-const TablePreview = (props) => {
+type TablePreviewProps = {
+    selectedFile: File,
+    dataStartsFromRow?: number,
+    data?: any[],
+    columns?: ColumnSchema[],
+    tableName: string,
+    columnSelector: JSX.Element[]
+}
+
+const TablePreview = (props: TablePreviewProps) => {
     const classes = useStyles()
 
-    const {selectedFile, dataStartsFromRow, columns, tableName, data} = props
-    const [dataGridProps, setDataGridProps] = React.useState({rows: [], columns: [], title: "", options: {}})
+    const {selectedFile, dataStartsFromRow, columns, tableName, data, columnSelector} = props
+    const [dataGridProps, setDataGridProps] = React.useState<DataGridProps>({rows: [], columns: []})
 
     React.useEffect(() => {
         if(!!selectedFile && !!dataStartsFromRow && !!columns && !!tableName && !!data) {
@@ -801,12 +893,12 @@ const TablePreview = (props) => {
                 return rowObject
             })
             
-            const columnProps = columns.map(column => {
+            const columnProps = columns.map((column,ind) => {
                 const headerName = `${column.columnName} (${column.columnDatatype})`
                 return {
                     field: column.columnName,
-                    width: headerName.length * 12,
-                    headerName: headerName
+                    minWidth: 300,
+                    headerName: columnSelector[ind]
                 }
             })
             
@@ -823,50 +915,56 @@ const TablePreview = (props) => {
     }, [selectedFile, dataStartsFromRow, columns, tableName, data])
 
     return (
-        <Box className={classes.TablePreviewBox} sx={{p:4}} fullWidth>
+        <Box className={classes.TablePreviewBox} sx={{p:4}}>
             <DataGrid
                 sx={{
                     "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
                     backgroundBlendMode: "soft-light, normal",
                     border: "2px solid rgba(255, 255, 255, 0.4)",
-                    boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
                     borderRadius: "10px",
                     
                 }}
+                headerHeight={150}
                 {...dataGridProps}
             />
         </Box>
     )
 }
 
-const ColumnPropertiesSelector = (props) => {
+type ColumnPropertiesSelectorProps = {
+    columnIndex: number,
+    columnProperty: ColumnSchema,
+    setColumnProperty: Function,
+}
+
+const ColumnPropertiesSelector = (props: ColumnPropertiesSelectorProps) => {
     const classes = useStyles()
 
-    const handleColumnNameChange = (event) => {
+    const handleColumnNameChange = (event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) => {
         const newName = event.target.value
         props.setColumnProperty(props.columnIndex, {columnName: newName})
     }
 
-    const handleColumnDataTypeChange = (event) => {
+    const handleColumnDataTypeChange = (event: SelectChangeEvent<string>) => {
         const newDataType = event.target.value;
         props.setColumnProperty(props.columnIndex, {columnDatatype: newDataType})
     }
 
-    const handleColumnTagChange = (tags) => {
+    const handleColumnTagChange = (tags: Tag[]) => {
         const newTags = tags
         props.setColumnProperty(props.columnIndex, {columnTags: newTags})
     }
 
     const isColumnFieldValid = () => {
-        return props.columnProperty.isValid & (!props.columnProperty.isDuplicate)
+        return props.columnProperty.isValid && (!props.columnProperty.isDuplicate)
     }
 
     const whyColumnFieldNotValid = () => {
-        if (props.columnProperty.isValid === true & props.columnProperty.isDuplicate === true) {
+        if (props.columnProperty.isValid === true && props.columnProperty.isDuplicate === true) {
             return "Duplicate Name"
-        } else if (props.columnProperty.isValid === true & props.columnProperty.isDuplicate === false) {
+        } else if (props.columnProperty.isValid === true && props.columnProperty.isDuplicate === false) {
             return "Column Name Valid"
-        } else if (props.columnProperty.isValid === false & props.columnProperty.isDuplicate === true) {
+        } else if (props.columnProperty.isValid === false && props.columnProperty.isDuplicate === true) {
             return `Duplicate. Non Empty except '"'`
         } else {
             return `Non Empty except '"'`
@@ -874,36 +972,39 @@ const ColumnPropertiesSelector = (props) => {
     }
 
     return (
-        <Card sx={{
-            borderRadius: '10px', 
-            px: 1,
-            py: 2, 
-            boxSizing: "content-box",
-            border: "0.439891px solid #FFFFFF",
-            width: "100%",
-            boxShadow: "-5px -5px 10px #E3E6F0, 5px 5px 10px #A6ABBD",
-            backgroundColor:'ButtonHighlight'
-             }}>
+        <Card sx={{px:2 , background:'transparent',border:'none'}}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 1, width: "100%" }}>
-                    <Box sx={{ width: "300px" }}>
-                        <TextField sx={{borderRadius:'0px'}} value={props.columnProperty.columnName} error={!isColumnFieldValid()}
-                                label={whyColumnFieldNotValid()} onChange={handleColumnNameChange} fullWidth/>
+                <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                    <Box sx={{ width: "250px"}}>
+                        <TextField 
+                        InputProps={{
+                            sx:{
+                                fontSize:'1.1rem',
+                                fontWeight:600
+                            }
+                            ,disableUnderline:true}}
+                            variant='standard'
+                            size='small'
+                            value={props.columnProperty.columnName} 
+                            error={!isColumnFieldValid()}
+                            onChange={handleColumnNameChange} 
+                            />
                     </Box>
-                    <Box sx={{ display: "flex", flex: 1 }}>
+                    <Box>
                         <FormControl className={classes.formControl}>
-                            <InputLabel>Datatype</InputLabel>
                             <Select
+                            variant='standard'
                                 labelId="demo-simple-select-helper-label"
                                 id="demo-simple-select-helper"
                                 label="Datatype"
                                 value={props.columnProperty.columnDatatype}
                                 onChange={handleColumnDataTypeChange}
+                                disableUnderline
                             >
-                                <MenuItem value={ColumnDataType.INT}>Integer</MenuItem>
-                                <MenuItem value={ColumnDataType.STRING}>String</MenuItem>
-                                <MenuItem value={ColumnDataType.BOOLEAN}>Boolean</MenuItem>
-                                <MenuItem value={ColumnDataType.FLOAT}>Float</MenuItem>
+                                <MenuItem value={DatafacadeDatatype.INT}>Integer</MenuItem>
+                                <MenuItem value={DatafacadeDatatype.STRING}>String</MenuItem>
+                                <MenuItem value={DatafacadeDatatype.BOOLEAN}>Boolean</MenuItem>
+                                <MenuItem value={DatafacadeDatatype.FLOAT}>Float</MenuItem>
                             </Select>
                         </FormControl>
                     </Box>
@@ -923,7 +1024,7 @@ const ColumnPropertiesSelector = (props) => {
     )
 }
 
-const MemoizedColumnPropertiesSelector = (props) => {
+const MemoizedColumnPropertiesSelector = (props: ColumnPropertiesSelectorProps) => {
     return React.useMemo(() => {
         return <ColumnPropertiesSelector
             columnProperty={props.columnProperty}
@@ -952,7 +1053,7 @@ const formActionPropertiesForLoadTableIntoLocal = (fdsResponse, selectedFile, fi
     }
 }
 
-const isValidObjectName = (name) => {
+const isValidObjectName = (name: string) => {
     if (name !== undefined) {
         return !(name.includes(`"`) || name.length === 0)
     } else {
@@ -960,7 +1061,7 @@ const isValidObjectName = (name) => {
     }
 }
 
-const getColor = (x) => {
+const getColor = (x: number) => {
     var letters = '0123456789ABCDEF';
     var color = '#';
     for (var i = 0; i < 6; i++) {
@@ -969,8 +1070,8 @@ const getColor = (x) => {
     return color;
 }
 
-const getTypeOfValue = (dataPoints) => {
-    const dataTypeList = dataPoints.map(dataPoint => {
+const getTypeOfValue = (dataPoints?: any[]) => {
+    const dataTypeList = dataPoints?.map(dataPoint => {
         if (dataPoint === null || dataPoint === undefined) {
             return null;
         } else {
@@ -978,30 +1079,30 @@ const getTypeOfValue = (dataPoints) => {
                 // if (Number(dataPoint) === dataPoint && dataPoint % 1 === 0) {
                 //     return ColumnDataType.INT
                 // } else {
-                    return ColumnDataType.FLOAT
+                    return DatafacadeDatatype.FLOAT
                 // }
             } else if (typeof dataPoint === "boolean") {
-                return ColumnDataType.BOOLEAN
+                return DatafacadeDatatype.BOOLEAN
             } else {
-                return ColumnDataType.STRING
+                return DatafacadeDatatype.STRING
             }
         }
     }).filter(x => x !== null)
 
-    if (dataTypeList.length === 0) {
-        return ColumnDataType.STRING
-    } else if (dataTypeList.every(dataType => dataType === ColumnDataType.BOOLEAN)) {
-        return ColumnDataType.BOOLEAN
-    } else if (dataTypeList.every(dataType => dataType === ColumnDataType.INT)) {
-        return ColumnDataType.INT
-    } else if (dataTypeList.every(dataType => dataType === ColumnDataType.INT || dataType === ColumnDataType.FLOAT)) {
-        return ColumnDataType.FLOAT
+    if (dataTypeList?.length === 0) {
+        return DatafacadeDatatype.STRING
+    } else if (dataTypeList?.every(dataType => dataType === DatafacadeDatatype.BOOLEAN)) {
+        return DatafacadeDatatype.BOOLEAN
+    } else if (dataTypeList?.every(dataType => dataType === DatafacadeDatatype.INT)) {
+        return DatafacadeDatatype.INT
+    } else if (dataTypeList?.every(dataType => dataType === DatafacadeDatatype.INT || dataType === DatafacadeDatatype.FLOAT)) {
+        return DatafacadeDatatype.FLOAT
     } else {
-        return ColumnDataType.STRING
+        return DatafacadeDatatype.STRING
     }
 }
 
-const formCloseValidObjectName = (name) => {
+const formCloseValidObjectName = (name: string) => {
     return name
 }
 

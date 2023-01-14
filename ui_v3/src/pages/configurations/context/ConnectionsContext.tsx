@@ -293,14 +293,12 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
     )
         
     React.useEffect(() => {
-        console.log("NEW PROVIDER INSTANCE", providerInstanceId)
         if(connectionState.mode === "UPDATE" && !!providerInstanceId) {
             loadProviderInstance.refetch()
         }
     }, [providerInstanceId, connectionState.mode])
 
     React.useEffect(() => {
-        console.log("NEW SYNC ACTION INSTANCE ID", syncActionInstanceId)
         if(connectionState.mode === 'UPDATE' && !!syncActionInstanceId) {
             getSyncActionInstance.refetch()
         } else if(connectionState.mode === 'UPDATE' && !syncActionInstanceId) {
@@ -309,7 +307,6 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
     }, [syncActionInstanceId])
 
     React.useEffect(() => {
-        console.log("NEW PROVIDER DEFINITION", providerDefinitionId)
         if(!!providerDefinitionId) {
             loadProviderDefinition.refetch()
         }

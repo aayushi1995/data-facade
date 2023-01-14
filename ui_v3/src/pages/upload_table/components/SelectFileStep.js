@@ -64,12 +64,6 @@ const SelectFileStep = (props) => {
                 {labels.UploadTableButton.DIRECTION}
                 </Grid>
             </Grid>
-            {/* <Grid item xs={12}>
-                <Button variant="contained" component="label" classes={{ root: "select-all" }}>
-                    Select File
-                    <input type="file" accept={".csv,.xlsx"} hidden onChange={changeHandler} />
-                </Button>
-            </Grid> */}
         </Grid>
     )
 }

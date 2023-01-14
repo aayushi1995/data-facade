@@ -48,7 +48,6 @@ const reducer = (state: ModuleType, action: ModuleAction): ModuleType => {
         
         default:
             const impossibleAction: never = action
-            console.log("Unkown Action", impossibleAction)
     }
     return state;
 }

@@ -103,7 +103,7 @@ const ApplicationDetailView = ({match}: RouteComponentProps<MatchParams>) => {
                 <Box mb={4}>
                     <TabPanel value={tabValue} index={0}>
                         <Box mt={1}>
-                            <ApplicationWorkflows workflows={application.workflows || []}/>
+                            <ApplicationWorkflows workflows={application?.workflows || []}/>
                         </Box>
                         <Box mt={0}>
                             <ApplicationActions application={application}/>
