@@ -1,12 +1,8 @@
-import { Autocomplete, Box, TextField } from "@mui/material";
-import { channel } from "diagnostics_channel";
+import {Box } from "@mui/material";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
-import useSlackChannelIDInput from "../../../common/components/common/useSlackChannelIDInput";
-import useSlackChannelIDInputProps from "../../../common/components/common/useSlackChannelIDInput";
 import LoadingIndicator from "../../../common/components/LoadingIndicator";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
-import ProviderDefinitionId from "../../../enums/ProviderDefinitionId";
 import { ConnectionQueryContext, ConnectionSetStateContext, ConnectionStateContext } from "../context/ConnectionsContext";
 import ProviderParameterInput, { ProviderParameterInputProps } from "./ProviderParameterInput";
 import UpdateProviderOptions from "./UpdateProviderOptions";

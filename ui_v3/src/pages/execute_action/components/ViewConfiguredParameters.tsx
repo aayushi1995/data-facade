@@ -2,13 +2,6 @@ import { Box, Grid, Typography, Card, Button, Dialog, DialogContent } from "@mui
 import React from "react";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, TableProperties } from "../../../generated/entities/Entities";
-import { TablePropertiesInfo } from "../../../generated/interfaces/Interfaces";
-import { UseGetTableModel } from "../../table_browser/components/AllTableViewHooks";
-import ActionDefinitionId from "../../../enums/ActionDefinitionId";
-import LoadingIndicator from "../../../common/components/LoadingIndicator";
-import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
-import ViewActionExecutionOutput from "../../view_action_execution/ViewActionExecutionOutput";
-import ActionDefinitionPresentationFormat from "../../../enums/ActionDefinitionPresentationFormat";
 import ViewTablePreview from "./ViewTablePreview";
 
 export interface ViewConfiguredParametersProps {

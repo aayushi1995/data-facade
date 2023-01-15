@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {Suspense} from 'react'
 import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom';
-import SingleCustomerView from './components/SingleCustomerView';
-import AutoBookCustomers from './components/customers';
-import SingleDataSetView from './components/SingleDataSetView';
+const SingleCustomerView = React.lazy(() => import('./components/SingleCustomerView'));
+const  AutoBookCustomers =  React.lazy(() => import('./components/customers'));
+const  SingleDataSetView = React.lazy(() => import('./components/SingleDataSetView'));
 
 export const AutobookHomePage = withRouter(function AutoBookRoutes() {
     const match = useRouteMatch()

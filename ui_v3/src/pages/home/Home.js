@@ -1,6 +1,5 @@
-import React from "react";
-import { Avatar, Divider, Grid, Typography } from "@mui/material";
-import { useAuth0 } from "@auth0/auth0-react";
+
+import { Avatar, Grid, Typography } from "@mui/material";
 import LoginButton from "./components/Login";
 import useHomeStyles from "./../../css/home/Home";
 import { DataFacadeLogo } from "../../common/components/sideBar/DataFacadeLogo";

@@ -1,6 +1,5 @@
 import { Box, Button, Card, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
 import React from "react";
-import ReactJson from 'react-json-view';
 import { useQueryClient } from "react-query";
 import SaveAndBuildChartContextProvider from "../../common/components/charts/SaveAndBuildChartsContext";
 import SaveAndBuildChartsFromExecution from "../../common/components/charts/SaveAndBuildChartsFromExecution";

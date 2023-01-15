@@ -1,6 +1,5 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
-import { generatePath, Route, useHistory } from "react-router";
-import { Grid , Box, Divider} from "@mui/material";
+import  { useContext, useEffect } from 'react';
+import { Grid , Divider} from "@mui/material";
 import CommonTask from "./components/CommonTask"
 import Recents from "./components/Recents"
 import NewItem from "./components/NewItem"

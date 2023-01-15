@@ -63,6 +63,7 @@
     "react-simple-code-editor": "^0.13.1",
     "recharts": "^2.0.4",
     "serve": "^11.3.2",
+    "source-map-explorer": "^2.5.3",
     "superagent": "^8.0.6",
     "typeface-roboto": "^1.1.13",
     "typescript": "4.3.2",
@@ -83,7 +84,8 @@
     "build-storybook": "build-storybook -s public",
     "figma-theme": "cross-env FIGMA_TOKEN='48218-095f5cbb-3954-48b4-8c7f-d6c5fad4c9d5' figma-theme 'CyosX2UsPUoIbt48of5tIz'",
     "lint": "eslint .",
-    "lint-fix": "eslint --fix ."
+    "lint-fix": "eslint --fix .",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "browserslist": {
     "production": [
@@ -124,6 +126,9 @@
     "@types/react-router-dom": "^5.3.2",
     "@types/superagent": "^4.1.16",
     "@types/uuid": "^8.3.4",
+    "babel-plugin-direct-import": "^1.0.0",
+    "babel-plugin-equire": "^1.1.1",
+    "babel-plugin-import": "^1.13.6",
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.23.3",

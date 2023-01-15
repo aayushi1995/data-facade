@@ -1,13 +1,11 @@
-import { Box, Button, Card, Dialog, DialogTitle, Grid, IconButton, InputAdornment, Typography } from "@mui/material";
-import { ActionCardButtonContainer, ActionCardConatier, ActionCardDescription, ActionCardHeader, AllApps, appCardContainer, ContainerHeader, DialogBGcolor, DialogBody, DialogHeader, HeaderButtonsStyle, IconConatiner, NumberofItemInPackage, PackagesNameStyle, PackagesNameStyleR, PackageTabHeader, SearchBarDialogTextField, SearchBarTextField, SeeAllPackage, StyledTypographyDataHeader } from "./StyledComponents";
+import { Box, InputAdornment } from "@mui/material";
+import { HeaderButtonsStyle, IconConatiner, SearchBarTextField, StyledTypographyDataHeader } from "./StyledComponents";
 import UploadFileIcon from "../../../images/uploadFile.svg"
 import CreateConnectionIcon from "../../../images/createConnection.svg"
 import SearchIcon from '@mui/icons-material/Search';
 import React, { useContext, useEffect } from "react";
-import useFetchActionDefinitionForSelector from "../../../edit-action-new/hooks/useFetchActionDefinitionForSelector"
-import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import { DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_CONNECTION_CHOOSE } from "../../../common/components/header/data/DataRoutesConfig";
-import { generatePath, Link as RouterLink, Route, Switch } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import RecommendedApps from "../../upload_table/components/RecommendedApps";
 

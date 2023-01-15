@@ -14,7 +14,6 @@ import {
 import {useRetreiveData} from './../../../data_manager/data_manager'
 import labels from './../../../labels/labels'
 import {useRouteMatch} from "react-router-dom";
-import {PageHeader} from "../../../common/components/header/PageHeader";
 
 
 const getOrElse = (data, key, defaultValue) => {

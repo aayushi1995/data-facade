@@ -1,6 +1,5 @@
 import {Box, Grid} from "@mui/material";
 import CreateActionDefinition from "./components/CreateActionDefinition";
-import React from "react";
 import {PageHeader} from "../../common/components/header/PageHeader";
 
 export function CreateActionPage() {

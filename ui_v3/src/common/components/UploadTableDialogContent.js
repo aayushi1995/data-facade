@@ -11,7 +11,7 @@ import { useMutation } from 'react-query';
 import labels from '../../labels/labels';
 import ExternalStorageUploadRequestContentType from './../../enums/ExternalStorageUploadRequestContentType'
 import SelectTags from './SelectTags.js';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx/xlsx.mjs';
 import { useStyles, formActionPropertiesForLoadTableIntoLocal, TableSchemaSelection } from './UploadTableButton';
 import DisplaySelectedFilesDetail from './DisplaySelectedFilesDetail'
 import {DATA_CONNECTIONS_UPLOAD_ROUTE} from "./header/data/DataRoutesConfig";

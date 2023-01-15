@@ -1,5 +1,4 @@
 import { useMutation } from "react-query";
-import { useLocation } from "react-router";
 import { userSettingsSingleton } from "../../data_manager/userSettingsSingleton";
 import { ProviderInstance } from "../../generated/entities/Entities";
 

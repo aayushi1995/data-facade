@@ -6,7 +6,7 @@ import {
     IconButton,
     TextField
 } from '@mui/material'
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx/xlsx.mjs';
 
 import './../../../css/table_browser/TableBrowser.css'
 import S3UploadState from '../../../custom_enums/S3UploadState';

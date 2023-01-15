@@ -2,10 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 import { useMutation } from "react-query";
 import { generatePath, useHistory, useLocation } from "react-router";
-import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE } from "../../common/components/header/data/ApplicationRoutesConfig";
 import { DATA_CONNECTION_DETAIL_ROUTE } from "../../common/components/header/data/DataRoutesConfig";
-import { userSettingsSingleton } from "../../data_manager/userSettingsSingleton";
-import { ProviderInstance } from "../../generated/entities/Entities";
 import useSlackRedirect from "./useSlackRedirect";
 
 const endPoint = require("../../common/config/config").FDSEndpoint

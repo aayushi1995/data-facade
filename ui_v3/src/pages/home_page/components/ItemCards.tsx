@@ -1,7 +1,6 @@
-import records from "../../../images/records.svg"
-import { Grid , Box, Link, Typography} from "@mui/material";
-import React from "react";
-import { NavLink as RouterLink, useLocation } from 'react-router-dom';
+
+import { Box} from "@mui/material";
+import { NavLink as RouterLink } from 'react-router-dom';
 import {TypographyVh , TypographyVsh } from './CSS/CssProperties'
 
 export const ItemCards = (props:{header: string,subHeader: string, imgURL: string, toLink: string})=>{

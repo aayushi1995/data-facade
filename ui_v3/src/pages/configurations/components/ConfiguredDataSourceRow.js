@@ -20,7 +20,6 @@ import NoData from '../../../common/components/NoData'
 import dataManagerInstance, {useRetreiveData} from './../../../data_manager/data_manager'
 import labels from './../../../labels/labels'
 import {useHistory, useRouteMatch} from "react-router-dom";
-import {PageHeader} from "../../../common/components/header/PageHeader";
 
 
 const useStyles = makeStyles(() => ({

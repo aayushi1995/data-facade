@@ -1,6 +1,5 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material"
 import React from "react"
-import VirtualTagHandler from "../../../../common/components/tag-handler/VirtualTagHandler"
 import { BuildActionContext, SetBuildActionContext } from "../../context/BuildActionContext"
 import { BuildActionWizardStepProps } from "../BuildActionWizard"
 import BuildActionForm from "../common-components/BuildActionForm"

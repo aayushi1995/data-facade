@@ -1,4 +1,4 @@
-import React from 'react'
+
 import {Route, Switch, useRouteMatch, withRouter} from 'react-router-dom'
 import SingleTagView from './components/SingleTagView';
 import AllTagView from './components/AllTagView';

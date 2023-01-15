@@ -1,6 +1,5 @@
 import {Box, Grid} from "@mui/material";
 import CreateActionInstanceForm from "../../common/components/CreateActionInstanceForm";
-import React from "react";
 import {PageHeader} from "../../common/components/header/PageHeader";
 import { useHistory } from "react-router-dom";
 

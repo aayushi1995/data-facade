@@ -4,7 +4,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog, DialogContent, DialogTitle, FormControl, FormControlLabel, FormGroup, Grid, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Checkbox, Chip, createFilterOptions, Dialog,  FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, SelectChangeEvent, TextField, Tooltip, Typography } from "@mui/material";
 import { DataGrid, DataGridProps, GridRenderCellParams, GridRenderEditCellParams, GridRowId, GridRowParams, GridToolbarContainer, useGridApiContext } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from 'react';
 import ConfirmationDialog from '../../../../common/components/ConfirmationDialog';
@@ -19,7 +19,6 @@ import { safelyParseJSON } from "../../../execute_action/util";
 import { ActionContextActionParameterDefinitionWithTags } from "../../context/BuildActionContext";
 import { ActionParameterDefinitionConfig } from "./EditActionParameter";
 import DefaultValueInput from "./parameter_input/DefaultValueInput";
-import CloseIcon from "@mui/icons-material/Close"
 
 const tagFilter = createFilterOptions<Tag>()
 const stringFilter = createFilterOptions<string|undefined>()
