@@ -76,7 +76,7 @@ const VirtualTagHandler = (props: VirtualTagHandlerProps) => {
                             }
                             return filtered;
                         }}
-                        renderInput={(params) => <TextField sx={{}} {...params}  label="Add Tag"/>}
+                        renderInput={(params) => <TextField  {...params}  label="Add Tag"/>}
                     />
                 </Grid>}
                 <Grid item {...((inputFieldLocation==="TOP" || inputFieldLocation==="BOTTOM") ? {xs:12} : {xs:12, md:12, lg:12} )}>

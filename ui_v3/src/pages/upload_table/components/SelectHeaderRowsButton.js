@@ -28,6 +28,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles'
 
 import {DataGrid} from "@mui/x-data-grid";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import {TableHeaderButtonCss} from './CssProperties';
 
 const useStyles = makeStyles(() => ({
     requiredTags: {
@@ -94,10 +96,8 @@ const SelectHeaderRowsButton = (props) => {
     return (
         <Grid container>
             <Grid xs={12}>
-                <Button sx={{ minWidth:'120px' , borderRadius:'13px', height:'55px'}} variant="contained"  component="label" onClick={() => {setShowDialog(true)}}
-
-                    >
-                    Select Header
+                <Button sx={{...TableHeaderButtonCss}}  variant="contained"  component="label" onClick={() => {setShowDialog(true)}}>
+                    Select Header <ArrowDropDownIcon/>
                 </Button>
             </Grid>
             <Grid item xs={12}>

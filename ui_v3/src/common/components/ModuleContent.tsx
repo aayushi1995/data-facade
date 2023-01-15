@@ -36,7 +36,7 @@ export const Header = ({tab}: ModuleHeaderPropType) => {
     return (
         <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Box sx={{display: 'flex', flexDirection: 'column', flex: 1 }}>
-                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: "space-between", mb: 3}}>
+                {/* <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: "space-between", mb: 3}}>
                     <Box sx={{display: 'flex', flexDirection: 'column'}}>
                         <Typography variant="h5" fontWeight={600}>
                             {title}
@@ -48,10 +48,10 @@ export const Header = ({tab}: ModuleHeaderPropType) => {
                     <Box sx={{display: 'flex', gap: 2}}>
                         
                     </Box>
-                </Box>
+                </Box> */}
             </Box>
             <Switch>
-                <Route path={DATA_ROUTE} component={DataHeader}/>
+                {/* <Route path={DATA_ROUTE} component={DataHeader}/> */}
                 <Route exact path={APPLICATION_ROUTE} component={ApplicationHeader}/>
                 <Route path={APPLICATION_DETAIL_ROUTE} component={ApplicationHeader}/>
             </Switch>

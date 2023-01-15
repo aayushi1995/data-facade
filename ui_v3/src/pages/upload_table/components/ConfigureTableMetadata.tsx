@@ -1,13 +1,15 @@
 import {
     Box,
     Button, Card, Divider,
-    FormControl, Grid, InputLabel,Typography,
+    FormControl, Grid, InputLabel, Typography,
     List,
     ListItem, MenuItem,
     Select, TextField,
     IconButton,
     InputAdornment,
-    SelectChangeEvent
+    SelectChangeEvent,
+    Dialog,
+    Popover
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { DataGrid, DataGridProps } from "@mui/x-data-grid";
@@ -31,15 +33,16 @@ import { findHeaderRows } from './util';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CollapsibleDrawer from "../../build_action/components/form-components/CollapsibleDrawer"
 import DoubeLeftIcon from '../../../../src/images/Group 691.svg';
-import {Link } from "react-router-dom";
-import SearchIcon from '@mui/icons-material/Search'; 
+import { Link } from "react-router-dom";
+import SearchIcon from '@mui/icons-material/Search';
 import TableIcon from '../../../../src/images/table_2.svg'
 import { TableProperties, Tag } from '../../../generated/entities/Entities';
 import { TableAndColumns } from '../../../generated/interfaces/Interfaces';
 import labels from '../../../labels/labels';
 import DatafacadeDatatype from '../../../enums/DatafacadeDatatype';
-
-const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function}
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
+const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function }
 
 const useStyles = makeStyles(() => ({
     requiredTags: {
@@ -116,12 +119,12 @@ export type ConfigureTableMetadataProps = {
     setUploadState?: Function,
     stateData?: string,
     file: File,
-    setLastUploadedTableId: React.Dispatch<React.SetStateAction<string|undefined>>
+    setLastUploadedTableId: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 type S3UploadInformation = {
-    requestUrl: string, 
-    headers: any, 
+    requestUrl: string,
+    headers: any,
     file: File
 }
 
@@ -130,9 +133,9 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
     let history = useHistory();
     // States
     const selectedFile = props.file
-    const [fileStatusInformation, setFileStatusInformation] = React.useState<{ autoUpload: Boolean, errors: string[] }>({ autoUpload: true, errors: []})
+    const [fileStatusInformation, setFileStatusInformation] = React.useState<{ autoUpload: Boolean, errors: string[] }>({ autoUpload: true, errors: [] })
     const [selectedFileSchema, setSelectedFileSchema] = React.useState<FileSchema>({ requiredTableTags: [], tableId: uuidv4() })
-    const [uploadButtonState, setUploadButtonState] = React.useState<{ currentEnabled: number, requiredEnabled: number}>({
+    const [uploadButtonState, setUploadButtonState] = React.useState<{ currentEnabled: number, requiredEnabled: number }>({
         currentEnabled: 5,
         requiredEnabled: 15
     })
@@ -144,8 +147,8 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
     // 2^3: All Column Names are Valid and Distinct
     // 2^4: All Required Table Tags Configured
     React.useEffect(() => {
-        if(fileStatusInformation.autoUpload) {
-            if(uploadButtonState.currentEnabled === uploadButtonState.requiredEnabled) {
+        if (fileStatusInformation.autoUpload) {
+            if (uploadButtonState.currentEnabled === uploadButtonState.requiredEnabled) {
                 setFileStatusInformation(old => ({ ...old, autoUpload: false }))
                 uploadSelectedFiles()
             }
@@ -174,7 +177,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         });
     };
 
-    const fetchPresignedUrlMutation = useMutation<S3UploadInformation, unknown, {file: File, expirationDurationInMinutes: number}, unknown>(
+    const fetchPresignedUrlMutation = useMutation<S3UploadInformation, unknown, { file: File, expirationDurationInMinutes: number }, unknown>(
         "GetS3PreSignedUrl",
         (config) => dataManagerInstance.s3PresignedUploadUrlRequest(config.file, config.expirationDurationInMinutes, ExternalStorageUploadRequestContentType.TABLE),
         {
@@ -196,7 +199,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         }
     );
 
-    const loadTableFromS3Action = useMutation<unknown, unknown, {entityName: string, actionProperties: any}, unknown>(
+    const loadTableFromS3Action = useMutation<unknown, unknown, { entityName: string, actionProperties: any }, unknown>(
         "LoadTableFromS3",
         (config) => dataManagerInstance.saveData(config.entityName, config.actionProperties),
         {
@@ -235,8 +238,8 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                 TableColumnEntities: entities
             })
         }, {
-            onMutate: (variables) => props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM),
-        }
+        onMutate: (variables) => props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM),
+    }
     )
 
     const setSelectedFileColumnSchema = React.useCallback((columnSchema: ColumnSchema[]) =>
@@ -249,7 +252,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         []
     );
 
-    const setSelectedFileTableTags = React.useCallback((tableTags) => 
+    const setSelectedFileTableTags = React.useCallback((tableTags) =>
         setSelectedFileSchema(old => ({ ...old, "tableTags": tableTags })),
         []
     );
@@ -295,7 +298,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                     }
                     const fileName = selectedFileSchema.tableName + ".csv";
                     const newCsvFileContent = Papa.unparse(newCsvFileJson)
-                    const newCsvFile = new File([newCsvFileContent], fileName, {type: selectedFile.type})
+                    const newCsvFile = new File([newCsvFileContent], fileName, { type: selectedFile.type })
                     props?.setUploadState?.(S3UploadState.FILE_BUILT_FOR_UPLOAD);
                     uploadGivenFile(newCsvFile)
                 },
@@ -381,7 +384,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
 
     // TODO: Apply colour to disbaled Upload Button
     return (
-        <Grid sx={{m:-4 , mt:-5}}>
+        <Grid sx={{ m: -4, mt: -5 }}>
             {props?.isApplication &&
                 <Grid item xs={12}>
                     <Box m={2}>
@@ -427,29 +430,29 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                         </Grid>
                     </Box>
                 </Grid>}
-                <Grid container item xs={12} direction="row">
-                        <Box  sx={{width:'100%',mx:1,px:2,pb:2, display:'flex' , flexDirection:'row', justifyContent:'flex-end'}}>
-                            <Link to="/data/connections" style={{textDecoration: 'none'}}>
-                                <Button  sx={{borderRadius:'5px',width:'115px',mr:2,textDecoration:'none'}} variant="outlined" color="error">
-                                    Cancel
-                                </Button>
-                            </Link>
+            <Grid container item xs={12} direction="row">
+                <Box sx={{ ...HeaderButtonContainerCss }}>
+                    <Link to="/data" style={{ textDecoration: 'none' }}>
+                        <Button sx={{ ...CancelButtonCss }} variant="outlined" color="error">
+                            Cancel
+                        </Button>
+                    </Link>
 
-                            <Button color="success" variant="contained" sx={{borderRadius:'5px', width:'115px'}} component="label" onClick={uploadSelectedFiles}
-                                // classes={{ root: "select-all", disabled: classes.disabledButton }}
-                                disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled}>
-                                Save
-                            </Button>
-                        </Box>
-                </Grid>
+                    <Button color="success" variant="contained" sx={{ ...SaveButtonCss }} component="label" onClick={uploadSelectedFiles}
+                        // classes={{ root: "select-all", disabled: classes.disabledButton }}
+                        disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled}>
+                        Save
+                    </Button>
+                </Box>
+            </Grid>
             <Grid container item xs={12}>
                 <TableSchemaSelection selectedFile={selectedFile}
                     setSelectedFileColumnSchema={setSelectedFileColumnSchema}
                     setSelectedFileTableName={setSelectedFileTableName}
                     enableUploadButton={enableUploadButton} disableUploadButton={disableUploadButton}
                     setSelectedFileTablTags={setSelectedFileTableTags}
-                    setSelectedFileDataStartsFromRow={setSelectedFileDataStartsFromRow} 
-                    statusMSG = {props.stateData}
+                    setSelectedFileDataStartsFromRow={setSelectedFileDataStartsFromRow}
+                    statusMSG={props.stateData}
                 />
             </Grid>
         </Grid>
@@ -463,7 +466,7 @@ type TableSchemaSelectionProps = {
     enableUploadButton: Function,
     disableUploadButton: Function,
     setSelectedFileTablTags: Function,
-    setSelectedFileDataStartsFromRow: Function, 
+    setSelectedFileDataStartsFromRow: Function,
     statusMSG?: string
     mode?: "READONLY"
 }
@@ -481,7 +484,7 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
     const [columnProperties, setColumnProperties] = React.useState<ColumnSchema[]>()
     const [displayColumnProperties, setDisplayColumnProperties] = React.useState<ColumnSchema[]>()
     const [columnSearchQuery, setColumnSearchQuery] = React.useState<string>("")
-    const [tableProperties, setTableProperties] = React.useState<{tableName: string, tags: Tag[], isValid: boolean}>({
+    const [tableProperties, setTableProperties] = React.useState<{ tableName: string, tags: Tag[], isValid: boolean }>({
         tableName: "",
         tags: [],
         isValid: true
@@ -505,7 +508,7 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
      *      2. Assigning the ColumnNames and DataStartsFromRow to parsedFileResult
      */
     React.useEffect(() => {
-        if(!!props.selectedFile) {
+        if (!!props.selectedFile) {
             findHeaderRows(props.selectedFile, setColumnAndDataCallback)
             setTableName(formCloseValidObjectName(props.selectedFile.name.split('.').slice(0, -1).join('')))
         }
@@ -528,7 +531,7 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                 } as ColumnSchema
             })
             setColumnProperties(colProps)
-        
+
         } else {
             setColumnProperties([])
         }
@@ -545,7 +548,7 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
 
     const setTableName = (tableName: string) => {
         setTableProperties(old => {
-            return {...old, tableName: tableName}
+            return { ...old, tableName: tableName }
         })
     }
 
@@ -651,17 +654,17 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                         setColumnProperties(oldProp => {
                             let column_tags = parsedData["column_tags"]
                             if (column_tags === undefined || column_tags.length == 0) return oldProp
-                            
+
                             let newProp = [...oldProp]
                             column_tags.forEach(columnTagProp => {
                                 const columnName = columnTagProp.column_name
                                 let tags_len = columnTagProp["column_tags"].length
                                 let tags = []
-                                for (var i=0; i < tags_len; i++){
+                                for (var i = 0; i < tags_len; i++) {
                                     let column_tag = columnTagProp["column_tags"][i]
-                                    tags.push({Name: column_tag})
+                                    tags.push({ Name: column_tag })
                                 }
-                                
+
                                 newProp = newProp.map(col => {
                                     if (col["columnName"] === columnName) {
                                         return {
@@ -679,14 +682,14 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
 
                         setTableProperties(oldProp => {
                             let table_tags = parsedData["table_tags"]
-                            if (table_tags === undefined 
+                            if (table_tags === undefined
                                 || table_tags.length == 0)
                                 return oldProp
                             let tags_len = table_tags.length
                             let tags = []
-                            for (var i=0; i < tags_len; i++){
+                            for (var i = 0; i < tags_len; i++) {
                                 let table_tag = table_tags[i]
-                                tags.push({Name: table_tag})
+                                tags.push({ Name: table_tag })
                             }
                             const newProp = {
                                 ...oldProp,
@@ -708,163 +711,102 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
 
     const setColumnProperty = React.useCallback(
         (columnIndex: number, newProperty: ColumnSchema) =>
-            setColumnProperties(old => old?.map((col, index) => index===columnIndex ? { ...col, ...newProperty} : col)), 
-            []
+            setColumnProperties(old => old?.map((col, index) => index === columnIndex ? { ...col, ...newProperty } : col)),
+        []
     )
 
     const schemaDataSelector = (displayColumnProperties || []).map((columnProperty, columnIndex) =>
         <>
-            <Box sx={{px:1,display:'flex'}}
-                style={((columnProperty.duplicateColor !== undefined) ? {background: columnProperty.duplicateColor} : {})} key={`ColumnIndex-${columnIndex}`}>
+            <Box sx={{ px: 1, display: 'flex' }}
+                style={((columnProperty.duplicateColor !== undefined) ? { background: columnProperty.duplicateColor } : {})} key={`ColumnIndex-${columnIndex}`}>
                 <MemoizedColumnPropertiesSelector columnIndex={columnIndex} columnProperty={columnProperty}
-                                                  setColumnProperty={setColumnProperty} key={columnIndex}/>
+                    setColumnProperty={setColumnProperty} key={columnIndex} />
             </Box>
-            
+
         </>
     )
 
-    const [opener , setopener] = React.useState<boolean>(true);
-    const drawerOpenHandler = (mp: boolean) => setopener(mp)
-    
+    const [tagOpener, setTagOpener] = React.useState<HTMLButtonElement | null>(null);
+    const opener = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setTagOpener(event.currentTarget);
+    };
+    const closer = () => {
+        setTagOpener(null);
+    };
+    const open = Boolean(tagOpener);
+    const id = open ? 'simple-popover' : undefined;
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 0 }}>
-                {/* <CollapsibleDrawer
-                open={opener || false}
-                openWidth="400px"
-                closedWidth="50px"
-                openDrawer={() => {drawerOpenHandler(true)}}
-                >
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", flex: 1 }}>
-                            <IconButton onClick={() => drawerOpenHandler(false)}>
-                                <img src={DoubeLeftIcon} alt="NA"/>
-                            </IconButton>
-                        </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", gap: 0 ,px:1, borderRadius:'10px' }}>
-                    <Box sx={{ display: "flex", flexDirection: "row", width: "100%", gap: 1,pr:2 }}>
-                        <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "300px" }}>
-                            <TextField
-                                fullWidth
-                                sx={{
-                                    backgroundColor: 'allTableTextfieldbgColor1.main',
-                                    boxSizing: 'border-box', 
-                                    boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5)',
-                                    borderRadius: '15px'
-                                }}
-                                placeholder="Search Column"
-                                value={columnSearchQuery}
-                                onChange={(event) => {
-                                    setColumnSearchQuery(event.target.value)
-                                }}
-                                InputProps={{
-                                    disableUnderline: true,
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon sx={{marginLeft: 0}}/>
-                                        </InputAdornment>
-                                    )
-                            }}
-                            />
-                        </Box>
-                        <Box sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", flex: 1 , width:'100px' }}>
-                            <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
-                        </Box>
-                    </Box>
-                    <Box sx={{display:'flex',flexDirection:'row'}}>
-                        <Box sx={{ height: 700, overflow: 'auto', width: "100%" ,p:0}}>
-                            {schemaDataSelector}
-                        </Box>
-                    </Box>
+        <Box sx={{ ...MetaDataContainerBoxCss }}>
+            <Box sx={{ display: "flex", mx: 5 }}>
+                <Box sx={{ ...StatusContainerCss }}>
+                    <Box sx={{ ...statusTypoCss }}>Status : </Box><>{props.statusMSG}</>
                 </Box>
-                </CollapsibleDrawer> */}
-            <Box sx={{  display: "flex",
-                        flexDirection: "column", 
-                        width: "100%", 
-                        }}>
-                <Box sx={{ display: "flex", 
-                            flexDirection: "row", 
-                            backgroundColor: 'ActionDefinationHeroCardBgColor.main',
-                            
-                            // boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF' 
-                        }}>
-                    <Box sx={{ width: "50%",p:2, display:'flex', flexDirection:'column'}}>
+                <Box sx={{ ...HeaderTextFieldConatinerCss }}>
+                    <Box sx={{ m: 'auto' }}>
                         <TextField
-                            variant="standard"
+                            size="small"
+                            variant='standard'
                             value={tableProperties.tableName}
                             error={!!tableProperties.tableName && !tableProperties.isValid}
-                            // label={tableProperties.tableName && whyTableNameNotValid()}
+                            // label="Table Name"
                             onChange={(event) => {
                                 setTableName(event.target.value)
                             }}
                             InputProps={{
                                 sx: {
-                                    fontFamily: "SF Pro Display",
-                                    fontStyle: "normal",
-                                    fontWeight: 600,
-                                    fontSize: "1.2rem",
-                                    color: "ActionDefinationHeroTextColor1.main",
-                                    backgroundColor: "ActionCardBgColor.main",
-                                    ":hover": {
-                                        ...(props?.mode==="READONLY" ? {
-                                            
-                                        } : {
-                                            backgroundColor: "ActionDefinationTextPanelBgHoverColor.main"
-                                        })
-                                    }
+                                    ...HeaderTextFieldCss
                                 },
                                 disableUnderline: true,
                                 startAdornment: (
                                     <InputAdornment position="end">
-                                        <CheckCircleIcon sx={{ color: "syncStatusColor1.main" ,fontSize:'1.2rem', mx:1}}/>
+                                        {/* <CheckCircleIcon sx={{ color: "syncStatusColor1.main", fontSize: '1.2rem', mx: 1 }} /> */}
                                     </InputAdornment>
                                 )
                             }}
-                            
-                        />
-                            <Box  sx={{mt:2, display:'flex', flexDirection:'row'}}>
-                                <img src={TableIcon} alt="table" style={{width:'40px' , height:'40px'}}/>
-                                <Box sx={{px:2,ml:2, borderLeft:'3px solid black'}}>
-                                    <Box sx={{display:'inline',fontWeight:'600' , color:'gray'}}>Status : </Box>{props.statusMSG}
-                                </Box>
-                            </Box>
-                    </Box>
-                    <Box sx={{ flex: 1 , my:1,px:2}}>
-                            
-                            <Box sx={{
-                                borderRadius: "5px",
-                                boxShadow: '-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF',
-                                backgroundColor: "ActionCardBgColor.main",
-                                p:1,
-                                mt:2,
-                                height:'130px',
-                                overflow:'scroll'
 
-                                
+                        />
+                    </Box>
+                </Box>
+                <Box sx={{ ...TagHeaderSelButtonContainer }}>
+                    <Box sx={{ ml: 'auto', display: 'flex', gap: 2, }}>
+                        <Button sx={{ ...TableHeaderButtonCss }} variant="contained" aria-describedby={id} onClick={opener}>
+                            Add / Show Tag <ArrowDropDownIcon />
+                        </Button>
+                        <Popover
+                            open={open}
+                            anchorEl={tagOpener}
+                            onClose={closer}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
                             }}>
-                            <VirtualTagHandler
-                                selectedTags={tableProperties.tags}
-                                onSelectedTagsChange={handleTableTagChange}
-                                tagFilter={{Scope: TagScope.TABLE}}
-                                allowAdd={true}
-                                allowDelete={true}
-                                inputFieldLocation="BOTTOM"
+                            <Box sx={{ width: '300px', mr: 1 }}>
+                                <VirtualTagHandler
+                                    selectedTags={tableProperties.tags}
+                                    onSelectedTagsChange={handleTableTagChange}
+                                    tagFilter={{ Scope: TagScope.TABLE }}
+                                    allowAdd={true}
+                                    allowDelete={true}
+                                    inputFieldLocation="BOTTOM"
                                 />
                             </Box>
-                        
-                            <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows}/>
+                        </Popover>
+                        <SelectHeaderRowsButton selectedFile={props.selectedFile} callback={setColumnAndDataCallback} headerRows={parsedFileResult?.headerRows} />
                     </Box>
                 </Box>
-                <Box>
-                    <TablePreview 
-                        selectedFile={props.selectedFile}
-                        dataStartsFromRow={parsedFileResult.dataStartsFromRow}
-                        columns={columnProperties}
-                        tableName={tableProperties?.tableName}
-                        data={parsedFileResult.data}
-                        columnSelector = {schemaDataSelector}
-                    />
-                </Box>
+            </Box>
+            <Box>
+                <TablePreview
+                    selectedFile={props.selectedFile}
+                    dataStartsFromRow={parsedFileResult.dataStartsFromRow}
+                    columns={columnProperties}
+                    tableName={tableProperties?.tableName}
+                    data={parsedFileResult.data}
+                    columnSelector={schemaDataSelector}
+                />
             </Box>
         </Box>
+
     )
 }
 
@@ -880,20 +822,20 @@ type TablePreviewProps = {
 const TablePreview = (props: TablePreviewProps) => {
     const classes = useStyles()
 
-    const {selectedFile, dataStartsFromRow, columns, tableName, data, columnSelector} = props
-    const [dataGridProps, setDataGridProps] = React.useState<DataGridProps>({rows: [], columns: []})
+    const { selectedFile, dataStartsFromRow, columns, tableName, data, columnSelector } = props
+    const [dataGridProps, setDataGridProps] = React.useState<DataGridProps>({ rows: [], columns: [] })
 
     React.useEffect(() => {
-        if(!!selectedFile && !!dataStartsFromRow && !!columns && !!tableName && !!data) {
+        if (!!selectedFile && !!dataStartsFromRow && !!columns && !!tableName && !!data) {
             const rows = data.map((dataRow, index) => {
-                const rowObject = {id: index}
-                for(let i=0; i<columns.length; i+=1) {
+                const rowObject = { id: index }
+                for (let i = 0; i < columns.length; i += 1) {
                     rowObject[columns[i].columnName] = dataRow[i]
                 }
                 return rowObject
             })
-            
-            const columnProps = columns.map((column,ind) => {
+
+            const columnProps = columns.map((column, ind) => {
                 const headerName = `${column.columnName} (${column.columnDatatype})`
                 return {
                     field: column.columnName,
@@ -901,30 +843,24 @@ const TablePreview = (props: TablePreviewProps) => {
                     headerName: columnSelector[ind]
                 }
             })
-            
+
             setDataGridProps(oldProps => {
                 return {
                     ...oldProps,
                     columns: columnProps,
                     isRowSelectable: () => false,
                     rows: rows,
-                    rowsPerPageOptions: [10, 25, 50, 100]
+                    rowsPerPageOptions: [10, 25, 50, 100],
+                    headerHeight: '120px'
                 }
             })
         }
     }, [selectedFile, dataStartsFromRow, columns, tableName, data])
 
     return (
-        <Box className={classes.TablePreviewBox} sx={{p:4}}>
+        <Box className={classes.TablePreviewBox} >
             <DataGrid
-                sx={{
-                    "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
-                    backgroundBlendMode: "soft-light, normal",
-                    border: "2px solid rgba(255, 255, 255, 0.4)",
-                    borderRadius: "10px",
-                    
-                }}
-                headerHeight={150}
+                sx={{ ...TableCss }}
                 {...dataGridProps}
             />
         </Box>
@@ -940,19 +876,19 @@ type ColumnPropertiesSelectorProps = {
 const ColumnPropertiesSelector = (props: ColumnPropertiesSelectorProps) => {
     const classes = useStyles()
 
-    const handleColumnNameChange = (event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) => {
+    const handleColumnNameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const newName = event.target.value
-        props.setColumnProperty(props.columnIndex, {columnName: newName})
+        props.setColumnProperty(props.columnIndex, { columnName: newName })
     }
 
     const handleColumnDataTypeChange = (event: SelectChangeEvent<string>) => {
         const newDataType = event.target.value;
-        props.setColumnProperty(props.columnIndex, {columnDatatype: newDataType})
+        props.setColumnProperty(props.columnIndex, { columnDatatype: newDataType })
     }
 
     const handleColumnTagChange = (tags: Tag[]) => {
         const newTags = tags
-        props.setColumnProperty(props.columnIndex, {columnTags: newTags})
+        props.setColumnProperty(props.columnIndex, { columnTags: newTags })
     }
 
     const isColumnFieldValid = () => {
@@ -970,55 +906,72 @@ const ColumnPropertiesSelector = (props: ColumnPropertiesSelectorProps) => {
             return `Non Empty except '"'`
         }
     }
-
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
     return (
-        <Card sx={{px:2 , background:'transparent',border:'none'}}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
-                <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
-                    <Box sx={{ width: "250px"}}>
-                        <TextField 
-                        InputProps={{
-                            sx:{
-                                fontSize:'1.1rem',
-                                fontWeight:600
-                            }
-                            ,disableUnderline:true}}
-                            variant='standard'
-                            size='small'
-                            value={props.columnProperty.columnName} 
-                            error={!isColumnFieldValid()}
-                            onChange={handleColumnNameChange} 
-                            />
+        <Card sx={{ ...TableHeaderCardCss }}>
+            <Box sx={{ ...ColumnHeaderConatiner }}>
+                <TextField
+                    InputProps={{
+                        sx: { ...ColumnHeaderTextFieldCss }
+                        , disableUnderline: true
+                    }}
+                    variant='standard'
+                    size='small'
+                    value={props.columnProperty.columnName}
+                    error={!isColumnFieldValid()}
+                    onChange={handleColumnNameChange}
+                />
+            </Box>
+            <Box sx={{ height: '30px' }}>
+                <FormControl className={classes.formControl}>
+                    <Select
+                        variant='standard'
+                        labelId="demo-simple-select-helper-label"
+                        id="demo-simple-select-helper"
+                        label="Datatype"
+                        value={props.columnProperty.columnDatatype}
+                        onChange={handleColumnDataTypeChange}
+                        disableUnderline
+                        sx={{...columnDataTypeSelectCss}}
+                    >
+                        <MenuItem value={DatafacadeDatatype.INT}>Integer</MenuItem>
+                        <MenuItem value={DatafacadeDatatype.STRING}>String</MenuItem>
+                        <MenuItem value={DatafacadeDatatype.BOOLEAN}>Boolean</MenuItem>
+                        <MenuItem value={DatafacadeDatatype.FLOAT}>Float</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+            <Box sx={{ m: -1 }}>
+                <Button sx={{ color: '#A6ABBD' }} aria-describedby={id} onClick={handleClick}>
+                    Add/Show Tag <ArrowDropDownIcon />
+                </Button>
+                <Popover
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}>
+                    <Box sx={{ width: '300px', mr: 1 }}>
+                        <VirtualTagHandler
+                            selectedTags={props.columnProperty.columnTags}
+                            onSelectedTagsChange={handleColumnTagChange}
+                            tagFilter={{ Scope: TagScope.COLUMN }}
+                            allowAdd={true}
+                            allowDelete={true}
+                            inputFieldLocation="TOP"
+                        />
                     </Box>
-                    <Box>
-                        <FormControl className={classes.formControl}>
-                            <Select
-                            variant='standard'
-                                labelId="demo-simple-select-helper-label"
-                                id="demo-simple-select-helper"
-                                label="Datatype"
-                                value={props.columnProperty.columnDatatype}
-                                onChange={handleColumnDataTypeChange}
-                                disableUnderline
-                            >
-                                <MenuItem value={DatafacadeDatatype.INT}>Integer</MenuItem>
-                                <MenuItem value={DatafacadeDatatype.STRING}>String</MenuItem>
-                                <MenuItem value={DatafacadeDatatype.BOOLEAN}>Boolean</MenuItem>
-                                <MenuItem value={DatafacadeDatatype.FLOAT}>Float</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </Box>
-                <Box sx={{m:-1}}>
-                    <VirtualTagHandler
-                        selectedTags={props.columnProperty.columnTags}
-                        onSelectedTagsChange={handleColumnTagChange}
-                        tagFilter={{Scope: TagScope.COLUMN}}
-                        allowAdd={true}
-                        allowDelete={true}
-                        inputFieldLocation="TOP"
-                    />
-                </Box>
+                </Popover>
             </Box>
         </Card>
     )
@@ -1079,7 +1032,7 @@ const getTypeOfValue = (dataPoints?: any[]) => {
                 // if (Number(dataPoint) === dataPoint && dataPoint % 1 === 0) {
                 //     return ColumnDataType.INT
                 // } else {
-                    return DatafacadeDatatype.FLOAT
+                return DatafacadeDatatype.FLOAT
                 // }
             } else if (typeof dataPoint === "boolean") {
                 return DatafacadeDatatype.BOOLEAN

@@ -6,7 +6,8 @@ import ApplicationActionCard from "./ApplicationActionCard";
 
 
 interface ApplicationActionsProps {
-    application: ApplicationDetails
+    application: ApplicationDetails,
+    allTab: boolean
 }
 
 const ApplicationActions = (props: ApplicationActionsProps) => {
@@ -21,9 +22,9 @@ const ApplicationActions = (props: ApplicationActionsProps) => {
 
     return (
         <Box>
-            {(props.application?.actions || []).length === 0 ? (
+            {!props.allTab &&(props.application?.actions || []).length === 0 ? (
                 <Box sx={{width: '100%', minheight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <Typography variant="heroHeader">No Actions</Typography>
+                    <Typography>No Actions</Typography>
                 </Box>
             ) : (
                 <Box sx={{overflowY: 'auto', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 1, p: 1}}>
