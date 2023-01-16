@@ -501,18 +501,12 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                         <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
                     </DialogContent>
                 </Dialog>
-                {/* <Snackbar open={snackbarState} autoHideDuration={5000} onClose={() => setSnackbarState(false)} message="Execution Created"/>  */}
                 <Snackbar open={!!validateErrorMessage} autoHideDuration={5000} onClose={() => setValidationErrorMessage(undefined)} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
                     <Alert severity='error' onClose={() => setValidationErrorMessage(undefined)} sx={{width: '100%'}}>
                         {validateErrorMessage}
                     </Alert>
                 </Snackbar>
             </Box>
-            {/* {!!actionExecutionId && !!data && !props.hideExecution? (
-                <Box sx={{mb: 10}} ref={actionExecutionView}>
-                    <ActionExecutionDetails actionExecutionId={actionExecutionId} showDescription={false}/>
-                </Box>
-            ) : (<></>)} */}
         </ExecuteActionMainBox>
     )
 }

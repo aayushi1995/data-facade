@@ -11,16 +11,19 @@ import { useContext , useEffect} from 'react';
 import RecommendedApps from './components/RecommendedApps';
 
 
-
-
 export const UploadTablePage = (props) => {
-    const uploadButtonRef = React.useRef(null)
     const [lastUploadedTableId, setLastUploadedTableId] = React.useState()
     const [uploadState, setUploadState] = React.useState(S3UploadState.NO_FILE_SELECTED)
     const [activeStep, setActiveStep] = React.useState({
         stepIndex: 0,
         stepProps: {}
     })
+
+    React.useEffect(() => {
+        if(!!props?.file) {
+            changeHandler(props?.file)
+        }
+    }, [ props?.file ])
 
     const setModuleContext = useContext(SetModuleContextState)
     useEffect(() => {
@@ -53,8 +56,7 @@ export const UploadTablePage = (props) => {
     }
     const prevStep = () => {}
 
-    const changeHandler = (event) => {
-        const file = event.target.files[0];
+    const changeHandler = (file) => {
         if (file !== undefined) {
             if (file.size > 200000000) {
                 setUploadState(S3UploadState.SELECTED_FILE_TOO_LARGE);
@@ -72,22 +74,10 @@ export const UploadTablePage = (props) => {
         }
     };
 
-    React.useEffect(() => {
-        console.log(uploadButtonRef)
-        uploadButtonRef.current.click()
-    }, [])
 
     return (
-        <Box px={1} py={2}>
+        <Box px={1} py={4}>
             <Grid container spacing={5}>
-                <Grid container item xs={12}>
-                    <Grid item xs={5}>
-                        <Button sx={{ display: "none"}}>
-                            Select File
-                            <input ref={uploadButtonRef} type="file" accept={".csv,.xlsx"} hidden onChange={changeHandler} onClick={(event) => {event.target.value=''}}/>
-                        </Button>
-                    </Grid>
-                </Grid>
                 { (activeStep.stepIndex===0) &&<Grid item xs={12}>
                     <SelectFileStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
                 </Grid> }
@@ -95,7 +85,7 @@ export const UploadTablePage = (props) => {
                     <SelectTableStep nextStep={nextStep} prevStep={prevStep} setUploadState={setUploadState} {...activeStep.stepProps}/>
                 </Grid> }
                 { (activeStep.stepIndex===2) &&<Grid item xs={12}>
-                    <ConfigureTableMetadata nextStep={nextStep} prevStep={prevStep} stateData={uploadState.message} setUploadState={setUploadState} setLastUploadedTableId={setLastUploadedTableId} {...activeStep.stepProps}/>
+                    <ConfigureTableMetadata nextStep={nextStep} prevStep={prevStep} stateData={uploadState.message} setUploadState={setUploadState} setLastUploadedTableId={setLastUploadedTableId} onCancel={() => props?.onCancel?.()}{...activeStep.stepProps}/>
                     <RecommendedApps tableId={lastUploadedTableId}/>
                 </Grid> }
                 

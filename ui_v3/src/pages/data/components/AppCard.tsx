@@ -11,11 +11,18 @@ import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION } from 
 interface AppCardProps {
     Displayname: string,
     Description: string,
-    ID: any
+    ID: any,
+    tableId?: string
 }
 
 export const AppCard = (props: AppCardProps) => {
-
+    const getExecuteUrl = () => {
+        const url  = generatePath(`${APPLICATION_EXECUTE_ACTION}`, { ActionDefinitionId: props.ID || "" })
+        if(props?.tableId) {
+            return url + `?tableId=${props?.tableId}`
+        }
+        return url
+    }
 
     return (
         <Card sx={{...AppCardStyle}}>
@@ -41,7 +48,11 @@ export const AppCard = (props: AppCardProps) => {
             </Box>
             <Box sx={{ ...ActionCardButtonContainer }}>
                 <Box sx={{...CursorPointer}} to={generatePath(`${APPLICATION_EDIT_ACTION_ROUTE_ROUTE}`, { ActionDefinitionId: props.ID || "" })} component={RouterLink}><img width='25px' height='25px' src={SettingIcon} alt="" /></Box>
-                <Box sx={{...CursorPointer}} onClick={() => { window.open(generatePath(`${APPLICATION_EXECUTE_ACTION}`, { ActionDefinitionId: props.ID || "" })) }}><img width='25px' height='25px' src={RunIcon} alt="" /></Box>
+                <Box sx={{...CursorPointer}} onClick={() => { 
+                    window.open(getExecuteUrl()) 
+                }}>
+                    <img width='25px' height='25px' src={RunIcon} alt="" />
+                </Box>
                 <Box sx={{...CursorPointer}}><img width='25px' height='25px' src={SaveIcon} alt="" /></Box>
             </Box>
         </Card>

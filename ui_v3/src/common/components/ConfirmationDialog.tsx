@@ -14,14 +14,33 @@ export interface ConfirmationDialogProps {
     onAccept?: Function,
     onDecline?: Function,
     dialogOpen: boolean,
-    onDialogClose?: ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void)
+    onDialogClose?: ((event: {}, reason: "backdropClick" | "escapeKeyDown") => void),
+    autoTimeoutInS?: number
 }
  
 const ConfirmationDialog = (props: ConfirmationDialogProps) => {
     const mode = props?.mode || "ERROR"
     const styling = stylings?.[mode]
+    const [timer, setTimer] = React.useState<NodeJS.Timeout>()
+    const clearTimer = () => {
+        setTimer(oldTimer => {
+            if(!!oldTimer) {
+                clearTimeout(oldTimer)
+            }
+            return undefined
+        })
+    }
+
+    React.useEffect(() => {
+        if(!!props?.autoTimeoutInS) {
+            const autoDeclineTimer = setTimeout(() => props?.onDecline?.(), (props?.autoTimeoutInS || 5) * 1000)
+            setTimer(autoDeclineTimer)
+            return () => clearTimer()
+        }
+    }, [props?.autoTimeoutInS])
+
     return (
-        <Dialog open={props.dialogOpen} onClose={props.onDialogClose}fullWidth maxWidth="md" scroll="paper">
+        <Dialog open={props.dialogOpen} onClose={props.onDialogClose}fullWidth maxWidth="md" scroll="paper" onClick={() => clearTimer()}>
             <Box sx={{display: 'flex' , px:1,pt:1}}>    
                 <Box sx={{display: 'flex', width:'45%'}}>
                     <Box sx={{ px: 2, display: "flex", alignItems: "center" }}>

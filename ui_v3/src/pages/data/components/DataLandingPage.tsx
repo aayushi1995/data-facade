@@ -1,4 +1,4 @@
-import { Box, InputAdornment } from "@mui/material";
+import { Box, IconButton, InputAdornment } from "@mui/material";
 import { HeaderButtonsStyle, IconConatiner, SearchBarTextField, StyledTypographyDataHeader } from "./StyledComponents";
 import UploadFileIcon from "../../../images/uploadFile.svg"
 import CreateConnectionIcon from "../../../images/createConnection.svg"
@@ -8,12 +8,19 @@ import { DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_CONNECTION_CHOOSE } from "../../../
 import { Link as RouterLink } from "react-router-dom";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import RecommendedApps from "../../upload_table/components/RecommendedApps";
+import UploadTablePage from "../../upload_table/UploadTablePage";
 
 
 
 export const DataLandingPage = () => {
     const HeaderString = "Upload csv or select a table to explore"
     const [searchQuery, setSearchQuery] = React.useState("")
+    const [fileToUpload, setFileToUpload] = React.useState<File | undefined>()
+
+    const changeHandler = (event) => {
+        const file = event.target.files[0];
+        setFileToUpload(file)
+    };
     
     const setModuleContext = useContext(SetModuleContextState)
     useEffect(() => {
@@ -29,34 +36,42 @@ export const DataLandingPage = () => {
     }, [])
 
     return (
-        <Box sx={{ mt: 10,mx:6 }}>
-            <Box>
-                <StyledTypographyDataHeader>
-                    {HeaderString}
-                </StyledTypographyDataHeader>
+        !!fileToUpload ?
+            <UploadTablePage file={fileToUpload} onCancel={() => setFileToUpload(undefined)}/>
+            :
+            <Box sx={{ mt: 10,mx:6 }}>
+                <Box>
+                    <StyledTypographyDataHeader>
+                        {HeaderString}
+                    </StyledTypographyDataHeader>
+                </Box>
+                <Box sx={{ ...IconConatiner }}>
+                    <Box sx={{...HeaderButtonsStyle }} to={DATA_CONNECTION_CHOOSE} component={RouterLink}><img width='100px' height='100px' src={CreateConnectionIcon} alt="" /></Box>
+                    <IconButton 
+                        sx={{...HeaderButtonsStyle }} 
+                        component="label"
+                    >
+                        <input type="file" accept={".csv,.xlsx"} hidden onChange={changeHandler} onClick={(event) => {event.target.value=''}}/>
+                        <img width='100px' height='100px' src={UploadFileIcon} alt="" />
+                    </IconButton>
+                </Box>
+                <Box sx={{ py: 2 }}>
+                    <SearchBarTextField variant="standard"
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        multiline={true}
+                        InputProps={{
+                            disableUnderline: true,
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon sx={{ marginLeft: 1 }} />
+                                </InputAdornment>
+                            )
+                        }} />
+                </Box>
+                <RecommendedApps searchQuery={searchQuery}/>
             </Box>
-            <Box sx={{ ...IconConatiner }}>
-                <Box sx={{...HeaderButtonsStyle }} to={DATA_CONNECTION_CHOOSE} component={RouterLink}><img width='100px' height='100px' src={CreateConnectionIcon} alt="" /></Box>
-                <Box sx={{...HeaderButtonsStyle }} to={DATA_CONNECTIONS_UPLOAD_ROUTE} component={RouterLink}><img width='100px' height='100px' src={UploadFileIcon} alt="" /></Box>
-            </Box>
-            <Box sx={{ py: 2 }}>
-                <SearchBarTextField variant="standard"
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    multiline={true}
-                    InputProps={{
-                        disableUnderline: true,
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon sx={{ marginLeft: 1 }} />
-                            </InputAdornment>
-                        )
-                    }} />
-            </Box>
-            <RecommendedApps searchQuery={searchQuery}/>
-        </Box>
     )
-
 }
 
 export default DataLandingPage;

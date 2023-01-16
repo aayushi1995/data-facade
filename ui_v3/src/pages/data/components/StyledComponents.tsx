@@ -16,6 +16,7 @@ export const IconConatiner = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: '10px',
     gap: 1
 }

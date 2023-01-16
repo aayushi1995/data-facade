@@ -42,6 +42,7 @@ import labels from '../../../labels/labels';
 import DatafacadeDatatype from '../../../enums/DatafacadeDatatype';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
+import ConfirmationDialog from '../../../common/components/ConfirmationDialog';
 const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function }
 
 const useStyles = makeStyles(() => ({
@@ -119,7 +120,8 @@ export type ConfigureTableMetadataProps = {
     setUploadState?: Function,
     stateData?: string,
     file: File,
-    setLastUploadedTableId: React.Dispatch<React.SetStateAction<string | undefined>>
+    setLastUploadedTableId: React.Dispatch<React.SetStateAction<string | undefined>>,
+    onCancel: Function
 }
 
 type S3UploadInformation = {
@@ -139,6 +141,9 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         currentEnabled: 5,
         requiredEnabled: 15
     })
+    const [warningDialog, setWarningDialog] = React.useState<boolean>(false)
+    const closeWarningDialog = () => setWarningDialog(false)
+    const openWarningDialog = () => setWarningDialog(true)
 
     // Upload Button is enabled if all bits are set
     // 2^0: File type/size valid
@@ -286,6 +291,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
     };
 
     const uploadSelectedFiles = () => {
+        openWarningDialog()
         props?.setUploadState?.(S3UploadState.BUIDING_FILE_FOR_UPLOAD);
         Papa.parse(selectedFile,
             {
@@ -432,14 +438,13 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                 </Grid>}
             <Grid container item xs={12} direction="row">
                 <Box sx={{ ...HeaderButtonContainerCss }}>
-                    <Link to="/data" style={{ textDecoration: 'none' }}>
-                        <Button sx={{ ...CancelButtonCss }} variant="outlined" color="error">
-                            Cancel
-                        </Button>
-                    </Link>
+                    <Button sx={{ ...CancelButtonCss }} disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled} 
+                        onClick={() => props?.onCancel?.()} variant="outlined" color="error"
+                    >
+                        Cancel
+                    </Button>
 
                     <Button color="success" variant="contained" sx={{ ...SaveButtonCss }} component="label" onClick={uploadSelectedFiles}
-                        // classes={{ root: "select-all", disabled: classes.disabledButton }}
                         disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled}>
                         Save
                     </Button>
@@ -455,6 +460,18 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                     statusMSG={props.stateData}
                 />
             </Grid>
+            <ConfirmationDialog
+                mode='INFO'
+                messageHeader='Uploading Table'
+                messageToDisplay='Closing this page will result in file not being uploaded'
+                dialogOpen={warningDialog}
+                onDialogClose={closeWarningDialog}
+                onDecline={closeWarningDialog}
+                onAccept={closeWarningDialog}
+                autoTimeoutInS={6   }
+                acceptString="OK"
+                declineString='Close'
+            />
         </Grid>
     );
 };

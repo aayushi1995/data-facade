@@ -19,6 +19,7 @@ export type RecommendedAppsProps = {
 }
 
 function RecommendedApps(props: RecommendedAppsProps) {
+    const { tableId } = props
     const propsSearchQuery = props?.searchQuery?.toLowerCase() || ""
     const { data, isLoading, error } = useFetchActionDefinitionForSelector({})
     const filteredData = data?.filter(action => action?.ActionDisplayName?.toLowerCase()?.includes(propsSearchQuery))
@@ -31,7 +32,7 @@ function RecommendedApps(props: RecommendedAppsProps) {
         data={data}
         children = {() => filteredData?.map?.(ad =>
             <Grid item xs={6} md={4} lg={2.4} sx={{px:1,py:2}}>
-                <AppCard Displayname={ad.ActionDisplayName || ""} Description={ad.ActionDisplayName || ""} ID={ad.ActionId} />
+                <AppCard Displayname={ad.ActionDisplayName || ""} Description={ad.ActionDisplayName || ""} ID={ad.ActionId} tableId={tableId}/>
             </Grid>
         )}
     />
@@ -59,6 +60,7 @@ function RecommendedApps(props: RecommendedAppsProps) {
                     <DetailView
                         searchQuery={dialogsearchQuery}
                         onSearchQueryChange={(newSearchQuery) => setDialogSearchQuery(newSearchQuery)}
+                        tableId={props?.tableId}
                     />
                 </Dialog>
             </Box>
@@ -77,7 +79,8 @@ function RecommendedApps(props: RecommendedAppsProps) {
 
 type DetailViewProps = {
     searchQuery?: string,
-    onSearchQueryChange?: (newSearchQuery: string) => void
+    onSearchQueryChange?: (newSearchQuery: string) => void,
+    tableId?: string
 }
 
 function DetailView(props: DetailViewProps) {
@@ -91,7 +94,7 @@ function DetailView(props: DetailViewProps) {
         onLabelClick={(applicationName: string) => props?.onSearchQueryChange?.(applicationName)}
     />)
 
-    const applicationDetailsApps = filteredPrebuiltAppsData?.map(data => <ApplicationDetailView app={data} showAllActions={filteredPrebuiltAppsData?.length === 1}/>)
+    const applicationActions = filteredPrebuiltAppsData?.map(data => <ApplicationDetailView app={data} showAllActions={filteredPrebuiltAppsData?.length === 1} tableId={props?.tableId}/>)
 
     return (
         <Box sx={{...DialogBody}}>
@@ -103,7 +106,7 @@ function DetailView(props: DetailViewProps) {
                     {appLabels}
                 </Box>
             </Box>
-            <Box sx={{...AllApps}}>{applicationDetailsApps}</Box>
+            <Box sx={{...AllApps}}>{applicationActions}</Box>
         </Box>
     )
 }
@@ -133,7 +136,8 @@ function ApplicationLabel(props: ApplicationLabelProps) {
 
 type ApplicationDetailViewProps = {
     app?: ApplicationCardViewResponse,
-    showAllActions: boolean
+    showAllActions: boolean,
+    tableId?: string
 }
 function ApplicationDetailView(props: ApplicationDetailViewProps) {
     const { app } = props
@@ -155,7 +159,7 @@ function ApplicationDetailView(props: ApplicationDetailViewProps) {
                 <Grid container>
                     {getActions()?.map(action =>
                         <Grid item xs={4} sx={{ px: 1 }}>
-                            <AppCard Displayname={action?.model?.DisplayName || ""} Description={action?.model?.Description || ""} ID={action?.model?.Id} />
+                            <AppCard Displayname={action?.model?.DisplayName || ""} Description={action?.model?.Description || ""} ID={action?.model?.Id} tableId={props?.tableId}/>
                         </Grid>
                     )}
                 </Grid>
