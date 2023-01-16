@@ -1,4 +1,4 @@
-
+import React from "react";
 import { Avatar, Grid, Typography } from "@mui/material";
 import LoginButton from "./components/Login";
 import useHomeStyles from "./../../css/home/Home";
@@ -6,9 +6,12 @@ import { DataFacadeLogo } from "../../common/components/sideBar/DataFacadeLogo";
 import { Box } from "@mui/system";
 import { Link } from "react-router-dom";
 
+import useLogin from "../../hooks/useLogin";
+
 const Home = () => {
   const classes = useHomeStyles();
   const user = JSON.parse(localStorage.getItem("user"));
+  const { handleLogin } = useLogin()
   return (
     <>
       <Box
@@ -70,7 +73,15 @@ const Home = () => {
             >
               <Grid item xs={8}>
                 <Typography variant="h6">
-                  <a href="#">Login to a different account</a>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      localStorage.removeItem('user')
+                      handleLogin()
+                    }}
+                  >
+                    Login to a different account
+                  </a>
                 </Typography>
               </Grid>
               <Grid item xs={4}>

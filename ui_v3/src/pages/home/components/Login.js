@@ -1,10 +1,9 @@
-import React from "react";
 import {Button} from '@mui/material'
-import {useAuth0} from "@auth0/auth0-react";
 import { makeStyles } from '@mui/styles'
-import {LOGIN_STATE_KEY, LOGIN_STATE_PROGRESS_VALUE} from "../EULA";
 import COLORS from "../../../assets/theme.color";
 import { ArrowForwardIosOutlined } from "@mui/icons-material";
+import useLogin from "../../../hooks/useLogin";
+
 
 const useStyles = makeStyles(() => ({
 
@@ -21,13 +20,10 @@ const useStyles = makeStyles(() => ({
 const LoginButton = () => {
 
     const classes = useStyles()
-    const {loginWithRedirect} = useAuth0();
+    const { handleLogin } = useLogin()
     return (
         <Button
-            onClick={() => {
-                localStorage.setItem(LOGIN_STATE_KEY, LOGIN_STATE_PROGRESS_VALUE)
-                loginWithRedirect()
-            }}
+            onClick={handleLogin}
             variant="outlined"
             className={classes.button}
             endIcon={<ArrowForwardIosOutlined/>}
