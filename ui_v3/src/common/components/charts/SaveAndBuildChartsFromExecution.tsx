@@ -1,4 +1,4 @@
-import { Box, Grid, Button, Typography, Tabs, Tab } from "@mui/material"
+import { Box, Grid, Button, Typography, Tabs, Tab, Dialog } from "@mui/material"
 import WrapInCollapsable from "../collapsable/WrapInCollapsable"
 import ChartIcon from "../../../../src/images/ChartIcon.svg"
 import ResultIcon from "../../../../src/images/Results.png"
@@ -21,6 +21,7 @@ interface SaveAndBuildChartsFromExecutionProps {
     executionId: string;
     definitionName?: string;
     onChildExecutionCreated?: (childExecutionId: string) => void;
+    definitionId?: string
 }
 
 interface TabPanelProps {
@@ -55,6 +56,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     const setSaveAndBuildChartsState = React.useContext(SetSaveAndBuildChartContext)
     const chartQueriesState = React.useContext(ChartQueriesContext)
     const [activeTab, setActiveTab] = React.useState<number>(0)
+    const [selectedDeepDiveActionId, setSelectedDeepDiveActionId] = React.useState<string | undefined>()
 
     const handleSaveCharts = () => {
         saveAndBuildChartsState.Charts.forEach(chart => {
@@ -68,37 +70,9 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 newProperties: {...chart.data.model},
                 assignedDashboards: chart.assignedDasboards
             })
-            // {
-            //     onSuccess: (data) => {
-            //         const expectedData = data as {requestUrl: string, headers: any}
-            //         chartQueriesState.uploadFileToS3Mutation?.mutate({
-            //             requestUrl: expectedData.requestUrl,
-            //             chart: chart.data,
-            //             headers: expectedData.headers
-            //         },{
-            //             onSuccess: (data) => {
-            //                 chartQueriesState.updateChart?.mutate({
-            //                     filter: {Id: chart.data.model?.Id},
-            //                     newProperties: {...chart.data.model}
-            //                 }, {
-            //                     onSuccess: (data) => {
-            //                         chartQueriesState.fetchCharts?.refetch()
-            //                     }
-            //                 })
-            //             }
-            //         })
-            //     }}
         })
         
     }
-
-    React.useEffect(() => {
-        if(!!chartQueriesState.fetchCharts?.data) {
-            if(chartQueriesState.fetchCharts?.data?.length === 0 || !chartQueriesState.fetchCharts?.data) {
-                setActiveTab(1)
-            }
-        }
-    }, [chartQueriesState.fetchCharts?.data]) 
 
     React.useEffect(() => {
         setSaveAndBuildChartsState({type: 'SetExecutionId', payload: {executionId: props.executionId}})
@@ -148,9 +122,12 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         </Box>
         <Box sx={{getLargerButtonSx: getButtonSx}}>
             <DeepDive 
+                setSelectedActionId={setSelectedDeepDiveActionId}
                 executionId={props.executionId} 
                 definitionName={props.definitionName || ""}
                 onChildExecutionCreated={props.onChildExecutionCreated}
+                definitionId={props.definitionId || ""}
+                selectedActionId={selectedDeepDiveActionId}
             />
         </Box>
         <Box sx={{getLargerButtonSx: getButtonSx}}>
@@ -158,6 +135,10 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         </Box>
     </>
 
+    const onDeepDiveActionSelected = (actionId: string) => {
+        console.log(actionId)
+        setSelectedDeepDiveActionId(actionId)
+    }
 
     return (
         <Box sx={highLevelSxProps}>
@@ -178,23 +159,24 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                         expanded={
                             <Box sx={{mt: 2}}>
                                 <TabPanel value={activeTab} index={0}>
-                                    <ReactQueryWrapper isLoading={chartQueriesState.fetchCharts?.isLoading || chartQueriesState.fetchCharts?.isFetching} data={saveAndBuildChartsState.Charts} error={chartQueriesState.fetchCharts?.error}>
-                                        {() => <ShowChartsFromContext/>}
-                                    </ReactQueryWrapper>
-                                </TabPanel>
-                                <TabPanel value={activeTab} index={1}>
                                     <ReactQueryWrapper isLoading={chartQueriesState.fetchExecution?.isLoading || chartQueriesState.fetchExecution?.isFetching} data={chartQueriesState.fetchExecution?.data} error={chartQueriesState.fetchExecution?.error}>
-                                        {() => <>{saveAndBuildChartsState.ExecutionDetails ? 
-                                            <ViewActionExecutionOutput 
-                                                ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
-                                                ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
-                                                ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}
-                                                showCharts={false}    /> : <LoadingIndicator />
-                                        }
+                                        {() => <>
+                                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
+                                                <ReactQueryWrapper isLoading={chartQueriesState.fetchCharts?.isLoading || chartQueriesState.fetchCharts?.isFetching} data={saveAndBuildChartsState.Charts} error={chartQueriesState.fetchCharts?.error}>
+                                                    {() => <ShowChartsFromContext onDeepDiveActionSelected={onDeepDiveActionSelected}/>}
+                                                </ReactQueryWrapper>
+                                                {saveAndBuildChartsState.ExecutionDetails ? 
+                                                    <ViewActionExecutionOutput 
+                                                    ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
+                                                    ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
+                                                    ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}
+                                                    showCharts={false}    /> : <LoadingIndicator />}
+                                            </Box>
+                                        
                                         </>}
                                     </ReactQueryWrapper>
                                 </TabPanel>
-                                <TabPanel value={activeTab} index={2}>
+                                <TabPanel value={activeTab} index={1}>
                                     <ReactQueryWrapper {...chartQueriesState.fetchExecution}>
                                         {() => <>
                                             {saveAndBuildChartsState.ExecutionDetails ? 
@@ -244,31 +226,23 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
                 }
                 props.onTabChange(newValue)   
             }}>
-                <Tab value={0} icon={<img src={ChartIcon}/>} iconPosition="start" label="Charts" sx={{
+                <Tab value={0} icon={<img src={ResultIcon}/>} iconPosition="start" label="Results" sx={{
                     fontFamily: "'SF Pro Text'",
                     fontStyle: "normal",
                     fontWeight: 500,
-                    fontSize: "17.4731px",
-                    lineHeight: "100%",
-                    letterSpacing: "0.124808px",
-                    color: "#DB8C28"
-                }}/>
-                <Tab value={1} icon={<img src={ResultIcon}/>} iconPosition="start" label="Results" sx={{
-                    fontFamily: "'SF Pro Text'",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    fontSize: "17.4731px",
+                    fontSize: "17px",
                     lineHeight: "100%",
                     letterSpacing: "0.124808px",
                     color: "#353535"
                 }}/>
-                <Tab label="Parameters" value={2} sx={{
+                <Tab label="Parameters" value={1} sx={{
                     fontFamily: "'SF Pro Text'",
                     fontStyle: "normal",
                     fontWeight: 500,
                     lineHeight: "157%",
                     letterSpacing: "0.124808px",
                     color: "#DB8C28",
+                    fontSize: "17px",
                 }}
                 iconPosition="start" 
                 icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>

@@ -9,7 +9,7 @@ interface ParameterDescriptionCardProps {
 
 const ParameterDescriptionCard = (props: ParameterDescriptionCardProps) => {
     return (
-        <StyledParameterDescriptionCard sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', height: '100%', m: 1, gap: 1, maxHeight: '200px', overflowY: 'auto'}}>
+        <StyledParameterDescriptionCard sx={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start', width: '100%', height: '100%', gap: 1, maxHeight: '200px', overflowY: 'auto'}}>
             <Typography variant="executeActionName" sx={{fontSize: '13px'}}>
                 Input Description
             </Typography>

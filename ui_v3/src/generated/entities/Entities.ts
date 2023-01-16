@@ -307,6 +307,7 @@ export interface ActionDefinition extends BaseEntity{
 	UpdatedBy?: string
 	Config?: string
 	IsUpdatedAfterSync?: boolean
+	DeepDiveConfig?: string
 }
 
 

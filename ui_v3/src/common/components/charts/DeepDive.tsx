@@ -17,63 +17,68 @@ import ExecuteActionNew from "../../../pages/execute_action/components/ExecuteAc
 import { ExecuteActionContextProvider } from "../../../pages/execute_action/context/ExecuteActionContext"
 import { ActionExecutionDetails } from "../../../pages/apps/components/ActionExecutionHomePage"
 import CloseIcon from '@mui/icons-material/Close';
+import DeepDiveActionSelector from "./DeepDiveActionSelector"
 
 
 export interface DeepDiveProps {
     executionId: string,
     definitionName: string,
-    onChildExecutionCreated: (executionId: string) => void,
+    definitionId: string,
+    onChildExecutionCreated?: (executionId: string) => void,
+    selectedActionId?: string,
+    setSelectedActionId: (id: string | undefined) => void
 }
 
 // This compoment enable users to iteratively run all available application from the result of another action.
 const DeepDive = (props: DeepDiveProps) => {
-    const [openDialog, setOpenDialog] = React.useState(false)
     const [executionId, setExecutionId] = React.useState<string | undefined>(props.executionId)
-    const [selecedAction, setSelecedAction] = React.useState()
+    const [dialogState, setDialogState] = React.useState(false)
 
     const handleDialogOpen = () => {
-        setOpenDialog(true)
         setExecutionId(undefined)
-        setSelecedAction(undefined)
+        setDialogState(true)
     }
 
     const handleDialogClose = () => {
-        setOpenDialog(false)
+        props.setSelectedActionId(undefined)
+        setDialogState(false)
     }
 
     const addActionHandler = (actionDefinition: ActionDefinitionToAdd) => {
-        setSelecedAction(actionDefinition)
+        props.setSelectedActionId(actionDefinition.Id)
     }
 
     const onExecutionCreated = (actionExecutionId: string) => {
         setExecutionId(actionExecutionId)
-        props.onChildExecutionCreated(actionExecutionId)
-        setOpenDialog(false)
+        props.onChildExecutionCreated?.(actionExecutionId)
+        props.setSelectedActionId(undefined)
     }
+
 
     return (
         <React.Fragment>
             <Dialog 
-                open={openDialog}
+                open={!!props.selectedActionId || dialogState}
                 onClick={(e)=>{e.stopPropagation()}}
                 maxWidth="md" 
                 fullWidth>
                 {dialogTitle(handleDialogClose)}
                 {
-                    !selecedAction && 
+                    !props.selectedActionId && 
                     <DialogContent>
-                        <SelectAction groups={[]} onAddAction={addActionHandler}></SelectAction>
+                        {/* <SelectAction groups={[]} onAddAction={addActionHandler}></SelectAction> */}
+                        <DeepDiveActionSelector onAddAction={addActionHandler} actionDefinitionId={props.definitionId}/>
                     </DialogContent>
                 }
                 {/* Execute action on the selected action definition */}
                 {
-                selecedAction && 
+                !!props.selectedActionId && 
                 <ExecuteActionContextProvider>
                        <ExecuteActionNew 
                             showOnlyParameters={true} 
                             fromDeepDive={true}
                             fromTestRun={true} 
-                            actionDefinitionId={selecedAction.Id} 
+                            actionDefinitionId={props.selectedActionId} 
                             showActionDescription={true} 
                             redirectToExecution={false} 
                             onExecutionCreate={onExecutionCreated}

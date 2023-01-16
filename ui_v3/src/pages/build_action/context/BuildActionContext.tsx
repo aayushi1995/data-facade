@@ -33,6 +33,11 @@ export type ActionContextActionParameterDefinitionWithTags = {
 
 export type ContextModes = "CREATE" | "UPDATE" | "EMPTY" | undefined
 
+export type DeepDiveConfigType = {
+    DisplayName?: string,
+    Id?: string
+}
+
 export type BuildActionContextState = {
     mode: ContextModes,
     actionDefinitionWithTags: {
@@ -45,6 +50,7 @@ export type BuildActionContextState = {
         parameterAdditionalConfig?: ActionParameterAdditionalConfig[],
         activeParameterId?: string
     }[],
+    deepDiveConfig: DeepDiveConfigType[],
     activeTemplateId?: string,
     lastSavedActionDefinition?: ActionDefinition,
     savingAction: boolean,
@@ -52,7 +58,8 @@ export type BuildActionContextState = {
     actionDefinitionToLoadId?: string,
     SourceApplicationId?: string,
     testMode?: boolean,
-    charts?: ChartOptionType[]
+    charts?: ChartOptionType[],
+    sideSettingsOpen?: boolean
 }
 
 const formEmptyDefaultContext: () => BuildActionContextState = () => {
@@ -62,6 +69,7 @@ const formEmptyDefaultContext: () => BuildActionContextState = () => {
             actionDefinition: {},
             tags: []
         },
+        deepDiveConfig: [],
         actionTemplateWithParams: [],
         isLoadingAction: false,
         savingAction: false,
@@ -79,7 +87,8 @@ const formDefaultUpdateContext: () => BuildActionContextState = () => {
         actionTemplateWithParams: [],
         isLoadingAction: false,
         savingAction: false,
-        loadingActionForEdit: false
+        loadingActionForEdit: false,
+        deepDiveConfig: []
     }
 }
 
@@ -96,7 +105,7 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
                 PinnedToDashboard: true,
                 Visibility: ActionDefinitionVisibility.CREATED_BY,
                 PublishStatus: ActionDefinitionPublishStatus.READY_TO_USE,
-                DefaultActionTemplateId: actionTemplateId
+                DefaultActionTemplateId: actionTemplateId,
             },
             tags: []
         },
@@ -115,7 +124,8 @@ const formDefaultCreateContext: () => BuildActionContextState = () => {
         ],
         activeTemplateId: actionTemplateId,
         savingAction: false,
-        loadingActionForEdit: false
+        loadingActionForEdit: false,
+        deepDiveConfig: []
     }
     newState.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId = newState.actionTemplateWithParams[0].template.Id
     return newState
@@ -403,6 +413,39 @@ type SetEntireState = {
     }
 }
 
+type ToggleSideSettings = {
+    type: "ToggleSideSettings",
+    payload: {}
+}
+
+type AddDeepDiveAction = {
+    type: "AddDeepDiveAction",
+    payload: {}
+}
+
+type ChangeNameForDeepDiveAction = {
+    type: "ChangeNameForDeepDiveAction",
+    payload: {
+        name: string,
+        index: number
+    }
+}
+
+type ChangeActionIdForDeepDive = {
+    type: "ChangeActionIdForDeepDive",
+    payload: {
+        id: string,
+        index: number
+    }
+}
+
+type RemoveDeepDiveAction = {
+    type: "RemoveDeepDiveAction",
+    payload: {
+        index: number
+    }
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -444,7 +487,12 @@ ChangeChartKind |
 ChangeChartName |
 SetChartConfigForIndex |
 SetActiveParameterId |
-SetEntireState
+SetEntireState |
+ToggleSideSettings |
+AddDeepDiveAction |
+ChangeNameForDeepDiveAction |
+ChangeActionIdForDeepDive |
+RemoveDeepDiveAction
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -756,7 +804,8 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 activeTemplateId: activeTemplateId,
                 sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!,
                 charts: formChartsFromActionDefinitionConfig(action.payload?.ActionDefinition?.model?.Config || "{}"),
-                actionDefinitionToLoadId: undefined
+                actionDefinitionToLoadId: undefined,
+                deepDiveConfig: (JSON.parse(action.payload.ActionDefinition?.model?.DeepDiveConfig || "[]") as DeepDiveConfigType[])
             } as BuildActionContextState
         
             const finalState = assignActiveTemplateId(newState)
@@ -911,7 +960,8 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
         case "SetTestMode": {
             return {
                 ...state,
-                testMode: action.payload
+                testMode: action.payload,
+                sideSettingsOpen: false
             }
         }
 
@@ -972,6 +1022,42 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             const { newState, oldStateCallback } = action.payload
             oldStateCallback?.(state)
             return newState
+        }
+
+        case "ToggleSideSettings": {
+            return {
+                ...state,
+                sideSettingsOpen: !state.sideSettingsOpen,
+                testMode: false
+            }
+        }
+
+        case "AddDeepDiveAction": {
+            return {
+                ...state,
+                deepDiveConfig: [...state.deepDiveConfig, {}]
+            }
+        }
+
+        case "ChangeNameForDeepDiveAction": {
+            return {
+                ...state,
+                deepDiveConfig: state.deepDiveConfig.map((config, index) => index === action.payload.index ? {...config, DisplayName: action.payload.name} : config)
+            }
+        }
+
+        case "ChangeActionIdForDeepDive": {
+            return {
+                ...state,
+                deepDiveConfig: state.deepDiveConfig.map((config, index) => index === action.payload.index ? {...config, Id: action.payload.id} : config)
+            }
+        }
+
+        case "RemoveDeepDiveAction": {
+            return {
+                ...state,
+                deepDiveConfig: state.deepDiveConfig.filter((config, index )=> index !== action.payload.index)
+            }
         }
 
         default:

@@ -1,6 +1,6 @@
 import { Chart as ChartModel, Dashboard} from "../../../generated/entities/Entities"
 import { ChartWithDataAndOptions } from "./SaveAndBuildChartsContext"
-import { Box, IconButton, Grid, Autocomplete, TextField, Tooltip, Popover, createFilterOptions } from "@mui/material"
+import { Box, IconButton, Grid, Autocomplete, TextField, Tooltip, Popover, createFilterOptions, Divider } from "@mui/material"
 import { Chart } from "./Chart"
 import getChartTypeOptions from "../../util/getChartTypeOptions"
 import LoadingWrapper from "../LoadingWrapper"
@@ -18,7 +18,8 @@ import useGetDashboardsForChart from "./hooks/useGetDashboardsForChart"
 interface ChartFromContextProps {
     chart: ChartWithDataAndOptions,
     onChartModelChange: (chartId: string, chartModel: ChartModel) => void,
-    onAssignedDashboardsChange: (chartId: string, dashboards: Dashboard[]) => void
+    onAssignedDashboardsChange: (chartId: string, dashboards: Dashboard[]) => void,
+    onDeepDiveActionSelected: (actionId: string) => void
 }
 
 const ChartFromContext = (props: ChartFromContextProps) => {
@@ -33,7 +34,7 @@ const ChartFromContext = (props: ChartFromContextProps) => {
         setChanged(false)
     }, [props.chart.options])
 
-    const [dashboardData, isDashboardLoading, dashboardDataError, refetchDashboards] = useGetDashboardDetails({filter: {}})
+    const [dashboardData, isDashboardLoading, dashboardDataError, refetchDashboards] = useGetDashboardDetails({filter: {}, enabled: false})
 
     const handleGetAssignedDashboards = (dashboards: Dashboard[]) => {
         if(!assignedDashboards) {
@@ -42,8 +43,6 @@ const ChartFromContext = (props: ChartFromContextProps) => {
     }
 
     const fetchAssignedDashboardsQuery = useGetDashboardsForChart({filter: {Id: props.chart.data.model?.Id}, queryParams: {onSuccess: handleGetAssignedDashboards}})
-    console.log(props.chart)
-
     const handleMenuOpenClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         setMenuAnchor(e.currentTarget)
     }
@@ -78,6 +77,10 @@ const ChartFromContext = (props: ChartFromContextProps) => {
         props.onAssignedDashboardsChange(props.chart.data.model?.Id!, finalDashboards)
     }
 
+    React.useEffect(() => {
+        refetchDashboards()
+    }, [props.chart.assignedDasboards])
+
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%', gap: 4, p: 2}}>
             <Popover
@@ -95,17 +98,10 @@ const ChartFromContext = (props: ChartFromContextProps) => {
                     sx: {minWidth: 400, minHeight: 300, mt: '50px'}
                 }}
             >
-                <ChartConfigConfigurator chartId={props.chart?.data?.model?.Id || "ID"} onChartModelChange={props.onChartModelChange}/>
+                <ChartConfigConfigurator chartId={props.chart?.data?.model?.Id || "ID"} onChartModelChange={props.onChartModelChange} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
             </Popover>
-            <Grid container direction="row-reverse" spacing={1}>
-                <Grid item xs={1} sx={{display: 'flex', justifyContent: 'center'}}>
-                    <Tooltip title="configure">
-                        <IconButton onClick={handleMenuOpenClick}>
-                            <img src={OptionsIcon} alt="More" style={{transform: 'scale(1.5)'}}/>
-                        </IconButton>
-                    </Tooltip>
-                </Grid>
-                <Grid item xs={2}>
+            <Grid container spacing={1}>
+                <Grid item xs={4}>
                     <LoadingWrapper isLoading={isDashboardLoading} data={dashboardData} error={dashboardDataError}>
                         <Autocomplete
                             fullWidth
@@ -132,7 +128,12 @@ const ChartFromContext = (props: ChartFromContextProps) => {
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        sx: {borderRadius: '0px'}
+                                    }}
                                     variant="outlined"
+                                    sx={{borderRadius: '0px'}}
                                     label="Assign To Dashboard"
                                     placeholder=""
                                 />
@@ -140,7 +141,7 @@ const ChartFromContext = (props: ChartFromContextProps) => {
                         />
                     </LoadingWrapper>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4}>
                     <Autocomplete 
                         fullWidth
                         value={props.chart.data.model?.Type || "NA"}
@@ -157,6 +158,10 @@ const ChartFromContext = (props: ChartFromContextProps) => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    sx: {borderRadius: '0px'}
+                                }}
                                 variant="outlined"
                                 label="Chart Type"
                                 placeholder=""
@@ -164,7 +169,15 @@ const ChartFromContext = (props: ChartFromContextProps) => {
                         )}
                     />
                 </Grid>
+                <Grid item xs={4} sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                    <Tooltip title="configure">
+                        <IconButton onClick={handleMenuOpenClick}>
+                            <img src={OptionsIcon} alt="More" style={{transform: 'scale(1.5)'}}/>
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
             </Grid>
+            <Divider orientation="horizontal" sx={{width: '100%'}} />
             {/* <Chart {...props.chart.options}/> */}
             {changed ? <></> : <Chart {...props.chart.options}/>}
             

@@ -14,12 +14,9 @@ import { SetBuildActionContext } from "../../build_action/context/BuildActionCon
 import { ExecuteActionContextProvider } from "../../execute_action/context/ExecuteActionContext"
 import FetchActionExecutionDetails from "../../view_action_execution/hooks/FetchActionExecutionDetails"
 import { ViewFailedActionExecution } from "../../view_action_execution/VIewActionExecution"
-import ActionExecutionCard from "./ActionExecutionCard"
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import LoadingIndicator from "../../../common/components/LoadingIndicator"
 import ExecuteAction from "../../execute_action/components/ExecuteAction"
 import ExecutionLoadingIndicator from "../../execute_action/presentation/ExecuteLoadingIndicator"
+import DownloadAndDisplayLogs from "../../view_action_execution/DownloadAndDisplyaLogs"
 
 type MatchParams = {
     ActionExecutionId?: string
@@ -52,8 +49,6 @@ export const ActionExecutionDetails = (props: {
     const [showParameters, setShowParameters] = React.useState(false)
     const resultsView = React.useRef<HTMLDivElement | null>(null)
     const [currentTime, setCurrentTime] = React.useState<number>(Date.now())
-    const setModuleContextState = React.useContext(SetModuleContextState)
-    const setBuildActionContext = React.useContext(SetBuildActionContext)
     const [intervalId, setIntervalId] = React.useState<number | undefined>()
 
     const onChildExecutionCreated = (actionExecutionId: string) => {
@@ -66,7 +61,6 @@ export const ActionExecutionDetails = (props: {
         if(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED) {
             clearInterval(intervalId)
             setExecutionTerminal(true)
-            console.log('termintated')
             if(actionStatus === ActionExecutionStatus.FAILED) {
                 setExecutionError(true)
             } else {
@@ -117,14 +111,15 @@ export const ActionExecutionDetails = (props: {
         setExecutionTerminal(false)
     }, [props.actionExecutionId])
 
-    const handleClickArrow = () => {
-        if(!(props.showParametersOnClick === false)){
-            setShowParameters(showParameters => !showParameters)
-        }
-    }
-
     let description = actionExecutionDetailQuery?.data?.ActionDefinition?.Description || 
         actionExecutionDetailQuery?.data?.ActionDefinition?.DisplayName;
+    
+    const handleMoreInfoClick = () => {
+        const actionExecutionId = actionExecutionDetailQuery?.data?.ActionExecution?.Id
+        if(actionExecutionId !== undefined) {
+            window.open(`/application/jobs/${actionExecutionId}`)
+        }
+    }
 
     return (
         <>
@@ -140,13 +135,14 @@ export const ActionExecutionDetails = (props: {
                             </Typography>
                         </Box>
                         {executionTerminal ? (
-                            <ActionExecutionCard 
-                            elapsedTime={getElapsedTime()} 
-                            actionExecution={actionExecutionDetailQuery?.data?.ActionExecution!} 
-                            handleClickArrow={handleClickArrow} 
-                            arrowState={showParameters ? "UP":"DOWN"} 
-                            terminalState={executionTerminal} 
-                            error={executionError}/>
+                            <Box sx={{display: 'flex', width: '100%', justifyContent: 'flex-end', gap: 2}}>
+                                <Button variant="outlined" sx={{border: '1.28323px solid #0A414D;'}} onClick={handleMoreInfoClick}>
+                                    More Info
+                                </Button>
+                                {executionTerminal ? (
+                                    <DownloadAndDisplayLogs actionExecution={actionExecutionDetailQuery?.data?.ActionExecution || {}} />
+                                ) : (<></>)}
+                            </Box>
                         ) : (
                             <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, alignItems: 'center'}}>
                                 <ExecutionLoadingIndicator />
@@ -174,6 +170,7 @@ export const ActionExecutionDetails = (props: {
                                                 <SaveAndBuildChartsFromExecution 
                                                     executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}
                                                     onChildExecutionCreated={onChildExecutionCreated}
+                                                    definitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id}
                                                     />
                                             </SaveAndBuildChartContextProvider>
                                         </Box>

@@ -131,6 +131,12 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboardForChart", inputPayload: Entity.Chart): Promise<Entity.Dashboard[]>; 
 	
 	/**
+	Gives you the details of the associated deep dive actions of an action definition
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getDeepDiveActions", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionDetail[]>; 
+	
+	/**
 	Gives you the the action definitions of the types that should be visible to the user.
 	*/
 	

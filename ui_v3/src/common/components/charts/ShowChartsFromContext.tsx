@@ -7,11 +7,13 @@ import ChartFromContext from "./ChartFromContext"
 import { ChartQueriesContext, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext"
 
 
+interface ShowChartsFromContextProps {
+    onDeepDiveActionSelected: (actionId: string) => void
+}
 
-const ShowChartsFromContext = () => {
+const ShowChartsFromContext = (props: ShowChartsFromContextProps) => {
     const saveAndBuildChartsState = React.useContext(SaveAndBuildChartContext)
     const setAndBuildChartsState = React.useContext(SetSaveAndBuildChartContext)
-    const chartQueriesState = React.useContext(ChartQueriesContext)
 
     const onChartModelChange = (chartId: string, chartModel: ChartModel) => {
         setAndBuildChartsState({
@@ -33,14 +35,20 @@ const ShowChartsFromContext = () => {
         })
     }
 
+    const getSxPropsForCard = () => {
+        return {
+            height: '100%', width: '100%',   background: "#EBF1FA", boxShadow: "0px 1.01276px 1.01276px rgba(0, 0, 0, 0.1), 0px 0px 1.01276px rgba(0, 0, 0, 0.25)", borderRadius: "8px"
+        }
+    }
+
     return (
-        <Grid container spacing={1} sx={{padding: 2}}>
+        <Grid container spacing={2} sx={{padding: 2}}>
             {saveAndBuildChartsState.Charts?.map(chart => {
                 if (!!chart) {
                     return (
                         <Grid item xs={12} sx={{minHeight: '400px'}}>
-                            <Card sx={{height: '100%', width: '100%'}}>
-                                <ChartFromContext chart={chart} onChartModelChange={onChartModelChange} onAssignedDashboardsChange={onAssignedDashboardsChange}/>
+                            <Card sx={{...getSxPropsForCard()}}>
+                                <ChartFromContext chart={chart} onChartModelChange={onChartModelChange} onAssignedDashboardsChange={onAssignedDashboardsChange} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
                             </Card>
                         </Grid>
                     )

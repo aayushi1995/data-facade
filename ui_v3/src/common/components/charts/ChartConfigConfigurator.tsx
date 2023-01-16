@@ -1,13 +1,17 @@
-import { Box, Typography, Tabs, Tab, Button, TextField, FormGroup, FormControlLabel, Checkbox, Autocomplete } from "@mui/material";
+import { Box, Typography, Tabs, Tab, Button, TextField, FormGroup, FormControlLabel, Checkbox, Autocomplete, List, ListItemButton } from "@mui/material";
 import React from "react"
 import ChartGroups from "../../../enums/ChartGroups";
 import { Chart } from "../../../generated/entities/Entities";
+import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import { ReactQueryWrapper } from "../ReactQueryWrapper";
+import useFetchDeepDiveActions from "./hooks/useFetchDeepDiveActions";
 import { ChartModelConfig, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext"
 
 
 interface ChartConfigConfiguratorProps {
     chartId: string,
-    onChartModelChange: (chartId: string, chartModel: Chart) => void
+    onChartModelChange: (chartId: string, chartModel: Chart) => void,
+    onDeepDiveActionSelected: (actionId: string) => void
 }
 
 interface TabPanelProps {
@@ -43,6 +47,14 @@ const ChartConfigConfigurator = (props: ChartConfigConfiguratorProps) => {
 
     const chartDataWithOptions = saveAndBuildChartsState.Charts.find(chart => chart.data.model?.Id === props.chartId)!
 
+    const fetchDeepDiveActionsQuery = useFetchDeepDiveActions({filter: {Id: saveAndBuildChartsState.ExecutionDetails?.ActionDefinition?.Id}, options: {enabled: false}})
+
+    React.useEffect(() => {
+        if(!fetchDeepDiveActionsQuery.data) {
+            fetchDeepDiveActionsQuery.refetch()
+        }
+    }, [])
+
     const handleSwitchAxes = () => {
         setSaveAndBuildChartState({
             type: 'SwitchAxes',
@@ -62,32 +74,38 @@ const ChartConfigConfigurator = (props: ChartConfigConfiguratorProps) => {
         })
     }
 
+    const getTabSxProps = () => {
+        return {
+            fontFamily: "SF Pro Text",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "10px",
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            opacity: 0.7
+        }
+    }
+
+    const handleDeepDiveActionClick = (actionDefinition: ActionDefinitionDetail ) => {
+        props.onDeepDiveActionSelected(actionDefinition.ActionDefinition?.model?.Id!)
+    }
+
     return (
         <Box>
             <Tabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
-                <Tab label="Axes" value={0} sx={{
-                    fontFamily: "SF Pro Text",
-                    fontStyle: "normal",
-                    fontWeight: 600,
-                    fontSize: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                    opacity: 0.7
+                <Tab label="Actions" value={0} sx={{
+                    ...getTabSxProps()
                 }}/>
-                <Tab label="Config" value={1} sx={{
-                    fontFamily: "SF Pro Text",
-                    fontStyle: "normal",
-                    fontWeight: 600,
-                    fontSize: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                    opacity: 0.7
+                <Tab label="Axes" value={1} sx={{
+                    ...getTabSxProps()
+                }}/>
+                <Tab label="Config" value={2} sx={{
+                    ...getTabSxProps()
                 }}/>
             </Tabs>
             <Box>
-                <TabPanel value={tabValue} index={0}>
+                <TabPanel value={tabValue} index={1}>
                     <Box m={1} sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 1}}>
                         <Button onClick={handleSwitchAxes} disabled={chartDataWithOptions?.data?.model?.ChartGroup !== ChartGroups.TWO_DIMENSIONAL_SCATTER && chartDataWithOptions?.data?.model?.ChartGroup !== ChartGroups.TWO_DIMENSION}>Switch Axes</Button>
                         <FormGroup row={true} sx={{display: 'webkit', minWidth: '400px'}}>
@@ -151,10 +169,18 @@ const ChartConfigConfigurator = (props: ChartConfigConfiguratorProps) => {
                         }
                     </Box>
                 </TabPanel>
-                <TabPanel value={tabValue} index={1}>
+                <TabPanel value={tabValue} index={2}>
                     <Box m={1} sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                         <TextField sx={{mt: 2}} label="Chart Name" value={chartDataWithOptions.data?.model?.Name} fullWidth onChange={(e: React.ChangeEvent<HTMLInputElement>) => {props.onChartModelChange(props.chartId, {...chartDataWithOptions.data.model, Name: e.target.value})}}/>
                     </Box>
+                </TabPanel>
+                <TabPanel value={tabValue} index={0}>
+                    <ReactQueryWrapper isLoading={fetchDeepDiveActionsQuery.isLoading || fetchDeepDiveActionsQuery.isRefetching} data={fetchDeepDiveActionsQuery.data} error={fetchDeepDiveActionsQuery.error}>
+                        {() => <List>
+                            {fetchDeepDiveActionsQuery?.data?.map(actionDefinition => 
+                                <ListItemButton onClick={() => handleDeepDiveActionClick(actionDefinition)}>{actionDefinition.ActionDefinition?.model?.DisplayName || actionDefinition?.ActionDefinition?.model?.UniqueName}</ListItemButton>)}
+                        </List>}
+                    </ReactQueryWrapper>
                 </TabPanel>
             </Box>
         </Box>

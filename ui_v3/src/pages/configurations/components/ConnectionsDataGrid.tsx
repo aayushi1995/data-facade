@@ -24,6 +24,8 @@ import { ViewFailedActionExecution } from "../../view_action_execution/VIewActio
 import { useDeleteActionInstance } from "./hooks/useDeleteActionInstance";
 import useSyncProviderInstance from "./hooks/useSyncProviderInstance";
 import useUpdateSyncActionInstance from "./hooks/useUpdateSyncActionInstance";
+import { Delete } from '@mui/icons-material';
+import { useDeleteProviderInstance } from './hooks/useDeleteProviderInstance';
 
 type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 
@@ -328,6 +330,12 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
             onSuccess: () => queryClient.invalidateQueries([labels.entities.ProviderInstance, "Card"])
         }
     })
+    const deleteProviderInstanceMutation = useDeleteProviderInstance({
+        mutationOptions: {
+            onSuccess: () => queryClient.invalidateQueries([labels.entities.ProviderInstance, "Card"])
+        }
+    })
+
     const deleteActionHandler =()=>{
         deleteActionInstanceMutation.mutate({
             filter: {Id: props.syncActionInstance?.Id},
@@ -421,7 +429,12 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
         }
     }
  
-    
+    const handleDeleteProvider = () => {
+        deleteProviderInstanceMutation.mutate({
+            filter: {Id: props.providerInstance?.Id},
+            hard: true
+        })
+    }
 
     return (
         <Box sx={{width: '100%', display: 'flex', gap: 2, px:1}}>
@@ -482,7 +495,11 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                     {getIcon()}
                 </IconButton>
             </Tooltip>
-            
+            <Tooltip title="Delete">
+                <IconButton onClick={handleDeleteProvider}>
+                    <Delete />
+                </IconButton>
+            </Tooltip>
         </Box>
     )
 }

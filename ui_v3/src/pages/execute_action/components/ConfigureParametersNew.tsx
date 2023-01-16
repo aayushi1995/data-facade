@@ -25,9 +25,9 @@ export const isDefaultValueDefined = (parameterDefaultValue?: string) => {
 
 const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
 
-    const filteredParameters = props.mode === "GENERAL" ? 
+    const filteredParameters = (props.mode === "GENERAL" ? 
             props.ActionParameterDefinitions?.filter(apd => !isDefaultValueDefined(apd.DefaultParameterValue) ) 
-            : props.ActionParameterDefinitions?.filter(apd => isDefaultValueDefined(apd.DefaultParameterValue))
+            : props.ActionParameterDefinitions?.filter(apd => isDefaultValueDefined(apd.DefaultParameterValue))).sort((p1, p2) => ((p1?.Index||0) > (p2?.Index||1)) ? 1 : -1)
         
     const [parameterSelected, setParameterSelected] = React.useState<ActionParameterDefinition | undefined>()
 
