@@ -1,28 +1,49 @@
 import React, { useState } from "react";
 import { getModalStyle, useStyles } from "../users/Users";
 import Modal from "@mui/material/Modal";
-import { Button } from "@mui/material";
+import { Button, Dialog } from "@mui/material";
+import { useMutation, useQuery } from "react-query";
+import dataManager from "../../data_manager/data_manager";
 
 export const LOGIN_STATE_KEY = "loginState";
 export const LOGIN_STATE_PROGRESS_VALUE = "in-progress";
-export const useEULAState = () => {
+export const useEULAState = ({user}) => {
   const [showEULA, setShowEULA] = useState(false);
+  
+  const {data, error, isRefetching, refetch} = useQuery(['user', user.email], () => dataManager.getInstance.fetchSingleUser(), {enabled: false})
+
   if (localStorage.getItem(LOGIN_STATE_KEY) === LOGIN_STATE_PROGRESS_VALUE) {
     localStorage.setItem(LOGIN_STATE_KEY, "");
-    setShowEULA(true);
+    refetch()
   }
+
   return {
     showEULA,
     setShowEULA,
+    data,
+    isRefetching,
+    refetch
   };
 };
-export const EULA = () => {
-  const { showEULA, setShowEULA } = useEULAState();
+export const EULA = (props) => {
+  const { showEULA, setShowEULA, data, isRefetching, refetch } = useEULAState(props);
+  console.log(props)
   const [modalStyle] = useState(getModalStyle);
   const classes = useStyles();
+
+  const submitEulaMutation = useMutation(() => {
+    return dataManager.getInstance.updateUser({...data, signedEULA: true})
+  })
+
+  const onSubmit = () => {
+    submitEulaMutation.mutate({}, {
+      onSuccess: () => refetch()
+    })
+  }
+
   return (
     <Modal
-      open={showEULA}
+      open={!!data && !data?.signedEULA && !isRefetching}
       //onClose={() => setShowEULA(false)}
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
@@ -32,6 +53,8 @@ export const EULA = () => {
         event.stopPropagation();
         return false;
       }}
+      maxWidth="lg"
+      fullWidth
     >
       <div style={modalStyle} className={classes.paper}>
         <h1>End-User License Agreement (&quot;Agreement&quot;)</h1>
@@ -340,7 +363,7 @@ export const EULA = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setShowEULA(false)}
+          onClick={onSubmit}
         >
           Agree
         </Button>

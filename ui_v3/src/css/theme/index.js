@@ -365,6 +365,24 @@ const baseOptions = {
             fontSize: "13px",
             lineHeight: "20px",
             color: "#050505"
+        },
+        homePageTitle: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "48.78px",
+            lineHeight: "150%",
+            letterSpacing: "0.1626px",
+            color: "#000000"
+        },
+        homePageSubText: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 300,
+            fontSize: "20px",
+            lineHeight: "26px",
+            textAlign: "center",
+            color: "#000000"
         }
     }
 };

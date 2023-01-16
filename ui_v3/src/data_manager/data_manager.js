@@ -81,6 +81,19 @@ const dummyDataHeader = function (token) {
         }
     }
 }
+
+const dummyPatchHeader = function (token, body) {
+    return {
+        method: 'PATCH',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+    }
+}
+
 const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDurationInMinutes, contentType, uploadPath, token) {
     return {
         method: 'POST',
@@ -225,20 +238,20 @@ dataManager.getInstance.fetchUsers = async function () {
     return fn
 }
 
+dataManager.getInstance.fetchSingleUser = async function () {
+    if(!isValidUserSettings()) {
+        return;
+    }
+
+    const fn = await fetch(endPoint + `/singleUser?email=${userSettingsSingleton.userEmail}`, dummyDataHeader(userSettingsSingleton.token))
+    return fn.json()
+}
+
 dataManager.getInstance.updateUser = async function (user) {
     if (!isValidUserSettings()) {
         return;
     }
-    try {
-        await dataManager.getInstance.deleteUser(user.email);
-    } catch (e) {
-        console.error(e);
-        //if delete user fails, do not proceed to add user
-        return;
-    }
-    let updatedUser = {...user, newUserEmail: user.email}
-    delete updatedUser["email"]
-    return dataManager.getInstance.addUser(updatedUser);
+    const fn = await fetch(endPoint + `/updateUser?email=${userSettingsSingleton.userEmail}`, dummyPatchHeader(userSettingsSingleton.token, user))
 }
 dataManager.getInstance.deleteUser = async function (targetUserEmail) {
     if (!isValidUserSettings()) {

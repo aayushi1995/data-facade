@@ -94,7 +94,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Grid container>
                                         <Grid item xs={12}>
 
-                                            {isNonProductionEnv() && <EULA />}
+                                            {isNonProductionEnv() && <EULA user={user}/>}
                                             <Switch>
                                                 <Route path='/customizations' component={Customizations} />
                                                 {isNonProductionEnv() &&

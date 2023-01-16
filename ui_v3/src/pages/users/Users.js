@@ -34,13 +34,13 @@ const columns = [
 export const useStyles = makeStyles((theme)=>({
     paper: {
         position: 'absolute',
-        width: '50%',
+        width: '80%',
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
         boxShadow: "",
         padding: "40px",
-        maxHeight: "400px",
-        overflow: "scroll"
+        maxHeight: "600px",
+        overflow: "scroll",
     },
     modal: {
         display: 'flex',

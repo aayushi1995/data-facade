@@ -40,7 +40,9 @@ declare module '@mui/styles' {
       tableBrowserContent: React.CSSProperties,
       tableBrowserHealthCell: React.CSSProperties,
       parameterGrid: React.CSSProperties,
-      executeActionName: React.CSSProperties
+      executeActionName: React.CSSProperties,
+      homePageTitle: React.CSSProperties,
+      homePageSubtext: React.CSSProperties
     }
 }
 declare module '@mui/material/Typography' {
@@ -65,7 +67,9 @@ declare module '@mui/material/Typography' {
         executeActionName: true,
         executeActionSubtext: true,
         executeActionDescription: true,
-        parameterInputField: true
+        parameterInputField: true,
+        homePageTitle: true,
+        homePageSubtext: true
     }
 }
 
