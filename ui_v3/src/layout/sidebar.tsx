@@ -6,6 +6,7 @@ import items from './menuItems'
 import COLORS from '../assets/theme.color';
 import React, { useState } from 'react';
 import { ConnectWithoutContact, PersonAddAlt1Outlined } from '@mui/icons-material';
+import SchoolIcon from '@mui/icons-material/School';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import { SLACK_URL, GENERATE_URL_PARAMS } from '../common/config/config';
@@ -170,6 +171,20 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
         </StyledListItem>
     </RouterLink>;
 
+    const learn = <RouterLink to="/learn" style={routeStyle}>
+        <StyledListItem
+            sx={listItemStyle}
+            onClick={() => closeCollapse('users')}
+        >
+            <ListItemIcon
+                sx={listItemIconStyle}
+            >
+                <SchoolIcon/>
+            </ListItemIcon>
+            <Typography sx={textStyle}> Learn</Typography>
+        </StyledListItem>
+    </RouterLink>;
+
     const HoverMenu = <Popper open={open} onMouseOver={() => setOpen(true)} onMouseLeave={() => setOpen(false)} anchorEl={anchorEl} placement="right" transition sx={{ zIndex: 1200 }}>
         {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
@@ -256,6 +271,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
                     </Box>
                     <Box>
                         <List component="nav">
+                            {learn}
                             {users}
                             {slackConnect}
                         

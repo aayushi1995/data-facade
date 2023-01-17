@@ -7,7 +7,8 @@ export const APPLICATION_ROUTE = '/application';
 export const APPLICATION_DETAIL_ROUTE = '/application/detail';
 export const INSIGHTS_ROUTE = '/insights';
 export const USER_ROUTE = '/users';
-
+export const LEARN_ROUTE = '/learn';
+export const HOME_ROUTE = '/'
 export const TOP_TAB_ROUTES: TabsType = [
     {
         id: 'DATA',

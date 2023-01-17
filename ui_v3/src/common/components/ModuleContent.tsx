@@ -13,10 +13,11 @@ import {
     DATA_ROUTE,
     DATA_SUB_TABS,
 } from "./header/data/DataRoutesConfig";
-import { APPLICATION_ROUTE, INSIGHTS_ROUTE , APPLICATION_DETAIL_ROUTE, USER_ROUTE } from "./header/data/RoutesConfig";
+import { APPLICATION_ROUTE, INSIGHTS_ROUTE , APPLICATION_DETAIL_ROUTE, USER_ROUTE, LEARN_ROUTE, HOME_ROUTE } from "./header/data/RoutesConfig";
 import { ModuleHeaderPropType } from "./header/schema";
 import { ModuleContextState } from "./ModuleContext";
 import { Users } from "../../pages/users/Users";
+import DataLandingPage from "../../pages/data/components/DataLandingPage";
 
 
 export const SubHeader = () => <Switch>{
@@ -52,9 +53,9 @@ export const Header = ({tab}: ModuleHeaderPropType) => {
                 </Box> */}
             </Box>
             <Switch>
-                <Route path={DATA_CONNECTIONS_ROUTE} component={DataHeader}/>
+                {/* <Route path={DATA_CONNECTIONS_ROUTE} component={DataHeader}/>
                 <Route exact path={APPLICATION_ROUTE} component={ApplicationHeader}/>
-                <Route path={APPLICATION_DETAIL_ROUTE} component={ApplicationHeader}/>
+                <Route path={APPLICATION_DETAIL_ROUTE} component={ApplicationHeader}/> */}
             </Switch>
         </Box>
         
@@ -70,7 +71,8 @@ export const MainContent = () => {
                 <Route path={APPLICATION_ROUTE} component={ApplicationContent}/>
                 <Route path={INSIGHTS_ROUTE} component={InsightsContent}/>
                 <Route path={USER_ROUTE} component={Users}/>
-                <Route exact path='/' component={HomePage}/>
+                <Route exact path={LEARN_ROUTE} component={HomePage}/>
+                <Route exact path={HOME_ROUTE} component={DataLandingPage}/>
             </Switch>
         </Box>
     )
