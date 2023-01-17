@@ -9,6 +9,7 @@ import DataHeader from "../../pages/data/DataHeader";
 import { InsightsContent } from "../../pages/insights/InsightsContent";
 import { HomePage } from "../../pages/home_page/HomePage"
 import {
+    DATA_CONNECTIONS_ROUTE,
     DATA_ROUTE,
     DATA_SUB_TABS,
 } from "./header/data/DataRoutesConfig";
@@ -51,7 +52,7 @@ export const Header = ({tab}: ModuleHeaderPropType) => {
                 </Box> */}
             </Box>
             <Switch>
-                {/* <Route path={DATA_ROUTE} component={DataHeader}/> */}
+                <Route path={DATA_CONNECTIONS_ROUTE} component={DataHeader}/>
                 <Route exact path={APPLICATION_ROUTE} component={ApplicationHeader}/>
                 <Route path={APPLICATION_DETAIL_ROUTE} component={ApplicationHeader}/>
             </Switch>

@@ -60,6 +60,7 @@ export const DataLandingPage = () => {
                         value={searchQuery}
                         onChange={(event) => setSearchQuery(event.target.value)}
                         multiline={true}
+                        placeholder="Search Actions"
                         InputProps={{
                             disableUnderline: true,
                             startAdornment: (
