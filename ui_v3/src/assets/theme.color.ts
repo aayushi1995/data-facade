@@ -1,6 +1,6 @@
 const COLORS = {
-    SIDEBAR: '#A6CEE3',
-    HEADER:'#154954',
+    SIDEBAR: '#C9E6FC',
+    HEADER:'#66BBE0',
     ACTIVE:'#F4F5F780',
     WHITE:'#fff',
     PRIMARY:'#007DFA'

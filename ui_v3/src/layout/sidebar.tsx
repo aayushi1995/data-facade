@@ -1,5 +1,5 @@
 
-import { CssBaseline, Drawer, List, ListItemButton, ListItemIcon, ListItem, Collapse, Typography, Divider, Fade, Paper, Popper, PopperPlacementType, Menu, MenuItem, ListItemText, Box, Tooltip, IconButton } from '@mui/material';
+import { CssBaseline, Drawer, List, ListItemButton, ListItemIcon, ListItem, Collapse, Typography, Divider, Fade, Paper, Popper, PopperPlacementType, ListItemText, Box, Tooltip, IconButton } from '@mui/material';
 import { withStyles } from "@material-ui/core";
 import { Link, NavLink as RouterLink, useLocation } from 'react-router-dom';
 import items from './menuItems'
@@ -47,17 +47,8 @@ const textStyle = {
     fontSize: 12,
 }
 
-const floatStyle = {
-    borderRadius: 0,
-    height: 10,
-    top: 64,
-    left: 45,
-    padding: 0,
-    minHeight: 20,
-    width: 25,
-    background: '#000',
-    color: '#fff'
-}
+
+
 
 interface SidebarProps {
     toggle?: boolean,

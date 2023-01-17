@@ -1,19 +1,12 @@
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import { HomeMaxOutlined } from "@mui/icons-material";
 import StorageOutlinedIcon from "@mui/icons-material/StorageOutlined";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
-import InsertChartOutlinedSharpIcon from "@mui/icons-material/InsertChartOutlinedSharp";
-import CollectionsIcon from "@mui/icons-material/Collections";
-import TableViewIcon from "@mui/icons-material/TableView";
-import PivotTableChartIcon from "@mui/icons-material/PivotTableChart";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import LockClockIcon from "@mui/icons-material/LockClock";
-import HistoryIcon from "@mui/icons-material/History";
-import HubIcon from "@mui/icons-material/Hub";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import HomeIcon from '@mui/icons-material/Home';
 import {
   IconApplication,
   IconCertified,
   IconConnection,
+  IconData,
   IconHistory,
   IconHome,
   IconInsights,
@@ -33,7 +26,7 @@ const items = [
     key: "data",
     name: "Data",
     url: "/data",
-    icon: StorageOutlinedIcon,
+    icon: IconData,
     subMenu: [
       {
         key: "data",

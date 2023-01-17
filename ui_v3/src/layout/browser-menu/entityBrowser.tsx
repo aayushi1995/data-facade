@@ -40,31 +40,56 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
   const classes = useStyles();
   const [treeData, setTreeData] = React.useState<any>({})
   const [loader, setLoader] = React.useState<any>({})
+  const [expanded, setExpanded] = React.useState<any>({})
   const [expandedNodes, setExpandedNodes] = React.useState<string[]>([])
   let history = useHistory();
   const { data: entityBrowsers, error, isLoading } = useQuery(['entityBrowser', type], () => fetchEntityBrowser(type))
 
   const fetchNodeData = (path: string, item?: any) => {
-    setLoader((prevState: any) => ({
+
+    setExpanded((prevState: any) => ({
       ...prevState,
       [path]: true,
     }));
-    fetchEntityBrowser(path).then((res) => {
-      
-      res.length === 1 && fetchNodeData(res[0]?.path, res[0])
-      
-      checkIfExpanded(path)
-      
+
+    
+    if (!expanded[path]) {
       setLoader((prevState: any) => ({
+        ...prevState,
+        [path]: true,
+      }));
+      checkIfExpanded(path)
+      fetchEntityBrowser(path).then((res) => {
+
+        if (res.length === 1) {
+          fetchNodeData(res[0]?.path, res[0])
+        }
+        setLoader((prevState: any) => ({
+          ...prevState,
+          [path]: false,
+        }));
+        setTreeData((prevState: any) => ({
+          ...prevState,
+          [path]: res,
+        }));
+      }).catch(err => {
+        setLoader((prevState: any) => ({
+          ...prevState,
+          [path]: false,
+        }));
+      })
+    }
+    else{
+      const newExpandedNodes = [...expandedNodes];
+      const index = newExpandedNodes.indexOf(path);
+      newExpandedNodes.splice(index, 1);
+      setExpandedNodes(newExpandedNodes);
+      setExpanded((prevState: any) => ({
         ...prevState,
         [path]: false,
       }));
-      setTreeData((prevState: any) => ({
-        ...prevState,
-        [path]: res,
-      }));
-    });
-
+      
+    }
     if (item) {
       navigate(item);
     }
@@ -73,14 +98,15 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
   const checkIfExpanded = (nodeId: string) => {
     if (expandedNodes.includes(nodeId)) {
       const index = expandedNodes.indexOf(nodeId);
-      setExpandedNodes((oldState:any) => oldState.splice(index, 1))
+      setExpandedNodes((oldState: any) => oldState.splice(index, 1))
+
     }
     else {
-      setExpandedNodes((oldState:any) => ([...oldState, nodeId]))
+      setExpandedNodes((oldState: any) => ([...oldState, nodeId]))
     }
   }
 
-  
+
 
   const navigate = (item: any, hideparam = false) => {
     if (NAVIGATE_URL.hasOwnProperty(item.type)) {
@@ -95,7 +121,7 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
     } else return <Default />
   }
 
-  
+
 
   const renderTree = (items: any) => {
     return items.map((item: any) => ([
@@ -115,7 +141,6 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
       </TreeItem>, loader[item.path] && <CircularProgress size={15} />,]
     ));
   };
-
   return (
     <TreeView
       aria-label="file system navigator"

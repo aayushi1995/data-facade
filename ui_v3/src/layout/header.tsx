@@ -22,12 +22,12 @@ const Header = () => {
             <AppBar position="fixed" component="nav" sx={headerStyle}>
                 <Toolbar>
                     <Box sx={{ display: "flex", flexDirection: "row", height: "100%", alignItems: "center", justifyContent: 'flex-start' }}>
-                        <Box sx={{ height: "100%", width: "auto" }}>
+                        <Box sx={{ height: "100%", width: "74px" }}>
                             <RouterLink to="/">
                                 <DataFacadeLogo />
                             </RouterLink>
                         </Box>
-                        <Divider orientation="vertical" flexItem />
+                        <Divider orientation="vertical" flexItem sx={{borderColor:'#fff'}}/>
                     </Box>
                     <Box sx={{ml: 2}}>
                         <AccountPopover/>
