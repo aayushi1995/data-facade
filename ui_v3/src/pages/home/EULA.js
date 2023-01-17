@@ -27,7 +27,6 @@ export const useEULAState = ({user}) => {
 };
 export const EULA = (props) => {
   const { showEULA, setShowEULA, data, isRefetching, refetch } = useEULAState(props);
-  console.log(props)
   const [modalStyle] = useState(getModalStyle);
   const classes = useStyles();
 

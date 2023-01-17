@@ -14,7 +14,7 @@ const ExecuteActionHomePage = () => {
 
     return (
         <ExecuteActionContextProvider>
-            <ExecuteAction actionDefinitionId={match.params.ActionDefinitionId} showActionDescription={true} parentExecutionId={tableId}/>
+            <ExecuteAction actionDefinitionId={match.params.ActionDefinitionId} showActionDescription={true} tableId={tableId}/>
         </ExecuteActionContextProvider>
     )
 }

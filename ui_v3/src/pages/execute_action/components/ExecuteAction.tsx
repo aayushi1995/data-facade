@@ -72,7 +72,8 @@ interface ExecuteActionProps {
     showOnlyParameters?: boolean,
     fromDeepDive?: boolean,
     parentExecutionId?: string,
-    hideExecution?: boolean
+    hideExecution?: boolean,
+    tableId?: string
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
@@ -107,7 +108,8 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                 payload: {
                     ActionDefinitionDetail: data[0],
                     existingParameterInstances: fetchExistingActionParameterInstancesQuery?.data,
-                    parentExecutionId: props.parentExecutionId
+                    parentExecutionId: props.parentExecutionId,
+                    tableId: props?.tableId
                 }
             })
         }

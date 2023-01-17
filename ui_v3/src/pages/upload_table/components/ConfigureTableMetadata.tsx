@@ -43,6 +43,7 @@ import DatafacadeDatatype from '../../../enums/DatafacadeDatatype';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
 import ConfirmationDialog from '../../../common/components/ConfirmationDialog';
+import { SetUploadTableState, SetUploadTableStateContext, UploadState, UploadTableState, UploadTableStateContext } from '../context/UploadTablePageContext';
 const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function }
 
 const useStyles = makeStyles(() => ({
@@ -92,6 +93,7 @@ type ColumnSchema = {
     columnIndex: number,
     columnName: string,
     columnTags: Tag[],
+    tagsFetched: boolean,
     duplicateColor: any,
     isDuplicate: boolean,
     isValid: boolean,
@@ -115,12 +117,6 @@ type ParsedFileResult = {
 
 export type ConfigureTableMetadataProps = {
     isApplication?: boolean,
-    nextStep?: Function,
-    prevStep?: Function,
-    setUploadState?: Function,
-    stateData?: string,
-    file: File,
-    setLastUploadedTableId: React.Dispatch<React.SetStateAction<string | undefined>>,
     onCancel: Function
 }
 
@@ -133,24 +129,24 @@ type S3UploadInformation = {
 export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
     const classes = useStyles();
     let history = useHistory();
+    const uploadTableStateContext = React.useContext<UploadTableState>(UploadTableStateContext)
+    const setUploadTableStateContext = React.useContext<SetUploadTableState>(SetUploadTableStateContext)
+    const setUploadState = (uploadState: UploadState) => setUploadTableStateContext({ type: "SetUploadState", payload: { uploadState: uploadState } })
     // States
-    const selectedFile = props.file
+    const selectedFile = uploadTableStateContext?.CSVFileSelectedForUpload?.CsvFile!
     const [fileStatusInformation, setFileStatusInformation] = React.useState<{ autoUpload: Boolean, errors: string[] }>({ autoUpload: true, errors: [] })
-    const [selectedFileSchema, setSelectedFileSchema] = React.useState<FileSchema>({ requiredTableTags: [], tableId: uuidv4() })
+    const [selectedFileSchema, setSelectedFileSchema] = React.useState<FileSchema>({ requiredTableTags: [], tableId: uuidv4(), tagsFetched: false })
     const [uploadButtonState, setUploadButtonState] = React.useState<{ currentEnabled: number, requiredEnabled: number }>({
         currentEnabled: 5,
-        requiredEnabled: 15
+        requiredEnabled: 31
     })
-    const [warningDialog, setWarningDialog] = React.useState<boolean>(false)
-    const closeWarningDialog = () => setWarningDialog(false)
-    const openWarningDialog = () => setWarningDialog(true)
 
     // Upload Button is enabled if all bits are set
     // 2^0: File type/size valid
     // 2^1: File name valid
     // 2^2: No Upload already in progress
     // 2^3: All Column Names are Valid and Distinct
-    // 2^4: All Required Table Tags Configured
+    // 2^4: All Required Tags Fetched
     React.useEffect(() => {
         if (fileStatusInformation.autoUpload) {
             if (uploadButtonState.currentEnabled === uploadButtonState.requiredEnabled) {
@@ -162,7 +158,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
 
     React.useEffect(() => {
         setFileStatusInformation(old => ({ ...old, autoUpload: true }))
-    }, [props.file])
+    }, [selectedFile])
 
     const enableUploadButton = (value: number) => {
         setUploadButtonState(old => {
@@ -187,7 +183,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         (config) => dataManagerInstance.s3PresignedUploadUrlRequest(config.file, config.expirationDurationInMinutes, ExternalStorageUploadRequestContentType.TABLE),
         {
             onMutate: variables => {
-                props?.setUploadState?.(S3UploadState.PRESIGNED_URL_FETCH_LOADING);
+                setUploadState(S3UploadState.PRESIGNED_URL_FETCH_LOADING);
                 disableUploadButton(4);
             }
         }
@@ -198,7 +194,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         (config) => dataManagerInstance.s3UploadRequest(config.requestUrl, config.headers, config.file),
         {
             onMutate: variables => {
-                props?.setUploadState?.(S3UploadState.S3_UPLOAD_LOADING);
+                setUploadState(S3UploadState.S3_UPLOAD_LOADING);
                 disableUploadButton(4);
             }
         }
@@ -209,7 +205,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         (config) => dataManagerInstance.saveData(config.entityName, config.actionProperties),
         {
             onMutate: () => {
-                props?.setUploadState?.(S3UploadState.FDS_TABLE_FETCH_LOADING);
+                setUploadState(S3UploadState.FDS_TABLE_FETCH_LOADING);
                 disableUploadButton(4);
             }
         }
@@ -243,7 +239,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                 TableColumnEntities: entities
             })
         }, {
-        onMutate: (variables) => props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM),
+        onMutate: (variables) => setUploadState(S3UploadState.CREATING_TABLE_IN_SYSTEM),
     }
     )
 
@@ -291,8 +287,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
     };
 
     const uploadSelectedFiles = () => {
-        openWarningDialog()
-        props?.setUploadState?.(S3UploadState.BUIDING_FILE_FOR_UPLOAD);
+        setUploadState(S3UploadState.BUIDING_FILE_FOR_UPLOAD);
         Papa.parse(selectedFile,
             {
                 dynamicTyping: true,
@@ -305,7 +300,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                     const fileName = selectedFileSchema.tableName + ".csv";
                     const newCsvFileContent = Papa.unparse(newCsvFileJson)
                     const newCsvFile = new File([newCsvFileContent], fileName, { type: selectedFile.type })
-                    props?.setUploadState?.(S3UploadState.FILE_BUILT_FOR_UPLOAD);
+                    setUploadState(S3UploadState.FILE_BUILT_FOR_UPLOAD);
                     uploadGivenFile(newCsvFile)
                 },
                 error: (errors, file) => {
@@ -331,13 +326,13 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
             { file: newFile, expirationDurationInMinutes: 5 },
             {
                 onSuccess: (data, variables, context) => {
-                    props?.setUploadState?.(S3UploadState.PRESIGNED_URL_FETCH_SUCCESS);
+                    setUploadState(S3UploadState.PRESIGNED_URL_FETCH_SUCCESS);
                     disableUploadButton(4);
                     uploadToS3Mutation.mutate(
                         { requestUrl: data.requestUrl, headers: data.headers, file: variables.file },
                         {
                             onSuccess: () => {
-                                props?.setUploadState?.(S3UploadState.S3_UPLOAD_SUCCESS);
+                                setUploadState(S3UploadState.S3_UPLOAD_SUCCESS);
                                 disableUploadButton(4);
                                 loadTableFromS3Action.mutate(
                                     {
@@ -346,18 +341,23 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                                     },
                                     {
                                         onSuccess: () => {
-                                            props?.setUploadState?.(S3UploadState.FDS_TABLE_FETCH_SUCCESS);
+                                            setUploadState(S3UploadState.FDS_TABLE_FETCH_SUCCESS);
                                             createTableColumnMutation.mutate(
                                                 selectedFileSchema,
                                                 {
                                                     onSuccess: (data, variables, context) => {
-                                                        props?.setLastUploadedTableId?.(selectedFileSchema.tableId)
+                                                        setUploadTableStateContext({
+                                                            type: "SetLastUploadedTableId",
+                                                            payload: {
+                                                                tableId: selectedFileSchema.tableId
+                                                            }
+                                                        })
                                                         refreshIds()
-                                                        props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS)
+                                                        setUploadState(S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS)
                                                         enableUploadButton(4);
                                                     },
                                                     onError: (error, variables, context) => {
-                                                        props?.setUploadState?.(S3UploadState.CREATING_TABLE_IN_SYSTEM_FAILURE)
+                                                        setUploadState(S3UploadState.CREATING_TABLE_IN_SYSTEM_FAILURE)
                                                         enableUploadButton(4);
                                                     }
                                                 }
@@ -365,21 +365,21 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                                         },
                                         onError: (err, variables, context) => {
                                             console.log(err, variables, context)
-                                            props?.setUploadState?.(S3UploadState.FDS_TABLE_FETCH_ERROR);
+                                            setUploadState(S3UploadState.FDS_TABLE_FETCH_ERROR);
                                             enableUploadButton(4);
                                         }
                                     }
                                 );
                             },
                             onError: (data, variables, context) => {
-                                props?.setUploadState?.(S3UploadState.S3_UPLOAD_ERROR);
+                                setUploadState(S3UploadState.S3_UPLOAD_ERROR);
                                 enableUploadButton(4);
                             }
                         }
                     );
                 },
                 onError: (data, variables, context) => {
-                    props?.setUploadState?.(S3UploadState.PRESIGNED_URL_FETCH_ERROR);
+                    setUploadState(S3UploadState.PRESIGNED_URL_FETCH_ERROR);
                     enableUploadButton(4);
                 }
             }
@@ -457,21 +457,9 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                     enableUploadButton={enableUploadButton} disableUploadButton={disableUploadButton}
                     setSelectedFileTablTags={setSelectedFileTableTags}
                     setSelectedFileDataStartsFromRow={setSelectedFileDataStartsFromRow}
-                    statusMSG={props.stateData}
+                    statusMSG={uploadTableStateContext?.uploadState?.message}
                 />
             </Grid>
-            <ConfirmationDialog
-                mode='INFO'
-                messageHeader='Uploading Table'
-                messageToDisplay='Closing this page will result in file not being uploaded'
-                dialogOpen={warningDialog}
-                onDialogClose={closeWarningDialog}
-                onDecline={closeWarningDialog}
-                onAccept={closeWarningDialog}
-                autoTimeoutInS={6   }
-                acceptString="OK"
-                declineString='Close'
-            />
         </Grid>
     );
 };
@@ -501,10 +489,11 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
     const [columnProperties, setColumnProperties] = React.useState<ColumnSchema[]>()
     const [displayColumnProperties, setDisplayColumnProperties] = React.useState<ColumnSchema[]>()
     const [columnSearchQuery, setColumnSearchQuery] = React.useState<string>("")
-    const [tableProperties, setTableProperties] = React.useState<{ tableName: string, tags: Tag[], isValid: boolean }>({
+    const [tableProperties, setTableProperties] = React.useState<{ tableName: string, tags: Tag[], isValid: boolean, tagsFetched: boolean }>({
         tableName: "",
         tags: [],
-        isValid: true
+        isValid: true,
+        tagsFetched: false
     })
 
     const setColumnAndDataCallback = (columnNames: string[], dataStartsFromRow: number, data: any[], headerRows: number[]) => {
@@ -531,6 +520,11 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
         }
     }, [props.selectedFile])
 
+    React.useEffect(() => {
+        const tagsFetched = tableProperties?.tagsFetched && columnProperties?.every(c => c?.tagsFetched)
+        tagsFetched ? props?.enableUploadButton?.(16) : props?.disableUploadButton(16)
+    }, [tableProperties, columnProperties])
+
     // Responsible for populating columnProperties from parsedFileResult
     React.useEffect(() => {
         if (!!parsedFileResult && !!parsedFileResult?.columnNames && !!parsedFileResult?.data) {
@@ -542,6 +536,7 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                     columnDatatype: calculatedDataType,
                     columnIndex: columnIndex,
                     columnTags: [],
+                    tagsFetched: false,
                     isValid: true,
                     isDuplicate: false,
                     duplicateColor: undefined
@@ -686,22 +681,21 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                                     if (col["columnName"] === columnName) {
                                         return {
                                             ...col,
-                                            columnTags: [...col.columnTags, ...tags]
+                                            columnTags: [...col.columnTags, ...tags],
+                                            tagsFetched: true
                                         }
                                     } else {
-                                        return col
+                                        return { ...col, tagsFetched: true }
                                     }
                                 })
                             })
-
                             return newProp
                         })
 
                         setTableProperties(oldProp => {
                             let table_tags = parsedData["table_tags"]
-                            if (table_tags === undefined
-                                || table_tags.length == 0)
-                                return oldProp
+                            if (table_tags === undefined || table_tags.length == 0)
+                                return { ...oldProp, tagsFetched: true }
                             let tags_len = table_tags.length
                             let tags = []
                             for (var i = 0; i < tags_len; i++) {
@@ -710,7 +704,8 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                             }
                             const newProp = {
                                 ...oldProp,
-                                tags: [...oldProp.tags, ...tags]
+                                tags: [...oldProp.tags, ...tags],
+                                tagsFetched: true
                             }
                             return newProp
                         })

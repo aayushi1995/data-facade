@@ -67,7 +67,8 @@ export type SetFromActionDefinitionDetailAction = {
     payload: {
         ActionDefinitionDetail: ActionDefinitionDetail
         existingParameterInstances?: ActionParameterInstance[],
-        parentExecutionId?: string
+        parentExecutionId?: string,
+        tableId?: string
     }
 }
 
@@ -161,7 +162,7 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
             if(!!action.payload.existingParameterInstances) {
                 return reducer(newState, {type: 'SetActionParameterInstances', payload: {newActionParameterInstances: action.payload.existingParameterInstances}})
             }
-            if(!!action.payload.parentExecutionId) {
+            if(!!action.payload.parentExecutionId || action.payload.tableId) {
                 return {
                     ...newState,
                     ToCreateModels: {
@@ -171,8 +172,8 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
                             if(apd.Tag === ActionParameterDefinitionTag.DATA || apd.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
                                 return {
                                     ...api,
-                                    TableId: action.payload.parentExecutionId,
-                                    ParameterValue: "Previous Execution"
+                                    TableId: action.payload.parentExecutionId || action.payload.tableId,
+                                    ParameterValue: action.payload.parentExecutionId && "Previous Execution"
                                 }
                             }
                             return api

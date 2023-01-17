@@ -9,6 +9,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
 import RecommendedApps from "../../upload_table/components/RecommendedApps";
 import UploadTablePage from "../../upload_table/UploadTablePage";
+import UploadTableContextProvider from "../../upload_table/context/UploadTablePageContext";
 
 
 
@@ -37,7 +38,7 @@ export const DataLandingPage = () => {
 
     return (
         !!fileToUpload ?
-            <UploadTablePage file={fileToUpload} onCancel={() => setFileToUpload(undefined)}/>
+            <UploadTableContextProvider><UploadTablePage file={fileToUpload} onCancel={() => setFileToUpload(undefined)}/></UploadTableContextProvider>
             :
             <Box sx={{ mt: 10,mx:6 }}>
                 <Box>
