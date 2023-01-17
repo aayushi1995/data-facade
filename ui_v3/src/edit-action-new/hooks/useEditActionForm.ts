@@ -27,8 +27,9 @@ function getActionHeaderProps(): ActionHeaderProps {
     const useActionHooks = React.useContext(UseActionHooks)
     const [generatedCodeDialogState, setGeneratedCodeDialogState] = React.useState({ open: false, text: "", loading: false})
     const history = useHistory()
-    const fetchedDataManagerInstance = dataManager.getInstance as {getGeneratedCode: Function}
-    const promptSQLMutation = useMutation<any, unknown, {prompt: string}, unknown>("PromptSQL", ({prompt}) => fetchedDataManagerInstance.getGeneratedCode({input: prompt}), {
+    const fetchedDataManagerInstance = dataManager.getInstance as {getGeneratedActionTemplate: Function}
+    const promptSQLMutation = useMutation<any, unknown, {prompt: string, prompt_type: string}, unknown>("PromptSQL", ({prompt, prompt_type}) => 
+        fetchedDataManagerInstance.getGeneratedActionTemplate({input: prompt, input_type: prompt_type}), {
         onMutate: () => setGeneratedCodeDialogState(oldState => ({ ...oldState, text: "", loading: true, open: true}))
     })
 
@@ -61,11 +62,14 @@ function getActionHeaderProps(): ActionHeaderProps {
 
     const onGenerateCode = () => {
         let actionDescription = buildActionContext.actionDefinitionWithTags.actionDefinition.Description || "Generate a SQL"
-        promptSQLMutation.mutate({prompt: actionDescription}, {
+        // TODO (Cleanup Code Duplicate): This is duplicated in useActionDefinitionFormSave.ts
+        const activeTemplate = (buildActionContext?.actionTemplateWithParams || []).find(at => at.template.Id===buildActionContext.activeTemplateId)?.template
+        let action_language = activeTemplate?.Language || "sql"
+        promptSQLMutation.mutate({prompt: actionDescription, prompt_type: action_language}, {
             onSuccess: (data, variables, context) => setGeneratedCodeDialogState(oldState => ({ 
                 ...oldState,
                 open: true, 
-                text: data?.["sql_code"] || "", 
+                text: data?.["template"] || "", 
                 loading: false
             })),
             onError: (error) => setGeneratedCodeDialogState(oldState => ({ 

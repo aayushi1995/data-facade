@@ -1,7 +1,6 @@
 import TemplateSupportedRuntimeGroup from '../enums/TemplateSupportedRuntimeGroup.js';
 import ActionDefinitionActionType from './../enums/ActionDefinitionActionType.js';
 
-
 const defaultPythonCode = `
 '''
 To plot charts you can use the df_plot class. The options for df_plot are:
@@ -29,18 +28,20 @@ new_df = df.head(1000)
 df_helper.publish(new_df)
 
 `;
+const default_sql = `SELECT COUNT(*) FROM {{ table_name }} where {{ column_name }} = {{ some_value }}`;
+const default_check_sql = `SELECT COUNT(*)<1 FROM {table_name}`;
 const DefaultCode = {
     [ActionDefinitionActionType.PROFILING]: {
-        [TemplateSupportedRuntimeGroup.DATABRICKS_SQL]: `SELECT COUNT(*) FROM {table_name} where {column_name} = {some_value}`,
-        [TemplateSupportedRuntimeGroup.POSTGRES_SQL]: `SELECT COUNT(*) FROM {table_name} where {column_name} = {some_value}`,
-        [TemplateSupportedRuntimeGroup.SNOWFLAKE_SQL]: `SELECT COUNT(*) FROM {table_name} where {column_name} = {some_value}`,
+        [TemplateSupportedRuntimeGroup.DATABRICKS_SQL]: default_sql,
+        [TemplateSupportedRuntimeGroup.POSTGRES_SQL]: default_sql,
+        [TemplateSupportedRuntimeGroup.SNOWFLAKE_SQL]: default_sql,
         [TemplateSupportedRuntimeGroup.PYTHON]:
             defaultPythonCode
     },
     [ActionDefinitionActionType.CHECK]: {
-        [TemplateSupportedRuntimeGroup.DATABRICKS_SQL]: `SELECT COUNT(*)<1 FROM {table_name}`,
-        [TemplateSupportedRuntimeGroup.POSTGRES_SQL]: `SELECT COUNT(*)<1 FROM {table_name}`,
-        [TemplateSupportedRuntimeGroup.SNOWFLAKE_SQL]: `SELECT COUNT(*)<1 FROM {table_name}`,
+        [TemplateSupportedRuntimeGroup.DATABRICKS_SQL]: default_check_sql,
+        [TemplateSupportedRuntimeGroup.POSTGRES_SQL]: default_check_sql,
+        [TemplateSupportedRuntimeGroup.SNOWFLAKE_SQL]: default_check_sql,
         [TemplateSupportedRuntimeGroup.PYTHON]:
             `# each function will be wrapped inside a single class. It should have a self attribute
 # The execute function must have a pandas dataframe as a parameter which will be replaced by the table you select
@@ -81,7 +82,7 @@ const getDefaultCode = (actionType, supportedRuntimeGroup) => {
             if (supportedRuntimeGroup === TemplateSupportedRuntimeGroup.PYTHON) {
                 return `# Enter Python Code\n# Default Code Sample Not Available`
             } else {
-                return `-- Enter SQL Code\nSelect count(*), {column1} from {table} where {column2} = {val} group by {column1}`
+                return `-- Enter SQL Code\nSelect count(*), {{ column1 }} from {{ table }} where {{ column2 }} = {{ val }} group by {{ column1 }}`
             }
         }
     } else {

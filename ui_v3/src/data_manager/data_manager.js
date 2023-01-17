@@ -304,11 +304,11 @@ dataManager.getInstance.getTableAndColumnTags = async function (tableData) {
     return response.json()
 }
 
-dataManager.getInstance.getGeneratedCode = async function (requestBody) {
+dataManager.getInstance.getGeneratedActionTemplate = async function (requestBody) {
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/getGeneratedSql?email=' + userSettingsSingleton.userEmail, 
+    const response = await fetch(endPoint + '/getGeneratedAction?email=' + userSettingsSingleton.userEmail, 
         createPostRequestBody(JSON.stringify(requestBody)))
     return response.json()
 }
