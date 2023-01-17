@@ -167,6 +167,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                                                 </ReactQueryWrapper>
                                                 {saveAndBuildChartsState.ExecutionDetails ? 
                                                     <ViewActionExecutionOutput 
+                                                    onDeepDiveActionSelected={onDeepDiveActionSelected}
                                                     ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
                                                     ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
                                                     ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}

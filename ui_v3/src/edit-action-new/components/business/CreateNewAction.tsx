@@ -37,6 +37,9 @@ function CreateNewAction(props: CreateNewActionProps) {
             name: "SQL",
             description: "Query your data connections or dataframes.",
             onClick: () => {
+                if(!name) {
+                    onNameChange?.("Default Name")
+                }
                 onSaveAction(TemplateSupportedRuntimeGroup.COMMON, TemplateLanguage.SQL)
             }
         },
@@ -44,6 +47,9 @@ function CreateNewAction(props: CreateNewActionProps) {
             name: "Python",
             description: "Transform your data using python.",
             onClick: () => {
+                if(!name) {
+                    onNameChange?.("Default Name")
+                }
                 onSaveAction(TemplateSupportedRuntimeGroup.PYTHON, TemplateLanguage.PYTHON)
             }
         }
@@ -51,7 +57,7 @@ function CreateNewAction(props: CreateNewActionProps) {
     
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1,px:5}}>
-            {/* <Box sx={{ display: "flex", flexDirection: "row" ,borderBottom:'1px solid #dbd7d7'}}>
+            <Box sx={{ display: "flex", flexDirection: "row" ,borderBottom:'1px solid #dbd7d7'}}>
                 <Box sx={{ display: "flex", flexDirection: "column", flex: 1,width:'50%'}}>
                     <Box sx={{width:'100%'}}>
                         <TextField InputProps ={{
@@ -90,7 +96,7 @@ function CreateNewAction(props: CreateNewActionProps) {
                         <ActionHeroGroupSelector selectedGroup={group} onSelectedGroupChange={onGroupChange}/>
                     </ActionHeaderAutocompleteBox>
                 </Box>
-            </Box> */}
+            </Box>
             <Box sx={{justifyContent:'center',width:'100%',textAlign:'center'}}>
                 <CodeIconBox>
                     <CodeIcon/>

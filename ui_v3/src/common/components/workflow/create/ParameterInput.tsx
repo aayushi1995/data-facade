@@ -830,7 +830,7 @@ const TableInput = (props: TableParameterInput) => {
             error={error}
             data={tables}
         >
-            <ViewTablePreview tableName={SelectedTable?.UniqueName} tablePreviewExecutionId={SelectedTable?.Id} showPreview={tablePreview} setShowPreview={setTablePreview}/>
+            <ViewTablePreview tableName={SelectedTable?.TableType === "UpstreamExecution" ? undefined : SelectedTable?.UniqueName} tablePreviewExecutionId={SelectedTable?.Id} showPreview={tablePreview} setShowPreview={setTablePreview}/>
             <Autocomplete
                 key={SelectedTable?.UniqueName || "NA"}
                 options={AvailableTables.sort((table1, table2) => (table1.ProviderInstanceID || "id").localeCompare(table2.ProviderInstanceID || "id"))}

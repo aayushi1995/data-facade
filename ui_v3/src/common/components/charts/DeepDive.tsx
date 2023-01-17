@@ -52,6 +52,7 @@ const DeepDive = (props: DeepDiveProps) => {
         setExecutionId(actionExecutionId)
         props.onChildExecutionCreated?.(actionExecutionId)
         props.setSelectedActionId(undefined)
+        setDialogState(false)
     }
 
 

@@ -26,7 +26,7 @@ const ApplicationMarketplace = () => {
         return apps?.map(app => 
             <Grid item xs={12} lg={12} md={12} xl={12} sx={{py:1,px:8,ml:4}}>
                 <Box sx={{ height: '100%',mx:3 }}  key={app.ApplicationName}>
-                    <ApplicationCard application={app} isInstalled={app.InstallationStatus || false}/>
+                    <ApplicationCard application={app} isInstalled={app.InstallationStatus || false} isInstalledFromMarketplace={app.InstallationStatus || false}/>
                 </Box>
             </Grid>
         )

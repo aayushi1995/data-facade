@@ -17,6 +17,7 @@ interface ViewTablePrieviewProps {
 }
 
 const ViewTablePreview = (props: ViewTablePrieviewProps) => {
+    console.log(props)
     const [tablePreviewExecutionId, setTablePreviewExecutionId] = React.useState<string | undefined>(props.tablePreviewExecutionId)
 
     const handleTableFetched = (data: TableProperties) => {
@@ -36,6 +37,12 @@ const ViewTablePreview = (props: ViewTablePrieviewProps) => {
             tableModelQuery.refetch()
         }
     }, [props.tableName])
+
+    React.useEffect(() => {
+        if(!!props.tablePreviewExecutionId) {
+            setTablePreviewExecutionId(props.tablePreviewExecutionId)
+        }
+    }, [props.tablePreviewExecutionId])
 
     return (
         <Dialog open={props.showPreview} onClose={handlePreviewDialogClose} maxWidth="lg" fullWidth>

@@ -21,11 +21,12 @@ import AddIcon from "@mui/icons-material/Add";
 
 interface ApplicationCardProps {
     application: ApplicationCardViewResponse,
-    isInstalled: boolean
+    isInstalled: boolean,
+    isInstalledFromMarketplace?: boolean
 }
 
 const ApplicationCard = (props: ApplicationCardProps) => {
-    const {application, isInstalled} = props
+    const {application, isInstalled, isInstalledFromMarketplace} = props
     const history = useHistory()
     const match = useRouteMatch()
     const [disableCardActions, setDisableCardActions] = React.useState(false)
@@ -206,11 +207,14 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                                 </StyledTypographyApplicationformCreatedOnString>
                             </Box>
                             <Box sx={{...ButtonBoxStyle}}>
-                                {isInstalled && <Button onClick={onApplicationSelect} disabled={disableCardActions} variant='contained' color='info' sx={{...viewButton}}>
+                                {isInstalled && !isInstalledFromMarketplace && <Button onClick={onApplicationSelect} disabled={disableCardActions} variant='contained' color='info' sx={{...viewButton}}>
                                     View
                                 </Button>}
                                 {!isInstalled && <Button onClick={onApplicationInstall} disabled={disableCardActions} variant='contained' color='info' sx={{...viewButton}}>
                                     Install
+                                </Button>}
+                                {isInstalled && isInstalledFromMarketplace && <Button onClick={onApplicationSelect} disabled={disableCardActions} variant='contained' color='info' sx={{...viewButton}}>
+                                    Installed
                                 </Button>}
                             </Box>
                         </Box>

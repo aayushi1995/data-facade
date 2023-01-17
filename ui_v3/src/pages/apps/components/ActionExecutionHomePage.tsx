@@ -48,11 +48,19 @@ export const ActionExecutionDetails = (props: {
     const [executionError, setExecutionError] = React.useState(false)
     const [showParameters, setShowParameters] = React.useState(false)
     const resultsView = React.useRef<HTMLDivElement | null>(null)
+    const childExecution = React.useRef<HTMLDivElement | null>(null)
     const [currentTime, setCurrentTime] = React.useState<number>(Date.now())
     const [intervalId, setIntervalId] = React.useState<number | undefined>()
 
     const onChildExecutionCreated = (actionExecutionId: string) => {
         setChildActionExecutionId(actionExecutionId)
+        const currentComponent: React.ReactNode = childExecution.current
+        if (currentComponent) {
+            (currentComponent as {scrollIntoView: Function})?.scrollIntoView?.({
+                behavior: 'smooth',
+                block: 'start',
+            })
+        }
     }
 
     const handleDataFetched = (data?: ActionExecutionIncludeDefinitionInstanceDetailsResponse[]) => {
@@ -184,6 +192,7 @@ export const ActionExecutionDetails = (props: {
                     </Box>
                 )}
             </ReactQueryWrapper>
+            <div ref={childExecution}>
             {childActionExecutionId ?
             (<ActionExecutionDetails 
                 actionExecutionId={childActionExecutionId} 
@@ -193,6 +202,7 @@ export const ActionExecutionDetails = (props: {
                 />) :
                 <></>
             }
+            </div>
         </>
     )
 }

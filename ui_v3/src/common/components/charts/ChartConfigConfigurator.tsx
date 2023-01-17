@@ -4,6 +4,7 @@ import ChartGroups from "../../../enums/ChartGroups";
 import { Chart } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
 import { ReactQueryWrapper } from "../ReactQueryWrapper";
+import DeepDiveActionsList from "./DeepDiveActionsList";
 import useFetchDeepDiveActions from "./hooks/useFetchDeepDiveActions";
 import { ChartModelConfig, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext"
 
@@ -175,12 +176,7 @@ const ChartConfigConfigurator = (props: ChartConfigConfiguratorProps) => {
                     </Box>
                 </TabPanel>
                 <TabPanel value={tabValue} index={0}>
-                    <ReactQueryWrapper isLoading={fetchDeepDiveActionsQuery.isLoading || fetchDeepDiveActionsQuery.isRefetching} data={fetchDeepDiveActionsQuery.data} error={fetchDeepDiveActionsQuery.error}>
-                        {() => <List>
-                            {fetchDeepDiveActionsQuery?.data?.map(actionDefinition => 
-                                <ListItemButton onClick={() => handleDeepDiveActionClick(actionDefinition)}>{actionDefinition.ActionDefinition?.model?.DisplayName || actionDefinition?.ActionDefinition?.model?.UniqueName}</ListItemButton>)}
-                        </List>}
-                    </ReactQueryWrapper>
+                    <DeepDiveActionsList actionDefinition={saveAndBuildChartsState.ExecutionDetails?.ActionDefinition || {}} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
                 </TabPanel>
             </Box>
         </Box>

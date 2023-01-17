@@ -1,4 +1,4 @@
-import { Box, Divider, IconButton, Tooltip, Typography } from "@mui/material"
+import { Box, Divider, IconButton, Popover, Tooltip, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import ReactJson from "react-json-view"
 import { CustomToolbar } from "../../common/components/CustomToolbar"
@@ -11,12 +11,16 @@ import DownloadIcon from "../../images/DownloadData.svg"
 import { useActionExecutionParsedOutputNew } from "../execute_action/hooks/useActionExecutionParsedOutput"
 import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOutputFromS3"
 import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput"
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import React from "react"
+import DeepDiveActionButton from "./DeepDiveActionButton"
 
 export interface ViewActionExecutionOutputProps {
     ActionExecution: ActionExecution,
     ActionInstance: ActionInstance,
     ActionDefinition: ActionDefinition,
-    showCharts?: boolean
+    showCharts?: boolean,
+    onDeepDiveActionSelected?: (actionId: string) => void
 } 
 
 const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
@@ -27,9 +31,9 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     const outputComponentToRender = (output?: any) => {
         switch(ActionDefinition?.PresentationFormat || "NA") {
             case ActionDefinitionPresentationFormat.TABLE_VALUE:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
             case ActionDefinitionPresentationFormat.OBJECT:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition}/>
             case ActionDefinitionPresentationFormat.SINGLE_VALUE:
                 return <ViewActionExecutionSingleValueOutput SingleValueOutput={output as SingleValueOutputFormat}/>
             default:
@@ -94,11 +98,13 @@ export interface SingleValueOutputFormat {
 
 export interface ViewActionExecutionTableOutputProps {
     TableOutput: TableOutputSuccessfulFormat | TableOutputSizeExceededErrorFormat,
-    ActionExecution: ActionExecution
+    ActionExecution: ActionExecution,
+    ActionDefinition: ActionDefinition,
+    onDeepDiveActionSelected?: (actionId: string) => void
 }
 
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
-    const { TableOutput, ActionExecution } = props
+    const { TableOutput, ActionExecution, ActionDefinition } = props
     const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionOutput(ActionExecution?.OutputFilePath || "NA", 5)
     const {downloadExecutionOutputFromS3, download} = useDownloadExecutionOutputFromS3()
 
@@ -123,11 +129,9 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
     const downloadButton = downloadExecutionOutputFromS3.isLoading ? (
         <LoadingIndicator />
     ) : (
-        <Tooltip title="Download Result as CSV">
             <IconButton onClick={handleDownloadResult}>
                 <img src={DownloadIcon} />
             </IconButton>
-        </Tooltip>
     )
 
     if(isTableOutputSuccessfulFormat(TableOutput)) {
@@ -135,32 +139,34 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridColumns = (preview?.schema?.fields || []).map(f => {return {...f, field: f.name, headerName: f.name, flex: 1, minWidth: 200}}).filter(col => col.field!=='datafacadeindex')
         const dataGridRows = (preview?.data || []).map((row, index) => ({...row, id: row?.Id||index}))
 
+        
         return (
-            <Box>
-                <Box>
-                    <DataGrid 
-                        headerHeight={70}
-                        sx={{
-                            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
-                            backgroundBlendMode: "soft-light, normal",
-                            border: "2px solid rgba(255, 255, 255, 0.4)",
-                            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-                            borderRadius: "10px"
-                        }}
-                        rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
-                        initialState={{
-                            pagination: {
-                                pageSize: 10
-                            }
-                        }}
-                        autoHeight
-                        columns={dataGridColumns} 
-                        rows={dataGridRows}
-                        components={{
-                            Toolbar: CustomToolbar([downloadButton])
-                        }}
-                    />
+            <Box sx={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+                <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
+                    <DeepDiveActionButton ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
                 </Box>
+                <DataGrid 
+                    headerHeight={70}
+                    sx={{
+                        "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
+                        backgroundBlendMode: "soft-light, normal",
+                        border: "2px solid rgba(255, 255, 255, 0.4)",
+                        boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
+                        borderRadius: "10px"
+                    }}
+                    rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+                    initialState={{
+                        pagination: {
+                            pageSize: 10
+                        }
+                    }}
+                    autoHeight
+                    columns={dataGridColumns} 
+                    rows={dataGridRows}
+                    components={{
+                        Toolbar: CustomToolbar([downloadButton])
+                    }}
+                />
             </Box>
         )
     } else if(isTableOutputSizeExceededErrorFormat(TableOutput)) {
