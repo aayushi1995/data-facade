@@ -82,7 +82,7 @@ const getDefaultCode = (actionType, supportedRuntimeGroup) => {
             if (supportedRuntimeGroup === TemplateSupportedRuntimeGroup.PYTHON) {
                 return `# Enter Python Code\n# Default Code Sample Not Available`
             } else {
-                return `-- Enter SQL Code\nSelect count(*), {{ column1 }} from {{ table }} where {{ column2 }} = {{ val }} group by {{ column1 }}`
+                return `-- Enter SQL Code\nSelect count(*), {{column1}} from {{table}} where {{column2}} = {{val}} group by {{column1}}`
             }
         }
     } else {

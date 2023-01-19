@@ -11,6 +11,7 @@ import ColumnDetails from "../column_details/ColumnDetails";
 import ActionInstances from "../customizations/components/ActionInstances";
 import TableRowExpanded from "../table_browser/components/TableRowExpanded";
 import ColumnView from "./components/ColumnView";
+import IntermediaryTables from "./components/IntermediaryTables";
 import TableView from "./components/TableView";
 
 export const a11yProps = (index: number) => {
@@ -115,7 +116,8 @@ const TableDetailsView = () => {
                   </TabPanel>
                   {/* **** Action Instance And Intermediary Tabs are comnt out for temporary bcz these are not required now */}
                   <TabPanel value={DATA_TABLE_TAB_ACTION_INSTANCES}>
-                    <ActionInstances TableId={data[0] && data[0].Id} />
+                    {/* <ActionInstances TableId={data[0] && data[0].Id} /> */}
+                    <IntermediaryTables tableId={data[0] && data[0].Id} />
                   </TabPanel>
                   {/* <TabPanel value={DATA_TABLE_TAB_INTERMEDIARY_TABLES}>
                       <IntermediaryTables TableId={data[0].Id}/>

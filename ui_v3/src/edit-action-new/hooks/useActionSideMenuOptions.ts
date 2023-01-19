@@ -12,8 +12,16 @@ const useActionSideMenuOptions = () => {
         })
     }
 
+    const handleOpenPastRuns = () => {
+        setBuildActionContext({
+            type: "ToggleDisplayPastRuns",
+            payload: {}
+        })
+    }
+
     return {
-        handleOpenSettings
+        handleOpenSettings,
+        handleOpenPastRuns
     }
 }
 

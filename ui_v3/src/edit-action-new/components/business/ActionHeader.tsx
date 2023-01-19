@@ -175,7 +175,7 @@ function ActionHeader(props: ActionHeaderProps) {
                     
                 </Box> */}
 
-                <Box sx={{display:'flex',flexDirection: buildActionContext.testMode || buildActionContext.sideSettingsOpen ?'column':'row', gap:buildActionContext.testMode?1:3}}>
+                <Box sx={{display:'flex',flexDirection: buildActionContext.testMode || buildActionContext.sideSettingsOpen || buildActionContext.pastRunsOpen ?'column':'row', gap:buildActionContext.testMode?1:3}}>
                     <TestButton size='small' variant='outlined' color="info" onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</TestButton>
                     <Box sx={{display:'flex',flexDirection:'row',gap:buildActionContext.testMode?1:3}}>
                         <SaveButton size='small' color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {

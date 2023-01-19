@@ -149,6 +149,12 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "GET", endpoint: "/getFilteredActionInstances", inputPayload: Entity.ActionInstance): Promise<Entity.ActionInstance[]>; 
 	
 	/**
+	Gives you the the past runs of the action definition
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getPastRunsForActions", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionRun[]>; 
+	
+	/**
 	Gives you the list of possible auto flows that can run on this table
 	*/
 	

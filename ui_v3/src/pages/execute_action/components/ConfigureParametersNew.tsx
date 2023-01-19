@@ -64,7 +64,7 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
 
     const getParamsToShowInGroups = () => {
         const paramArrayByGroup: ActionParameterDefinition[][] = []
-        for(let i = 0 ; i <= filteredParameters.length/5 ; i ++) {
+        for(let i = 0 ; i < filteredParameters.length/5 ; i ++) {
             const paramsToShow = filteredParameters.slice(i*5, Math.min(filteredParameters.length, (i+1)*5))
             paramArrayByGroup.push(
                 paramsToShow

@@ -86,7 +86,6 @@ const getInputTypeFromAttributes = (language, tag, type, datatype) => {
 }
 
 const getInputTypeFromAttributesNew = (language, tag, type, datatype) => {
-    console.log(language, tag, type, datatype)
     if (language in InputMap) {
         for (const [key, value] of Object.entries(InputMap[language])) {
             const tagsToBecomeOther = [ActionParameterDefinitionTag.OPTION_SET_MULTIPLE, ActionParameterDefinitionTag.OPTION_SET_SINGLE, ActionParameterDefinitionTag.SLACK_CHANNEL_SINGLE, ActionParameterDefinitionTag.SLACK_CHANNEL_MULTIPLE]

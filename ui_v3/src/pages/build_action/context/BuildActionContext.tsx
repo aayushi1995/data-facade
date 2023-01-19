@@ -59,7 +59,8 @@ export type BuildActionContextState = {
     SourceApplicationId?: string,
     testMode?: boolean,
     charts?: ChartOptionType[],
-    sideSettingsOpen?: boolean
+    sideSettingsOpen?: boolean,
+    pastRunsOpen?: boolean
 }
 
 const formEmptyDefaultContext: () => BuildActionContextState = () => {
@@ -446,6 +447,11 @@ type RemoveDeepDiveAction = {
     }
 }
 
+type ToggleDisplayPastRuns = {
+    type: "ToggleDisplayPastRuns",
+    payload: {}
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -492,7 +498,8 @@ ToggleSideSettings |
 AddDeepDiveAction |
 ChangeNameForDeepDiveAction |
 ChangeActionIdForDeepDive |
-RemoveDeepDiveAction
+RemoveDeepDiveAction |
+ToggleDisplayPastRuns
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -961,7 +968,8 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             return {
                 ...state,
                 testMode: action.payload,
-                sideSettingsOpen: false
+                sideSettingsOpen: false,
+                pastRunsOpen: false
             }
         }
 
@@ -1028,7 +1036,8 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             return {
                 ...state,
                 sideSettingsOpen: !state.sideSettingsOpen,
-                testMode: false
+                testMode: false,
+                pastRunsOpen: false
             }
         }
 
@@ -1057,6 +1066,15 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             return {
                 ...state,
                 deepDiveConfig: state.deepDiveConfig.filter((config, index )=> index !== action.payload.index)
+            }
+        }
+
+        case "ToggleDisplayPastRuns": {
+            return {
+                ...state,
+                pastRunsOpen: !state.pastRunsOpen,
+                testMode: false,
+                sideSettingsOpen: false
             }
         }
 

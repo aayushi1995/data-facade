@@ -84,12 +84,6 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 width: 100,
                 renderCell: (params: GridCellParams<any, Run, any>) => <Box sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "flex-start", alignItems: "center", cursor: "pointer", color: "#2155CD", "&:hover": { backgroundColor: "#E6E6E6", color: "#40DFEF" } }}><span style={{ width: "100%", textAlign: "center" }}>Show</span></Box>
             },
-            {
-                field: "Run Again",
-                headerName: "Run Again",
-                width: 100,
-                renderCell: (params: GridCellParams<any, Run, any>) => <Box sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "flex-start", alignItems: "center", cursor: "pointer", color: "#2155CD", "&:hover": { backgroundColor: "#E6E6E6", color: "#40DFEF" } }}><span style={{ width: "100%", textAlign: "center" }}>Run</span></Box>
-            },
         ],
         sx: {
             "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
@@ -154,7 +148,7 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
     )
 }
 
-const DurationCell = (props: { start?: number, end?: number}) => {
+export const DurationCell = (props: { start?: number, end?: number}) => {
     const { start, end } = props
     let duration = "NA"
     if(!!start && !!end) {

@@ -40,7 +40,6 @@ const DefaultValueInput = (props: DefaultValueInputProps) => {
             const addtionalConfig = actionParameterDefinitionAdditionalConfig as (undefined | ActionParameterColumnAdditionalConfig)
             const tableFilters = addtionalConfig?.availableTablesFilter || []
             const uniqueTableFilters = getUniqueFilters(tableFilters)
-            
             return {
                 parameterType: "COLUMN",
                 inputProps: {

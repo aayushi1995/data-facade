@@ -5,6 +5,7 @@ import { BuildActionContext} from "../pages/build_action/context/BuildActionCont
 import ActionHeader from "./components/business/ActionHeader";
 import ActionMain from "./components/business/ActionMain";
 import DeepDiveSideMenu from "./components/business/DeepDiveSideMenu";
+import EditActionSideView from "./components/presentation/custom/EditActionSideView";
 import EditActionMenu from "./components/presentation/EditActionMenu";
 import { CardBoxRoot } from "./components/presentation/styled_native/ActionMainBox";
 import useEditActionForm from "./hooks/useEditActionForm";
@@ -15,7 +16,7 @@ function EditActionForm() {
     const buildActionContext = React.useContext(BuildActionContext)
     const [actionHeaderProps, actionMainProps] = useEditActionForm()
 
-    const rootBoxWidth = buildActionContext.testMode ? "50%" : buildActionContext.sideSettingsOpen ? "60%" : "100%"
+    const rootBoxWidth = buildActionContext.testMode ? "50%" : (buildActionContext.sideSettingsOpen || buildActionContext.pastRunsOpen) ? "60%" : "100%"
 
     return(
         <Box sx={{ display: "flex", flexDirection: "row", gap: 1 ,mt:2,pl:2}}>
@@ -23,16 +24,7 @@ function EditActionForm() {
                 <ActionHeader {...actionHeaderProps}/>
                 <ActionMain/>
             </CardBoxRoot>
-            { buildActionContext.testMode &&
-                <CardBoxRoot sx={{width:'50%'}}>
-                    <TestAction/>
-                </CardBoxRoot>
-            }
-            { buildActionContext.sideSettingsOpen && 
-                <Box sx={{ width: "40%"}}>
-                <DeepDiveSideMenu />
-                </Box>
-            }
+            <EditActionSideView />
             <EditActionMenu />
         </Box>
     )

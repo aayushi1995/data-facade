@@ -315,26 +315,8 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
 
     const StepNumberToComponent: {component: React.ReactNode, label: string}[] = []
 
-    if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => !isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
-        StepNumberToComponent.unshift({
-            component: 
-            <Box sx={{ mx: 15 }}>
-                <ConfigureParametersNew
-                    mode="GENERAL"
-                    ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                    ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                    ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
-                    handleParametersChange={handleChange}
-                    showOnlyParameters={props.showOnlyParameters}
-                    parentExecutionId={props.parentExecutionId}
-                />
-            </Box>,
-            label: "Required Inputs"
-        })
-    }
-
     if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
-        StepNumberToComponent.push({
+        StepNumberToComponent.unshift({
             component: 
             <Box sx={{ mx: 15 }}>
                 <ConfigureParametersNew
@@ -351,6 +333,26 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             
         })
     }
+    
+    if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => !isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
+        StepNumberToComponent.push({
+            component: 
+            <Box sx={{ mx: 15 }}>
+                <ConfigureParametersNew
+                    mode="GENERAL"
+                    ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                    ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                    ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
+                    handleParametersChange={handleChange}
+                    showOnlyParameters={props.showOnlyParameters}
+                    parentExecutionId={props.parentExecutionId}
+                />
+            </Box>,
+            label: "Required Inputs"
+        })
+    }
+
+    
     if(!props.fromTestRun) {
         StepNumberToComponent.push(
             {
