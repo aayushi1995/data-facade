@@ -1,6 +1,6 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const LineChart =(props: { titleName: String; xTitle: String; yTitle: String;})=>{
+const LineChart =(props: { titleName: String; xTitle: String; yTitle: String; XData: any[]; YData:any[]})=>{
 
     const LineChar = {
         title: {
@@ -15,7 +15,7 @@ const LineChart =(props: { titleName: String; xTitle: String; yTitle: String;})=
           },
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: props.XData||['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             name: props.xTitle
           },
           yAxis: {
@@ -24,7 +24,7 @@ const LineChart =(props: { titleName: String; xTitle: String; yTitle: String;})=
           },
           series: [
             {
-              data: [150, 230, 224, 218, 135, 147, 260],
+              data: props.YData || [150, 230, 224, 218, 135, 147, 260],
               type: 'line'
             }
         ],

@@ -35,6 +35,7 @@ export const DATA_CONNECTIONS_UPLOAD_ROUTE = '/data/connections/upload-file';
 export const DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE = `${DATA_CONNECTIONS_UPLOAD_ROUTE}/preview`;
 export const DATA_CONNECTIONS_UPLOAD_COLUMNS_ROUTE = `${DATA_CONNECTIONS_UPLOAD_ROUTE}/columns`;
 export const BLANK_STRING = '';
+export const DATA_SCRATCH_PAD = '/data/scratchpad';
 
 export const DATA_SUB_TABS: TabsType = [
     {

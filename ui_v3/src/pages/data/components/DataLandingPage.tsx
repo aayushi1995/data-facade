@@ -11,8 +11,6 @@ import RecommendedApps from "../../upload_table/components/RecommendedApps";
 import UploadTablePage from "../../upload_table/UploadTablePage";
 import UploadTableContextProvider from "../../upload_table/context/UploadTablePageContext";
 
-
-
 export const DataLandingPage = () => {
     const HeaderString = "Upload csv or select a table to explore"
     const [searchQuery, setSearchQuery] = React.useState("")

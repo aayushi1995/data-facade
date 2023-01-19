@@ -162,3 +162,15 @@ export const AppCardStyle = {
         boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.25)' 
     }
 }
+
+export const ScratchPadTabStyle = {
+    width: '150px',
+    margin: '15px',
+    backgroundColor: 'white',
+    border: '1px solid #d1d1d1',
+    cursor: 'pointer',
+    display: 'flex',
+    borderRadius: '10px',
+    alignItems: 'center',
+    justifyContent: 'center'
+}

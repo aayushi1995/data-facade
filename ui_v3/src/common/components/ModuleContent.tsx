@@ -53,8 +53,8 @@ export const Header = ({tab}: ModuleHeaderPropType) => {
                 </Box> */}
             </Box>
             <Switch>
-                {/* <Route path={DATA_CONNECTIONS_ROUTE} component={DataHeader}/>
-                <Route exact path={APPLICATION_ROUTE} component={ApplicationHeader}/>
+                <Route path={DATA_CONNECTIONS_ROUTE} component={DataHeader}/>
+                {/* <Route exact path={APPLICATION_ROUTE} component={ApplicationHeader}/>
                 <Route path={APPLICATION_DETAIL_ROUTE} component={ApplicationHeader}/> */}
             </Switch>
         </Box>

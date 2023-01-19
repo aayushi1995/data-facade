@@ -16,13 +16,6 @@ export function CreateConnectionButton() {
         history.push(DATA_CONNECTIONS_ROUTE);
     }
     return <>
-            <Button variant="ModuleHeaderButton1"
-                    endIcon={<AddIcon sx={{fontSize: "small", backgroundColor: "secondary"}}/>}
-                    title="Create Connection"
-                    onClick={handleDialogOpen}
-            >
-                Create Connection
-            </Button>
             <Route path={CHOOSE_CONNECTOR_ROUTE}>
                 <Dialog sx={{backgroundBlendMode: "soft-light, normal",}} onClose={handleDialogClose} open={dialogState} fullWidth={true} maxWidth="xl">
                     <DialogTitle id="simple-dialog-title">

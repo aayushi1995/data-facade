@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { DATA_ALL_TABLES_ROUTE, DATA_CERTIFIED_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_ROUTE, DATA_SUB_TABS, DATA_TABLE_VIEW, findTab } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_ALL_TABLES_ROUTE, DATA_CERTIFIED_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_ROUTE, DATA_SUB_TABS, DATA_TABLE_VIEW, findTab, DATA_SCRATCH_PAD } from "../../common/components/header/data/DataRoutesConfig";
 import { SetModuleContextState } from "../../common/components/ModuleContext";
 import TablePropertiesCertificationStatus from "../../enums/TablePropertiesCertificationStatus";
 import ConfiguredDataSource from "../configurations/components/ConfiguredDataSource";
@@ -9,6 +9,10 @@ import TableDetails from "../table_details/TableDetails";
 import UploadTablePage from "../upload_table/UploadTablePage";
 import { Box } from "@mui/material";
 import { DataLandingPage } from "./components/DataLandingPage";
+import ScratchPadLandingPage from "./components/ScratchPadLandingPage";
+import { CreateConnectionButton } from "./components/connections/CreateConnectionButton";
+import { CHOOSE_CONNECTOR_ROUTE } from "./components/connections/DataRoutesConstants";
+
 const DataContent = () => {
     const setModuleContext = useContext(SetModuleContextState)
 
@@ -17,6 +21,7 @@ const DataContent = () => {
         <Switch>
             <Redirect exact from={DATA_CONNECTIONS_UPLOAD_ROUTE} to={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE}/>
             <Route exact path={DATA_ROUTE} component={DataLandingPage}/>
+            <Route exact path={DATA_SCRATCH_PAD} component={ScratchPadLandingPage}/>
             <Route path={DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE} component={UploadTablePage}/>
             <Route path={DATA_CONNECTIONS_ROUTE} component={ConfiguredDataSource}/>
             <Route path={DATA_TABLE_VIEW} component={TableDetails}/>
@@ -25,6 +30,9 @@ const DataContent = () => {
             </Route>
             <Route path={DATA_CERTIFIED_ROUTE}>
                 <CertifiedTables/>
+            </Route>
+            <Route path={CHOOSE_CONNECTOR_ROUTE}>    
+                <CreateConnectionButton/>
             </Route>
         </Switch>
         </Box>

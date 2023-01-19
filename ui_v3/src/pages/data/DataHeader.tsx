@@ -21,7 +21,7 @@ const DataHeader = () => {
             <Route path={DATA_CONNECTIONS_ROUTE} >
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2, alignItems: "center"}}>
                     <CreateConnectionButton/>
-                    {uploadButton}
+                    {/* {uploadButton} */}
                 </Box>
             </Route>
         </Switch>

@@ -3,7 +3,7 @@ import React from "react";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import useFetchActionDefinitionForSelector from "../../../edit-action-new/hooks/useFetchActionDefinitionForSelector";
 import AppCard from "../../data/components/AppCard";
-import { ActionCardConatier, AllApps, AllPackageList, ContainerHeader, DialogBGcolor, DialogBody, DialogHeader, NumberofItemInPackage, PackagesNameStyle, PackagesNameStyleR, PackageTabHeader, SearchBarDialogTextField, SearchBarTextField, SeeAllPackage, StyledTypographyDataHeader } from "../../data/components/StyledComponents";
+import { ActionCardConatier, AllApps, AllPackageList, ContainerHeader, DialogBGcolor, DialogBody, DialogHeader, NumberofItemInPackage, PackagesNameStyle, PackagesNameStyleR, PackageTabHeader, SearchBarDialogTextField, SearchBarTextField, SeeAllPackage, StyledTypographyDataHeader,ScratchPadTabStyle } from "../../data/components/StyledComponents";
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { ActionDetailsForApplication, ApplicationCardViewResponse, ApplicationDetails } from "../../../generated/interfaces/Interfaces";
@@ -69,6 +69,9 @@ function RecommendedApps(props: RecommendedAppsProps) {
                     <Button sx={{ ml: 'auto' }} onClick={() => { setDialogState(true) }}>See All</Button>
                 </Box>
                 <Grid container>
+                    {/* <Box sx={{ ...ScratchPadTabStyle }}>
+                        <RouterLink to={{pathname: '/data/scratchpad'}}>Scratch Pad</RouterLink>
+                    </Box> */}
                     {actionDefinitionRows}
                 </Grid>
             </Box>

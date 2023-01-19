@@ -60,13 +60,13 @@ function TabPanel(props: TabPanelProps) {
 const BrowserHeadButton = (props: { image: string, name: string ,link:string }) => {
 
     return (
-        <>
+        <Box sx={{px:1}}>
             <Divider></Divider>
-            <Button sx={{ justifyContent:'flex-start',gap: 1, px: 3, borderRadius: '5px', ml: 1, my: 1, backgroundColor: '#007DFA',minWidth:'200px' }} variant='contained' to={props.link} component={NavLink}>
+            <Button sx={{ justifyContent:'center',gap: 1, px: 3, borderRadius: '5px',  my: 1, backgroundColor: '#007DFA',minWidth:'100%' }} variant='contained' to={props.link} component={NavLink}>
                 <img src={props.image} />  {props.name}
             </Button>
             <Divider></Divider>
-        </>
+        </Box>
     )
 }
 
