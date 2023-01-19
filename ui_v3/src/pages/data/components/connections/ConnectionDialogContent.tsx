@@ -4,6 +4,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import { generatePath, Route, useHistory } from "react-router-dom";
 import useSlackInstallURL from "../../../../common/components/common/useSlackInstallURL";
+import GoogleAuth from "../../../../common/components/google/GoogleAuth";
 import { ReactQueryWrapper } from "../../../../common/components/ReactQueryWrapper";
 import ProviderDefinitionId from "../../../../enums/ProviderDefinitionId";
 import { Fetcher } from "../../../../generated/apis/api";
@@ -12,7 +13,6 @@ import labels from "../../../../labels/labels";
 import { ProviderInputConnectionStateWrapper } from "../../../configurations/components/ProviderParameterInput";
 import { ConnectionsProvider, ConnectionStateContext } from "../../../configurations/context/ConnectionsContext";
 import {
-    CHOOSE_CONNECTOR_ROUTE,
     CHOOSE_CONNECTOR_SELECTED_ROUTE
 } from "./DataRoutesConstants";
 import { iconProviderMap } from "./iconProviderMap";
@@ -38,12 +38,12 @@ export function ProviderIcon({ providerUniqueName, height , width }: {providerUn
     />: null;
 }
 
-function ConnectorCard(props: { onClick: () => void, provider: ProviderDefinitionDetail }
+function ConnectorCard(props: { onClick?: () => void, provider: ProviderDefinitionDetail }
 ) {
     const connectionState = React.useContext(ConnectionStateContext)
 
     return <Card
-        onClick={props.onClick}
+        onClick={props?.onClick}
         sx={{
             width: 150,
             height: 140,
@@ -71,6 +71,28 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
     const { url: slackInstallUrl } = useSlackInstallURL()
     const searchPredicate = (provider: ProviderDefinitionDetail) => !!searchText && provider?.ProviderDefinition ?
         (provider?.ProviderDefinition?.UniqueName||"").toLowerCase().includes(searchText.toLowerCase()) : true;
+
+    const providerComponents = {
+        [ProviderDefinitionId.SLACK]: (provider: ProviderDefinitionDetail) => 
+            slackInstallUrl && <ConnectorCard onClick={() => window.open(slackInstallUrl)} provider={provider}/>,
+
+        [ProviderDefinitionId.GOOGLE_SHEETS]: (provider: ProviderDefinitionDetail) => 
+            <GoogleAuth><ConnectorCard provider={provider}/></GoogleAuth>,
+        
+        DEFAULT: (provider: ProviderDefinitionDetail) => <ConnectorCard onClick={() => {
+            if(!!provider?.ProviderDefinition?.Id) {
+                history.push(generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: provider?.ProviderDefinition?.Id}))
+            }
+        }} provider={provider}
+    />
+    }
+
+    const getProviderComponent = (provider: ProviderDefinitionDetail) => {
+
+        const component = providerComponents?.[provider?.ProviderDefinition?.Id || "NA"] || providerComponents.DEFAULT
+        return component(provider)
+    }
+    
     return (
         <ConnectionsProvider>
             <>
@@ -101,16 +123,7 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
                         {() => <Grid container gap={2} alignItems={'space-between'} justifyContent={'space-between'}>
                             {providerDefinitionQuery.data?.filter(searchPredicate)?.map((provider, i: number) =>
                                 <Grid item key={i}>
-                                    {provider?.ProviderDefinition?.Id === ProviderDefinitionId.SLACK ?
-                                        slackInstallUrl && <ConnectorCard onClick={() => window.open(slackInstallUrl)} provider={provider}/>
-                                        :
-                                        <ConnectorCard onClick={() => {
-                                                if(!!provider?.ProviderDefinition?.Id) {
-                                                    history.push(generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: provider?.ProviderDefinition?.Id}))
-                                                }
-                                            }} provider={provider}
-                                        />
-                                    }
+                                    { getProviderComponent(provider) }
                                 </Grid>)
                             }
                         </Grid>}

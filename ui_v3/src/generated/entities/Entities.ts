@@ -227,6 +227,7 @@ export interface ProviderInstance extends BaseEntity{
 	Config?: string
 	IsDefaultProvider?: boolean
 	IsConfigurable?: boolean
+	LastSyncedOn?: number
 }
 
 

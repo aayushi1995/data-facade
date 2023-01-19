@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import React from "react";
-import { useMutation } from "react-query";
 import { generatePath, useHistory, useLocation } from "react-router";
 import { DATA_CONNECTION_DETAIL_ROUTE } from "../../common/components/header/data/DataRoutesConfig";
 import useSlackRedirect from "./useSlackRedirect";
@@ -13,11 +12,11 @@ function SlackRedirect() {
     const history = useHistory()
     const slackTempCode = new URLSearchParams(location.search).get("code") || undefined
 
-    const { query } = useSlackRedirect();    
+    const { mutation } = useSlackRedirect();    
 
     React.useEffect(() => {
         if(slackTempCode){
-            query.mutate({ slackCode: slackTempCode }, {
+            mutation.mutate({ slackCode: slackTempCode }, {
                 onSuccess: (data, variable, context) => history.replace(generatePath(DATA_CONNECTION_DETAIL_ROUTE, { ProviderInstanceId: data?.Id }))
             })   
         }
@@ -26,10 +25,10 @@ function SlackRedirect() {
     return (
         <Box>
             <Box>
-                {query.isLoading && "Connecting ..."}
+                {mutation.isLoading && "Connecting ..."}
             </Box>
             <Box>
-                {query.data && `Connected to ${query.data.Name}`}
+                {mutation.data && `Connected to ${mutation.data.Name}`}
             </Box>
         </Box>
     )

@@ -1,14 +1,8 @@
 import { Box, Button } from '@mui/material'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { useMutation } from 'react-query'
 import LoadingIndicator from '../../common/components/LoadingIndicator'
-import TagHandler from '../../common/components/tag-handler/TagHandler'
-import { AddingActionView } from '../../common/components/workflow/create/addAction/AddingActionView'
-import { StagesWithActions } from '../../common/components/workflow/create/newStage/StagesWithActions'
-import { makeWorkflowTemplate } from '../../common/components/workflow/create/util/MakeWorkflowTemplate'
-import labels from '../../labels/labels'
 import AppContext from '../../utils/AppContext'
-import { WorkflowContext } from '../applications/workflow/WorkflowContext'
 
 
 const endPoint = require("../../common/config/config").FDSEndpoint

@@ -1,12 +1,12 @@
 import { Card, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import { ActionCardHeader, ActionCardDescription, ActionCardButtonContainer, CursorPointer, AppCardStyle } from "./StyledComponents"
-import SaveIcon from "../../../images/SaveIcon.svg"
+import LinesEllipsis from "react-lines-ellipsis"
+import { generatePath, Link as RouterLink, useHistory } from "react-router-dom"
+import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import SettingIcon from "../../../images/editAction.svg"
 import RunIcon from "../../../images/runAction.svg"
-import { generatePath, Link as RouterLink, Route, Switch } from "react-router-dom";
-import LinesEllipsis from "react-lines-ellipsis"
-import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION } from "../../../common/components/header/data/ApplicationRoutesConfig"
+import SaveIcon from "../../../images/SaveIcon.svg"
+import { ActionCardButtonContainer, ActionCardDescription, ActionCardHeader, AppCardStyle, CursorPointer } from "./StyledComponents"
 
 interface AppCardProps {
     Displayname: string,
@@ -16,12 +16,11 @@ interface AppCardProps {
 }
 
 export const AppCard = (props: AppCardProps) => {
+    const history = useHistory()
     const getExecuteUrl = () => {
         const url  = generatePath(`${APPLICATION_EXECUTE_ACTION}`, { ActionDefinitionId: props.ID || "" })
-        if(props?.tableId) {
-            return url + `?tableId=${props?.tableId}`
-        }
-        return url
+        const tabOpenQueryParams = `source=browser&name=${props?.Displayname}`
+        return props?.tableId ? `${url}?tableId=${props?.tableId}&${tabOpenQueryParams}` : `${url}?${tabOpenQueryParams}`
     }
 
     return (
@@ -49,7 +48,7 @@ export const AppCard = (props: AppCardProps) => {
             <Box sx={{ ...ActionCardButtonContainer }}>
                 <Box sx={{...CursorPointer}} to={generatePath(`${APPLICATION_EDIT_ACTION_ROUTE_ROUTE}`, { ActionDefinitionId: props.ID || "" })} component={RouterLink}><img width='25px' height='25px' src={SettingIcon} alt="" /></Box>
                 <Box sx={{...CursorPointer}} onClick={() => { 
-                    window.open(getExecuteUrl()) 
+                    history.push(getExecuteUrl()) 
                 }}>
                     <img width='25px' height='25px' src={RunIcon} alt="" />
                 </Box>

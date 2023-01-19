@@ -37,7 +37,11 @@ const ProviderParameterDefinitionId = {
     CLICKHOUSE_PASSWORD: "49",
     CLICKHOUSE_DATABASE: "51",
     SLACK_ACCESS_TOKEN: "12",
-    SLACK_ERROR_CHANNEL: "13"
+    SLACK_ERROR_CHANNEL: "13",
+    GOOGLE_EMAIL: "54",
+    GOOGLE_ACCESS_TOKEN: "52",
+    GOOGLE_ID_TOKEN: "55",
+    GOOGLE_REFRESH_TOKEN: "53"
 }
 
 export default ProviderParameterDefinitionId;

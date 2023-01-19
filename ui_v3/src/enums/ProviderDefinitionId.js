@@ -9,7 +9,8 @@ const ProviderDefinitionId = {
     PYTHON_SANDBOX: "5",
     DBT_REPO: "24",
     CLICKHOUSE: "1000",
-    SLACK: "4"
+    SLACK: "4",
+    GOOGLE_SHEETS: "100"
 }
 
 export default ProviderDefinitionId;

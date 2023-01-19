@@ -1,14 +1,13 @@
-import { Box, Checkbox, FormControlLabel, TextField, Grid, Divider, Typography, Card, Autocomplete, avatarClasses } from '@mui/material';
+import { Box, Card, Checkbox, Divider, FormControlLabel, Grid, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
+import CreateProviderOptions from "../../../../src/pages/configurations/components/CreateProviderOptions";
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
+import { SlackChannelSingle } from '../../../common/components/workflow/create/ParameterInput';
+import ProviderParameterDefinitionId from '../../../enums/ProviderParameterDefinitionId';
 import { ProviderDefinitionDetail, ProviderInformation } from '../../../generated/interfaces/Interfaces';
 import { ProviderIcon } from '../../data/components/connections/ConnectionDialogContent';
 import { ConnectionQueryContext, ConnectionSetStateContext, ConnectionStateContext } from '../context/ConnectionsContext';
-import CreateProviderOptions from "../../../../src/pages/configurations/components/CreateProviderOptions";
-import useSlackChannelIDInput from '../../../common/components/common/useSlackChannelIDInput';
-import ProviderParameterDefinitionId from '../../../enums/ProviderParameterDefinitionId';
-import { SlackChannelSingle } from '../../../common/components/workflow/create/ParameterInput';
 
 export type ProviderParameterInputProps = { 
     ProviderDefinition?: ProviderDefinitionDetail,
@@ -36,7 +35,7 @@ const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
                             <Box>
                                 <TextField sx={{ height: "100%" }} fullWidth variant="outlined" label="Instance name" required value={props?.ProviderInstance?.ProviderInstance?.model?.Name} onChange={(event) => props?.onProviderInstanceNameChange?.(event.target.value)}/>
                             </Box>
-                            {props?.ProviderInstance?.ProviderParameterInstance?.map(paramInstance => {
+                            {props?.ProviderInstance?.ProviderInstance?.model?.IsConfigurable && props?.ProviderInstance?.ProviderParameterInstance?.map(paramInstance => {
                                 const paramDef = props?.ProviderDefinition?.ProviderParameterDefinition?.find(paramDef => paramInstance?.ProviderParameterDefinitionId === paramDef?.Id)
                                 const hidden = (paramDef?.Protected || false) && (!showHidden)
                                 if(!!paramDef && paramDef?.FilledBy!=="FDS") {
