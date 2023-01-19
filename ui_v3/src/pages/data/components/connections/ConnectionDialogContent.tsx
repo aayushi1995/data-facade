@@ -13,6 +13,7 @@ import labels from "../../../../labels/labels";
 import { ProviderInputConnectionStateWrapper } from "../../../configurations/components/ProviderParameterInput";
 import { ConnectionsProvider, ConnectionStateContext } from "../../../configurations/context/ConnectionsContext";
 import {
+    CHOOSE_CONNECTOR_ROUTE,
     CHOOSE_CONNECTOR_SELECTED_ROUTE
 } from "./DataRoutesConstants";
 import { iconProviderMap } from "./iconProviderMap";
