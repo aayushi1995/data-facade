@@ -38,7 +38,7 @@ function CreateNewAction(props: CreateNewActionProps) {
             description: "Query your data connections or dataframes.",
             onClick: () => {
                 if(!name) {
-                    onNameChange?.("Default Name")
+                    return;
                 }
                 onSaveAction(TemplateSupportedRuntimeGroup.COMMON, TemplateLanguage.SQL)
             }
@@ -48,7 +48,7 @@ function CreateNewAction(props: CreateNewActionProps) {
             description: "Transform your data using python.",
             onClick: () => {
                 if(!name) {
-                    onNameChange?.("Default Name")
+                    return;
                 }
                 onSaveAction(TemplateSupportedRuntimeGroup.PYTHON, TemplateLanguage.PYTHON)
             }
@@ -68,10 +68,11 @@ function CreateNewAction(props: CreateNewActionProps) {
                                                     borderRadius: "5px",
                                                     width:'50vw'
                                                 },
-                                                disableUnderline: true,
+                                                disableUnderline: !name ? false : true,
+                                                error: !name
                                             }} variant='standard' 
                                             placeholder="Add Action Name"
-                            value={name} onChange={(event) => onNameChange?.(event.target.value) }/>
+                            value={name} onChange={(event) => onNameChange?.(event.target.value)} error={name === undefined? true: false}/>
                     </Box>
                     <Box sx={{width:'100%'}}>
                         <TextField InputProps ={{
@@ -85,7 +86,7 @@ function CreateNewAction(props: CreateNewActionProps) {
                                                 disableUnderline: true,
                                             }} variant='standard' 
                                             placeholder="Add Action Description" 
-                                            value={description} onChange={(event) => onDescriptionChange?.(event.target.value) }/>
+                                            value={description} onChange={(event) => onDescriptionChange?.(event.target.value) } multiline/>
                     </Box>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 3,width:'50%',justifyContent:'flex-end'}}>

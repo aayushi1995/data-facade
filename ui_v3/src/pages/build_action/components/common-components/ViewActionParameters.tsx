@@ -327,7 +327,7 @@ const ViewActionParameters = (props: ViewActionParametersProps) => {
     )
 }
 
-const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void, optionSetEnabled: boolean}) => {
+export const OptionSetSelector = (props: {parameter: ActionParameterDefinition, onParameterEdit: (newParameter: ActionParameterDefinition) => void, optionSetEnabled: boolean}) => {
 
     const filter = createFilterOptions<string>()
     const handleChange = (newOptions: string[]) => {
@@ -754,6 +754,7 @@ type TagEditorProps = {
 }
 const TagEditor = (props: TagEditorProps) => {
     const { tags, onTagsChange } = props
+    console.log(tags)
     const [selectedTags, availableTagsForEntity, isLoading, isMutating, error, deleteTag, addTag, createAndAddTag] = useFetchVirtualTags({ selectedTags: (tags || []), onSelectedTagsChange: onTagsChange, tagFilter: {}})
 
     return (

@@ -184,6 +184,10 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                 </Box>
             </Box>
         )
+    } else if((TableOutput as any)?.statusCode === "404") {
+        return <Typography variant="heroHeader">
+            No Output Produced
+        </Typography>
     } else {
         return (
             <Typography sx={{

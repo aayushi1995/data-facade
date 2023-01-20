@@ -28,7 +28,7 @@ export const useTableView = (params: {TableId?: string, options?: UseQueryOption
 export const formDataGridPropsFromResponse = (response?: TableView, searchQuery?: string) => {
     if(!!response) {
         const tableData: TableOutputSuccessfulFormat = JSON.parse(response?.TableData?.Output || "{}")
-        const tablePreview: TablePreview = JSON.parse(tableData.preview)
+        const tablePreview: TablePreview = JSON.parse(tableData.preview || "{}")
 
         const rows = tablePreview.data?.map((row, i) => ({...row, id: i}))
 

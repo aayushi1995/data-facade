@@ -438,7 +438,9 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
 
     return (
         <LoadingWrapper
-            {...fetchColumnsQuery}
+            isLoading={fetchColumnsQuery.isLoading || fetchColumnsQuery.isRefetching}
+            error={fetchColumnsQuery.error}
+            data={fetchColumnsQuery.data}
         >
             <Autocomplete
                 options={fetchColumnsQuery.data?.[0]?.Columns || []}
@@ -471,7 +473,8 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
 const ColumnInput = (props: ColumnParameterInput) => {
     const filter = createFilterOptions<ColumnProperties>()
     const {parameterName, selectedColumnFilter, filters, onChange} = props.inputProps
-    const [availableColumnsState, setAvailableColumns] = React.useState<ColumnProperties[]>([])
+    const [availableColumnsState, setAvailableColumns] = React.useState<ColumnProperties[] | undefined>()
+    const [columnsFetched, setColumnsFetched] = React.useState(false)
     const fetchTableQuery = useFetchColumnsForTableAndTags({
         filters: {
             tableFilters: filters.tableFilters,
@@ -480,7 +483,10 @@ const ColumnInput = (props: ColumnParameterInput) => {
         },
         queryOptions: {
             enabled: filters?.tableFilters!==undefined,
-            onSuccess: (data: FilteredColumnsResponse[]) => setAvailableColumns(data?.[0]?.Columns || [])
+            onSuccess: (data: FilteredColumnsResponse[]) => {
+                setAvailableColumns(data?.[0]?.Columns || [])
+                setColumnsFetched(true)
+            }
         }
     })    
     
@@ -513,16 +519,17 @@ const ColumnInput = (props: ColumnParameterInput) => {
     }
 
     const { AvailableColumns, SelectedColumn } = getColumnSelectionInfo(availableColumnsState, selectedColumnFilter)
-
     React.useEffect(() => {
-        if(SelectedColumn!==undefined && SelectedColumn !== selectedColumnFilter) {
-            onChange(SelectedColumn)
+        if(columnsFetched) {
+            if(SelectedColumn!==undefined && SelectedColumn !== selectedColumnFilter) {
+                onChange(SelectedColumn)
+            }
         }
     }, [availableColumnsState])
  
     return (
         <LoadingWrapper 
-        isLoading={fetchTableQuery.isLoading}
+        isLoading={fetchTableQuery.isLoading || fetchTableQuery.isRefetching}
         error={fetchTableQuery.error}
         data={fetchTableQuery.data}
         >

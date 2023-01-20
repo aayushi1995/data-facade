@@ -4,7 +4,8 @@ Business logic for ui_v3/src/edit-action-new/components/business/ActionActivePar
 
 import React from "react";
 import useFetchVirtualTags from "../../common/components/tag-handler/hooks/useFetchVirtualTags";
-import { getAttributesFromInputType } from "../../custom_enums/ActionParameterDefinitionInputMap";
+import { getAttributesFromInputType, getInputTypeFromAttributesNew } from "../../custom_enums/ActionParameterDefinitionInputMap";
+import ActionParameterDefinitionInputType from "../../enums/ActionParameterDefinitionInputType";
 import { ActionParameterDefinition, Tag } from "../../generated/entities/Entities";
 import { BuildActionContext, SetBuildActionContext } from "../../pages/build_action/context/BuildActionContext";
 
@@ -73,6 +74,16 @@ function useActionActiveParameterConfigurator(params: ActionActiveParameterConfi
     const activeParamTagNames = activeParamTags?.map(tag => tag?.Name)
     const availableActiveParamTagNames = availableTagsForActiveParam?.map(tag => tag?.Name)
 
+    const enableSettingsIcon = () => {
+        const inputAttribuuteValue = getInputTypeFromAttributesNew(templateLanguage, activeParamDef?.Tag, activeParamDef?.Type, activeParamDef?.Datatype)
+        return (
+            inputAttribuuteValue === ActionParameterDefinitionInputType.STRING || 
+            inputAttribuuteValue === ActionParameterDefinitionInputType.INTEGER || 
+            inputAttribuuteValue === ActionParameterDefinitionInputType.DECIMAL ||
+            inputAttribuuteValue === ActionParameterDefinitionInputType.STRING_NO_QUOTES 
+        )
+    }
+
     return {
         templateLanguage,
         activeParamDef,
@@ -89,7 +100,8 @@ function useActionActiveParameterConfigurator(params: ActionActiveParameterConfi
         handleParameterInputTypeChange,
         handleParameterTagsChange,
         handleParameterChange,
-        handleDefaultValueChange
+        handleDefaultValueChange,
+        enableSettingsIcon
     }
 }
 

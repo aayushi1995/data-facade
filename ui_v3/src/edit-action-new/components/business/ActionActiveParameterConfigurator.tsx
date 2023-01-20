@@ -1,7 +1,8 @@
 import { Box, TextField } from "@mui/material";
+import { getInputTypeFromAttributesNew } from "../../../custom_enums/ActionParameterDefinitionInputMap";
 import { ConfigureParentParameter } from "../../../pages/build_action/components/common-components/EditActionParameter";
 import DefaultValueInput from "../../../pages/build_action/components/common-components/parameter_input/DefaultValueInput";
-import { TagEditorView } from "../../../pages/build_action/components/common-components/ViewActionParameters";
+import { OptionSetSelector, TagEditorView } from "../../../pages/build_action/components/common-components/ViewActionParameters";
 import useActionActiveParameterConfigurator from "../../hooks/useActionActiveParameterConfigurator";
 import ActionParameterInputTypeSelector from "../presentation/custom/ActionParameterInputTypeSelector";
 import { ActiveParameterConfiguratorLabelTypography } from "../presentation/styled_native/ActiveParameterConfiguratorTypography";
@@ -25,7 +26,8 @@ function ActionActiveParameterConfigurator() {
         handleParameterInputTypeChange,
         handleParameterTagsChange,
         handleParameterChange,
-        handleDefaultValueChange
+        handleDefaultValueChange,
+        enableSettingsIcon
     } = useActionActiveParameterConfigurator({})
     
     const widthofip = '18vw'
@@ -36,7 +38,7 @@ function ActionActiveParameterConfigurator() {
                 <Box>
                     <ActiveParameterConfiguratorLabelTypography>Parameter Name : </ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box sx={{width:widthofip}}>
+                <Box sx={{width: widthofip}}>
                     <TextField size="small" fullWidth value={activeParamDef?.ParameterName || ""} onChange={(event) => handleParameterNameChange(event.target.value)}/>
                 </Box>
             </Box>
@@ -44,7 +46,7 @@ function ActionActiveParameterConfigurator() {
                 <Box>
                     <ActiveParameterConfiguratorLabelTypography>Parameter Display Name :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box sx={{width:widthofip}}>
+                <Box sx={{width:  widthofip}}>
                     <TextField size="small" fullWidth value={activeParamDef?.DisplayName || ""} onChange={(event) => handleParameterDisplayNameChange(event.target.value)}/>
                 </Box>
             </Box>
@@ -52,7 +54,7 @@ function ActionActiveParameterConfigurator() {
                 <Box>
                     <ActiveParameterConfiguratorLabelTypography>Input Type :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box sx={{width:widthofip}}>
+                <Box sx={{width: widthofip}}>
                     <ActionParameterInputTypeSelector
                         parameter={activeParamDef}
                         templateLanguage={templateLanguage}
@@ -64,7 +66,7 @@ function ActionActiveParameterConfigurator() {
                 <Box>
                     <ActiveParameterConfiguratorLabelTypography>Default Value :</ActiveParameterConfiguratorLabelTypography>
                 </Box>
-                <Box sx={{width:widthofip}}>
+                <Box sx={{width: widthofip}}>
                     <DefaultValueInput
                         actionParameterDefinition={activeParamDef}
                         actionParameterDefinitionAdditionalConfig={activeParamAdditionalConfig}
@@ -115,6 +117,11 @@ function ActionActiveParameterConfigurator() {
                     createAndAddTag={createAndAddActiveParamTag}
                     addTag={addActiveParamTag}/>
                 </Box>
+            </Box>
+            <Box sx={{display: 'flex', flexDirection: "row"}}>
+                <ActiveParameterConfiguratorLabelTypography>Settings: </ActiveParameterConfiguratorLabelTypography>
+                <OptionSetSelector parameter={activeParamDef || {}} onParameterEdit={handleParameterChange} 
+                    optionSetEnabled={enableSettingsIcon()}/>
             </Box>
         </Box>
     )

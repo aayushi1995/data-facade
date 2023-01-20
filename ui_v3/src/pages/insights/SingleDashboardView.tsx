@@ -47,6 +47,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
     const fetchDashboardChartQuery = useGetDashboardChart({filter: {Id: dashboardId}, queryParams: {enabled: dashboardData !== undefined && !chartFetched, onSuccess: handleChartFetched}})
 
     React.useEffect(() => {
+        setChartFetched(false)
         refetch()
     }, [dashboardId]) 
 
@@ -203,7 +204,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
                     
                 </Box>
                 <Box sx={{pt: 2, minHeight: "100%"}}>
-                    <ReactQueryWrapper {...fetchDashboardChartQuery}>
+                    <ReactQueryWrapper {...fetchDashboardChartQuery} isLoading={fetchDashboardChartQuery.isLoading || fetchDashboardChartQuery.isRefetching}>
                         {() => <ShowDashboardCharts chartWithDataAndLayout={chartWithData || []} onChartChange={onChartChange} textBoxes={getTextBoxes()} onTextBoxValueChange={onTextBoxValueChange} handleUpdateChartLayout={handleUpdateChartLayout}/>}
                     </ReactQueryWrapper>
                 </Box>

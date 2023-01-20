@@ -73,7 +73,8 @@ interface ExecuteActionProps {
     fromDeepDive?: boolean,
     parentExecutionId?: string,
     hideExecution?: boolean,
-    tableId?: string
+    tableId?: string,
+    parentProviderInstanceId?: string
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
@@ -209,7 +210,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             setValidationErrorMessage("Please Fill All Required Parameters")
             return
         }
-        const request = constructCreateActionInstanceRequest(executeActionContext)
+        const request = constructCreateActionInstanceRequest(executeActionContext, props.parentProviderInstanceId)
         validateActionInstance.validate(request, executeActionContext.ExistingModels.ActionTemplates?.[0]?.SupportedRuntimeGroup || "python", {
             onSuccess: () => {
                 createActionInstanceAsyncMutation.mutate(request, {

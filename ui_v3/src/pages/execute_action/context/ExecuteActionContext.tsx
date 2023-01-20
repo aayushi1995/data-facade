@@ -433,13 +433,16 @@ const safeMergeState = (oldState: ExecuteActionContextState, actionDetail: Actio
     }
 }
 
-export const constructCreateActionInstanceRequest = (state: ExecuteActionContextState) => {
+export const constructCreateActionInstanceRequest = (state: ExecuteActionContextState, parentProviderInstanceId?: string) => {
     const {ActionDefinition, ActionParameterDefinitions, SelectedProviderInstance} = state.ExistingModels
     const {ActionInstance, ActionParameterInstances} = state.ToCreateModels
     const tableParameterId: string|undefined = ActionParameterDefinitions?.find(apd => apd?.Tag===ActionParameterDefinitionTag.TABLE_NAME)?.Id
     const getProviderInstanceId: () => string|undefined = () => {
         const providerInstanceId = ActionParameterInstances.find(api => api.ActionParameterDefinitionId===tableParameterId)?.ProviderInstanceId
         if(!providerInstanceId) {
+            if(!!parentProviderInstanceId) {
+                return parentProviderInstanceId
+            }
             if(SelectedProviderInstance !== undefined){
                 return SelectedProviderInstance.Id
             }

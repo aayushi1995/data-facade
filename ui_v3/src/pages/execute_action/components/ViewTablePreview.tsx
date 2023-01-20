@@ -17,7 +17,6 @@ interface ViewTablePrieviewProps {
 }
 
 const ViewTablePreview = (props: ViewTablePrieviewProps) => {
-    console.log(props)
     const [tablePreviewExecutionId, setTablePreviewExecutionId] = React.useState<string | undefined>(props.tablePreviewExecutionId)
 
     const handleTableFetched = (data: TableProperties) => {

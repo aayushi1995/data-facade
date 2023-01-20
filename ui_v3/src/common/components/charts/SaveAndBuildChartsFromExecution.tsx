@@ -114,6 +114,10 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         )
     }
 
+    const getParentProviderInstanceId = () => {
+        return saveAndBuildChartsState.ExecutionDetails?.ActionParameterInstances?.find(pi => !!pi.ProviderInstanceId)?.ProviderInstanceId || saveAndBuildChartsState.ExecutionDetails?.ActionInstance?.ProviderInstanceId
+    }
+
     const getButtonSx = { width: '10vw', height: '100%', ml: 'auto' }
     const postExecutionTasks = 
     <>
@@ -128,6 +132,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 onChildExecutionCreated={props.onChildExecutionCreated}
                 definitionId={props.definitionId || ""}
                 selectedActionId={selectedDeepDiveActionId}
+                parentProviderInstanceId={getParentProviderInstanceId()}
             />
         </Box>
         <Box sx={{getLargerButtonSx: getButtonSx}}>

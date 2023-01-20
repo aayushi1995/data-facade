@@ -657,16 +657,16 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             const inferredParameters = extractParametersFromCode(activeTemplate?.template?.Text, activeTemplate?.template?.Language)
             const existingParameters = activeTemplate?.parameterWithTags
             const newParameters = inferredParameters.map(inferredParam => {
-                const existingParameterDefinition = existingParameters?.find(p => p?.parameter?.ParameterName===inferredParam?.ParameterName)?.parameter
-                const parameterTag = ( inferredParam.Tag === ActionParameterDefinitionTag.OTHER || inferredParam.Tag === undefined ) ? existingParameterDefinition?.Tag : inferredParam.Tag
+                const existingParameterDefinition = existingParameters?.find(p => p?.parameter?.ParameterName===inferredParam?.ParameterName)
+                const parameterTag = ( inferredParam.Tag === ActionParameterDefinitionTag.OTHER || inferredParam.Tag === undefined ) ? existingParameterDefinition?.parameter?.Tag : inferredParam.Tag
                 if(existingParameterDefinition){
                     return {
                         parameter: {
-                            ...existingParameterDefinition,
+                            ...existingParameterDefinition?.parameter,
                             ...inferredParam,
                             Tag: parameterTag
                         },
-                        tags: []
+                        tags: existingParameterDefinition?.tags
                     }
                 }
                 return getDefaultParameterDefinition(inferredParam, activeTemplate?.template?.Language, activeTemplate?.template?.Id, state?.actionDefinitionWithTags?.actionDefinition?.Id)
@@ -1195,7 +1195,7 @@ const formAdditionalConfForColumnParameters = (parameters: ActionParameterDefini
 
 const extractParametersFromCode = (code?: string, language?: string): ActionParameterDefinition[] => {
     if(!!code && !!language) {
-        const parametersArray = []
+        const parametersArray: ActionParameterDefinition[] = []
         if (language === ActionDefinitionQueryLanguage.PYTHON) {
             for (let i = 0; i < code.length; i++) {
                 if (code.substring(i, i + 3) === "def") {
@@ -1242,6 +1242,7 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
                         const displayName = match?.groups?.["DisplayName"] ?? name
                         const description = match?.groups?.["Description"] ?? name
                         const type = match?.groups?.["Type"]
+                        console.log(type)
                         if(name && type) {
                             parametersArray.push({
                                 ParameterName: name,
@@ -1251,6 +1252,7 @@ const extractParametersFromCode = (code?: string, language?: string): ActionPara
 
                             } as ActionParameterDefinition)
                         }
+                        console.log(parametersArray)
                     }
                 })
             }
@@ -1292,7 +1294,7 @@ const inferInputType = (type?: string) => {
 }
 
 const getDefaultParameterDefinition = (param: ActionParameterDefinition, language?: string, templateId?: string, definitionId?: string): ActionContextActionParameterDefinitionWithTags => {
-    if (param?.ParameterName?.includes('table') || param?.ParameterName?.includes("df")) {
+    if (param?.ParameterName?.includes('table') || param?.ParameterName?.includes("df") && language !== "python") {
         return {
             parameter: {
                 Id: uuidv4(),
@@ -1306,7 +1308,8 @@ const getDefaultParameterDefinition = (param: ActionParameterDefinition, languag
             tags: [],
             existsInDB: false
         }
-    } else if (param?.ParameterName?.includes('column')) {
+    } else if (param?.ParameterName?.includes('column') && language !== "python") {
+        console.log('here')
         return {
             parameter: {
                 Id: uuidv4(),
@@ -1321,6 +1324,7 @@ const getDefaultParameterDefinition = (param: ActionParameterDefinition, languag
             existsInDB: false
         }
     } else {
+        console.log('here')
         return {
             parameter: {
                 Id: uuidv4(),

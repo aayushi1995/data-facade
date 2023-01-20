@@ -26,11 +26,13 @@ export interface DeepDiveProps {
     definitionId: string,
     onChildExecutionCreated?: (executionId: string) => void,
     selectedActionId?: string,
-    setSelectedActionId: (id: string | undefined) => void
+    setSelectedActionId: (id: string | undefined) => void,
+    parentProviderInstanceId?: string
 }
 
 // This compoment enable users to iteratively run all available application from the result of another action.
 const DeepDive = (props: DeepDiveProps) => {
+    console.log(props)
     const [executionId, setExecutionId] = React.useState<string | undefined>(props.executionId)
     const [dialogState, setDialogState] = React.useState(false)
 
@@ -85,6 +87,7 @@ const DeepDive = (props: DeepDiveProps) => {
                             onExecutionCreate={onExecutionCreated}
                             parentExecutionId={props.executionId}
                             existingParameterInstances={[]}
+                            parentProviderInstanceId={props.parentProviderInstanceId}
                    />
                 </ExecuteActionContextProvider>
                 }
