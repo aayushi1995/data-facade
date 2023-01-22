@@ -113,3 +113,21 @@ export const columnDataTypeSelectCss = {
     color: '#C9CFDA',
     width: '100px'
 }
+
+export const AddActionCard = {
+    m: 'auto',
+    height: '12vh',
+    width: '12vw',
+    display: 'flex',
+    flexDirection: 'Column',
+    justifyContent: 'center',
+    textDecoration: 'none',
+    color: 'blue',
+    fontSize: '1.2rem',
+    textAlign: 'center',
+    backgroundColor: '#d7f7e0',
+    ":hover": {
+        boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.25)',
+        backgroundColor: '#b5f5c6',
+    }
+}

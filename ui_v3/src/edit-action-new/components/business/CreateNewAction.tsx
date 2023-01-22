@@ -9,6 +9,8 @@ import CodeIcon from '@mui/icons-material/Code';
 import TemplateLanguage from "../../../enums/TemplateLanguage";
 import labels from "../../../labels/labels";
 import { CodeIconBox } from "../presentation/styled_native/ActionAddCodeIconBox";
+import AddActionContext from "../../../pages/upload_table/components/AddActionContext";
+import React from "react";
 
 export type CreateNewActionProps = {
     name?: string,
@@ -55,6 +57,12 @@ function CreateNewAction(props: CreateNewActionProps) {
         }
     ]
     
+    const { ActionMaker, setActionMaker } = React.useContext(AddActionContext);
+    if(ActionMaker){
+        onNameChange?.(ActionMaker)
+        onDescriptionChange?.(ActionMaker)
+    }
+    setActionMaker("")
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1,px:5}}>
             <Box sx={{ display: "flex", flexDirection: "row" ,borderBottom:'1px solid #dbd7d7'}}>
@@ -86,7 +94,7 @@ function CreateNewAction(props: CreateNewActionProps) {
                                                 disableUnderline: true,
                                             }} variant='standard' 
                                             placeholder="Add Action Description" 
-                                            value={description} onChange={(event) => onDescriptionChange?.(event.target.value) } multiline/>
+                                            value={description || ActionMaker} onChange={(event) => onDescriptionChange?.(event.target.value) } multiline/>
                     </Box>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 3,width:'50%',justifyContent:'flex-end'}}>

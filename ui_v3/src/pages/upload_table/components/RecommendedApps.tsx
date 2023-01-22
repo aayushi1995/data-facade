@@ -1,22 +1,25 @@
-import { Box, Button, Dialog, Grid, IconButton, InputAdornment, Typography } from "@mui/material";
+import { Box, Button, Card, Dialog, Grid, IconButton, InputAdornment, Typography } from "@mui/material";
 import React from "react";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
 import useFetchActionDefinitionForSelector from "../../../edit-action-new/hooks/useFetchActionDefinitionForSelector";
 import AppCard from "../../data/components/AppCard";
-import { ActionCardConatier, AllApps, AllPackageList, ContainerHeader, DialogBGcolor, DialogBody, DialogHeader, NumberofItemInPackage, PackagesNameStyle, PackagesNameStyleR, PackageTabHeader, SearchBarDialogTextField, SearchBarTextField, SeeAllPackage, StyledTypographyDataHeader,ScratchPadTabStyle } from "../../data/components/StyledComponents";
+import { ActionCardConatier, AllApps, AllPackageList, ContainerHeader, DialogBGcolor, DialogBody, DialogHeader, NumberofItemInPackage, PackagesNameStyle, PackagesNameStyleR, PackageTabHeader, SearchBarDialogTextField, SearchBarTextField, SeeAllPackage, StyledTypographyDataHeader, ScratchPadTabStyle } from "../../data/components/StyledComponents";
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { ActionDetailsForApplication, ApplicationCardViewResponse, ApplicationDetails } from "../../../generated/interfaces/Interfaces";
-import { generatePath, Link as RouterLink } from "react-router-dom";
+import { generatePath, Link as RouterLink, NavLink } from "react-router-dom";
 import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
 import useGetApplicationDetails from "../../apps/hooks/useGetApplicationDetails";
 import { useGetPrebuiltApplications } from "../../../common/components/application/hooks/useGetPrebuildApplications";
 import LinesEllipsis from "react-lines-ellipsis";
-
+import addActionContext from './AddActionContext'
+import { AddActionCard } from "./CssProperties";
+import AddIcon from '@mui/icons-material/Add';
 export type RecommendedAppsProps = {
     searchQuery?: string,
     tableId?: string
 }
+
 
 function RecommendedApps(props: RecommendedAppsProps) {
     const { tableId } = props
@@ -25,23 +28,27 @@ function RecommendedApps(props: RecommendedAppsProps) {
     const filteredData = data?.filter(action => action?.ActionDisplayName?.toLowerCase()?.includes(propsSearchQuery))
     const [dialogState, setDialogState] = React.useState<boolean>(false)
     const [dialogsearchQuery, setDialogSearchQuery] = React.useState<string>(propsSearchQuery)
-    
+
     const actionDefinitionRows = <ReactQueryWrapper
         isLoading={isLoading}
         error={error}
         data={data}
-        children = {() => filteredData?.slice(0,10)?.map?.(ad =>
-            <Grid item xs={6} md={4} lg={2.4} sx={{px:1,py:2}}>
-                <AppCard Displayname={ad.ActionDisplayName || ""} Description={ad.ActionDisplayName || ""} ID={ad.ActionId} tableId={tableId}/>
+        children={() => filteredData?.slice(0, 10)?.map?.(ad =>
+            <Grid item xs={6} md={4} lg={2.4} sx={{ px: 1, py: 2 }}>
+                <AppCard Displayname={ad.ActionDisplayName || ""} Description={ad.ActionDisplayName || ""} ID={ad.ActionId} tableId={tableId} />
             </Grid>
         )}
     />
+    const { ActionMaker, setActionMaker } = React.useContext(addActionContext);
+    if(filteredData?.length==0 && props.searchQuery){
+        setActionMaker(props.searchQuery)
+    }
 
     return (
         <>
             <Box>
                 <Dialog fullWidth={true} maxWidth={'lg'} open={dialogState}>
-                    <Box sx={{...DialogHeader}}>
+                    <Box sx={{ ...DialogHeader }}>
                         <SearchBarDialogTextField variant="standard" size='small'
                             value={dialogsearchQuery}
                             onChange={(event) => setDialogSearchQuery(event.target.value)}
@@ -53,7 +60,7 @@ function RecommendedApps(props: RecommendedAppsProps) {
                                         <SearchIcon sx={{ marginLeft: 1 }} />
                                     </InputAdornment>
                                 )
-                            }} 
+                            }}
                         />
                         <IconButton sx={{ ml: 'auto', mr: 4 }} onClick={() => { setDialogState(false) }}><CloseIcon /></IconButton>
                     </Box>
@@ -73,6 +80,14 @@ function RecommendedApps(props: RecommendedAppsProps) {
                         <RouterLink to={{pathname: '/data/scratchpad'}}>Scratch Pad</RouterLink>
                     </Box> */}
                     {actionDefinitionRows}
+                    {filteredData?.length === 0 ?
+                            <Card sx={{...AddActionCard}} to="application/edit-action/Add" component={NavLink}>
+                                <AddIcon sx={{mx:'auto',fontSize:'40px',fontWeight:900,color:'#0ec940'}}/>
+                                <Typography sx={{fontsize:'1.2rem',fontWeight:600, color:'black'}}>Make A action</Typography>    
+                                <Typography sx={{fontSize:'0.9rem', fontWeight:400, color:'#878c88'}}>Name : {props.searchQuery}</Typography>
+                            </Card>
+                        : <>
+                        </>}
                 </Grid>
             </Box>
         </>
@@ -90,41 +105,42 @@ function DetailView(props: DetailViewProps) {
     const filteredPrebuiltAppsData = !!selectedAppId ? prebuiltAppsQuery?.data?.filter(data => data?.ApplicationId === selectedAppId) : prebuiltAppsQuery?.data
 
     React.useEffect(() => {
-        if(!!props?.searchQuery) {
+        if (!!props?.searchQuery) {
             setSelectedAppId(undefined)
         }
     }, [props?.searchQuery])
 
-    const appLabels = prebuiltAppsQuery?.data?.map(data => <ApplicationLabel 
+    const appLabels = prebuiltAppsQuery?.data?.map(data => <ApplicationLabel
         ApplicationId={data?.ApplicationId}
-        ApplicationName={data?.ApplicationName} 
+        ApplicationName={data?.ApplicationName}
         ActionCount={data?.NumberOfActions}
         FlowCount={data?.NumberOfFlows}
         onLabelClick={(applicationId?: string) => {
             console.log(applicationId, selectedAppId)
-            setSelectedAppId(oldId => oldId===applicationId ? undefined : applicationId)}
+            setSelectedAppId(oldId => oldId === applicationId ? undefined : applicationId)
         }
-        isSelected={selectedAppId===data?.ApplicationId}
+        }
+        isSelected={selectedAppId === data?.ApplicationId}
     />)
 
-    const applicationActions = filteredPrebuiltAppsData?.map(data => <ApplicationDetailView 
-        app={data} 
+    const applicationActions = filteredPrebuiltAppsData?.map(data => <ApplicationDetailView
+        app={data}
         searchQuery={props?.searchQuery}
         tableId={props?.tableId}
-        isSelected={selectedAppId===data?.ApplicationId}
+        isSelected={selectedAppId === data?.ApplicationId}
     />)
 
     return (
-        <Box sx={{...DialogBody}}>
-            <Box sx={{...AllPackageList}}>
+        <Box sx={{ ...DialogBody }}>
+            <Box sx={{ ...AllPackageList }}>
                 <Box>
                     <Box onClick={() => setSelectedAppId(undefined)} sx={{ cursor: "pointer" }}>
-                        <Typography sx={{...PackageTabHeader}}>All Packages</Typography>
+                        <Typography sx={{ ...PackageTabHeader }}>All Packages</Typography>
                     </Box>
                     {appLabels}
                 </Box>
             </Box>
-            <Box sx={{...AllApps}}>{applicationActions}</Box>
+            <Box sx={{ ...AllApps }}>{applicationActions}</Box>
         </Box>
     )
 }
@@ -139,8 +155,8 @@ type ApplicationLabelProps = {
 }
 function ApplicationLabel(props: ApplicationLabelProps) {
     return (
-        <Box onClick={()=>{props.onLabelClick(props?.ApplicationId)}} sx={{ my: 2, display: 'flex', px: 4, py: 1, textDecoration: 'none', backgroundColor: props?.isSelected && "#eeeeee", ":hover": { backgroundColor: '#EAEBEF' }, cursor: "pointer" }}>
-            <Typography sx={{...PackagesNameStyle}}>
+        <Box onClick={() => { props.onLabelClick(props?.ApplicationId) }} sx={{ my: 2, display: 'flex', px: 4, py: 1, textDecoration: 'none', backgroundColor: props?.isSelected && "#eeeeee", ":hover": { backgroundColor: '#EAEBEF' }, cursor: "pointer" }}>
+            <Typography sx={{ ...PackagesNameStyle }}>
                 <LinesEllipsis
                     text={props?.ApplicationName}
                     maxLine='1'
@@ -149,7 +165,7 @@ function ApplicationLabel(props: ApplicationLabelProps) {
                     basedOn='letters'
                 />
             </Typography>
-            <Typography sx={{...NumberofItemInPackage}}>{(props?.FlowCount || 0) + (props?.ActionCount || 0)}</Typography>
+            <Typography sx={{ ...NumberofItemInPackage }}>{(props?.FlowCount || 0) + (props?.ActionCount || 0)}</Typography>
         </Box>
     )
 }
@@ -169,26 +185,26 @@ function ApplicationDetailView(props: ApplicationDetailViewProps) {
     const actions = props?.isSelected ? allActions : filteredActions?.slice(0, 3)
 
     return (actions?.length || 0) > 0 ?
-            <ReactQueryWrapper
-                isLoading={applicationDetailLoading}
-                error={applicationDataError}
-                data={applicationDetailData}
-                children={() => (
-                    <Box sx={{ px: 4, py: 2, }}>
-                        <Box sx={{ display: 'flex', px: 1 }}>
-                            <Box sx={{...PackagesNameStyleR}}>{appDetailData?.model?.Name}</Box>
-                            <Box sx={{...SeeAllPackage}} to={generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, { applicationId: appDetailData?.model?.Id })} component={RouterLink}>See all</Box>
-                        </Box>
-                        <Grid container spacing={2}>
-                            {actions?.map(action =>
-                                <Grid item xs={4}>
-                                    <AppCard Displayname={action?.model?.DisplayName || ""} Description={action?.model?.Description || ""} ID={action?.model?.Id} tableId={props?.tableId}/>
-                                </Grid>
-                            )}
-                        </Grid>
+        <ReactQueryWrapper
+            isLoading={applicationDetailLoading}
+            error={applicationDataError}
+            data={applicationDetailData}
+            children={() => (
+                <Box sx={{ px: 4, py: 2, }}>
+                    <Box sx={{ display: 'flex', px: 1 }}>
+                        <Box sx={{ ...PackagesNameStyleR }}>{appDetailData?.model?.Name}</Box>
+                        <Box sx={{ ...SeeAllPackage }} to={generatePath(APPLICATION_DETAIL_ROUTE_ROUTE, { applicationId: appDetailData?.model?.Id })} component={RouterLink}>See all</Box>
                     </Box>
-                )}
-            />
+                    <Grid container spacing={2}>
+                        {actions?.map(action =>
+                            <Grid item xs={4}>
+                                <AppCard Displayname={action?.model?.DisplayName || ""} Description={action?.model?.Description || ""} ID={action?.model?.Id} tableId={props?.tableId} />
+                            </Grid>
+                        )}
+                    </Grid>
+                </Box>
+            )}
+        />
         :
         <></>
 }

@@ -13,7 +13,7 @@ const ApplicationCreationWizardDialog = () => {
     
     return (
         <Dialog open={true} fullWidth maxWidth="lg">
-            <DialogTitle sx={{display: 'flex', justifyContent: 'center',backgroundColor: "ActionConfigDialogBgColor.main", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
+            <DialogTitle sx={{display: 'flex',backgroundColor: "ActionConfigDialogBgColor.main", boxShadow: "inset 0px 15px 25px rgba(54, 48, 116, 0.3)"}}>
                     <Grid item xs={6} sx={{display: 'flex', alignItems: 'center'}}>
                         <Typography variant="heroHeader" sx={{
                             fontFamily: "'SF Pro Text'",
@@ -27,7 +27,7 @@ const ApplicationCreationWizardDialog = () => {
                             Application Creator
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} style={{display: 'flex', justifyContent: 'flex-end'}} >
+                    <Grid item xs={6} sx={{ml:'auto'}} style={{display: 'flex', justifyContent: 'flex-end'}} >
                         <IconButton onClick={handleDialogClose}>
                             <img src={CloseIcon} alt="close"/>
                         </IconButton>

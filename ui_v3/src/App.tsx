@@ -140,13 +140,13 @@ const App = ({ children = noop }) => {
         {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}
         <CssBaseline />
         <AppContext.Provider value={userSettings}>
-            <Router history={history}>
-                <SearchQueryProvider>
-                    <ErrorBoundary>
-                        {children(restProps)}
-                    </ErrorBoundary>
-                </SearchQueryProvider>
-            </Router>
+                <Router history={history}>
+                    <SearchQueryProvider>
+                        <ErrorBoundary>
+                            {children(restProps)}
+                        </ErrorBoundary>
+                    </SearchQueryProvider>
+                </Router>
         </AppContext.Provider>
     </ThemeProvider>
 }

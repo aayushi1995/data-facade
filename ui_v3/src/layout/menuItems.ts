@@ -2,6 +2,7 @@ import { HomeMaxOutlined } from "@mui/icons-material";
 import StorageOutlinedIcon from "@mui/icons-material/StorageOutlined";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import HomeIcon from '@mui/icons-material/Home';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import {
   IconApplication,
   IconCertified,
@@ -54,6 +55,12 @@ const items = [
     url: "/application",
     icon: IconApplication,
     subMenu: [
+      {
+        key: "application",
+        name: "APP Builder",
+        url: "/application/app-builder",
+        icon: AddBusinessIcon,
+      },
       {
         key: "application",
         name: "Packages",

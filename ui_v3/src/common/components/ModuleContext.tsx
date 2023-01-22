@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
+import AddActionContext from "../../pages/upload_table/components/AddActionContext";
 
 export type HeaderType = {
     Title?: string,
@@ -91,11 +92,13 @@ const ModuleContextStateProvider = ({children}: { children: React.ReactElement }
             })
         }
     }, [history.location.pathname])
-
+    const [ActionMaker, setActionMaker] = React.useState<string>("");
     return (
         <ModuleContextState.Provider value={state}>
             <SetModuleContextState.Provider value={setState}>
+            <AddActionContext.Provider value={{ ActionMaker, setActionMaker }}>
                 {children}
+                </AddActionContext.Provider>
             </SetModuleContextState.Provider>
         </ModuleContextState.Provider>
     )
