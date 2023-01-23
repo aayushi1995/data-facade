@@ -60,7 +60,9 @@ export type BuildActionContextState = {
     testMode?: boolean,
     charts?: ChartOptionType[],
     sideSettingsOpen?: boolean,
-    pastRunsOpen?: boolean
+    pastRunsOpen?: boolean,
+    showDependencies?: boolean,
+    splitView?: boolean
 }
 
 const formEmptyDefaultContext: () => BuildActionContextState = () => {
@@ -452,6 +454,11 @@ type ToggleDisplayPastRuns = {
     payload: {}
 }
 
+type ToggleDisplayDependenciesAction = {
+    type: "ToggleDisplayDependenciesAction",
+    payload: {}
+}
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -499,7 +506,8 @@ AddDeepDiveAction |
 ChangeNameForDeepDiveAction |
 ChangeActionIdForDeepDive |
 RemoveDeepDiveAction |
-ToggleDisplayPastRuns
+ToggleDisplayPastRuns |
+ToggleDisplayDependenciesAction
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -969,7 +977,9 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 ...state,
                 testMode: action.payload,
                 sideSettingsOpen: false,
-                pastRunsOpen: false
+                pastRunsOpen: false,
+                showDependencies: false,
+                splitView: action.payload
             }
         }
 
@@ -1037,7 +1047,9 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 ...state,
                 sideSettingsOpen: !state.sideSettingsOpen,
                 testMode: false,
-                pastRunsOpen: false
+                pastRunsOpen: false,
+                showDependencies: false,
+                splitView: !state.sideSettingsOpen
             }
         }
 
@@ -1074,7 +1086,20 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 ...state,
                 pastRunsOpen: !state.pastRunsOpen,
                 testMode: false,
-                sideSettingsOpen: false
+                sideSettingsOpen: false,
+                showDependencies: false,
+                splitView: !state.pastRunsOpen
+            }
+        }
+
+        case "ToggleDisplayDependenciesAction": {
+            return {
+                ...state,
+                showDependencies: !state.showDependencies,
+                testMode: false,
+                sideSettingsOpen: false,
+                pastRunsOpen: false,
+                splitView: !state.showDependencies
             }
         }
 

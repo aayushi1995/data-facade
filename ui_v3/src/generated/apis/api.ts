@@ -77,6 +77,12 @@ export class Fetcher {
 	static async fetchData(httpsVerb: "GET", endpoint: "/getActionDefinitionDetails", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionDetail[]>; 
 	
 	/**
+	Gives you the dependencies of any action
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getActionDependencies", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDependency[]>; 
+	
+	/**
 	Gives you the the action instances for the given filter
 	*/
 	

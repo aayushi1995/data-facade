@@ -16,7 +16,7 @@ function EditActionForm() {
     const buildActionContext = React.useContext(BuildActionContext)
     const [actionHeaderProps, actionMainProps] = useEditActionForm()
 
-    const rootBoxWidth = buildActionContext.testMode ? "50%" : (buildActionContext.sideSettingsOpen || buildActionContext.pastRunsOpen) ? "60%" : "100%"
+    const rootBoxWidth = buildActionContext.splitView ? "50%" : "100%"
 
     return(
         <Box sx={{ display: "flex", flexDirection: "row", gap: 1 ,mt:2,pl:2}}>

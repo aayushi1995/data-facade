@@ -128,8 +128,7 @@ export const ActionHeaderLanguageTextStyle = {
     color: "#303234"
 }
 export const ActionTestButtonStyle = {
-    gap: 1, 
-    minWidth: '4vw', 
+    gap: 1,  
     color: 'white', 
     borderColor: 'white',
     borderRadius:'0px',

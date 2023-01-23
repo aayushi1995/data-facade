@@ -103,7 +103,7 @@ const EditWorkflow = ({match}: RouteComponentProps<MatchParams>) => {
                     ApplicationId: workflowContextObject.ApplicationId,
                     CreatedBy: workflowContextObject.Author,
                     CreatedOn: workflowContextObject.CreatedOn,
-                    UpdatedOn: workflowContextObject.UpdatedOn
+                    UpdatedOn: workflowContextObject.UpdatedOn,
                 }
             }})
         }

@@ -19,9 +19,17 @@ const useActionSideMenuOptions = () => {
         })
     }
 
+    const handleOpenDependencies = () => {
+        setBuildActionContext({
+            type: "ToggleDisplayDependenciesAction",
+            payload: {}
+        })
+    }
+
     return {
         handleOpenSettings,
-        handleOpenPastRuns
+        handleOpenPastRuns,
+        handleOpenDependencies
     }
 }
 

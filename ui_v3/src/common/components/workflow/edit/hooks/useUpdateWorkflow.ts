@@ -1,5 +1,6 @@
 import { useMutation } from "react-query";
 import dataManager from "../../../../../data_manager/data_manager";
+import ActionDefinitionActionType from "../../../../../enums/ActionDefinitionActionType";
 import labels from "../../../../../labels/labels";
 import { WorkflowContextType } from "../../../../../pages/applications/workflow/WorkflowContext";
 import { BuildActionContextState } from "../../../../../pages/build_action/context/BuildActionContext";
@@ -21,7 +22,7 @@ export const useUpdateWorkflow = (mutationName: string, workflowContext: Workflo
             const actionTemplateText = makeWorkflowTemplate(workflowContext)
             const updatedWorkflow: ActionDefinitionFormPayload = {
                 ActionDefinition: {
-                    model: {...actionContext?.actionDefinitionWithTags?.actionDefinition, Id: options.workflowId, Config: formWorkflowConfig()},
+                    model: {...actionContext?.actionDefinitionWithTags?.actionDefinition, Id: options.workflowId, Config: formWorkflowConfig(), ActionType: ActionDefinitionActionType.WORKFLOW},
                     tags: []
                 },
                 ActionTemplatesWithParameters: [

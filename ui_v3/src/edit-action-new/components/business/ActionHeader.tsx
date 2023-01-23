@@ -140,25 +140,30 @@ function ActionHeader(props: ActionHeaderProps) {
                         </Box>
                     </Box>
                 </Box>
-                <ActionHeaderAutocompleteBox>
-                    <FormControl variant="outlined" fullWidth>
-                        <InputLabel>Select your Scripting Language</InputLabel>
-                        <Select
-                            value={language|| "Select"}
-                            onChange={(event) => onLanguageChange?.(event.target.value)}
-                            variant="outlined"
-                            label="Select your Scripting Language"
-                            fullWidth
-                        >
-                            {ActionTypeToSupportedRuntimes[actionType].map( runtime => {
-                                return <MenuItem value={runtime}>{runtime}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
-                </ActionHeaderAutocompleteBox>
-                <ActionHeaderAutocompleteBox>
-                    <ActionHeroApplicationSelector selectedApplicationId={props?.applicationId} onSelectedApplicationChange={handleApplicationChange}/>
-                </ActionHeaderAutocompleteBox>
+                {buildActionContext.splitView ? <></> : (
+                    <>
+                    <ActionHeaderAutocompleteBox>
+                        <FormControl variant="outlined" fullWidth>
+                            <InputLabel>Select your Scripting Language</InputLabel>
+                            <Select
+                                value={language|| "Select"}
+                                onChange={(event) => onLanguageChange?.(event.target.value)}
+                                variant="outlined"
+                                label="Select your Scripting Language"
+                                fullWidth
+                            >
+                                {ActionTypeToSupportedRuntimes[actionType].map( runtime => {
+                                    return <MenuItem value={runtime}>{runtime}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </ActionHeaderAutocompleteBox>
+                    <ActionHeaderAutocompleteBox>
+                        <ActionHeroApplicationSelector selectedApplicationId={props?.applicationId} onSelectedApplicationChange={handleApplicationChange}/>
+                    </ActionHeaderAutocompleteBox>
+                    </>
+                )}
+                
             </ActionHeaderCardInputArea>
             <ActionHeaderCardActionArea sx={{ display: "flex", alignItems: "center",justifyContent:'center' }}>
                 {/* <Box sx={{mr:buildActionContext.testMode?0:4}}>
@@ -175,18 +180,16 @@ function ActionHeader(props: ActionHeaderProps) {
                     
                 </Box> */}
 
-                <Box sx={{display:'flex',flexDirection: buildActionContext.testMode || buildActionContext.sideSettingsOpen || buildActionContext.pastRunsOpen ?'column':'row', gap:buildActionContext.testMode?1:3}}>
+                <Box sx={{display:'flex',flexDirection: buildActionContext.splitView ?'column':'row', gap: 1}}>
                     <TestButton size='small' variant='outlined' color="info" onClick={props?.actionHandler?.onTest}><PlayArrowIcon/>Test</TestButton>
-                    <Box sx={{display:'flex',flexDirection:'row',gap:buildActionContext.testMode?1:3}}>
-                        <SaveButton size='small' color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {
-                            (buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? 
-                                <InfoIcon sx={{ transform: "scale(0.7)"}}/> 
-                                :
-                                <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }
-                                    Save
-                        </SaveButton>
-                        <RunButton size="small" color='primary' variant='contained' onClick={props?.actionHandler?.onRun}> <PlayCircleOutlineIcon sx={{ transform: "scale(0.8)"}}/>Run</RunButton>
-                    </Box>
+                    <SaveButton size='small' color='success' variant='outlined' onClick={props?.actionHandler?.onSave}> {
+                        (buildActionContext.savingAction||buildActionContext.loadingActionForEdit) ? 
+                            <InfoIcon sx={{ transform: "scale(0.7)"}}/> 
+                            :
+                            <CheckCircleIcon sx={{ transform: "scale(0.7)"}}/> }
+                                Save
+                    </SaveButton>
+                    <RunButton size="small" color='primary' variant='contained' onClick={props?.actionHandler?.onRun}> <PlayCircleOutlineIcon sx={{ transform: "scale(0.8)"}}/>Run</RunButton>
                 </Box>
                 <Box sx={{mr:1}}>
                 <IconButton onClick={handleMenuOpen}>

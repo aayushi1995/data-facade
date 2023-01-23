@@ -94,7 +94,6 @@ const ShowActionHistory = () => {
 
     return (
         <Box>
-            <Box>
             <ReactQueryWrapper
                     {...fetchActionRuns}
                     children={() => 
@@ -112,8 +111,6 @@ const ShowActionHistory = () => {
                         }} />
                     }
                 />
-                
-            </Box>
         </Box>    
     )
 }

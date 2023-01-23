@@ -66,8 +66,6 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
 
     const {isLoading, error, data} = useViewAction({actionDefinitionId: props.actionDefinitionId, expectUniqueResult: true})
 
-    const onParameterSelectForEdit = (actionParameter: ActionParameterDefinition) => setSelectedParameterForEdit(actionParameter)
-    const deleteParametersWithIds = (actionParameterIds: string[]) => console.log("Deleting", actionParameterIds)
     const onCodeChange = (newCode: string) => console.log(newCode)
 
     const toggleGuideEnabled = () => {
@@ -119,7 +117,7 @@ const ViewSelectedAction = (props: ViewSelectedActionProps) => {
         const selectedActionTemplate = defaultActionTemplate || firstActionTemplate
         const selectedActionTemplateModel = selectedActionTemplate?.model
         const selectedActionParams = selectedActionTemplate?.actionParameterDefinitions
-        if(!selectedParameterForEdit && !!selectedActionParams) {
+        if(!selectedParameterForEdit && !!selectedActionParams && selectedActionParams?.length > 0) {
             setSelectedParameterForEdit(selectedActionParams?.[0]?.model)
         }
 
