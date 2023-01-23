@@ -109,7 +109,7 @@ export const InfoBoxStyle = {
     py:2,
     display:'flex',
     flexDirection:'row' ,
-    backgroundColor:"#F0F2F5",
+    backgroundColor:"#EFF3FB",
     justifyContent: "space-between"
 }
 

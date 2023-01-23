@@ -22,7 +22,7 @@ const Header = () => {
             <AppBar position="fixed" component="nav" sx={headerStyle}>
                 <Toolbar>
                     <Box sx={{ display: "flex", flexDirection: "row", height: "100%", alignItems: "center", justifyContent: 'flex-start' }}>
-                        <Box sx={{ height: "100%", width: "74px" }}>
+                        <Box sx={{ height: "100%", width: "75px" }}>
                             <RouterLink to="/">
                                 <DataFacadeLogo />
                             </RouterLink>

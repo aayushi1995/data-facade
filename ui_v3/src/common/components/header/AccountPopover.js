@@ -34,7 +34,7 @@ const AccountPopover = () => {
           onClick={handleOpen}
           ref={anchorRef}
           variant="outlined"
-          sx={buttonStyle}
+          sx={{...buttonStyle,borderRadius:'4px'}}
           endIcon={<ArrowDropDownIcon />}
         >
           {appcontext.workspaceName}

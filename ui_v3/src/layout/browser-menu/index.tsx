@@ -77,9 +77,9 @@ const BrowserMenu: React.FunctionComponent<BrowserMenuProps> = () => {
         setValue(newValue);
     };
     return (
-        <Box sx={{ display: 'flex', width: "100%", height: "100%" }}>
+        <Box sx={{ display: 'flex', width: "100%", height: "100%",background:'#F6F8FC' }}>
             <CssBaseline />
-            <Box sx={{ background: '#fff', width: "100%", height: "100%" }}>
+            <Box sx={{ backgroundColor: '#F6F8FC', width: "100%", height: "100%" }}>
                 <Box sx={{ height: "50px", width: "auto" }}>
                     <Tabs value={value} onChange={handleChange}>
                         <Tab label="Data" />

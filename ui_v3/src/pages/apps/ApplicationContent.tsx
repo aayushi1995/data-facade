@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import { borderRadius } from "@mui/system";
 import { useContext, useEffect } from 'react';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { ACTION_EXECUTION_ROUTE, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION, APPLICATION_EXECUTE_WORKFLOW, APPLICATION_ROUTE_MARKETPLACE, APPLICATION_SUB_TABS, APPLICATION_WEB_APP_BUILD_ROUTE, APPLICATION_WEB_APP_EDIT_ROUTE, APPPLICATION_CREATE_AUTO_FLOW, EXECUTE_INSTANCE_ROUTE, EXECUTION_HISTORY_ROUTE, SCHEDULED_JOBS_ROUTE, WORKFLOW_EDIT_ROUTE_ROUTE, WORKFLOW_EXECUTION_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
@@ -76,17 +77,27 @@ export const AllApplicationViewWrapper = () => {
     }, [])
     const panelStyle = {
         width:'50%',
-        height:'80vh',
+        height:'90vh',
         overflow:'scroll',
         p:1,
-        backgroundColor:'#FBFCFF',
-        boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.15)"
+        backgroundColor:'#EAEBEF',
+        boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.15), -2px -2px 2px rgba(154, 161, 169, 0.2)",
+        borderRadius:'5px'
     }
-    return <Box sx={{mx:-3,display:'flex',flexDirection:'row',gap:2,}}> 
+    const panelStyle2 = {
+        width:'50%',
+        height:'90vh',
+        overflow:'scroll',
+        p:1,
+        backgroundColor:'#EFF3FB',
+        boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.15), -2px -2px 2px rgba(154, 161, 169, 0.2)",
+        borderRadius:'5px'
+    }
+    return <Box sx={{mx:-1,display:'flex',flexDirection:'row',gap:1,}}> 
                 <Box sx={{...panelStyle}}>
                 <AllApplicationView/>
                 </Box>
-                <Box sx={panelStyle}>
+                <Box sx={panelStyle2}>
                 <Switch>       
                     <Route path={APPLICATION_DETAIL_ROUTE_ROUTE} component={ApplicationDetailView}/>
                 </Switch>

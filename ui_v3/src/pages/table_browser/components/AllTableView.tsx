@@ -3,7 +3,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import SearchIcon from '@mui/icons-material/Search';
-import { AppBar, Box, Card, Dialog, DialogContent, IconButton, InputAdornment, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { AppBar, Box, Card, Dialog, DialogContent, Grid, IconButton, InputAdornment, LinearProgress, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import { TransitionProps } from '@mui/material/transitions';
 import { DataGrid, DataGridProps, GridCellParams, GridRowParams, GridValueGetterParams } from "@mui/x-data-grid";
@@ -20,7 +20,7 @@ import SyncOOBActionExecutionStatus from '../SyncOOBActionStatus';
 import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
 import { useDeleteTables, useGetTables, useReSyncTables } from "./AllTableViewHooks";
 import useFeatureConfig from './useFeatureConfig';
-
+import SyncIcon from '@mui/icons-material/Sync';
 export type AllTableViewProps = {
     tableFilter?: TableProperties,
     disableCellClick?: boolean
@@ -84,14 +84,14 @@ const AllTableView = (props: AllTableViewProps) => {
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.ProviderInstanceName}/>
             },
             {
-                headerName: "CreatedBy",
+                headerName: "Created By",
                 field: "TableCreatedBy",
                 flex: 1,
                 minWidth: 200,
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <TextCell text={params.row.TableCreatedBy}/>
             },
             featureConfigQuery?.data?.tableStats===true && {
-                field: "Sync Status",
+                field: "Status",
                 flex: 1,
                 minWidth: 200,
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <SyncStatusCell SyncStatus={params.row?.SyncStatus}/>
@@ -108,7 +108,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 flex: 1,
                 minWidth: 200,
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <HealthCell Health={params.row?.Health} SyncStatus={params.row?.SyncStatus}/>,
-                type: "number",
+                // type: "number",
                 valueGetter: (params: GridValueGetterParams<any, TableBrowserResponseAndCalculatedInfo>) => params.row?.Health
             },
             {
@@ -120,19 +120,26 @@ const AllTableView = (props: AllTableViewProps) => {
         ].filter(c => c!==undefined),
         rows: (rows.map?.((x, index) => ({ ...x, id: index})) || []),
         sx: {
-            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
+            "& .MuiDataGrid-columnHeaders": { 
+                backgroundColor: "#c3d7f7",
+                fontFamily:'sans-serif',
+                fontSize:'14px',
+                fontWeight:800,
+                textTransform: 'uppercase',
+                letterSpacing:'2px',
+                color:'#797a7a',
+            },
+            "& .MuiDataGrid-row": {
+                border: '0px solid black !important',
+              },
             backgroundColor: 'ActionCardBgColor.main',
-            backgroundBlendMode: "soft-light, normal",
-            border: "2px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-            borderRadius: "15px",
-            height:'500px',
-            overflow:'scroll'
+            height:900,
+            overflow:'scroll',
+            border: '0 !important',
         },
-        autoHeight: true,
-        headerHeight: 70,
+        checkboxSelection:true,
+        headerHeight: 80,
         rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
-        hideFooterSelectedRowCount: true,
         onRowClick: (params: GridRowParams<TableBrowserResponseAndCalculatedInfo>) => {
             const tableName = params?.row?.TableUniqueName
             const tableId = params?.row?.TableId
@@ -172,11 +179,11 @@ const AllTableView = (props: AllTableViewProps) => {
     return (
         <>
             <WrapInDialog dialogProps={{ ...dialogProps, handleClose: handleDialogClose }}>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1}}>
                 {!dialogProps.open &&
                     <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", 
                                 position:'sticky',
-                                top:'70px' ,  zIndex:1, overflow:'hidden'}}>
+                                top:'10px' ,  zIndex:1, overflow:'hidden'}}>
                         <Box sx={{ 
                                 width:'100%' 
                                 
@@ -190,7 +197,7 @@ const AllTableView = (props: AllTableViewProps) => {
                                     boxSizing: 'border-box', 
                                     boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                                     backgroundBlendMode: 'soft-light, normal', 
-                                    borderRadius: '26px',
+                                    borderRadius: '8px',
                                     
                                     // display: 'flex', 
                                     justifyContent: 'center', 
@@ -228,7 +235,7 @@ const AllTableView = (props: AllTableViewProps) => {
                                     boxSizing: 'border-box', 
                                     boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
                                     backgroundBlendMode: 'soft-light, normal', 
-                                    borderRadius: '26px',
+                                    borderRadius: '8px',
                                     
                                     // display: 'flex', 
                                     justifyContent: 'center', 
@@ -244,12 +251,12 @@ const AllTableView = (props: AllTableViewProps) => {
                         </Box>
                         </Box>
                 }
-                    <Card sx={{ borderRadius: 2, boxShadow: lightShadows[31]}}>
                     <ReactQueryWrapper
                             isLoading={tableQuery.isLoading}
                             error={tableQuery.error}
                             data={tableQuery.data}
                             children={() =>
+                                <Grid container sx={{height:900,overflow:'scroll',display:'flex',borderRadius:'5px',border:'none'}}>
                                 <DataGrid {...dataGridProps} components={{
                                     NoRowsOverlay: () => (
                                       <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
@@ -262,9 +269,9 @@ const AllTableView = (props: AllTableViewProps) => {
                                         </Stack>
                                     )
                                   }}/>
+                                  </Grid>
                             }/>
                         
-                    </Card>
                 </Box>
             </WrapInDialog>
             <Route exact path={DATA_TABLE_SYNC_ACTIONS}>
@@ -355,11 +362,26 @@ const HealthCell = (props?: { Health?: number, SyncStatus?: string }) => {
 const SyncStatusCell = (props?: { SyncStatus?: string }) => {
     const history = useHistory()
     const SyncStatus = props?.SyncStatus
-    const getLabel = () => SyncStatus
+    const getLabel = () => {
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return ("Synced")
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return ("Failed")
+        else return("In Progress")
+    }
+    const getColor = () => {
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return ("#0bbf17")
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return ("#bf0b1a")
+        else return("#142cc9")
+    }
+    const getSize = () => {
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE || SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return ("80px")
+        else return("150px")
+    }
+
+    const getBGColor = SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE?'#d0facf':(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED?'#facfd8':'#cfdcfa')
 
     const getIcon = () => {
-        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return <CheckCircleIcon height="24px" width="24px" sx={{ color: "syncStatusColor1.main" }}/>
-        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return <CancelIcon height="24px" width="24px" sx={{ color: "syncStatusColor2.main" }}/>
+        if(SyncStatus === TablePropertiesSyncStatus.SYNC_COMPLETE) return <></>//<CheckCircleIcon sx={{ fontSize:'0px', color: "syncStatusColor1.main" }}/>
+        else if(SyncStatus === TablePropertiesSyncStatus.SYNC_FAILED) return <></>//<CancelIcon  sx={{ color: "syncStatusColor2.main" }}/>
         else return (
             <Box sx={{
                 animation: "spin 2s linear infinite",
@@ -374,7 +396,8 @@ const SyncStatusCell = (props?: { SyncStatus?: string }) => {
                 height: "24px", 
                 width: "24px"
               }}>
-                 <SyncingLogo height="24px" width="24px" color="syncingLogoColor2.main"/>
+                 {/* <SyncingLogo height="24px" width="24px" color="syncingLogoColor2.main"/> */}
+                 <SyncIcon/>
             </Box>
         )
     }
@@ -387,12 +410,12 @@ const SyncStatusCell = (props?: { SyncStatus?: string }) => {
 
     return (
         <Tooltip title={getTooltipText()}>
-            <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", alignItems: "center", gap: 1, cursor: "pointer" }}>
+            <Box sx={{ width: getSize(), height: "30px",borderRadius:'20px',backgroundColor:getBGColor ,display: "flex", flexDirection: "row", justifyContent:'center',alignItems:'center', gap: 1, cursor: "pointer" }}>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                     {getIcon()}
                 </Box>
                 <Box>
-                    <Typography variant="tableBrowserContent">
+                    <Typography sx={{color:getColor(),fontSize:'0.9rem',fontWeight:600}} variant="tableBrowserContent">
                         {getLabel()}
                     </Typography>
                 </Box>
@@ -424,15 +447,17 @@ export const TimestampCell = (props: {timestamp?: number}) => {
 
 export const TextCell = (props: { text?: string}) => {
         
-    const textComponent = <Typography variant="tableBrowserContent">
+    const textComponent = <Typography sx={{fontFamily:'sans-serif',fontSize:'0.9rem'}}>
                             {props?.text}
                         </Typography>
     
     if(!!props?.text) {
         return (
+            <Box sx={{px:2,width:'140px',overflow:'hidden'}}>
             <Tooltip title={props?.text}>
                 {textComponent}
             </Tooltip>
+            </Box>
         )
     } else {
         return textComponent

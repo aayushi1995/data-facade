@@ -36,7 +36,7 @@ function AddActionToEdit(props: AddActionToEditProps) {
             })
         },
         actionHandlers: {
-            onSaveAction: (newSupportedRuntimeGroup: string, language: string) => {
+            onSaveAction: (newSupportedRuntimeGroup: string, language: string ,genCode:string) => {
                 useActionHooks.useActionDefinitionFormSave?.mutate({
                     ...buildActionContext,
                     actionTemplateWithParams: buildActionContext.actionTemplateWithParams.map(templateWithParam => templateWithParam.template.Id === buildActionContext.actionDefinitionWithTags.actionDefinition.DefaultActionTemplateId ? {
@@ -45,7 +45,7 @@ function AddActionToEdit(props: AddActionToEditProps) {
                             ...templateWithParam.template,
                             SupportedRuntimeGroup: newSupportedRuntimeGroup,
                             Language: language,
-                            Text: getDefaultCode(ActionDefinitionActionType.PROFILING, newSupportedRuntimeGroup)
+                            Text:genCode//getDefaultCode(ActionDefinitionActionType.PROFILING, newSupportedRuntimeGroup)
                         }
                     }: templateWithParam)
                 }, {

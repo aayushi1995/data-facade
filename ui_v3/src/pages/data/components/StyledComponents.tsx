@@ -29,7 +29,7 @@ export const SearchBarTextField = styled(TextField)<TextFieldProps>(({ theme }) 
     boxSizing: 'border-box',
     boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5)',
     backgroundBlendMode: 'soft-light, normal',
-    borderRadius: '16px',
+    borderRadius: '8px',
     display: 'flex',
     justifyContent: 'center',
     minHeight: '50px'
@@ -68,13 +68,16 @@ export const ActionCardButtonContainer = {
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 6,
-    p: 1
+    p: 1,
+    height:'4vh'
 }
 
 export const ActionCardConatier = {
     backgroundColor: '#EBF1FA',
+    boxShadow:'0px 1px 1px rgba(0, 0, 0, 0.1), 0px 0px 1px rgba(0, 0, 0, 0.25)',
     px: 3,
     py: 2,
+    borderRadius:'8px',
     height: '48vh',
     overflowY: 'scroll'
 }
@@ -128,24 +131,28 @@ export const DialogBGcolor = {
 }
 export const DialogHeader = {
     borderBottom: '1px solid #C0C1C1',
+    backgroundColor:'#EBF1FA',
     display: 'flex'
 }
 export const DialogBody = {
     display: 'flex',
-    height: '70vh'
+    height: '70vh',
+    backgroundColor:'#EBF1FA',
 }
 export const AllPackageList = {
     mt: 1,
     width: '30%',
     height: '70vh',
     overflow: 'scroll',
-    boxShadow: '-1px -1px 1px #FAFBFF, 1px 1px 1px #A6ABBD',
-    backgroundColor: '#FFFFFF'
+    boxShadow: '-1px -1px 1px #FAFBFF, 1px 1px 1px ',
+    backgroundColor: '#FFFFFF',
+    borderRadius:'8px'
 }
 export const AllApps = {
     width: '70%',
     height: '70vh',
-    overflow: 'scroll'
+    overflow: 'scroll',
+    backgroundColor:'#EBF1FA'
 }
 export const HeaderButtonsStyle = {
     display: 'flex',
@@ -158,8 +165,11 @@ export const CursorPointer = {
 
 export const AppCardStyle = {
     width: '100%', 
+    cursor:'pointer',
     ":hover": { 
-        boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.25)' 
+        boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.25)' ,
+        backgroundColor:'#F6F8FC'
+
     }
 }
 

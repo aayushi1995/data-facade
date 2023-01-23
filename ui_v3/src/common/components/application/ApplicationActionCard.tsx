@@ -121,7 +121,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                 onAccept={handleDelete}
                 onDecline={handleDialogClose}
             />
-            <StyledApplicationCard sx={{ backgroundColor: background}}>
+            <StyledApplicationCard sx={{ backgroundColor: props.isWorkflow?'#D6E2FB':'#C9E6FC'}}>
                 <Box sx={{}}>
                     <Box sx={{ display: 'flex' }}>
                         <ExpandMoreIcon onClick={() => setCollapsedView(!collapsedView)} sx={{ mr: 2, alignSelf: 'center', transform: `scale(1.5) rotate(${!collapsedView ? '270' : '0'}deg)`, ml: 1 }} />
@@ -170,7 +170,7 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
                     </Box>
 
 
-                    <Box sx={{ p: 1, display: 'flex', backgroundColor: '#DDDDDD' }}>
+                    <Box sx={{ p: 1, display: 'flex', backgroundColor: '#F0F2F5' }}>
                         <Box sx={{ml:5}}>
                             <StyledTypographyApplicationformCreatedOnString>
                                 Created By : <b>{props.action.model?.CreatedBy || ""} | </b>Created On : <b>{new Date(props.action.model?.CreatedOn || "").toDateString()}</b>

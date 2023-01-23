@@ -25,7 +25,7 @@ const LogoutButton = () => {
     }
 
     return (
-        <Button onClick={handleLogout}
+        <Button sx={{borderRadius:'4px'}} onClick={handleLogout}
                 variant="outlined">
             Log Out
         </Button>
