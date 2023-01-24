@@ -23,11 +23,7 @@ export type ShowDashboardChartProps = {
 }
 
 const ShowDashboardCharts = (props: ShowDashboardChartProps) => {
-    const {chartWithDataAndLayout, onChartTypeChange, onChartNameChange, onChartDashboardChange, updateLayout, onTextBoxValueChange, formCharts} = useShowDashboardCharts(props);
-
-    React.useEffect(() => {
-        formCharts()
-    }, [props.chartWithDataAndLayout])
+    const {chartWithDataAndLayout, onChartTypeChange, onChartNameChange, onChartDashboardChange, updateLayout, onTextBoxValueChange} = useShowDashboardCharts(props);
 
     if (chartWithDataAndLayout) {
         return (

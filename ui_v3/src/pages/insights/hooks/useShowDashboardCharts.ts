@@ -2,6 +2,7 @@ import React, {useCallback} from "react";
 
 import { Layout } from "react-grid-layout";
 import { useShowCharts } from "../../../common/components/charts/hooks/useShowCharts";
+import formChartOptions from "../../../common/util/formChartOptionsFromContext";
 import { DashboardChartWithData } from "../../../generated/interfaces/Interfaces";
 import { ShowDashboardChartProps } from "../components/ShowDashboardCharts";
 
@@ -11,11 +12,15 @@ export function useShowDashboardCharts(props: ShowDashboardChartProps) {
         return charts.map?.(chartWithDataAndLayout => chartWithDataAndLayout.chartWithData!)
     }
 
-    const {formChartOptionsWrapper, onChartTypeChange, onChartNameChange, onChartDashboardChange, chartDataOptions} = useShowCharts({chartWithData: prepareProps(props.chartWithDataAndLayout ) || []})
+    // const {formChartOptionsWrapper, onChartTypeChange, onChartNameChange, onChartDashboardChange, chartDataOptions} = useShowCharts({chartWithData: prepareProps(props.chartWithDataAndLayout ) || []})
 
     const onTextBoxValueChange = (value: string, id: string) => {
         props?.onTextBoxValueChange?.(id, 'text', value)
     }
+
+    const getChartDataOptions = React.useCallback(() => {
+        return props.chartWithDataAndLayout.map(chartDetails => ({...formChartOptions(chartDetails.chartWithData || {}), model: chartDetails.chartWithData?.model!}))
+    }, [props.chartWithDataAndLayout])
 
     const updateLayout = (layout: Layout[]) => {
         const newCharts = props.chartWithDataAndLayout.map(chartData => {
@@ -38,13 +43,9 @@ export function useShowDashboardCharts(props: ShowDashboardChartProps) {
         props.onChartChange?.(newCharts)
     }
 
-    const formCharts = () => {
-        formChartOptionsWrapper(prepareProps(props.chartWithDataAndLayout))
-    }
-
     const getChartDataOptionsAndLayout = () => {
-        return chartDataOptions?.map(chartWithData => {
-            const layoutChart = props.chartWithDataAndLayout.find(chartWithLayout => chartWithData?.model.Id === chartWithLayout.chartWithData?.model?.Id)?.layout
+        return getChartDataOptions()?.map(chartWithData => {
+            const layoutChart = props.chartWithDataAndLayout.find(chartWithLayout => chartWithData?.model?.Id === chartWithLayout.chartWithData?.model?.Id)?.layout
             if(!!layoutChart){
                 return {
                     ...chartWithData!,
@@ -58,7 +59,30 @@ export function useShowDashboardCharts(props: ShowDashboardChartProps) {
         })
     }
 
+    const onChartPropChange = (prop: string)=>(chartId: string, propValue: string) => {
+        const newCharts = props.chartWithDataAndLayout?.map(executionChart => {
+            if (chartId === executionChart?.chartWithData?.model?.Id && executionChart !== undefined) {
+                return {
+                    ...executionChart,
+                    chartWithData: {
+                        ...executionChart.chartWithData,
+                        model: {
+                            ...executionChart.chartWithData.model,
+                            [prop]: propValue
+                        }
+                    }
+                }
+            }
+            return executionChart
+        })
+        props.onChartChange?.(newCharts)
+
+    };
+    const onChartNameChange = onChartPropChange('Name');
+    const onChartDashboardChange = onChartPropChange('DashboardId');
+    const onChartTypeChange = onChartPropChange('Type');
+
     const chartWithDataAndLayout = getChartDataOptionsAndLayout() || []
 
-    return {updateLayout, onChartNameChange, onChartDashboardChange, onChartTypeChange, onTextBoxValueChange, chartWithDataAndLayout, formCharts}
+    return {updateLayout, onChartNameChange, onChartDashboardChange, onChartTypeChange, onTextBoxValueChange, chartWithDataAndLayout}
 }
