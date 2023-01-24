@@ -145,7 +145,7 @@ const ApplicationCard = (props: ApplicationCardProps) => {
                 onDecline={handleDialogClose}
             />
             <Box>
-            <StyledApplicationCard onClick={onApplicationSelect} sx={{
+            <StyledApplicationCard onClick={() => onApplicationSelect} sx={{
                         backgroundColor: disableCardActions ? 'disableCardBackgroundColor.main' : 'cardBackgroundColor.main',
                         cursor: props.isInstalled ? 'pointer' : undefined
                 }}>

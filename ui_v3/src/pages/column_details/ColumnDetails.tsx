@@ -38,7 +38,7 @@ const ColumnDetailsView = () => {
             <React.Fragment>
                 <Grid container spacing={0}>
                     <Grid item xs={12}>
-                        <Tabs onChange={handleTabChange} value={tabState}>
+                        <Tabs onChange={(event , value) => handleTabChange(event,value)} value={tabState}>
                         {
                             URL_TAB_INFO.map((info, index) => <Tab key={info.ViewName} value={info.ViewName} label={info.TabLabel} {...a11yProps(index)} />)
                         }

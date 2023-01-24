@@ -1,17 +1,11 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Card, Divider, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material";
+import { Box, Button,  IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { generatePath, useHistory } from "react-router-dom";
-import ExecuteImage from "../../../../src/images/Execute.png";
-import OptionIcon from "../../../../src/images/Options.png";
-import { lightShadows } from "../../../css/theme/shadows";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import { ActionDetailsForApplication } from "../../../generated/interfaces/Interfaces";
-import labels from "../../../labels/labels";
-import NumberStat from "../NumberStat";
-import TagHandler from "../tag-handler/TagHandler";
 import ConfirmationDialog from "../ConfirmationDialog";
 import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
 import useDeleteAction from "./hooks/useDeleteActions";
@@ -90,10 +84,10 @@ const ApplicationActionCard = (props: ApplicationActionCardProps) => {
             if (props.action.model?.ActionType === ActionDefinitionActionType.WEB_APP) {
                 history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, { WebAppId: props.action.model?.Id }))
             } else {
-                history.push(`/application/edit-action/${props.action.model?.Id || "idNotFound"}`)
+                history.push(`/application/edit-action/${props.action.model?.Id || "idNotFound"}?source=browser&name=${props.action.model?.DisplayName}`)
             }
         } else {
-            history.push(`/application/edit-workflow/${props.action.model?.Id || "Id"}`)
+            history.push(`/application/edit-workflow/${props.action.model?.Id || "Id"}?source=browser&name=${props.action.model?.DisplayName}`)
         }
     }
 

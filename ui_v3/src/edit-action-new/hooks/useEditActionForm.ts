@@ -115,14 +115,20 @@ function getActionHeaderProps(): ActionHeaderProps {
         },
         actionHandler: {
             onTest: onTest,
-            onSave: onSave,
+            onSave: () => {
+                const actionId = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id
+                const actionName = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName
+                history.push(`/application/edit-action/${actionId}?name=${actionName}`)
+                onSave()
+            },
             onDuplicate: onDuplicate,
             onRun: () => {
                 useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
                     onSuccess: () => {
                         const actionId = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id
+                        const actionName = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName
                         if(!!actionId) {
-                            history.push(`/application/execute-action/${actionId}`)
+                            history.push(`/application/execute-action/${actionId}?name=${actionName}`)
                         }
                     }
                 })

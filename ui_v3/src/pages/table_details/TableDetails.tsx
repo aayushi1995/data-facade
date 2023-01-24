@@ -77,9 +77,6 @@ const TableDetailsView = () => {
   });
 
   const data = result.data;
-
-  console.log('data',data)
-
   return (
     <TabContext value={tabState}>
       <React.Fragment>
@@ -90,7 +87,7 @@ const TableDetailsView = () => {
               scrollButtons="auto"
               textColor="primary"
               variant="scrollable"
-              onChange={handleTabChange}
+              onChange={(event , value) => handleTabChange(event,value)}
               value={tabState}
             >
               {

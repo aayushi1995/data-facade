@@ -17,12 +17,11 @@ interface AppCardProps {
 
 export const AppCard = (props: AppCardProps) => {
     const history = useHistory()
-    const getExecuteUrl = () => {
-        const url  = generatePath(`${APPLICATION_EXECUTE_ACTION}`, { ActionDefinitionId: props.ID || "" })
+    const getExecuteUrl = (route:string) => {
+        const url  = generatePath(`${route}`, { ActionDefinitionId: props.ID || "" })
         const tabOpenQueryParams = `source=browser&name=${props?.Displayname}`
         return props?.tableId ? `${url}?tableId=${props?.tableId}&${tabOpenQueryParams}` : `${url}?${tabOpenQueryParams}`
     }
-
     return (
         <Card sx={{...AppCardStyle}}>
             <Box sx={{ p: 3, height: '12vh' }}>
@@ -46,9 +45,11 @@ export const AppCard = (props: AppCardProps) => {
                 </Typography>
             </Box>
             <Box sx={{ ...ActionCardButtonContainer }}>
-                <Box sx={{...CursorPointer}} to={generatePath(`${APPLICATION_EDIT_ACTION_ROUTE_ROUTE}`, { ActionDefinitionId: props.ID || "" })} component={RouterLink}><img width='25px' height='25px' src={SettingIcon} alt="" /></Box>
                 <Box sx={{...CursorPointer}} onClick={() => { 
-                    history.push(getExecuteUrl()) 
+                    history.push(getExecuteUrl(APPLICATION_EDIT_ACTION_ROUTE_ROUTE)) 
+                }} component={RouterLink}><img width='25px' height='25px' src={SettingIcon} alt="" /></Box>
+                <Box sx={{...CursorPointer}} onClick={() => { 
+                    history.push(getExecuteUrl(APPLICATION_EXECUTE_ACTION)) 
                 }}>
                     <img width='25px' height='25px' src={RunIcon} alt="" />
                 </Box>

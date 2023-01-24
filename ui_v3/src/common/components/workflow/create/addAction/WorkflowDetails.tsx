@@ -1,8 +1,9 @@
 import { Box, Button, Grid, TextField, Typography ,DialogTitle ,IconButton ,} from "@mui/material"
-import React from "react"
+import React, { useContext } from "react"
 import { useHistory } from "react-router-dom"
 import { APPLICATION_ROUTE } from "../../../../../../src/common/components/header/data/RoutesConfig"
 import CloseIcon from "../../../../../../src/images/close.svg"
+import { RouteContext } from "../../../../../layout/TabRenderer"
 import { BuildActionContext, SetBuildActionContext } from "../../../../../pages/build_action/context/BuildActionContext"
 
 export interface WorkflowDetailsProps {
@@ -17,9 +18,17 @@ const WorkflowDetails = (props: WorkflowDetailsProps) => {
     const [name, setName] = React.useState<string|undefined>()
     const [description, setDescription] = React.useState<string|undefined>()
 
+    const routes:any = useContext(RouteContext);
     const history = useHistory()
     const handleDialogClose = () => {
-        history.push(APPLICATION_ROUTE)
+        if(routes.length > 0){
+            const lastItem:any = routes[routes.length-1]
+            history.push(lastItem['path'])
+        }
+        else{
+            history.push(APPLICATION_ROUTE)
+        }
+        
     }
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setActionContext({type: 'SetActionDefinitionName', payload: {newName: name}})

@@ -847,7 +847,7 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
                 sourcedFromActionDefiniton: action.payload?.ActionDefinition?.model!,
                 charts: formChartsFromActionDefinitionConfig(action.payload?.ActionDefinition?.model?.Config || "{}"),
                 actionDefinitionToLoadId: undefined,
-                deepDiveConfig: (JSON.parse(action.payload.ActionDefinition?.model?.DeepDiveConfig || "[]") as DeepDiveConfigType[])
+                deepDiveConfig: (JSON.parse(action.payload?.ActionDefinition?.model?.DeepDiveConfig || "[]") as DeepDiveConfigType[])
             } as BuildActionContextState
         
             const finalState = assignActiveTemplateId(newState)

@@ -54,7 +54,7 @@ const ConnectionDetails = () => {
                     scrollButtons="auto"
                     textColor="primary"
                     variant="scrollable"
-                    onChange={handleTabChange}
+                    onChange={(event , value) => handleTabChange(event ,value )}
                     value={tabState}
                 >
                     {CONNECTION_DETAILS_TABS.map((tab, index) => (

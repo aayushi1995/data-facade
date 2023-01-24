@@ -110,7 +110,7 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
 
   const navigate = (item: any, hideparam = false) => {
     if (NAVIGATE_URL.hasOwnProperty(item.type)) {
-      const URL = `${NAVIGATE_URL[`${item.type}`]}/${item.type === "table" ? item.name : item.id}${!hideparam ? `?source=browser&name=${item.name}` : ``}`;
+      const URL = item.type==="connection" ? `${NAVIGATE_URL[`${item.type}`]}/${`${item.id}/View/Overview`}${!hideparam ? `?source=browser&name=${item.name}` : ``}` : `${NAVIGATE_URL[`${item.type}`]}/${item.type === "table" ? `${item.name}/View/Summary` : item.id}${!hideparam ? `?source=browser&name=${item.name}` : ``}`
       history.push(URL)
     }
   }
@@ -131,7 +131,7 @@ const EntityBrowser: React.FunctionComponent<TreeViewerProps> = ({ type }) => {
         onClick={() =>
           item.IsExpandable
             ? fetchNodeData(item.path, item)
-            : navigate(item, item.type === "dashboard" ? false : true)
+            : navigate(item, false)
         }
         nodeId={item.path}
         label={item.name}

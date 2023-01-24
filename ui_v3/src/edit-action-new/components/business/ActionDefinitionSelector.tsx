@@ -7,41 +7,43 @@ import SearchIcon from '@mui/icons-material/Search';
 import labels from "../../../labels/labels";
 import { SearchBarTextField } from "../presentation/styled_native/ActionAddCodeIconBox";
 export type ActionDefinitionSelectorProps = {
-    onActionDefinitionSelectionCallback?: (actionDefinitionId?: string) => void
+    onActionDefinitionSelectionCallback?: (actionDefinitionId?: string, actionDefinitionName?: string) => void
 }
 
 function ActionDefinitionSelector(props: ActionDefinitionSelectorProps) {
-    const {data, isLoading, error} = useFetchActionDefinitionForSelector({})
+    const { data, isLoading, error } = useFetchActionDefinitionForSelector({})
     const [searchQuery, setSearchQuery] = React.useState("")
     const filteredData = (data || [])?.filter(ad => ad?.ActionDisplayName?.includes?.(searchQuery))
 
-    const actionDefinitionRows = filteredData?.map?.(ad => 
+    const actionDefinitionRows = filteredData?.map?.(ad =>
         <Box>
-            <ActionDefinitionSelectorRow 
-                data={ad} 
-                onSelect={() => props?.onActionDefinitionSelectionCallback?.(ad?.ActionId)} 
+            <ActionDefinitionSelectorRow
+                data={ad}
+                onSelect={() => props?.onActionDefinitionSelectionCallback?.(ad?.ActionId, ad?.ActionDisplayName)}
             />
         </Box>
+
+
     )
 
     return (
-        <Box sx={{m:'auto',width:'40vw',my:2}}>
-            <Box sx={{width:'40vw'}}>
-                <SearchBarTextField variant="standard" 
-                            value={searchQuery}
-                            onChange={(event) => setSearchQuery(event.target.value)}
-                            placeholder={labels.AddActionPage.searchText}
-                            multiline={true}
-                            InputProps={{
-                                disableUnderline: true,
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon sx={{marginLeft: 1}}/>
-                                    </InputAdornment>
-                                )
-                            }}/>
+        <Box sx={{ m: 'auto', width: '40vw', my: 2 }}>
+            <Box sx={{ width: '40vw' }}>
+                <SearchBarTextField variant="standard"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder={labels.AddActionPage.searchText}
+                    multiline={true}
+                    InputProps={{
+                        disableUnderline: true,
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon sx={{ marginLeft: 1 }} />
+                            </InputAdornment>
+                        )
+                    }} />
             </Box>
-            <Box sx={{height:'30vh',overflow:'scroll'}}>
+            <Box sx={{ height: '30vh', overflow: 'scroll' }}>
                 <ReactQueryWrapper
                     isLoading={isLoading}
                     error={error}

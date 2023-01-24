@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Tabs, Tab, Button, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';

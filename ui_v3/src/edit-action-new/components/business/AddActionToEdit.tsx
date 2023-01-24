@@ -7,7 +7,7 @@ import { BuildActionContext, SetBuildActionContext, UseActionHooks } from "../..
 import ActionDefinitionSelector from "./ActionDefinitionSelector";
 import CreateNewAction, { CreateNewActionProps } from "./CreateNewAction";
 export type AddActionToEditProps = {
-    addActionWithId: (actionDefId?: string) => void
+    addActionWithId: (actionDefId?: string,actionDefinitionName?:string) => void
 }
 
 function AddActionToEdit(props: AddActionToEditProps) {
@@ -54,14 +54,13 @@ function AddActionToEdit(props: AddActionToEditProps) {
             }
         }
     }
-    console.log(buildActionContext)
     return (
         <Box sx={{p:5}}>
             {buildActionContext.mode==="CREATE" &&
                 <CreateNewAction {...createNewActionProps}/>
             }
             <ActionDefinitionSelector
-                onActionDefinitionSelectionCallback={(actionDefinitionId?: string) =>  props?.addActionWithId(actionDefinitionId)}
+                onActionDefinitionSelectionCallback={(actionDefinitionId?: string,actionDefinitionName?:string) =>  props?.addActionWithId(actionDefinitionId,actionDefinitionName)}
             />
         </Box>
     )

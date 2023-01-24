@@ -1,16 +1,18 @@
 import { Tabs, Tab, IconButton, Button, Box, MenuItem, MenuList, Tooltip, styled, tooltipClasses, TooltipProps, Typography, ListItemIcon, ListItemText } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { withStyles } from '@mui/styles';
 import { CloseOutlined } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import Plus from '../icons/Plus';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import Home from '@mui/icons-material/Home';
 
 interface ChildrenProps {
     children: React.ReactChild | React.ReactChildren | React.ReactChildren[] | React.ReactElement<any, any>
 }
 
+export const RouteContext = React.createContext(null);
 
 const BrowserTab = withStyles({
     root: {
@@ -32,7 +34,7 @@ const BrowserTab = withStyles({
     selected: {
         "&.Mui-selected": {
             backgroundColor: '#fff',
-            color: '#000000',
+            color: '#444444!important',
         }
     }
 })(Tab);
@@ -58,10 +60,13 @@ const actionButtonStyle = {
     padding: 0,
     minWidth: 40
 }
-const linkStyle = {
-    textDecoration: 'none',
-    color: '#444444'
-
+const elipsisText = {
+    display: "inline-block",
+    width: 200,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    textAlign: 'left'
 }
 
 
@@ -83,27 +88,37 @@ const TabRenderer = ({ children }: ChildrenProps) => {
     const location = useLocation();
     let history = useHistory();
     const search = location.search;
-    const source = new URLSearchParams(search).get('source');
-    const name = new URLSearchParams(search).get('name');
+    const name = new URLSearchParams(search).get('name')
+
 
     useEffect(() => {
         const route = routes.find((route: any) => route.path === location.pathname);
-        if (!route && source === "browser") {
+        setActiveTab(location.pathname)
+        if (!route && location.pathname !== '/' && name) {
             const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
+            setRoutes([...permanentRoutes, { id: Date.now(), path: location.pathname, name: name, params:location.search, isPermanent: false }]);
+            // setActiveTab(location.pathname)
+        }
+        else {
 
-            setRoutes([...permanentRoutes, { id: Date.now(), path: location.pathname, name: name, isPermanent: false }]);
-            setActiveTab(location.pathname)
+        }
+    }, [location.pathname, name]);
+
+    useEffect(() => {
+        const index = routes.findIndex((route: any) => route.path == location.pathname);
+        if(index > -1){
+            setRoutes((oldRoutes: any) => oldRoutes.map((route: any) => route.path === location.pathname ? { ...route, params: location.search } : route))
         }
 
-        if (route && source === "browser") {
-            setActiveTab(location.pathname)
-        }
-    }, [location.pathname, source]);
+    },[location.search])
+
+    
 
 
     const handleChange = (event: React.SyntheticEvent, value: string) => {
+        const path:any = event.currentTarget.getAttribute("data-path")
         setActiveTab(value)
-        history.push(value)
+        path ?  history.push(`${value}${path}`) : history.push(value)
     };
 
     const removeTab = (event: any, path: string) => {
@@ -129,22 +144,24 @@ const TabRenderer = ({ children }: ChildrenProps) => {
     const renderLabel = (path: string, name: string, isPermanent: boolean) => {
         const label = path === "/" ? 'home' : path.slice(1).replace("/", ' > ');
         return (
-            <span style={{ fontSize: 12, textTransform: 'capitalize', fontStyle: isPermanent ? 'normal' : 'italic' }}>
-                {" "}
-                {name}
-                {
-                    label !== 'home' &&
-                    <IconButton
-                        component="div"
-                        onClick={event => removeTab(event, path)}
-                        sx={closeButtonStyle}
-                    >
-                        <CloseOutlined style={{ fontSize: 12 }} />
-                    </IconButton>
-                }
+            <Tooltip placement="bottom" title={name ? name : label}>
+                <span style={{ fontSize: 12, textTransform: 'capitalize', fontStyle: isPermanent ? 'normal' : 'italic' }}>
+                    {" "}
+                    <span style={elipsisText}>{name || label}</span>
+                    {
+                        label !== 'home' &&
+                        <IconButton
+                            component="div"
+                            onClick={event => removeTab(event, path)}
+                            sx={closeButtonStyle}
+                        >
+                            <CloseOutlined style={{ fontSize: 12 }} />
+                        </IconButton>
+                    }
 
 
-            </span>
+                </span>
+            </Tooltip>
         )
     }
 
@@ -152,45 +169,49 @@ const TabRenderer = ({ children }: ChildrenProps) => {
         setRoutes((oldRoutes: any) => oldRoutes.map((route: any) => route.path === path ? { ...route, isPermanent: true } : route))
     }
 
+    const navigate = (url: string) => {
+        history.push(url)
+    }
+
     const renderMenu = () => {
         return (
             <MenuList>
-                <NavLink to="/application/edit-action/Add" style={linkStyle}>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <Plus fontSize="small" />
-                        </ListItemIcon>
-                        <ListItemText>Add action</ListItemText>
-                        <Typography variant="body2" color="text.secondary">
-                            <KeyboardArrowRightIcon />
-                        </Typography>
-                    </MenuItem>
-                </NavLink>
 
-                <NavLink to="/application/build-workflow" style={linkStyle}>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <Plus fontSize="small" />
-                        </ListItemIcon>
-                        <ListItemText>Add flow</ListItemText>
-                        <Typography variant="body2" color="text.secondary">
-                            <KeyboardArrowRightIcon />
-                        </Typography>
-                    </MenuItem>
+                <MenuItem onClick={() => navigate("/application/edit-action/Add?name=Add")}>
+                    <ListItemIcon>
+                        <Plus fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Add action</ListItemText>
+                    <Typography variant="body2" color="text.secondary">
+                        <KeyboardArrowRightIcon />
+                    </Typography>
+                </MenuItem>
 
-                </NavLink>
 
-                <NavLink to="/application/build-web-app" style={linkStyle}>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <Plus fontSize="small" />
-                        </ListItemIcon>
-                        <ListItemText>Add dashboard</ListItemText>
-                        <Typography variant="body2" color="text.secondary">
-                            <KeyboardArrowRightIcon />
-                        </Typography>
-                    </MenuItem>
-                </NavLink>
+
+                <MenuItem onClick={() => navigate("/application/build-workflow")}>
+                    <ListItemIcon>
+                        <Plus fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Add flow</ListItemText>
+                    <Typography variant="body2" color="text.secondary">
+                        <KeyboardArrowRightIcon />
+                    </Typography>
+                </MenuItem>
+
+
+
+
+                <MenuItem onClick={() => navigate("/application/build-web-app")}>
+                    <ListItemIcon>
+                        <Plus fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Add dashboard</ListItemText>
+                    <Typography variant="body2" color="text.secondary">
+                        <KeyboardArrowRightIcon />
+                    </Typography>
+                </MenuItem>
+
 
             </MenuList>
         )
@@ -211,19 +232,23 @@ const TabRenderer = ({ children }: ChildrenProps) => {
         </HtmlTooltip>;
     };
 
+
+
     return (
 
         <React.Fragment>
             {
                 routes.length > 0 && <>
-                    <Tabs TabIndicatorProps={{
-                        style: {
-                            background: 'none'
-                        }
-                    }} value={activeTab} sx={tabHeaderStyle} aria-label="basic tabs example" onChange={handleChange}
-                        scrollButtons>
+                    <Tabs variant="scrollable"
+                        scrollButtons={false} TabIndicatorProps={{
+                            style: {
+                                background: 'none'
+                            }
+                        }} value={activeTab} sx={tabHeaderStyle} aria-label="basic tabs example" onChange={handleChange}
+                    >
+                        <BrowserTab style={{ width: 10, minWidth: 50 }} icon={<Home style={{ fontSize: 16 }} />} aria-label="Home" key="/" value="/" />
                         {routes.map((route: any) => (
-                            <BrowserTab onDoubleClick={() => makeParmanent(route.path)} label={renderLabel(route.path, route.name, route.isPermanent)} key={route.path} value={route.path} />
+                            <BrowserTab onDoubleClick={() => makeParmanent(route.path)} data-path={route.params} label={renderLabel(route.path, route.name, route.isPermanent)} key={route.path} value={route.path} />
                         ))}
 
                         <ButtonInTabs>
@@ -239,7 +264,11 @@ const TabRenderer = ({ children }: ChildrenProps) => {
 
             }
 
-            {children}
+            <RouteContext.Provider value={routes}>
+                {children}
+            </RouteContext.Provider>
+
+
 
         </React.Fragment>
 
