@@ -1,3 +1,4 @@
+import { type } from "os";
 import React from "react";
 import { UseMutationResult, useQueryClient } from "react-query";
 import { v4 as uuidv4 } from 'uuid';
@@ -62,7 +63,10 @@ export type BuildActionContextState = {
     sideSettingsOpen?: boolean,
     pastRunsOpen?: boolean,
     showDependencies?: boolean,
-    splitView?: boolean
+    splitView?: boolean,
+    latestTestExecutionId?: string,
+    latestTestInstanceId?: string,
+    inferredColumns?: string[]
 }
 
 const formEmptyDefaultContext: () => BuildActionContextState = () => {
@@ -459,6 +463,26 @@ type ToggleDisplayDependenciesAction = {
     payload: {}
 }
 
+type SetLatestExecutionId = {
+    type: "SetLatestExecutionId",
+    payload: {
+        executionId?: string
+    }
+}
+
+type SetLatestInstanceId = {
+    type: "SetLatestInstanceId",
+    payload: {
+        latestInstanceId?: string
+    }
+}
+
+type GetDerivedColumns = {
+    type: "GetDerivedColumns",
+}
+
+ 
+
 export type BuildActionAction = SetActionDefinitionNameAction |
 SetActionDefinitionDescriptionAction |
 SetActionDefinitionActionTypeAction |
@@ -507,7 +531,10 @@ ChangeNameForDeepDiveAction |
 ChangeActionIdForDeepDive |
 RemoveDeepDiveAction |
 ToggleDisplayPastRuns |
-ToggleDisplayDependenciesAction
+ToggleDisplayDependenciesAction |
+SetLatestExecutionId |
+SetLatestInstanceId |
+GetDerivedColumns
 
 
 const reducer = (state: BuildActionContextState, action: BuildActionAction): BuildActionContextState => {
@@ -1103,10 +1130,53 @@ const reducer = (state: BuildActionContextState, action: BuildActionAction): Bui
             }
         }
 
+        case "SetLatestExecutionId": {
+            return {
+                ...state,
+                latestTestExecutionId: action.payload.executionId
+            }
+        }
+
+        case "SetLatestInstanceId": {
+            return {
+                ...state,
+                latestTestInstanceId: action.payload.latestInstanceId
+            }
+        }
+
+        case "GetDerivedColumns": {
+            
+            const activeTemplate = state?.actionTemplateWithParams.find(at => at?.template?.Id===state?.activeTemplateId)
+            const derivedColumns = getDerviedColumns(activeTemplate?.template?.Text, activeTemplate?.template?.Language)
+            
+            return {
+                ...state,
+                inferredColumns: derivedColumns
+            }
+        }
+
         default:
             const neverAction: never = action
             return state
     }
+}
+
+export const getDerviedColumns = (code?: string, language?: string) => {
+    if(language === ActionDefinitionQueryLanguage.SQL) {
+        const words = code?.split(' ')
+        const inferredColumns: string[] = []
+        words?.forEach((eachWord, index) => {
+            if(eachWord.toLocaleLowerCase() == "as") {
+                if(index + 1 < words.length) {
+                    const nextWord = words[index + 1]
+                    inferredColumns.push(nextWord)
+                }
+            }
+        })
+        return inferredColumns
+    }
+    return []
+    
 }
 
 export const assignIndex = (parameters: ActionParameterDefinition[]) => {
@@ -1517,6 +1587,7 @@ export const BuildActionContextProvider = ({children, mode, newActionCallback}: 
     React.useEffect(() => {
         if(activeTemplate?.template?.Text!==undefined){
             setContextState({ type: "InferParameters" })
+            setContextState({type: "GetDerivedColumns"})
         }
     }, [activeTemplate?.template?.Text])
     

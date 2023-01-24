@@ -1,49 +1,31 @@
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {
     Box,
-    Button, Card, Divider,
-    FormControl, Grid, InputLabel, Typography,
-    List,
-    ListItem, MenuItem,
-    Select, TextField,
-    IconButton,
-    InputAdornment,
-    SelectChangeEvent,
-    Dialog,
-    Popover
+    Button, Card, FormControl, Grid, InputAdornment, MenuItem, Popover, Select, SelectChangeEvent, TextField
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { DataGrid, DataGridProps } from "@mui/x-data-grid";
 import Papa from 'papaparse';
-import React, { useState } from 'react';
+import React from 'react';
 import { useMutation } from 'react-query';
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
-import { DATA_ALL_TABLES_ROUTE } from '../../../common/components/header/data/DataRoutesConfig';
-import VirtualTagHandler from '../../../common/components/tag-handler/VirtualTagHandler';
 import SelectTags from '../../../common/components/SelectTags.js';
-import './../../../css/table_browser/TableBrowser.css';
+import VirtualTagHandler from '../../../common/components/tag-handler/VirtualTagHandler';
 import S3UploadState from '../../../custom_enums/S3UploadState';
 import dataManager from '../../../data_manager/data_manager';
-import ColumnDataType from '../../../enums/ColumnDataType';
+import DatafacadeDatatype from '../../../enums/DatafacadeDatatype';
 import ExternalStorageUploadRequestContentType from '../../../enums/ExternalStorageUploadRequestContentType';
 import TagGroups from '../../../enums/TagGroups';
 import TagScope from '../../../enums/TagScope';
-import SelectHeaderRowsButton from './SelectHeaderRowsButton';
-import { findHeaderRows } from './util';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CollapsibleDrawer from "../../build_action/components/form-components/CollapsibleDrawer"
-import DoubeLeftIcon from '../../../../src/images/Group 691.svg';
-import { Link } from "react-router-dom";
-import SearchIcon from '@mui/icons-material/Search';
-import TableIcon from '../../../../src/images/table_2.svg'
 import { TableProperties, Tag } from '../../../generated/entities/Entities';
 import { TableAndColumns } from '../../../generated/interfaces/Interfaces';
 import labels from '../../../labels/labels';
-import DatafacadeDatatype from '../../../enums/DatafacadeDatatype';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
-import ConfirmationDialog from '../../../common/components/ConfirmationDialog';
 import { SetUploadTableState, SetUploadTableStateContext, UploadState, UploadTableState, UploadTableStateContext } from '../context/UploadTablePageContext';
+import './../../../css/table_browser/TableBrowser.css';
+import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
+import SelectHeaderRowsButton from './SelectHeaderRowsButton';
+import { findHeaderRows } from './util';
 const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function }
 
 const useStyles = makeStyles(() => ({
@@ -713,6 +695,8 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                     onSettled: () => {
                     },
                     onError: (data, variables, context) => {
+                        setColumnProperties(oldCols => oldCols?.map(col => ({ ...col, tagsFetched: true })))
+                        setTableProperties(oldTable => ({ ...oldTable, tagsFetched: true }))
                     }
                 })
         }

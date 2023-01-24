@@ -350,18 +350,31 @@ export const LabelWithAutocomplete = (props: {label: string, value?: string, onV
     const buildActionContext = React.useContext(BuildActionContext)
     const parameters = buildActionContext.actionTemplateWithParams?.[0]?.parameterWithTags?.filter(apd => apd.parameter?.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
 
+    const inferredColumnParameters: ActionContextActionParameterDefinitionWithTags[] = (buildActionContext.inferredColumns || []).map(column => {
+        return {
+            parameter: {
+                ParameterName: column,
+                Id: "column"
+            },
+            tags: [],
+            existsInDB: false
+        }
+    })
+
+    const allParameters: ActionContextActionParameterDefinitionWithTags[] = [...parameters, ...inferredColumnParameters]
+
     const getCurrentValue = () => {
-        const selectedParameter = parameters?.find?.(apd => `{${apd.parameter?.ParameterName}}` === props.value)
+        const selectedParameter = allParameters?.find?.(apd => `{${apd.parameter?.ParameterName}}` === props.value)
 
         if(selectedParameter === undefined && !!props.value) {
             const virtualParameter: ActionContextActionParameterDefinitionWithTags = {parameter: {ParameterName: props.value, Id: "NA"}, tags: [], existsInDB: false}
             return {
                 currentOptionValue: {ParameterName: props.value, Id: "NA"},
-                allOptions: [...parameters, virtualParameter]
+                allOptions: [...allParameters, virtualParameter]
             }
         }
 
-        return {currentOptionValue: selectedParameter?.parameter, allOptions: parameters}
+        return {currentOptionValue: selectedParameter?.parameter, allOptions: allParameters}
     }
 
 
@@ -403,7 +416,7 @@ export const LabelWithAutocomplete = (props: {label: string, value?: string, onV
                         return filtered;
                     }}
                     onChange={(event, value, reason, details) => {
-                        const chartOptionValue = value?.Id === "NA" ? value?.ParameterName?.substring(0, value?.ParameterName?.length - 13) : `{${value?.ParameterName}}`
+                        const chartOptionValue = value?.Id === "NA" ? value?.ParameterName?.substring(0, value?.ParameterName?.length - 13) : value?.Id === "column" ? value?.ParameterName : `{${value?.ParameterName}}`
                         props.onValueChange(chartOptionValue || "")
                     }}
                     renderInput={(params) => {
@@ -422,11 +435,24 @@ export const LabelWithListAutocomplete = (props: {label: string, value: string[]
     const buildActionContext = React.useContext(BuildActionContext)
     const parameters = buildActionContext.actionTemplateWithParams?.[0]?.parameterWithTags?.filter(apd => apd.parameter?.Tag === ActionParameterDefinitionTag.COLUMN_NAME)
 
+    const inferredColumnParameters: ActionContextActionParameterDefinitionWithTags[] = (buildActionContext.inferredColumns || []).map(column => {
+        return {
+            parameter: {
+                ParameterName: column,
+                Id: "column"
+            },
+            tags: [],
+            existsInDB: false
+        }
+    })
+
+    const allParameters: ActionContextActionParameterDefinitionWithTags[] = [...parameters, ...inferredColumnParameters]
+
     const getCurrentValue = () => {
         const selectedParameters: ActionParameterDefinition[] = []
-        const allOptions = parameters
+        const allOptions = allParameters
         props.value?.forEach(value => {
-            const currentParameter = parameters?.find(apd => `{${apd.parameter?.ParameterName}}` === value)
+            const currentParameter = allParameters?.find(apd => `{${apd.parameter?.ParameterName}}` === value)
             if(currentParameter === undefined) {
                 const virtualParameter: ActionContextActionParameterDefinitionWithTags = {parameter: {ParameterName: value, Id: "Already_added"}, tags: [], existsInDB: false}
                 allOptions.push(virtualParameter)
@@ -482,7 +508,7 @@ export const LabelWithListAutocomplete = (props: {label: string, value: string[]
                         return filtered;
                     }}
                     onChange={(event, value) => {
-                        const newValue = value?.map(param => param?.Id === "NA" ? param?.ParameterName?.substring(0, param?.ParameterName?.length - 13) || "NA" : param?.Id === 'Already_added' ? param?.ParameterName || "NA" : `{${param?.ParameterName || "NA"}}`)
+                        const newValue = value?.map(param => param?.Id === "NA" ? param?.ParameterName?.substring(0, param?.ParameterName?.length - 13) || "NA" : param?.Id === 'Already_added' || param?.Id === "column" ? param?.ParameterName || "NA" : `{${param?.ParameterName || "NA"}}`)
                         props.onValueChange(newValue)
                     }}
                 />

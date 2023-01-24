@@ -118,11 +118,15 @@ function getActionHeaderProps(): ActionHeaderProps {
             onSave: onSave,
             onDuplicate: onDuplicate,
             onRun: () => {
-                onSave()
-                const actionId = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id
-                if(!!actionId) {
-                    history.push(`/application/execute-action/${actionId}`)
-                }
+                useActionHooks.useActionDefinitionFormSave?.mutate(buildActionContext, {
+                    onSuccess: () => {
+                        const actionId = buildActionContext?.actionDefinitionWithTags?.actionDefinition?.Id
+                        if(!!actionId) {
+                            history.push(`/application/execute-action/${actionId}`)
+                        }
+                    }
+                })
+                
             },
             onGenerateCode: onGenerateCode,
             onCloseGeneratedCodeDialog: closeGeneratedDialog,

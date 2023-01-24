@@ -35,7 +35,7 @@ const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
                             <Box>
                                 <TextField sx={{ height: "100%" }} fullWidth variant="outlined" label="Instance name" required value={props?.ProviderInstance?.ProviderInstance?.model?.Name} onChange={(event) => props?.onProviderInstanceNameChange?.(event.target.value)}/>
                             </Box>
-                            {props?.ProviderInstance?.ProviderInstance?.model?.IsConfigurable && props?.ProviderInstance?.ProviderParameterInstance?.map(paramInstance => {
+                            {props?.ProviderInstance?.ProviderInstance?.model?.IsConfigurable !== false && props?.ProviderInstance?.ProviderParameterInstance?.map(paramInstance => {
                                 const paramDef = props?.ProviderDefinition?.ProviderParameterDefinition?.find(paramDef => paramInstance?.ProviderParameterDefinitionId === paramDef?.Id)
                                 const hidden = (paramDef?.Protected || false) && (!showHidden)
                                 if(!!paramDef && paramDef?.FilledBy!=="FDS") {

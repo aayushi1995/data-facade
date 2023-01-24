@@ -8,6 +8,7 @@ import CodeEditor from "../../../common/components/CodeEditor";
 import { ACTION_EXECUTION_ROUTE, APPLICATION_EDIT_ACTION_ROUTE_ROUTE, SCHEDULED_JOBS_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
 import LoadingIndicator from '../../../common/components/LoadingIndicator';
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
+import { ReactQueryWrapper } from '../../../common/components/ReactQueryWrapper';
 import ActionDescriptionCard from "../../../common/components/workflow-action/ActionDescriptionCard";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
@@ -74,7 +75,9 @@ interface ExecuteActionProps {
     parentExecutionId?: string,
     hideExecution?: boolean,
     tableId?: string,
-    parentProviderInstanceId?: string
+    parentProviderInstanceId?: string,
+    actionInstanceId?: string,
+    onActionInstanceCreate?: (actionInstanceDetails: {Id?: string}) => void
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
@@ -84,7 +87,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
     const useUrlToFindId = (props.fromDeepDive === undefined || props.fromDeepDive == false)
     const location = useLocation()
     const actionExecutionId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("executionId") : undefined
-    const actionInstanceId = useUrlToFindId && location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
+    const actionInstanceId = props.fromTestRun ? props.actionInstanceId : useUrlToFindId && location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
     const [tabValue, setTabValue] = React.useState(!!actionExecutionId ? 1 : 0)
     const validateActionInstance = useValidateActionInstance()
     const [validateErrorMessage, setValidationErrorMessage] = React.useState<string | undefined>()
@@ -226,6 +229,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                             } else {
                                 setDialogState({isOpen: false})
                                 props.onExecutionCreate?.(request?.actionExecutionToBeCreatedId!)
+                                props.onActionInstanceCreate?.({Id: request.actionInstance.Id})
                             }
                         } else {
                             setDialogState({isOpen: false})
@@ -315,9 +319,38 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
     }
 
     const StepNumberToComponent: {component: React.ReactNode, label: string}[] = []
+    
+    if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => !isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
+        StepNumberToComponent.unshift({
+            component: 
+            <Box sx={{ mx: 15 }}>
+                <ConfigureParametersNew
+                    mode="GENERAL"
+                    ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                    ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                    ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
+                    handleParametersChange={handleChange}
+                    showOnlyParameters={props.showOnlyParameters}
+                    parentExecutionId={props.parentExecutionId}
+                    fromTestRun={props.fromTestRun}
+                />
+            </Box>,
+            label: "Required Inputs"
+        })
+    }
+
+    
+    if(!props.fromTestRun) {
+        StepNumberToComponent.push(
+            {
+                component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>,
+                label: "Notification"
+            },
+        )
+    }
 
     if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
-        StepNumberToComponent.unshift({
+        StepNumberToComponent.push({
             component: 
             <Box sx={{ mx: 15 }}>
                 <ConfigureParametersNew
@@ -333,34 +366,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             label: "Inputs Advanced"
             
         })
-    }
-    
-    if(executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => !isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
-        StepNumberToComponent.push({
-            component: 
-            <Box sx={{ mx: 15 }}>
-                <ConfigureParametersNew
-                    mode="GENERAL"
-                    ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                    ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                    ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
-                    handleParametersChange={handleChange}
-                    showOnlyParameters={props.showOnlyParameters}
-                    parentExecutionId={props.parentExecutionId}
-                />
-            </Box>,
-            label: "Required Inputs"
-        })
-    }
-
-    
-    if(!props.fromTestRun) {
-        StepNumberToComponent.push(
-            {
-                component: <ConfigureSlackAndEmail slack={executeActionContext.slack} email={executeActionContext.email} writeBackTableName={executeActionContext.ToCreateModels.ActionInstance.ResultTableName} handleEmailAndSlackChange={handleSlackAndEmailChange} parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances} actionDefinitionReturnType={executeActionContext.ExistingModels.ActionDefinition.PresentationFormat} handleWriteBackTableNameChange={handleWriteBackTableNameChange}/>,
-                label: "Notification"
-            },
-        )
     }
 
     const handleEdit = () => {
@@ -409,109 +414,116 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
 
     return (
         <ExecuteActionMainBox sx={{display: "flex", flexDirection: "column", gap: 2, p: 3}}>
-            {props.showActionDescription && !!description ? (
-                <Box>
-                    <ActionLevelInfo actionDefinition={executeActionContext.ExistingModels.ActionDefinition} subTexts={[executeActionContext.ExistingModels.ActionParameterDefinitions.length + " Parameters"]}/>
-                </Box>
-            ) : (
-                <></>
-            )}
-            <Divider orientation='horizontal' sx={{width: '100%'}} />
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1,
-                p: 2,
-                mb: 2
-            }}>
-                {props.fromTestRun ? (
-                    <></>
-                ) : (
-                    <Box sx={{display: 'flex', gap: 1}}>
-                        <ExecuteActionStyledTabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
-                            <ExecuteActionStyledTab label="Input" value={0} />
-                            <ExecuteActionStyledTab label="Output" value={1} disabled={!(!!actionExecutionId && !!data && !props.hideExecution)}/>
-                        </ExecuteActionStyledTabs>
-                    </Box>
-                )}
-                <Box m={1}>
-                    <TabPanel value={tabValue} index={0}>
-                        <Box sx={{display: 'flex', flexDirection: 'column', gap: 4}}>
-                            <Grid container>
-                                <Grid item xs={7} />
-                                <Grid item xs= {5} >
-                                    <Stepper nonLinear activeStep={executeActionContext.currentStep} alternativeLabel>
-                                        {StepNumberToComponent.map((component, index) => (
-                                            <Step key={index}>
-                                                <StepButton onClick={() => handleGoToStep(index)} >
-                                                    {StepNumberToComponent[index].label}
-                                                </StepButton>
-                                            </Step>
-                                        ))}
-                                    </Stepper>
-                                </Grid>
-                            </Grid>
-                            <Box>
-                                {StepNumberToComponent[executeActionContext.currentStep].component}
+            <ReactQueryWrapper isLoading={isRefetching || isLoading || fetchExistingActionParameterInstancesQuery.isRefetching} error={error} data={data}>
+                {() => (
+                    <>
+                    {props.showActionDescription && !!description ? (
+                        <Box>
+                            <ActionLevelInfo actionDefinition={executeActionContext.ExistingModels.ActionDefinition} subTexts={[executeActionContext.ExistingModels.ActionParameterDefinitions.length + " Parameters"]}/>
+                        </Box>
+                    ) : (
+                        <></>
+                    )}
+                    <Divider orientation='horizontal' sx={{width: '100%'}} />
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1,
+                        p: 2,
+                        mb: 2
+                    }}>
+                        {props.fromTestRun ? (
+                            <></>
+                        ) : (
+                            <Box sx={{display: 'flex', gap: 1}}>
+                                <ExecuteActionStyledTabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
+                                    <ExecuteActionStyledTab label="Input" value={0} />
+                                    <ExecuteActionStyledTab label="Output" value={1} disabled={!(!!actionExecutionId && !!data && !props.hideExecution)}/>
+                                </ExecuteActionStyledTabs>
                             </Box>
-                            {/* <Box>
-                                <ViewConfiguredParameters
-                                    parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                                    parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                                />
-                            </Box> */}
-                            <Box sx={{justifyContent:'center'}}>
-                                {executeActionContext.ExistingModels.ActionDefinition.ActionType === ActionDefinitionActionType.AUTO_FLOW ? (
-                                    <Button onClick={handleCreateWorkflow} variant="contained" sx={{width: "100%"}}>
-                                        Create Auto Flow
-                                    </Button>
-                                ) : (
-                                    <Box sx={{display: 'flex', flexDirection:'row',justifyContent: 'center'}}>
-                                        {createActionInstanceAsyncMutation.isLoading ? (
-                                            <LoadingIndicator />
+                        )}
+                        <Box m={1}>
+                            <TabPanel value={tabValue} index={0}>
+                                <Box sx={{display: 'flex', flexDirection: 'column', gap: 4}}>
+                                    <Grid container>
+                                        <Grid item xs={7} />
+                                        <Grid item xs= {5} >
+                                            <Stepper nonLinear activeStep={executeActionContext.currentStep} alternativeLabel>
+                                                {StepNumberToComponent.map((component, index) => (
+                                                    <Step key={index}>
+                                                        <StepButton onClick={() => handleGoToStep(index)} >
+                                                            {StepNumberToComponent[index].label}
+                                                        </StepButton>
+                                                    </Step>
+                                                ))}
+                                            </Stepper>
+                                        </Grid>
+                                    </Grid>
+                                    <Box>
+                                        {StepNumberToComponent[executeActionContext.currentStep].component}
+                                    </Box>
+                                    {/* <Box>
+                                        <ViewConfiguredParameters
+                                            parameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                                            parameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                                        />
+                                    </Box> */}
+                                    <Box sx={{justifyContent:'center'}}>
+                                        {executeActionContext.ExistingModels.ActionDefinition.ActionType === ActionDefinitionActionType.AUTO_FLOW ? (
+                                            <Button onClick={handleCreateWorkflow} variant="contained" sx={{width: "100%"}}>
+                                                Create Auto Flow
+                                            </Button>
                                         ) : (
-                                            <>
-                                            {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
-                                                <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
-                                                    RUN
-                                                </Button>
-                                            ) : (
-                                                <Box sx={{display: 'flex', gap: 1}}>
-                                                    {areAllParametersFilled() ? (
+                                            <Box sx={{display: 'flex', flexDirection:'row',justifyContent: 'center'}}>
+                                                {createActionInstanceAsyncMutation.isLoading ? (
+                                                    <LoadingIndicator />
+                                                ) : (
+                                                    <>
+                                                    {executeActionContext.currentStep === (StepNumberToComponent.length - 1) ? (
                                                         <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
                                                             RUN
                                                         </Button>
                                                     ) : (
-                                                        <></>
+                                                        <Box sx={{display: 'flex', gap: 1}}>
+                                                            {areAllParametersFilled() ? (
+                                                                <Button onClick={handleAsyncCreate} variant="contained" sx={{width: "250px"}} disabled={props.disableRun || false}>
+                                                                    RUN
+                                                                </Button>
+                                                            ) : (
+                                                                <></>
+                                                            )}
+                                                            <Button onClick={handleGoNext} variant="contained" sx={{width: "250px"}}>
+                                                                NEXT
+                                                            </Button>
+                                                        </Box>
                                                     )}
-                                                    <Button onClick={handleGoNext} variant="contained" sx={{width: "250px"}}>
-                                                        NEXT
-                                                    </Button>
-                                                </Box>
-                                            )}
-                                            </>
+                                                    </>
+                                                )}
+                                            </Box>
                                         )}
+                                        
                                     </Box>
-                                )}
-                                
-                            </Box>
+                                </Box>
+                            </TabPanel>
+                            <TabPanel value={tabValue} index={1}>
+                                <ActionExecutionDetails actionExecutionId={actionExecutionId!} showDescription={false}/>
+                            </TabPanel>
                         </Box>
-                    </TabPanel>
-                    <TabPanel value={tabValue} index={1}>
-                        <ActionExecutionDetails actionExecutionId={actionExecutionId!} showDescription={false}/>
-                    </TabPanel>
-                </Box>
-                <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
-                    <DialogContent>
-                        <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
-                    </DialogContent>
-                </Dialog>
-                <Snackbar open={!!validateErrorMessage} autoHideDuration={5000} onClose={() => setValidationErrorMessage(undefined)} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-                    <Alert severity='error' onClose={() => setValidationErrorMessage(undefined)} sx={{width: '100%'}}>
-                        {validateErrorMessage}
-                    </Alert>
-                </Snackbar>
-            </Box>
+                        <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">
+                            <DialogContent>
+                                <ViewActionExecution actionExecutionId={resultActionExecutionId}/>
+                            </DialogContent>
+                        </Dialog>
+                        <Snackbar open={!!validateErrorMessage} autoHideDuration={5000} onClose={() => setValidationErrorMessage(undefined)} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                            <Alert severity='error' onClose={() => setValidationErrorMessage(undefined)} sx={{width: '100%'}}>
+                                {validateErrorMessage}
+                            </Alert>
+                        </Snackbar>
+                    </Box>
+                    </>
+                )}
+            </ReactQueryWrapper>
+            
         </ExecuteActionMainBox>
     )
 }

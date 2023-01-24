@@ -15,6 +15,7 @@ interface ConfigureParametersPropsNew {
     showOnlyParameters?: boolean
     handleParametersChange: (newActionParameterInstances: ActionParameterInstance[]) => void,
     parentExecutionId?: string,
+    fromTestRun?: boolean
 }
 
 export const isDefaultValueDefined = (parameterDefaultValue?: string) => {
@@ -40,11 +41,11 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
     
     if(numberOfParameters <= 4) {
         return (
-            <Grid container spacing={3} justifyContent="center">
+            <Grid container spacing={3} justifyContent="center" direction={props.fromTestRun ? "column" : "row"}>
                 {filteredParameters.map(parameterDef => {
                     return (
                         <Grid item sm={12} md={12/numberOfParameters} >
-                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '100%'}}>
                                 <ParameterDefinitionsConfigPlane 
                                     parameterDefinitions={[parameterDef]}
                                     parameterInstances={props.ActionParameterInstances}

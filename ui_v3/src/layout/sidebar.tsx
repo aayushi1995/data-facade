@@ -11,6 +11,8 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import { SLACK_URL, GENERATE_URL_PARAMS } from '../common/config/config';
 import BrowserMenu from './browser-menu';
+import ExpandMenu from "../../src/images/expand_menu.svg"
+import CollaseMenu from "../../src/images/collapse_menu.svg"
 
 
 const navBarWidth = 100
@@ -56,8 +58,13 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FunctionComponent<SidebarProps> = () => {
-    const [toggle, setToggle] = React.useState<boolean>(true)
-    const toggleBrowser = () => setToggle(!toggle)
+    const sideBarLocalStorage = localStorage.getItem("sideBarState")
+    const [toggle, setToggle] = React.useState<boolean>(sideBarLocalStorage !== null ? (sideBarLocalStorage === "true" ? true: false) : true )
+    const toggleBrowser = () => {
+        localStorage.setItem("sideBarState", toggle ? "false" : "true")
+        setToggle(toggle => !toggle)
+        
+    }
     const location = useLocation();
     const collapsibleItems: any = items.filter(item => item.subMenu);
     collapsibleItems.forEach((item: any) => { item['open'] = false })
@@ -77,7 +84,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
 
     const toggleButton =  <Tooltip title={toggle ? `Close  Browser` : 'Open Browser'}>
         <IconButton sx={{ color: '#fff' }} onClick={() => toggleBrowser?.()}>
-            {!toggle ? <ArrowForwardIosOutlinedIcon /> : <ArrowBackIosNewOutlinedIcon />}
+            {!toggle ? <img src={ExpandMenu} /> : <img src={CollaseMenu} />}
         </IconButton>
     </Tooltip>
     const handleClick =
