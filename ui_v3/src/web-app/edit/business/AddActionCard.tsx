@@ -1,42 +1,44 @@
-import { Box, Typography, IconButton, Dialog, DialogContent, TextField, Button } from "@mui/material";
+import { Box, Typography, IconButton, Dialog, DialogContent, TextField, Button, Card, CardHeader, DialogTitle } from "@mui/material";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
-import { StyledAddActionCard } from "../presentation/styled/StyledAddActionCard";
 import AddIcon from '@mui/icons-material/Add';
 import useAddActionCard from "../hooks/useAddActionCard";
 import { getDialogTitile } from "./ComponentsTray";
 
-const AddActionCard = ({actionDefinitionDetail, handleAdd}: {actionDefinitionDetail: ActionDefinitionDetail, handleAdd: (ActionDefinitionDetail: ActionDefinitionDetail, referenceName: string | undefined) => void}) => {
+const AddActionCard = ({ actionDefinitionDetail, handleAdd }: { actionDefinitionDetail: ActionDefinitionDetail, handleAdd: (ActionDefinitionDetail: ActionDefinitionDetail, referenceName: string | undefined) => void }) => {
 
-    const {onChangeDialogState, onReferenceNameChange, actionReferenceName, actionReferenceNameDialogState} = useAddActionCard()
+    const { onChangeDialogState, onReferenceNameChange, actionReferenceName, actionReferenceNameDialogState } = useAddActionCard()
+
+    const renderTitle = (title: string | undefined) => <Typography style={{ fontSize: 14, fontWeight: 500 }}>{title}</Typography>
 
     return (
         <>
-        <Dialog maxWidth="md" fullWidth open={actionReferenceNameDialogState} onClose={onChangeDialogState}>
-            {getDialogTitile(onChangeDialogState)}
-            <DialogContent>
-                <Box sx={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', gap: 2}}>
-                    <TextField value={actionReferenceName} onChange={onReferenceNameChange} fullWidth label="Unique Action reference" />
-                    <Button variant="contained" size="medium" onClick={() => handleAdd(actionDefinitionDetail, actionReferenceName)}>
+            <Dialog maxWidth="md" fullWidth open={actionReferenceNameDialogState} onClose={onChangeDialogState} title="Unique Action reference">
+                <DialogTitle id="alert-dialog-title">
+                    {"Unique Action reference"}
+                </DialogTitle>
+
+                <DialogContent>
+
+                    <TextField value={actionReferenceName} onChange={onReferenceNameChange} fullWidth label="Unique Action reference" sx={{ mt: 2 }} />
+                    <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => handleAdd(actionDefinitionDetail, actionReferenceName)}>
                         Add
                     </Button>
-                </Box>
-            </DialogContent>
-        </Dialog>
-        <StyledAddActionCard variant="outlined">
-            <Box sx={{display: 'flex', gap: 2, alignItems: 'center'}}>
-                <Box sx={{display: 'flex', flexDirection: 'column', flex: 2, width: '100%', gap: 2}}>
-                    <Typography variant="actionCardHeader">
-                        {actionDefinitionDetail.ActionDefinition?.model?.DisplayName}    
-                    </Typography>
-                    <Typography variant="actionCardSubHeader">
-                        {actionDefinitionDetail.ActionDefinition?.model?.ActionGroup||"NA"}
-                    </Typography>
-                </Box> 
-                <IconButton sx={{ display: "flex", alignItems: "center", justifyContent: "center"}} onClick={() => onChangeDialogState()}>
-                    <AddIcon />
-                </IconButton>
-            </Box>
-        </StyledAddActionCard>
+
+                </DialogContent>
+            </Dialog>
+            <Card>
+                <CardHeader
+                    action={
+                        <IconButton aria-label="settings" onClick={() => onChangeDialogState()}>
+                            <AddIcon />
+                        </IconButton>
+                    }
+                    title={renderTitle(actionDefinitionDetail.ActionDefinition?.model?.DisplayName)}
+                    subheader={actionDefinitionDetail.ActionDefinition?.model?.ActionGroup || "NA"}
+                    subheaderTypographyProps={{ fontSize: 12 }}
+                />
+
+            </Card>
         </>
     )
 }

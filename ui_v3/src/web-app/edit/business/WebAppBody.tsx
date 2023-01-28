@@ -19,7 +19,7 @@ const WebAppBody = () => {
     return (
         <WebAppCanvasBox >
             <ResponsiveReactGridLayout
-                rowHeight={2}
+                rowHeight={1}
                 useCSSTransforms={true}
                 breakpoints={{ lg: 1200, md: 996, sm: 768 }}
                 cols={{ lg: 14, md: 10, sm: 6 }}

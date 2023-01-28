@@ -22,7 +22,7 @@ const AddingAllActionView = ({onAddAction}: AddingActionActionViewProps) => {
     return (
         <ReactQueryWrapper isLoading={allActionDefinitionsIsLoading} error={allActionDefinitionsError} data={allActionDefinitionsData}>
             {() => (
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, mt:1}}>
                     <TextField
                         id="input-with-icon-textfield"
                         placeholder="Search action..."
@@ -40,9 +40,9 @@ const AddingAllActionView = ({onAddAction}: AddingActionActionViewProps) => {
                         }}
                         variant="outlined"
                     />
-                    <Grid container spacing={1}>
+                    <Grid container spacing={3} sx={{mt:1}}>
                         {filteredActionDefinitions?.map(actionDefinitionDetail => (
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <AddActionCard actionDefinitionDetail={actionDefinitionDetail} handleAdd={onAddAction}/>
                             </Grid>
                         ))}

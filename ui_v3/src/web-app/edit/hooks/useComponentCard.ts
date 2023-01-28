@@ -18,7 +18,7 @@ const useComponentCard = (component: WebAppComponent) => {
         })
     }
 
-    const onLableChange = (label: React.ChangeEvent<HTMLInputElement>) => {
+    const onLabelChange = (label: React.ChangeEvent<HTMLInputElement>) => {
         setEditWebAppContext({
             type: 'ChangeComponentLabel',
             payload: {
@@ -30,7 +30,7 @@ const useComponentCard = (component: WebAppComponent) => {
 
     return {
         onDelete,
-        onLableChange
+        onLabelChange
     }
 
 }

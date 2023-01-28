@@ -96,8 +96,7 @@ const TabRenderer = ({ children }: ChildrenProps) => {
         setActiveTab(location.pathname)
         if (!route && location.pathname !== '/' && name) {
             const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
-            setRoutes([...permanentRoutes, { id: Date.now(), path: location.pathname, name: name, params:location.search, isPermanent: false }]);
-            // setActiveTab(location.pathname)
+            setRoutes([...permanentRoutes, { id: Date.now(), path: location.pathname, name: name, params: location.search, isPermanent: false }]);
         }
         else {
 
@@ -106,19 +105,19 @@ const TabRenderer = ({ children }: ChildrenProps) => {
 
     useEffect(() => {
         const index = routes.findIndex((route: any) => route.path == location.pathname);
-        if(index > -1){
+        if (index > -1) {
             setRoutes((oldRoutes: any) => oldRoutes.map((route: any) => route.path === location.pathname ? { ...route, params: location.search } : route))
         }
 
-    },[location.search])
+    }, [location.search])
 
-    
+
 
 
     const handleChange = (event: React.SyntheticEvent, value: string) => {
-        const path:any = event.currentTarget.getAttribute("data-path")
+        const path: any = event.currentTarget.getAttribute("data-path")
         setActiveTab(value)
-        path ?  history.push(`${value}${path}`) : history.push(value)
+        path ? history.push(`${value}${path}`) : history.push(value)
     };
 
     const removeTab = (event: any, path: string) => {
@@ -265,7 +264,9 @@ const TabRenderer = ({ children }: ChildrenProps) => {
             }
 
             <RouteContext.Provider value={routes}>
-                {children}
+                <div onClick={() => makeParmanent(location.pathname)}>
+                    {children}
+                </div>
             </RouteContext.Provider>
 
 

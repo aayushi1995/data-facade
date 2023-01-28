@@ -36,14 +36,15 @@ const WebAppEdit = (props: WebAppHomePageProps) => {
         <ReactQueryWrapper {...webAppDetailsQuery}>
             {() => (
                 <Box sx={{display: 'flex', gap: 1, justifyContent: 'flex-end'}}>
-                    <HeaderAndBody />
-                    <CollapsibleDrawer
+                    <HeaderAndBody webAppId={props.WebAppId}/>
+                    <ComponentsTray webAppId={props.WebAppId}/>
+                    {/* <CollapsibleDrawer
                         open={true}
                         openWidth="20%"
                         closedWidth="10px"
                         openDrawer={() => {}}
-                        children={<ComponentsTray webAppId={props.WebAppId}/>}
-                    />    
+                        children={}
+                    />     */}
                 </Box>
             )}
             
