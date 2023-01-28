@@ -647,9 +647,9 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                     onSuccess: (parsedData, variables, context) => {
                         setColumnProperties(oldProp => {
                             let column_tags = parsedData["column_tags"]
-                            if (column_tags === undefined || column_tags.length == 0) return oldProp
-
-                            let newProp = [...oldProp]
+                            let newProp = oldProp?.map(cs => ({ ...cs, tagsFetched: true }))
+                            if (column_tags === undefined || column_tags.length == 0) return newProp
+                            
                             column_tags.forEach(columnTagProp => {
                                 const columnName = columnTagProp.column_name
                                 let tags_len = columnTagProp["column_tags"].length
@@ -663,11 +663,10 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                                     if (col["columnName"] === columnName) {
                                         return {
                                             ...col,
-                                            columnTags: [...col.columnTags, ...tags],
-                                            tagsFetched: true
+                                            columnTags: [...col.columnTags, ...tags]
                                         }
                                     } else {
-                                        return { ...col, tagsFetched: true }
+                                        return col
                                     }
                                 })
                             })
