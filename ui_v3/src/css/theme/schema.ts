@@ -69,7 +69,9 @@ declare module '@mui/material/Typography' {
         executeActionDescription: true,
         parameterInputField: true,
         homePageTitle: true,
-        homePageSubtext: true
+        homePageSubtext: true,
+        actionExecutionSubText: true,
+        actionExecutionRunTime: true
     }
 }
 

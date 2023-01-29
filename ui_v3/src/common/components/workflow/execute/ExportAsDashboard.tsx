@@ -8,7 +8,8 @@ import useCreateDashboard from "./hooks/useCreateDashboard"
 
 export interface ExportAsDashboardProps {
     executionId: string,
-    definitionName: string
+    definitionName: string,
+    buttonEle?: JSX.Element
 }
 
 
@@ -70,9 +71,13 @@ const ExportAsDashboard = (props: ExportAsDashboardProps) => {
                     
                 </DialogContent>
             </Dialog>
-            <Button variant="outlined" color='success' sx={{ borderRadius: "5px" }} onClick={handleDialogOpen} fullWidth>
-                Export As Dashboard
-            </Button>
+            <Box onClick={handleDialogOpen}>
+                {props.buttonEle ? props.buttonEle :
+                    <Button variant="outlined" color='success' sx={{ borderRadius: "5px" }} fullWidth>
+                        Export As Dashboard
+                    </Button> }
+            </Box>
+            
         </React.Fragment>
     )
 }

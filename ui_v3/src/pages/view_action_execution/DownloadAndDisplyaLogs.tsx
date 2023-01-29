@@ -6,49 +6,22 @@ import CloseIcon from '@mui/icons-material/Close'
 import React from "react"
 import LoadingIndicator from "../../common/components/LoadingIndicator"
 import useGetLogStatus from "./hooks/useGetLogsStatus"
+import useDonwloadAndDisplayLogs from "./hooks/useDownloadAndDisplayLogs"
 
-interface DownloadAndDisplayLogsProps {
+export interface DownloadAndDisplayLogsProps {
     actionExecution: ActionExecution
 }
 
 const DownloadAndDisplayLogs = (props: DownloadAndDisplayLogsProps) => {
-    const [logs, setLogs] = React.useState<string | ArrayBuffer | null | undefined>()
 
-    const logsReady = Boolean(logs)
-    const logsLocation = props.actionExecution.ExecutionLogs
-    const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionLogs(logsLocation || "NA", 5)
-    const {downloadExecutionOutputFromS3} = useDownloadExecutionOutputFromS3()
-    const executionLogStatus = useGetLogStatus({
-        filter: {
-            Id: props.actionExecution.Id
-        }
-    })
-
-    const reader = new FileReader()
-
-    reader.addEventListener('loadend', (e) => {
-
-        setLogs(e.target?.result);
-    });
-
-    const handleViewLogs = () => {
-        useGetPresignedDowloadUrl.mutate(
-            (undefined),
-            {
-                onSuccess: (data, variables, context) => {
-                    const s3Data = data as {requestUrl: string, headers: any}
-                    downloadExecutionOutputFromS3.mutate(
-                        ({requestUrl: s3Data.requestUrl as string, headers: s3Data.headers}),
-                        {
-                            onSuccess: (data, variables, context) => {
-                                reader.readAsText(data as Blob)
-                            }
-                        }
-                    )
-                }
-            }
-        )
-    }
+    const {
+        handleViewLogs,
+        logs,
+        setLogs,
+        logsReady,
+        useGetPresignedDowloadUrl,
+        downloadExecutionOutputFromS3
+    } = useDonwloadAndDisplayLogs(props)
 
     return (
         <Box>
@@ -70,15 +43,12 @@ const DownloadAndDisplayLogs = (props: DownloadAndDisplayLogsProps) => {
             {useGetPresignedDowloadUrl.isLoading || downloadExecutionOutputFromS3.isLoading ? (
                 <LoadingIndicator/>
             ) : (
-                <>
-                    
-                        <Button variant="outlined" onClick={handleViewLogs}>
-                            View Logs
-                        </Button>
-                    
+                <>  
+                    <Button variant="outlined" onClick={handleViewLogs}>
+                        View Logs
+                    </Button>  
                 </>
             )}
-            
         </Box>
 
     

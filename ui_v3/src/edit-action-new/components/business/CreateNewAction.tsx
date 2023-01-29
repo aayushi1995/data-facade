@@ -28,7 +28,7 @@ export type CreateNewActionProps = {
         onLanguageChange: (newSupportedRuntimeGroup?: string) => void
     },
     actionHandlers: {
-        onSaveAction: (templateSupportedRuntimeGroup: string, language: string, genCode: string) => void
+        onSaveAction: (templateSupportedRuntimeGroup: string, language: string, genCode?: string) => void
     }
 }
 
@@ -48,12 +48,7 @@ function CreateNewAction(props: CreateNewActionProps) {
         let action_language = lang || "sql"
         promptSQLMutation.mutate({ prompt: actionDescription, prompt_type: action_language }, {
             onSuccess: (data, variables, context) => onSaveAction(lang == 'sql' ? TemplateSupportedRuntimeGroup.COMMON : TemplateSupportedRuntimeGroup.PYTHON, lang == 'sql' ? TemplateLanguage.SQL : TemplateLanguage.PYTHON, data?.["template"] || ""),
-            onError: (error) => setGeneratedCodeDialogState(oldState => ({
-                ...oldState,
-                open: true,
-                text: "Error fetching generated code",
-                loading: false
-            }))
+            onError: (error) => onSaveAction(lang == 'sql' ? TemplateSupportedRuntimeGroup.COMMON : TemplateSupportedRuntimeGroup.PYTHON, lang == 'sql' ? TemplateLanguage.SQL : TemplateLanguage.PYTHON)
         })
     }
     const templateTypes = [

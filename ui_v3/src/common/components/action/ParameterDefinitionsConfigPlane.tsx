@@ -348,7 +348,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
     }
 
     return (
-        <Box sx={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', gap: 2, overflow: 'auto', minWidth: '120px'}}>
+        <Box sx={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', gap: 2, minWidth: '120px'}}>
             {parameterDefinitions.length === 0 && 
                 <Grid item xs={12} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Typography> No Parameters Present</Typography>
@@ -356,13 +356,10 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
             }
             {parameterDefinitions.map((parameter) => {
                 return (
-                    <Box sx={{width:'100%', minWidth: '100px'}}>
-                        <Box
+                        <Box sx={{height: '100%', width: '100%'}}
                             onClick={(event) => onParameterSelectClick(event, parameter)}>
                             <ParameterInput {...parameter}/>
                         </Box>
-                        
-                    </Box>
                 )
             })}
         </Box>

@@ -1,4 +1,4 @@
-import { Card, Typography } from "@mui/material"
+import { Card, IconButton, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import LinesEllipsis from "react-lines-ellipsis"
 import { generatePath, Link as RouterLink, useHistory } from "react-router-dom"
@@ -7,12 +7,16 @@ import SettingIcon from "../../../images/editAction.svg"
 import RunIcon from "../../../images/runAction.svg"
 import SaveIcon from "../../../images/SaveIcon.svg"
 import { ActionCardButtonContainer, ActionCardDescription, ActionCardHeader, AppCardStyle, CursorPointer } from "./StyledComponents"
+import AddIcon from "@mui/icons-material/Add"
+
 
 interface AppCardProps {
     Displayname: string,
     Description: string,
     ID: any,
-    tableId?: string
+    tableId?: string,
+    fromAddActionView?: boolean,
+    onAddAction?: (actionId: string) => void
 }
 
 export const AppCard = (props: AppCardProps) => {
@@ -53,7 +57,12 @@ export const AppCard = (props: AppCardProps) => {
                 }}>
                     <img width='25px' height='25px' src={RunIcon} alt="" />
                 </Box>
-                <Box sx={{...CursorPointer}}><img width='25px' height='25px' src={SaveIcon} alt="" /></Box>
+                {props.fromAddActionView ? <IconButton onClick={() => props?.onAddAction?.(props.ID as string)}>
+                    <AddIcon/>
+                </IconButton> : 
+                    <Box sx={{...CursorPointer}}><img width='25px' height='25px' src={SaveIcon} alt="" /></Box>
+                }
+                
             </Box>
         </Card>
     )

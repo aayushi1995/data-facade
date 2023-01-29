@@ -17,6 +17,7 @@ import { ViewFailedActionExecution } from "../../view_action_execution/VIewActio
 import ExecuteAction from "../../execute_action/components/ExecuteAction"
 import ExecutionLoadingIndicator from "../../execute_action/presentation/ExecuteLoadingIndicator"
 import DownloadAndDisplayLogs from "../../view_action_execution/DownloadAndDisplyaLogs"
+import ActionExecutionDetailsNew from "./ActionExecutionDetails"
 
 type MatchParams = {
     ActionExecutionId?: string
@@ -50,7 +51,8 @@ export const ActionExecutionDetails = (props: {
     const resultsView = React.useRef<HTMLDivElement | null>(null)
     const childExecution = React.useRef<HTMLDivElement | null>(null)
     const [currentTime, setCurrentTime] = React.useState<number>(Date.now())
-    const [intervalId, setIntervalId] = React.useState<number | undefined>()
+    const [intervalId, setIntervalId] = React.useState<any>()
+    console.log(currentTime)
 
     const onChildExecutionCreated = (actionExecutionId: string) => {
         setChildActionExecutionId(actionExecutionId)
@@ -81,11 +83,7 @@ export const ActionExecutionDetails = (props: {
         enabled: !executionTerminal,
         onSuccess: handleDataFetched
     }})
-    
 
-    React.useEffect(() => {
-        setExecutionTerminal(false)
-    }, [props.actionExecutionId])
 
     React.useEffect(() => {
         if(executionTerminal === true) {
@@ -100,6 +98,7 @@ export const ActionExecutionDetails = (props: {
     }, [executionTerminal])
 
     const increaseTime = () => {
+        console.log('here')
         setCurrentTime(time => time + 1000)
     }
 
@@ -115,7 +114,7 @@ export const ActionExecutionDetails = (props: {
     React.useEffect(() => {
         setCurrentTime(Date.now())
         const intervalId = setInterval(increaseTime, 1000)
-        setIntervalId(intervalId as unknown as number)
+        setIntervalId(intervalId)
         setExecutionTerminal(false)
     }, [props.actionExecutionId])
 
@@ -214,7 +213,7 @@ const ActionExecutionHomePage = () => {
 
     return (
         <ExecuteActionContextProvider>
-            <ActionExecutionDetails actionExecutionId={actionExecutionId || "NA"} />
+            <ActionExecutionDetailsNew actionExecutionId={actionExecutionId || "NA"} />
         </ExecuteActionContextProvider>
     )
 }

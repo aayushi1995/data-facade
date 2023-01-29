@@ -95,12 +95,14 @@ function RecommendedApps(props: RecommendedAppsProps) {
     )
 }
 
-type DetailViewProps = {
+export type DetailViewProps = {
     searchQuery?: string,
-    tableId?: string
+    tableId?: string,
+    fromAddActionView?: boolean,
+    onAddAction?: (actionId: string) => void
 }
 
-function DetailView(props: DetailViewProps) {
+export function DetailView(props: DetailViewProps) {
     const prebuiltAppsQuery = useGetPrebuiltApplications()
     const [selectedAppId, setSelectedAppId] = React.useState<string | undefined>()
     const filteredPrebuiltAppsData = !!selectedAppId ? prebuiltAppsQuery?.data?.filter(data => data?.ApplicationId === selectedAppId) : prebuiltAppsQuery?.data
@@ -129,6 +131,8 @@ function DetailView(props: DetailViewProps) {
         searchQuery={props?.searchQuery}
         tableId={props?.tableId}
         isSelected={selectedAppId === data?.ApplicationId}
+        fromAddActionView={props.fromAddActionView}
+        onAddAction={props.onAddAction}
     />)
 
     return (
@@ -141,10 +145,12 @@ function DetailView(props: DetailViewProps) {
                     <Box sx={{height:'650px',my:1,overflow:'scroll'}}>
                     {appLabels}
                     </Box>
-                    <Box sx={{textDecoration:'none',display:'flex',px:4,my:2,gap:1,fontSize:'0.9rem',color: '#007DFA',fontWeight:700}} to={APPLICATION_ROUTE_MARKETPLACE} component={NavLink}>
+
+                    {!props.fromAddActionView && <Box sx={{textDecoration:'none',display:'flex',px:4,my:2,gap:1,fontSize:'0.9rem',color: '#007DFA',fontWeight:700}} to={APPLICATION_ROUTE_MARKETPLACE} component={NavLink}>
                         <img width='20px' height='20px' src={MarcketPlaceIcon } alt="" />
-                        See more in marcketplace
+                        See more in marketplace
                         </Box>
+                    }
                 </Box>
             </Box>
             <Box sx={{ ...AllApps }}>{applicationActions}</Box>
@@ -182,6 +188,8 @@ type ApplicationDetailViewProps = {
     tableId?: string,
     searchQuery?: string,
     isSelected?: boolean,
+    fromAddActionView?: boolean,
+    onAddAction?: (actionId: string) => void
 }
 function ApplicationDetailView(props: ApplicationDetailViewProps) {
     const { app } = props
@@ -205,7 +213,7 @@ function ApplicationDetailView(props: ApplicationDetailViewProps) {
                     <Grid container spacing={2}>
                         {actions?.map(action =>
                             <Grid item xs={4}>
-                                <AppCard Displayname={action?.model?.DisplayName || ""} Description={action?.model?.Description || ""} ID={action?.model?.Id} tableId={props?.tableId} />
+                                <AppCard onAddAction={props.onAddAction} fromAddActionView={props.fromAddActionView} Displayname={action?.model?.DisplayName || ""} Description={action?.model?.Description || ""} ID={action?.model?.Id} tableId={props?.tableId} />
                             </Grid>
                         )}
                     </Grid>

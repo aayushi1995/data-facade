@@ -453,7 +453,7 @@ export const TextCell = (props: { text?: string}) => {
     
     if(!!props?.text) {
         return (
-            <Box sx={{px:2,width:'140px',overflow:'hidden'}}>
+            <Box sx={{px:2,overflow:'hidden'}}>
             <Tooltip title={props?.text}>
                 {textComponent}
             </Tooltip>

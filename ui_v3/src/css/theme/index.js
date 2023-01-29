@@ -383,6 +383,22 @@ const baseOptions = {
             lineHeight: "26px",
             textAlign: "center",
             color: "#000000"
+        },
+        actionExecutionSubText: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fontSize: "12px",
+            lineHeight: "16px",
+            color: "#65676B"
+        },
+        actionExecutionRunTime: {
+            fontFamily: "'Segoe UI'",
+            fontStyle: "normal",
+            fontWeight: 600,
+            fontSize: "14px",
+            lineHeight: "19px",
+            color: "#050505"
         }
     }
 };

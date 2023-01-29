@@ -7,7 +7,7 @@ import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDef
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import WriteBackSchemaNames from "../../../enums/WriteBackSchemaNames";
 import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ActionTemplate, ProviderInstance, TableProperties, Tag } from "../../../generated/entities/Entities";
-import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
+import { ActionDefinitionDetail, ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces";
 import { ActionParameterDefinitionConfig } from "../../build_action/components/common-components/EditActionParameter";
 import { MutationContext } from "../hooks/useCreateActionInstance";
 import { getDefaultTemplateParameters, safelyParseJSON } from "../util";
@@ -34,7 +34,9 @@ type ExecuteActionContextState = {
     currentStep: number,
     startDate?: Date,
     email?: string,
-    slack?: string
+    slack?: string,
+    selectedActionIndex?: number,
+    postProcessingActions?: ActionInstanceWithParameters[]
 }
 
 const defaultExecuteActionContext: () => ExecuteActionContextState = () => {
@@ -139,6 +141,50 @@ export type FormAdditionalConfig = {
     type: "FormAdditionalConfig"
 }
 
+export type AddPostProcessingActionDefinition = {
+    type: "AddPostProcessingActionDefinition",
+    payload: {
+        actionDetails: ActionDefinitionDetail
+    }
+}
+
+export type ChangeNameOfPostProcessingAction = {
+    type: "ChangeNameOfPostProcessingAction",
+    payload: {
+        actionIndex: number,
+        newName: string
+    }
+}
+
+export type SetSelectedPostProcessingActionIndex = {
+    type: "SetSelectedPostProcessingActionIndex",
+    payload: {
+        actionIndex: number
+    }
+}
+
+export type ChangePostProcessingActionParameterInstances = {
+    type: "ChangePostProcessingActionParameterInstances",
+    payload: {
+        actionIndex: number,
+        parameterInstances: ActionParameterInstance[]
+    }
+}
+
+export type SetPostProcessingActions = {
+    type: "SetPostProcessingActions",
+    payload: {
+        postActions: ActionInstanceWithParameters[]
+    }
+}
+
+export type DeltePostProcessingAction = {
+    type: 'DeltePostProcessingAction',
+    payload: {
+        actionIndex: number
+    }
+}
+
 export type ExecuteActionAction = SetFromActionDefinitionDetailAction 
                                 | SetActionParameterInstancesAction 
                                 | CreatingModelsAction 
@@ -152,6 +198,12 @@ export type ExecuteActionAction = SetFromActionDefinitionDetailAction
                                 | SetProviderInstance
                                 | SetParameterAdditionalConfig
                                 | FormAdditionalConfig
+                                | AddPostProcessingActionDefinition 
+                                | ChangeNameOfPostProcessingAction
+                                | SetSelectedPostProcessingActionIndex
+                                | ChangePostProcessingActionParameterInstances
+                                | SetPostProcessingActions
+                                | DeltePostProcessingAction
 
 
 
@@ -340,6 +392,76 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
             return finalState
         }
 
+        case "AddPostProcessingActionDefinition": {
+            const defaultActionTemplate = action.payload.actionDetails.ActionTemplatesWithParameters?.find(templateDetails => templateDetails.model?.Id === action.payload.actionDetails.ActionDefinition?.model?.DefaultActionTemplateId)
+            const newPostProcessingAction: ActionInstanceWithParameters = {
+                model: {
+                    DefinitionId: action.payload.actionDetails.ActionDefinition?.model?.Id,
+                    DisplayName: action.payload.actionDetails.ActionDefinition?.model?.DisplayName,
+                    Name: action.payload.actionDetails.ActionDefinition?.model?.DisplayName,
+                    TemplateId: defaultActionTemplate?.model?.Id,
+                    ResultTableName: action.payload.actionDetails.ActionDefinition?.model?.DisplayName || "" + uuidv4(),
+                    ResultSchemaName: WriteBackSchemaNames.DF_TEMP_SCHEMA
+                },
+                ParameterInstances: defaultActionTemplate?.actionParameterDefinitions?.map(paramterDetails => {
+                    const defaultActionParameterInstance = JSON.parse( paramterDetails.model?.DefaultParameterValue || "{}")  
+                    return {
+                        ...defaultActionParameterInstance,
+                        ActionParameterDefinitionId: paramterDetails.model?.Id,   
+                    }
+                })
+            }
+            return {
+                ...state,
+                postProcessingActions: [...state?.postProcessingActions || [], newPostProcessingAction],
+                selectedActionIndex: state.postProcessingActions?.length || 0
+            }
+        }
+
+        case "ChangeNameOfPostProcessingAction": {
+            return {
+                ...state,
+                postProcessingActions: state.postProcessingActions?.map((postAction, index) => index === action.payload.actionIndex ? {...postAction,
+                    model: {
+                        ...postAction.model,
+                        Name: action.payload.newName,
+                        DisplayName: action.payload.newName
+                    }
+                } : postAction)
+            }
+        }
+
+        case "SetSelectedPostProcessingActionIndex": {
+            return {
+                ...state,
+                selectedActionIndex: action.payload.actionIndex === state.selectedActionIndex ? undefined : action.payload.actionIndex
+            }
+        }
+
+        case "ChangePostProcessingActionParameterInstances": {
+            return {
+                ...state,
+                postProcessingActions: state.postProcessingActions?.map((actionDetails, index) => index === action.payload.actionIndex ? {
+                    ...actionDetails,
+                    ParameterInstances: action.payload.parameterInstances
+                } : actionDetails)
+            }
+        }
+
+        case "SetPostProcessingActions": {
+            return {
+                ...state,
+                postProcessingActions: action.payload.postActions
+            }
+        }
+
+        case "DeltePostProcessingAction": {
+            return {
+                ...state,
+                postProcessingActions: state.postProcessingActions?.filter((actionPost, index) => index !== action.payload.actionIndex)
+            }
+        }
+
         default:
             const neverAction = action
             console.log(`Action: ${neverAction} does not match any action`)
@@ -433,6 +555,12 @@ const safeMergeState = (oldState: ExecuteActionContextState, actionDetail: Actio
     }
 }
 
+const getConfig = (state: ExecuteActionContextState) => {
+    return JSON.stringify({
+        PostProcessingSteps: state.postProcessingActions || []
+    })
+}
+
 export const constructCreateActionInstanceRequest = (state: ExecuteActionContextState, parentProviderInstanceId?: string) => {
     const {ActionDefinition, ActionParameterDefinitions, SelectedProviderInstance} = state.ExistingModels
     const {ActionInstance, ActionParameterInstances} = state.ToCreateModels
@@ -462,7 +590,8 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
         ActionType: ActionDefinition?.ActionType,
         CreatedBy: userSettingsSingleton.userEmail,
         ResultTableName: ActionDefinition.DisplayName + uuidv4(),
-        ResultSchemaName: WriteBackSchemaNames.DF_TEMP_SCHEMA
+        ResultSchemaName: WriteBackSchemaNames.DF_TEMP_SCHEMA,
+        Config: getConfig(state)
     }
 
     const apis = ActionParameterInstances.map(api => ({

@@ -14,17 +14,22 @@ import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionTyp
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionInstance, ActionParameterInstance, ProviderInstance } from "../../../generated/entities/Entities";
+import { ActionInstanceWithParameters } from '../../../generated/interfaces/Interfaces';
+import { useFetchActionInstances } from '../../applications/custom-applications/hooks/useFetchActionInstances';
+import ActionExecutionDetailsNew from '../../apps/components/ActionExecutionDetails';
 import { ActionExecutionDetails } from '../../apps/components/ActionExecutionHomePage';
 import useActionDefinitionDetail from "../../build_action/hooks/useActionDefinitionDetail";
 import ViewActionExecution from "../../view_action_execution/VIewActionExecution";
 import { constructCreateActionInstanceRequest, ExecuteActionContext, SetExecuteActionContext } from "../context/ExecuteActionContext";
 import useCreateActionInstance from "../hooks/useCreateActionInstance";
+import useFetchActionInstancesForFilter from '../hooks/useFetchActionInstances';
 import useGetExistingParameterInstances from '../hooks/useGetExistingParameterInstances';
 import useValidateActionInstance from '../hooks/useValidateActionInstance';
 import ActionLevelInfo from '../presentation/ActionLevelInfo';
 import CircularDot from '../presentation/CircularDot';
 import { ExecuteActionMainBox } from '../styled_components/ExecuteActionMainBox';
 import { ExecuteActionStyledTab, ExecuteActionStyledTabs } from '../styled_components/StyledTab';
+import AddPostProcessingActions from './AddPostProcessActions';
 import ConfigureActionRecurring from "./ConfigureActionRecurring";
 import ConfigureParameters, { isDefaultValueDefined } from "./ConfigureParameters";
 import ConfigureParametersNew from './ConfigureParametersNew';
@@ -127,6 +132,23 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             enabled: false
         }
     })
+    const fetchExistingActionInstance = useFetchActionInstancesForFilter({
+        filter: {Id: actionInstanceId === null ? undefined : actionInstanceId},
+        queryParams: {
+            enabled: false,
+            onSuccess: (data) => {
+                if(!!data[0] && data?.length === 1) {
+                    const postProcessingActions = JSON.parse(data?.[0]?.Config || "{}") as {PostProcessingSteps?: ActionInstanceWithParameters[]}
+                    setExecuteActionContext({
+                        type: "SetPostProcessingActions",
+                        payload: {
+                            postActions: postProcessingActions?.PostProcessingSteps || []
+                        }
+                    })
+                }
+            }
+        }
+    })
     const { availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook()
     const defaultProviderInstance = availableProviderInstanceQuery?.data?.find(prov => prov?.IsDefaultProvider)
 
@@ -163,6 +185,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             refetch()
         } else {
             fetchExistingActionParameterInstancesQuery.refetch()
+            fetchExistingActionInstance.refetch()
         }
         
     }, [props.actionDefinitionId])
@@ -438,7 +461,9 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                             <Box sx={{display: 'flex', gap: 1}}>
                                 <ExecuteActionStyledTabs value={tabValue} onChange={((event, newValue) => setTabValue(newValue))}>
                                     <ExecuteActionStyledTab label="Input" value={0} />
+                                    <ExecuteActionStyledTab label="Post Processing" value={2} />
                                     <ExecuteActionStyledTab label="Output" value={1} disabled={!(!!actionExecutionId && !!data && !props.hideExecution)}/>
+                                    
                                 </ExecuteActionStyledTabs>
                             </Box>
                         )}
@@ -506,7 +531,10 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                                 </Box>
                             </TabPanel>
                             <TabPanel value={tabValue} index={1}>
-                                <ActionExecutionDetails actionExecutionId={actionExecutionId!} showDescription={false}/>
+                                <ActionExecutionDetailsNew actionExecutionId={actionExecutionId!} showDescription={false} displayPostProcessed={true}/>
+                            </TabPanel>
+                            <TabPanel value={tabValue} index={2}>
+                                <AddPostProcessingActions />
                             </TabPanel>
                         </Box>
                         <Dialog open={dialogState.isOpen} onClose={handleDialogClose} fullWidth maxWidth="xl">

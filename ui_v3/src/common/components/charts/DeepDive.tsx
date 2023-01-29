@@ -22,12 +22,13 @@ import DeepDiveActionSelector from "./DeepDiveActionSelector"
 
 export interface DeepDiveProps {
     executionId: string,
-    definitionName: string,
+    definitionName?: string,
     definitionId: string,
     onChildExecutionCreated?: (executionId: string) => void,
     selectedActionId?: string,
     setSelectedActionId: (id: string | undefined) => void,
-    parentProviderInstanceId?: string
+    parentProviderInstanceId?: string,
+    buttonElement?: JSX.Element
 }
 
 // This compoment enable users to iteratively run all available application from the result of another action.
@@ -92,14 +93,16 @@ const DeepDive = (props: DeepDiveProps) => {
                 </ExecuteActionContextProvider>
                 }
             </Dialog>
-            <Button 
+            <Box onClick={handleDialogOpen}>
+            {!!props.buttonElement ? (props.buttonElement) : <Button 
                 variant="outlined" 
                 color='success' 
                 sx={{ borderRadius: "5px" }} 
-                onClick={handleDialogOpen} 
                 fullWidth>
                 Deep Dive
-            </Button>
+            </Button>}
+            </Box>
+            
         </React.Fragment>
     )
 

@@ -15,6 +15,9 @@ import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
 import ParametersIcon from "../../../../src/images/Parameters.svg";
 import ViewConfiguredParameters from "../../../pages/execute_action/components/ViewConfiguredParameters"
 import DeepDive from "./DeepDive"
+import { ActionExecutionResultTab } from "./styled_components/ResultsViewStyledTab"
+import DisplayLogs from "./DisplayLogs"
+import JobsRowJobDetail from "../../../pages/jobs/components/JobsRowJobDetail"
 
 
 interface SaveAndBuildChartsFromExecutionProps {
@@ -58,7 +61,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     const [activeTab, setActiveTab] = React.useState<number>(0)
     const [selectedDeepDiveActionId, setSelectedDeepDiveActionId] = React.useState<string | undefined>()
 
-    const handleSaveCharts = () => {
+    React.useEffect(() => {
         saveAndBuildChartsState.Charts.forEach(chart => {
             chartQueriesState.fetchPresignedUrlMutation?.mutate({
                 expirationDurationInMinutes: 5,
@@ -71,8 +74,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 assignedDashboards: chart.assignedDasboards
             })
         })
-        
-    }
+    }, [saveAndBuildChartsState.Charts])
 
     React.useEffect(() => {
         setSaveAndBuildChartsState({type: 'SetExecutionId', payload: {executionId: props.executionId}})
@@ -135,9 +137,6 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 parentProviderInstanceId={getParentProviderInstanceId()}
             />
         </Box>
-        <Box sx={{getLargerButtonSx: getButtonSx}}>
-            {postExecutionTasksButton("Save", handleSaveCharts)}
-        </Box>
     </>
 
     const onDeepDiveActionSelected = (actionId: string) => {
@@ -145,56 +144,58 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         setSelectedDeepDiveActionId(actionId)
     }
 
+    const getTabBoxSx = () => {
+        return {
+            background: "#F0F2F5",
+            boxShadow:
+              "0px 0.970733px 0.970733px rgba(0, 0, 0, 0.1), 0px 0px 0.970733px rgba(0, 0, 0, 0.25)",
+            borderRadius: "7.66801px"
+        }
+    }
+
     return (
         <Box sx={highLevelSxProps}>
             <Grid direction="column" ml={2}>
                 <Grid item xs={12} >
-                    <WrapInCollapsable summary={
-                        <>
                         <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>
-                        <Box sx={{display:'flex',flexDirection:'row',ml:'auto',gap:1,mt:'20px'}}>
-                            {chartQueriesState.fetchPresignedUrlMutation?.isLoading || chartQueriesState.uploadFileToS3Mutation?.isLoading || chartQueriesState.updateChart?.isLoading ? (
-                                    <LoadingIndicator />
-                                ) : postExecutionTasks
-                                }
-                        </Box>
-                        </>
-                    }
-                        defaultExpanded={true}
-                        expanded={
-                            <Box sx={{mt: 2}}>
-                                <TabPanel value={activeTab} index={0}>
-                                    <ReactQueryWrapper isLoading={chartQueriesState.fetchExecution?.isLoading || chartQueriesState.fetchExecution?.isFetching} data={chartQueriesState.fetchExecution?.data} error={chartQueriesState.fetchExecution?.error}>
-                                        {() => <>
-                                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
-                                                <ReactQueryWrapper isLoading={chartQueriesState.fetchCharts?.isLoading || chartQueriesState.fetchCharts?.isFetching} data={saveAndBuildChartsState.Charts} error={chartQueriesState.fetchCharts?.error}>
-                                                    {() => <ShowChartsFromContext onDeepDiveActionSelected={onDeepDiveActionSelected}/>}
-                                                </ReactQueryWrapper>
-                                                {saveAndBuildChartsState.ExecutionDetails ? 
-                                                    <ViewActionExecutionOutput 
-                                                    onDeepDiveActionSelected={onDeepDiveActionSelected}
-                                                    ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
-                                                    ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
-                                                    ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}
-                                                    showCharts={false}    /> : <LoadingIndicator />}
-                                            </Box>
-                                        
-                                        </>}
-                                    </ReactQueryWrapper>
-                                </TabPanel>
-                                <TabPanel value={activeTab} index={1}>
-                                    <ReactQueryWrapper {...chartQueriesState.fetchExecution}>
-                                        {() => <>
+                        <Box sx={{mt: 1, p: 2, ...getTabBoxSx()}}>
+                            <TabPanel value={activeTab} index={0}>
+                                <ReactQueryWrapper isLoading={chartQueriesState.fetchExecution?.isLoading || chartQueriesState.fetchExecution?.isFetching} data={chartQueriesState.fetchExecution?.data} error={chartQueriesState.fetchExecution?.error}>
+                                    {() => <>
+                                        <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
+                                            <ReactQueryWrapper isLoading={chartQueriesState.fetchCharts?.isLoading || chartQueriesState.fetchCharts?.isFetching} data={saveAndBuildChartsState.Charts} error={chartQueriesState.fetchCharts?.error}>
+                                                {() => <ShowChartsFromContext onDeepDiveActionSelected={onDeepDiveActionSelected}/>}
+                                            </ReactQueryWrapper>
                                             {saveAndBuildChartsState.ExecutionDetails ? 
-                                            <ViewConfiguredParameters 
-                                                parameterDefinitions={saveAndBuildChartsState.ExecutionDetails.ActionParameterDefinitions || []} 
-                                                parameterInstances={saveAndBuildChartsState.ExecutionDetails.ActionParameterInstances || []} /> : <LoadingIndicator />
-                                            }
-                                        </>}
-                                    </ReactQueryWrapper>
-                                </TabPanel>
-                            </Box>}
-                    />
+                                                <ViewActionExecutionOutput 
+                                                onDeepDiveActionSelected={onDeepDiveActionSelected}
+                                                ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
+                                                ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
+                                                ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}
+                                                showCharts={false}    /> : <LoadingIndicator />}
+                                        </Box>
+                                    
+                                    </>}
+                                </ReactQueryWrapper>
+                            </TabPanel>
+                            <TabPanel value={activeTab} index={1}>
+                                <ReactQueryWrapper {...chartQueriesState.fetchExecution}>
+                                    {() => <>
+                                        {saveAndBuildChartsState.ExecutionDetails ? 
+                                        <ViewConfiguredParameters 
+                                            parameterDefinitions={saveAndBuildChartsState.ExecutionDetails.ActionParameterDefinitions || []} 
+                                            parameterInstances={saveAndBuildChartsState.ExecutionDetails.ActionParameterInstances || []} /> : <LoadingIndicator />
+                                        }
+                                    </>}
+                                </ReactQueryWrapper>
+                            </TabPanel>
+                            <TabPanel value={activeTab} index={2}>
+                                <DisplayLogs actionExecution={saveAndBuildChartsState.ExecutionDetails?.ActionExecution || {}} />
+                            </TabPanel>
+                            <TabPanel value={activeTab} index={3}>
+                                <JobsRowJobDetail actionExecutionId={saveAndBuildChartsState.ExecutionDetails?.ActionExecution?.Id} />
+                            </TabPanel>
+                        </Box>
                 </Grid>
                 
             </Grid>
@@ -223,6 +224,7 @@ export const CollapsibleSummary = (props: {icon: string, label: string}) => {
     )
 }
 
+
 const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value: number) => void}) => {
     return (
         <Box sx={{display: 'flex', gap: 0}}>
@@ -232,29 +234,15 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
                 }
                 props.onTabChange(newValue)   
             }}>
-                <Tab value={0} icon={<img src={ResultIcon}/>} iconPosition="start" label="Results" sx={{
-                    fontFamily: "'SF Pro Text'",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    fontSize: "17px",
-                    lineHeight: "100%",
-                    letterSpacing: "0.124808px",
-                    color: "#353535"
-                }}/>
-                <Tab label="Parameters" value={1} sx={{
-                    fontFamily: "'SF Pro Text'",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    lineHeight: "157%",
-                    letterSpacing: "0.124808px",
-                    color: "#DB8C28",
-                    fontSize: "17px",
-                }}
-                iconPosition="start" 
-                icon={<img src={ParametersIcon} alt="" style={{height: 35, width: 60}}/>}/>
+                <ActionExecutionResultTab value={0}iconPosition="start" label="Results" />
+                <ActionExecutionResultTab label="Parameters" value={1} />
+                <ActionExecutionResultTab label="Logs" value={2}/>
+                <ActionExecutionResultTab label="More Info" value={3} />
             </Tabs>
         </Box>
     )
 }
+
+
 export default SaveAndBuildChartsFromExecution
 
