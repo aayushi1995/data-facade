@@ -1,9 +1,8 @@
+import { useQueries, useQuery, useQueryClient } from "react-query";
 import S3RequestType from "../custom_enums/S3RequestType";
-import {userSettingsSingleton} from "./userSettingsSingleton";
-import {useQuery, useQueryClient, useQueries} from "react-query";
+import { userSettingsSingleton } from "./userSettingsSingleton";
 
 const endPoint = require("./../common/config/config").FDSEndpoint
-console.log(endPoint)
 /* 
     Data manager for retreive and save operations. 
     Behaves like singleton.
@@ -94,7 +93,7 @@ const dummyPatchHeader = function (token, body) {
     }
 }
 
-const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDurationInMinutes, contentType, uploadPath, token) {
+const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDurationInMinutes, contentType, uploadPath, token, providerInstanceId) {
     return {
         method: 'POST',
         headers: {
@@ -108,11 +107,12 @@ const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDur
             provider: "S3",
             operation:"UploadPreSignedURL",
             content: contentType,
-            absolutePath: uploadPath
+            absolutePath: uploadPath,
+            providerInstanceId
         })
     }
 }
-const s3PresignedDownloadUrlRequestHeader = function (tableFileName, expirationDurationInMinutes, token, contentType) {
+const s3PresignedDownloadUrlRequestHeader = function (tableFileName, expirationDurationInMinutes, token, contentType, providerInstanceId) {
     return {
         method: 'POST',
         headers: {
@@ -126,12 +126,13 @@ const s3PresignedDownloadUrlRequestHeader = function (tableFileName, expirationD
             provider: "S3",
             content: contentType,
             operation: "DownloadPreSignedURL",
-            absolutePath: tableFileName
+            absolutePath: tableFileName,
+            providerInstanceId
         })
     }
 }
 
-const s3CheckIfFileExistsHeader = function (tableFilename, token) {
+const s3CheckIfFileExistsHeader = function (tableFilename, token, providerInstanceId) {
     return {
         method: 'POST',
         headers: {
@@ -142,7 +143,8 @@ const s3CheckIfFileExistsHeader = function (tableFilename, token) {
         body: JSON.stringify({
             key: tableFilename,
             provider: "S3",
-            operation: S3RequestType.CHECK_IF_EXISTS
+            operation: S3RequestType.CHECK_IF_EXISTS,
+            providerInstanceId
         })
     }
 }
@@ -217,7 +219,6 @@ dataManager.getInstance.patchData = async function (entityName, actionProperties
     if (!isValidUserSettings()) {
         return;
     }
-    console.log(patchHeader(entityName, actionProperties, userSettingsSingleton.token))
     const fn = await fetch(endPoint + '/entity?email=' + userSettingsSingleton.userEmail, patchHeader(entityName, actionProperties, userSettingsSingleton.token))
     return await fn.json()
 }
@@ -277,21 +278,19 @@ dataManager.getInstance.dummyData = async function (email, token) {
     return fn
 }
 
-dataManager.getInstance.s3PresignedUploadUrlRequest = async function (file, expirationDurationInMinutes, contentType, uploadPath=undefined) {
+dataManager.getInstance.s3PresignedUploadUrlRequest = async function (file, expirationDurationInMinutes, contentType, uploadPath=undefined, providerInstanceId=undefined) {
     if (!isValidUserSettings()) {
         return;
     }
-    console.log(file.name, expirationDurationInMinutes)
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedUploadUrlRequestHeader(file.name, expirationDurationInMinutes, contentType, uploadPath, userSettingsSingleton.token))
+    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedUploadUrlRequestHeader(file.name, expirationDurationInMinutes, contentType, uploadPath, userSettingsSingleton.token, providerInstanceId))
     return response.json()
 }
 
-dataManager.getInstance.s3PresignedDownloadUrlRequest = async function (tableFileName, expirationDurationInMinutes, contentType) {
+dataManager.getInstance.s3PresignedDownloadUrlRequest = async function (tableFileName, expirationDurationInMinutes, contentType, providerInstanceId=undefined) {
     if (!isValidUserSettings()) {
         return;
     }
-    console.log(tableFileName, expirationDurationInMinutes)
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedDownloadUrlRequestHeader(tableFileName, expirationDurationInMinutes, userSettingsSingleton.token, contentType))
+    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedDownloadUrlRequestHeader(tableFileName, expirationDurationInMinutes, userSettingsSingleton.token, contentType, providerInstanceId))
     return response.json()
 }
 
@@ -313,11 +312,11 @@ dataManager.getInstance.getGeneratedActionTemplate = async function (requestBody
     return response.json()
 }
 
-dataManager.getInstance.s3CheckIfFileExistsRequest = async function (tableFileName) {
+dataManager.getInstance.s3CheckIfFileExistsRequest = async function (tableFileName, providerInstanceId=undefined) {
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3CheckIfFileExistsHeader(tableFileName, userSettingsSingleton.token))
+    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3CheckIfFileExistsHeader(tableFileName, userSettingsSingleton.token), providerInstanceId)
     return response.json()
 }
 

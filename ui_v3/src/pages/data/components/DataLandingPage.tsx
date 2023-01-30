@@ -1,18 +1,21 @@
-import { Box, IconButton, InputAdornment } from "@mui/material";
-import { HeaderButtonsStyle, IconConatiner, SearchBarTextField, StyledTypographyDataHeader } from "./StyledComponents";
-import UploadFileIcon from "../../../images/uploadFile.svg"
-import CreateConnectionIcon from "../../../images/createConnection.svg"
 import SearchIcon from '@mui/icons-material/Search';
+import { Box, IconButton, InputAdornment } from "@mui/material";
 import React, { useContext, useEffect } from "react";
-import { DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_CONNECTION_CHOOSE } from "../../../common/components/header/data/DataRoutesConfig";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import { DATA_CONNECTION_CHOOSE } from "../../../common/components/header/data/DataRoutesConfig";
 import { SetModuleContextState } from "../../../common/components/ModuleContext";
+import CreateConnectionIcon from "../../../images/createConnection.svg";
+import UploadFileIcon from "../../../images/uploadFile.svg";
 import RecommendedApps from "../../upload_table/components/RecommendedApps";
-import UploadTablePage from "../../upload_table/UploadTablePage";
 import UploadTableContextProvider from "../../upload_table/context/UploadTablePageContext";
+import UploadTablePage from "../../upload_table/UploadTablePage";
+import { HeaderButtonsStyle, IconConatiner, SearchBarTextField, StyledTypographyDataHeader } from "./StyledComponents";
 
 export const DataLandingPage = () => {
     const HeaderString = "Upload csv or select a table to explore"
+    const location = useLocation()
+    const s3Url = new URLSearchParams(location.search)?.get("s3Url") || undefined
+    const s3UrlProviderInstanceId = new URLSearchParams(location.search)?.get("s3UrlProviderInstanceId") || undefined
     const [searchQuery, setSearchQuery] = React.useState("")
     const [fileToUpload, setFileToUpload] = React.useState<File | undefined>()
 
@@ -35,8 +38,8 @@ export const DataLandingPage = () => {
     }, [])
 
     return (
-        !!fileToUpload ?
-            <UploadTableContextProvider><UploadTablePage file={fileToUpload} onCancel={() => setFileToUpload(undefined)}/></UploadTableContextProvider>
+        (!!fileToUpload || !!s3Url) ?
+            <UploadTableContextProvider><UploadTablePage s3Url={s3Url} s3UrlProviderInstanceId={s3UrlProviderInstanceId} file={fileToUpload} onCancel={() => setFileToUpload(undefined)}/></UploadTableContextProvider>
             :
             <Box sx={{ mt: 10,mx:6 }}>
                 <Box>

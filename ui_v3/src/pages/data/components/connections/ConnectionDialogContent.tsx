@@ -1,10 +1,13 @@
-import { Box, Card, CardContent, Grid, TextField, Typography } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
 import { useQuery } from "react-query";
 import { generatePath, Route, useHistory } from "react-router-dom";
 import useSlackInstallURL from "../../../../common/components/common/useSlackInstallURL";
 import GoogleAuth from "../../../../common/components/google/GoogleAuth";
+import ImportGoogleSheet from "../../../../common/components/google/ImportGoogleSheet";
+import ImportS3File from '../../../../common/components/google/ImportS3File';
 import { ReactQueryWrapper } from "../../../../common/components/ReactQueryWrapper";
 import ProviderDefinitionId from "../../../../enums/ProviderDefinitionId";
 import { Fetcher } from "../../../../generated/apis/api";
@@ -78,8 +81,8 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
             slackInstallUrl && <ConnectorCard onClick={() => window.open(slackInstallUrl)} provider={provider}/>,
 
         [ProviderDefinitionId.GOOGLE_SHEETS]: (provider: ProviderDefinitionDetail) => 
-            <GoogleAuth><ConnectorCard provider={provider}/></GoogleAuth>,
-        
+            <GoogleConnectorCard provider={provider}/>,
+        [ProviderDefinitionId.S3]: (provider: ProviderDefinitionDetail) => <S3ConnectorCard provider={provider}/>,
         DEFAULT: (provider: ProviderDefinitionDetail) => <ConnectorCard onClick={() => {
             if(!!provider?.ProviderDefinition?.Id) {
                 history.push(generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: provider?.ProviderDefinition?.Id}))
@@ -136,9 +139,76 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
                             <ProviderInputConnectionStateWrapper {...routeProps}/>
                         </Box>
                     </Box>
-                    
                 }/>
             </>
         </ConnectionsProvider>
+    )
+}
+
+const GoogleConnectorCard = (props: { onClick?: () => {}, provider: ProviderDefinitionDetail }) => {
+    const [dialogOpen, setDialogOpen] = React.useState(false)
+    const closeDialog = () => setDialogOpen(false)
+    const openDialog = () => setDialogOpen(true)
+    return (
+        <>
+            <Dialog maxWidth="md" fullWidth open={dialogOpen} onClose={closeDialog}>
+                <DialogTitle>
+                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                        <Box>
+                            Google
+                        </Box>
+                        <IconButton aria-label="close" onClick={closeDialog}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{ py: 1 }}>
+                        <ImportGoogleSheet/>
+                        <GoogleAuth>
+                            <Button>Add New</Button>
+                        </GoogleAuth>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+            <ConnectorCard onClick={openDialog} provider={props?.provider}/>
+        </>
+    )
+}
+
+const S3ConnectorCard = (props: { provider: ProviderDefinitionDetail }) => {
+    const history = useHistory()
+    const [dialogOpen, setDialogOpen] = React.useState(false)
+    const openDialog = () => setDialogOpen(true)
+    const closeDialog = () => setDialogOpen(false)
+
+    const onAddNew = () => props?.provider?.ProviderDefinition?.Id && history.push(
+        generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: props?.provider?.ProviderDefinition?.Id})
+        )
+
+    return (
+        <>
+            <Dialog maxWidth="md" fullWidth open={dialogOpen} onClose={closeDialog}>
+                <DialogTitle>
+                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                        <Box>
+                            S3
+                        </Box>
+                        <IconButton aria-label="close" onClick={closeDialog}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{ py: 1 }}>
+                        <ImportS3File/>
+                        <Button onClick={onAddNew}>
+                            Add New
+                        </Button>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+            <ConnectorCard provider={props?.provider} onClick={() => openDialog()}/>
+        </>
     )
 }

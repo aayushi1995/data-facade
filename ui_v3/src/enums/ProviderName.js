@@ -16,7 +16,8 @@ const ProviderName = {
     SAGEMAKER: "Sagemaker",
     SALESFORCE: "Salesforce",
     DBT_REPO: "DBTRepo",
-    CLICKHOUSE: "Clickhouse"
+    CLICKHOUSE: "Clickhouse",
+    GOOGLE: "Google"
 }
 
 export default ProviderName;

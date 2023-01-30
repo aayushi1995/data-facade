@@ -48,6 +48,3 @@ export const APPLICATION_SUB_TABS: TabsType = [
         subTitle: "View Previously Run Jobs from here"
     }
 ];
-
-
-console.log(APPLICATION_SUB_TABS)

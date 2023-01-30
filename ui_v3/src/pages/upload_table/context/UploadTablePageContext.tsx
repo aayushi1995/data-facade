@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import * as XLSX from 'xlsx/xlsx.mjs';
 import S3UploadState from "../../../custom_enums/S3UploadState";
 import { convertToCsv } from "../components/util";

@@ -835,7 +835,9 @@ const TablePreview = (props: TablePreviewProps) => {
                 return {
                     field: column.columnName,
                     minWidth: 300,
-                    headerName: columnSelector[ind]
+                    renderHeader: () => columnSelector[ind],
+                    disableColumnMenu: true,
+                    sortable: false
                 }
             })
 

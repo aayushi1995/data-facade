@@ -1,7 +1,12 @@
 import { useMutation, useQuery } from "react-query"
+import dataManager from "../../../data_manager/data_manager"
 import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
+import ProviderDefinitionId from "../../../enums/ProviderDefinitionId"
 import { ProviderInstance } from "../../../generated/entities/Entities"
+import labels from "../../../labels/labels"
 import { FDSEndpoint } from "../../config/config"
+
+const dataManagerInstance = dataManager.getInstance as { retreiveData: Function, saveData: Function }
 
 export function useGoogleClientId() {
     const query = useQuery<string, unknown, string>(["Google", "ClientId"],
@@ -60,6 +65,22 @@ export function useGoogleScopes () {
             const response = await fetch(FDSEndpoint + `/google/scopes?email=` + userSettingsSingleton.userEmail, requestSpec)
             return response.json()
         }
+    )
+
+    return query
+}
+
+export function useProviders(params: { providerDefinitionId?: string }) {
+    const query = useQuery<ProviderInstance[], unknown, ProviderInstance[], string[]>([labels.entities.ProviderInstance, ProviderDefinitionId.GOOGLE_SHEETS, "All"], 
+        () => dataManagerInstance.retreiveData(
+            labels.entities.ProviderInstance,
+            {
+                filter: {
+                    ProviderDefinitionId: params?.providerDefinitionId,
+                    IsVisibleOnUI: true
+                } as ProviderInstance
+            }
+        )
     )
 
     return query

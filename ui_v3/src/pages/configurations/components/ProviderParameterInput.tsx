@@ -23,7 +23,7 @@ export type ProviderParameterInputProps = {
 const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
     const [showHidden, setShowHidden] = React.useState(false)
     const connectionQueryState = React.useContext(ConnectionQueryContext)
-
+    
     return (
         <Box>
             {connectionQueryState?.loadProviderDefinitionQuery?.isLoading ? (

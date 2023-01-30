@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     Box,
     Checkbox,
@@ -10,10 +9,11 @@ import {
     TableRow,
     TextField,
     Typography
-} from '@mui/material'
-import {useRetreiveData} from './../../../data_manager/data_manager'
-import labels from './../../../labels/labels'
-import {useRouteMatch} from "react-router-dom";
+} from '@mui/material';
+import React from 'react';
+import { useRouteMatch } from "react-router-dom";
+import { useRetreiveData } from './../../../data_manager/data_manager';
+import labels from './../../../labels/labels';
 
 
 const getOrElse = (data, key, defaultValue) => {
@@ -211,23 +211,6 @@ const DisplayData = (props) => {
         <Box px={5}>
             <Table>
                 <TableBody>
-                    {/* <TableRow>
-                        <TableCell>{labels.JobsRowJobDetail.template_rendered}</TableCell>
-                        <TableCell>
-                            <TextField
-                                id="outlined-multiline-static"
-                                label="Action Instance Rendered Template"
-                                multiline
-                                rows={2}
-                                defaultValue={ActionExecutionData.ActionInstanceRenderedTemplate}
-                                variant="outlined"
-                                InputProps={{readOnly: true}}
-                                fullWidth
-                                rowsMax="20"
-                                nowrap
-                            />  
-                        </TableCell>
-                    </TableRow> */}
                     <TableRow>
                         <TableCell>{labels.JobsRowJobDetail.template_executed}</TableCell>
                         <TableCell>
@@ -237,7 +220,7 @@ const DisplayData = (props) => {
                                 multiline
                                 minRows={3}
                                 maxRows={10}
-                                value={props.JobBase.Input.charAt(0) == '{' ? JSON.parse(props.JobBase.Input).df_script : props.JobBase.Input}
+                                value={props.JobBase.Input.charAt(0) == '{' ? JSON.parse(props.JobBase.Input)?.script : props.JobBase.Input}
                                 variant="outlined"
                                 InputProps={{readOnly: true}}
                                 fullWidth

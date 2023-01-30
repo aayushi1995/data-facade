@@ -1,20 +1,17 @@
-import { Box, Button, Dialog, TextField, Typography } from "@mui/material";
-import TemplateSupportedRuntimeGroup from "../../../enums/TemplateSupportedRuntimeGroup";
-import { Application } from "../../../generated/entities/Entities";
-import ActionHeroApplicationSelector from "../presentation/custom/ActionHeroApplicationSelector";
-import ActionHeroGroupSelector from "../presentation/custom/ActionHeroGroupSelector";
-import { ActionHeaderAutocompleteBox, ActionHeaderCard, ActionHeaderCardInputArea } from "../presentation/styled_native/ActionHeaderBox";
-import TemplateSelector from "../presentation/TemplateSelector";
 import CodeIcon from '@mui/icons-material/Code';
-import TemplateLanguage from "../../../enums/TemplateLanguage";
-import labels from "../../../labels/labels";
-import { CodeIconBox } from "../presentation/styled_native/ActionAddCodeIconBox";
-import AddActionContext from "../../../pages/upload_table/components/AddActionContext";
+import { Box, Dialog, TextField, Typography } from "@mui/material";
 import React from "react";
-import dataManager from "../../../data_manager/data_manager";
 import { useMutation } from "react-query";
 import LoadingIndicator from "../../../common/components/LoadingIndicator";
-import { ActionTypeTamplateContainer, columnFlexBox, CreateActionDialogTypo1, CreateActionDialogTypo2, CreateActionMainContainer, CreateActionMSG1Typo, CreateActionMSG2Typo, DescriptionTextField, MainContainerBox, NameTextField, SelectorsContainer } from "../../style/CreateActionStyle";
+import dataManager from "../../../data_manager/data_manager";
+import TemplateLanguage from "../../../enums/TemplateLanguage";
+import TemplateSupportedRuntimeGroup from "../../../enums/TemplateSupportedRuntimeGroup";
+import labels from "../../../labels/labels";
+import AddActionContext from "../../../pages/upload_table/components/AddActionContext";
+import { ActionTypeTamplateContainer, columnFlexBox, CreateActionDialogTypo1, CreateActionDialogTypo2, CreateActionMainContainer, CreateActionMSG1Typo, CreateActionMSG2Typo, DescriptionTextField, MainContainerBox, NameTextField } from "../../style/CreateActionStyle";
+import { CodeIconBox } from "../presentation/styled_native/ActionAddCodeIconBox";
+import { ActionHeaderCard, ActionHeaderCardInputArea } from "../presentation/styled_native/ActionHeaderBox";
+import TemplateSelector from "../presentation/TemplateSelector";
 
 export type CreateNewActionProps = {
     name?: string,
