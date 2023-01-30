@@ -3,6 +3,8 @@ import { DataGrid, DataGridProps, GridRenderCellParams } from "@mui/x-data-grid"
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import TagHandler from "../../../common/components/tag-handler/TagHandler"
+import { TableTheme } from "../../../css/theme/CentralCSSManager"
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype"
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag"
 import { ActionParameterDefinition, ActionParameterInstance, Tag } from "../../../generated/entities/Entities"
 import { ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
@@ -33,15 +35,19 @@ const ConfigureSelectedPostProcessingAction = (props: ConfigureSelectedPostProce
         changeSourceExecutionId
     } = useConfigureSelectedPostProcessingAction(props)
 
-    const sxProps = {
-        "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
-        backgroundColor: 'ActionCardBgColor.main',
-        backgroundBlendMode: "soft-light, normal",
-        border: "2px solid rgba(255, 255, 255, 0.4)",
-        boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-        borderRadius: "15px"
-    }
-
+    const sxProps = {...TableTheme()}
+    const myRow = getRows()
+    const newRow: {rr:any}[] = []
+    myRow.map(r => {
+        if(r.ParameterName=='df' || 
+        r.ParameterName==ActionParameterDefinitionTag.TABLE_NAME || 
+        r.ParameterName==ActionParameterDefinitionTag.DATA || 
+        r.Datatype==ActionParameterDefinitionDatatype.PANDAS_DATAFRAME){
+            newRow.unshift(r)
+        }else{
+            newRow.push(r)
+        }
+    })
     const dataGridProps: DataGridProps = {
         columns: [
             {
@@ -104,7 +110,7 @@ const ConfigureSelectedPostProcessingAction = (props: ConfigureSelectedPostProce
                 )
             }
         ],
-        rows: getRows(),
+        rows: newRow,
         autoHeight: true,
         headerHeight: 70,
         rowsPerPageOptions: [5, 10, 25, 50, 100, 200],
