@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import { TemplateSelectorParentBox } from "./styled_native/ActionMainBox";
-import pythonLogo from "../../../../src/images/python.svg";
-import sqlLogo from "../../../../src/images/sqlcard.svg"
+import pythonLogo from "../../../../src/images/PYTHON_COLOR_ICON 2.svg";
+import sqlLogo from "../../../../src/images/sqlCardNew.svg"
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddIcon from '@mui/icons-material/Add';
+import { TamplateSelectorBox, TamplateSelectorDFlogoConatiner, TamplateSelectorText } from "../../style/CreateActionStyle";
 export type TemplateLanguageBoxProps = {
     name?: string,
     description?: string,
@@ -12,18 +14,13 @@ export type TemplateLanguageBoxProps = {
 function TemplateSelector(props: TemplateLanguageBoxProps) {
     const { name, description, onClick } = props
     return (
-        <TemplateSelectorParentBox sx={{ display: "flex", flexDirection: "column", gap: 2 , alignItems: "center"}} onClick={props?.onClick}>
-            <Box sx={{height:'80px',p:2,pt:name=="SQL"?5:3}}>
-              <img width={name=="SQL"?85:65} src={name=="SQL"?sqlLogo:pythonLogo} alt="" />  
+        <TemplateSelectorParentBox sx={{...TamplateSelectorBox}} onClick={props?.onClick}>
+            <Box sx={{...TamplateSelectorDFlogoConatiner}}>
+              <img width={name=="SQL"?25:18} src={name=="SQL"?sqlLogo:pythonLogo} alt="" />  
             </Box>
+            <AddIcon sx={{color:'#fff'}}/>
             <Box>
-                <Typography sx={{color:"black",fontSize:'1.2rem',fontWeight:600}}>{name=="SQL"?"SQL Action":"Python cell"}</Typography>
-            </Box>
-            <Box>
-                <Typography>{description}</Typography>
-            </Box>
-            <Box sx={{width:'100%',borderTop:'1px solid #d4d5d6',textAlign:'center',gap:2,display:'flex',flexDirection:'row',justifyContent:'center',py:1}}>
-                <AddCircleOutlineIcon color='success' /> <Typography>Add</Typography>
+                <Typography sx={{...TamplateSelectorText}}>{name=="SQL"?"SQL Action":"Python Action"}</Typography>
             </Box>
         </TemplateSelectorParentBox>
     )

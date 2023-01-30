@@ -26,7 +26,7 @@ const DeepDiveActionButton = (props: DeepDiveActionButtonProps) => {
     }
 
     return (
-        <Box>
+        <Box sx={{display:'flex'}}>
             <Popover
                 anchorEl={menuAnchor}
                 open={menuOpen} onClose={handlePopoverClose} keepMounted

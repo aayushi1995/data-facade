@@ -14,7 +14,7 @@ import dataManager, { useRetreiveData } from "../../../data_manager/data_manager
 import { getActionExecutionParsedOutput } from "../../../data_manager/entity_data_handlers/action_execution_data";
 import { formTimeStampOrReturnDefault } from '../../jobs/components/JobsRowJobDetail';
 import ConfigureTableMetadata from "../../upload_table/components/ConfigureTableMetadata";
-
+import { TableTheme } from '../../../css/theme/CentralCSSManager';
 const columns = [
     {
         field: "ActionInstanceName",
@@ -224,7 +224,7 @@ const IntermediaryTables = (props) => {
                             handleImportTable: handleImportTable
                         }}
                         sx={{
-                            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"}
+                            ...TableTheme()
                         }}
                         headerHeight={70}
                         rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}

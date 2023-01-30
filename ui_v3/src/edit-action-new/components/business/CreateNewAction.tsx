@@ -3,7 +3,7 @@ import TemplateSupportedRuntimeGroup from "../../../enums/TemplateSupportedRunti
 import { Application } from "../../../generated/entities/Entities";
 import ActionHeroApplicationSelector from "../presentation/custom/ActionHeroApplicationSelector";
 import ActionHeroGroupSelector from "../presentation/custom/ActionHeroGroupSelector";
-import { ActionHeaderAutocompleteBox } from "../presentation/styled_native/ActionHeaderBox";
+import { ActionHeaderAutocompleteBox, ActionHeaderCard, ActionHeaderCardInputArea } from "../presentation/styled_native/ActionHeaderBox";
 import TemplateSelector from "../presentation/TemplateSelector";
 import CodeIcon from '@mui/icons-material/Code';
 import TemplateLanguage from "../../../enums/TemplateLanguage";
@@ -14,6 +14,7 @@ import React from "react";
 import dataManager from "../../../data_manager/data_manager";
 import { useMutation } from "react-query";
 import LoadingIndicator from "../../../common/components/LoadingIndicator";
+import { ActionTypeTamplateContainer, columnFlexBox, CreateActionDialogTypo1, CreateActionDialogTypo2, CreateActionMainContainer, CreateActionMSG1Typo, CreateActionMSG2Typo, DescriptionTextField, MainContainerBox, NameTextField, SelectorsContainer } from "../../style/CreateActionStyle";
 
 export type CreateNewActionProps = {
     name?: string,
@@ -82,82 +83,75 @@ function CreateNewAction(props: CreateNewActionProps) {
     }
     setActionMaker("")
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, px: 5 }}>
+        <Box sx={{...MainContainerBox}}>
             {promptSQLMutation.isLoading ?
                 <Dialog open={promptSQLMutation.isLoading}>
                     <Box sx={{ p: 3 }}>
                         <LoadingIndicator />
-                        <Typography sx={{ fontSize: '0.9rem', color: '#383d59', textAlign: 'center' }}>Please wait while we generate the initial boilerplate code for you based on the description. </Typography>
-                        <Typography sx={{ fontSize: '0.8rem', color: '#40424a', textAlign: 'center' }}>It can take few minutes</Typography>
+                        <Typography sx={{...CreateActionDialogTypo1}}>Please wait while we generate the initial boilerplate code for you based on the description. </Typography>
+                        <Typography sx={{...CreateActionDialogTypo2}}>It can take few minutes</Typography>
                     </Box>
                 </Dialog>
                 : <></>}
-                <Dialog open={generatedCodeDialogState.open}>
-                    <Box>
-                        {generatedCodeDialogState.text}
-                    </Box>
-                </Dialog>
-
-            <Box sx={{ display: "flex", flexDirection: "row", borderBottom: '1px solid #dbd7d7' }}>
-                <Box sx={{ display: "flex", flexDirection: "column", flex: 1, width: '50%' }}>
-                    <Box sx={{ width: '100%' }}>
-                        <TextField InputProps={{
-                            sx: {
-                                fontWeight: 500,
-                                fontSize: "2rem",
-                                color: "ActionDefinationHeroTextColor1.main",
-                                borderRadius: "5px",
-                                width: '50vw'
-                            },
-                            disableUnderline: !name ? false : true,
-                            error: !name
-                        }} variant='standard'
-                            placeholder="Add Action Name"
-                            value={name} onChange={(event) => onNameChange?.(event.target.value)} error={name === undefined ? true : false} />
-                    </Box>
-                    <Box sx={{ width: '100%' }}>
-                        <TextField InputProps={{
-                            sx: {
-                                fontWeight: 500,
-                                fontSize: "1rem",
-                                color: "ActionDefinationHeroTextColor1.main",
-                                borderRadius: "5px",
-                                width: '50vw'
-                            },
-                            disableUnderline: true,
-                        }} variant='standard'
-                            placeholder="Add Action Description"
-                            value={description || ActionMaker} onChange={(event) => onDescriptionChange?.(event.target.value)} multiline />
-                    </Box>
+            <Dialog open={generatedCodeDialogState.open}>
+                <Box>
+                    {generatedCodeDialogState.text}
                 </Box>
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 3, width: '50%', justifyContent: 'flex-end' }}>
+            </Dialog>
+            <Box sx={{...CreateActionMainContainer}}>
+                <CodeIconBox>
+                    <CodeIcon />
+                </CodeIconBox>
+                <Box>
+                    <Typography sx={{...CreateActionMSG1Typo}}>
+                        {labels.AddActionPage.addActionMsg1}
+                    </Typography>
+                    <Typography sx={{...CreateActionMSG2Typo}}>
+                        {labels.AddActionPage.addActionMsg2}
+                    </Typography>
+                </Box>
+            </Box>
+            <ActionHeaderCard >
+                <ActionHeaderCardInputArea sx={{ p:2}}>
+                    <Box sx={{... columnFlexBox}}>
+                        <Box>
+                            <TextField InputProps={{
+                                sx: {...NameTextField},
+                                disableUnderline: true,
+                                error: !name
+                            }} variant='standard'
+                                placeholder="Add Action Name *"
+                                value={name} onChange={(event) => onNameChange?.(event.target.value)} error={name === undefined ? true : false} />
+                        </Box>
+                        <Box>
+                            <TextField InputProps={{
+                                sx: {...DescriptionTextField},
+                                disableUnderline: true,
+                            }} variant='standard'
+                                placeholder="Add Action Description"
+                                value={description || ActionMaker} onChange={(event) => onDescriptionChange?.(event.target.value)} multiline />
+                        </Box>
+                    </Box>
+                    
+                </ActionHeaderCardInputArea>
+                {/* <Box sx={{...SelectorsContainer}}>
                     <ActionHeaderAutocompleteBox>
                         <ActionHeroApplicationSelector selectedApplicationId={applicationId} onSelectedApplicationChange={(application?: Application) => onApplicationChange?.(application?.Id)} />
                     </ActionHeaderAutocompleteBox>
                     <ActionHeaderAutocompleteBox>
                         <ActionHeroGroupSelector selectedGroup={group} onSelectedGroupChange={onGroupChange} />
                     </ActionHeaderAutocompleteBox>
-                </Box>
-            </Box>
-            <Box sx={{ justifyContent: 'center', width: '100%', textAlign: 'center' }}>
-                <CodeIconBox>
-                    <CodeIcon />
-                </CodeIconBox>
-                <Box>
-                    <Typography sx={{ fontWeight: 300, color: '#585959' }}>
-                        {labels.AddActionPage.addActionMsg1}
-                    </Typography>
-                    <Typography sx={{ fontWeight: 600, fontSize: '1.2rem' }}>
-                        {labels.AddActionPage.addActionMsg2}
-                    </Typography>
-                </Box>
-            </Box>
-            <Box sx={{ display: "flex", flexDirection: "row", gap: 2, justifyContent: "center", width: "100%" }}>
-                {templateTypes.map(t =>
-                    <TemplateSelector {...t} />
-                )}
-            </Box>
+                </Box> */}
+                <Box sx={{...ActionTypeTamplateContainer}}>
+                        {templateTypes.map(t =>
+                            <TemplateSelector {...t} />
+                        )}
+                    </Box>
+            </ActionHeaderCard>
         </Box>
+
+
+
     )
 }
 

@@ -21,6 +21,8 @@ import { ReactComponent as DeleteIcon } from "./../../../images/DeleteIcon.svg";
 import { useDeleteTables, useGetTables, useReSyncTables } from "./AllTableViewHooks";
 import useFeatureConfig from './useFeatureConfig';
 import SyncIcon from '@mui/icons-material/Sync';
+import ReSyncNewLogo from '../../../../src/images/resync_icon.svg'
+import { SearchBar, TableTheme } from '../../../css/theme/CentralCSSManager';
 export type AllTableViewProps = {
     tableFilter?: TableProperties,
     disableCellClick?: boolean
@@ -112,7 +114,7 @@ const AllTableView = (props: AllTableViewProps) => {
                 valueGetter: (params: GridValueGetterParams<any, TableBrowserResponseAndCalculatedInfo>) => params.row?.Health
             },
             {
-                field: "Action",
+                field: "Re Sync",
                 flex: 1,
                 minWidth: 100,
                 renderCell: (params: GridCellParams<any, TableBrowserResponseAndCalculatedInfo, any>) => <ActionCell {...params.row}/>
@@ -120,22 +122,7 @@ const AllTableView = (props: AllTableViewProps) => {
         ].filter(c => c!==undefined),
         rows: (rows.map?.((x, index) => ({ ...x, id: index})) || []),
         sx: {
-            "& .MuiDataGrid-columnHeaders": { 
-                backgroundColor: "#c3d7f7",
-                fontFamily:'sans-serif',
-                fontSize:'14px',
-                fontWeight:800,
-                textTransform: 'uppercase',
-                letterSpacing:'2px',
-                color:'#797a7a',
-            },
-            "& .MuiDataGrid-row": {
-                border: '0px solid black !important',
-              },
-            backgroundColor: 'ActionCardBgColor.main',
-            height:900,
-            overflow:'scroll',
-            border: '0 !important',
+            ...TableTheme()
         },
         checkboxSelection:true,
         headerHeight: 80,
@@ -192,16 +179,8 @@ const AllTableView = (props: AllTableViewProps) => {
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 placeholder="Search Tables"
-                                sx={{width: '40%', 
-                                    backgroundColor: 'allTableTextfieldbgColor1.main',
-                                    boxSizing: 'border-box', 
-                                    boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
-                                    backgroundBlendMode: 'soft-light, normal', 
-                                    borderRadius: '8px',
-                                    
-                                    // display: 'flex', 
-                                    justifyContent: 'center', 
-                                    minHeight: '50px'}}
+                                sx={{width: '40%',
+                                ...SearchBar()}}
                                 InputProps={{
                                     disableUnderline: true,
                                     startAdornment: (
@@ -230,16 +209,8 @@ const AllTableView = (props: AllTableViewProps) => {
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 placeholder="Search Tables"
-                                sx={{width: '40%', 
-                                    backgroundColor: 'allTableTextfieldbgColor1.main',
-                                    boxSizing: 'border-box', 
-                                    boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
-                                    backgroundBlendMode: 'soft-light, normal', 
-                                    borderRadius: '8px',
-                                    
-                                    // display: 'flex', 
-                                    justifyContent: 'center', 
-                                    minHeight: '50px'}}
+                                sx={{width: '40%',
+                                ...SearchBar()}}
                                 InputProps={{
                                     disableUnderline: true,
                                     startAdornment: (
@@ -256,7 +227,7 @@ const AllTableView = (props: AllTableViewProps) => {
                             error={tableQuery.error}
                             data={tableQuery.data}
                             children={() =>
-                                <Grid container sx={{height:900,overflow:'scroll',display:'flex',borderRadius:'5px',border:'none'}}>
+                                <Grid container sx={{height:900,display:'flex',borderRadius:'8px',border:'none',boxShadow:'0px 1.01276px 1.01276px rgba(0, 0, 0, 0.1), 0px 0px 1.01276px rgba(0, 0, 0, 0.25)'}}>
                                 <DataGrid {...dataGridProps} components={{
                                     NoRowsOverlay: () => (
                                       <Stack height="100%" fontSize="18px" alignItems="center" justifyContent="center">
@@ -302,7 +273,7 @@ const ActionCell = (props?: TableBrowserResponseAndCalculatedInfo) => {
             <Box>
                 <Tooltip title="ReSync">
                     <IconButton sx={{ width: "40px", height: "40px" }} onClick={ (event) => {event.stopPropagation(); reSyncTable(props?.TableId)} }>
-                        <SyncingLogo color="syncingLogoColor1.main" height="24px" width="auto"/>
+                        <img width='35px' height='35px' src={ReSyncNewLogo} alt="" />
                     </IconButton>
                 </Tooltip>
                 {reSyncTablesMutation.isLoading && <LinearProgress variant="indeterminate"/>}

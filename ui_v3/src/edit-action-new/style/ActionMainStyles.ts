@@ -1,9 +1,8 @@
 export const ActionMainBoxStyle = {
-  background: "#F8F8F8",
-  boxShadow:
-    "inset 5.84023px 5.84023px 5.84023px rgba(0, 0, 0, 0.05), inset -5.84023px -5.84023px 11.6805px #FFFFFF",
-  borderRadius: "5.67671px",
-  marginTop:'5px',
+  background: "#EBF1FA",
+  boxShadow:"0px 1px 1px rgba(115, 127, 142, 0.2), 0px 0px 1px #DDDDDD",
+  borderRadius: "15px",
+  marginTop:'15px',
   padding:'3px'
 
 }
@@ -16,12 +15,12 @@ export const CardBoxRootStyle = {
 }
 
 export const TemplateParentBoxStyle = {
-  height: "30%",
-  width: "35%",
-  background: "#E7F7FF",
-  opacity: 0.64,
-  boxShadow:
-    "0px 2px 6px rgba(8, 35, 48, 0.16), 0px 1px 2px rgba(8, 35, 48, 0.24)",
-  borderRadius: "4px",
-  cursor: "pointer"
+  background: "#007DFA",
+  boxShadow:"0px 1px 2px rgba(0, 0, 0, 0.25)",
+  borderRadius: "5px",
+  cursor: "pointer",
+  minWidth:'10vw',
+  height:'35px',
+  display: "flex", 
+  alignItems: "center",
 }

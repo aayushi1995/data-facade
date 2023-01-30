@@ -3,7 +3,7 @@ import React from "react";
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag";
 import { ActionParameterDefinition, ActionParameterInstance, TableProperties } from "../../../generated/entities/Entities";
 import ViewTablePreview from "./ViewTablePreview";
-
+import PreviewIcon from '@mui/icons-material/Preview';
 export interface ViewConfiguredParametersProps {
     parameterDefinitions: ActionParameterDefinition[]
     parameterInstances: ActionParameterInstance[]
@@ -49,47 +49,63 @@ const ConfiguredParameter = (props: {definition: ActionParameterDefinition, inst
         setShowPreview(true)
     }
 
-    return (
-        <Card sx={{px: 3, py: 3, maxHeight: '183px', overflowY: 'auto', minHeight: '183px'}}>
-            {!!tableName || !!tablePreviewExecutionId ? <ViewTablePreview showPreview={showPreview} setShowPreview={setShowPreview} tableName={tableName} tablePreviewExecutionId={tablePreviewExecutionId}/> : <></>}
-            <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "120px", width: "100%"}}>
-                <Box sx={{width: "100%"}}>
-                    <Typography sx={{
+    const ParamNameTypo = {
                         fontFamily: "SF Pro Text",
                         fontStyle: "normal",
                         fontWeight: 600,
-                        fontSize: "12px",
-                        lineHeight: "266%",
+                        fontSize: "1.2rem",
                         letterSpacing: "0.5px",
                         textTransform: "uppercase",
-                        color: "rgba(66, 82, 110, 0.86)",
-                        textAlign: "center",
-                        
+                        color: "#050505",
+    }
+    const ParamValueTypo = {
+        fontFamily: "SF Pro Display",
+        fontStyle: "normal",
+        fontWeight: 500,
+        fontSize: "1rem",
+        lineHeight: "133.4%",
+        color: "#253858",
+        overflowWrap: 'break-word',
+    }
+
+    const cardDesign = {
+        p:1, 
+        maxHeight: '183px', 
+        overflowY: 'auto', 
+        minHeight: '183px'
+    }
+    const ParamContainer = {
+        display: "flex", 
+        flexDirection: "column",  
+        minHeight: "120px", 
+        width: "100%"
+    }
+    return (
+        <Card sx={{...cardDesign}}>
+            {!!tableName || !!tablePreviewExecutionId ? <ViewTablePreview showPreview={showPreview} setShowPreview={setShowPreview} tableName={tableName} tablePreviewExecutionId={tablePreviewExecutionId}/> : <></>}
+            <Box sx={{...ParamContainer}}>
+                <Box sx={{width: "100%",display:'flex'}}>
+                    <Typography sx={{
+                        ...ParamNameTypo
                     }}>
                         {definition.ParameterName}
                     </Typography>
-                </Box>
-                <Box sx={{width: "100%"}}>
-                    <Typography sx={{
-                        fontFamily: "SF Pro Display",
-                        fontStyle: "normal",
-                        fontWeight: 600,
-                        fontSize: "24px",
-                        lineHeight: "133.4%",
-                        color: "#253858",
-                        overflowWrap: 'break-word',
-                        textAlign: "center"
-                    }}>
-                        {instance.ParameterValue}
-                    </Typography>
-                </Box>
-                <Box sx={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <Box sx={{width: '100%', display: 'flex',ml:'auto',justifyContent:'flex-end'}}>
                     {definition.Tag === ActionParameterDefinitionTag.TABLE_NAME || definition.Tag === ActionParameterDefinitionTag.DATA ?  (
-                        <Button onClick={handleViewTablePreview}>Preview Table</Button>
+                        <PreviewIcon sx={{cursor:"pointer",color:'gray'}} onClick={handleViewTablePreview}/>
                     ) : (
                         <></>
                     )}
                 </Box>
+                </Box>
+                <Box sx={{width: "100%",mt:1}}>
+                    <Typography sx={{
+                        ...ParamValueTypo
+                    }}>
+                        {instance.ParameterValue}
+                    </Typography>
+                </Box>
+                
             </Box>
         </Card>  
     )

@@ -5,7 +5,7 @@ import useFetchActionDefinitionForSelector from "../../hooks/useFetchActionDefin
 import ActionDefinitionSelectorRow from "../presentation/ActionDefinitionSelectorRow";
 import SearchIcon from '@mui/icons-material/Search';
 import labels from "../../../labels/labels";
-import { SearchBarTextField } from "../presentation/styled_native/ActionAddCodeIconBox";
+import { ActionContainer, ActionSelectorContainer, DefinationSelectorHeader, SearchBarTextField } from "../presentation/styled_native/ActionAddCodeIconBox";
 export type ActionDefinitionSelectorProps = {
     onActionDefinitionSelectionCallback?: (actionDefinitionId?: string, actionDefinitionName?: string) => void
 }
@@ -15,7 +15,7 @@ function ActionDefinitionSelector(props: ActionDefinitionSelectorProps) {
     const [searchQuery, setSearchQuery] = React.useState("")
     const filteredData = (data || [])?.filter(ad => ad?.ActionDisplayName?.includes?.(searchQuery))
 
-    const actionDefinitionRows = filteredData?.map?.(ad =>
+    const actionDefinitionRows = filteredData.slice(0,4)?.map?.(ad =>
         <Box>
             <ActionDefinitionSelectorRow
                 data={ad}
@@ -27,7 +27,8 @@ function ActionDefinitionSelector(props: ActionDefinitionSelectorProps) {
     )
 
     return (
-        <Box sx={{ m: 'auto', width: '40vw', my: 2 }}>
+        <Box sx={{...ActionSelectorContainer}}>
+            <Typography sx={{...DefinationSelectorHeader}}>Search and add existing action to run or customize</Typography>
             <Box sx={{ width: '40vw' }}>
                 <SearchBarTextField variant="standard"
                     value={searchQuery}
@@ -43,7 +44,7 @@ function ActionDefinitionSelector(props: ActionDefinitionSelectorProps) {
                         )
                     }} />
             </Box>
-            <Box sx={{ height: '30vh', overflow: 'scroll' }}>
+            <Box sx={{...ActionContainer}}>
                 <ReactQueryWrapper
                     isLoading={isLoading}
                     error={error}

@@ -143,14 +143,12 @@ export const AllPackageList = {
     mt: 1,
     width: '30%',
     height: '70vh',
-    overflow: 'scroll',
-    boxShadow: '-1px -1px 1px #FAFBFF, 1px 1px 1px ',
     backgroundColor: '#FFFFFF',
     borderRadius:'8px'
 }
 export const AllApps = {
     width: '70%',
-    height: '70vh',
+    height: '65vh',
     overflow: 'scroll',
     backgroundColor:'#EBF1FA'
 }

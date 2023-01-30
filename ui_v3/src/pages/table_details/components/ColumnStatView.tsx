@@ -344,7 +344,7 @@ const MostFrequentStatView = (props?: MostFrequentStat) => {
     }
 
     return (
-        <Box sx={{ maxWidth: "300px" }}>
+        <Box sx={{ maxWidth: "500px" }}>
             <SmartChart expandedViewProps={expandedViewProps} compressedViewProps={compressedViewProps}/>
         </Box>
     )

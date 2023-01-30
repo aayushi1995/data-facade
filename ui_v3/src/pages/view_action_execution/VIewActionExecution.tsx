@@ -97,6 +97,17 @@ const getFailureMessage = (actionOutput: any): Object => {
         return actionOutput.Message
     }
 }
+const cardCss = {
+    p: 3,
+    background: "#F4F5F7",
+    width:'100%',
+    boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)",
+    overflow:'scroll',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 2,
+    borderRadius:'10px'
+}
 
 export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) => {
     const { actionExecutionDetail } = props
@@ -104,10 +115,10 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
     const failureMessage = getFailureMessage(actionOutput)
     const script = actionOutput?.script
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2}}>
-            <Box p={2} sx={{display: 'flex', justifyContent: 'center'}}>
-                <Typography variant="heroHeader">
-                    {actionExecutionDetail.ActionExecution?.ActionInstanceName}
+        <Box sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2,px:2}}>
+            <Box  sx={{display: 'flex'}}>
+                <Typography variant="heroHeader" sx={{fontSize: '2.5vh'}}>
+                    Input Parameter
                 </Typography>
             </Box>
             <Box>
@@ -119,21 +130,14 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
             <Box sx={{width:'100%', display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box>
                     <Card sx={{
-                        p: 3,
-                        background: "#F4F5F7",
-                        width:'100%',
-                        boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.25)",
-                        overflow:'scroll',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 3
+                       ...cardCss
                     }}>
                         {!!script ? (
                             <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
                                 <Typography variant="heroHeader" sx={{fontSize: '2.5vh'}}>
                                     SCRIPT
                                 </Typography>
-                                <Card sx={{p: 1}}>
+                                <Card sx={{p: 1, backgroundColor:'#FFFFFF',borderRadius:'10px'}}>
                                     <Typography variant="heroMeta" sx={{fontSize: '1.5vh', whiteSpace: 'pre-line'}}>
                                         {(script || "NA")}
                                     </Typography>
@@ -144,19 +148,16 @@ export const ViewFailedActionExecution = (props: ResolvedActionExecutionProps) =
                         )}
                         
                         <Box sx={{display: 'flex', gap: 1, flexDirection: 'column'}}>
-                            <Typography variant="heroHeader" sx={{fontSize: '2.5vh'}}>
+                            <Typography variant="heroHeader" sx={{fontSize: '2.5vh',color:'#f70505'}}>
                                 ERROR
                             </Typography>
-                            <Card sx={{p: 1}}>
+                            <Card sx={{p: 1,backgroundColor:'#FFFFFF',borderRadius:'10px'}}>
                                 <Typography variant="heroMeta" sx={{fontSize: '1.5vh', whiteSpace: 'pre-line'}}>
                                     {failureMessage}
                                 </Typography>
                             </Card>
                         </Box>
                     </Card>
-                </Box>
-                <Box>
-                        <DownloadAndDisplayLogs actionExecution={actionExecutionDetail.ActionExecution || {}}/>
                 </Box>
             </Box>
         </Box>

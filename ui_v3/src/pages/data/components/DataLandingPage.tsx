@@ -59,7 +59,7 @@ export const DataLandingPage = () => {
                         value={searchQuery}
                         onChange={(event) => setSearchQuery(event.target.value)}
                         multiline={true}
-                        placeholder="Search Actions"
+                        placeholder="What insight are you looking for ?"
                         InputProps={{
                             disableUnderline: true,
                             startAdornment: (
@@ -71,6 +71,7 @@ export const DataLandingPage = () => {
                 </Box>
                 <RecommendedApps searchQuery={searchQuery}/>
             </Box>
+
     )
 }
 

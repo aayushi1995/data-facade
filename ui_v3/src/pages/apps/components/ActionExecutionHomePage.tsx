@@ -17,21 +17,14 @@ import { ViewFailedActionExecution } from "../../view_action_execution/VIewActio
 import ExecuteAction from "../../execute_action/components/ExecuteAction"
 import ExecutionLoadingIndicator from "../../execute_action/presentation/ExecuteLoadingIndicator"
 import DownloadAndDisplayLogs from "../../view_action_execution/DownloadAndDisplyaLogs"
+import { ExecutingContainer, executionContainer, executionHeaderSxProps, moreInfoANDlogsContainer, moreinfoBtnColor, RuntimeStyle } from "./CssProperties"
 import ActionExecutionDetailsNew from "./ActionExecutionDetails"
 
 type MatchParams = {
     ActionExecutionId?: string
 }
 
-const executionHeaderSxProps = {
-    background: "#F8F8F8",
-    boxShadow: "-10px -10px 15px #FFFFFF, 10px 10px 10px rgba(0, 0, 0, 0.05), inset 10px 10px 10px rgba(0, 0, 0, 0.05), inset -10px -10px 20px #FFFFFF",
-    borderRadius: "9.72px",
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 1,
-    p: 3
-}
+
 export const ActionExecutionDetails = (props: {
         actionExecutionId: string,
         childActionExecutionId?: string, 
@@ -128,22 +121,24 @@ export const ActionExecutionDetails = (props: {
         }
     }
 
+    
     return (
         <>
             <ReactQueryWrapper {...actionExecutionDetailQuery}>
                 {() => (
-                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, height: '100%'}}>
+                    <Box sx={{...executionContainer}}>
                         {props.showDescription === false ? (<></>): (
                             <ActionDescriptionCard description={description} mode="READONLY"/>
                         )}
-                        <Box sx={{display: 'flex', width: '100%', justifyContent: 'flex-end'}}>
+                        <Box sx={{display:'flex',flexDirection:!executionTerminal?'column':'row',alignItems:'center'}}>
+                        <Box sx={{...RuntimeStyle}}>
                             <Typography variant="executeActionSubtext">
                                 Runtime: {getElapsedTime()}
                             </Typography>
                         </Box>
                         {executionTerminal ? (
-                            <Box sx={{display: 'flex', width: '100%', justifyContent: 'flex-end', gap: 2}}>
-                                <Button variant="outlined" sx={{border: '1.28323px solid #0A414D;'}} onClick={handleMoreInfoClick}>
+                            <Box sx={{...moreInfoANDlogsContainer}}>
+                                <Button sx={{...moreinfoBtnColor}} onClick={handleMoreInfoClick}>
                                     More Info
                                 </Button>
                                 {executionTerminal ? (
@@ -151,13 +146,14 @@ export const ActionExecutionDetails = (props: {
                                 ) : (<></>)}
                             </Box>
                         ) : (
-                            <Box sx={{width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, alignItems: 'center'}}>
+                            <Box sx={{...ExecutingContainer}}>
                                 <ExecutionLoadingIndicator />
                                 <Typography>
                                     Executing {actionExecutionDetailQuery?.data?.ActionDefinition?.DisplayName}. Please Wait
                                 </Typography>
                             </Box>
                         )}
+                        </Box>
                         
                         {showParameters ? (
                             <ExecuteAction hideExecution={true} disableRun={!executionTerminal} actionDefinitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id || "NA"} existingParameterInstances={actionExecutionDetailQuery?.data?.ActionParameterInstances} showActionDescription={false} fromTestRun={props.fromTestAction} onExecutionCreate={props.onExecutionCreate} redirectToExecution={!props.fromTestAction} />
@@ -168,7 +164,7 @@ export const ActionExecutionDetails = (props: {
                         
                         {executionTerminal ? (
                             <div ref={resultsView}>
-                                <Card sx={executionHeaderSxProps} >
+                                <Box sx={executionHeaderSxProps} >
                                     {executionError ? (
                                         <ViewFailedActionExecution actionExecutionDetail={actionExecutionDetailQuery?.data || {}}/>
                                     ) : (
@@ -183,7 +179,7 @@ export const ActionExecutionDetails = (props: {
                                         </Box>
                                     )}
                                     
-                                </Card>
+                                </Box>
                             </div>
                         ) : (
                             <></>

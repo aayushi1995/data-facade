@@ -4,6 +4,7 @@ import { Box, Card, IconButton, InputAdornment, TextField } from "@mui/material"
 import { DataGrid, DataGridProps, GridRenderCellParams, GridValueGetterParams } from "@mui/x-data-grid"
 import { ChangeEvent, useState } from 'react'
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
+import { SearchBar } from '../../../css/theme/CentralCSSManager'
 import { lightShadows } from "../../../css/theme/shadows"
 import { ColumnProperties } from "../../../generated/entities/Entities"
 import { WrapInDialog } from '../../table_browser/components/AllTableView'
@@ -70,7 +71,7 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
                 field: "Info",
                 width: 300,
                 renderCell: (params: GridRenderCellParams<any, ColumnStatViewProps, any>) => {
-                    return !!(params.row?.column?.Id) ? <Box sx={{ py: 2, width: "100%" }}><Box sx={{ backgroundColor: "ActionDefinationTextPanelBgColor.main", height: "100%", width: "100%" }}><TableViewColumnHeader ColumnId={params.row?.column?.Id}/></Box></Box> : <></>
+                    return !!(params.row?.column?.Id) ? <Box sx={{ py: 2, width: "100%" }}><Box sx={{ backgroundColor: "#fff", height: "100%", width: "100%" }}><TableViewColumnHeader ColumnId={params.row?.column?.Id}/></Box></Box> : <></>
                 },
                 valueGetter: (params: GridValueGetterParams<any, ColumnStatViewProps>) => params?.row?.column?.UniqueName
             },
@@ -111,15 +112,8 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 placeholder="Search Columns"
-                                sx={{width: '40%', 
-                                    backgroundColor: 'allTableTextfieldbgColor1.main',
-                                    boxSizing: 'border-box', 
-                                    boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
-                                    backgroundBlendMode: 'soft-light, normal', 
-                                    borderRadius: '26px',
-                                    display: 'flex', 
-                                    justifyContent: 'center', 
-                                    minHeight: '50px'}}
+                                sx={{width: '40%',
+                                ...SearchBar()}}
                                 InputProps={{
                                     disableUnderline: true,
                                     startAdornment: (
@@ -138,7 +132,7 @@ const ColumnInfoDataGrid = (props: ColumnInfoDataGridProps) => {
                         }
                     </Box>
                     <Box>
-                        <Card sx={{ borderRadius: 2, boxShadow: lightShadows[31] }}>
+                        <Card sx={{ borderRadius: '15px' }}>
                             <DataGrid {...dataGridProps} sx={{
                                 "& .MuiDataGrid-cell--withRenderer": { p: 0 }
                             }}/>

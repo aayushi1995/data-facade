@@ -55,7 +55,7 @@ function AddActionToEdit(props: AddActionToEditProps) {
         }
     }
     return (
-        <Box sx={{p:5}}>
+        <Box>
             {buildActionContext.mode==="CREATE" &&
                 <CreateNewAction {...createNewActionProps}/>
             }

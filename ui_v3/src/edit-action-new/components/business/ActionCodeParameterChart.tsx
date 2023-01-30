@@ -1,8 +1,9 @@
 import { TabContext } from "@mui/lab";
 import TabPanel from "@mui/lab/TabPanel";
-import { Box, Dialog, DialogContent, Tab, Tabs } from "@mui/material";
+import { Box, Dialog, DialogContent, Divider, Tab, Tabs } from "@mui/material";
 import EditActionChartConfig from "../../../pages/build_action/components/form-components/EditActionChartConfig";
 import useActionCodeParameter from "../../hooks/useActionCodeParameter";
+import { paramChipContainer, tabContainer } from "../../style/ActionCodeParamStyle";
 import ActionCode from "../presentation/custom/ActionCode";
 import ActionParameter from "../presentation/custom/ActionParameter";
 import { ActiveParameterConfiguratorHeaderTypography } from "../presentation/styled_native/ActiveParameterConfiguratorTypography";
@@ -19,11 +20,12 @@ function ActionCodeParameterChart() {
 
     return (
         <Box>
-            <Box sx={{mt:2,mx:3}}>
+            <Box sx={{...paramChipContainer}}>
                 <ActionParameterChip/>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "row" ,mx:3}}>
-                <Box sx={{ width: "100%" }}>
+            <Divider/>
+            <Box sx={{...tabContainer}}>
+                <Box>
                     <Tabs
                         value={activeTab}
                         onChange={(event, newValue: string) => setActiveTab(newValue)}

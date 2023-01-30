@@ -14,6 +14,7 @@ import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrl
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import React from "react"
 import DeepDiveActionButton from "./DeepDiveActionButton"
+import { TableTheme } from "../../css/theme/CentralCSSManager"
 
 export interface ViewActionExecutionOutputProps {
     ActionExecution: ActionExecution,
@@ -133,6 +134,11 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                 <img src={DownloadIcon} />
             </IconButton>
     )
+    const deepdiveBtn = (<Box sx={{display:'flex',flexDirection:'row',mr:1}}>
+                        {downloadButton}
+                    <DeepDiveActionButton ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
+                    </Box>
+    )
 
     if(isTableOutputSuccessfulFormat(TableOutput)) {
         const preview: TablePreview = JSON.parse(TableOutput.preview)
@@ -142,17 +148,11 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         
         return (
             <Box sx={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-                <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end'}}>
-                    <DeepDiveActionButton ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
-                </Box>
+                
                 <DataGrid 
                     headerHeight={70}
                     sx={{
-                        "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
-                        backgroundBlendMode: "soft-light, normal",
-                        border: "2px solid rgba(255, 255, 255, 0.4)",
-                        boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-                        borderRadius: "10px"
+                        ...TableTheme()
                     }}
                     rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
                     initialState={{
@@ -164,7 +164,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                     columns={dataGridColumns} 
                     rows={dataGridRows}
                     components={{
-                        Toolbar: CustomToolbar([downloadButton])
+                        Toolbar: CustomToolbar([deepdiveBtn])
                     }}
                 />
             </Box>

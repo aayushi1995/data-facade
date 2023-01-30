@@ -81,7 +81,7 @@ const TableDetailsView = () => {
     <TabContext value={tabState}>
       <React.Fragment>
         <Box sx={{ display: "flex", flexDirection: "column"}}>
-          <Box className={classes.grid_root}>
+          <Box >
             <Tabs
               indicatorColor="primary"
               scrollButtons="auto"
@@ -96,11 +96,11 @@ const TableDetailsView = () => {
             </Tabs>
             <Divider />
           </Box>
-          <Box className={classes.grid_root}>
+          <Box >
             <ReactQueryWrapper {...result}>
               {() => (
-                <Box sx={{ mt: 3 }}>
-                  <TabPanel value={DATA_TABLE_TAB_SUMMARY}>
+                <Box>
+                  <TabPanel sx={{p:0,pt:1}} value={DATA_TABLE_TAB_SUMMARY}>
                     <TableRowExpanded
                       TableId={data[0] && data[0].Id}
                     />

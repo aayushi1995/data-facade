@@ -8,7 +8,7 @@ import LoadingIndicator from './LoadingIndicator'
 import { ReactQueryWrapper } from './ReactQueryWrapper'
 import useCreateRuntimeWorkflow from './workflow/create/hooks/useCreateRuntimeWorkflow'
 import useGetPossibleAutoFlows from './workflow/create/hooks/useGetPossibleAutoflow'
-
+import autoTablebtn from "../../../src/images/autoTablebtn.svg"
 const RunWorkflowButtons = (props) => {
     const {TableId} = props
 
@@ -38,15 +38,24 @@ const RunWorkflowButtons = (props) => {
             {tableId: TableId, autoFlow: autoFlow}
         )
     }
-
+    const btns={
+        backgroundColor:'#F1BF42',
+        borderRadius:'3px',
+        color:'#303234',
+        display:'flex',
+        gap:1,
+        "&:hover":{
+            backgroundColor:'#d1b01d'
+        }
+    }
     const getButtons = (data) => {
         const possibleFlows = data?.[0]?.PossibleAutoFlow
         const buttons = possibleFlows?.map(flow => {
             if(flow === AutoFlows.TIME_SERIES_AUTO_FLOW) {
-                return <Button size="small" color="primary" variant="contained" onClick={() => handleClick(AutoFlows.TIME_SERIES_AUTO_FLOW)}>Time Forecast Auto Flow</Button>
+                return <Button size="small" sx={{...btns}} color="primary" variant="contained" onClick={() => handleClick(AutoFlows.TIME_SERIES_AUTO_FLOW)}><img src={autoTablebtn}/> Auto-Forecast</Button>
             }
             if(flow === AutoFlows.CLEANUP_AUTO_FLOW) {
-                return <Button size="small" color="primary" variant="contained" onClick={() => handleClick(AutoFlows.CLEANUP_AUTO_FLOW)}>Cleanup Auto Flow</Button>
+                return <Button size="small" sx={{...btns}} color="primary" variant="contained" onClick={() => handleClick(AutoFlows.CLEANUP_AUTO_FLOW)}><img src={autoTablebtn}/> Auto-Cleanup</Button>
             }
         })
         
@@ -68,11 +77,11 @@ const RunWorkflowButtons = (props) => {
             data={possibleButtons}
             error={getPossibleFlowsQuery.error}
             children={() => 
-                <Box sx={{display: 'flex', gap: 1, justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+                <Box sx={{display: 'flex', gap: 1}}>
                     {isLoading ? (
                         <LoadingIndicator/>
                     ) : (
-                        <Box sx={{display: 'flex', gap: 1,  justifyContent: 'flex-start', alignItems: 'flex-start'}}>
+                        <Box sx={{display: 'flex', gap: 1,}}>
                             {possibleButtons}
                         </Box>
                     )}

@@ -10,8 +10,10 @@ export const ExecuteActionStyledTab = styled(Tab)<TabProps>(({theme}) => ({
     fontSize: "14px",
     lineHeight: "24px",
     color: '#253858',
+    // backgroundColor:'rgba(214, 226, 251, 0.5)',
     '& .Mui-selected': {
-        color: '#162EE7'
+        color: '#162EE7',
+        backgroundColor:'rgba(214, 226, 251, 0.5)'
     },
     '& .Mui-focusVisible': {
         backgroundColor: 'rgba(214, 226, 251, 0.5)'
@@ -24,7 +26,7 @@ export const ExecuteActionStyledTab = styled(Tab)<TabProps>(({theme}) => ({
 
 export const ExecuteActionStyledTabs = styled(Tabs)<TabsProps>(({theme}) => ({
     '& .MuiTabs-indicator': {
-        background: 'rgba(214, 226, 251, 0.5)'
+        background: '#fff'
     },
     '& .MuiTabs-indicatorSpan': {
         maxWidth: 40,

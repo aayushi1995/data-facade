@@ -155,7 +155,7 @@ const labels = {
     "AddActionPage":{
         "searchText": "Search and Add existing action from library",
         "addActionMsg1": "Add your action here",
-        "addActionMsg2": "Flow gives you flexibility of the notebook format but the power of DF Platform"
+        "addActionMsg2": "Please write a succinct description for your action and choose your preferred language and our AI will generate the required code"
     }
 }
 

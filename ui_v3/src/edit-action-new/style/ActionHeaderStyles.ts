@@ -1,3 +1,5 @@
+import { display } from "@mui/system"
+
 export const ActionHeaderActionNameStyle = {
     fontFamily: "'Work Sans'",
     fontStyle: "normal",
@@ -31,11 +33,13 @@ export const ActionHeaderActionDescriptionLabelStyle = {
 export const ActionHeaderActionVisibilityStyle = {
     fontFamily: "'SF Pro Text'",
     fontStyle: "normal",
-    fontWeight: 600,
-    fontSize: "9px",
+    fontWeight: 700,
+    fontSize: "1rem",
     lineHeight: "143%",
     letterSpacing: "0.0735392px",
-    color: "#66748A"
+    color: "#24B2CF",
+    cursor:'pointer',
+    marginTop:'5px'
 }
 
 export const ActionHeaderMakePublicToggleTextStyle = {
@@ -78,7 +82,7 @@ export const ActionHeaderDropDownTextStyle = {
     display: "flex",
     alignItems: "center",
     letterSpacing: "0.149465px",
-    color: "#303234"
+    color: "#e1e1e3"
 }
 
 export const ActionHeaderDropDownSuperTextStyle = {
@@ -95,16 +99,21 @@ export const ActionHeaderDropDownSuperTextStyle = {
 
 export const ActionHeaderCardStyle = {
     background: "#565656", 
-    borderRadius: "15.6169px"
+    borderRadius: "16px",
+    display:'flex',
+    flexDirection:'row'
 }
 
 export const ActionHeaderCardInputAreaStyle = {
     width:'75%',
     boxSizing: "border-box",
-    background: "#F5F9FF",
-    border: "1px solid #56D280",
-    boxShadow: "0px 15px 25px rgba(54, 48, 116, 0.3)",
+    background: "#EBF1FA",
+    // border: "1px solid #56D280",
+    boxShadow: "0px 2px 2px rgba(54, 48, 116, 0.3)",
     borderRadius: "15.62px",
+    display: "flex", 
+    flexDirection: "row", 
+    height: "100%",
 }
 
 export const ActionHeaderCardActionAreaStyle = {

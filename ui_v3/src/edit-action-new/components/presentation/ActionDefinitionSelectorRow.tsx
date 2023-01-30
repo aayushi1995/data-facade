@@ -1,6 +1,8 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { ActionDefinitionSelectorResponse } from "../../../generated/interfaces/Interfaces";
 import AddIcon from '@mui/icons-material/Add';
+import DFicon from "../../../images/DF_icon.svg"
+import { ACinfoContainer, ActionCardForSelectContainer, ActionSelectorNameTypo, AcTypo1, AcTypo2, DFlogoConatiner, SelectActionButton } from "./styled_native/ActionAddCodeIconBox";
 export type ActionDefinitionSelectorRowProps = {
     data: ActionDefinitionSelectorResponse,
     onSelect: () => void
@@ -8,27 +10,19 @@ export type ActionDefinitionSelectorRowProps = {
 
 function ActionDefinitionSelectorRow(props: ActionDefinitionSelectorRowProps) {
     return (
-        <Box sx={{
-            display:'flex', 
-            flexDirection:'row',
-            margin:'auto',
-            width:'90%',
-            boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5),  4px 6px 16px rgba(163, 177, 198, 0.5)',
-            borderRadius:'16px',
-            px:2,
-            py:1,
-            my:1}}>
-            <Box sx={{display:'flex', flexDirection:'column'}}>
-                <Typography sx={{fontSize:'1.2rem', fontWeight:600}}>{props?.data?.ActionDisplayName}</Typography>
-                <Box sx={{display:'flex',flexDirection:'row',gap:1}}>
-                    <Typography sx={{fontSize:'0.9rem'}}>Output Type : <b>{props?.data?.ActionOutputType}</b></Typography> <Divider orientation="vertical"/>
-                    <Typography sx={{fontSize:'0.9rem'}}>Parameters : <b>{props?.data?.ActionParameterCount}</b></Typography><Divider orientation="vertical"/>
-                    <Typography sx={{fontSize:'0.9rem'}}>Run : <b>{props?.data?.ActionRuns}</b></Typography>
+        <Box sx={{...ActionCardForSelectContainer}}>
+            <Box sx={{...DFlogoConatiner}}><img width='45px' height='45px' src={DFicon} alt="" /></Box>    
+            <Box sx={{...ActionSelectorNameTypo}}>
+                <Typography sx={{...AcTypo1}}>{props?.data?.ActionDisplayName}</Typography>
+                <Box sx={{...ACinfoContainer}}>
+                    <Typography sx={{...AcTypo2}}>Output Type : <b>{props?.data?.ActionOutputType}</b></Typography> <Divider orientation="vertical"/>
+                    <Typography sx={{...AcTypo2}}>Parameters : <b>{props?.data?.ActionParameterCount}</b></Typography><Divider orientation="vertical"/>
+                    <Typography sx={{...AcTypo2}}>Run : <b>{props?.data?.ActionRuns}</b></Typography>
                 </Box>
 
             </Box>
-            <Box sx={{ml:'auto'}}>
-                <Button variant="outlined" size='small' sx={{boxShadow: 'inset -4px -6px 16px #b6fab6, inset 4px 6px 16px #f8fcbb'}} color='success' onClick={props?.onSelect}><AddIcon color='success'/></Button>
+            <Box sx={{ml:'auto',my:'auto'}}>
+                <Button variant="contained" size='small' sx={{...SelectActionButton}} color='info' onClick={props?.onSelect}><AddIcon sx={{color:'#fff'}}/></Button>
             </Box>
         </Box>
     )

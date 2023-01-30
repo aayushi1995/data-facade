@@ -13,7 +13,7 @@ import useGetApplicationDetails from "../../apps/hooks/useGetApplicationDetails"
 import { useGetPrebuiltApplications } from "../../../common/components/application/hooks/useGetPrebuildApplications";
 import LinesEllipsis from "react-lines-ellipsis";
 import addActionContext from './AddActionContext'
-import { AddActionCard } from "./CssProperties";
+import { AddActionCard, AddIconCss, applabelCss, appname, seemoremarcketplace } from "./CssProperties";
 import AddIcon from '@mui/icons-material/Add';
 import MarcketPlaceIcon from '../../../../src/images/marketplace_blue.svg'
 export type RecommendedAppsProps = {
@@ -41,7 +41,7 @@ function RecommendedApps(props: RecommendedAppsProps) {
         )}
     />
     const { ActionMaker, setActionMaker } = React.useContext(addActionContext);
-    if(filteredData?.length==0 && props.searchQuery){
+    if (filteredData?.length == 0 && props.searchQuery) {
         setActionMaker(props.searchQuery)
     }
 
@@ -80,15 +80,19 @@ function RecommendedApps(props: RecommendedAppsProps) {
                     {/* <Box sx={{ ...ScratchPadTabStyle }}>
                         <RouterLink to={{pathname: '/data/scratchpad'}}>Scratch Pad</RouterLink>
                     </Box> */}
-                     <Grid item xs={6} md={4} lg={2.4} sx={{ px: 1, py: 2 }}>
-                     <Card sx={{...AddActionCard}} to="application/edit-action/Add" component={NavLink}>
-                                <Typography sx={{...ActionCardHeader}}>Create New action</Typography>    
-                                <Typography sx={{fontSize:'0.9rem', fontWeight:400, color:'#878c88'}}>Name : {props.searchQuery}</Typography>
-                                <AddIcon sx={{mx:'auto',fontSize:'80px',fontWeight:900,color:'#0ec940'}}/>
-                            </Card>
-                            </Grid>
+                    <Grid item xs={6} md={4} lg={2.4} sx={{ px: 1, py: 2 }}>
+                        <Card sx={{ ...AddActionCard }} to="application/edit-action/Add" component={NavLink}>
+                            <Box sx={{ height: '12vh', p: 3 }}>
+                                <Typography sx={{ ...ActionCardHeader }}>Create New action</Typography>
+                                <Typography sx={{...appname}}>Name : {props.searchQuery}</Typography>
+                            </Box>
+                            <Box sx={{borderTop:'1px solid #7cf786',textAlign:'center'}}>
+                                <AddIcon sx={{...AddIconCss}} />
+                            </Box>
+                        </Card>
+                    </Grid>
                     {actionDefinitionRows}
-                    
+
                 </Grid>
             </Box>
         </>
@@ -138,20 +142,18 @@ export function DetailView(props: DetailViewProps) {
     return (
         <Box sx={{ ...DialogBody }}>
             <Box sx={{ ...AllPackageList }}>
-                <Box>
                     <Box onClick={() => setSelectedAppId(undefined)} sx={{ cursor: "pointer" }}>
                         <Typography sx={{ ...PackageTabHeader }}>All Packages</Typography>
                     </Box>
-                    <Box sx={{height:'650px',my:1,overflow:'scroll'}}>
+                    <Box sx={{height:'60vh',overflow:'scroll'}}>
                     {appLabels}
                     </Box>
 
-                    {!props.fromAddActionView && <Box sx={{textDecoration:'none',display:'flex',px:4,my:2,gap:1,fontSize:'0.9rem',color: '#007DFA',fontWeight:700}} to={APPLICATION_ROUTE_MARKETPLACE} component={NavLink}>
+                    {!props.fromAddActionView && <Box sx={{...seemoremarcketplace}} to={APPLICATION_ROUTE_MARKETPLACE} component={NavLink}>
                         <img width='20px' height='20px' src={MarcketPlaceIcon } alt="" />
                         See more in marketplace
                         </Box>
                     }
-                </Box>
             </Box>
             <Box sx={{ ...AllApps }}>{applicationActions}</Box>
         </Box>

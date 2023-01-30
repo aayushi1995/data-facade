@@ -43,10 +43,12 @@ const DownloadAndDisplayLogs = (props: DownloadAndDisplayLogsProps) => {
             {useGetPresignedDowloadUrl.isLoading || downloadExecutionOutputFromS3.isLoading ? (
                 <LoadingIndicator/>
             ) : (
-                <>  
-                    <Button variant="outlined" onClick={handleViewLogs}>
-                        View Logs
-                    </Button>  
+                <>
+                    
+                        <Button sx={{color:'#65676B'}} onClick={handleViewLogs}>
+                            Logs
+                        </Button>
+                    
                 </>
             )}
         </Box>

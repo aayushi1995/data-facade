@@ -89,7 +89,7 @@ function ActionHeader(props: ActionHeaderProps) {
     const actionType = buildActionContext.actionDefinitionWithTags.actionDefinition.ActionType || "Check"
 
     return (
-        <ActionHeaderCard sx={{ display: "flex", flexDirection: "row" }}>
+        <ActionHeaderCard>
             <ConfirmationDialog
                 mode="INFO"
                 dialogOpen={generatedCodeDialogState.open}
@@ -102,7 +102,7 @@ function ActionHeader(props: ActionHeaderProps) {
                 onDialogClose={props?.actionHandler?.onCloseGeneratedCodeDialog}
                 
             />
-            <ActionHeaderCardInputArea sx={{ display: "flex", flexDirection: "row", height: "100%", gap: 2,px:2,py:3}}>
+            <ActionHeaderCardInputArea sx={{  gap: 2,px:2,py:2}}>
                 <Box sx={{ display: "flex", alignItems: "center"}}>
                     <KeyboardArrowDownIcon/>
                 </Box>
@@ -111,7 +111,7 @@ function ActionHeader(props: ActionHeaderProps) {
                         <img width='30px' src={props.language=='python'?pythonLogo:sqlLogo} alt="" />
                     </Box>
                     <Box sx={{ display: "flex", height: "20%", alignItems: "center",mt:1 }}>
-                        <ActionPublishStatusBox publishStatus={props?.publishStatus}/>
+                        {/* <ActionPublishStatusBox publishStatus={props?.publishStatus}/> */}
                     </Box>
                 </Box>
                 <Box sx={{ display: "flex",width:'50%', flexDirection: "column" }}>
@@ -136,7 +136,7 @@ function ActionHeader(props: ActionHeaderProps) {
                                             }} variant='standard' size='small' fullWidth multiline minRows={1} maxRows={3} value={props?.actionDescription || ""} onChange={handleDescriptionChange}/>
                         </Box>
                         <Box>
-                            <ActionHeaderActionVisibilityTypography sx={{mt:1}}>PUBLIC</ActionHeaderActionVisibilityTypography>
+                            <ActionHeaderActionVisibilityTypography onClick={props?.actionHandler?.onGenerateCode} sx={{mt:1}}>Generate Code</ActionHeaderActionVisibilityTypography>
                         </Box>
                     </Box>
                 </Box>

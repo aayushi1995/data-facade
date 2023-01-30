@@ -53,12 +53,12 @@ const TableRowExpanded = (props: TableRowExpandedProps) => {
             error={tableDetailError}
             data={tableDetailData}
             children={() => 
-                <Grid container spacing={6}>
+                <Grid container spacing={2  }>
                     <Grid item xs={12}>
                         <TableSummary TableId={tableDetailData?.Id}/>
                     </Grid>
                     <Grid item xs={12}>
-                        <TableView TableId={tableDetailData?.Id}/>
+                        <TableView showBTN={true} TableId={tableDetailData?.Id}/>
                     </Grid>
                 </Grid>
             }

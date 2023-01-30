@@ -45,7 +45,7 @@ export const formDataGridPropsFromResponse = (response?: TableView, searchQuery?
             rows: rows,
             columns: columns,
             autoHeight: true,
-            headerHeight: "140px",
+            headerHeight: "160px",
             rowsPerPageOptions: [5, 10, 20, 50, 100, 200],
             initialState: {
                 pagination: {

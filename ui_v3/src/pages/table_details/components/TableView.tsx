@@ -6,47 +6,59 @@ import { DataGrid } from "@mui/x-data-grid";
 import React, { ChangeEvent, useState } from "react";
 import LoadingWrapper from "../../../common/components/LoadingWrapper";
 import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper";
+import RunWorkflowButton from '../../../common/components/RunWorkflowButton';
 import useFetchTags from "../../../common/components/tag-handler/hooks/useFetchTags";
+import { SearchBar } from '../../../css/theme/CentralCSSManager';
 import { lightShadows } from '../../../css/theme/shadows';
 import DatafacadeDatatype from "../../../enums/DatafacadeDatatype";
 import labels from "../../../labels/labels";
 import { useTableAndColumnStats } from './ColumnInfoViewHooks';
 import { formDataGridPropsFromResponse, isDataGridRenderPossible, useColumn, useColumnDataTypeMutation, useTableView } from "./TableViewHooks";
 
-const TableView = (props: {TableId?: string}) => {
-    const tableViewQuery = useTableView({ TableId: props.TableId, options: {}})
-    const [searchQuery, setSearchQuery] = useState<string|undefined>("")
+const TableView = (props: { TableId?: string ,showBTN?:boolean }) => {
+    const tableViewQuery = useTableView({ TableId: props.TableId, options: {} })
+    const [searchQuery, setSearchQuery] = useState<string | undefined>("")
     const handleSearchChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSearchQuery(event?.target.value)
     }
-    
+
+    const tableCardStyle = {
+        borderRadius: '8px', 
+        boxShadow: '0px 1.01276px 1.01276px rgba(0, 0, 0, 0.1), 0px 0px 1.01276px rgba(0, 0, 0, 0.25)' 
+    }
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 5}}>
-            <Box>
-                <TextField variant="standard" 
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    placeholder="Search Columns"
-                    multiline={true}
-                    sx={{width: '40%', 
-                        backgroundColor: 'allTableTextfieldbgColor1.main',
-                        boxSizing: 'border-box', 
-                        boxShadow: 'inset -4px -6px 16px rgba(255, 255, 255, 0.5), inset 4px 6px 16px rgba(163, 177, 198, 0.5);',
-                        backgroundBlendMode: 'soft-light, normal', 
-                        borderRadius: '26px',
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        minHeight: '50px'}}
-                    InputProps={{
-                        disableUnderline: true,
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon sx={{marginLeft: 1}}/>
-                            </InputAdornment>
-                        )
-                }}/>
-            </Box>
-            <Card sx={{borderRadius: 2, boxShadow: lightShadows[31]}}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Grid container spacing={1} sx={{ display: 'flex', flexDirection: 'row' }}>
+                <Grid item xs={12} lg={5}>
+                    <TextField variant="standard"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Search Columns"
+                        multiline={true}
+                        sx={{
+                            width: '100%',
+                            ...SearchBar()
+                        }}
+                        InputProps={{
+                            disableUnderline: true,
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon sx={{ marginLeft: 1 }} />
+                                </InputAdornment>
+                            )
+                        }} />
+                </Grid>
+                {props.showBTN &&
+                <Grid item xs={12} lg={7}>
+                    <Card sx={{ height: '5vh', borderRadius: '5px' }}>
+                        <Box sx={{ pt: 1, px: 2 }}>
+                            <RunWorkflowButton TableId={props.TableId} />
+                        </Box>
+                    </Card>
+                </Grid>
+                } 
+            </Grid>
+            <Card sx={{...tableCardStyle}}>
                 <Box>
                     <ReactQueryWrapper
                         isLoading={tableViewQuery.isLoading}
@@ -54,12 +66,14 @@ const TableView = (props: {TableId?: string}) => {
                         data={tableViewQuery.data}
                         children={() =>
                             isDataGridRenderPossible(tableViewQuery.data) &&
-                                <DataGrid sx={{ 
-                                    "& .MuiDataGrid-columnHeaderTitleContainerContent": { width: "100%" },
-                                    "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"}
-                                }}
-                                    {...formDataGridPropsFromResponse(tableViewQuery.data, searchQuery)}  
-                                />
+                            <DataGrid sx={{
+                                "& .MuiDataGrid-columnHeaderTitleContainerContent": { width: "100%" },
+                                "& .MuiDataGrid-columnHeaders": { backgroundColor: "#FFFFFF" },
+                                borderRadius: '6px',
+                                backgroundColor: '#F0F2F5',
+                            }}
+                                {...formDataGridPropsFromResponse(tableViewQuery.data, searchQuery)}
+                            />
                         }
                     />
                 </Box>
@@ -74,12 +88,14 @@ export interface TableViewColumnHeaderProps {
 
 export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
     const { ColumnId } = props
-    
+
     const columnQuery = useColumn({ ColumnId: ColumnId, options: {} })
     const tableAndColumnStatsQuery = useTableAndColumnStats({ TableId: columnQuery?.data?.TableId })
-    const coumnDatatypeMutation = useColumnDataTypeMutation({ options: {
-        onSuccess: () => columnQuery.refetch()
-    }})
+    const coumnDatatypeMutation = useColumnDataTypeMutation({
+        options: {
+            onSuccess: () => columnQuery.refetch()
+        }
+    })
 
     const onColumnDatatypeChange = (newDatatype: string, columnId?: string) => {
         coumnDatatypeMutation.mutate({
@@ -87,16 +103,16 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
             newDataType: newDatatype
         })
     }
-    
+
     return (
         <ReactQueryWrapper
             isLoading={columnQuery.isLoading}
             error={columnQuery.error}
             data={columnQuery.data}
-            children={() => 
+            children={() =>
                 <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
-                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", flex: 1}}>
-                        <Box sx={{ px: 2 }}>
+                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", flex: 1 }}>
+                        <Box sx={{ px: 3 }}>
                             <Tooltip title={columnQuery?.data?.UniqueName || ""}>
                                 <Typography sx={{
                                     fontFamily: "'Open Sans'",
@@ -110,17 +126,17 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
                             </Tooltip>
                         </Box>
                         <Box>
-                            <IconButton sx={{ height: "24px"}}>
-                                <MoreHorizIcon/>
+                            <IconButton sx={{ height: "24px" }}>
+                                <MoreHorizIcon />
                             </IconButton>
                         </Box>
                     </Box>
-                    <Divider sx={{ mt: 1 }}/>
+                    <Divider sx={{ mt: 1 }} />
                     <Box>
                         <FormControl fullWidth>
                             <NativeSelect
                                 value={columnQuery?.data?.Datatype}
-                                onChange={(event) => {event.stopPropagation(); onColumnDatatypeChange(event.target.value, columnQuery?.data?.Id)}}
+                                onChange={(event) => { event.stopPropagation(); onColumnDatatypeChange(event.target.value, columnQuery?.data?.Id) }}
                                 sx={{
                                     fontFamily: "'Open Sans'",
                                     fontStyle: "normal",
@@ -142,9 +158,9 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
                             </NativeSelect>
                         </FormControl>
                     </Box>
-                    <Divider sx={{ mb: 1 }}/>
-                    <Box sx={{ pb: 1 }}>
-                        <ColumnHeaderTagSelector ColumnId={ColumnId}/>
+                    <Divider sx={{ mb: 1 }} />
+                    <Box sx={{ mb: "5px" }}>
+                        <ColumnHeaderTagSelector ColumnId={ColumnId} />
                     </Box>
                     <Box>
                         <ReactQueryWrapper
@@ -154,17 +170,17 @@ export const TableViewColumnHeader = (props: TableViewColumnHeaderProps) => {
                             children={() => {
                                 const columnHealth = tableAndColumnStatsQuery?.data?.ColumnInfoAndStats?.find(columnInfo => columnInfo?.ColumnName === columnQuery?.data?.UniqueName)?.ColumnStat?.Health
                                 return (
-                                    <Tooltip title={columnHealth !== undefined ? `${((columnHealth||0)*100).toFixed(2)} %` : "Fetching"}>
-                                        <LinearProgress variant={columnHealth !== undefined ? "determinate" : "indeterminate"} value={(columnHealth||0)*100} color="success"/>
+                                    <Tooltip title={columnHealth !== undefined ? `${((columnHealth || 0) * 100).toFixed(2)} %` : "Fetching"}>
+                                        <LinearProgress variant={columnHealth !== undefined ? "determinate" : "indeterminate"} value={(columnHealth || 0) * 100} color="success" />
                                     </Tooltip>
                                 )
                             }}
                         />
                     </Box>
-                </Box>   
+                </Box>
             }
-        /> 
-    )               
+        />
+    )
 }
 
 export type ColumnHeaderTagSelectorProps = {
@@ -182,6 +198,7 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
         alignItems: "center",
         letterSpacing: "0.073125px",
         color: "ActionDefinationHeroTextColor1.main",
+        borderRadius: '5px',
         py: 1
     }
     const filter = createFilterOptions<string>()
@@ -204,26 +221,26 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
         const tagsToShow = tagsSelectedForEntity.slice(0, howMany || tagsSelectedForEntity.length)
         const tagCount = tagsToShow.length
         tagCount === 0 && tagsToShow.push("No Tags")
-        tagCount !== tagsSelectedForEntity.length && tagsToShow.push(`+${tagsSelectedForEntity.length-tagsToShow.length} Tags`)
+        tagCount !== tagsSelectedForEntity.length && tagsToShow.push(`+${tagsSelectedForEntity.length - tagsToShow.length} Tags`)
         return tagsToShow.map((tagName, index) => {
             const tag = <Chip variant="outlined" color="primary" size="small"
-                            label={tagName}
-                            onDelete={index<tagCount ? () => deleteTag(tagName) : undefined}
-                            sx={{...chipStyle, maxWidth: chipMaxWidth }} key={`${index}-tag-chip`}
-                        />
+                label={tagName}
+                onDelete={index < tagCount ? () => deleteTag(tagName) : undefined}
+                sx={{ ...chipStyle, maxWidth: chipMaxWidth }} key={`${index}-tag-chip`}
+            />
             return <Tooltip title={tagName}>{tag}</Tooltip>
         })
     }
 
-    return(
+    return (
         <LoadingWrapper
             isLoading={isLoading}
             error={error}
             data={tagsSelectedForEntity}
         >
             <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }} onClick={handleClick}>
-                <Box sx={{ display: "flex", flexDirection: "column", width: "100%"}}>
-                    <Box sx={{ display: "flex", flexDirection: "row", width: "100%"}}>
+                <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                    <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
                         <Box sx={{ display: "flex", height: "100%", justifyContent: "center", alignItems: "center", flex: 1 }}>
                             <Typography sx={{
                                 fontFamily: "'Open Sans'",
@@ -238,22 +255,22 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
                                 px: 3,
                                 width: "100%"
                             }} onClick={handleClick}>
-                                    Add / Show Tag
+                                Add / Show Tag
                             </Typography>
                         </Box>
-                        <Box sx={{ display: "flex", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                            <ArrowDropDownIcon/>
+                        <Box sx={{ mr: '7px', display: "flex", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                            <ArrowDropDownIcon />
                         </Box>
                     </Box>
                     <Box sx={{ width: "100%", py: "4px" }}>
-                        <Divider orientation='horizontal'/> 
+                        <Divider orientation='horizontal' />
                     </Box>
-                    <Box sx={{ overflowX: "auto", display: "flex", flexDirection: "row", gap: 1}}>
+                    <Box sx={{ px: 3, overflowX: "auto", display: "flex", flexDirection: "row", gap: 1 }}>
                         {getTagChips(1, "100px")}
                     </Box>
                 </Box>
             </Box>
-            
+
             <Popover
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
@@ -263,7 +280,7 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
                     horizontal: 'left',
                 }}
             >
-                <Grid container spacing={2} sx={{overflowY: 'auto', p: 2, width: "450px"}}>
+                <Grid container spacing={2} sx={{ overflowY: 'auto', p: 2, width: "450px" }}>
                     <Grid item xs={12}>
                         <Autocomplete
                             options={tagsNotSelectedButAvaialbleForEntity}
@@ -272,17 +289,17 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
                             selectOnFocus
                             clearOnBlur
                             handleHomeEndKeys
-                            disabled={(isLoading || isMutating ||(!!error))}
+                            disabled={(isLoading || isMutating || (!!error))}
                             onChange={(event, value, reason, details) => {
-                                if(!!value){
-                                    if(value?.includes("Create Tag: ")){
+                                if (!!value) {
+                                    if (value?.includes("Create Tag: ")) {
                                         createAndAddTag(value.substring(12))
                                     } else {
                                         addTag(value)
                                     }
                                 }
                             }}
-                            renderInput={(params) => <TextField {...params} label="Add Tag"/>}
+                            renderInput={(params) => <TextField {...params} label="Add Tag" />}
                             filterOptions={(options, params) => {
                                 const filtered = filter(options, params);
                                 if (params.inputValue !== '') {
@@ -294,7 +311,7 @@ export const ColumnHeaderTagSelector = (props: ColumnHeaderTagSelectorProps) => 
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <Box sx={{display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%"}}>
+                        <Box sx={{ display: "flex", flexDirection: "row", gap: 1, flexWrap: "wrap", alignItems: "center", height: "100%" }}>
                             {getTagChips(undefined)}
                         </Box>
                     </Grid>

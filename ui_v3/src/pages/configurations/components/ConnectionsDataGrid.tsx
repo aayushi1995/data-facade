@@ -26,7 +26,8 @@ import useSyncProviderInstance from "./hooks/useSyncProviderInstance";
 import useUpdateSyncActionInstance from "./hooks/useUpdateSyncActionInstance";
 import { Delete } from '@mui/icons-material';
 import { useDeleteProviderInstance } from './hooks/useDeleteProviderInstance';
-
+import ReSyncNewLogo from '../../../../src/images/resync_icon.svg'
+import { TableTheme } from '../../../css/theme/CentralCSSManager';
 type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 
 interface ConnectionDataGridProps {
@@ -205,11 +206,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
         rows: rows?.map(row => ({...row, id: row.ProviderInstance?.Id, providerName: row.ProviderInstance?.Name})) || [],
         autoHeight: true,
         sx: {
-            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},    backgroundColor: 'ActionCardBgColor.main',
-            backgroundBlendMode: "soft-light, normal",
-            border: "2px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-            borderRadius: "10px"
+            ...TableTheme()
         },
         disableSelectionOnClick: true,
         headerHeight: 70,
@@ -415,7 +412,7 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                 height: "24px", 
                 width: "24px"
             }}>
-                <SyncIcon/>
+                <img width='35px' height='35px' src={ReSyncNewLogo} alt="" />
             </Box>
         )}else{
             return(
@@ -423,7 +420,8 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
                     height: "24px", 
                     width: "24px"
                 }}>
-                    <SyncIcon/>
+
+                <img width='35px' height='35px' src={ReSyncNewLogo} alt="" />
                 </Box>
             )
         }
@@ -508,9 +506,9 @@ export const ConnectionCell = (props: {providerInstance?: ProviderInstance, sync
 export const JobStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
     return (
         <Box sx={{display: 'flex', gap: 3, minWidth: '100%'}}>
-            <StatusCard text={props.providerStats?.NumberOfRunningExecutions || 0} background='statusCardBgColor1.main' title='Running'/>
-            <StatusCard text={props.providerStats?.NumberOfFailedExecutions || 0} background='statusCardBgColor2.main' title='Failed'/>
-            <StatusCard text={props.providerStats?.NumberOfCompletedExecutions || 0} background='statusCardBgColor3.main' title='Completed'/>
+            <StatusCard text={props.providerStats?.NumberOfRunningExecutions || 0} color={'#047a08'} background='statusCardBgColor1.main' title='Running'/>
+            <StatusCard text={props.providerStats?.NumberOfFailedExecutions || 0} color={'#e60b1a'} background='statusCardBgColor2.main' title='Failed'/>
+            <StatusCard text={props.providerStats?.NumberOfCompletedExecutions || 0} color={'#ad6f0a'} background='statusCardBgColor3.main' title='Completed'/>
         </Box>
     )
 }
@@ -518,19 +516,19 @@ export const JobStatusCell = (props: {providerStats?: ProviderInstanceStat}) => 
 const SyncStatusCell = (props: {providerStats?: ProviderInstanceStat}) => {
     return (
         <Box sx={{display: 'flex', gap: 3, minWidth: '100%'}}>
-            <StatusCard text={props.providerStats?.SyncRunning || 0} background='statusCardBgColor1.main' title='Active'/>
-            <StatusCard text={props.providerStats?.SyncFailed || 0} background='statusCardBgColor2.main' title='Errors'/>
-            <StatusCard text={props.providerStats?.SyncCompleted || 0} background='statusCardBgColor3.main' title='Successful'/>
+            <StatusCard text={props.providerStats?.SyncRunning || 0} color={'#047a08'} background='statusCardBgColor1.main' title='Active'/>
+            <StatusCard text={props.providerStats?.SyncFailed || 0} color={'#e60b1a'} background='statusCardBgColor2.main' title='Errors'/>
+            <StatusCard text={props.providerStats?.SyncCompleted || 0} color={'#ad6f0a'} background='statusCardBgColor3.main' title='Successful'/>
         </Box>
     )
 }
 
 
-export const StatusCard = (props: {background: string, text: string | number, title?: string}) => {
+export const StatusCard = (props: {background: string, text: string | number, title?: string,color?: string}) => {
     return (
         <Tooltip title={props.title || ""}>
             <StatusCardOnly sx={{ backgroundColor: props.background }}>
-                <StatusCardTypography>    
+                <StatusCardTypography sx={{color:props.color}}>    
                     {props.text} {props.title}
                 </StatusCardTypography>
             </StatusCardOnly>
@@ -544,9 +542,8 @@ const StatusCardOnly = styled(Card)<CardProps>(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: "0.439891px solid #FFFFFF",
-    boxShadow: "0px 5px 10px rgba(54, 48, 116, 0.3)",
-    borderRadius: "26.3934px"
+    boxShadow: "0px 2px 4px rgba(54, 48, 116, 0.3)",
+    borderRadius: "16px"
 }))
 
 const StatusCardTypography = styled(Typography)<TypographyProps>(({ theme }) => ({

@@ -122,10 +122,40 @@ export const AddActionCard = {
     textDecoration: 'none',
     color: 'blue',
     fontSize: '1.2rem',
-    p:3,
     backgroundColor: '#d7f7e0',
+    // border:'0.5px solid #1eeb07',
     ":hover": {
         boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.25)',
         backgroundColor: '#b5f5c6',
     }
+}
+
+export const seemoremarcketplace = {
+    textDecoration: 'none', 
+    display: 'flex', 
+    px: 4, 
+    my: 2, 
+    gap: 1, 
+    fontSize: '0.9rem', 
+    color: '#007DFA', 
+    fontWeight: 700 
+}
+
+export const AddIconCss = {
+    mx: 'auto', 
+    fontSize: '30px', 
+    fontWeight: 900, 
+    color: '#0ec940' 
+}
+
+export const appname = {
+    fontSize: '0.9rem', 
+    fontWeight: 400, 
+    color: '#878c88'
+}
+
+export const applabelCss = {
+    height: '650px', 
+    my: 1, 
+    overflow: 'scroll'
 }

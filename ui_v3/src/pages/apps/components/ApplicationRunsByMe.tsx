@@ -8,6 +8,7 @@ import { Application } from "../../../generated/entities/Entities"
 import { TextCell, TimestampCell } from "../../table_browser/components/AllTableView"
 import useApplicationRunsByMe, { Run } from "./UseApplicationRunsByMe"
 import Stack from '@mui/material/Stack';
+import { TableTheme } from "../../../css/theme/CentralCSSManager"
 
 export type ApplicationRunsByMeProps = {
     application?: Application,
@@ -18,7 +19,15 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
     const {application} = props
     const { fetchDataQuery, displayActionOutput, displayWorkflowOutput, reRunWorkflow, reRunAction } = useApplicationRunsByMe({ application: application, fetchAll: props.fetchAll })
     const history = useHistory()
-
+    const StatusCell = (props:{sts:string})=>{
+        const bgColor = props.sts=='Completed'?'#d0facf':'#facfd8'
+        const textColor = props.sts=='Completed'?'#0bbf17':'#bf0b1a'
+        return(
+            <Box sx={{backgroundColor:bgColor,color:textColor,px:1,py:0.5,borderRadius:'16px'}}>
+                {props.sts}
+            </Box>
+        )
+    }
     const datagridProps: DataGridProps = {
         rows: fetchDataQuery?.data || [],
         columns: [
@@ -53,7 +62,7 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
                 field: "ActionExecutionStatus",
                 headerName: "Status",
                 width: 200,
-                renderCell: (params: GridCellParams<any, Run, any>) => <TextCell text={params.row.ActionExecutionStatus}/>
+                renderCell: (params: GridCellParams<any, Run, any>) => <StatusCell sts={params.row.ActionExecutionStatus || ""}/>
             },
             {
                 field: "ActionExecutionStartedOn",
@@ -86,12 +95,7 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
             },
         ],
         sx: {
-            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
-            backgroundColor: 'ActionCardBgColor.main',
-            backgroundBlendMode: "soft-light, normal",
-            border: "2px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-            borderRadius: "15px"
+            ...TableTheme()
         },
         autoHeight: true,
         headerHeight: 70,

@@ -13,6 +13,7 @@ import { generatePath, useHistory } from "react-router"
 import { ACTION_EXECUTION_ROUTE, WORKFLOW_EXECUTION_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType"
 import Stack from '@mui/material/Stack';
+import { TableTheme } from "../../../css/theme/CentralCSSManager"
 
 interface ScheduledJobsViewProps {
 
@@ -88,12 +89,7 @@ const ScheduledJobsView = (props: ScheduledJobsViewProps) => {
         rows: rows.map(row => ({...row, id: row.model?.Id, jobName: row.model?.Name})),
         autoHeight: true,
         sx: {
-            "& .MuiDataGrid-columnHeaders": { backgroundColor: "ActionDefinationTextPanelBgColor.main"},
-            backgroundColor: 'ActionCardBgColor.main',
-            backgroundBlendMode: "soft-light, normal",
-            border: "2px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: "-10px -10px 20px #E3E6F0, 10px 10px 20px #A6ABBD",
-            borderRadius: "15px"
+            ...TableTheme()
         },
         disableSelectionOnClick: true,
         headerHeight: 70,
@@ -142,18 +138,22 @@ const ScheduledJobsView = (props: ScheduledJobsViewProps) => {
 
 export const JobStatusCell = (props: {status: string}) => {
     let background = 'statusCardBgColor1.main'
+    let color = '#07a31e'
     switch (props.status) {
         case 'Error': {
             background = 'statusCardBgColor3.main'
+            color = '#ad6f0a'
             break;
         }
         case 'Failure': {
+            color = '#a3070e'
             background = 'rgba(255, 189, 189, 0.88)'
         }
     }
 
     return (
         <Card sx={{  width: "70px",
+            color: color,
             height: "36px",
             display: 'flex',
             alignItems: 'center',
@@ -169,7 +169,7 @@ export const JobStatusCell = (props: {status: string}) => {
                     fontSize: "11.5435px",
                     lineHeight: "160%",
                     letterSpacing: "0.0961957px",
-                    color: "ActionDefinationHeroTextColor1.main"}}
+                    color: color}}
                 >    
                     {props.status}
                 </Typography>

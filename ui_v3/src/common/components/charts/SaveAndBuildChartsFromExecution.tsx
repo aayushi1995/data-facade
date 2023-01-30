@@ -1,4 +1,4 @@
-import { Box, Grid, Button, Typography, Tabs, Tab, Dialog } from "@mui/material"
+import { Box, Grid, Button, Typography, Tabs, Tab, Dialog, Tooltip } from "@mui/material"
 import WrapInCollapsable from "../collapsable/WrapInCollapsable"
 import ChartIcon from "../../../../src/images/ChartIcon.svg"
 import ResultIcon from "../../../../src/images/Results.png"
@@ -15,6 +15,8 @@ import ActionExecutionStatus from "../../../enums/ActionExecutionStatus"
 import ParametersIcon from "../../../../src/images/Parameters.svg";
 import ViewConfiguredParameters from "../../../pages/execute_action/components/ViewConfiguredParameters"
 import DeepDive from "./DeepDive"
+import SaveBtn from "../../../images/save1.svg"
+import { ActionExecutionOutputContainer, collapseSummaryBox, collapseSummaryTypo, PostTaskBTNContainer, TabHeaderContainer, tabsStyle, tabStyle } from "./CssProperties"
 import { ActionExecutionResultTab } from "./styled_components/ResultsViewStyledTab"
 import DisplayLogs from "./DisplayLogs"
 import JobsRowJobDetail from "../../../pages/jobs/components/JobsRowJobDetail"
@@ -43,7 +45,7 @@ function TabPanel(props: TabPanelProps) {
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
-            >
+        >
             {value === index && (
                 <Box>
                     <Typography>{children}</Typography>
@@ -52,7 +54,7 @@ function TabPanel(props: TabPanelProps) {
         </div>);
 }
 
-const highLevelSxProps = { display: 'flex', flexDirection: 'column', gap: 2, mt: 2, mr: 2 }
+const highLevelSxProps = { display: 'flex', flexDirection: 'column', gap: 2, }
 const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionProps) => {
 
     const saveAndBuildChartsState = React.useContext(SaveAndBuildChartContext)
@@ -69,15 +71,15 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                 uploadPath: (chart?.data?.model?.S3Path || "s3Path") + "/data.txt"
             })
             chartQueriesState.updateChart?.mutate({
-                filter: {Id: chart.data.model?.Id},
-                newProperties: {...chart.data.model},
+                filter: { Id: chart.data.model?.Id },
+                newProperties: { ...chart.data.model },
                 assignedDashboards: chart.assignedDasboards
             })
         })
     }, [saveAndBuildChartsState.Charts])
 
     React.useEffect(() => {
-        setSaveAndBuildChartsState({type: 'SetExecutionId', payload: {executionId: props.executionId}})
+        setSaveAndBuildChartsState({ type: 'SetExecutionId', payload: { executionId: props.executionId } })
     }, [props.executionId])
 
     const handleTabChange = (tabValue: number) => {
@@ -87,12 +89,14 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
 
     const [executionTerminal, setExecutionTerminal] = React.useState(true)
 
-    const actionExecutionDetailQuery = FetchActionExecutionDetails({actionExecutionId: props.executionId, refetch: false, queryOptions: {
-        enabled: !executionTerminal
-    }})
+    const actionExecutionDetailQuery = FetchActionExecutionDetails({
+        actionExecutionId: props.executionId, refetch: false, queryOptions: {
+            enabled: !executionTerminal
+        }
+    })
     React.useEffect(() => {
         const actionStatus = actionExecutionDetailQuery.data?.ActionExecution?.Status
-        if(actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED) {
+        if (actionStatus === ActionExecutionStatus.FAILED || actionStatus === ActionExecutionStatus.COMPLETED) {
             setExecutionTerminal(true)
         }
     }, [actionExecutionDetailQuery.data])
@@ -101,20 +105,8 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         console.log(props.executionId)
         setExecutionTerminal(false)
     }, [props.executionId])
-    
 
-    function postExecutionTasksButton(buttonLabel :String, onClick: React.MouseEventHandler<HTMLButtonElement> | undefined){
-        return (
-            <Button
-            variant="outlined" 
-            color="success" 
-            sx={{ ml: 'auto', borderRadius: '5px' }} 
-                onClick={onClick}
-                >
-                {buttonLabel}
-            </Button>
-        )
-    }
+
 
     const getParentProviderInstanceId = () => {
         return saveAndBuildChartsState.ExecutionDetails?.ActionParameterInstances?.find(pi => !!pi.ProviderInstanceId)?.ProviderInstanceId || saveAndBuildChartsState.ExecutionDetails?.ActionInstance?.ProviderInstanceId
@@ -197,26 +189,20 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                             </TabPanel>
                         </Box>
                 </Grid>
-                
+
             </Grid>
         </Box>
-    )    
+    )
 }
 
 
-export const CollapsibleSummary = (props: {icon: string, label: string}) => {
+export const CollapsibleSummary = (props: { icon: string, label: string }) => {
 
     return (
-        <Box sx={{display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center'}}>
+        <Box sx={{...collapseSummaryBox}}>
             <img src={props.icon} alt="Filter" />
             <Typography sx={{
-                fontFamily: "'SF Pro Text'",
-                fontStyle: "normal",
-                fontWeight: 500,
-                fontSize: "14px",
-                lineHeight: "157%",
-                letterSpacing: "0.1px",
-                color: "#353535"
+                ...collapseSummaryTypo
             }}>
                 {props.label}
             </Typography>
@@ -227,12 +213,14 @@ export const CollapsibleSummary = (props: {icon: string, label: string}) => {
 
 const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value: number) => void}) => {
     return (
-        <Box sx={{display: 'flex', gap: 0}}>
-            <Tabs value={props.activeTab} onChange={(event, newValue) => {
-                if(newValue !== props.activeTab && props.activeTab !== -1){
-                    event.stopPropagation() 
+        <Box sx={{ display: 'flex', gap: 0 }}>
+            <Tabs sx={{
+                ...tabsStyle
+            }} value={props.activeTab} onChange={(event, newValue) => {
+                if (newValue !== props.activeTab && props.activeTab !== -1) {
+                    event.stopPropagation()
                 }
-                props.onTabChange(newValue)   
+                props.onTabChange(newValue)
             }}>
                 <ActionExecutionResultTab value={0}iconPosition="start" label="Results" />
                 <ActionExecutionResultTab label="Parameters" value={1} />

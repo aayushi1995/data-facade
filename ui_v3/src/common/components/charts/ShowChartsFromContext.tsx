@@ -42,7 +42,7 @@ const ShowChartsFromContext = (props: ShowChartsFromContextProps) => {
     }
 
     return (
-        <Grid container spacing={2} sx={{padding: 2}}>
+        <Grid container spacing={2} sx={{px: 2}}>
             {saveAndBuildChartsState.Charts?.map(chart => {
                 if (!!chart) {
                     return (
