@@ -10,6 +10,7 @@ const useSaveDashboard = () => {
 
     return useMutation("SaveDashbaord",
         (params: {filter: Dashboard, newProperties: Dashboard}) => {
+            console.log(params)
             return fetchedDataManager.patchData(labels.entities.Dashboard, {
                 filter: params.filter,
                 newProperties: params.newProperties

@@ -37,7 +37,14 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
     const [dashboardDetails, setDashboardDetails] = React.useState<DashboardDetails | undefined>()
     const updateDashboard = useSaveDashboard()
 
-    const [dashboardData, isDashboardLoading, dashboardError, refetch] = useGetDashboardDetails({filter: {Id: dashboardId}, enabled: false})
+    const handleDashboardFetched = (data: DashboardDetails[]) => {
+        if(!!data && data.length) {
+            console.log(data)
+            setDashboardDetails(data?.[0])
+        }
+    }
+
+    const [dashboardData, isDashboardLoading, dashboardError, refetch] = useGetDashboardDetails({filter: {Id: dashboardId}, enabled: false, onSuccess: handleDashboardFetched})
     const refreshDashboard = useRefreshDashboard()
 
     const handleChartFetched = () => {
@@ -48,6 +55,8 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
 
     React.useEffect(() => {
         setChartFetched(false)
+        setChartWithData(undefined)
+        setDashboardDetails(undefined)
         refetch()
     }, [dashboardId]) 
 
@@ -58,12 +67,6 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
             setChartWithData(fetchDashboardChartQuery.data)
         }
     }, [fetchDashboardChartQuery.data])
-
-    React.useEffect(() => {
-        if(!!dashboardData && dashboardData.length) {
-            setDashboardDetails(dashboardData?.[0])
-        }
-    }, [dashboardData])
 
     const onChartChange = (chartData: DashboardChartWithData[]) => {
         setChartWithData(chartData)
@@ -86,7 +89,7 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
             ...JSON.parse(dashboardDetails?.model?.Config || "{}") as DashboardConfig,
             charts: chartWithData?.map(chart => ({chartName: chart.chartWithData?.model?.Name, layout: chart.layout, ActionInstanceId: chart.ActionInstanceId}))
         })
-
+        console.log(dashboardDetails)
         updateDashboard.mutate({
             filter: {Id: dashboardDetails?.model?.Id},
             newProperties: {...dashboardDetails?.model, Config: finalConfig} || {}
@@ -162,7 +165,28 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
         setDashboardDetails(dashboard => ({
             ...dashboard,
             model: {
+                ...dashboard?.model,
                 Config: config
+            }
+        }))
+    }
+
+    const onNameChange = (newName?: string) => {
+        setDashboardDetails(details => ({
+            ...details,
+            model: {
+                ...details?.model,
+                Name: newName
+            }
+        }))
+    }
+
+    const onDescriptionChange = (newDescription?: string) => {
+        setDashboardDetails(details => ({
+            ...details,
+            model: {
+                ...details?.model,
+                Description: newDescription
             }
         }))
     }
@@ -175,12 +199,16 @@ const SingleDashboardView = ({match}: RouteComponentProps<{dashboardId: string}>
                        
                         <DashboardHero 
                             mode="EDIT" 
-                            name={dashboardData?.[0]?.model?.Name} 
-                            createdBy={dashboardData?.[0]?.model?.CreatedBy} 
-                            description={dashboardData?.[0]?.model?.Description} 
+                            name={dashboardDetails?.model?.Name} 
+                            createdBy={dashboardDetails?.model?.CreatedBy} 
+                            description={dashboardDetails?.model?.Description} 
                             lastUpdatedOn={dashboardData?.[0]?.model?.CreatedOn}
                             numberOfCharts={dashboardData?.[0]?.numberOfCharts}
                             flowExecutionId={dashboardData?.[0]?.model?.FlowId}    
+                            onChangeHandlers={{
+                                onDescriptionChange: onDescriptionChange,
+                                onNameChange: onNameChange
+                            }}
                         />
                   
                 </LoadingWrapper>

@@ -5,12 +5,13 @@ import { DashboardDetails } from "../../../generated/interfaces/Interfaces"
 import labels from "../../../labels/labels"
 
 
-const useGetDashboardDetails = (props: {filter: Dashboard, enabled?: boolean}): [DashboardDetails[], boolean, object, Function] => {
+const useGetDashboardDetails = (props: {filter: Dashboard, enabled?: boolean, onSuccess: (data: DashboardDetails[]) => void}): [DashboardDetails[], boolean, object, Function] => {
 
     const {data, isLoading, isRefetching, error, refetch} = useQuery([labels.entities.Dashboard, "details", props.filter], 
         () => Fetcher.fetchData("GET", "/getDashboardDetails", props.filter),
         {
-            enabled: props.enabled
+            enabled: props.enabled,
+            onSuccess: props.onSuccess
         }
     )
 

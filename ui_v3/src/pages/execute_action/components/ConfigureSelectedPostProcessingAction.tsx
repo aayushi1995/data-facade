@@ -5,6 +5,7 @@ import { ReactQueryWrapper } from "../../../common/components/ReactQueryWrapper"
 import TagHandler from "../../../common/components/tag-handler/TagHandler"
 import { TableTheme } from "../../../css/theme/CentralCSSManager"
 import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype"
+import { ActionParameterAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput"
 import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag"
 import { ActionParameterDefinition, ActionParameterInstance, Tag } from "../../../generated/entities/Entities"
 import { ActionInstanceWithParameters } from "../../../generated/interfaces/Interfaces"
@@ -20,13 +21,14 @@ export interface ConfigureSelectedPostProcessingActionProps {
     handlers: {
         onParameterValueChange: (newActionParameterInstances: ActionParameterInstance[], actionIndex: number) => void,
     },
-    selectedActionIndex: number
+    selectedActionIndex: number,
+    actionParameterAdditionalConfigs?: ActionParameterAdditionalConfig[]
 
 }
 
 const ConfigureSelectedPostProcessingAction = (props: ConfigureSelectedPostProcessingActionProps) => {
 
-    const {selectedActionDetails} = props
+    const {selectedActionDetails, actionParameterAdditionalConfigs} = props
     const {
         getRows, 
         fetchActionDefinitionQuery, 
@@ -70,6 +72,7 @@ const ConfigureSelectedPostProcessingAction = (props: ConfigureSelectedPostProce
                                     parameterDefinitions={[params.row]}
                                     parameterInstances={selectedActionDetails.ParameterInstances || []}
                                     handleChange={handleParameterChange}
+                                    parameterAdditionalConfigs={actionParameterAdditionalConfigs}
                                 />
                             }
                         </>    

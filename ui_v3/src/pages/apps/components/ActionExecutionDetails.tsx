@@ -51,6 +51,10 @@ const ActionExecutionDetailsNew = (props: ActionExecutionDetailProps) => {
         alignItems: 'center'
     }
 
+    const onDeepDiveActionSelected = (actionId?: string) => {
+        setSelectedActionId(actionId)
+    }
+
     return (
         <ReactQueryWrapper  {...actionExecutionDetailQuery}>
             {() => <Box sx={{display: 'flex', flexDirection: 'column', width: '100%', gap: 4}}>
@@ -156,6 +160,7 @@ const ActionExecutionDetailsNew = (props: ActionExecutionDetailProps) => {
                                             executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}
                                             onChildExecutionCreated={onChildExecutionCreated}
                                             definitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id}
+                                            onDeepDiveActionSelected={onDeepDiveActionSelected}
                                         />
                                     </SaveAndBuildChartContextProvider>}
                                 

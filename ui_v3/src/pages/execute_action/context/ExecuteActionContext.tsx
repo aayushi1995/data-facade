@@ -404,10 +404,13 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
                     ResultSchemaName: WriteBackSchemaNames.DF_TEMP_SCHEMA
                 },
                 ParameterInstances: defaultActionTemplate?.actionParameterDefinitions?.map(paramterDetails => {
-                    const defaultActionParameterInstance = JSON.parse( paramterDetails.model?.DefaultParameterValue || "{}")  
+                    const defaultActionParameterInstance = JSON.parse( paramterDetails.model?.DefaultParameterValue || "{}") as ActionParameterInstance
+                    
                     return {
                         ...defaultActionParameterInstance,
-                        ActionParameterDefinitionId: paramterDetails.model?.Id,   
+                        ActionParameterDefinitionId: paramterDetails.model?.Id, 
+                        SourceExecutionId: paramterDetails.model?.Tag === ActionParameterDefinitionTag.TABLE_NAME || paramterDetails.model?.Tag === ActionParameterDefinitionTag.DATA ? "Previous Execution " : undefined,
+                        ParameterValue: paramterDetails.model?.Tag === ActionParameterDefinitionTag.TABLE_NAME || paramterDetails.model?.Tag === ActionParameterDefinitionTag.DATA ? "Previous Execution " : undefined,
                     }
                 })
             }
@@ -458,7 +461,8 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
         case "DeltePostProcessingAction": {
             return {
                 ...state,
-                postProcessingActions: state.postProcessingActions?.filter((actionPost, index) => index !== action.payload.actionIndex)
+                postProcessingActions: state.postProcessingActions?.filter((actionPost, index) => index !== action.payload.actionIndex),
+                selectedActionIndex: state.selectedActionIndex === action.payload.actionIndex ? undefined : state.selectedActionIndex
             }
         }
 
@@ -555,16 +559,11 @@ const safeMergeState = (oldState: ExecuteActionContextState, actionDetail: Actio
     }
 }
 
-const getConfig = (state: ExecuteActionContextState) => {
-    return JSON.stringify({
-        PostProcessingSteps: state.postProcessingActions || []
-    })
-}
 
 export const constructCreateActionInstanceRequest = (state: ExecuteActionContextState, parentProviderInstanceId?: string) => {
     const {ActionDefinition, ActionParameterDefinitions, SelectedProviderInstance} = state.ExistingModels
     const {ActionInstance, ActionParameterInstances} = state.ToCreateModels
-    const tableParameterId: string|undefined = ActionParameterDefinitions?.find(apd => apd?.Tag===ActionParameterDefinitionTag.TABLE_NAME)?.Id
+    const tableParameterId: string|undefined = ActionParameterDefinitions?.find(apd => apd?.Tag===ActionParameterDefinitionTag.TABLE_NAME || apd?.Tag===ActionParameterDefinitionTag.DATA)?.Id
     const getProviderInstanceId: () => string|undefined = () => {
         const providerInstanceId = ActionParameterInstances.find(api => api.ActionParameterDefinitionId===tableParameterId)?.ProviderInstanceId
         if(!providerInstanceId) {
@@ -576,6 +575,22 @@ export const constructCreateActionInstanceRequest = (state: ExecuteActionContext
             }
         }
         return providerInstanceId
+    }
+
+    const getPostProcessedProviderInstanceId = (parameterInstances: ActionParameterInstance[]) => {
+        return parameterInstances.find(pi => !!pi.ProviderInstanceId)?.ProviderInstanceId || getProviderInstanceId()
+    }
+
+    const getConfig = (state: ExecuteActionContextState) => {
+        return JSON.stringify({
+            PostProcessingSteps: (state.postProcessingActions || []).map(aiWithPi => ({
+                ...aiWithPi,
+                model: {
+                    ...aiWithPi.model,
+                    ProviderInstanceId: getPostProcessedProviderInstanceId(aiWithPi.ParameterInstances || [])
+                }
+            }))
+        })
     }
     
 

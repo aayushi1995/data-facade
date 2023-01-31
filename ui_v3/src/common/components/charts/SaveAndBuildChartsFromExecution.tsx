@@ -26,7 +26,8 @@ interface SaveAndBuildChartsFromExecutionProps {
     executionId: string;
     definitionName?: string;
     onChildExecutionCreated?: (childExecutionId: string) => void;
-    definitionId?: string
+    definitionId?: string,
+    onDeepDiveActionSelected?: (actionId?: string) => void
 }
 
 interface TabPanelProps {
@@ -61,7 +62,6 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     const setSaveAndBuildChartsState = React.useContext(SetSaveAndBuildChartContext)
     const chartQueriesState = React.useContext(ChartQueriesContext)
     const [activeTab, setActiveTab] = React.useState<number>(0)
-    const [selectedDeepDiveActionId, setSelectedDeepDiveActionId] = React.useState<string | undefined>()
 
     React.useEffect(() => {
         saveAndBuildChartsState.Charts.forEach(chart => {
@@ -112,30 +112,6 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         return saveAndBuildChartsState.ExecutionDetails?.ActionParameterInstances?.find(pi => !!pi.ProviderInstanceId)?.ProviderInstanceId || saveAndBuildChartsState.ExecutionDetails?.ActionInstance?.ProviderInstanceId
     }
 
-    const getButtonSx = { width: '10vw', height: '100%', ml: 'auto' }
-    const postExecutionTasks = 
-    <>
-        <Box sx={{getLargerButtonSx: getButtonSx}}>
-            <ExportAsDashboard executionId={props.executionId} definitionName={props.definitionName || ""}/>
-        </Box>
-        <Box sx={{getLargerButtonSx: getButtonSx}}>
-            <DeepDive 
-                setSelectedActionId={setSelectedDeepDiveActionId}
-                executionId={props.executionId} 
-                definitionName={props.definitionName || ""}
-                onChildExecutionCreated={props.onChildExecutionCreated}
-                definitionId={props.definitionId || ""}
-                selectedActionId={selectedDeepDiveActionId}
-                parentProviderInstanceId={getParentProviderInstanceId()}
-            />
-        </Box>
-    </>
-
-    const onDeepDiveActionSelected = (actionId: string) => {
-        console.log(actionId)
-        setSelectedDeepDiveActionId(actionId)
-    }
-
     const getTabBoxSx = () => {
         return {
             background: "#F0F2F5",
@@ -156,11 +132,11 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                                     {() => <>
                                         <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                                             <ReactQueryWrapper isLoading={chartQueriesState.fetchCharts?.isLoading || chartQueriesState.fetchCharts?.isFetching} data={saveAndBuildChartsState.Charts} error={chartQueriesState.fetchCharts?.error}>
-                                                {() => <ShowChartsFromContext onDeepDiveActionSelected={onDeepDiveActionSelected}/>}
+                                                {() => <ShowChartsFromContext onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>}
                                             </ReactQueryWrapper>
                                             {saveAndBuildChartsState.ExecutionDetails ? 
                                                 <ViewActionExecutionOutput 
-                                                onDeepDiveActionSelected={onDeepDiveActionSelected}
+                                                onDeepDiveActionSelected={props.onDeepDiveActionSelected}
                                                 ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
                                                 ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
                                                 ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}

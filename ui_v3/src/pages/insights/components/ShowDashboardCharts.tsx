@@ -48,7 +48,6 @@ const ShowDashboardCharts = (props: ShowDashboardChartProps) => {
                     }
                 })}
                 {props.textBoxes?.map(textBox => {
-                    console.log(textBox.layout)
                     return <div key={textBox.id} data-grid={JSON.parse(textBox.layout)}>
                         <Card sx={{borderRadius: '0px', height: '100%', width: '100%', display: 'flex', alignItems: 'center'}}> 
                             <TextField

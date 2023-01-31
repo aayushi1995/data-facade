@@ -98,7 +98,8 @@ const useAddPostProcessingActions = () => {
             handlers: {
                 onParameterValueChange: onParameterValueChange
             },
-            sourceActionName: executeActionContext.ExistingModels.ActionDefinition.DisplayName || "Previous Execution"
+            sourceActionName: executeActionContext.ExistingModels.ActionDefinition.DisplayName || "Previous Execution",
+            actionParameterAdditionalConfigs: executeActionContext.ExistingModels.ParameterAdditionalConfig
         }
     }
 

@@ -8,7 +8,7 @@ import { ChartQueriesContext, SaveAndBuildChartContext, SetSaveAndBuildChartCont
 
 
 interface ShowChartsFromContextProps {
-    onDeepDiveActionSelected: (actionId: string) => void
+    onDeepDiveActionSelected?: (actionId: string) => void
 }
 
 const ShowChartsFromContext = (props: ShowChartsFromContextProps) => {

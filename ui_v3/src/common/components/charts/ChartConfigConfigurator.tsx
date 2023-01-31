@@ -12,7 +12,7 @@ import { ChartModelConfig, SaveAndBuildChartContext, SetSaveAndBuildChartContext
 interface ChartConfigConfiguratorProps {
     chartId: string,
     onChartModelChange: (chartId: string, chartModel: Chart) => void,
-    onDeepDiveActionSelected: (actionId: string) => void
+    onDeepDiveActionSelected?: (actionId: string) => void
 }
 
 interface TabPanelProps {
@@ -89,7 +89,7 @@ const ChartConfigConfigurator = (props: ChartConfigConfiguratorProps) => {
     }
 
     const handleDeepDiveActionClick = (actionDefinition: ActionDefinitionDetail ) => {
-        props.onDeepDiveActionSelected(actionDefinition.ActionDefinition?.model?.Id!)
+        props.onDeepDiveActionSelected?.(actionDefinition.ActionDefinition?.model?.Id!)
     }
 
     return (

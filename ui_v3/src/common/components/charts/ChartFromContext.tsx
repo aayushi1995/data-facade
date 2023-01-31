@@ -19,7 +19,7 @@ interface ChartFromContextProps {
     chart: ChartWithDataAndOptions,
     onChartModelChange: (chartId: string, chartModel: ChartModel) => void,
     onAssignedDashboardsChange: (chartId: string, dashboards: Dashboard[]) => void,
-    onDeepDiveActionSelected: (actionId: string) => void
+    onDeepDiveActionSelected?: (actionId: string) => void
 }
 
 const ChartFromContext = (props: ChartFromContextProps) => {
