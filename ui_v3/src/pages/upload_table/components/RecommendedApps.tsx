@@ -77,9 +77,11 @@ function RecommendedApps(props: RecommendedAppsProps) {
                     <Button sx={{ ml: 'auto' }} onClick={() => { setDialogState(true) }}>See All</Button>
                 </Box>
                 <Grid container>
-                    {/* <Box sx={{ ...ScratchPadTabStyle }}>
-                        <RouterLink to={{pathname: '/data/scratchpad'}}>Scratch Pad</RouterLink>
-                    </Box> */}
+                    <Grid item xs={6} md={4} lg={2.4} sx={{ px: 1, py: 2 }}>
+                        <Card sx={{...AddActionCard}} to="/data/scratchpad?source=browser&name=ScratchPad" component={NavLink}>
+                            <Typography sx={{...ScratchPadTabStyle}}>Scratch Pad</Typography> 
+                        </Card>
+                    </Grid>
                     <Grid item xs={6} md={4} lg={2.4} sx={{ px: 1, py: 2 }}>
                         <Card sx={{ ...AddActionCard }} to="application/edit-action/Add" component={NavLink}>
                             <Box sx={{ height: '12vh', p: 3 }}>

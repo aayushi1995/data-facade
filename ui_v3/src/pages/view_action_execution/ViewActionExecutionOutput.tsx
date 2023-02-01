@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, Divider, IconButton, Popover, Tooltip, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import ReactJson from "react-json-view"
@@ -20,6 +21,7 @@ export interface ViewActionExecutionOutputProps {
     ActionDefinition: ActionDefinition,
     showCharts?: boolean,
     onDeepDiveActionSelected?: (actionId: string) => void
+    getTableData?: (data:any) => void
 } 
 
 const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
@@ -27,6 +29,11 @@ const ViewActionExecutionOutput = (props: ViewActionExecutionOutputProps) => {
     const actionExecutionParsedOutputQuery = useActionExecutionParsedOutputNew({ actionExecutionFilter: {Id: ActionExecution?.Id}, queryOptions: {staleTime: 1000}})
     const showCharts = props.showCharts === undefined ? true : false
 
+    // send output
+    React.useEffect(() => {
+        props?.getTableData && props?.getTableData(actionExecutionParsedOutputQuery.data?.Output)
+    },[actionExecutionParsedOutputQuery.data?.Output])
+   
     const outputComponentToRender = (output?: any) => {
         switch(ActionDefinition?.PresentationFormat || "NA") {
             case ActionDefinitionPresentationFormat.TABLE_VALUE:

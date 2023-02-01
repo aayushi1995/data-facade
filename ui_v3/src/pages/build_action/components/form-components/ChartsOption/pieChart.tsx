@@ -1,11 +1,10 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const PieChart =(props:{titleName: String; vaLueColumn:String;legendColumn: String;})=>{
+const PieChart =(props:{titleName: String; data?:any})=>{
 
     const Pie = {
-        
         title: {
-            text: props.titleName,
+            text:'',
             left: 'center'
           },
           tooltip: {
@@ -20,7 +19,7 @@ const PieChart =(props:{titleName: String; vaLueColumn:String;legendColumn: Stri
               name: 'Access From',
               type: 'pie',
               radius: '50%',
-              data: [
+              data: props.data || [
                 { value: 1048, name: 'Search Engine' },
                 { value: 735, name: 'Direct' },
                 { value: 580, name: 'Email' },

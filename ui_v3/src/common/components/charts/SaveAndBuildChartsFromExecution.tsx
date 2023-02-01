@@ -20,13 +20,16 @@ import { ActionExecutionOutputContainer, collapseSummaryBox, collapseSummaryTypo
 import { ActionExecutionResultTab } from "./styled_components/ResultsViewStyledTab"
 import DisplayLogs from "./DisplayLogs"
 import JobsRowJobDetail from "../../../pages/jobs/components/JobsRowJobDetail"
+import ScratchPadChart from "../../../pages/data/components/ScratchPad/ScratchPadChart"
+import { cleanData } from "../../../pages/data/components/ScratchPad/utils"
 
 
 interface SaveAndBuildChartsFromExecutionProps {
     executionId: string;
     definitionName?: string;
     onChildExecutionCreated?: (childExecutionId: string) => void;
-    definitionId?: string,
+    definitionId?: string
+    hideTabs?:boolean
     onDeepDiveActionSelected?: (actionId?: string) => void
 }
 
@@ -35,6 +38,7 @@ interface TabPanelProps {
     index: number;
     value: number;
 }
+
 
 function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -55,13 +59,33 @@ function TabPanel(props: TabPanelProps) {
         </div>);
 }
 
-const highLevelSxProps = { display: 'flex', flexDirection: 'column', gap: 2, }
-const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionProps) => {
+const highLevelSxProps = { display: 'flex', flexDirection: 'column', gap: 2 }
 
+const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionProps) => {
+    // constant Label
+    const ChartAndResultTabSummaryLabel = props?.hideTabs ? ["Results", "Charts", "Logs", "More Info"] : ["Results", "Parameters", "Logs", "More Info"]
+
+    const hideTabs = props?.hideTabs
     const saveAndBuildChartsState = React.useContext(SaveAndBuildChartContext)
     const setSaveAndBuildChartsState = React.useContext(SetSaveAndBuildChartContext)
     const chartQueriesState = React.useContext(ChartQueriesContext)
     const [activeTab, setActiveTab] = React.useState<number>(0)
+
+    const [tables, setTables] = React.useState({
+        columns:undefined,
+        rows:undefined
+    })
+
+    const getTableData = (data: any) => {
+        if(data) {
+            const {columns, rows} = cleanData(data)
+            setTables({
+                columns: columns,
+                rows: rows
+            })
+            // chart ready
+        }
+    }
 
     React.useEffect(() => {
         saveAndBuildChartsState.Charts.forEach(chart => {
@@ -85,8 +109,6 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
     const handleTabChange = (tabValue: number) => {
         setActiveTab(tabValue)
     }
-
-
     const [executionTerminal, setExecutionTerminal] = React.useState(true)
 
     const actionExecutionDetailQuery = FetchActionExecutionDetails({
@@ -106,8 +128,6 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
         setExecutionTerminal(false)
     }, [props.executionId])
 
-
-
     const getParentProviderInstanceId = () => {
         return saveAndBuildChartsState.ExecutionDetails?.ActionParameterInstances?.find(pi => !!pi.ProviderInstanceId)?.ProviderInstanceId || saveAndBuildChartsState.ExecutionDetails?.ActionInstance?.ProviderInstanceId
     }
@@ -120,12 +140,15 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
             borderRadius: "7.66801px"
         }
     }
+    
 
     return (
         <Box sx={highLevelSxProps}>
             <Grid direction="column" ml={2}>
                 <Grid item xs={12} >
-                        <ChartAndResultTabSummary activeTab={activeTab} onTabChange={handleTabChange}/>
+
+                        <ChartAndResultTabSummary labels={ChartAndResultTabSummaryLabel} activeTab={activeTab} onTabChange={handleTabChange}/>
+                        
                         <Box sx={{mt: 1, p: 2, ...getTabBoxSx()}}>
                             <TabPanel value={activeTab} index={0}>
                                 <ReactQueryWrapper isLoading={chartQueriesState.fetchExecution?.isLoading || chartQueriesState.fetchExecution?.isFetching} data={chartQueriesState.fetchExecution?.data} error={chartQueriesState.fetchExecution?.error}>
@@ -140,13 +163,14 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                                                 ActionExecution={saveAndBuildChartsState?.ExecutionDetails?.ActionExecution!} 
                                                 ActionDefinition={saveAndBuildChartsState?.ExecutionDetails?.ActionDefinition!} 
                                                 ActionInstance={saveAndBuildChartsState?.ExecutionDetails?.ActionInstance!}
+                                                getTableData={getTableData}
                                                 showCharts={false}    /> : <LoadingIndicator />}
                                         </Box>
                                     
                                     </>}
                                 </ReactQueryWrapper>
                             </TabPanel>
-                            <TabPanel value={activeTab} index={1}>
+                            {!hideTabs ? <TabPanel value={activeTab} index={1}>
                                 <ReactQueryWrapper {...chartQueriesState.fetchExecution}>
                                     {() => <>
                                         {saveAndBuildChartsState.ExecutionDetails ? 
@@ -156,7 +180,11 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                                         }
                                     </>}
                                 </ReactQueryWrapper>
+                            </TabPanel> : 
+                            <TabPanel value={activeTab} index={1}>
+                                  <ScratchPadChart {...tables}/>
                             </TabPanel>
+                            }
                             <TabPanel value={activeTab} index={2}>
                                 <DisplayLogs actionExecution={saveAndBuildChartsState.ExecutionDetails?.ActionExecution || {}} />
                             </TabPanel>
@@ -172,22 +200,8 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
 }
 
 
-export const CollapsibleSummary = (props: { icon: string, label: string }) => {
 
-    return (
-        <Box sx={{...collapseSummaryBox}}>
-            <img src={props.icon} alt="Filter" />
-            <Typography sx={{
-                ...collapseSummaryTypo
-            }}>
-                {props.label}
-            </Typography>
-        </Box>
-    )
-}
-
-
-const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value: number) => void}) => {
+const ChartAndResultTabSummary = (props: {labels:string[], activeTab: number, onTabChange: (value: number) => void}) => {
     return (
         <Box sx={{ display: 'flex', gap: 0 }}>
             <Tabs sx={{
@@ -198,10 +212,14 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
                 }
                 props.onTabChange(newValue)
             }}>
-                <ActionExecutionResultTab value={0}iconPosition="start" label="Results" />
-                <ActionExecutionResultTab label="Parameters" value={1} />
+                {props?.labels?.map((label:string, index:number) => {
+                    return <ActionExecutionResultTab value={index} label={label}/>
+                } )}
+
+                
+                {/* <ActionExecutionResultTab label="Parameters" value={1} />
                 <ActionExecutionResultTab label="Logs" value={2}/>
-                <ActionExecutionResultTab label="More Info" value={3} />
+                <ActionExecutionResultTab label="More Info" value={3} /> */}
             </Tabs>
         </Box>
     )
@@ -209,4 +227,3 @@ const ChartAndResultTabSummary = (props: {activeTab: number, onTabChange: (value
 
 
 export default SaveAndBuildChartsFromExecution
-

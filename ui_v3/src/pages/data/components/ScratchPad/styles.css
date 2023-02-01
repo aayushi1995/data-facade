@@ -1,0 +1,12 @@
+.ChartContainer {
+    display:flex;
+    justify-content: flex-end;
+}
+.scratchPadWrapper {
+    display:flex;
+    justify-content: space-evenly;
+    width:80%;
+}
+.ScratchPadButtonWrapper {
+    margin: 20px 0px;
+}

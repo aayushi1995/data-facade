@@ -1,12 +1,12 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const ScatterChart =(props:{titleName: String; xTitle: String; yTitle: String;})=>{
+const ScatterChart =(props:{titleName: String; xTitle: String; yTitle: String, data?:any[]})=>{
 
     const Scatter = {
         
         dataset: [
             {
-              source: [
+              source: props?.data || [
                 [1, 4862.4],
                 [2, 5294.7],
                 [3, 5934.5],

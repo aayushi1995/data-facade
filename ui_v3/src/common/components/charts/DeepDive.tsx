@@ -33,7 +33,6 @@ export interface DeepDiveProps {
 
 // This compoment enable users to iteratively run all available application from the result of another action.
 const DeepDive = (props: DeepDiveProps) => {
-    console.log(props)
     const [executionId, setExecutionId] = React.useState<string | undefined>(props.executionId)
     const [dialogState, setDialogState] = React.useState(false)
 

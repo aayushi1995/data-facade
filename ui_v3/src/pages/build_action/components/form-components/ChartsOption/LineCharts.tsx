@@ -1,11 +1,12 @@
 import {Box} from "@mui/material"
 import ReactEcharts from "echarts-for-react"; 
-const LineChart =(props: { titleName: String; xTitle: String; yTitle: String; XData: any[]; YData:any[]})=>{
+const LineChart =(props: { titleName: String; xTitle: String; yTitle: String; XData?: any[]; YData?:any[], isStack?:boolean,  areaStyle?: boolean})=>{
 
     const LineChar = {
+        legend: {},
         title: {
             left: 'center',
-            text: props.xTitle
+            text: ''
           },
           tooltip: {
             trigger: 'axis',
@@ -22,13 +23,8 @@ const LineChart =(props: { titleName: String; xTitle: String; yTitle: String; XD
             type: 'value',
             name: props.yTitle
           },
-          series: [
-            {
-              data: props.YData || [150, 230, 224, 218, 135, 147, 260],
-              type: 'line'
-            }
-        ],
-        dataZoom: [
+          series: props?.YData || [],
+          dataZoom: [
             {
               type: 'inside',
               start: 0,
@@ -49,8 +45,6 @@ const LineChart =(props: { titleName: String; xTitle: String; yTitle: String; XD
             }
           },
     }; 
-
-
 
     return(
         <Box sx={{border:'1px solid black',p:5, m:3}}>

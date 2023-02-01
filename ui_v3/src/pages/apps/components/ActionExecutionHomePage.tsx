@@ -33,9 +33,10 @@ export const ActionExecutionDetails = (props: {
         fromTestAction?: boolean, 
         fromDeepDive?: boolean,
         onExecutionCreate?: (actionExecutionId: string) => void,
-        handleGetExistingParameterInstance?: (actionParameterInstances: ActionParameterInstance[]) => void}
+        handleGetExistingParameterInstance?: (actionParameterInstances: ActionParameterInstance[]) => void,
+        hideTabs?:boolean
+    }
     ) => {
-
     const actionExecutionId = props.actionExecutionId
     const [childActionExecutionId, setChildActionExecutionId] = React.useState<string | undefined>(props.childActionExecutionId)
     const [executionTerminal, setExecutionTerminal] = React.useState(true)
@@ -45,7 +46,6 @@ export const ActionExecutionDetails = (props: {
     const childExecution = React.useRef<HTMLDivElement | null>(null)
     const [currentTime, setCurrentTime] = React.useState<number>(Date.now())
     const [intervalId, setIntervalId] = React.useState<any>()
-    console.log(currentTime)
 
     const onChildExecutionCreated = (actionExecutionId: string) => {
         setChildActionExecutionId(actionExecutionId)
@@ -136,16 +136,16 @@ export const ActionExecutionDetails = (props: {
                                 Runtime: {getElapsedTime()}
                             </Typography>
                         </Box>
-                        {executionTerminal ? (
-                            <Box sx={{...moreInfoANDlogsContainer}}>
-                                <Button sx={{...moreinfoBtnColor}} onClick={handleMoreInfoClick}>
-                                    More Info
-                                </Button>
-                                {executionTerminal ? (
-                                    <DownloadAndDisplayLogs actionExecution={actionExecutionDetailQuery?.data?.ActionExecution || {}} />
-                                ) : (<></>)}
-                            </Box>
-                        ) : (
+                        {executionTerminal ? 
+                            !props?.hideTabs && (<Box sx={{...moreInfoANDlogsContainer}}>
+                            <Button sx={{...moreinfoBtnColor}} onClick={handleMoreInfoClick}>
+                                More Info
+                            </Button>
+                            {executionTerminal ? (
+                                <DownloadAndDisplayLogs actionExecution={actionExecutionDetailQuery?.data?.ActionExecution || {}} />
+                            ) : (<></>)}
+                        </Box>)
+                         : (
                             <Box sx={{...ExecutingContainer}}>
                                 <ExecutionLoadingIndicator />
                                 <Typography>
@@ -174,6 +174,7 @@ export const ActionExecutionDetails = (props: {
                                                     executionId={actionExecutionDetailQuery?.data?.ActionExecution?.Id!}
                                                     onChildExecutionCreated={onChildExecutionCreated}
                                                     definitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id}
+                                                    hideTabs={props?.hideTabs}
                                                     />
                                             </SaveAndBuildChartContextProvider>
                                         </Box>
@@ -204,7 +205,6 @@ export const ActionExecutionDetails = (props: {
 
 const ActionExecutionHomePage = () => {
     const match = useRouteMatch<MatchParams>()
-
     const actionExecutionId = match.params?.ActionExecutionId
 
     return (

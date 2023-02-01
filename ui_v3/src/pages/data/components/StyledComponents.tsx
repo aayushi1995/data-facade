@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { TextField, TextFieldProps, Typography } from "@mui/material";
-import { TypographyProps } from "@mui/system";
+import { fontFamily, TypographyProps } from "@mui/system";
+import { inherits } from 'util';
 
 
 
@@ -174,8 +175,6 @@ export const AppCardStyle = {
 export const ScratchPadTabStyle = {
     width: '150px',
     margin: '15px',
-    backgroundColor: 'white',
-    border: '1px solid #d1d1d1',
     cursor: 'pointer',
     display: 'flex',
     borderRadius: '10px',
