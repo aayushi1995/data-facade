@@ -40,7 +40,8 @@ export const NameTextField = {
 
 export const columnFlexBox = {
     display: 'flex', 
-    flexDirection: 'column' 
+    flexDirection: 'column' ,
+    gap:1
 }
 
 export const DescriptionTextField = {

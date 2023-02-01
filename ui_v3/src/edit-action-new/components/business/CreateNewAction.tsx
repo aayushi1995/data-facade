@@ -114,7 +114,7 @@ function CreateNewAction(props: CreateNewActionProps) {
                         <Box>
                             <TextField InputProps={{
                                 sx: {...NameTextField},
-                                disableUnderline: true,
+                                disableUnderline: !name?false:true,
                                 error: !name
                             }} variant='standard'
                                 placeholder="Add Action Name *"

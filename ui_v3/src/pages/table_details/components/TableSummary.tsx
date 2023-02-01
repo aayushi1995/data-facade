@@ -227,10 +227,14 @@ type TableHighLevelInfoProps = { TableId?: string }
 const TableHighLevelInfo = (props: TableHighLevelInfoProps) => {
     const tableFullStats = useTableAndColumnStats({ TableId: props.TableId })
     const health = tableFullStats?.data?.TableStat?.Health
+    const TotalCol =    tableFullStats?.data?.TableStat?.IntColumnCount+ 
+                        tableFullStats?.data?.TableStat?.FloatColumnCount+
+                        tableFullStats?.data?.TableStat?.BoolColumnCount+
+                        tableFullStats?.data?.TableStat?.StringColumnCount 
     const stats = [
             {
             Label: "Number of columns",
-            Value: tableFullStats?.data?.TableStat?.RowCount
+            Value: TotalCol
         },
         {
             Label: "number of Rows",
