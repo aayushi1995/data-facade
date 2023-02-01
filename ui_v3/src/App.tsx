@@ -5,35 +5,23 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { ModuleContent } from "./common/components/ModuleContent";
 import { isNonProductionEnv } from './common/config/config';
-import { RunWorkflowHomePage } from './pages/applications/custom-applications/components/RunWorkflowHomePage';
 
 import ErrorBoundary from "./common/components/ErrorBoundry";
 import GoogleRedirect from "./common/components/google/GoogleRedirect";
 import LoadingIndicator from './common/components/LoadingIndicator';
 import Layout from "./layout";
-import { CreateActionPage } from "./pages/customizations/CreateActionPage";
-import { RunActionPage } from "./pages/customizations/RunActionPage";
 import { EULA } from "./pages/home/EULA";
-import { SearchQueryProvider } from './pages/table_browser/TableBrowser';
 import { useAppInternal } from "./UseAppInternal";
 import AppContext from "./utils/AppContext";
 import history from "./utils/history";
 
 //optimized routes
 const ModuleContextStateProvider = React.lazy(() => import("./common/components/ModuleContext"));
-const CustomApplicationsHomePage = React.lazy(() => import("./pages/applications/custom-applications/CustomApplicationsHomePage"));
-const WorkflowEditorPage = React.lazy(() => import('./pages/applications/custom-applications/WorkflowEditorPage'));
-const ViewWorkflowHomePage = React.lazy(() => import('./pages/applications/view-workflow/ViewWorkflowHomePage'));
-const Configurations = React.lazy(() => import('./pages/configurations/Configurations'));
-const AutobookHomePage = React.lazy(() => import('./pages/applications/auto_book/AutobookHomePage'));
-const Customizations = React.lazy(() => import('./pages/customizations/Customizations'));
 const DevTestPage = React.lazy(() => import('./pages/dev_test_page/DevTestPage'));
 const SlackRedirect = React.lazy(() => import("./pages/dev_test_page/SlackRedirect"));
 const Home = React.lazy(() => import('./pages/home/Home'));
 const NotRegistered = React.lazy(() => import('./pages/home/NotRegistered'));
 const OrgUpdateInProgress = React.lazy(() => import("./pages/home/OrgUpdateInProgress"));
-const Alerts = React.lazy(() => import('./pages/alerts/Alerts'));
-const TagHomePage = React.lazy(() => import('./pages/tag/TagHomePage'));
 
 
 export const AppInternal = (props: { classes: any; userEmail: any; dummyData: any; dummyDataPending: any; activeLink: any; setActiveLink: any; isLoading: any; user: any }) => {
@@ -97,21 +85,9 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
 
                                             {isNonProductionEnv() && <EULA user={user}/>}
                                             <Switch>
-                                                <Route path='/customizations' component={Customizations} />
-                                                {isNonProductionEnv() &&
-                                                    <Route path='/configurations' component={Configurations} />}
-                                                <Route path='/alerts' component={Alerts} />
                                                 <Route path="/slackredirect" component={SlackRedirect} />
                                                 <Route path="/googleredirect" component={GoogleRedirect} />
                                                 <Route path='/testPage' component={DevTestPage} />
-                                                <Route path='/tag' component={TagHomePage} />
-                                                <Route path='/create-action' component={CreateActionPage} />
-                                                <Route path='/run-action' component={RunActionPage} />
-                                                <Route path='/autobook/customers' component={AutobookHomePage} />
-                                                <Route path='/custom-applications' component={CustomApplicationsHomePage} />
-                                                <Route path='/workflow-editor' component={WorkflowEditorPage} />
-                                                <Route path='/run-workflow' component={RunWorkflowHomePage} />
-                                                <Route path='/view-workflow' component={ViewWorkflowHomePage} />
                                                 <Redirect exact from="/tableBrowser" to="/" />
                                             </Switch>
 
@@ -141,11 +117,9 @@ const App = ({ children = noop }) => {
         <CssBaseline />
         <AppContext.Provider value={userSettings}>
                 <Router history={history}>
-                    <SearchQueryProvider>
-                        <ErrorBoundary>
-                            {children(restProps)}
-                        </ErrorBoundary>
-                    </SearchQueryProvider>
+                    <ErrorBoundary>
+                        {children(restProps)}
+                    </ErrorBoundary>
                 </Router>
         </AppContext.Provider>
     </ThemeProvider>

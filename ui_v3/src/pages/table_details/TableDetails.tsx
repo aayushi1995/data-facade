@@ -7,8 +7,8 @@ import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper";
 import useStyles from "../../css/table_details/TableDetails";
 import { useRetreiveData } from "../../data_manager/data_manager";
 import labels from "../../labels/labels";
-import ColumnDetails from "../column_details/ColumnDetails";
-import ActionInstances from "../customizations/components/ActionInstances";
+// import ColumnDetails from "../column_details/ColumnDetails";
+// import ActionInstances from "../customizations/components/ActionInstances";
 import TableRowExpanded from "../table_browser/components/TableRowExpanded";
 import ColumnView from "./components/ColumnView";
 import IntermediaryTables from "./components/IntermediaryTables";
@@ -133,7 +133,7 @@ const TableDetails = () => {
   const match = useRouteMatch();
   return (
     <Switch>
-      <Route path={DATA_COLUMN_VIEW} component={ColumnDetails}/>
+      {/* <Route path={DATA_COLUMN_VIEW} component={ColumnDetails}/> */}
       <Redirect exact from={DATA_TABLE_VIEW} to={DATA_TABLE_TAB_DEFAULT}/>
       <Route path={DATA_TABLE_TAB} component={TableDetailsView} />
     </Switch>

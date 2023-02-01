@@ -1,5 +1,4 @@
 import dataManager from '../data_manager'
-import Highcharts from 'highcharts';
 
 export const getActionExecutionParsedOutput = (actionExecutionFilter) => {
     const response = dataManager.getInstance.retreiveData(
@@ -60,10 +59,6 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
                                     y2: 1
                                 }
                             },
-                            // stops: [
-                            //     [0, Highcharts.getOptions().colors[0]],
-                            //     [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                            // ],
                             lineWidth: 1,
                             states: {
                                 hover: {

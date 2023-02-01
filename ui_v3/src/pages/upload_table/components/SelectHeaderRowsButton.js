@@ -1,35 +1,19 @@
-import React from 'react';
-import Papa from 'papaparse';
+import CloseIcon from '@mui/icons-material/Close';
 import {
     Box,
     Button,
     Dialog,
     DialogContent,
-    DialogTitle,
-    Divider,
-    FormControl,
-    FormHelperText,
-    Grid,
-    IconButton,
-    List,
-    ListItem,
-    MenuItem,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    Typography,
-    Fab,
-    Autocomplete,
-    TextField,
-    TableRow
-} from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close';
-import { makeStyles } from '@mui/styles'
+    DialogTitle, Grid,
+    IconButton
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import Papa from 'papaparse';
+import React from 'react';
 
-import {DataGrid} from "@mui/x-data-grid";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import {TableHeaderButtonCss} from './CssProperties';
+import { DataGrid } from "@mui/x-data-grid";
+import { TableHeaderButtonCss } from './CssProperties';
 
 const useStyles = makeStyles(() => ({
     requiredTags: {

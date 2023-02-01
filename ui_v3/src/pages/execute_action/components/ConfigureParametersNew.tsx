@@ -1,10 +1,9 @@
-import { Box, Card, Grid, Typography } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 import React from "react"
 import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import { ActionParameterAdditionalConfig } from "../../../common/components/workflow/create/ParameterInput"
 import { ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities"
 import ParameterDescriptionCard from "./ParameterDescriptionCard"
-import { StyledIPCard } from "./StyledComponents"
 
 
 interface ConfigureParametersPropsNew {
@@ -95,29 +94,3 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
 }
 
 export default ConfigureParametersNew
-
-function userInputHeader(label: String) {
-    return <Typography sx={{
-        fontFamily: "'SF Pro Display'",
-        fontStyle: "normal",
-        fontWeight: 700,
-        fontSize: "18px",
-        lineHeight: "24px",
-        mt: 1,
-        p: 2
-    }}>
-        {label}
-    </Typography>
-}
-
-function getTypogrpahySx() {
-    return {
-        fontFamily: "'SF Pro Display'",
-        fontStyle: "normal",
-        fontWeight: 400,
-        fontSize: "18px",
-        lineHeight: "24px",
-        mt: 1,
-        p: 2
-    }
-}

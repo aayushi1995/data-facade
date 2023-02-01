@@ -11,8 +11,6 @@ import DownloadIcon from "../../images/DownloadData.svg"
 import { useActionExecutionParsedOutputNew } from "../execute_action/hooks/useActionExecutionParsedOutput"
 import { useDownloadExecutionOutputFromS3 } from "./hooks/useDownloadExecutionOutputFromS3"
 import { useGetPreSignedUrlForExecutionOutput } from "./hooks/useGetPreSignedUrlForExecutionOutput"
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import React from "react"
 import DeepDiveActionButton from "./DeepDiveActionButton"
 import { TableTheme } from "../../css/theme/CentralCSSManager"
 

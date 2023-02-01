@@ -1,14 +1,13 @@
-import React from "react";
-import {ActionsIcon} from "../../../images/actions_icon";
-import {TableIcon} from "../../../images/table_icon";
-import {DashboardsIcon} from "../../../images/dashboards_icon";
-import {JobsIcon} from "../../../images/jobs_icon";
-import {AlertsIcon} from "../../../images/alerts_icon";
-import {UsersIcon} from "../../../images/users_icon";
-import {isNonProductionEnv} from "../../config/config";
-import {DataSourcesIcon} from "../../../images/data_sources_icon";
 import AppsIcon from '@mui/icons-material/Apps';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import { ActionsIcon } from "../../../images/actions_icon";
+import { AlertsIcon } from "../../../images/alerts_icon";
+import { DashboardsIcon } from "../../../images/dashboards_icon";
+import { DataSourcesIcon } from "../../../images/data_sources_icon";
+import { JobsIcon } from "../../../images/jobs_icon";
+import { TableIcon } from "../../../images/table_icon";
+import { UsersIcon } from "../../../images/users_icon";
+import { isNonProductionEnv } from "../../config/config";
 
 export const icon_dimension = 24
 const iconStyles = {height: icon_dimension, width: icon_dimension, verticalAlign: "bottom"};

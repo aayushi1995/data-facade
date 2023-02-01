@@ -1,15 +1,6 @@
-import React, {useContext} from 'react'
-import {Button, Grid} from '@mui/material'
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import {SearchBar, SearchQueryContext} from "../../../pages/table_browser/TableBrowser";
-import AppContext from "../../../utils/AppContext";
-import {DataFacadeLogo} from "../sideBar/DataFacadeLogo";
-import MenuItem from "@mui/material/MenuItem";
-import Logout from "../../../pages/home/components/Logout";
-import Menu from "@mui/material/Menu";
-import DashboardNavBar from "./DashboardNavbar";
+import { useContext } from 'react';
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
+import AppContext from "../../../utils/AppContext";
 
 export const customizationsSubRoutes = {
     "all-actions": {
@@ -127,7 +118,6 @@ export const decodeURL = (url) => {
 
 
 export function useAppBarProps() {
-    const [, setSearchQuery] = React.useContext(SearchQueryContext);
     const appcontext = useContext(AppContext);
-    return {setSearchQuery, appcontext};
+    return {appcontext};
 }

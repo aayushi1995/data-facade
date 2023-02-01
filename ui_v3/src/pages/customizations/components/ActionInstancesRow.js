@@ -1,5 +1,4 @@
 import React from 'react'
-import Editor from "react-simple-code-editor";
 import { Box, Button, Dialog, Grid, IconButton, TextField, Tooltip } from '@mui/material'
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,11 +8,11 @@ import labels from './../../../labels/labels'
 import dataManagerInstance from './../../../data_manager/data_manager'
 import useStyles from './../../../css/customizations/ActionInstancesRow'
 import CloseIcon from '@mui/icons-material/Close';
-import { highlight, languages } from "prismjs/components/prism-core"
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-python"
-import "prismjs/themes/prism.css";
+// import { highlight, languages } from "prismjs/components/prism-core"
+// import "prismjs/components/prism-clike";
+// import "prismjs/components/prism-sql";
+// import "prismjs/components/prism-python"
+// import "prismjs/themes/prism.css";
 import * as PropTypes from "prop-types";
 import { useFetchActionInstancesQuery } from "./ActionInstances";
 import { useRouteMatch } from "react-router-dom";
@@ -26,12 +25,12 @@ import CodeEditor from '../../../common/components/CodeEditor';
 let languagesMap = {
     "python": {
         "Value": "python",
-        "Language": languages.python,
+        // "Language": languages.python,
         "Code": `# write your code here`
     },
     "sql": {
         "Value": "sql",
-        "Language": languages.sql,
+        // "Language": languages.sql,
         "Code": `/* write your code here */`
     }
 }

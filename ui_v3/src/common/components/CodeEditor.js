@@ -1,14 +1,12 @@
-import { highlight, languages } from "prismjs/components/prism-core"
-
+// import { highlight, languages } from "prismjs/components/prism-core"
 import TemplateLanguage from "../../enums/TemplateLanguage.js";
-
 import './../../css/customizations/CodeEditor.css'
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-python"
-import "prismjs/themes/prism.css";
+// import "prismjs/components/prism-clike";
+// import "prismjs/components/prism-sql";
+// import "prismjs/components/prism-python"
+// import "prismjs/themes/prism.css";
 import { Box, MenuItem, Select, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState } from "react";``
 import Editor from "@monaco-editor/react";
 
 
