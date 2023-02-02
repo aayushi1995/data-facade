@@ -3,9 +3,9 @@ import React from "react";
 import { useHistory } from "react-router";
 import ProviderDefinitionId from "../../../enums/ProviderDefinitionId";
 import { ProviderInstance } from "../../../generated/entities/Entities";
-import { DATA_ROUTE } from "../header/data/DataRoutesConfig";
+import { ReactQueryWrapper } from "../error-boundary/ReactQueryWrapper";
 import LoadingIndicator from "../LoadingIndicator";
-import { ReactQueryWrapper } from "../ReactQueryWrapper";
+import { DATA_ROUTE } from "../route_consts/data/DataRoutesConfig";
 import { useProviders } from "./useGoogleHooks";
 import useImportGoogleSheet from "./useImportGoogleSheet";
 

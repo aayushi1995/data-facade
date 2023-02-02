@@ -1,8 +1,7 @@
-import { Box, Grid } from "@mui/material"
-import React from "react"
-import WorkflowExecutionStage, { WorkflowExecutionStageProps } from "../../../common/components/workflow/execute/WorkflowExecutionStage"
-import WorkflowStage, { WorkflowStageProps } from "../../../../src/application/common/workflowStages/WorkflowStage";
-import { WorkflowContext } from "./WorkflowContext"
+import { Box, Grid } from "@mui/material";
+import React from "react";
+import { WorkflowContext } from "./context/WorkflowContext";
+import WorkflowExecutionStage, { WorkflowExecutionStageProps } from "./execute/WorkflowExecutionStage";
 
 
 

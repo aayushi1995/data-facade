@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
-import { fetchEntityBrowser } from '../../../../data_manager/data_manager';
 import { Box } from '@mui/system';
-import { v4 as uuidv4 } from 'uuid'
-import { FormControl, Select, MenuItem, InputLabel} from '@mui/material';
-import ScratchPad from './ScratchPad';
-import SelectProviderInstanceHook from '../../../execute_action/components/SelectProviderInstanceHook';
-import SelectProviderInstance from '../../../execute_action/components/SelectProviderInstance';
+import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { fetchEntityBrowser } from '../../../../data_manager/data_manager';
 import { ProviderInstance } from '../../../../generated/entities/Entities';
+import SelectProviderInstance from '../../../applications/execute_action/components/SelectProviderInstance';
+import SelectProviderInstanceHook from '../../../applications/execute_action/components/SelectProviderInstanceHook';
+import ScratchPad from './ScratchPad';
 
 export const ScratchPadLandingPage = () => {
     const [dataColumns, setDataColumns] = useState<any[]>([])

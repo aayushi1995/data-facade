@@ -3,15 +3,15 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import React from "react";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import addActionIcon from "../../../../src/images/add_action.svg";
-import buildActionIcon from '../../../../src/images/build_action.svg';
-import arrow from '../../../../src/images/workflow_action_arrow.png';
+import addActionIcon from "../../../../src/assets/images/add_action.svg";
+import buildActionIcon from '../../../../src/assets/images/build_action.svg';
+import arrow from '../../../../src/assets/images/workflow_action_arrow.png';
 import NoData from "../../../common/components/NoData";
-import ActionCard from "../../../common/components/workflow-action/ActionCard";
 import { ActionDefinition } from "../../../generated/entities/Entities";
-import CreateActionWizardDialog from "../../build_action/components/form-components/CreateActionWizardDialog";
-import { BuildActionContextProvider } from "../../build_action/context/BuildActionContext";
-import { SetWorkflowContext, WorkflowContext } from "./WorkflowContext";
+import CreateActionWizardDialog from "../build_action_old/components/form-components/CreateActionWizardDialog";
+import { BuildActionContextProvider } from "../build_action_old/context/BuildActionContext";
+import ActionCard from "./components/ActionCard";
+import { SetWorkflowContext, WorkflowContext } from "./context/WorkflowContext";
 
 
 export interface WorkflowActionContainerProps {

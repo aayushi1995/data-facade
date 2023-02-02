@@ -1,23 +1,19 @@
+import AddIcon from "@mui/icons-material/Add"
 import DeleteIcon from '@mui/icons-material/Delete'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import InstallDesktopIcon from '@mui/icons-material/InstallDesktop'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import ShareIcon from '@mui/icons-material/Share'
-import { Box, Button, Card, IconButton, Menu, MenuItem, Tooltip, Typography } from "@mui/material"
+import { Box, Button, IconButton, Menu, MenuItem, Tooltip } from "@mui/material"
 import React, { useState } from "react"
 import LinesEllipsis from 'react-lines-ellipsis'
 import { generatePath, useHistory, useRouteMatch } from "react-router-dom"
-import DataFacadeLogo from "../../../../src/images/DataFacadeLogo.png"
-import PackageLogo from "../../../../src/images/package.svg"
-import { lightShadows } from '../../../css/theme/shadows'
+import PackageLogo from "../../../../src/assets/images/package.svg"
 import { ApplicationCardViewResponse } from "../../../generated/interfaces/Interfaces"
 import ConfirmationDialog from "../ConfirmationDialog"
-import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE } from "../header/data/ApplicationRoutesConfig"
-import { ButtonBoxStyle, getIconSxProperties, HeadingBoxStyle, InfoBoxStyle, StyledApplicationCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedByString, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName, viewButton } from './compomentCssProperties'
+import { APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_DETAIL_ROUTE_ROUTE } from "../route_consts/data/ApplicationRoutesConfig"
+import { ButtonBoxStyle, HeadingBoxStyle, InfoBoxStyle, StyledApplicationCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName, viewButton } from './compomentCssProperties'
 import useDeleteApplication from "./hooks/useDeleteApplicatin"
 import useInstallApplication from './hooks/useInstallApplication'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import AddIcon from "@mui/icons-material/Add";
 
 interface ApplicationCardProps {
     application: ApplicationCardViewResponse,

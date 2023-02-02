@@ -1,18 +1,16 @@
 
-import { CssBaseline, Drawer, List, ListItemButton, ListItemIcon, ListItem, Collapse, Typography, Divider, Fade, Paper, Popper, PopperPlacementType, ListItemText, Box, Tooltip, IconButton } from '@mui/material';
 import { withStyles } from "@material-ui/core";
-import { Link, NavLink as RouterLink, useLocation } from 'react-router-dom';
-import items from './menuItems'
-import COLORS from '../assets/theme.color';
-import React, { useState } from 'react';
 import { ConnectWithoutContact, PersonAddAlt1Outlined } from '@mui/icons-material';
 import SchoolIcon from '@mui/icons-material/School';
-import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
-import { SLACK_URL, GENERATE_URL_PARAMS } from '../common/config/config';
+import { Box, Collapse, CssBaseline, Divider, Drawer, Fade, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Popper, PopperPlacementType, Tooltip, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Link, NavLink as RouterLink, useLocation } from 'react-router-dom';
+import CollaseMenu from "../../src/assets/images/collapse_menu.svg";
+import ExpandMenu from "../../src/assets/images/expand_menu.svg";
+import COLORS from '../assets/theme.color';
+import { GENERATE_URL_PARAMS, SLACK_URL } from '../common/config/config';
 import BrowserMenu from './browser-menu';
-import ExpandMenu from "../../src/images/expand_menu.svg"
-import CollaseMenu from "../../src/images/collapse_menu.svg"
+import items from './menuItems';
 
 
 const navBarWidth = 100

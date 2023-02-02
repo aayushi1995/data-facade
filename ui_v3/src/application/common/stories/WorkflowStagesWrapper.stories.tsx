@@ -1,9 +1,9 @@
-import WorkflowStagesWrapper, {WorkflowStagesWrapperProps} from "../workflowStages/WorkflowStagesWrapper";
-import { withDesign } from 'storybook-addon-designs'
-import { Story } from "@storybook/react";
 import { Box } from "@mui/material";
+import { Story } from "@storybook/react";
 import React from "react";
-import { v4 as uuidv4 } from 'uuid'
+import { withDesign } from 'storybook-addon-designs';
+import { v4 as uuidv4 } from 'uuid';
+import WorkflowStagesWrapper, { WorkflowStagesWrapperProps } from "../../../pages/applications/workflow/components/WorkflowStagesWrapper";
 
 export default{
     title: "WORKFLOW/Stages/WorkflowStagesWrapper",

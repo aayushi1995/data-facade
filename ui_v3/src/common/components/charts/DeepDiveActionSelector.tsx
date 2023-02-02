@@ -1,8 +1,8 @@
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material"
 import React from "react"
-import { ReactQueryWrapper } from "../ReactQueryWrapper"
-import SelectAction, { ActionDefinitionToAdd, TabPanel } from "../workflow/create/SelectAction/SelectAction"
-import SelectActionCard from "../workflow/create/SelectActionCard"
+import SelectAction, { ActionDefinitionToAdd, TabPanel } from "../../../pages/applications/workflow/create/SelectAction/SelectAction"
+import SelectActionCard from "../../../pages/applications/workflow/create/SelectActionCard"
+import { ReactQueryWrapper } from "../error-boundary/ReactQueryWrapper"
 import useFetchDeepDiveActions from "./hooks/useFetchDeepDiveActions"
 
 

@@ -1,14 +1,14 @@
-import  {useRef, useState,useContext,useEffect} from "react";
-import { makeStyles } from '@mui/styles';
+import { Error } from "@mui/icons-material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import Modal from '@mui/material/Modal';
-import {Box, Button, Grid, Typography} from "@mui/material";
-import {UserEdit} from "../../common/components/UserEdit";
-import {useMutation, useQuery, useQueryClient} from "react-query";
+import { makeStyles } from '@mui/styles';
+import { DataGrid } from '@mui/x-data-grid';
+import { useContext, useEffect, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useRouteMatch } from "react-router-dom";
+import { SetModuleContextState } from '../../common/components/main_module/context/ModuleContext';
+import { UserEdit } from "../../common/components/UserEdit";
 import dataManager from "../../data_manager/data_manager";
-import { SetModuleContextState } from '../../common/components/ModuleContext'
-import {Error} from "@mui/icons-material";
-import {DataGrid} from '@mui/x-data-grid';
-import {useRouteMatch} from "react-router-dom";
 
 
 const columns = [

@@ -1,9 +1,9 @@
 import { Box } from "@mui/material"
-import ActionInstanceCard from "../../action/ActionInstanceCard"
-import { useGetOrgActionInstances } from "../hooks/useGetOrgActionInstances"
 import { ActionInstanceCardViewResponse } from "../../../../generated/interfaces/Interfaces"
+import { AllApplicationRowProps } from "../../../../pages/applications/components/AllApplicationView"
 import LoadingWrapper from "../../LoadingWrapper"
-import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
+import ActionInstanceCard from "../action/ActionInstanceCard"
+import { useGetOrgActionInstances } from "../hooks/useGetOrgActionInstances"
 
 
 const OrgActionInstances = (props: AllApplicationRowProps) => {

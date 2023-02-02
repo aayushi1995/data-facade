@@ -1,15 +1,12 @@
-import React from 'react'
 import {
-    Box, Grid, Tab, Table, TableBody, TableCell, TableRow, Tabs
-} from '@mui/material'
-import { makeStyles } from '@mui/styles'
+    Box, Tab, Tabs, Typography
+} from '@mui/material';
+import { Link as RouterLink, Route, useLocation } from "react-router-dom";
 import {
     DATA_CONNECTIONS_UPLOAD_COLUMNS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE
-} from "./header/data/DataRoutesConfig";
-import {Divider, Typography} from "@mui/material";
-import {Link as RouterLink, Route, useLocation} from "react-router-dom";
-import {findCurrentSelectedTabIndex} from "./header/ModuleSwitcher";
-import {useAppBarProps} from "./header/DataFacadeAppBar";
+} from "./route_consts/data/DataRoutesConfig";
+import { useAppBarProps } from "./route_consts/DataFacadeAppBar";
+import { findCurrentSelectedTabIndex } from "./route_consts/ModuleSwitcher";
 
 const DisplaySelectedFilesDetail = (props) => {
     const {appcontext} = useAppBarProps();

@@ -1,13 +1,13 @@
+import AddIcon from "@mui/icons-material/Add"
 import { Card, IconButton, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import LinesEllipsis from "react-lines-ellipsis"
 import { generatePath, Link as RouterLink, useHistory } from "react-router-dom"
-import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION } from "../../../common/components/header/data/ApplicationRoutesConfig"
-import SettingIcon from "../../../images/editAction.svg"
-import RunIcon from "../../../images/runAction.svg"
-import SaveIcon from "../../../images/SaveIcon.svg"
+import SettingIcon from "../../../assets/images/editAction.svg"
+import RunIcon from "../../../assets/images/runAction.svg"
+import SaveIcon from "../../../assets/images/SaveIcon.svg"
+import { APPLICATION_EDIT_ACTION_ROUTE_ROUTE, APPLICATION_EXECUTE_ACTION } from "../../../common/components/route_consts/data/ApplicationRoutesConfig"
 import { ActionCardButtonContainer, ActionCardDescription, ActionCardHeader, AppCardStyle, CursorPointer } from "./StyledComponents"
-import AddIcon from "@mui/icons-material/Add"
 
 
 interface AppCardProps {

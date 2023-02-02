@@ -1,10 +1,10 @@
-import { Grid, IconButton, Tooltip } from "@mui/material";
-import { ACTION_EXECUTION_STATUS } from "../hooks/useRunActions";
-import ShowActionTemplate from "../../../customizations/components/ActionInstancesRow";
-import InputIcon from "@mui/icons-material/Input";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InputIcon from "@mui/icons-material/Input";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { Grid, IconButton, Tooltip } from "@mui/material";
 import * as PropTypes from "prop-types";
+import ShowActionTemplate from "../../../data/table_details/components/ActionInstancesRow";
+import { ACTION_EXECUTION_STATUS } from "../hooks/useRunActions";
 import { RUN_WORKFLOW_VIEWS } from "./RunWorkflowHomePage";
 
 export function WorkflowActionButtons(props) {

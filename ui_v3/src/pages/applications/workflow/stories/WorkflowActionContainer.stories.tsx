@@ -1,10 +1,10 @@
 // @ts-nocheck
 
-import React from "react";
 import { Box } from "@mui/material";
 import { Story } from "@storybook/react";
+import React from "react";
+import { ActionCardProps } from "../components/ActionCard";
 import WorkflowActionContainer, { WorkflowActionContainerProps } from "../WorkflowActionContainer";
-import { ActionCardProps } from "../../../../common/components/workflow-action/ActionCard";
 
 
 export default {

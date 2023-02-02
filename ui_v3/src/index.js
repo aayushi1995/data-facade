@@ -1,12 +1,11 @@
 import { Auth0Provider } from "@auth0/auth0-react";
 import StyledEngineProvider from '@mui/material/StyledEngineProvider';
-import React from 'react';
 import ReactDOM from 'react-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'typeface-roboto';
 import App, { AppInternal } from './App';
-import { ModuleProvider } from "./common/components/header/data/ModuleContext";
+import { ModuleProvider } from "./common/components/route_consts/data/ModuleContext";
 import { auth0ClientId } from './common/config/config';
 import { getConfig } from "./config";
 import { SettingsProvider } from "./data_manager/SettingsContext";

@@ -1,19 +1,19 @@
 
-import { Box, Autocomplete, TextField, Button, IconButton, Popover, Dialog } from "@mui/material";
-import { BaseChartsConfig } from "./BaseChartsConfig";
-import { Chart} from "./Chart";
+import { Autocomplete, Box, Button, Dialog, IconButton, Popover, TextField } from "@mui/material";
+import React from "react";
+import OptionsIcon from "../../../../src/assets/images/more-horizontal.svg";
+import TableIcon from "../../../../src/assets/images/Table.svg";
 import { Chart as ChartModel, Dashboard } from "../../../generated/entities/Entities";
-import OptionsIcon from "../../../../src/images/more-horizontal.svg"
-import getChartTypeOptions from "../../util/getChartTypeOptions";
-import React from "react"
-import useUpdateChart from "./hooks/useUpdateChart";
-import LoadingIndicator from "../LoadingIndicator";
-import TableIcon from "../../../../src/images/Table.svg"
-import ViewActionExecution from "../../../pages/view_action_execution/VIewActionExecution";
 import useGetDashboardDetails from "../../../pages/insights/hooks/useGetDashboardDetails";
+import getChartTypeOptions from "../../util/getChartTypeOptions";
+import ViewActionExecution from "../action_execution/view_action_execution/VIewActionExecution";
+import LoadingIndicator from "../LoadingIndicator";
 import LoadingWrapper from "../LoadingWrapper";
-import {EChartUISpecificConfig} from "./types/EChartUISpecificConfig";
+import { BaseChartsConfig } from "./BaseChartsConfig";
+import { Chart } from "./Chart";
 import useGetDashboardsForChart from "./hooks/useGetDashboardsForChart";
+import useUpdateChart from "./hooks/useUpdateChart";
+import { EChartUISpecificConfig } from "./types/EChartUISpecificConfig";
 
 interface ChartWithMetadataProps {
     chart: {config: BaseChartsConfig, uiConfig: EChartUISpecificConfig, model: ChartModel},

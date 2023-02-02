@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material"
 import React from "react"
-import { DownloadAndDisplayLogsProps } from "../../../pages/view_action_execution/DownloadAndDisplyaLogs"
-import useDonwloadAndDisplayLogs from "../../../pages/view_action_execution/hooks/useDownloadAndDisplayLogs"
+import { DownloadAndDisplayLogsProps } from "../action_execution/view_action_execution/DownloadAndDisplyaLogs"
+import useDonwloadAndDisplayLogs from "../action_execution/view_action_execution/hooks/useDownloadAndDisplayLogs"
 import LoadingIndicator from "../LoadingIndicator"
 
 

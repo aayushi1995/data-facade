@@ -1,15 +1,10 @@
-import { Grid , Box, Link, Typography, ListItem, List} from "@mui/material";
-import React from "react";
-import { NavLink as RouterLink, useLocation } from 'react-router-dom';
-import { generatePath, useHistory } from "react-router"
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {HeadeCssOfCard} from './CSS/CssProperties'
-import useApplicationRunsByMe, { Run } from '../../../../src/pages/apps/components/UseApplicationRunsByMe'
-import { Application } from '../../../../src/generated/entities/Entities'
-import { TimestampCell } from "../../table_browser/components/AllTableView";
-import { RecentLink } from "./RecentLink";
+import { Box, List } from "@mui/material";
+import { useHistory } from "react-router";
+import { Application } from '../../../../src/generated/entities/Entities';
+import { APPLICATION_ROUTE } from "../../../common/components/route_consts/data/ApplicationRoutesConfig";
+import useApplicationRunsByMe from '../../applications/components/UseApplicationRunsByMe';
 import BottomCardheader from "./BottomCardHeader";
-import { APPLICATION_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig";
+import { RecentLink } from "./RecentLink";
 
 
 export type ApplicationRunsByMeProps = {

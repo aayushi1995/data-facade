@@ -1,5 +1,5 @@
 import { Box, Grid } from "@mui/material"
-import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
+import { AllApplicationRowProps } from "../../../../pages/applications/components/AllApplicationView"
 import LoadingWrapper from "../../LoadingWrapper"
 import { ApplicationCardViewResponse } from "./../../../../generated/interfaces/Interfaces"
 import ApplicationCard from "./../ApplicationCard"

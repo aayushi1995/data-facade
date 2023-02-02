@@ -1,15 +1,15 @@
-import * as React from 'react';
+import { Button, Divider, Tab, Tabs } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Tabs, Tab, Button, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import EntityBrowser from './entityBrowser';
+import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import conIcon from '../../../src/images/creatcon.svg'
-import appBuilderIcon from '../../../src/images/appbuilder.svg'
-import DashboardIcon from '../../../src/images/Dashboardicon.svg'
-import { DATA_CONNECTION_CHOOSE } from '../../common/components/header/data/DataRoutesConfig';
-import { APPLICATION_CREATION_WIZARD_ROUTE } from '../../common/components/header/data/ApplicationRoutesConfig';
+import appBuilderIcon from '../../../src/assets/images/appbuilder.svg';
+import conIcon from '../../../src/assets/images/creatcon.svg';
+import DashboardIcon from '../../../src/assets/images/Dashboardicon.svg';
+import { APPLICATION_CREATION_WIZARD_ROUTE } from '../../common/components/route_consts/data/ApplicationRoutesConfig';
+import { DATA_CONNECTION_CHOOSE } from '../../common/components/route_consts/data/DataRoutesConfig';
+import EntityBrowser from './entityBrowser';
 
 interface BrowserMenuProps {
     toggle?: boolean,

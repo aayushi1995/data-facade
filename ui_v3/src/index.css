@@ -14,15 +14,15 @@ code {
 
 @font-face {
     font-family: 'SF Pro Display';
-    src: url('../src/fonts/SF-Pro-Display-Regular.otf') format('opentype');
+    src: url('../src/assets/fonts/SF-Pro-Display-Regular.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'SF Pro Text';
-    src: url('../src/fonts/SF-Pro-Text-Regular.otf') format('opentype');
+    src: url('../src/assets/fonts/SF-Pro-Text-Regular.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'Segoe UI';
-    src: url('../src/fonts/Segoe\ UI.ttf') format('opentype');
+    src: url('../src/assets/fonts/Segoe\ UI.ttf') format('opentype');
 }

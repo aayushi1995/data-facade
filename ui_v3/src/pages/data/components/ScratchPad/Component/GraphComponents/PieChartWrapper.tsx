@@ -1,9 +1,6 @@
-import React,{useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+import PieChart from '../../../../../applications/build_action_old/components/form-components/ChartsOption/pieChart';
 import Select from '../Select';
-import { getData } from '../../utils';
-import PieChart from '../../../../../build_action/components/form-components/ChartsOption/pieChart';
-import BarChart from '../../../../../build_action/components/form-components/ChartsOption/BarCharts';
-import ScatterChart from '../../../../../build_action/components/form-components/ChartsOption/ScatterCharts';
 
 const PieChartWrapper = ({rows, columns, pie, setPie}: any) => {
     const [x, setX] = useState(pie.x)

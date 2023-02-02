@@ -1,9 +1,8 @@
 import { Box, List, ListItemButton, Typography } from "@mui/material"
 import React from "react"
-import ActionDefinitionId from "../../../enums/ActionDefinitionId"
 import { ActionDefinition } from "../../../generated/entities/Entities"
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces"
-import { ReactQueryWrapper } from "../ReactQueryWrapper"
+import { ReactQueryWrapper } from "../error-boundary/ReactQueryWrapper"
 import useFetchDeepDiveActions from "./hooks/useFetchDeepDiveActions"
 
 

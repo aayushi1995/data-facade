@@ -5,16 +5,16 @@ import React from "react";
 import { useQuery } from "react-query";
 import { generatePath, Route, useHistory } from "react-router-dom";
 import useSlackInstallURL from "../../../../common/components/common/useSlackInstallURL";
+import { ReactQueryWrapper } from "../../../../common/components/error-boundary/ReactQueryWrapper";
 import GoogleAuth from "../../../../common/components/google/GoogleAuth";
 import ImportGoogleSheet from "../../../../common/components/google/ImportGoogleSheet";
 import ImportS3File from '../../../../common/components/google/ImportS3File';
-import { ReactQueryWrapper } from "../../../../common/components/ReactQueryWrapper";
 import ProviderDefinitionId from "../../../../enums/ProviderDefinitionId";
 import { Fetcher } from "../../../../generated/apis/api";
 import { ProviderDefinitionDetail } from "../../../../generated/interfaces/Interfaces";
 import labels from "../../../../labels/labels";
-import { ProviderInputConnectionStateWrapper } from "../../../configurations/components/ProviderParameterInput";
-import { ConnectionsProvider, ConnectionStateContext } from "../../../configurations/context/ConnectionsContext";
+import { ProviderInputConnectionStateWrapper } from "../../configurations/components/ProviderParameterInput";
+import { ConnectionsProvider, ConnectionStateContext } from "../../configurations/context/ConnectionsContext";
 import {
     CHOOSE_CONNECTOR_ROUTE,
     CHOOSE_CONNECTOR_SELECTED_ROUTE

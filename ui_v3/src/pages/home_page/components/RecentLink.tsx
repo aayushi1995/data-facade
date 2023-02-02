@@ -1,9 +1,8 @@
-import { ListItem, Typography } from "@mui/material"
-import { borderBottom, Box } from "@mui/system"
-import { NavLink as RouterLink, useLocation } from 'react-router-dom';
-import sx from "@mui/system/sx"
-import { TimestampCell } from "../../table_browser/components/AllTableView"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { ListItem, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import { NavLink as RouterLink } from 'react-router-dom';
+import { TimestampCell } from "../../data/table_browser/components/AllTableView";
 export const RecentLink = (props:{name: string , date: number , to: string})=>{
 
     return(

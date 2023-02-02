@@ -1,8 +1,7 @@
-import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import { Button, Dialog, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Grid, IconButton } from "@mui/material";
 import { Route, useHistory } from "react-router-dom";
-import { DATA_CONNECTIONS_ROUTE } from "../../../../common/components/header/data/DataRoutesConfig";
+import { DATA_CONNECTIONS_ROUTE } from "../../../../common/components/route_consts/data/DataRoutesConfig";
 import { ConnectionDialogContent } from "./ConnectionDialogContent";
 import { CHOOSE_CONNECTOR_ROUTE } from "./DataRoutesConstants";
 

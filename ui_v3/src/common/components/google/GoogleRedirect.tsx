@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 import { generatePath, useHistory, useLocation } from "react-router";
 import { GOOGLE_REDIRECT_URL } from "../../config/config";
-import { DATA_CONNECTION_DETAIL_ROUTE } from "../header/data/DataRoutesConfig";
+import { DATA_CONNECTION_DETAIL_ROUTE } from "../route_consts/data/DataRoutesConfig";
 import { useCreateGoogleProviderMutation } from "./useGoogleHooks";
 
 function GoogleRedirect() {

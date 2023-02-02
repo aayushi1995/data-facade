@@ -1,7 +1,6 @@
-import React,{useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+import ScatterChart from '../../../../../applications/build_action_old/components/form-components/ChartsOption/ScatterCharts';
 import Select from '../Select';
-import { getData } from '../../utils';
-import ScatterChart from '../../../../../build_action/components/form-components/ChartsOption/ScatterCharts';
 
 const ScatterGraphWrapper = ({rows, columns, scatter, setScatter}: any) => {
     const [x, setX] = useState(scatter.x)

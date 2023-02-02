@@ -1,12 +1,12 @@
 import AppsIcon from '@mui/icons-material/Apps';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import { ActionsIcon } from "../../../images/actions_icon";
-import { AlertsIcon } from "../../../images/alerts_icon";
-import { DashboardsIcon } from "../../../images/dashboards_icon";
-import { DataSourcesIcon } from "../../../images/data_sources_icon";
-import { JobsIcon } from "../../../images/jobs_icon";
-import { TableIcon } from "../../../images/table_icon";
-import { UsersIcon } from "../../../images/users_icon";
+import { ActionsIcon } from "../../../assets/images/actions_icon";
+import { AlertsIcon } from "../../../assets/images/alerts_icon";
+import { DashboardsIcon } from "../../../assets/images/dashboards_icon";
+import { DataSourcesIcon } from "../../../assets/images/data_sources_icon";
+import { JobsIcon } from "../../../assets/images/jobs_icon";
+import { TableIcon } from "../../../assets/images/table_icon";
+import { UsersIcon } from "../../../assets/images/users_icon";
 import { isNonProductionEnv } from "../../config/config";
 
 export const icon_dimension = 24

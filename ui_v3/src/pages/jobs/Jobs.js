@@ -1,8 +1,8 @@
+import { Divider, Grid, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import {Divider, Grid, Tab, Tabs} from '@mui/material'
-import {Route, Switch, useLocation, useRouteMatch, withRouter} from 'react-router-dom'
-import {JobsFiltered} from './components/JobsFiltered'
-import { SetModuleContextState } from "../../common/components/ModuleContext";
+import { Route, Switch, useLocation, useRouteMatch, withRouter } from 'react-router-dom';
+import { SetModuleContextState } from "../../common/components/main_module/context/ModuleContext";
+import { JobsFiltered } from './components/JobsFiltered';
 import JobsRowJobDetail from "./components/JobsRowJobDetail";
 
 

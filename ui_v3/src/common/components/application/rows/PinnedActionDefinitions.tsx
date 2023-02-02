@@ -1,8 +1,8 @@
 import { Box } from "@mui/material"
 import { ActionDefinitionCardViewResponse } from "../../../../generated/interfaces/Interfaces"
-import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
-import ActionDefinitionCard from "../../action/ActionDefinitionCard"
+import { AllApplicationRowProps } from "../../../../pages/applications/components/AllApplicationView"
 import LoadingWrapper from "../../LoadingWrapper"
+import ActionDefinitionCard from "../action/ActionDefinitionCard"
 import { useGetPinnedActionDefinitions } from "./../hooks/useGetPinnedActionDefinitions"
 
 

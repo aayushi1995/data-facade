@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import { Link as RouterLink, Route, Switch } from "react-router-dom";
-import { DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE } from "../../common/components/route_consts/data/DataRoutesConfig";
 import { CreateConnectionButton } from "./components/connections/CreateConnectionButton";
 
 const DataHeader = () => {

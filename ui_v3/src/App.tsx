@@ -3,7 +3,7 @@ import { Box, CssBaseline, Grid, ThemeProvider } from "@mui/material";
 import React, { Suspense } from "react";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
-import { ModuleContent } from "./common/components/ModuleContent";
+import { ModuleContent } from "./common/components/main_module/ModuleContent";
 import { isNonProductionEnv } from './common/config/config';
 
 import ErrorBoundary from "./common/components/ErrorBoundry";
@@ -16,7 +16,7 @@ import AppContext from "./utils/AppContext";
 import history from "./utils/history";
 
 //optimized routes
-const ModuleContextStateProvider = React.lazy(() => import("./common/components/ModuleContext"));
+const ModuleContextStateProvider = React.lazy(() => import("./common/components/main_module/context/ModuleContext"));
 const DevTestPage = React.lazy(() => import('./pages/dev_test_page/DevTestPage'));
 const SlackRedirect = React.lazy(() => import("./pages/dev_test_page/SlackRedirect"));
 const Home = React.lazy(() => import('./pages/home/Home'));

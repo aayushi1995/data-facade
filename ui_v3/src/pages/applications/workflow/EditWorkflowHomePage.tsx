@@ -2,24 +2,24 @@ import ErrorIcon from '@mui/icons-material/Error'
 import { Box, Button, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material"
 import React, { useContext, useEffect } from "react"
 import { generatePath, Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router-dom"
-import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../../../common/components/header/data/ApplicationRoutesConfig"
-import { SetModuleContextState } from '../../../common/components/ModuleContext'
+import { SetModuleContextState } from '../../../common/components/main_module/context/ModuleContext'
 import NoData from "../../../common/components/NoData"
-import { AddingActionView } from "../../../common/components/workflow/create/addAction/AddingActionView"
-import useCopyAndSaveDefinition from "../../../common/components/workflow/create/hooks/useCopyAndSaveDefinition"
-import WorkflowSideDrawer from "../../../common/components/workflow/create/SelectAction/WorkflowSideDrawer"
-import WorkflowTabs from "../../../common/components/workflow/create/WorkflowTabs"
-import MakeWorkflowContextFromDetail from "../../../common/components/workflow/edit/hooks/MakeWorkflowContextFromDetails"
-import useTestSingleActionInFlow from '../../../common/components/workflow/edit/hooks/useTestSingleAction'
-import { useUpdateWorkflow } from "../../../common/components/workflow/edit/hooks/useUpdateWorkflow"
-import useValidateWorkflow from "../../../common/components/workflow/edit/hooks/useValidateWorkflow"
-import { useGetWorkflowDetails } from "../../../common/components/workflow/execute/hooks/useGetWorkflowInstaces"
+import { APPLICATION_DETAIL_ROUTE_ROUTE } from "../../../common/components/route_consts/data/ApplicationRoutesConfig"
 import ApplicationID from "../../../enums/ApplicationID"
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces"
-import { ActionDefinitionHeroActionContextWrapper } from "../../build_action/components/shared-components/ActionDefinitionHero"
-import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from "../../build_action/context/BuildActionContext"
+import { ActionDefinitionHeroActionContextWrapper } from "../build_action_old/components/shared-components/ActionDefinitionHero"
+import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from "../build_action_old/context/BuildActionContext"
+import { SetWorkflowContext, TestActionInstance, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./context/WorkflowContext"
+import { AddingActionView } from "./create/addAction/AddingActionView"
+import useCopyAndSaveDefinition from "./create/hooks/useCopyAndSaveDefinition"
+import WorkflowSideDrawer from "./create/SelectAction/WorkflowSideDrawer"
+import WorkflowTabs from "./create/WorkflowTabs"
+import { useGetWorkflowDetails } from "./execute/hooks/useGetWorkflowInstaces"
+import MakeWorkflowContextFromDetail from "./hooks/MakeWorkflowContextFromDetails"
+import useTestSingleActionInFlow from './hooks/useTestSingleAction'
+import { useUpdateWorkflow } from "./hooks/useUpdateWorkflow"
+import useValidateWorkflow from "./hooks/useValidateWorkflow"
 import TestWorkflowActionDialog from './TestWorkflowActionDialog'
-import { SetWorkflowContext, TestActionInstance, WorkflowContext, WorkflowContextProvider, WorkflowContextType } from "./WorkflowContext"
 
 
 interface MatchParams {

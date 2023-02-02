@@ -1,15 +1,15 @@
-import  { useContext, useEffect } from 'react';
-import { Grid , Divider} from "@mui/material";
-import CommonTask from "./components/CommonTask"
-import Recents from "./components/Recents"
-import NewItem from "./components/NewItem"
-import SearchComponent from './components/SearchComponent';
-import welcome from "../../images/welcomeToDF.svg"
-import { SetModuleContextState } from '../../common/components/ModuleContext';
-import records from "../../images/records.svg"
-import library from "../../images/Library Icon.svg"
-import compile from "../../images/compile.svg"
+import { Divider, Grid } from "@mui/material";
+import { useContext, useEffect } from 'react';
+import compile from "../../assets/images/compile.svg";
+import library from "../../assets/images/Library Icon.svg";
+import records from "../../assets/images/records.svg";
+import welcome from "../../assets/images/welcomeToDF.svg";
+import { SetModuleContextState } from '../../common/components/main_module/context/ModuleContext';
+import CommonTask from "./components/CommonTask";
 import ItemCards from './components/ItemCards';
+import NewItem from "./components/NewItem";
+import Recents from "./components/Recents";
+import SearchComponent from './components/SearchComponent';
 
 
 

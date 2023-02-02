@@ -1,5 +1,5 @@
 import { Box, Card, Link, Typography } from "@mui/material"
-import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper"
+import { ReactQueryWrapper } from "../../common/components/error-boundary/ReactQueryWrapper"
 import { lightShadows } from "../../css/theme/shadows"
 import { Dashboard } from "../../generated/entities/Entities"
 import { ChartWithData } from "../../generated/interfaces/Interfaces"

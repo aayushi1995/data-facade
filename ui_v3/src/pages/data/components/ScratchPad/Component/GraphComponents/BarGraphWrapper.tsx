@@ -1,8 +1,8 @@
-import React,{useEffect, useState} from 'react';
-import Select from '../Select';
-import MultiSelect from '../MultiSelect';
+import { useEffect, useState } from 'react';
+import BarChart from '../../../../../applications/build_action_old/components/form-components/ChartsOption/BarCharts';
 import { getData } from '../../utils';
-import BarChart from '../../../../../build_action/components/form-components/ChartsOption/BarCharts';
+import MultiSelect from '../MultiSelect';
+import Select from '../Select';
 
 const LineChartWrapper = ({rows, columns, bar, setBar}: any) => {
     

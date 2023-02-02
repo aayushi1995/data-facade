@@ -1,21 +1,21 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button,  IconButton, Menu, MenuItem } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { Box, Button, IconButton, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { generatePath, useHistory } from "react-router-dom";
+import ActionLogo from "../../../../src/assets/images/action.svg";
+import FlowLogo from "../../../../src/assets/images/flow.svg";
 import ActionDefinitionActionType from "../../../enums/ActionDefinitionActionType";
 import { ActionDetailsForApplication } from "../../../generated/interfaces/Interfaces";
+import useCopyAndSaveDefinition from "../../../pages/applications/workflow/create/hooks/useCopyAndSaveDefinition";
 import ConfirmationDialog from "../ConfirmationDialog";
-import useCopyAndSaveDefinition from "../workflow/create/hooks/useCopyAndSaveDefinition";
-import useDeleteAction from "./hooks/useDeleteActions";
-import DeleteIcon from '@mui/icons-material/Delete'
-import { APPLICATION_WEB_APP_EDIT_ROUTE } from '../header/data/ApplicationRoutesConfig';
+import { APPLICATION_WEB_APP_EDIT_ROUTE } from '../route_consts/data/ApplicationRoutesConfig';
 import { StyledApplicationCard, StyledButtonActionCard, StyledTypographyApplicationDescription, StyledTypographyApplicationformCreatedOnString, StyledTypographyApplicationformInfoString, StyledTypographyApplicationName } from './compomentCssProperties';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import FlowLogo from "../../../../src/images/flow.svg"
-import ActionLogo from "../../../../src/images/action.svg"
+import useDeleteAction from "./hooks/useDeleteActions";
 interface ApplicationActionCardProps {
     isWorkflow?: boolean
     action: ActionDetailsForApplication,

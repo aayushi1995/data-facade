@@ -1,21 +1,19 @@
-import React from 'react';
-import {Link as RouterLink, Redirect, Route} from 'react-router-dom';
 import {
     Box,
-    Button, Grid, Tab, Tabs, TextField
+    Button, Divider, Grid, Stack, TextField
 } from '@mui/material';
-import dataManagerInstance from './../../data_manager/data_manager';
-import S3UploadState from './../../custom_enums/S3UploadState';
-import TagGroups from './../../enums/TagGroups';
+import React from 'react';
 import { useMutation } from 'react-query';
-import labels from '../../labels/labels';
-import ExternalStorageUploadRequestContentType from './../../enums/ExternalStorageUploadRequestContentType'
-import SelectTags from './SelectTags.js';
+import { Redirect } from 'react-router-dom';
 import * as XLSX from 'xlsx/xlsx.mjs';
-import { useStyles, formActionPropertiesForLoadTableIntoLocal, TableSchemaSelection } from './UploadTableButton';
-import DisplaySelectedFilesDetail from './DisplaySelectedFilesDetail'
-import {DATA_CONNECTIONS_UPLOAD_ROUTE} from "./header/data/DataRoutesConfig";
-import {Divider, Stack, Typography} from "@mui/material";
+import labels from '../../labels/labels';
+import S3UploadState from './../../custom_enums/S3UploadState';
+import dataManagerInstance from './../../data_manager/data_manager';
+import ExternalStorageUploadRequestContentType from './../../enums/ExternalStorageUploadRequestContentType';
+import TagGroups from './../../enums/TagGroups';
+import DisplaySelectedFilesDetail from './DisplaySelectedFilesDetail';
+import SelectTags from './SelectTags.js';
+import { formActionPropertiesForLoadTableIntoLocal, TableSchemaSelection, useStyles } from './UploadTableButton';
 
 export const UploadTableDialogContent = (props) => {
     const classes = useStyles();

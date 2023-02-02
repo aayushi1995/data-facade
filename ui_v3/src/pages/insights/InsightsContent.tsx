@@ -1,10 +1,10 @@
 
 import { useContext, useEffect } from "react";
 import { Route, Switch, withRouter } from "react-router";
-import { findTab } from "../../common/components/header/data/DataRoutesConfig";
-import { SINGLE_DASHBOARD_VIEW } from "../../common/components/header/data/InsightsRoutesConfig";
-import { INSIGHTS_ROUTE, TOP_TAB_ROUTES } from "../../common/components/header/data/RoutesConfig";
-import { SetModuleContextState } from "../../common/components/ModuleContext";
+import { SetModuleContextState } from "../../common/components/main_module/context/ModuleContext";
+import { findTab } from "../../common/components/route_consts/data/DataRoutesConfig";
+import { SINGLE_DASHBOARD_VIEW } from "../../common/components/route_consts/data/InsightsRoutesConfig";
+import { INSIGHTS_ROUTE, TOP_TAB_ROUTES } from "../../common/components/route_consts/data/RoutesConfig";
 import AllDashboardView from "./AllDashboardView";
 import SingleDashboardView from "./SingleDashboardView";
 

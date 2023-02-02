@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import Button from '@mui/material/Button';
 import Editor from "@monaco-editor/react";
-import { v4 as uuidv4 } from 'uuid'
-import { ExecuteActionContext, ExecuteActionContextProvider } from '../../../execute_action/context/ExecuteActionContext';
+import Button from '@mui/material/Button';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router';
-import useCreateActionInstance from '../../../execute_action/hooks/useCreateActionInstance';
-import { ActionExecutionDetails } from '../../../apps/components/ActionExecutionHomePage';
-import './styles.css'
+import { v4 as uuidv4 } from 'uuid';
+import ActionExecutionDetails from '../../../../common/components/action_execution/components/ActionExecutionDetails';
+import { ExecuteActionContext } from '../../../applications/execute_action/context/ExecuteActionContext';
+import useCreateActionInstance from '../../../applications/execute_action/hooks/useCreateActionInstance';
+import './styles.css';
 
 
 const ScratchPad = ({dataSourceId, executionId, current}:any) => {

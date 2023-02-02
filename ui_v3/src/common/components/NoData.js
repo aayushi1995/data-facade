@@ -1,6 +1,5 @@
-import React from 'react'
-import {Grid} from '@mui/material'
-import NoDataIcon from './../../images/no_data_icon.png'
+import { Grid } from '@mui/material'
+import NoDataIcon from './../../assets/images/no_data_icon.png'
 
 
 const NoData = (props) => {

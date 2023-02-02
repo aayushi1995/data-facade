@@ -1,11 +1,11 @@
-import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, MuiEvent } from "@mui/x-data-grid"
-import React from "react"
-import { useHistory } from "react-router"
-import { INSIGHTS_ROUTE } from "../../common/components/header/data/RoutesConfig"
-import { ReactQueryWrapper } from "../../../src/common/components/ReactQueryWrapper";
-import { DashboardDetails } from "../../generated/interfaces/Interfaces"
-import useGetDashboardDetails from "./hooks/useGetDashboardDetails"
 import Stack from '@mui/material/Stack';
+import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, MuiEvent } from "@mui/x-data-grid";
+import React from "react";
+import { useHistory } from "react-router";
+import { ReactQueryWrapper } from "../../common/components/error-boundary/ReactQueryWrapper";
+import { INSIGHTS_ROUTE } from "../../common/components/route_consts/data/RoutesConfig";
+import { DashboardDetails } from "../../generated/interfaces/Interfaces";
+import useGetDashboardDetails from "./hooks/useGetDashboardDetails";
 
 const columns: GridColDef[] = [
     {

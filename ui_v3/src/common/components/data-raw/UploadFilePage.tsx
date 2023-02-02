@@ -1,10 +1,9 @@
-import {Redirect, Route, Switch} from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import {
     DATA_CONNECTIONS_UPLOAD_COLUMNS_ROUTE,
     DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE,
     DATA_CONNECTIONS_UPLOAD_ROUTE
-} from "../header/data/DataRoutesConfig";
-import React from "react";
+} from "../route_consts/data/DataRoutesConfig";
 import UploadTableDialogContent from "../UploadTableDialogContent";
 
 export const UploadFilePage = () =>{

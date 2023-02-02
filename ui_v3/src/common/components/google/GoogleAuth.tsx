@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { CodeResponse, GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { GOOGLE_REDIRECT_URL } from '../../config/config';
-import { ReactQueryWrapper } from '../ReactQueryWrapper';
+import { ReactQueryWrapper } from '../error-boundary/ReactQueryWrapper';
 import { useGoogleClientId, useGoogleScopes } from './useGoogleHooks';
 
 

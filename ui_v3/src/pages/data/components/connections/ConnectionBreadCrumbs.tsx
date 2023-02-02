@@ -4,7 +4,7 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { ConnectionStateContext } from '../../../configurations/context/ConnectionsContext';
+import { ConnectionStateContext } from '../../configurations/context/ConnectionsContext';
 import { CHOOSE_CONNECTOR_SELECTED_ROUTE, connectionsRoutes } from "./DataRoutesConstants";
 
 

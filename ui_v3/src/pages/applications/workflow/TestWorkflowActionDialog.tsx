@@ -1,10 +1,9 @@
 import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@mui/material"
 import React from "react"
-import ParameterDefinitionsConfigPlane from "../../../common/components/action/ParameterDefinitionsConfigPlane"
 import LoadingIndicator from "../../../common/components/LoadingIndicator"
+import ParameterDefinitionsConfigPlane from "../../../common/components/parameters/ParameterDefinitionsConfigPlane"
 import { ActionParameterInstance } from "../../../generated/entities/Entities"
-import ConfigureParameters from "../../execute_action/components/ConfigureParameters"
-import { SetWorkflowContext, UpstreamAction, WorkflowContext } from "./WorkflowContext"
+import { SetWorkflowContext, UpstreamAction, WorkflowContext } from "./context/WorkflowContext"
 
 
 interface TestWorkflowActionDialogProps {

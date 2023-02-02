@@ -1,8 +1,8 @@
 import { Box, Grid } from "@mui/material"
 import { ActionDefinitionCardViewResponse } from "../../../../generated/interfaces/Interfaces"
-import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
-import ActionDefinitionCard from "../../action/ActionDefinitionCard"
-import { ReactQueryWrapper } from "../../ReactQueryWrapper"
+import { AllApplicationRowProps } from "../../../../pages/applications/components/AllApplicationView"
+import { ReactQueryWrapper } from "../../error-boundary/ReactQueryWrapper"
+import ActionDefinitionCard from "../action/ActionDefinitionCard"
 import useGetActionDefinitionsForUi from "../hooks/useGetActionDefinitionsForUi"
 
 

@@ -1,18 +1,18 @@
-import { Chart as ChartModel, Dashboard} from "../../../generated/entities/Entities"
-import { ChartWithDataAndOptions } from "./SaveAndBuildChartsContext"
-import { Box, IconButton, Grid, Autocomplete, TextField, Tooltip, Popover, createFilterOptions, Divider } from "@mui/material"
-import { Chart } from "./Chart"
+import { Autocomplete, Box, createFilterOptions, Divider, Grid, IconButton, Popover, TextField, Tooltip } from "@mui/material"
+import React from "react"
+import { v4 as uuidv4 } from 'uuid'
+import OptionsIcon from "../../../../src/assets/images/more-horizontal.svg"
+import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
+import ChartGroups from "../../../enums/ChartGroups"
+import { Chart as ChartModel, Dashboard } from "../../../generated/entities/Entities"
+import useGetDashboardDetails from "../../../pages/insights/hooks/useGetDashboardDetails"
 import getChartTypeOptions from "../../util/getChartTypeOptions"
 import LoadingWrapper from "../LoadingWrapper"
-import useGetDashboardDetails from "../../../pages/insights/hooks/useGetDashboardDetails"
-import OptionsIcon from "../../../../src/images/more-horizontal.svg"
-import React from "react"
+import { Chart } from "./Chart"
 import ChartConfigConfigurator from "./ChartConfigConfigurator"
-import ChartGroups from "../../../enums/ChartGroups"
-import { userSettingsSingleton } from "../../../data_manager/userSettingsSingleton"
-import { v4 as uuidv4 } from 'uuid'
 import useCreateDashboard from "./hooks/useCreateDashboard"
 import useGetDashboardsForChart from "./hooks/useGetDashboardsForChart"
+import { ChartWithDataAndOptions } from "./SaveAndBuildChartsContext"
 
 
 interface ChartFromContextProps {

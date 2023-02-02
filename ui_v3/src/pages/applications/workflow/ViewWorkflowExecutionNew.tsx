@@ -1,24 +1,17 @@
-import { Box, Tabs, Tab, Typography, Button,IconButton ,Collapse } from "@mui/material"
-import React,{ useState } from "react"
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import { Box, Button, Typography } from "@mui/material"
+import React, { useState } from "react"
+import { ReactQueryWrapper } from '../../../common/components/error-boundary/ReactQueryWrapper'
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
-import { SetModuleContextState } from '../../../common/components/ModuleContext'
+import { SetModuleContextState } from '../../../common/components/main_module/context/ModuleContext'
 import NoData from "../../../common/components/NoData"
-import { ReactQueryWrapper } from '../../../common/components/ReactQueryWrapper'
-import ActionDescriptionCard from '../../../common/components/workflow-action/ActionDescriptionCard'
-import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
-import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
-import ShowWorkflowExecutionOutput from '../../../common/components/workflow/execute/ShowWorkflowExecutionOutput'
 import ActionExecutionStatus from '../../../enums/ActionExecutionStatus'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
-import ActionExecutionCard from '../../apps/components/ActionExecutionCard'
+import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./context/WorkflowContext"
+import useGetWorkflowStatus from "./execute/hooks/useGetWorkflowStatus"
 import { ExecuteWorkflow } from './ExecuteWorkflowHomePage'
-import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
 import WorkflowExecutionStages from './WorkflowExecutionStages'
-import CollapsibleDrawer from "../../../../src/pages/build_action/components/form-components/CollapsibleDrawer"
-import DoubeLeftIcon from '../../../../src/images/Group 691.svg';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import WorkflowStagesWrapper from "../../../../src/application/common/workflowStages/WorkflowStagesWrapper"
 
 interface ViewWorkflowExecutionProps {
     workflowExecutionId: string

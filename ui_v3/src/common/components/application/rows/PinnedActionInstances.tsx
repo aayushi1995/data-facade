@@ -1,9 +1,9 @@
 import { Box } from "@mui/material"
-import ActionInstanceCard from "./../../action/ActionInstanceCard"
+import { AllApplicationRowProps } from "../../../../pages/applications/components/AllApplicationView"
+import LoadingWrapper from "../../LoadingWrapper"
+import ActionInstanceCard from "../action/ActionInstanceCard"
 import { useGetPinnedActionInstances } from "../hooks/useGetPinnedActionInstances"
 import { ActionInstanceCardViewResponse } from "./../../../../generated/interfaces/Interfaces"
-import LoadingWrapper from "../../LoadingWrapper"
-import { AllApplicationRowProps } from "../../../../pages/apps/components/AllApplicationView"
 
 
 const PinnedActionInstances = (props: AllApplicationRowProps) => {

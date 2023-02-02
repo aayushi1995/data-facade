@@ -1,18 +1,18 @@
 import { Box, Button } from "@mui/material"
 import React from "react"
 import { RouteComponentProps } from "react-router"
+import { v4 as uuidv4 } from "uuid"
 import useUpdateChart from "../../common/components/charts/hooks/useUpdateChart"
+import { ReactQueryWrapper } from "../../common/components/error-boundary/ReactQueryWrapper"
 import LoadingIndicator from "../../common/components/LoadingIndicator"
 import LoadingWrapper from "../../common/components/LoadingWrapper"
 import { DashboardChartWithData, DashboardDetails } from "../../generated/interfaces/Interfaces"
 import DashboardHero from "./components/DashboardHero"
 import ShowDashboardCharts from "./components/ShowDashboardCharts"
-import useGetDashboardDetails from "./hooks/useGetDashboardDetails"
-import {v4 as uuidv4} from "uuid"
-import useSaveDashboard from "./hooks/useSaveDashboard"
 import useGetDashboardChart from "./hooks/useGetDashboardChart"
-import { ReactQueryWrapper } from "../../common/components/ReactQueryWrapper"
+import useGetDashboardDetails from "./hooks/useGetDashboardDetails"
 import useRefreshDashboard from "./hooks/useRefreshDashboards"
+import useSaveDashboard from "./hooks/useSaveDashboard"
 
 export interface DashboardTextBoxConfig {
     layout: string,

@@ -1,9 +1,9 @@
-import {Card, Box, Tabs, Tab, IconButton, InputAdornment, TextField} from "@mui/material"
-import { TabPanel } from "../../../common/components/workflow/create/SelectAction/SelectAction";
-import DoubeLeftIcon from './../../../images/Group 691.svg'
-import React from "react"
 import SearchIcon from '@mui/icons-material/Search';
-import AllActions from "../../../pages/build_action/components/form-components/AllActions";
+import { Box, Card, IconButton, InputAdornment, Tab, Tabs, TextField } from "@mui/material";
+import React from "react";
+import AllActions from "../../../pages/applications/build_action_old/components/form-components/AllActions";
+import { TabPanel } from "../../../pages/applications/workflow/create/SelectAction/SelectAction";
+import DoubeLeftIcon from './../../../assets/images/Group 691.svg';
 
 
 interface SelectActionDrawerProps {

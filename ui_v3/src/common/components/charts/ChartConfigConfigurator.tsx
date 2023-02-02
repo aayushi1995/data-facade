@@ -1,12 +1,11 @@
-import { Box, Typography, Tabs, Tab, Button, TextField, FormGroup, FormControlLabel, Checkbox, Autocomplete, List, ListItemButton } from "@mui/material";
-import React from "react"
+import { Autocomplete, Box, Button, Checkbox, FormControlLabel, FormGroup, Tab, Tabs, TextField, Typography } from "@mui/material";
+import React from "react";
 import ChartGroups from "../../../enums/ChartGroups";
 import { Chart } from "../../../generated/entities/Entities";
 import { ActionDefinitionDetail } from "../../../generated/interfaces/Interfaces";
-import { ReactQueryWrapper } from "../ReactQueryWrapper";
 import DeepDiveActionsList from "./DeepDiveActionsList";
 import useFetchDeepDiveActions from "./hooks/useFetchDeepDiveActions";
-import { ChartModelConfig, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext"
+import { ChartModelConfig, SaveAndBuildChartContext, SetSaveAndBuildChartContext } from "./SaveAndBuildChartsContext";
 
 
 interface ChartConfigConfiguratorProps {

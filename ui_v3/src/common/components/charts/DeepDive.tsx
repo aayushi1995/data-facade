@@ -1,22 +1,16 @@
 // Create a component named DeepDiveCompoment that take an action execution id as a prop and display the following: It'll open up a diaglog with an option to select any action definition from the drop down list of action definitions. Then it'll create an action execution corresponding to the selected action definition. 
 
-import SelectAction, { ActionDefinitionToAdd } from "../workflow/create/SelectAction/SelectAction"
-import SelectFromAllActions from "../workflow/create/SelectFromAllActions"
+import { ActionDefinitionToAdd } from "../../../pages/applications/workflow/create/SelectAction/SelectAction"
 
 
 // Create a compoment that can select any action definition from the drop down list of action definitions.
 
-import { Dialog, DialogTitle, DialogContent, Typography, Box, TextField, Grid, IconButton } from "@mui/material"
-import { Button } from "@mui/material"
+import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from "@mui/material"
 import React from "react"
-import { useHistory } from "react-router"
 
-import { Dashboard } from "../../../generated/entities/Entities"
-import LoadingIndicator from "../LoadingIndicator"
-import ExecuteActionNew from "../../../pages/execute_action/components/ExecuteAction"
-import { ExecuteActionContextProvider } from "../../../pages/execute_action/context/ExecuteActionContext"
-import { ActionExecutionDetails } from "../../../pages/apps/components/ActionExecutionHomePage"
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close'
+import ExecuteActionNew from "../../../pages/applications/execute_action/components/ExecuteAction"
+import { ExecuteActionContextProvider } from "../../../pages/applications/execute_action/context/ExecuteActionContext"
 import DeepDiveActionSelector from "./DeepDiveActionSelector"
 
 

@@ -1,17 +1,17 @@
+import { Box } from "@mui/material";
 import { useContext, useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { DATA_ALL_TABLES_ROUTE, DATA_CERTIFIED_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_ROUTE, DATA_SUB_TABS, DATA_TABLE_VIEW, findTab, DATA_SCRATCH_PAD } from "../../common/components/header/data/DataRoutesConfig";
-import { SetModuleContextState } from "../../common/components/ModuleContext";
+import { SetModuleContextState } from "../../common/components/main_module/context/ModuleContext";
+import { DATA_ALL_TABLES_ROUTE, DATA_CERTIFIED_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTIONS_UPLOAD_PREVIEW_ROUTE, DATA_CONNECTIONS_UPLOAD_ROUTE, DATA_ROUTE, DATA_SCRATCH_PAD, DATA_SUB_TABS, DATA_TABLE_VIEW, findTab } from "../../common/components/route_consts/data/DataRoutesConfig";
 import TablePropertiesCertificationStatus from "../../enums/TablePropertiesCertificationStatus";
-import ConfiguredDataSource from "../configurations/components/ConfiguredDataSource";
-import AllTableView from "../table_browser/components/AllTableView";
-import TableDetails from "../table_details/TableDetails";
-import UploadTablePage from "../upload_table/UploadTablePage";
-import { Box } from "@mui/material";
-import { DataLandingPage } from "./components/DataLandingPage";
-import ScratchPadLandingPage from "./components/ScratchPad/ScratchPadLandingPage";
 import { CreateConnectionButton } from "./components/connections/CreateConnectionButton";
 import { CHOOSE_CONNECTOR_ROUTE } from "./components/connections/DataRoutesConstants";
+import ScratchPadLandingPage from "./components/ScratchPad/ScratchPadLandingPage";
+import ConfiguredDataSource from "./configurations/components/ConfiguredDataSource";
+import { DataLandingPage } from "./landing/DataLandingPage";
+import AllTableView from "./table_browser/components/AllTableView";
+import TableDetails from "./table_details/TableDetails";
+import UploadTablePage from "./upload_table/UploadTablePage";
 
 const DataContent = () => {
     const setModuleContext = useContext(SetModuleContextState)

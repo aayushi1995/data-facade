@@ -1,8 +1,8 @@
-import React,{useEffect, useState} from 'react';
-import Select from '../Select';
-import MultiSelect from '../MultiSelect';
+import { useEffect, useState } from 'react';
+import LineChart from '../../../../../applications/build_action_old/components/form-components/ChartsOption/LineCharts';
 import { getData } from '../../utils';
-import LineChart from "../../../../../build_action/components/form-components/ChartsOption/LineCharts";
+import MultiSelect from '../MultiSelect';
+import Select from '../Select';
 
 
 const LineChartWrapper = ({rows, columns, line, setLine}: any) => {

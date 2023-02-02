@@ -1,9 +1,9 @@
-import {Box, ListItem, List} from "@mui/material";
+import { Box, List, ListItem } from "@mui/material";
 import { NavLink as RouterLink } from 'react-router-dom';
-import {HeadeCssOfCard, TypographyForCommon} from './CSS/CssProperties';
-import {APPLICATION_ROUTE ,APPLICATION_CREATION_WIZARD_ROUTE ,APPPLICATION_CREATE_AUTO_FLOW, APPLICATION_BUILD_ACTION_ROUTE_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_ADD_ACTION_ROUTE } from '../../../../src/common/components/header/data/ApplicationRoutesConfig';
-import { DATA_ALL_TABLES_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTION_CHOOSE } from "../../../common/components/header/data/DataRoutesConfig";
-import { INSIGHTS_ROUTE } from "../../../common/components/header/data/RoutesConfig";
+import { APPLICATION_ADD_ACTION_ROUTE, APPLICATION_BUILD_FLOW_ROUTE_ROUTE, APPLICATION_CREATION_WIZARD_ROUTE, APPLICATION_ROUTE, APPPLICATION_CREATE_AUTO_FLOW } from '../../../common/components/route_consts/data/ApplicationRoutesConfig';
+import { DATA_ALL_TABLES_ROUTE, DATA_CONNECTIONS_ROUTE, DATA_CONNECTION_CHOOSE } from "../../../common/components/route_consts/data/DataRoutesConfig";
+import { INSIGHTS_ROUTE } from "../../../common/components/route_consts/data/RoutesConfig";
+import { HeadeCssOfCard, TypographyForCommon } from './CSS/CssProperties';
 
 type commonItems = {
     Name : string,

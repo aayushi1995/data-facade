@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { generatePath, useHistory, useLocation } from "react-router";
-import { DATA_CONNECTION_DETAIL_ROUTE } from "../../common/components/header/data/DataRoutesConfig";
+import { DATA_CONNECTION_DETAIL_ROUTE } from "../../common/components/route_consts/data/DataRoutesConfig";
 import useSlackRedirect from "./useSlackRedirect";
 
 const endPoint = require("../../common/config/config").FDSEndpoint

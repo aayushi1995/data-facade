@@ -1,35 +1,23 @@
-import CloseIcon from '@mui/icons-material/Close'
-import { Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Button, Typography, Card, Divider, Tooltip } from "@mui/material"
+import { Box, Button, Card, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material"
 import React, { useState } from "react"
-import { RouteComponentProps, useLocation, useRouteMatch } from "react-router-dom"
+import { useLocation, useRouteMatch } from "react-router-dom"
+import leftExpandIcon from '../../../../src/assets/images/left expand.svg'
+import RightExpandIcon from '../../../../src/assets/images/right expand.svg'
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
+import { SetModuleContextState } from '../../../common/components/main_module/context/ModuleContext'
 import NoData from "../../../common/components/NoData"
-import { StagesWithActions } from "../../../common/components/workflow/create/newStage/StagesWithActions"
-import ExportAsDashboard from '../../../common/components/workflow/execute/ExportAsDashboard'
-import useGetWorkflowStatus from "../../../common/components/workflow/execute/hooks/useGetWorkflowStatus"
-import ShowWorkflowExecutionOutput from "../../../common/components/workflow/execute/ShowWorkflowExecutionOutput"
-import ViewWorkflowStageResults from '../../../common/components/workflow/execute/ViewWorkflowStageResults'
-import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
-import { ActionDefinitionHeroActionContextWrapper } from '../../build_action/components/shared-components/ActionDefinitionHero'
-import { BuildActionContext, BuildActionContextProvider, SetBuildActionContext } from '../../build_action/context/BuildActionContext'
-import ViewActionExecution from '../../view_action_execution/VIewActionExecution'
-import ViewWorkflowExecutionNew from './ViewWorkflowExecutionNew'
-import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./WorkflowContext"
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { ExecuteWorkflow } from './ExecuteWorkflowHomePage'
-import ActionExecutionStatus from '../../../enums/ActionExecutionStatus'
-import { SetModuleContextState } from '../../../common/components/ModuleContext'
 import StepSlider from '../../../common/StepSlider'
-import WorkflowStagesWrapper from '../../../application/common/workflowStages/WorkflowStagesWrapper'
-import SaveAndBuildChartContextProvider from '../../../common/components/charts/SaveAndBuildChartsContext'
-import SaveAndBuildChartsFromExecution from '../../../common/components/charts/SaveAndBuildChartsFromExecution'
-import WorkflowActionContainer from './WorkflowActionContainer'
-import leftExpandIcon from '../../../../src/images/left expand.svg'
-import RightExpandIcon from '../../../../src/images/right expand.svg'
+import ActionExecutionStatus from '../../../enums/ActionExecutionStatus'
 import { ActionParameterInstance } from '../../../generated/entities/Entities'
-import useReRunWorkflowAction from '../../../common/components/workflow/execute/hooks/useReRunWorkflowAction'
-import { ActionExecutionDetails } from '../../apps/components/ActionExecutionHomePage'
+import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
+import { ActionExecutionDetails } from '../action_execution/ActionExecutionHomePage'
+import { BuildActionContextProvider } from '../build_action_old/context/BuildActionContext'
+import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./context/WorkflowContext"
+import { StagesWithActions } from "./create/newStage/StagesWithActions"
+import useGetWorkflowStatus from "./execute/hooks/useGetWorkflowStatus"
+import useReRunWorkflowAction from './execute/hooks/useReRunWorkflowAction'
+import ShowWorkflowExecutionOutput from "./execute/ShowWorkflowExecutionOutput"
+import WorkflowActionContainer from './WorkflowActionContainer'
 
 interface MatchParams {
     workflowExecutionId: string
