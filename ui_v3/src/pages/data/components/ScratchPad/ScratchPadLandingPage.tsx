@@ -13,13 +13,14 @@ export const ScratchPadLandingPage = () => {
     const [providerInstance, setProviderInstance] = useState<any[]>([])
     const paramsExecutionId = new URLSearchParams(window.location.href).get('executionId')  
     let executionId = (location.search === '?source=browser&name=ScratchPad') ? uuidv4() : paramsExecutionId
-    const {availableProviderInstanceQuery} = SelectProviderInstanceHook()
+    // const {availableProviderInstanceQuery} = SelectProviderInstanceHook()
+    const { availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook()
+
 
     React.useEffect(() => {
        
         fetchEntityBrowser('data').then((res: any) => {
             if (res) {
-                console.log(res)
                 setProviderInstance(res)
             }
         })
@@ -37,12 +38,14 @@ export const ScratchPadLandingPage = () => {
                 }
             })
             setDataColumns(newData)
-            setCurrent(newData[0].providerInstanceId)
+            const newObj = availableProviderInstanceQuery.data?.find((obj) => obj.Id === newData[0]?.providerInstanceId)
+            setCurrent(newObj)
         }
+
     }, [availableProviderInstanceQuery.data, providerInstance])
     
-    const handleChange = (event:any) => {
-        setCurrent(event.target.value)
+    const handleProviderChange = (newProviderInstance:any) => {
+        setCurrent(newProviderInstance)
     }
 
     return (
@@ -51,13 +54,13 @@ export const ScratchPadLandingPage = () => {
                 <h3>Scratch Pad</h3>
                     <hr/><br/>
                     <SelectProviderInstance
-                        selectedProviderInstance={undefined}
+                        selectedProviderInstance={current}
                         onProviderInstanceChange={(newProviderInstance?: ProviderInstance) => 
-                            newProviderInstance?.Id && setCurrent(newProviderInstance?.Id)
+                            newProviderInstance?.Id && handleProviderChange(newProviderInstance)
                         }
                     />
                     <br/><br/>
-                    <ScratchPad current={current} dataSourceId={current} executionId={paramsExecutionId || executionId}/>
+                    <ScratchPad dataSourceId={current?.Id} executionId={paramsExecutionId || executionId}/>
             </Box>
         </Box>
 

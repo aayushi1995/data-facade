@@ -13,7 +13,7 @@ export type SelectProviderInstanceProps = {
 const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
     const { availableProviderInstanceQuery, availableProviderDefinitionQuery } = SelectProviderInstanceHook()
     const availableProviderInstances = availableProviderInstanceQuery?.data || []
-    console.log(props?.selectedProviderInstance)
+ 
     React.useEffect(() => {
         if(!props.selectedProviderInstance){
             availableProviderInstanceQuery?.data?.forEach(parameterInstance => {
@@ -22,6 +22,7 @@ const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
                 }
             })
         }
+        
     }, [availableProviderInstanceQuery?.data]) 
 
     React.useEffect(() => {
@@ -33,6 +34,7 @@ const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
             })
         }
     }, [])
+    const currentValue = availableProviderInstances?.find(providerInstance => providerInstance.Id===props?.selectedProviderInstance?.Id)
 
     return (
         <ReactQueryWrapper
@@ -49,7 +51,7 @@ const SelectProviderInstance = (props: SelectProviderInstanceProps) => {
                         options={availableProviderInstances || []}
                         getOptionLabel={(providerInstance: ProviderInstance) => providerInstance.Name || "NA"}
                         groupBy={(providerInstance: ProviderInstance) => availableProviderDefinitionQuery?.data?.find(providerDefinition => providerDefinition?.Id===providerInstance.ProviderDefinitionId)?.UniqueName || "NA"}
-                        value={availableProviderInstances?.find(providerInstance => providerInstance.Id===props?.selectedProviderInstance?.Id)}
+                        value={currentValue || null}
                         filterSelectedOptions
                         fullWidth
                         selectOnFocus

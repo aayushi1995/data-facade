@@ -36,7 +36,7 @@ const ScratchPad = ({dataSourceId, executionId, current}:any) => {
             actionInstance: {
                     ActionType: "Profiling",
                     CreatedBy: "aayushi@data-facade.com",
-                    DefinitionId: "bd2e3bd0-aa3b-42e5-bed6-a5f5553d1186",
+                    DefinitionId: "0",
                     DisplayName: "Aayushi Action",
                     Id: actionInstanceId,
                     ProviderInstanceId: dataSourceId,
