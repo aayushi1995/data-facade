@@ -61,7 +61,7 @@ const BrowserHeadButton = (props: { image: string, name: string ,link:string }) 
     return (
         <Box sx={{px:1}}>
             <Divider></Divider>
-            <Button sx={{ justifyContent:'center',gap: 1, px: 3, borderRadius: '5px',  my: 1, backgroundColor: '#007DFA',minWidth:'100%' }} variant='contained' to={props.link} component={NavLink}>
+            <Button sx={{ justifyContent:'center',gap: 1, px: 3, borderRadius: '5px',  my: 1, backgroundColor: '#007DFA',minWidth:'100%' }} variant='contained' to={`${props.link}?name=${props.name}`} component={NavLink}>
                 <img src={props.image} />  {props.name}
             </Button>
             <Divider></Divider>
@@ -96,7 +96,7 @@ const BrowserMenu: React.FunctionComponent<BrowserMenuProps> = () => {
                         <EntityBrowser type="packages" />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                    <BrowserHeadButton image={DashboardIcon} name="Create Dashboard" link='/insights'/>
+                    <BrowserHeadButton image={DashboardIcon} name="Create Dashboard" link='/application/build-web-app'/>
                         <EntityBrowser type="dashboards" />
                     </TabPanel>
                 </Box>

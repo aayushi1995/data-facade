@@ -17,7 +17,13 @@ const BuildWebAppHomePage = () => {
     const handleDialogClose = () => {
         if (routes.length > 0) {
             const lastItem: any = routes[routes.length - 1]
-            history.push(lastItem['path'])
+            if(lastItem['path']==='/application/build-web-app'){
+                history.push(APPLICATION_CREATION_WIZARD_ROUTE)
+            }
+            else{
+                history.push(lastItem['path'])
+            }
+                
         }
         else {
             history.push(APPLICATION_CREATION_WIZARD_ROUTE)

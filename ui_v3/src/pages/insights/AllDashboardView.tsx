@@ -52,7 +52,7 @@ const AllDashboardView = () => {
     }
 
     const handleRowClick = (params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => {
-        history.push(`${INSIGHTS_ROUTE}/dashboard/${params.id}`)
+        history.push(`${INSIGHTS_ROUTE}/dashboard/${params.id}?name=${params.row?.Name}`)
     }
 
     return (

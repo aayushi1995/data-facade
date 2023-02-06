@@ -6,7 +6,7 @@ import {
 import { makeStyles } from '@mui/styles';
 import { DataGrid, DataGridProps } from "@mui/x-data-grid";
 import Papa from 'papaparse';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useMutation } from 'react-query';
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
@@ -21,6 +21,7 @@ import TagScope from '../../../../enums/TagScope';
 import { TableProperties, Tag } from '../../../../generated/entities/Entities';
 import { TableAndColumns } from '../../../../generated/interfaces/Interfaces';
 import labels from '../../../../labels/labels';
+import { DataContext, SetDataContext } from '../../../../utils/DataContextProvider';
 import { SetUploadTableState, SetUploadTableStateContext, UploadState, UploadTableState, UploadTableStateContext } from '../context/UploadTablePageContext';
 import './../presentation/css/TableBrowser.css';
 import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
@@ -122,7 +123,8 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         currentEnabled: 5,
         requiredEnabled: 31
     })
-
+    const setDataContext = useContext(SetDataContext);
+    const dataContext = useContext(DataContext);
     // Upload Button is enabled if all bits are set
     // 2^0: File type/size valid
     // 2^1: File name valid
@@ -131,7 +133,7 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
     // 2^4: All Required Tags Fetched
     React.useEffect(() => {
         if (fileStatusInformation.autoUpload) {
-            if (uploadButtonState.currentEnabled === uploadButtonState.requiredEnabled) {
+            if (uploadButtonState.currentEnabled === uploadButtonState.requiredEnabled && !dataContext?.isUploadSucess) {
                 setFileStatusInformation(old => ({ ...old, autoUpload: false }))
                 uploadSelectedFiles()
             }
@@ -336,6 +338,12 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                                                         })
                                                         refreshIds()
                                                         setUploadState(S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS)
+                                                        setDataContext({
+                                                            type: 'SetFileUpload',
+                                                            payload: {
+                                                                isUploadSucess: true
+                                                            }
+                                                        })
                                                         enableUploadButton(4);
                                                     },
                                                     onError: (error, variables, context) => {
@@ -367,8 +375,6 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
             }
         );
     };
-
-
 
     // TODO: Apply colour to disbaled Upload Button
     return (
@@ -420,13 +426,13 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                 </Grid>}
             <Grid container item xs={12} direction="row">
                 <Box sx={{ ...HeaderButtonContainerCss }}>
-                    <Button sx={{ ...CancelButtonCss }} disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled} 
+                    <Button sx={{ ...CancelButtonCss }} disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled}
                         onClick={() => props?.onCancel?.()} variant="outlined" color="error"
                     >
                         Cancel
                     </Button>
 
-                    <Button color="success" variant="contained" sx={{ ...SaveButtonCss }} component="label" onClick={uploadSelectedFiles}
+                    <Button color="success" variant="contained" sx={{ ...SaveButtonCss }} component="label" onClick={() => uploadSelectedFiles}
                         disabled={uploadButtonState.currentEnabled !== uploadButtonState.requiredEnabled}>
                         Save
                     </Button>
@@ -649,7 +655,7 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
                             let column_tags = parsedData["column_tags"]
                             let newProp = oldProp?.map(cs => ({ ...cs, tagsFetched: true }))
                             if (column_tags === undefined || column_tags.length == 0) return newProp
-                            
+
                             column_tags.forEach(columnTagProp => {
                                 const columnName = columnTagProp.column_name
                                 let tags_len = columnTagProp["column_tags"].length
@@ -730,11 +736,13 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
     };
     const open = Boolean(tagOpener);
     const id = open ? 'simple-popover' : undefined;
+
+    const dataContext = useContext(DataContext);
     return (
         <Box sx={{ ...MetaDataContainerBoxCss }}>
             <Box sx={{ display: "flex", mx: 5 }}>
                 <Box sx={{ ...StatusContainerCss }}>
-                    <Box sx={{ ...statusTypoCss }}>Status : </Box><>{props.statusMSG}</>
+                    <Box sx={{ ...statusTypoCss }}>Status : </Box><>{dataContext?.isUploadSucess ? S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS.message : props.statusMSG}</>
                 </Box>
                 <Box sx={{ ...HeaderTextFieldConatinerCss }}>
                     <Box sx={{ m: 'auto' }}>
@@ -937,7 +945,7 @@ const ColumnPropertiesSelector = (props: ColumnPropertiesSelectorProps) => {
                         value={props.columnProperty.columnDatatype}
                         onChange={handleColumnDataTypeChange}
                         disableUnderline
-                        sx={{...columnDataTypeSelectCss}}
+                        sx={{ ...columnDataTypeSelectCss }}
                     >
                         <MenuItem value={DatafacadeDatatype.INT}>Integer</MenuItem>
                         <MenuItem value={DatafacadeDatatype.STRING}>String</MenuItem>

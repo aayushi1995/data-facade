@@ -79,7 +79,7 @@ function EditActionFormInitialized(props: { actionDefinitionId?: string, context
             if (activeTabId === "Add") {
                 history.push(`/application/edit-action/${activeTabId}?name=${activeTabId}`)
             }
-            else {
+            else if(activeTabName!==undefined || buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName!==undefined) {
                 history.push(`/application/edit-action/${activeTabId}?name=${activeTabName||buildActionContext?.actionDefinitionWithTags?.actionDefinition?.DisplayName}`)
             }
 

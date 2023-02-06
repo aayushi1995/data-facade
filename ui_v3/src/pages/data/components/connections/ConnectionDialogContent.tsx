@@ -85,7 +85,8 @@ export const ConnectionDialogContent = ({handleDialogClose}: { handleDialogClose
         [ProviderDefinitionId.S3]: (provider: ProviderDefinitionDetail) => <S3ConnectorCard provider={provider}/>,
         DEFAULT: (provider: ProviderDefinitionDetail) => <ConnectorCard onClick={() => {
             if(!!provider?.ProviderDefinition?.Id) {
-                history.push(generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: provider?.ProviderDefinition?.Id}))
+                // history.push(generatePath(CHOOSE_CONNECTOR_SELECTED_ROUTE, { ProviderDefinitionId: provider?.ProviderDefinition?.Id}))
+                history.push(`/data/connections/choose/${provider?.ProviderDefinition?.Id}?name=${provider?.ProviderDefinition?.UniqueName}`)
             }
         }} provider={provider}
     />

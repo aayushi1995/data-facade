@@ -107,23 +107,25 @@ const ApplicationRunsByMe = (props: ApplicationRunsByMeProps) => {
             }
         },
         onCellClick: (params: GridCellParams<unknown, Run, unknown>, event, details) => {
+            
             if(params?.colDef?.field === "Run Again") {
                 if(params?.row?.isWorkflow) {
                     reRunWorkflow(params?.row?.ActionInstanceId)                    
                 } else {
-                    history.push(generatePath(EXECUTE_INSTANCE_ROUTE, {actionInstanceId: params?.row?.ActionInstanceId}))
-                    // reRunAction(params?.row?.ActionInstanceId)
+                    // history.push(generatePath(EXECUTE_INSTANCE_ROUTE, {actionInstanceId: params?.row?.ActionInstanceId}))
+                    history.push(`/application/action-execution/${params?.row?.ActionInstanceId}?name=${params?.row?.ActionDefinitionName}`)
+                    
                 }
             } else if(params?.colDef?.field === "Result") {
+                console.log('params?.row?.isWorkflow',params?.row?.isWorkflow)
                 if(params?.row?.isWorkflow) {
-                    displayWorkflowOutput(params?.row?.ActionExecutionId, params?.row?.ActionDefinitionId, params?.row?.ActionInstanceId)
+                    displayWorkflowOutput(params?.row?.ActionExecutionId, params?.row?.ActionDefinitionId, params?.row?.ActionInstanceId, params?.row?.ActionDefinitionName)
                 } else {
-                    displayActionOutput(params?.row?.ActionExecutionId, params?.row?.ActionDefinitionId, params?.row?.ActionInstanceId)
+                    displayActionOutput(params?.row?.ActionExecutionId, params?.row?.ActionDefinitionId, params?.row?.ActionInstanceId , params?.row?.ActionDefinitionName)
                 }
             }
         }
     }
-    console.log(fetchDataQuery?.data)
     return (
         <Box>
             <Box>

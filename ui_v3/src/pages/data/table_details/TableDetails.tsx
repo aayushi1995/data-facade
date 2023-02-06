@@ -1,6 +1,6 @@
 import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Divider, Tab, Tabs } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { generatePath, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { ReactQueryWrapper } from "../../../common/components/error-boundary/ReactQueryWrapper";
 import { DATA_TABLE_TAB, DATA_TABLE_TAB_ACTION_INSTANCES, DATA_TABLE_TAB_COLUMN_VIEW, DATA_TABLE_TAB_DEFAULT, DATA_TABLE_TAB_SUMMARY, DATA_TABLE_TAB_TABLE_VIEW, DATA_TABLE_VIEW } from "../../../common/components/route_consts/data/DataRoutesConfig";
@@ -64,10 +64,11 @@ const TableDetailsView = () => {
   const classes = useStyles();
   const match = useRouteMatch<MatchParams>();
   const history = useHistory()
-  const tabState = URL_TAB_INFO.find(info => info.ViewName === match.params.ViewName)?.ViewName!
+  const [tabState , setTabState] =   useState(URL_TAB_INFO.find(info => info.ViewName === match.params.ViewName)?.ViewName!)
 
   const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
-    history.replace(generatePath(DATA_TABLE_TAB, { ...match.params, ViewName: newValue }))
+    setTabState(newValue)
+    // history.replace(generatePath(DATA_TABLE_TAB, { ...match.params, ViewName: newValue }))
   };
 
   const result = useRetreiveData(labels.entities.TableProperties, {

@@ -105,16 +105,16 @@ const useApplicationRunsByMe = (params: ApplicationRunsByMeHookParams) => {
         return result
     }
 
-    const displayActionOutput = (executionId?: string, actionDefinitionId?: string, actionInstanceId?: string) => {
+    const displayActionOutput = (executionId?: string, actionDefinitionId?: string, actionInstanceId?: string ,actionDefinitionName?:string) => {
         if(!!executionId) {
-            history.push(`${APPLICATION_ROUTE}/execute-action/${actionDefinitionId}?instanceId=${actionInstanceId}&executionId=${executionId}`)
+            history.push(`${APPLICATION_ROUTE}/execute-action/${actionDefinitionId}?instanceId=${actionInstanceId}&executionId=${executionId}&name=${actionDefinitionName}`)
         }
     }
 
-    const displayWorkflowOutput = (executionId?: string, actionDefinitionId?: string, actionInstanceId?: string) => {
+    const displayWorkflowOutput = (executionId?: string, actionDefinitionId?: string, actionInstanceId?: string,actionDefinitionName?:string) => {
         if(!!executionId) {
             // const redirectUrl = generatePath(WORKFLOW_EXECUTION_ROUTE, { WorkflowExecutionId: executionId })
-            const redirectUrl = `${APPLICATION_ROUTE}/execute-workflow/${actionDefinitionId}?flowInstance=${actionInstanceId}&flowExecution=${executionId}`
+            const redirectUrl = `${APPLICATION_ROUTE}/execute-workflow/${actionDefinitionId}?flowInstance=${actionInstanceId}&flowExecution=${executionId}&name=${actionDefinitionName}`
             history.push(redirectUrl)
         }
     }

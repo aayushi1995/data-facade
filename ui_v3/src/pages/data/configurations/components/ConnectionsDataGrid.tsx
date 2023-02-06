@@ -137,7 +137,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
 
     const handleCellClick = (params: GridCellParams<any, DataGridRow, any>) => {
         if(params.field !== "Connection" && params.field !== "DefaultConnection" && params?.row?.providerName!=="LocalDB") {
-            history.push(generatePath(DATA_CONNECTION_DETAIL_ROUTE, { ProviderInstanceId: params.row.ProviderInstance?.Id || "NA" }))
+            history.push(`/data/connections/detail/${params?.row?.ProviderInstance?.Id}/View/Overview?name=${params?.row?.ProviderInstance?.Name}`)
         }
     }
 

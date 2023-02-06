@@ -1,8 +1,8 @@
 import { TabContext, TabPanel } from "@mui/lab";
 import { Box, Tab, Tabs } from "@mui/material";
-import React from "react";
-import { generatePath, useHistory, useRouteMatch } from "react-router";
-import { DATA_CONNECTION_DETAIL_TAB, DATA_CONNECTION_DETAIL_TAB_LOGS, DATA_CONNECTION_DETAIL_TAB_OVERVIEW, DATA_CONNECTION_DETAIL_TAB_SETUP } from "../../../../common/components/route_consts/data/DataRoutesConfig";
+import React, { useState } from "react";
+import { useHistory, useRouteMatch } from "react-router";
+import { DATA_CONNECTION_DETAIL_TAB_LOGS, DATA_CONNECTION_DETAIL_TAB_OVERVIEW, DATA_CONNECTION_DETAIL_TAB_SETUP } from "../../../../common/components/route_consts/data/DataRoutesConfig";
 import ConnectionDetailsSetup from "./ConnectionDetailsSetup";
 import ConnectionOverview from "./ConnectionOverview";
 
@@ -37,13 +37,9 @@ interface MatchParams {
 const ConnectionDetails = () => {
     const match = useRouteMatch<MatchParams>()
     const history = useHistory()
-    const tabState = CONNECTION_DETAILS_TABS.find(info => info.View === match.params.ViewName)?.View!
-
+    const [tabState,seTabState] = useState(CONNECTION_DETAILS_TABS.find(info => info.View === match.params.ViewName)?.View!)
     const handleTabChange = (event: React.SyntheticEvent<Element, Event>, newValue: any) => {
-        history.replace(generatePath(DATA_CONNECTION_DETAIL_TAB, {
-            ProviderInstanceId: match.params.ProviderInstanceId,
-            ViewName: newValue
-        }))
+        seTabState(newValue)
     }
 
     return (

@@ -40,7 +40,8 @@ const useBuildWebApp = ({applicationId}: UseBuildWebAppParams) => {
             webApp: webAppToBeSaved
         },{
             onSuccess: () => {
-                history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, {WebAppId: webAppToBeSaved.Id}))
+                // history.push(generatePath(APPLICATION_WEB_APP_EDIT_ROUTE, {WebAppId: webAppToBeSaved.Id}))
+                history.push(`/application/web-app/${webAppToBeSaved.Id}?name=${webAppToBeSaved?.DisplayName}`)
             }
         })
     }

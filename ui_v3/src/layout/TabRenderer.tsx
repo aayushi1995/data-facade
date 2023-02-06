@@ -18,7 +18,7 @@ const BrowserTab = withStyles({
     root: {
         "&.MuiTab-root": {
             boxSizing: "border-box",
-            width: "300px",
+            width: "250px",
             background: "#EAEBEF",
             borderWidth: "0.3px 1.3px 1.3px 0.3px",
             borderStyle: "solid",
@@ -89,8 +89,6 @@ const TabRenderer = ({ children }: ChildrenProps) => {
     let history = useHistory();
     const search = location.search;
     const name = new URLSearchParams(search).get('name')
-
-
     useEffect(() => {
         const route = routes.find((route: any) => route.path === location.pathname);
         setActiveTab(location.pathname)
@@ -98,11 +96,7 @@ const TabRenderer = ({ children }: ChildrenProps) => {
             const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
             setRoutes([...permanentRoutes, { id: Date.now(), path: location.pathname, name: name, params: location.search, isPermanent: false }]);
         }
-        else {
-
-        }
     }, [location.pathname, name]);
-
     useEffect(() => {
         const index = routes.findIndex((route: any) => route.path == location.pathname);
         if (index > -1) {
@@ -110,10 +104,6 @@ const TabRenderer = ({ children }: ChildrenProps) => {
         }
 
     }, [location.search])
-
-
-
-
     const handleChange = (event: React.SyntheticEvent, value: string) => {
         const path: any = event.currentTarget.getAttribute("data-path")
         setActiveTab(value)
@@ -171,7 +161,6 @@ const TabRenderer = ({ children }: ChildrenProps) => {
     const navigate = (url: string) => {
         history.push(url)
     }
-
     const renderMenu = () => {
         return (
             <MenuList>
@@ -239,7 +228,7 @@ const TabRenderer = ({ children }: ChildrenProps) => {
             {
                 routes.length > 0 && <>
                     <Tabs variant="scrollable"
-                        scrollButtons={false} TabIndicatorProps={{
+                        scrollButtons={routes.length > 5 ? true : false} TabIndicatorProps={{
                             style: {
                                 background: 'none'
                             }

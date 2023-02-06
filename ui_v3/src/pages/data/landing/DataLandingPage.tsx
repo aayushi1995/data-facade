@@ -10,20 +10,25 @@ import { HeaderButtonsStyle, IconConatiner, SearchBarTextField, StyledTypography
 import RecommendedApps from "../upload_table/components/RecommendedApps";
 import UploadTableContextProvider from "../upload_table/context/UploadTablePageContext";
 import UploadTablePage from "../upload_table/UploadTablePage";
+import useContextStorageFile from '../../../hooks/useContextStorage';
+import { SetDataContext } from '../../../utils/DataContextProvider';
+
 
 export const DataLandingPage = () => {
     const HeaderString = "Upload csv or select a table to explore"
     const location = useLocation()
     const s3Url = new URLSearchParams(location.search)?.get("s3Url") || undefined
-    const s3UrlProviderInstanceId = new URLSearchParams(location.search)?.get("s3UrlProviderInstanceId") || undefined
+    const s3UrlProviderInstanceId = new URLSearchParams(location.search)?.get("s3UrlProviderInstanceId") || localStorage.getItem('s3Url') || undefined
     const [searchQuery, setSearchQuery] = React.useState("")
-    const [fileToUpload, setFileToUpload] = React.useState<File | undefined>()
+    const [file, handleFileUpload, handleFileRetrieval]: any = useContextStorageFile('file');
+    const [fileToUpload, setFileToUpload] = React.useState<File | undefined>(handleFileRetrieval())
 
-    const changeHandler = (event) => {
+    const setDataContext = React.useContext(SetDataContext)
+    const changeHandler = (event: any) => {
         const file = event.target.files[0];
+        handleFileUpload(event)
         setFileToUpload(file)
     };
-    
     const setModuleContext = useContext(SetModuleContextState)
     useEffect(() => {
         setModuleContext({
@@ -37,23 +42,53 @@ export const DataLandingPage = () => {
         })
     }, [])
 
+    useEffect(() => {
+        if (s3Url) {
+            localStorage.setItem('s3Url', s3Url)
+        }
+
+    }, [s3Url])
+
+
+    const resetContext = () => {
+        setFileToUpload(undefined)
+        setDataContext({
+            type: 'SetFile',
+            payload: {
+                fileURL: null
+            }
+        })
+        setDataContext({
+            type: 'SetFileName',
+            payload: {
+                fileName: null
+            }
+        })
+        setDataContext({
+            type: 'SetFileUpload',
+            payload: {
+                isUploadSucess: false
+            }
+        })
+    }
+
     return (
         (!!fileToUpload || !!s3Url) ?
-            <UploadTableContextProvider><UploadTablePage s3Url={s3Url} s3UrlProviderInstanceId={s3UrlProviderInstanceId} file={fileToUpload} onCancel={() => setFileToUpload(undefined)}/></UploadTableContextProvider>
+            <UploadTableContextProvider><UploadTablePage s3Url={s3Url} s3UrlProviderInstanceId={s3UrlProviderInstanceId} file={fileToUpload} onCancel={() => resetContext()} /></UploadTableContextProvider>
             :
-            <Box sx={{ mt: 10,mx:6 }}>
+            <Box sx={{ mt: 10, mx: 6 }}>
                 <Box>
                     <StyledTypographyDataHeader>
                         {HeaderString}
                     </StyledTypographyDataHeader>
                 </Box>
                 <Box sx={{ ...IconConatiner }}>
-                    <Box sx={{...HeaderButtonsStyle }} to={DATA_CONNECTION_CHOOSE} component={RouterLink}><img width='100px' height='100px' src={CreateConnectionIcon} alt="" /></Box>
-                    <IconButton 
-                        sx={{...HeaderButtonsStyle }} 
+                    <Box sx={{ ...HeaderButtonsStyle }} to={DATA_CONNECTION_CHOOSE} component={RouterLink}><img width='100px' height='100px' src={CreateConnectionIcon} alt="" /></Box>
+                    <IconButton
+                        sx={{ ...HeaderButtonsStyle }}
                         component="label"
                     >
-                        <input type="file" accept={".csv,.xlsx"} hidden onChange={changeHandler} onClick={(event) => {event.target.value=''}}/>
+                        <input type="file" accept={".csv,.xlsx"} hidden onChange={changeHandler} />
                         <img width='100px' height='100px' src={UploadFileIcon} alt="" />
                     </IconButton>
                 </Box>
@@ -72,7 +107,7 @@ export const DataLandingPage = () => {
                             )
                         }} />
                 </Box>
-                <RecommendedApps searchQuery={searchQuery}/>
+                <RecommendedApps searchQuery={searchQuery} />
             </Box>
 
     )

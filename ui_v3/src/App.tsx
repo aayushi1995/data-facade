@@ -14,6 +14,7 @@ import { EULA } from "./pages/home/EULA";
 import { useAppInternal } from "./UseAppInternal";
 import AppContext from "./utils/AppContext";
 import history from "./utils/history";
+import { DataProvider } from "./utils/DataContextProvider";
 
 //optimized routes
 const ModuleContextStateProvider = React.lazy(() => import("./common/components/main_module/context/ModuleContext"));
@@ -83,7 +84,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
                                     <Grid container>
                                         <Grid item xs={12}>
 
-                                            {isNonProductionEnv() && <EULA user={user}/>}
+                                            {isNonProductionEnv() && <EULA user={user} />}
                                             <Switch>
                                                 <Route path="/slackredirect" component={SlackRedirect} />
                                                 <Route path="/googleredirect" component={GoogleRedirect} />
@@ -116,11 +117,13 @@ const App = ({ children = noop }) => {
         {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}
         <CssBaseline />
         <AppContext.Provider value={userSettings}>
+            <DataProvider>
                 <Router history={history}>
                     <ErrorBoundary>
                         {children(restProps)}
                     </ErrorBoundary>
                 </Router>
+            </DataProvider>
         </AppContext.Provider>
     </ThemeProvider>
 }

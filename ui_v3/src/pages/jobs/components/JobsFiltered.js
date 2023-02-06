@@ -281,7 +281,7 @@ export function JobsFiltered(props) {
                                         columns={columns}
                                         rows={searchResults()}
                                         onRowClick={(params) => {
-                                            history.push(`${match.url}/${params.row.Id}`)
+                                            history.push(`${match.url}/${params.row.Id}?name=${params?.row?.ActionInstanceName}`)
                                         }}
 
                                         sx={{

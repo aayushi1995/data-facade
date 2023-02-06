@@ -81,7 +81,7 @@ const ScheduledJobsView = (props: ScheduledJobsViewProps) => {
             {
                 field: "Action",
                 headerName: "Actions",
-                renderCell: (params: GridCellParams<any, DataGridRow, any>) => <ActionButtonCells historicalRuns={params.row?.HistoricalActionExecutions} actionType={params.row?.ActionType}/>,
+                renderCell: (params: GridCellParams<any, DataGridRow, any>) => <ActionButtonCells jobName={params.row?.jobName} historicalRuns={params.row?.HistoricalActionExecutions} actionType={params.row?.ActionType}/>,
                 flex: 1,
                 minWidth: 100
             }
@@ -215,7 +215,7 @@ export const NextScheduledCell = (props: {nextScheduledTime?: number}) => {
     )
 }
 
-export const ActionButtonCells = (props: {historicalRuns?: ActionExecution[], actionType?: string}) => {
+export const ActionButtonCells = (props: {jobName?: string,historicalRuns?: ActionExecution[], actionType?: string}) => {
 
     const completedActionExecutions = props.historicalRuns?.filter(ae => !!ae.ExecutionCompletedOn)
     const history = useHistory()
@@ -223,9 +223,11 @@ export const ActionButtonCells = (props: {historicalRuns?: ActionExecution[], ac
         const latestExecution = props.historicalRuns?.[0]
         if(!!latestExecution) {
             if(props.actionType === ActionDefinitionActionType.WORKFLOW) {
-                history.push(generatePath(WORKFLOW_EXECUTION_ROUTE, {WorkflowExecutionId: latestExecution.Id!}))
+                // history.push(generatePath(WORKFLOW_EXECUTION_ROUTE, {WorkflowExecutionId: latestExecution.Id!}))
+                history.push(`/application/workflow-execution/${latestExecution.Id}?name=${props.jobName}`)
             } else {
-                history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: latestExecution.Id!}))
+                // history.push(generatePath(ACTION_EXECUTION_ROUTE, {ActionExecutionId: latestExecution.Id!}))
+                history.push(`/application/action-execution/${latestExecution.Id}?name=${props.jobName}`)
             }
             
         }

@@ -57,11 +57,11 @@ interface SidebarProps {
 
 const Sidebar: React.FunctionComponent<SidebarProps> = () => {
     const sideBarLocalStorage = localStorage.getItem("sideBarState")
-    const [toggle, setToggle] = React.useState<boolean>(sideBarLocalStorage !== null ? (sideBarLocalStorage === "true" ? true: false) : true )
+    const [toggle, setToggle] = React.useState<boolean>(sideBarLocalStorage !== null ? (sideBarLocalStorage === "true" ? true : false) : true)
     const toggleBrowser = () => {
         localStorage.setItem("sideBarState", toggle ? "false" : "true")
         setToggle(toggle => !toggle)
-        
+
     }
     const location = useLocation();
     const collapsibleItems: any = items.filter(item => item.subMenu);
@@ -80,7 +80,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
 
     }
 
-    const toggleButton =  <Tooltip title={toggle ? `Close  Browser` : 'Open Browser'}>
+    const toggleButton = <Tooltip title={toggle ? `Close  Browser` : 'Open Browser'}>
         <IconButton sx={{ color: '#fff' }} onClick={() => toggleBrowser?.()}>
             {!toggle ? <img src={ExpandMenu} /> : <img src={CollaseMenu} />}
         </IconButton>
@@ -96,24 +96,24 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
             };
 
     const collapsibleMenu = (item: any) => <React.Fragment>
-        <RouterLink to={item.url} style={routeStyle}>
-            <StyledListItem
-                selected={checkActive(item.key)}
-                onClick={() => toggleOpen(item.key)}
-                sx={listItemStyle}
-                onMouseEnter={handleClick('right-end', item.subMenu)}
-                onMouseLeave={() => {
-                    setOpen(false)
-                }}
+
+        <StyledListItem
+            selected={checkActive(item.key)}
+            onClick={() => toggleOpen(item.key)}
+            sx={listItemStyle}
+            onMouseEnter={handleClick('right-end', item.subMenu)}
+            onMouseLeave={() => {
+                setOpen(false)
+            }}
+        >
+            <ListItemIcon
+                sx={listItemIconStyle}
             >
-                <ListItemIcon
-                    sx={listItemIconStyle}
-                >
-                    {<item.icon />}
-                </ListItemIcon>
-                <Typography sx={textStyle}> {item.name}</Typography>
-            </StyledListItem>
-        </RouterLink>
+                {<item.icon />}
+            </ListItemIcon>
+            <Typography sx={textStyle}> {item.name}</Typography>
+        </StyledListItem>
+
         <Collapse
             in={collapse.find((x: any) => x.key === item.key).open || checkActive(item.key)}
             timeout="auto"
@@ -121,7 +121,10 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
         >
             <List component="div" disablePadding>
                 {item.subMenu.map((subData: any) => (
-                    <RouterLink to={subData.url} style={routeStyle}>
+                    <RouterLink to={{
+                        pathname: subData.url,
+                        search: `?name=${subData.name}`,
+                    }} style={routeStyle}>
 
                         <StyledListItem key={subData.key} sx={listItemStyle}>
                             <ListItemIcon
@@ -153,7 +156,10 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
         </StyledListItem>
     </a>;
 
-    const users = <RouterLink to="/users" style={routeStyle}>
+    const users = <RouterLink  to={{
+        pathname: "/users",
+        search : '?name=users'
+    }} style={routeStyle}>
         <StyledListItem
             sx={listItemStyle}
             onClick={() => closeCollapse('users')}
@@ -167,7 +173,10 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
         </StyledListItem>
     </RouterLink>;
 
-    const learn = <RouterLink to="/learn" style={routeStyle}>
+    const learn = <RouterLink to={{
+        pathname: "/learn",
+        search : '?name=Learn'
+    }} style={routeStyle}>
         <StyledListItem
             sx={listItemStyle}
             onClick={() => closeCollapse('users')}
@@ -175,7 +184,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
             <ListItemIcon
                 sx={listItemIconStyle}
             >
-                <SchoolIcon/>
+                <SchoolIcon />
             </ListItemIcon>
             <Typography sx={textStyle}> Learn</Typography>
         </StyledListItem>
@@ -201,7 +210,12 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
                     <Paper square elevation={1}>
                         <List>
                             {
-                                subMenu.map((menu: any, index: number) => <RouterLink key={index} to={menu.url} style={routeStyle}>
+                                subMenu.map((menu: any, index: number) => <RouterLink key={index} to={
+                                    {
+                                        pathname: menu.url,
+                                        search: `?name=${menu.name}`,
+                                    }
+                                } style={routeStyle}>
 
                                     <ListItemButton>
                                         <ListItemIcon sx={{ fontSize: 10 }}>
@@ -236,19 +250,20 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
                         flexDirection: "row"
                     }
                 }}
-                sx={{ 
+                sx={{
                     zIndex: 0,
                     width: drawerWidth
                 }}
             >
                 <Box sx={{
-                        background: COLORS.SIDEBAR,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        height: "100%",
-                        overflowY: "auto",
-                        width: navBarWidth}}>
+                    background: COLORS.SIDEBAR,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    height: "100%",
+                    overflowY: "auto",
+                    width: navBarWidth
+                }}>
                     <Box>
                         <List component="nav" disablePadding>
                             {
@@ -270,15 +285,15 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
                             {learn}
                             {users}
                             {slackConnect}
-                        
+
                         </List>
-                        <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             {toggleButton}
                         </Box>
                     </Box>
                 </Box>
                 {toggle && <Box sx={{ width: fileBrowserWidth, height: "100%" }}>
-                    <BrowserMenu toggle={toggle} toggleBrowser={toggleBrowser}/>
+                    <BrowserMenu toggle={toggle} toggleBrowser={toggleBrowser} />
                 </Box>}
             </Drawer>
         </>
@@ -286,7 +301,10 @@ const Sidebar: React.FunctionComponent<SidebarProps> = () => {
 
     function mainMenuItems(item: any): React.ReactNode {
         return <ListItem key={item.name} disablePadding sx={{ display: 'block' }}>
-            <Link to={item.url} style={routeStyle}>
+            <Link to={{
+                pathname: item.url,
+                search: `?name=${item.name}`,
+            }} style={routeStyle}>
 
                 <StyledListItem selected={checkActive(item.key)}
                     sx={listItemStyle}

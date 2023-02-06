@@ -130,7 +130,8 @@ const AllTableView = (props: AllTableViewProps) => {
             const tableDetail = tableQuery?.data?.find( table => table.TableId === tableId)
 
             if(!!tableName && !!tableId && !!tableDetail && syncSuccessfully===true && featureConfigQuery?.data?.tableStats===true) { 
-                history.push(generatePath(DATA_TABLE_VIEW, { TableName: tableName }))
+                // history.push(generatePath(DATA_TABLE_VIEW, { TableName: tableName }))
+                history.push(`/data/all/table-detail/${tableName}/View/Summary?name=${tableName}`)
             }
         },
         filterModel: {
