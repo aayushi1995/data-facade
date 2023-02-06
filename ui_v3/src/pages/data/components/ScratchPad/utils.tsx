@@ -17,3 +17,14 @@ export const getData = (rows:any, value:any) => {
     })
     return newArray
 }
+
+export const debouncedFunction = function (func:any, delay:number) {
+    let timer:any; 
+    return (arg:any) => {
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                func(arg)
+            }, delay)
+    }
+    
+}

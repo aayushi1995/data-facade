@@ -9,14 +9,12 @@ import {ReactComponent as PieIcon} from './Assests/PieIcon.svg'
 import {ReactComponent as LineBar} from './Assests/LineBar.svg'
 import {ReactComponent as ScatterIcon } from './Assests/ScatterIcon.svg'
 
-import ScatterChart from "../../../build_action/components/form-components/ChartsOption/ScatterCharts";
 import LineChartWrapper from './Component/GraphComponents/LineGraphWrapper';
 import BarGraphWrapper from './Component/GraphComponents/BarGraphWrapper';
 import PieChartWrapper from './Component/GraphComponents/PieChartWrapper';
 import LineBarGraphWrapper from './Component/GraphComponents/LineBarGraphWrapper';
 import ScatterGraphWrapper from './Component/GraphComponents/ScatterGraphWrapper';
-import { getData } from './utils';
-import { Pie } from 'recharts';
+
 
 function TabPanel(props: any) {
     const { children, value, index, ...other } = props;

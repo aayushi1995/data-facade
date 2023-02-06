@@ -1,21 +1,24 @@
-import Editor from "@monaco-editor/react";
-import Button from '@mui/material/Button';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import ActionExecutionDetails from '../../../../common/components/action_execution/components/ActionExecutionDetails';
 import { ExecuteActionContext } from '../../../applications/execute_action/context/ExecuteActionContext';
 import useCreateActionInstance from '../../../applications/execute_action/hooks/useCreateActionInstance';
+import ReactAceEditor from './CustomizedAceEditor';
+
+import 'ace-builds/src-noconflict/ace';
+import "ace-builds/src-noconflict/mode-mysql";
+import "ace-builds/src-noconflict/ext-language_tools";
 import './styles.css';
 
-
-const ScratchPad = ({dataSourceId, executionId, current}:any) => {
-    const [code, setCode] = useState("")
+const ScratchPad = ({dataSourceId, executionId, autoCompleteionData}:any) => {
+    // const [code, setCode] = useState("")
     const history = useHistory()
     const executeActionContext = React.useContext(ExecuteActionContext)
     const [showTables, setShowTables] = useState(false)
+
     let actionInstanceId = uuidv4()
-    
+
     const { createActionInstanceAsyncMutation } = useCreateActionInstance({
         asyncOptions: {
             onMutate: () => {
@@ -28,7 +31,7 @@ const ScratchPad = ({dataSourceId, executionId, current}:any) => {
         }
     })
     
-    const handleExecuteSQLCode = async () => {
+    const handleExecuteSQLCode = async (code:any) => {
         const newExecutedId = uuidv4()
 
         let obj = {
@@ -58,31 +61,20 @@ const ScratchPad = ({dataSourceId, executionId, current}:any) => {
         })
     }
 
-    const handleCodeChange = (code:any)=> {
-        setCode(code)
-    }
-
    return (
    <div>
         <div style={{width:'100%'}}>
-            <Editor
-                height={"200px"}
-                width={'100%'}
-                defaultLanguage={"sql"}
-                onChange={handleCodeChange}
-                value={"--Enter SQL Code"}
-                theme={'light'}
-            />
+            <ReactAceEditor handleRunQuery={handleExecuteSQLCode} autoCompleteionData={autoCompleteionData}/>
         </div>
         <br/>
-        <div className='ScratchPadButtonWrapper'>
-            <Button variant="contained" onClick={handleExecuteSQLCode} style={{margin: '0px 10px'}}>RUN</Button>
-        </div>
-        {showTables && <ActionExecutionDetails actionExecutionId={executionId || "NA"} showDescription={false} hideTabs={true} />}
+        {showTables && <ActionExecutionDetails actionExecutionId={executionId || "NA"} showDescription={false} showChart autoCompleteionData={autoCompleteionData}/>}
        
     </div>
     )
 }
 
 export default ScratchPad
+
+
+
 

@@ -22,6 +22,7 @@ export interface ActionExecutionDetailProps {
     fromDeepDive?: boolean,
     onExecutionCreate?: (actionExecutionId: string) => void,
     displayPostProcessed?: boolean
+    showChart?:boolean
 }
 
 const ActionExecutionDetailsNew = (props: ActionExecutionDetailProps) => {
@@ -39,6 +40,7 @@ const ActionExecutionDetailsNew = (props: ActionExecutionDetailProps) => {
         selectedActionId,
         setSelectedActionId,
         getProviderInstanceId
+        
     } = useActionExecutionDetails(props)
 
     const {actionExecutionId} = props
@@ -53,6 +55,7 @@ const ActionExecutionDetailsNew = (props: ActionExecutionDetailProps) => {
     const onDeepDiveActionSelected = (actionId?: string) => {
         setSelectedActionId(actionId)
     }
+    
 
     return (
         <ReactQueryWrapper  {...actionExecutionDetailQuery}>
@@ -117,9 +120,9 @@ const ActionExecutionDetailsNew = (props: ActionExecutionDetailProps) => {
                         p: 2
                     }}>
                         <Box sx={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-                            <Typography variant="actionExecutionSubText">
+                           {!props?.showChart && <Typography variant="actionExecutionSubText">
                                 <span>Created By : <b>{actionExecutionDetailQuery.data?.ActionInstance?.CreatedBy}</b></span>
-                            </Typography>
+                            </Typography>} 
                             <Typography variant="actionExecutionRunTime">
                                 Runtime : {getElapsedTime()}
                             </Typography>
@@ -160,6 +163,7 @@ const ActionExecutionDetailsNew = (props: ActionExecutionDetailProps) => {
                                             onChildExecutionCreated={onChildExecutionCreated}
                                             definitionId={actionExecutionDetailQuery?.data?.ActionDefinition?.Id}
                                             onDeepDiveActionSelected={onDeepDiveActionSelected}
+                                            showCharts={props?.showChart}
                                         />
                                     </SaveAndBuildChartContextProvider>}
                                 

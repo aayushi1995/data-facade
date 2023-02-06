@@ -21,7 +21,7 @@ interface SaveAndBuildChartsFromExecutionProps {
     definitionName?: string;
     onChildExecutionCreated?: (childExecutionId: string) => void;
     definitionId?: string
-    hideTabs?:boolean
+    showCharts?:boolean
     onDeepDiveActionSelected?: (actionId?: string) => void
 }
 
@@ -55,9 +55,9 @@ const highLevelSxProps = { display: 'flex', flexDirection: 'column', gap: 2 }
 
 const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionProps) => {
     // constant Label
-    const ChartAndResultTabSummaryLabel = props?.hideTabs ? ["Results", "Charts", "Logs", "More Info"] : ["Results", "Parameters", "Logs", "More Info"]
+    const ChartAndResultTabSummaryLabel = props?.showCharts ? ["Results", "Charts", "Logs", "More Info"] : ["Results", "Parameters", "Logs", "More Info"]
 
-    const hideTabs = props?.hideTabs
+    const showCharts = props?.showCharts
     const saveAndBuildChartsState = React.useContext(SaveAndBuildChartContext)
     const setSaveAndBuildChartsState = React.useContext(SetSaveAndBuildChartContext)
     const chartQueriesState = React.useContext(ChartQueriesContext)
@@ -162,7 +162,7 @@ const SaveAndBuildChartsFromExecution = (props: SaveAndBuildChartsFromExecutionP
                                     </>}
                                 </ReactQueryWrapper>
                             </TabPanel>
-                            {!hideTabs ? <TabPanel value={activeTab} index={1}>
+                            {!showCharts ? <TabPanel value={activeTab} index={1}>
                                 <ReactQueryWrapper {...chartQueriesState.fetchExecution}>
                                     {() => <>
                                         {saveAndBuildChartsState.ExecutionDetails ? 
