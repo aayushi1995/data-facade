@@ -17,10 +17,20 @@ const S3UploadState = {
         colour: "#F3C583",
         icon: <ErrorOutlineOutlinedIcon style={{fontSize: 45}}/>
     },
+    GENERATING_QUESTIONS_SUCCESS: {
+        message: "Questions generated for table",
+        colour: "#F3C583",
+        icon: <CheckOutlinedIcon style={{fontSize: 45}}/>
+    },
+    GENERATING_QUESTIONS_ERROR: {
+        message: "Questions could not be generated for this table",
+        colour: "#F3C583",
+        icon: <CheckOutlinedIcon style={{fontSize: 45}}/>
+    },
     CREATING_TABLE_IN_SYSTEM: {
         message: "Table Sync in Progress",
         colour: "#F3C583",
-        icon: <LoadingIndicator style={{width: 40, height: 40}}/>
+        icon: <ErrorOutlineOutlinedIcon style={{fontSize: 45}}/>
     },
     BUIDING_FILE_FOR_UPLOAD: {
         message: "Preparing File",
@@ -96,6 +106,11 @@ const S3UploadState = {
         message: "Parsing Application",
         colour: "#F3C583",
         icon: <LoadingIndicator style={{width: 40, height: 40}}/>
+    },
+    FETCHING_TABLE_QUESTIONS: {
+        message: "Fetching Table Questions",
+        colour: '#F3C583',
+        icon: <LoadingIndicator style={{width: 35, height: 35}}/>
     },
     APPLICATION_PARSING_FAILED: (errorBody) => {
         const formMessage = () => {

@@ -19,7 +19,7 @@ import ExternalStorageUploadRequestContentType from '../../../../enums/ExternalS
 import TagGroups from '../../../../enums/TagGroups';
 import TagScope from '../../../../enums/TagScope';
 import { TableProperties, Tag } from '../../../../generated/entities/Entities';
-import { TableAndColumns } from '../../../../generated/interfaces/Interfaces';
+import { ActionDefinitionDetail, TableAndColumns } from '../../../../generated/interfaces/Interfaces';
 import labels from '../../../../labels/labels';
 import { DataContext, SetDataContext } from '../../../../utils/DataContextProvider';
 import { SetUploadTableState, SetUploadTableStateContext, UploadState, UploadTableState, UploadTableStateContext } from '../context/UploadTablePageContext';
@@ -27,7 +27,7 @@ import './../presentation/css/TableBrowser.css';
 import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
 import SelectHeaderRowsButton from './SelectHeaderRowsButton';
 import { findHeaderRows } from './util';
-const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function }
+const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function, getRecommendedQuestions?: Function }
 
 const useStyles = makeStyles(() => ({
     requiredTags: {
@@ -100,7 +100,7 @@ type ParsedFileResult = {
 
 export type ConfigureTableMetadataProps = {
     isApplication?: boolean,
-    onCancel: Function
+    onCancel: Function,
 }
 
 type S3UploadInformation = {
@@ -194,6 +194,15 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
             }
         }
     );
+
+    const getRecommenededQuestions = useMutation<ActionDefinitionDetail[], unknown, {tableId: string}, unknown>(
+        "GetRecommenedActions",
+        (config) => dataManagerInstance.getRecommendedQuestions?.(config.tableId), {
+            onMutate: () => {
+                setUploadState(S3UploadState.FETCHING_TABLE_QUESTIONS);
+            }
+        }
+    )
 
     const createTableColumnMutation = useMutation<TableProperties, unknown, FileSchema, unknown>(
         "CreateTableColumn",
@@ -345,6 +354,22 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                                                             }
                                                         })
                                                         enableUploadButton(4);
+                                                        getRecommenededQuestions.mutate({
+                                                            tableId: selectedFileSchema.tableId!,
+                                                        }, {
+                                                            onSuccess: (data, variables, context) => {
+                                                                setUploadState(S3UploadState.GENERATING_QUESTIONS_SUCCESS)
+                                                                setUploadTableStateContext({
+                                                                    type: "SetRecommendedQuestions",
+                                                                    payload: {
+                                                                        recommendedQuestions: data
+                                                                    }
+                                                                })
+                                                            },
+                                                            onError: (error, variables, context) => {
+                                                                setUploadState(S3UploadState.GENERATING_QUESTIONS_ERROR)
+                                                            }
+                                                        })
                                                     },
                                                     onError: (error, variables, context) => {
                                                         setUploadState(S3UploadState.CREATING_TABLE_IN_SYSTEM_FAILURE)

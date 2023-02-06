@@ -131,6 +131,22 @@ export interface JobBase extends BaseEntity{
 
 export type JobBaseColumns = keyof JobBase
 
+export interface RelationshipMap extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	CreatedOn?: number
+	ParentEntityName?: string
+	ParentEntityId?: string
+	ChildEntityName?: string
+	ChildEntityId?: string
+	RelationshipType?: string
+	IsActive?: boolean
+}
+
+
+export type RelationshipMapColumns = keyof RelationshipMap
+
 export interface OptimisticTag extends BaseEntity{
     Id?: string
 	DeletedStatus?: string
@@ -309,6 +325,7 @@ export interface ActionDefinition extends BaseEntity{
 	Config?: string
 	IsUpdatedAfterSync?: boolean
 	DeepDiveConfig?: string
+	TableId?: string
 }
 
 

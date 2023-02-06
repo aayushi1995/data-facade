@@ -9,6 +9,7 @@ import dataManager from '../../../data_manager/data_manager';
 import ExternalStorageUploadRequestContentType from '../../../enums/ExternalStorageUploadRequestContentType';
 import ConfigureTableMetadata from './components/ConfigureTableMetadata';
 import RecommendedApps from './components/RecommendedApps';
+import RecommendedQuestions from './components/RecommendedQuestions';
 import { SetUploadTableState, SetUploadTableStateContext, UploadTableState, UploadTableStateContext } from './context/UploadTablePageContext';
 
 const dataManagerInstance = dataManager.getInstance as { s3PresignedDownloadUrlRequest: Function, s3DownloadRequest: Function }
@@ -91,6 +92,7 @@ export const UploadTablePage = (props: UploadTablePageProps) => {
         })
     }, [])
 
+
     if(getPresignedDownloadUrlMutation.isLoading || downloadFromS3Mutation.isLoading) {
         return <LoadingIndicator/>
     } else if(getPresignedDownloadUrlMutation.error || downloadFromS3Mutation.error) {
@@ -98,8 +100,9 @@ export const UploadTablePage = (props: UploadTablePageProps) => {
         return <Typography>{error}</Typography>
     } else {
         return (
-            <Box px={1} py={4}>
+            <Box px={1} py={4} sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
                 <ConfigureTableMetadata onCancel={() => props?.onCancel?.()}/>
+                {uploadTableStateContext.recommenedQuestions && <RecommendedQuestions recommenedQuestions={uploadTableStateContext.recommenedQuestions}/>}
                 <RecommendedApps tableId={uploadTableStateContext?.lastUploadedTableId}/>
             </Box>
         )

@@ -73,7 +73,7 @@ function RecommendedApps(props: RecommendedAppsProps) {
             </Box>
             <Box sx={{ ...ActionCardConatier }}>
                 <Box sx={{ display: 'flex' }}>
-                    <Typography sx={{ ...ContainerHeader }}>Recommended Apps</Typography>
+                    <Typography sx={{ ...ContainerHeader }}>Recently Used Apps</Typography>
                     <Button sx={{ ml: 'auto' }} onClick={() => { setDialogState(true) }}>See All</Button>
                 </Box>
                 <Grid container>

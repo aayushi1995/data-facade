@@ -1,6 +1,7 @@
 import React from "react";
 import * as XLSX from 'xlsx/xlsx.mjs';
 import S3UploadState from "../../../../custom_enums/S3UploadState";
+import { ActionDefinitionDetail } from "../../../../generated/interfaces/Interfaces";
 import { convertToCsv } from "../components/util";
 
 type ValidationStatus = {
@@ -43,7 +44,8 @@ export type UploadTableState = {
     sourceFileParsingStatus: "COMPLETED" | "NOT_STARTED",
     extractedCSVFiles?: ExtractedCSVFile[],
     CSVFileSelectedForUpload?: ExtractedCSVFile,
-    lastUploadedTableId?: string
+    lastUploadedTableId?: string,
+    recommenedQuestions?: ActionDefinitionDetail[]
 }
 const defaultEmptyContext: UploadTableState = {
     activeStep: "SELECT_FILE",
@@ -131,6 +133,13 @@ export type SetLastUploadedTableIdAction = {
     }
 }
 
+export type SetRecommendedQuestions = {
+    type: 'SetRecommendedQuestions',
+    payload: {
+        recommendedQuestions: ActionDefinitionDetail[]
+    }
+}
+
 export type UploadTableStateAction = SetFileAction |
                                      SetUploadStateAction |
                                      SetActiveStepAction |
@@ -140,7 +149,8 @@ export type UploadTableStateAction = SetFileAction |
                                      FileSizeValidationAction | 
                                      FileTypeValidationAction |
                                      FileParsedValidationAction |
-                                     SetLastUploadedTableIdAction
+                                     SetLastUploadedTableIdAction |
+                                     SetRecommendedQuestions
 
 
 const reducer = (state: UploadTableState, action: UploadTableStateAction): UploadTableState => {
@@ -263,6 +273,13 @@ const reducer = (state: UploadTableState, action: UploadTableStateAction): Uploa
             return {
                 ...state,
                 lastUploadedTableId: action.payload.tableId
+            }
+        }
+
+        case "SetRecommendedQuestions": {
+            return {
+                ...state,
+                recommenedQuestions: action.payload.recommendedQuestions
             }
         }
 

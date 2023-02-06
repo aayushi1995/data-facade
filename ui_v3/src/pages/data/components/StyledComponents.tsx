@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { TextField, TextFieldProps, Typography } from "@mui/material";
-import { fontFamily, TypographyProps } from "@mui/system";
-import { inherits } from 'util';
+import { TypographyProps } from "@mui/system";
 
 
 
@@ -81,6 +80,14 @@ export const ActionCardConatier = {
     borderRadius:'8px',
     height: '48vh',
     overflowY: 'scroll'
+}
+
+export const RecommnedQuestionContainer = {
+    backgroundColor: '#EBF1FA',
+    boxShadow:'0px 1px 1px rgba(0, 0, 0, 0.1), 0px 0px 1px rgba(0, 0, 0, 0.25)',
+    px: 3,
+    py: 2,
+    borderRadius:'8px'
 }
 
 export const ContainerHeader = {

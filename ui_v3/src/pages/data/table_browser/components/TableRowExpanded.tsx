@@ -6,8 +6,10 @@ import { SetModuleContextState } from '../../../../common/components/main_module
 import dataManager from '../../../../data_manager/data_manager'
 import { TableProperties } from '../../../../generated/entities/Entities'
 import labels from '../../../../labels/labels'
+import useFetchActionDefinitions from '../../../applications/workflow/create/hooks/useFetchActionDefinitions'
 import TableSummary from '../../table_details/components/TableSummary'
 import TableView from '../../table_details/components/TableView'
+import RecommendedQuestions from '../../upload_table/components/RecommendedQuestions'
 import './../../../../css/table_browser/TableRowExpanded.css'
 import { formDateText } from './AllTableView'
 
@@ -31,6 +33,11 @@ const TableRowExpanded = (props: TableRowExpandedProps) => {
                 .then( (data: TableProperties[]) => data?.[0] )
         }
     )
+    
+    const [actionDefinitions, questionsLoading, questionsError] = useFetchActionDefinitions({
+        filter: {TableId: props.TableId}
+    })
+
     
     React.useEffect(() => {
         if(!!tableDetailData?.UniqueName) {
@@ -56,6 +63,14 @@ const TableRowExpanded = (props: TableRowExpandedProps) => {
                 <Grid container spacing={2  }>
                     <Grid item xs={12}>
                         <TableSummary TableId={tableDetailData?.Id}/>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <ReactQueryWrapper 
+                            isLoading={questionsLoading}
+                            error={questionsError}
+                            data={actionDefinitions}>
+                                {() => <RecommendedQuestions recommenedQuestions={actionDefinitions}/>}
+                            </ReactQueryWrapper>
                     </Grid>
                     <Grid item xs={12}>
                         <TableView showBTN={true} TableId={tableDetailData?.Id}/>

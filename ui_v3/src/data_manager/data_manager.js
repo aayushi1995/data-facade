@@ -350,6 +350,18 @@ dataManager.getInstance.generateUniqueQueryKey = function () {
     return queryKey
 }
 
+dataManager.getInstance.getRecommendedQuestions = async function(tableId) {
+    if (!isValidUserSettings()) {
+        return;
+    }
+    const response = await fetch(endPoint + "/getTableQuestions?email=" + userSettingsSingleton.userEmail + "&tableId=" + tableId, dummyDataHeader(userSettingsSingleton.token))
+    if(response.ok) {
+        return response.json()
+    } else {
+        throw response.json()
+    }
+}
+
 
 
 export const fetchEntityBrowser = async (path) => {
