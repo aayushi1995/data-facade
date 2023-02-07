@@ -27,6 +27,8 @@ const queryClient = new QueryClient()
 
 const config = getConfig()
 
+console.log('config',config)
+
 const providerConfig = {
     domain: config.domain,
     clientId: auth0ClientId,
@@ -36,6 +38,8 @@ const providerConfig = {
     cacheLocation:"localstorage",
     onRedirectCallback,
 };
+
+console.log('providerConfig',providerConfig)
 
 export const RootComponent = ({children}) => 
     <StyledEngineProvider>

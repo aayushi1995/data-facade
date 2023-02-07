@@ -127,4 +127,4 @@ const App = ({ children = noop }) => {
         </AppContext.Provider>
     </ThemeProvider>
 }
-export default App;
+export default App
