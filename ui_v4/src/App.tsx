@@ -1,12 +1,14 @@
-import React, { ReactElement, Suspense } from 'react';
-import { ConfigProvider, Typography, Alert } from 'antd';
-import { Routes, Route, BrowserRouter as Router } from 'react-router-dom'
+import React, { ReactElement } from 'react';
+import { ConfigProvider, Alert } from 'antd';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import Loader from '@components/Loader';
 import AppContext from '@contexts/AppContext';
 import { DataProvider } from '@contexts/DataContextProvider';
 import { useAppInternal } from './hooks/useAppInternal';
-const Home = React.lazy(() => import("@pages/home"))
+import AppLayout from './layouts';
+import PrivateRoutes from '@routes/privateRoutes';
+import PublicRoutes from '@routes/publicRoutes'
+
 
 
 const { ErrorBoundary } = Alert;
@@ -29,15 +31,7 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
     )
   } else if (user === undefined) {
     return (
-
-      <Suspense fallback={<Loader/>}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </Suspense>
-
-
-
+      <PublicRoutes />
     )
   } else {
     if (!userEmail) {
@@ -46,7 +40,10 @@ export const AppInternal = (props: { classes: any; userEmail: any; dummyData: an
       )
     } else {
       return (
-        <Typography.Text>Login Done</Typography.Text>
+        <AppLayout>
+          <PrivateRoutes />
+        </AppLayout>
+
       )
     }
   }
@@ -65,9 +62,9 @@ const App = ({ children = noop }) => {
 
     <AppContext.Provider value={userSettings}>
       <DataProvider>
-          <ErrorBoundary>
-            {children(restProps)}
-          </ErrorBoundary>
+        <ErrorBoundary>
+          {children(restProps)}
+        </ErrorBoundary>
       </DataProvider>
     </AppContext.Provider>
   </ConfigProvider>

@@ -44,7 +44,7 @@ export function useAppInternal() {
                 setToken(receivedToken)
                 setUserEmail(user.email)
                 setUserName(user.name)
-                fetchDummyData(receivedToken, FDSEndpoint, user.email).catch(console.error).then((res:any) => {
+                fetchDummyData(receivedToken, FDSEndpoint, user.email).then((res:any) => {
                     setDummyData(res);
                     setWorkspaceName(res?.organizationDbSchemaName);
                     setDummyDataPending(2);

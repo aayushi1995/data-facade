@@ -10,7 +10,9 @@
       "@pages/*": ["src/pages/*"],
       "@helpers/*": ["src/helpers/*"],
       "@settings/*": ["src/settings/*"],
-      "@api/*": ["src/api/*"]
+      "@api/*": ["src/api/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@routes/*": ["src/routes/*"]
     }
   }
 }
