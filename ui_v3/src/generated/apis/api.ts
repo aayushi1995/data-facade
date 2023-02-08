@@ -4,10 +4,9 @@
  * (c) Data Facade LLC.
  */  
 
+import { userSettingsSingleton } from '../../data_manager/userSettingsSingleton'
 import * as Entity from '../entities/Entities'
 import * as CustomInterface from '../interfaces/Interfaces'
-import dataManager from '../../data_manager/data_manager'
-import { userSettingsSingleton } from '../../data_manager/userSettingsSingleton'
 
 const endPoint = require("../../common/config/config").FDSEndpoint
 
@@ -183,6 +182,12 @@ export class Fetcher {
 	*/
 	
 	static async fetchData(httpsVerb: "GET", endpoint: "/getRecurringActionInstanceDetails", inputPayload: Entity.ActionInstance): Promise<CustomInterface.RecurringActionInstanceDetails[]>; 
+	
+	/**
+	Gives you the list of tables along with it's columns for the given filter
+	*/
+	
+	static async fetchData(httpsVerb: "GET", endpoint: "/getTableWithColumns", inputPayload: Entity.TableProperties): Promise<CustomInterface.TablePropertiesWithColumns[]>; 
 	
 	/**
 	Gives you the details of all tags along with it's subsidiaries.

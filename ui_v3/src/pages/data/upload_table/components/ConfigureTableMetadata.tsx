@@ -350,7 +350,8 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                                                         setDataContext({
                                                             type: 'SetFileUpload',
                                                             payload: {
-                                                                isUploadSucess: true
+                                                                isUploadSucess: true,
+                                                                status: S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS.message
                                                             }
                                                         })
                                                         enableUploadButton(4);
@@ -359,6 +360,13 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                                                         }, {
                                                             onSuccess: (data, variables, context) => {
                                                                 setUploadState(S3UploadState.GENERATING_QUESTIONS_SUCCESS)
+                                                                setDataContext({
+                                                                    type: 'SetFileUpload',
+                                                                    payload: {
+                                                                        isUploadSucess: true,
+                                                                        status: S3UploadState.GENERATING_QUESTIONS_SUCCESS.message
+                                                                    }
+                                                                })
                                                                 setUploadTableStateContext({
                                                                     type: "SetRecommendedQuestions",
                                                                     payload: {
@@ -368,6 +376,13 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
                                                             },
                                                             onError: (error, variables, context) => {
                                                                 setUploadState(S3UploadState.GENERATING_QUESTIONS_ERROR)
+                                                                setDataContext({
+                                                                    type: 'SetFileUpload',
+                                                                    payload: {
+                                                                        isUploadSucess: true,
+                                                                        status: S3UploadState.GENERATING_QUESTIONS_ERROR.message
+                                                                    }
+                                                                })
                                                             }
                                                         })
                                                     },
@@ -767,7 +782,7 @@ const TableSchemaSelection = (props: TableSchemaSelectionProps) => {
         <Box sx={{ ...MetaDataContainerBoxCss }}>
             <Box sx={{ display: "flex", mx: 5 }}>
                 <Box sx={{ ...StatusContainerCss }}>
-                    <Box sx={{ ...statusTypoCss }}>Status : </Box><>{dataContext?.isUploadSucess ? S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS.message : props.statusMSG}</>
+                    <Box sx={{ ...statusTypoCss }}>Status : </Box><>{dataContext?.isUploadSucess ? dataContext.uploadStats : props.statusMSG}</>
                 </Box>
                 <Box sx={{ ...HeaderTextFieldConatinerCss }}>
                     <Box sx={{ m: 'auto' }}>

@@ -3,7 +3,8 @@ import { createContext, useReducer, useState } from 'react';
 export type FileType = {
   fileURL?: string | null,
   fileName?: string | null,
-  isUploadSucess?: boolean | null
+  isUploadSucess?: boolean | null,
+  uploadStats?: string
 }
 
 const initialState: FileType = { fileURL: null, fileName: null, isUploadSucess: false };
@@ -34,6 +35,7 @@ type SetFileUploadStateAction = {
   type: "SetFileUpload",
   payload: {
     isUploadSucess?: boolean,
+    status?: string
   }
 }
 
@@ -56,7 +58,8 @@ const reducer = (state: FileType, action: DataAction): FileType => {
     case "SetFileUpload": {
       return {
         ...state,
-        isUploadSucess: action.payload?.isUploadSucess
+        isUploadSucess: action.payload?.isUploadSucess,
+        uploadStats: action.payload.status
       }
     }
 
