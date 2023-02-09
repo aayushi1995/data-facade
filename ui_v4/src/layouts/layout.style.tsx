@@ -1,14 +1,16 @@
 const LAYOUT_STYLE = {
     header: {
         backgroundColor: "#F9FAFB",
-        borderBottom: '1px solid #D1D5DB'
+        borderBottom: '1px solid #D1D5DB',
+        marginLeft: 1
     },
     sidebar: {
         backgroundColor: "#F9FAFB",
         borderRight: '1px solid #D1D5DB',
+        
     },
     content: {
-        background:'#fff'
+        background: '#fff',
     },
     image: {
         display: 'flex',
@@ -32,7 +34,7 @@ const LAYOUT_STYLE = {
         alignItems: 'center',
 
     }
-    
+
 }
 
 export default LAYOUT_STYLE

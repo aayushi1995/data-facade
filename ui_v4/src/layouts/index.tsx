@@ -14,7 +14,7 @@ const AppLayout = ({ children }: ChildrenProps) => {
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <AppSidebar />
-            <Layout>
+            <Layout style={{ marginLeft: 80 }}>
                 <AppHeader />
                 <BrowserTab>
                     <Content style={LAYOUT_STYLE.content}>
