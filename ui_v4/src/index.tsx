@@ -10,7 +10,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 const onRedirectCallback = (appState: any) => {
   history.push(
-    appState && appState.returnTo ? appState.returnTo : '/tableBrowser'
+    appState && appState.returnTo ? appState.returnTo : '/'
   );
 };
 

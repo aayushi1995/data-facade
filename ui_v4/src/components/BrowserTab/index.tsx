@@ -9,11 +9,20 @@ interface ChildrenProps {
     children: React.ReactElement<any, any>
 }
 
-export const RouteContext = React.createContext(null);
+interface TabProps {
+    id?: string | number | undefined,
+    key?: string | undefined,
+    label?: string | undefined,
+    params?: string | undefined,
+    isPermanent?: boolean | undefined
+
+}
+
+export const RouteContext = React.createContext([]);
 
 const BrowserTab = ({ children }: ChildrenProps) => {
-    const [routes, setRoutes] = React.useState<any>([]);
-    const [activeTab, setActiveTab] = React.useState<string>('')
+    const [routes, setRoutes]: any[] = React.useState<TabProps[]>([]);
+    const [activeTab, setActiveTab] = React.useState<string | undefined>('')
     const location = useLocation();
     const navigate = useNavigate();
     const search = location.search;
@@ -21,7 +30,7 @@ const BrowserTab = ({ children }: ChildrenProps) => {
     React.useEffect(() => {
         const route = routes.find((route: any) => route.key === location.pathname);
         setActiveTab(location.pathname)
-        if (!route  && name) {
+        if (!route && name) {
             const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
             setRoutes([...permanentRoutes, { id: Date.now(), key: location.pathname, label: name, params: location.search, isPermanent: true }]);
         }
@@ -36,17 +45,17 @@ const BrowserTab = ({ children }: ChildrenProps) => {
     }, [location.search])
 
     const handleChange = (value: string) => {
-        const tab = routes.find((route:any) => route.key === value);
+        const tab = routes.find((route: any) => route.key === value);
         setActiveTab(value)
         tab ? navigate(`${value}${tab['params']}`) : navigate(value)
-        
+
     };
 
     const removeTab = (path: string) => {
         const index = routes.findIndex((route: any) => route.key === path);
         if (index > -1) {
             const updatedRoutes = [...routes.slice(0, index), ...routes.slice(index + 1)];
-            const permanentRoutes = updatedRoutes.filter((route: any) => route.isPermanent === true);
+            const permanentRoutes: TabProps[] = updatedRoutes.filter((route: any) => route.isPermanent === true);
             setRoutes(updatedRoutes)
             if (permanentRoutes.length > 0) {
                 const lastIndex = permanentRoutes.length - 1

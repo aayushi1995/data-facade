@@ -12,6 +12,7 @@ const  dataManager:any = {
 
 const isValidUserSettings = () => userSettingsSingleton.userEmail && userSettingsSingleton.token
 
+
 const retreiveHeader =  (entityName:string, actionProperties:any, token:string) => {
     return {
         method: 'POST',
@@ -273,11 +274,9 @@ dataManager.getInstance.deleteData = async function (entityName:string, actionPr
 }
 
 dataManager.getInstance.dummyData = async function (email:string, token:string) {
-    if (!isValidUserSettings()) {
-        return;
-    }
     const fn = await fetch(endPoint + '/hello?email=' + email, dummyDataHeader(token))
-    return fn
+    const data = await fn.json()
+    return data
 }
 
 dataManager.getInstance.s3PresignedUploadUrlRequest = async function (file:any, expirationDurationInMinutes:any, contentType:any, uploadPath=undefined, providerInstanceId=undefined) {

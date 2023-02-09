@@ -64,7 +64,7 @@ const AppHeader = () => {
                             <Col>
                                 {DropdownMenu(menuProps, appContext.userName)}
                             </Col>
-                            <Col><Avatar size={40} style={{ background: '#7265e6' }}>{appContext.userName}</Avatar></Col>
+                            <Col><Avatar size={36} style={{ background: '#7265e6' }}>{appContext.userName[0]}</Avatar></Col>
                         </Row>
 
                     </Col>
