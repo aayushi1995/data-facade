@@ -5,7 +5,9 @@ import { Routes, Route, Navigate } from "react-router-dom"
 const Home = React.lazy(() => import("@pages/home"))
 const Data = React.lazy(() => import("@pages/data"))
 const Playground = React.lazy(() => import("@pages/playground"))
+const ChatComponent = React.lazy(() => import("@/pages/Chat"))
 const NotFound = React.lazy(() => import("@pages/404"))
+
 
 const PrivateRoutes = () => {
     return (
@@ -13,6 +15,7 @@ const PrivateRoutes = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/data" element={<Data />} />
+                <Route path="/chats" element={<ChatComponent />} />
                 <Route path="/playground" element={<Playground />} />
                 <Route
                     path="/tableBrowser"

@@ -6,34 +6,40 @@ import { Header } from "antd/es/layout/layout"
 import { useContext } from "react"
 import LAYOUT_STYLE from "./layout.style"
 
+const InputBox = () => <Input prefix={<SearchOutlined />} size="large" bordered={false} style={LAYOUT_STYLE.input} />
+
+const DropdownMenu = (menuProps:any, userName:any) => {
+    return (
+        <Dropdown menu={menuProps} trigger={['click']} arrow={true}>
+            <Button size="large" style={{ outline: 'none', borderRadius: 2 }}>
+                <Space>
+                    {userName}
+                    <DownOutlined style={{ fontSize: 10 }} />
+                </Space>
+            </Button>
+        </Dropdown>
+    )
+}
+
+const items: MenuProps['items'] = [
+    {
+        label: 'Settings',
+        key: 'settings',
+        icon: <SettingOutlined />,
+    },
+    {
+        label: 'Logout',
+        key: 'logout',
+        icon: <LogoutOutlined />,
+    },
+];
+
+
 const AppHeader = () => {
-
-    const InputBox = () => <Input prefix={<SearchOutlined />} size="large" bordered={false} style={LAYOUT_STYLE.input} />
-
-    const DropdownMenu = () => <Dropdown menu={menuProps} trigger={['click']} arrow={true}>
-        <Button size="large" style={{ outline: 'none', borderRadius: 2 }}>
-            <Space>
-                {appContext.userName}
-                <DownOutlined style={{ fontSize: 10 }} />
-            </Space>
-        </Button>
-    </Dropdown>
 
     const appContext: any = useContext(AppContext)
     const { logout } = useAuth0()
-    const items: MenuProps['items'] = [
-        {
-            label: 'Settings',
-            key: 'settings',
-            icon: <SettingOutlined />,
-        },
-        {
-            label: 'Logout',
-            key: 'logout',
-            icon: <LogoutOutlined />,
-        },
-    ];
-
+   
     const handleMenuClick = (event: any) => {
         if (event.key === "logout") {
             appContext.setUserName(null);
@@ -56,7 +62,7 @@ const AppHeader = () => {
                     <Col span={6}>
                         <Row justify="end" gutter={18}>
                             <Col>
-                                {DropdownMenu()}
+                                {DropdownMenu(menuProps, appContext.userName)}
                             </Col>
                             <Col><Avatar size={40} style={{ background: '#7265e6' }}>{appContext.userName}</Avatar></Col>
                         </Row>
