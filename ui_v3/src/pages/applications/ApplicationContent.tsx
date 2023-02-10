@@ -27,7 +27,6 @@ import ViewWorkflowExecutionHomePage from './workflow/ViewWorkflowExecutionHomeP
 
 
 export const ApplicationContent = withRouter(function TableBrowserRoutes() {
-    const setModuleContext = useContext(SetModuleContextState)
 
     return (
         <Switch>

@@ -200,6 +200,13 @@ export const ConfigureTableMetadata = (props: ConfigureTableMetadataProps) => {
         (config) => dataManagerInstance.getRecommendedQuestions?.(config.tableId), {
             onMutate: () => {
                 setUploadState(S3UploadState.FETCHING_TABLE_QUESTIONS);
+                setDataContext({
+                    type: "SetFileUpload",
+                    payload: {
+                        isUploadSucess: true,
+                        status: S3UploadState.FETCHING_TABLE_QUESTIONS.message
+                    }
+                })
             }
         }
     )

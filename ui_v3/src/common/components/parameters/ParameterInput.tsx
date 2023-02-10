@@ -670,7 +670,7 @@ const StringInput = (props: StringParameterInput) => {
                 onBlur={() => onChange(input)}
                 size="small"
                 placeholder={props.inputProps.parameterName || "Parameter Name NA"}
-                
+                fullWidth
                 onKeyDown={(event) => event.stopPropagation()}/>
         </StyledInputPaper>
     )

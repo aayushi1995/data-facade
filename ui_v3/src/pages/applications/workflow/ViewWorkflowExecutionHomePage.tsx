@@ -1,8 +1,9 @@
 import { Box, Button, Card, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material"
 import React, { useState } from "react"
-import { useLocation, useRouteMatch } from "react-router-dom"
+import { useRouteMatch } from "react-router-dom"
 import leftExpandIcon from '../../../../src/assets/images/left expand.svg'
 import RightExpandIcon from '../../../../src/assets/images/right expand.svg'
+import ActionExecutionDetailsNew from "../../../common/components/action_execution/components/ActionExecutionDetails"
 import LoadingIndicator from '../../../common/components/LoadingIndicator'
 import { SetModuleContextState } from '../../../common/components/main_module/context/ModuleContext'
 import NoData from "../../../common/components/NoData"
@@ -10,7 +11,6 @@ import StepSlider from '../../../common/StepSlider'
 import ActionExecutionStatus from '../../../enums/ActionExecutionStatus'
 import { ActionParameterInstance } from '../../../generated/entities/Entities'
 import { WorkflowActionExecutions } from "../../../generated/interfaces/Interfaces"
-import { ActionExecutionDetails } from '../action_execution/ActionExecutionHomePage'
 import { BuildActionContextProvider } from '../build_action_old/context/BuildActionContext'
 import { defaultWorkflowContext, SetWorkflowContext, WorkflowContext, WorkflowContextProvider } from "./context/WorkflowContext"
 import { StagesWithActions } from "./create/newStage/StagesWithActions"
@@ -29,7 +29,7 @@ interface ViewWorkflowExecutionProps {
 }
 
 export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
-    const location = useLocation()
+    console.log(props)
     const workflowExecutionId = props.workflowExecutionId
     const workflowContext = React.useContext(WorkflowContext)
     const setWorkflowContext = React.useContext(SetWorkflowContext)
@@ -149,7 +149,9 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
 
     const [initialTime, setInitialTime] = React.useState((new Date(Date.now()).getTime()))
     const increaseTime = () => {
-        if(!workflowContext.WorkflowExecutionCompletedOn){
+        console.log(workflowContext.WorkflowExecutionCompletedOn)
+        if(workflowContext.WorkflowExecutionCompletedOn === undefined){
+            console.log('here')
             setInitialTime(time => time + 1000)
         }
     }
@@ -165,11 +167,6 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
 
     }
 
-    const handleParameterInstancesChange = (newParameterInstances: ActionParameterInstance[]) => {
-        console.log(newParameterInstances)
-        setActionParameterInstances(newParameterInstances)
-    }
-
     const numberOfActionINStage = ()=>{
         let ans = 0;
         for(var i=0;i<workflowContext.stages.length;i++){
@@ -179,12 +176,6 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
     }
     const [userInputOpener , setuserInputOpener] = useState(false);
 
-    const handleInputOpener = () =>{
-        setuserInputOpener(userInputOpener=>!userInputOpener)
-    }
-    const handleBoxIPopener = ()=>{
-        if(!userInputOpener) {setuserInputOpener(true)}
-    }
     const currentIndex = workflowContext.stages.findIndex(stage => stage.Id === workflowContext.currentSelectedStage)
 
     const handleGoNext = () => {
@@ -210,13 +201,6 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
             }
         })
     }
-
-    const selectedStage = workflowContext.stages.filter(stage => stage.Id === workflowContext.currentSelectedStage).map(stage => ({
-        stageId: stage.Id,
-        stageName: stage.Name,
-        numberOfActions: stage.Actions.length,
-        totalRunTime: '32 SEC'
-    }))
     const [finalOutputOpener , setFinalOutputOpener] = useState(false);
     const [flowOpener , setFlowOpener] = useState(true);
     const [flowResultOpener , setFlowResultOpener] = useState(true)
@@ -247,7 +231,7 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
 
     React.useEffect(() => {
         setInitialTime(Date.now())
-        setInterval(increaseTime, 1000)
+        // setInterval(increaseTime, 1000)
         setAreChildActionReady(false)
         setWorkflowContext({
             type: 'SET_ENTIRE_CONTEXT',
@@ -360,7 +344,7 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
                                                 {/* <SaveAndBuildChartContextProvider>
                                                     <SaveAndBuildChartsFromExecution executionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
                                                 </SaveAndBuildChartContextProvider> */}
-                                                <ActionExecutionDetails actionExecutionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
+                                                <ActionExecutionDetailsNew actionExecutionId={workflowContext.currentSelectedAction?.actionId || "NA"}/>
                                                 
                                                 </Box>
                                         </Box>
@@ -393,7 +377,7 @@ export const ViewWorkflowExecution = (props: ViewWorkflowExecutionProps) => {
 
 export const ViewWorkflowExecutionHomePage = () => {
     const match = useRouteMatch<MatchParams>()
-
+    console.log(match)
     const workflowExecutionId = match.params.workflowExecutionId
     return (
         <WorkflowContextProvider>
