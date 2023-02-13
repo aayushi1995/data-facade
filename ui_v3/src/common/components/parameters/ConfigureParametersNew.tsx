@@ -1,5 +1,7 @@
 import { Box, Grid } from "@mui/material"
 import React from "react"
+import ActionParameterDefinitionDatatype from "../../../enums/ActionParameterDefinitionDatatype"
+import ActionParameterDefinitionTag from "../../../enums/ActionParameterDefinitionTag"
 import { ActionParameterDefinition, ActionParameterInstance } from "../../../generated/entities/Entities"
 import ParameterDescriptionCard from "../../../pages/applications/execute_action/components/ParameterDescriptionCard"
 import ParameterDefinitionsConfigPlane from "./ParameterDefinitionsConfigPlane"
@@ -37,11 +39,21 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
     }
 
     const numberOfParameters = filteredParameters.length
-    
+    const pramameterBody: ActionParameterDefinition[] = []
+    {filteredParameters.map(parameterDef => {
+        if(parameterDef.ParameterName=='df' || 
+        parameterDef.ParameterName==ActionParameterDefinitionTag.TABLE_NAME || 
+        parameterDef.ParameterName==ActionParameterDefinitionTag.DATA || 
+        parameterDef.Datatype==ActionParameterDefinitionDatatype.PANDAS_DATAFRAME){
+            pramameterBody.unshift(parameterDef)
+        }else{
+            pramameterBody.push(parameterDef)
+        }
+    })}
     if(numberOfParameters <= 4) {
         return (
             <Grid container spacing={3} justifyContent="center" direction={props.fromTestRun ? "column" : "row"}>
-                {filteredParameters.map(parameterDef => {
+                {pramameterBody.map(parameterDef => {
                     return (
                         <Grid item sm={12} md={12/numberOfParameters} >
                             <Box sx={{display: 'flex', flexDirection: 'column', gap: 1, width: '100%'}}>
