@@ -1,7 +1,8 @@
-import {useMemo} from "react";
+import { useMemo } from "react";
 
 export const userSettingsSingleton: any = {}
 
+console.log(userSettingsSingleton)
 export function useUserSettingsSingleton(userEmail: any, userName: any, token: any, workspaceName: any) {
     useMemo(() => {
         userSettingsSingleton.userEmail = userEmail;

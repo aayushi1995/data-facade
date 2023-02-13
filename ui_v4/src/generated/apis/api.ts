@@ -4,11 +4,12 @@
  * (c) Data Facade LLC.
  */  
 
-import userSettingsSingleton from '../../api/dataManager'
+
+import { userSettingsSingleton } from '@/settings/userSettingsSingleton'
 import * as Entity from '../entities/Entities'
 import * as CustomInterface from '../interfaces/Interfaces'
 
-const endPoint = require("../../common/config/config").FDSEndpoint
+const endPoint = require("../../settings/config").FDSEndpoint
 
 type HttpsVerb = "GET" | "POST" | "PATCH"
 export const isValidUserSettings = () => userSettingsSingleton.userEmail && userSettingsSingleton.token

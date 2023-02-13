@@ -1,11 +1,12 @@
-import React from "react"
-import { Suspense } from "react"
-import { Routes, Route, Navigate } from "react-router-dom"
+import React, { Suspense } from "react"
+import { Navigate, Route, Routes } from "react-router-dom"
 
 const Home = React.lazy(() => import("@pages/home"))
 const Data = React.lazy(() => import("@pages/data"))
 const Playground = React.lazy(() => import("@pages/playground"))
 const ChatComponent = React.lazy(() => import("@/pages/chat"))
+const AeComponent = React.lazy(() => import("@/components/ActionExecution"))
+
 const NotFound = React.lazy(() => import("@pages/404"))
 
 
@@ -17,6 +18,7 @@ const PrivateRoutes = () => {
                 <Route path="/data" element={<Data />} />
                 <Route path="/chats" element={<ChatComponent />} />
                 <Route path="/playground" element={<Playground />} />
+                <Route path="/test" element={<AeComponent actionExecutionId="2fbc8a19-ecf7-4208-9b4e-f5d7ddd0c2c6"/>}/>
                 <Route
                     path="/tableBrowser"
                     element={<Navigate to="/" replace />}
