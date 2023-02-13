@@ -28,7 +28,11 @@ export const getMessageType = (message:string) => {
 			type = 'actions'
 		} else if (message.includes('charts')) {
 			type = 'charts'
-		} else {
+		}
+        else if (message.includes('action_output')) {
+			type = 'action_output'
+		} 
+        else {
 			type = 'text'
 		}
         return type

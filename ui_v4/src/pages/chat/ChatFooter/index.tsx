@@ -1,46 +1,62 @@
+import { Col, Row } from 'antd';
 import Tooltip from 'antd/es/tooltip';
 import React, { useRef } from 'react'
-import { ChatInput, StyledChatInputWrapper, StyledCardChartFooterWrapper, ChatFooterButtonWrapper, StyledSendIcon, StyledDBConnectionIcon, StyledUploadIcon,StyledFileReplaceIcon, FlexBox } from './ChatFooter.styles'
+import { ChatInput, StyledChatInputWrapper, StyledCardChartFooterWrapper, StyledSendIcon, StyledDBConnectionIcon, StyledUploadIcon, StyledFileReplaceIcon } from './ChatFooter.styles'
 
 
-const ChatFooter = ({handleSend, scrollToBottom}:any) => {
+const ChatFooter = ({ handleSend, scrollToBottom,loading }: any) => {
     let inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
-    
+
     const handleClick = () => {
-        handleSend(inputRef.current.value,'user')
+        handleSend(inputRef.current.value, 'user')
         inputRef.current.value = '';
-        scrollToBottom();
+        scrollToBottom()
     }
-    const handleKeyDown = (event:any) => {
+    const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
-           handleClick()
+            handleClick()
         }
     }
 
     return (
-        <StyledCardChartFooterWrapper  bordered={true}>
-            <FlexBox>
-                <StyledChatInputWrapper>
-                    <ChatInput type="text" placeholder='Type a message...' ref={inputRef} onKeyDown={handleKeyDown}/> 
-                    <StyledSendIcon onClick={handleClick} onKeyDown={handleClick}/>
-                </StyledChatInputWrapper>
-                <ChatFooterButtonWrapper>
-                    <Tooltip title="Database Connection">
-                        <StyledDBConnectionIcon/>
-                    </Tooltip>
-                    <Tooltip title="File Upload">
-                        <StyledUploadIcon/>
-                    </Tooltip>
-                    <Tooltip title="FindReplace">
-                        <StyledFileReplaceIcon/>
-                    </Tooltip>
-                    
-                    
-                </ChatFooterButtonWrapper>
-            </FlexBox>
-            
-		</StyledCardChartFooterWrapper>
+
+        <StyledCardChartFooterWrapper>
+            <Row gutter={18} align="middle">
+                <Col span={22}>
+                    <StyledChatInputWrapper>
+                        <ChatInput disabled={loading} type="text" placeholder='Type a message...' ref={inputRef} onKeyDown={handleKeyDown} />
+                        <StyledSendIcon onClick={handleClick} onKeyDown={handleClick} />
+                    </StyledChatInputWrapper>
+
+                </Col>
+                <Col span={2}>
+                    <Row justify="space-between">
+                        <Col>
+                            <Tooltip title="Database Connection">
+                                <StyledDBConnectionIcon />
+                            </Tooltip>
+                        </Col>
+
+
+                        <Col>
+                            <Tooltip title="File Upload">
+                                <StyledUploadIcon />
+                            </Tooltip>
+                        </Col>
+                        <Col>
+                            <Tooltip title="FindReplace">
+                                <StyledFileReplaceIcon />
+                            </Tooltip>
+
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </StyledCardChartFooterWrapper>
+
+
+
     )
 }
 export default ChatFooter

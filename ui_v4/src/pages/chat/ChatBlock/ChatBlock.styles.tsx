@@ -5,7 +5,6 @@ export const ChatStyles = styled.div<IChatMessage>`
     display: flex;
     width:auto;
     max-width: 60vw;
-    font-size: 18px;
     color: black;
     padding: 16px;
     font-weight:500;

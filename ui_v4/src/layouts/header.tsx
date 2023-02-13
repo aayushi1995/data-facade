@@ -8,12 +8,12 @@ import LAYOUT_STYLE from "./layout.style"
 
 const InputBox = () => <Input prefix={<SearchOutlined />} size="large" bordered={false} style={LAYOUT_STYLE.input} />
 
-const DropdownMenu = (menuProps:any, userName:any) => {
+const DropdownMenu = (menuProps:any, workspaceName:any) => {
     return (
         <Dropdown menu={menuProps} trigger={['click']} arrow={true}>
             <Button size="large" style={{ outline: 'none', borderRadius: 2 }}>
                 <Space>
-                    {userName}
+                    {workspaceName}
                     <DownOutlined style={{ fontSize: 10 }} />
                 </Space>
             </Button>
@@ -62,7 +62,7 @@ const AppHeader = () => {
                     <Col span={6}>
                         <Row justify="end" gutter={18}>
                             <Col>
-                                {DropdownMenu(menuProps, appContext.userName)}
+                                {DropdownMenu(menuProps, appContext.workspaceName)}
                             </Col>
                             <Col><Avatar size={36} style={{ background: '#7265e6' }}>{appContext.userName[0]}</Avatar></Col>
                         </Row>

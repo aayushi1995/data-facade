@@ -35,7 +35,8 @@ export const StyledCardChartFooterWrapper = styled(Card)`
     position: sticky;
     bottom: 0px;
     background-color: #F3F4F6;
-    padding: 50px;
+    padding: 20px;
+    margin-top:20px
 `
 export const StyledSendIcon = styled(SendIcon)`
     position: relative;

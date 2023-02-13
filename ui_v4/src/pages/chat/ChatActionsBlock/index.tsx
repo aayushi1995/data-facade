@@ -1,6 +1,4 @@
-import { Button, Grid } from 'antd'
-import React from 'react'
-import { FlexBox } from '../ChatFooter/ChatFooter.styles'
+import { Button } from 'antd'
 import { ChatActionsBlockStyled } from './ChatActionsBlock.styles'
 
 const ChatActionsBlock = ({actions}:any) => {
