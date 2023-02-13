@@ -13,5 +13,5 @@ export interface IChatResponse {
   SentBy?: string;
   Index?: string | number;
   MessageType?: "text" | "action_output" | "error";
-  MessageContent?: { text: "" };
+  MessageContent?: any
 }

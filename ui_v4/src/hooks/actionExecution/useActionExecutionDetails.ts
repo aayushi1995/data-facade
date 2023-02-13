@@ -3,10 +3,11 @@ import { ActionExecution } from "@/generated/entities/Entities"
 import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "@/generated/interfaces/Interfaces"
 import { labels } from "@/helpers/constant"
 import ActionExecutionStatus from "@/helpers/enums/ActionExecutionStatus"
+import { ActionExecutionDetailProps } from "@/pages/chat/chatActionOutput/actionOutput"
 import React from "react"
 import { useQuery } from "react-query"
-import { ActionExecutionDetailProps } from "../index"
-import FetchActionExecutionDetails from "./FetchActionExecutionDetails"
+
+import FetchActionExecutionDetails from "@hooks/actionExecution/fetchActionExecutionDetails"
 
 
 const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {

@@ -1,12 +1,10 @@
 import { createContext, useReducer } from 'react';
 
 export type FileType = {
-  fileURL?: string | null,
-  fileName?: string | null,
-  isUploadSucess?: boolean | null
+  chatData?: any | null
 }
 
-const initialState: FileType = { fileURL: null, fileName: null, isUploadSucess: false };
+const initialState: FileType = { chatData: null };
 
 export const DataContext = createContext<FileType>(initialState)
 
@@ -16,51 +14,24 @@ const initialSetModuleState: SetDataContextType = (args) => { }
 
 export const SetDataContext = createContext<SetDataContextType>(initialSetModuleState)
 
-type SetFileAction = {
-  type: "SetFile",
+type setChatDataAction = {
+  type: "setChatData",
   payload: {
-    fileURL?: string|null,
+    chatData?: any | null,
   }
 }
 
-type SetFileNameAction = {
-  type: "SetFileName",
-  payload: {
-    fileName?: string|null,
-  }
-}
-
-type SetFileUploadStateAction = {
-  type: "SetFileUpload",
-  payload: {
-    isUploadSucess?: boolean,
-  }
-}
-
-type DataAction = SetFileAction | SetFileNameAction | SetFileUploadStateAction
+type DataAction = setChatDataAction
 
 const reducer = (state: FileType, action: DataAction): FileType => {
+
   switch (action.type) {
-    case "SetFile": {
+    case "setChatData" : {
       return {
         ...state,
-        fileURL: action.payload.fileURL
+        chatData: action?.payload?.chatData || null
       }
     }
-    case "SetFileName": {
-      return {
-        ...state,
-        fileName: action.payload?.fileName
-      }
-    }
-    case "SetFileUpload": {
-      return {
-        ...state,
-        isUploadSucess: action.payload?.isUploadSucess
-      }
-    }
-
-
     default:
       break
   }

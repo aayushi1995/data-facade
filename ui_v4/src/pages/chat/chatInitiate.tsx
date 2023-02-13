@@ -2,15 +2,23 @@
 import { initiateChat, startConversation } from "@/actions/chat.actions";
 import Loader from "@/components/Loader";
 import AppContext from "@/contexts/AppContext";
+import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
 import { getLocalStorage } from "@/utils";
 import { Alert, Col, Row, Spin } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { MessageWrapper } from "./Chat.styles";
+import ActionOutput from "./chatActionOutput/actionOutput";
 import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
 
 const InitiateChat = () => {
+
+    // central data provider context
+    const setDataContext = useContext(SetDataContext);
+    const dataContext = useContext(DataContext);
+
     const appContext: any = useContext(AppContext);
     const { chatId } = useParams();
     const [isError, setIsError] = useState(false);
@@ -18,12 +26,42 @@ const InitiateChat = () => {
     const [loadingMessage, setLoadingMessage] = useState(false);
     const [messages, setMessages] = useState<IChatMessage[] | undefined>()
     const [showActionOutput, setShowActionOutput] = useState(false)
+    const [executionId, setExecutionId]: any = useState({})
 
     const chatFooterRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     const scrollToBottom = () => {
         chatFooterRef?.current?.scrollIntoView({ behavior: "smooth" })
     }
+
+    // function that calls setChatData reducer to store message data in context
+    const persistState = () => {
+        messages != undefined && setDataContext({
+                type: "setChatData",
+                payload: {
+                    chatData: {
+                        messages: messages,
+                        executionId: executionId
+                    }
+                }
+            })
+    }
+
+    //persist the chat if there is any chatData in the DataProvider
+    useEffect(() => {
+        setMessages(dataContext?.chatData?.messages || [])
+        setExecutionId(dataContext?.chatData?.executionId || [])
+    },[])
+
+
+    // persists data whenever messages are added
+    useEffect(() => {
+        return (() => {
+            persistState()
+            
+        })
+    },[messages])
+
 
     useEffect(() => {
         if (chatId) {
@@ -42,23 +80,26 @@ const InitiateChat = () => {
         }
     }, [chatId])
 
-    const handleConversation = (message?: any, user?: any, type?: string) => {
+    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string) => {
+        console.log('responseID', responseID)
         let temp: IChatMessage = {
-            id: new Date().toTimeString(),
+            id: responseID ? responseID : new Date().toTimeString(),
             message: message,
             time: new Date().getTime(),
             from: user,
             username: user === 'system' ? 'Data-Facade' : appContext?.userName,
             type: type ? type : 'text'
         }
+
         setMessages(messages => messages ? [...messages, temp] : [temp])
+
         if (user === "user") {
             setLoadingMessage(true)
             startConversation(chatId, appContext.userName, message).then(response => {
-                for(let i=0; i < response.length;i++){
+                for (let i = 0; i < response.length; i++) {
                     handleBOTMessage(response[i])
                 }
-                
+
             }).catch(error => {
                 console.log('error', error)
                 handleConversation('Something went wrong', 'system', 'error')
@@ -68,17 +109,18 @@ const InitiateChat = () => {
 
     const handleBOTMessage = (messageBody: IChatResponse) => {
         const messageType = messageBody ? messageBody.MessageType : 'error';
+        console.log('messageType', messageType)
         setTimeout(() => {
             setLoadingMessage(false)
             switch (messageType) {
                 case 'text': {
-                    return handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system');
+                    return handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'text', messageBody?.Id);
                 }
                 case 'action_output': {
                     return handleActionOutput(messageBody)
                 }
                 case 'error': {
-                    return handleConversation(messageBody?.MessageContent || 'Something went wrong', 'system', 'error')
+                    return handleConversation(messageBody?.MessageContent, 'system', 'error', messageBody?.Id)
                 }
                 default: break;
             }
@@ -90,11 +132,18 @@ const InitiateChat = () => {
 
     }
 
-    const handleActionOutput = (messageBody: IChatResponse) => {
-        setShowActionOutput(true)
+    const handleActionOutput = (messageBody: IChatResponse | any) => {
+        const actionExecutionId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
+        handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'action_output', messageBody?.Id);
+        console.log('actionExecutionId', messageBody)
+        if (actionExecutionId) {
+            setShowActionOutput(true)
+            setExecutionId((prevState: any) => ({
+                ...prevState,
+                [messageBody?.Id]: actionExecutionId
+            }))
+        }
     }
-
-
 
     return (
         <React.Fragment>
@@ -111,13 +160,20 @@ const InitiateChat = () => {
                                 <Loader />
                                 :
                                 <Col sm={24}>
-                                    {messages?.map(({ id, type, ...props }: IChatMessage) =>
-                                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}/>
-                                    )}
-                                    {loadingMessage && <Spin />}
-                                    { showActionOutput && <div>Action output component will go there</div> }
+                                    <MessageWrapper>
+                                        {messages?.map(({ id, type, ...props }: IChatMessage) =>
+                                            <React.Fragment>
+                                                {type !== "action_output" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
+                                                {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput actionExecutionId={executionId[id]} />}
+                                            </React.Fragment>
+                                        )}
+                                        {loadingMessage && <Spin />}
 
-                                    <ChatFooter scrollToBottom={scrollToBottom} handleSend={handleConversation} loading={loadingMessage}/>
+
+                                    </MessageWrapper>
+
+
+                                    <ChatFooter scrollToBottom={scrollToBottom} handleSend={handleConversation} loading={loadingMessage} />
 
                                 </Col>
                         }
@@ -130,5 +186,3 @@ const InitiateChat = () => {
 }
 
 export default InitiateChat
-
-

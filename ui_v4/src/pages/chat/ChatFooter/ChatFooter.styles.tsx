@@ -32,11 +32,12 @@ export const StyledChatInputWrapper = styled.div`
 `
 export const StyledCardChartFooterWrapper = styled(Card)`
     display: block;
-    position: sticky;
-    bottom: 0px;
+    position: fixed;
+    bottom: 5px;
     background-color: #F3F4F6;
-    padding: 20px;
-    margin-top:20px
+    padding: 24px;
+    margin-top:20px;
+    width:90%
 `
 export const StyledSendIcon = styled(SendIcon)`
     position: relative;

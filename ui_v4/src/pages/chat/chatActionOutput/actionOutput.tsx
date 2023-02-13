@@ -1,30 +1,97 @@
-import { DeepdiveIcon } from "@/assets/icon.theme"
-import { SmallDashOutlined } from "@ant-design/icons"
-import { Button, Card, Col, Row } from "antd"
+
+import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper"
+import useActionExecutionDetails from "@/hooks/actionExecution/useActionExecutionDetails"
+import { Badge, Card, Col, Row, Skeleton, Tag, Typography } from "antd"
+import React from "react"
 import styled from "styled-components"
+import FailedActionOutput from "./failedActionOutput"
+import SuccessActionOutput from "./successActionOutput"
 
 const ActionCard = styled(Card)`
     border-radius: 0px 8px 8px 8px;
     border: 0.87659px solid #D1D5DB;
+    margin-bottom:20px;
 `
 
-interface ActionOutputInterface {
-    toggleDeepDive?: ()=> void,
-    showDeepdive?:boolean
+export interface ActionExecutionDetailProps {
+    actionExecutionId: string,
+    childActionExecutionId?: string,
+    showDescription?: boolean,
+    showParametersOnClick?: boolean,
+    fromTestAction?: boolean,
+    fromDeepDive?: boolean,
+    onExecutionCreate?: (actionExecutionId: string) => void,
+    displayPostProcessed?: boolean
+    showChart?: boolean
 }
 
-const ActionOutput = ({ toggleDeepDive,showDeepdive }: ActionOutputInterface) => {
+
+
+const ActionOutput = (props: ActionExecutionDetailProps) => {
+
+    const {
+        actionExecutionDetailQuery,
+        actionExecutionError,
+        actionExecutionTerminalState,
+        getElapsedTime,
+        childActionExecutionId,
+        fetchChildActionExecutionQuery,
+        postProcessedAction,
+    } = useActionExecutionDetails(props)
     return (
-        <Row gutter={18} align="middle">
-            <Col span={showDeepdive?16:12}>
-                <ActionCard headStyle={{ border: 'none' }} size="small" title="Marketting vs Sales" extra={<Button type="link" icon={<SmallDashOutlined />} />}>
-                    action out put graph
-                </ActionCard>
-            </Col>
-            <Col>
-                <Button onClick={toggleDeepDive} type="primary" ghost icon={<DeepdiveIcon style={{ fontSize: '20px' }} />}>{showDeepdive ?'Hide Deep Dive':'Deep Dive'}</Button>
-            </Col>
-        </Row>
+        <ReactQueryWrapper  {...actionExecutionDetailQuery}>
+            <Row>
+                <Col span={8}>
+                    <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}>
+                        <ActionCard headStyle={{ border: 0 }} size="small" title={<><Typography.Text strong>{actionExecutionDetailQuery.data?.ActionInstance?.Name}</Typography.Text></>}>
+                            <Row gutter={36}>
+                                <Col>
+                                    <Typography.Paragraph>Created by : <Tag color="green">{actionExecutionDetailQuery.data?.ActionInstance?.CreatedBy}</Tag></Typography.Paragraph>
+                                </Col>
+
+                                <Col>
+                                    <Typography.Paragraph>Runtime :  <Tag color="blue">{getElapsedTime()}</Tag></Typography.Paragraph>
+                                </Col>
+
+                            </Row>
+
+
+
+                            {
+                                !actionExecutionTerminalState ?
+                                    <Skeleton active />
+                                    :
+                                    <React.Fragment>
+                                        {
+                                            actionExecutionError ?
+                                                <FailedActionOutput actionExecutionDetail={actionExecutionDetailQuery?.data || {}} />
+                                                :
+                                                <SuccessActionOutput
+                                                    ActionExecution={actionExecutionDetailQuery?.data?.ActionExecution!}
+                                                    ActionDefinition={actionExecutionDetailQuery?.data?.ActionDefinition!}
+                                                    ActionInstance={actionExecutionDetailQuery?.data?.ActionInstance!}
+                                                    showCharts={false}
+                                                />
+                                        }
+                                    </React.Fragment>
+                            }
+
+                            {
+                                fetchChildActionExecutionQuery.data &&
+                                <ReactQueryWrapper {...fetchChildActionExecutionQuery}>
+                                    {
+                                        postProcessedAction?.map(value => <ActionOutput actionExecutionId={value?.Id!} displayPostProcessed={false} />)
+                                    }
+                                </ReactQueryWrapper>
+                            }
+                            {childActionExecutionId && <ActionOutput actionExecutionId={childActionExecutionId} />}
+                        </ActionCard>
+                    </Badge.Ribbon>
+                </Col>
+            </Row>
+
+
+        </ReactQueryWrapper>
     )
 }
 
