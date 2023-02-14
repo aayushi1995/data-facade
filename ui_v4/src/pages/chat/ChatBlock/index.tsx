@@ -4,6 +4,7 @@ import { FlexBox } from '../ChatFooter/ChatFooter.styles'
 import { ChatStyles, ChatBlockWrapper,ChatMetaData,StyledUserName, StyledTime} from './ChatBlock.styles'
 
 const ChatBlock = ({message, id, type, ...props}:any) => {
+    console.log(message, id, type, props.from)
     return (
         <ChatBlockWrapper {...props}>
             <FlexBox style={{alignItems: 'flex-end'}}>

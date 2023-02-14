@@ -13,6 +13,17 @@ import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
 
+const defaultBotMessage = (username:string): IChatMessage => {
+    return {
+        id: new Date().toTimeString(),
+        message: `Welcome ${username} ! What insight do you need ?`,
+        time: new Date().getTime(),
+        from: 'system',
+        username: 'Data-Facade',
+        type:'text'
+    }
+}
+
 const InitiateChat = () => {
 
     // central data provider context
@@ -24,7 +35,7 @@ const InitiateChat = () => {
     const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState(false);
-    const [messages, setMessages] = useState<IChatMessage[] | undefined>()
+    const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
     const [showActionOutput, setShowActionOutput] = useState(false)
     const [executionId, setExecutionId]: any = useState({})
 
@@ -49,7 +60,7 @@ const InitiateChat = () => {
 
     //persist the chat if there is any chatData in the DataProvider
     useEffect(() => {
-        setMessages(dataContext?.chatData?.messages || [])
+        setMessages(dataContext?.chatData?.messages || [defaultBotMessage(appContext?.userName)])
         setExecutionId(dataContext?.chatData?.executionId || [])
     }, [])
 
@@ -168,10 +179,10 @@ const InitiateChat = () => {
                                 <Col sm={24}>
                                     <MessageWrapper>
                                         {messages?.map(({ id, type, ...props }: IChatMessage) =>
-                                            <React.Fragment>
+                                            <>
                                                 {type !== "action_output" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
                                                 {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput actionExecutionId={executionId[id]} />}
-                                            </React.Fragment>
+                                            </>
                                         )}
                                         {loadingMessage && <Spin />}
 
