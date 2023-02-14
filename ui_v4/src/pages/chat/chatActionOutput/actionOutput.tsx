@@ -43,7 +43,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
             <Row>
                 <Col span={8}>
                     <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}>
-                        <ActionCard headStyle={{ border: 0 }} size="small" title={<><Typography.Text strong>{actionExecutionDetailQuery.data?.ActionInstance?.Name}</Typography.Text></>}>
+                        <ActionCard headStyle={{ border: 0 }} size="small" title={<><Typography.Text ellipsis={true} strong>{actionExecutionDetailQuery.data?.ActionInstance?.Name}</Typography.Text></>}>
                             <Row gutter={36}>
                                 <Col>
                                     <Typography.Paragraph>Created by : <Tag color="green">{actionExecutionDetailQuery.data?.ActionInstance?.CreatedBy}</Tag></Typography.Paragraph>

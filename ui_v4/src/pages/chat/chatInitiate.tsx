@@ -36,31 +36,31 @@ const InitiateChat = () => {
 
     // function that calls setChatData reducer to store message data in context
     const persistState = () => {
-        messages != undefined && setDataContext({
-                type: "setChatData",
-                payload: {
-                    chatData: {
-                        messages: messages,
-                        executionId: executionId
-                    }
+        messages !== undefined && setDataContext({
+            type: "setChatData",
+            payload: {
+                chatData: {
+                    messages: messages,
+                    executionId: executionId
                 }
-            })
+            }
+        })
     }
 
     //persist the chat if there is any chatData in the DataProvider
     useEffect(() => {
         setMessages(dataContext?.chatData?.messages || [])
         setExecutionId(dataContext?.chatData?.executionId || [])
-    },[])
+    }, [])
 
 
     // persists data whenever messages are added
     useEffect(() => {
         return (() => {
             persistState()
-            
+
         })
-    },[messages])
+    }, [messages])
 
 
     useEffect(() => {
@@ -96,13 +96,19 @@ const InitiateChat = () => {
         if (user === "user") {
             setLoadingMessage(true)
             startConversation(chatId, appContext.userName, message).then(response => {
-                for (let i = 0; i < response.length; i++) {
-                    handleBOTMessage(response[i])
+                if (response.length > 0) {
+                    for (let i = 0; i < response.length; i++) {
+                        handleBOTMessage(response[i])
+                    }
                 }
+                else{
+                    handleConversation('No output found for this message :(', 'system', 'error')
+                }
+
 
             }).catch(error => {
                 console.log('error', error)
-                handleConversation('Something went wrong', 'system', 'error')
+                
             });
         }
     }

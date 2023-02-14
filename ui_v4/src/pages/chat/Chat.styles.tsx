@@ -9,9 +9,9 @@ export const StyledPrivacyPolicyFooter = styled.div`
     text-align:center;
 `
 export const MessageWrapper = styled.div`
-    height:550px;
-    max-height:550px;
-    overflow:auto;
+    margin: 0 .6%;
+    overflow-y: scroll;
+    height: calc(100vh - 300px);
     &::-webkit-scrollbar {
         width: 0px;
     }
