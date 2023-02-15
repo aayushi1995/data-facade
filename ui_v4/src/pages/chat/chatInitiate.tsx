@@ -13,23 +13,46 @@ import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
 
-const defaultBotMessage = (username:string): IChatMessage => {
+const defaultBotMessage = (username: string): IChatMessage => {
     return {
         id: new Date().toTimeString(),
         message: `Welcome ${username} ! What insight do you need ?`,
         time: new Date().getTime(),
         from: 'system',
         username: 'Data-Facade',
-        type:'text'
+        type: 'text'
     }
 }
+
+
+const MessageOutputs = ({ messages, executionId, loading, showActionOutput }: any) => {
+    const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+
+    useEffect(() => {
+        chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
+    return (
+        <div>
+            {messages?.map(({ id, type, ...props }: IChatMessage) =>
+                <>
+                    {type !== "action_output" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
+                    {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput actionExecutionId={executionId[id]} />}
+                </>
+            )}
+            {loading && <Spin />}
+
+            <div ref={chatWrapperRef} />
+        </div>
+    )
+}
+
 
 const InitiateChat = () => {
 
     // central data provider context
     const setDataContext = useContext(SetDataContext);
     const dataContext = useContext(DataContext);
-
     const appContext: any = useContext(AppContext);
     const { chatId } = useParams();
     const [isError, setIsError] = useState(false);
@@ -38,12 +61,6 @@ const InitiateChat = () => {
     const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
     const [showActionOutput, setShowActionOutput] = useState(false)
     const [executionId, setExecutionId]: any = useState({})
-
-    const chatFooterRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-
-    const scrollToBottom = () => {
-        chatFooterRef?.current?.scrollIntoView({ behavior: "smooth" })
-    }
 
     // function that calls setChatData reducer to store message data in context
     const persistState = () => {
@@ -92,7 +109,6 @@ const InitiateChat = () => {
     }, [chatId])
 
     const handleConversation = (message?: any, user?: any, type?: string, responseID?: string) => {
-        console.log('responseID', responseID)
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
             message: message,
@@ -112,21 +128,21 @@ const InitiateChat = () => {
                         handleBOTMessage(response[i])
                     }
                 }
-                else{
+                else {
                     handleConversation('No output found for this message :(', 'system', 'error')
+                    setLoadingMessage(false)
                 }
 
 
             }).catch(error => {
-                console.log('error', error)
-                
+                return handleConversation('I amm sorry, it looks like something went wrong on our end.', 'system', 'error',)
+
             });
         }
     }
 
     const handleBOTMessage = (messageBody: IChatResponse) => {
         const messageType = messageBody ? messageBody.MessageType : 'error';
-        console.log('messageType', messageType)
         setTimeout(() => {
             setLoadingMessage(false)
             switch (messageType) {
@@ -141,7 +157,6 @@ const InitiateChat = () => {
                 }
                 default: break;
             }
-            scrollToBottom();
 
         }, 1000)
 
@@ -152,7 +167,6 @@ const InitiateChat = () => {
     const handleActionOutput = (messageBody: IChatResponse | any) => {
         const actionExecutionId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
         handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'action_output', messageBody?.Id);
-        console.log('actionExecutionId', messageBody)
         if (actionExecutionId) {
             setShowActionOutput(true)
             setExecutionId((prevState: any) => ({
@@ -178,19 +192,9 @@ const InitiateChat = () => {
                                 :
                                 <Col sm={24}>
                                     <MessageWrapper>
-                                        {messages?.map(({ id, type, ...props }: IChatMessage) =>
-                                            <>
-                                                {type !== "action_output" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
-                                                {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput actionExecutionId={executionId[id]} />}
-                                            </>
-                                        )}
-                                        {loadingMessage && <Spin />}
-
-
+                                        <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} />
                                     </MessageWrapper>
-
-
-                                    <ChatFooter scrollToBottom={scrollToBottom} handleSend={handleConversation} loading={loadingMessage} />
+                                    <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
 
                                 </Col>
                         }

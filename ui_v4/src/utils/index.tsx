@@ -1,4 +1,4 @@
-const setLocalStorage = (key: string, value: string) => {
+const setLocalStorage = (key: string, value: any) => {
     localStorage.setItem(key, value)
 }
 

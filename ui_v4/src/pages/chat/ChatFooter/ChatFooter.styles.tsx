@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { Card } from 'antd';
 import { ReactComponent as SendIcon } from '../../../assets/icons/send.svg'
 import { ReactComponent as DBConnectionIcon } from '../../../assets/icons/database.svg'
 import { ReactComponent as UploadIcon } from '../../../assets/icons/upload.svg'
 import { ReactComponent as FileReplaceIcon } from '../../../assets/icons/find_replace.svg'
+import { Button, Card } from 'antd';
 
 
 export const ChatInput = styled.input`
@@ -18,10 +18,6 @@ export const ChatInput = styled.input`
     color: #111827;
     width: 100%;
     height: 56px;
-
-    &:focus{
-        border: 1px solid #111827;
-    }
 `;
 
 export const StyledChatInputWrapper = styled.div`
@@ -30,13 +26,10 @@ export const StyledChatInputWrapper = styled.div`
     justify-content: center;
     align-items: center;    
 `
-export const StyledCardChartFooterWrapper = styled(Card)`
+export const StyledCardChartFooterWrapper = styled.div`
     display: block;
     position: fixed;
-    bottom: 5px;
-    background-color: #F3F4F6;
-    padding: 24px;
-    margin-top:20px;
+    bottom: 25px;
     width:90%
 `
 export const StyledSendIcon = styled(SendIcon)`
@@ -70,3 +63,18 @@ export const StyledFileReplaceIcon = styled(FileReplaceIcon)`
 export const FlexBox = styled.div`
     display:flex;
 `
+
+export const ConnectionButton = styled(Button)`
+    text-align:left;
+
+`;
+export const PopOverCard = styled(Card)`
+    padding:0px;
+    background:#F3F4F6;
+    border: 0.5px solid #D1D5DB;
+    box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.05), 0px 2px 6px rgba(0, 0, 0, 0.15);
+    border-radius:8px;
+    margin-bottom:30px;
+    z-index:1
+    
+`;
