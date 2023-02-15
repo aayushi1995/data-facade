@@ -95,21 +95,30 @@ export const getActionExecutionParsedOutputForTimeSeries = (actionExecutionFilte
 }
 
 
-export const getActionExecutionParsedOutputNew = (actionExecutionFilter) => {
-    const response = dataManager.getInstance.retreiveData(
+export async function getActionExecutionParsedOutputNew(actionExecutionFilter) {
+    const actionExecutions = await dataManager.getInstance.retreiveData(
         "ActionExecution",
         {
             filter: {Id: actionExecutionFilter.Id},
-            "getExecutionParsedOutput": true
+            "getExecutionParsedOutput": true,
+            "S3PathIfPresent": true
         }
-    ).then((response) => {
-        const actionExecution = response[0]
-        if(actionExecution?.Status === 'Failed') {
-            return actionExecution
-        }
+    )
+    
+    const actionExecution = actionExecutions?.[0]
+    if(actionExecution?.Status !== 'Failed') {
         const actionExecutionOutput = JSON.parse(actionExecution.Output)
-        actionExecution.Output = actionExecutionOutput
-        return actionExecution
-    })
-    return response
+        if("S3Path" in actionExecutionOutput) {
+            const s3Key = actionExecutionOutput.S3Path
+            const preSignedDownloadUrlInfo = await dataManager.getInstance.s3PresignedDownloadUrlRequest(s3Key, 5, "FormattedOutput", undefined, false)
+            const requestUrl = preSignedDownloadUrlInfo.requestUrl
+            const headers = preSignedDownloadUrlInfo.headers
+            const formattedOutputBlob = await dataManager.getInstance.s3DownloadRequest(requestUrl, headers)
+            const formattedOutput = await formattedOutputBlob.text()
+            actionExecution.Output = JSON.parse(formattedOutput)
+        } else {
+            actionExecution.Output = actionExecutionOutput
+        }
+    }
+    return actionExecution
 }

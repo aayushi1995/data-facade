@@ -112,7 +112,7 @@ const s3PresignedUploadUrlRequestHeader = function (tableFilename, expirationDur
         })
     }
 }
-const s3PresignedDownloadUrlRequestHeader = function (tableFileName, expirationDurationInMinutes, token, contentType, providerInstanceId) {
+const s3PresignedDownloadUrlRequestHeader = function (key, expirationDurationInMinutes, token, contentType, providerInstanceId, isAbsolute) {
     return {
         method: 'POST',
         headers: {
@@ -121,12 +121,12 @@ const s3PresignedDownloadUrlRequestHeader = function (tableFileName, expirationD
             'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-            key: tableFileName,
+            key: !isAbsolute ? key : undefined,
             expirationDurationInMinutes: expirationDurationInMinutes,
             provider: "S3",
             content: contentType,
             operation: "DownloadPreSignedURL",
-            absolutePath: tableFileName,
+            absolutePath: isAbsolute ? key : undefined,
             providerInstanceId
         })
     }
@@ -286,11 +286,11 @@ dataManager.getInstance.s3PresignedUploadUrlRequest = async function (file, expi
     return response.json()
 }
 
-dataManager.getInstance.s3PresignedDownloadUrlRequest = async function (tableFileName, expirationDurationInMinutes, contentType, providerInstanceId=undefined) {
+dataManager.getInstance.s3PresignedDownloadUrlRequest = async function (tableFileName, expirationDurationInMinutes, contentType, providerInstanceId=undefined, isAbsolute=true) {
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedDownloadUrlRequestHeader(tableFileName, expirationDurationInMinutes, userSettingsSingleton.token, contentType, providerInstanceId))
+    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedDownloadUrlRequestHeader(tableFileName, expirationDurationInMinutes, userSettingsSingleton.token, contentType, providerInstanceId, isAbsolute))
     return response.json()
 }
 
