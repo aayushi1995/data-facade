@@ -1,5 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
+import { getRandomId } from '@/layouts/sidebar';
+import { ConnectionButton } from '@/pages/chat/ChatFooter/ChatFooter.styles';
+import { removeLocalStorage, setLocalStorage } from '@/utils';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Dropdown } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -19,6 +24,33 @@ interface TabProps {
 }
 
 export const RouteContext = React.createContext([]);
+
+
+const dropdownStyle = {
+    background: "#F3F4F6",
+    border: "0.5px solid #D1D5DB",
+    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23)",
+    borderRadius: 8,
+    height: 'auto',
+    padding: 10,
+    width: 200
+}
+
+const AddMenu = () => {
+    const navigate = useNavigate()
+    const initiateChat = () => {
+        const chatId = getRandomId();
+        setLocalStorage(`chat_${chatId}`, chatId);
+        navigate(`/chats/${chatId}?tab=chats`)
+    }
+    const dropdownContent = () => <div style={dropdownStyle}>
+        <ConnectionButton onClick={() => initiateChat()} block type="text">Initiate new chat</ConnectionButton>
+    </div>
+    return (
+        <Dropdown dropdownRender={() => dropdownContent()} arrow={true} trigger={['click']}><Button size="small" type='text' icon={<PlusOutlined />} /></Dropdown>
+    )
+}
+
 
 const BrowserTab = ({ children }: ChildrenProps) => {
     const [routes, setRoutes]: any[] = React.useState<TabProps[]>([]);
@@ -53,9 +85,14 @@ const BrowserTab = ({ children }: ChildrenProps) => {
 
     const removeTab = (path: string) => {
         const index = routes.findIndex((route: any) => route.key === path);
+
         if (index > -1) {
             const updatedRoutes = [...routes.slice(0, index), ...routes.slice(index + 1)];
             const permanentRoutes: TabProps[] = updatedRoutes.filter((route: any) => route.isPermanent === true);
+            if (routes[index]['label'] === 'chats') {
+                const chatId = routes[index]['key'].split('/').filter((x:string) => x)[1];
+                removeLocalStorage(`chat_${chatId}`);
+            }
             setRoutes(updatedRoutes)
             if (permanentRoutes.length > 0) {
                 const lastIndex = permanentRoutes.length - 1
@@ -90,6 +127,7 @@ const BrowserTab = ({ children }: ChildrenProps) => {
                     activeKey={activeTab}
                     onEdit={onEdit}
                     items={routes}
+                    addIcon={<AddMenu />}
                 />
             }
             <RouteContext.Provider value={routes}>

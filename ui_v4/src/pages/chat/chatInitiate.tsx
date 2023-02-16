@@ -35,10 +35,10 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput }: an
     return (
         <div>
             {messages?.map(({ id, type, ...props }: IChatMessage) =>
-                <>
+                <React.Fragment key={id}>
                     {type !== "action_output" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
                     {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput actionExecutionId={executionId[id]} />}
-                </>
+                </React.Fragment>
             )}
             {loading && <Spin />}
 
@@ -69,7 +69,8 @@ const InitiateChat = () => {
             payload: {
                 chatData: {
                     messages: messages,
-                    executionId: executionId
+                    executionId: executionId,
+                    chatId: chatId,
                 }
             }
         })
@@ -77,9 +78,12 @@ const InitiateChat = () => {
 
     //persist the chat if there is any chatData in the DataProvider
     useEffect(() => {
-        setMessages(dataContext?.chatData?.messages || [defaultBotMessage(appContext?.userName)])
-        setExecutionId(dataContext?.chatData?.executionId || [])
-    }, [])
+        if (chatId){
+            setMessages(dataContext?.chatData[chatId]?.messages || [defaultBotMessage(appContext?.userName)])
+            setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
+        }
+            
+    }, [chatId])
 
 
     // persists data whenever messages are added
@@ -93,7 +97,7 @@ const InitiateChat = () => {
 
     useEffect(() => {
         if (chatId) {
-            if (chatId !== getLocalStorage('chat_id')) {
+            if (chatId !== getLocalStorage(`chat_${chatId}`)) {
                 setIsError(true);
             }
             else {

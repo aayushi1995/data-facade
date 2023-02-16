@@ -4,7 +4,7 @@ export type FileType = {
   chatData?: any | null
 }
 
-const initialState: FileType = { chatData: null };
+const initialState: FileType = { chatData: {} };
 
 export const DataContext = createContext<FileType>(initialState)
 
@@ -26,10 +26,18 @@ type DataAction = setChatDataAction
 const reducer = (state: FileType, action: DataAction): FileType => {
 
   switch (action.type) {
-    case "setChatData" : {
+    case "setChatData": {
+      const chatId = action.payload?.chatData?.chatId;
+      const chatData = action.payload?.chatData;
       return {
         ...state,
-        chatData: action?.payload?.chatData || null
+        chatData: {
+          ...state.chatData,
+          [chatId]: {
+            ...state.chatData[chatId],
+            ...chatData 
+          }
+        }
       }
     }
     default:
@@ -42,7 +50,7 @@ const reducer = (state: FileType, action: DataAction): FileType => {
 export const DataProvider = ({ children }: { children: React.ReactElement }) => {
   const [fileData, dispatch] = useReducer(reducer, initialState);
   const setFileData: SetDataContextType = (args: DataAction) => dispatch(args)
-  
+
 
   return (
     <DataContext.Provider value={fileData}>
