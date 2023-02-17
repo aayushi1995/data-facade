@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import images from "@/assets/images"
 import { Menu, Typography } from "antd"
 import Sider from "antd/es/layout/Sider"
 import { NavLink, useNavigate } from "react-router-dom"
@@ -11,6 +10,7 @@ import Icon from "@ant-design/icons"
 import { SidebarItems } from './utils'
 import { v4 as uuidv4 } from 'uuid';
 import { setLocalStorage } from "@/utils"
+import { LogoIcon } from "@/assets/icon.theme"
 
 const MenuText = styled(Typography)`
     font-size:11px;
@@ -82,7 +82,7 @@ const AppSidebar = () => {
         }}>
 
             <div style={LAYOUT_STYLE.image}>
-                <img src={images.DataFacadeLogo} alt="Data-facade" />
+               <LogoIcon />
             </div>
 
             <AntMenu theme="light" selectedKeys={[selectedKey]} mode="inline" style={{ background: '#F9FAFB', border: 'none', }} onClick={onMenuItemClick}>
