@@ -3,15 +3,21 @@ import { initiateChat, startConversation } from "@/actions/chat.actions";
 import Loader from "@/components/Loader";
 import AppContext from "@/contexts/AppContext";
 import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
+import { ChatContext, SetChatContext } from "@/contexts/ChatContext/index";
+
 import { getLocalStorage } from "@/utils";
 import { Alert, Col, Row, Spin } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MessageWrapper } from "./Chat.styles";
+import { MessageWrapper, ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper } from "./Chat.styles";
 import ActionOutput from "./chatActionOutput/actionOutput";
+import ChatComponentIconTabExperience from "./chatActionOutput/Chat_DeepDive_Tab";
+import DeepDive from "./chatActionOutput/DeepDive/DeepDiveTabs";
 import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
+import { ChatProvider } from '@contexts/ChatContext/index';
+
 
 const defaultBotMessage = (username: string): IChatMessage => {
     return {
@@ -25,7 +31,7 @@ const defaultBotMessage = (username: string): IChatMessage => {
 }
 
 
-const MessageOutputs = ({ messages, executionId, loading, showActionOutput }: any) => {
+const MessageOutputs = ({ messages, executionId, loading, showActionOutput, handleDeepDive }: any) => {
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     useEffect(() => {
@@ -37,7 +43,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput }: an
             {messages?.map(({ id, type, ...props }: IChatMessage) =>
                 <React.Fragment key={id}>
                     {type !== "action_output" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
-                    {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput actionExecutionId={executionId[id]} />}
+                    {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} />}
                 </React.Fragment>
             )}
             {loading && <Spin />}
@@ -54,6 +60,10 @@ const InitiateChat = () => {
     const setDataContext = useContext(SetDataContext);
     const dataContext = useContext(DataContext);
     const appContext: any = useContext(AppContext);
+    // chat context
+    const setChatContext = useContext(SetChatContext);
+    const chatContext = useContext(ChatContext);
+
     const { chatId } = useParams();
     const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -61,6 +71,8 @@ const InitiateChat = () => {
     const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
     const [showActionOutput, setShowActionOutput] = useState(false)
     const [executionId, setExecutionId]: any = useState({})
+    const [showDeepDive, setShowDeepDive] = useState(false)
+    const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
 
     // function that calls setChatData reducer to store message data in context
     const persistState = () => {
@@ -111,6 +123,8 @@ const InitiateChat = () => {
             }
         }
     }, [chatId])
+
+
 
     const handleConversation = (message?: any, user?: any, type?: string, responseID?: string) => {
         let temp: IChatMessage = {
@@ -180,32 +194,54 @@ const InitiateChat = () => {
         }
     }
 
+    const handleDeepDive = (data:any) => {
+        setShowDeepDive(true)
+        setDeepDiveData(data)
+        console.log(data)
+    }
+
+    const handleChatClick = () => {
+        setShowDeepDive(false)
+    }
+
+    const handleTerminalClick = () => {
+        setShowDeepDive(true)
+    }
+
     return (
-        <React.Fragment>
-            {
-                isError ? <Alert
-                    message="Error!!"
-                    description="The chat session is not matching. Please initiate the chat again"
-                    type="error"
-                />
-                    :
-                    <Row>
-                        {
-                            loading ?
-                                <Loader />
-                                :
-                                <Col sm={24}>
-                                    <MessageWrapper>
-                                        <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} />
-                                    </MessageWrapper>
-                                    <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
-
-                                </Col>
-                        }
-                    </Row>
-
-            }
-        </React.Fragment>
+       <ChatProvider>
+            <MainWrapper>
+                    <ChatWrapperStyled>
+                    {
+                        isError ? <Alert
+                            message="Error!!"
+                            description="The chat session is not matching. Please initiate the chat again"
+                            type="error"
+                        />
+                            :
+                            <Row>
+                                {
+                                    loading ?
+                                        <Loader />
+                                        :
+                                        <Col sm={24}>
+                                            <MessageWrapper>
+                                                <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} />
+                                            </MessageWrapper>
+                                            <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
+        
+                                        </Col>
+                                }
+                            </Row>
+        
+                    }
+                    </ChatWrapperStyled>
+                    <ChatComponentIconTabExperience handleChatClick={handleChatClick} handleTerminalClick={handleTerminalClick} showDeepDive={showDeepDive}/>
+                    {showDeepDive && (<DeepDiveWrapperStyled>
+                    <DeepDive deepdiveData={deepdiveData}/>
+                </DeepDiveWrapperStyled>)}
+            </MainWrapper>
+        </ChatProvider>
     )
 
 }

@@ -12,6 +12,8 @@ import { NavigationTabs } from './navigationtab.style';
 
 interface ChildrenProps {
     children: React.ReactElement<any, any>
+    tabKey?: string
+    tabName?: string
 }
 
 interface TabProps {
@@ -20,8 +22,7 @@ interface TabProps {
     label?: string | undefined,
     params?: string | undefined,
     isPermanent?: boolean | undefined
-
-}
+}   
 
 export const RouteContext = React.createContext([]);
 
@@ -55,10 +56,12 @@ const AddMenu = () => {
 const BrowserTab = ({ children }: ChildrenProps) => {
     const [routes, setRoutes]: any[] = React.useState<TabProps[]>([]);
     const [activeTab, setActiveTab] = React.useState<string | undefined>('')
+
     const location = useLocation();
     const navigate = useNavigate();
     const search = location.search;
-    const name = new URLSearchParams(search).get('tab')
+    const name = new URLSearchParams(search).get('tabKey')
+
     React.useEffect(() => {
         const route = routes.find((route: any) => route.key === location.pathname);
         setActiveTab(location.pathname)

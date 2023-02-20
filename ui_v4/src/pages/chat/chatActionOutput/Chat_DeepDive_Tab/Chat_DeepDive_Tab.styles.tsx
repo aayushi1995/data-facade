@@ -1,0 +1,23 @@
+import { Button } from 'antd'
+import styled from 'styled-components'
+
+export const StyledWrapper = styled.div`
+    // position: absolute;
+    height: 80vh;
+    right: 0px;
+    background: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    // z-index: 1;
+`
+export const CustomButton = styled<any>(Button)`
+    width: 50px !important;
+    border-radius: 0px;
+    height: 50px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    background-color: ${props => props.showDeepDive ? '#f3f4f6' : '#ffffff' };
+`

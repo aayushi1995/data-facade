@@ -1,4 +1,5 @@
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper";
+import {  SetChatContext } from "@/contexts/ChatContext/index";
 import { ActionDefinition, ActionExecution, ActionInstance } from "@/generated/entities/Entities";
 import ActionDefinitionPresentationFormat from "@/helpers/enums/ActionDefinitionPresentationFormat";
 import { useActionExecutionParsedOutput } from "@/hooks/actionExecution/useActionExecutionParsedOutput";
@@ -6,7 +7,7 @@ import { useDownloadExecutionOutputFromS3 } from "@/hooks/actionExecution/useDow
 import { useGetPreSignedUrlForExecutionOutput } from "@/hooks/actionExecution/useGetPreSignedUrlForExecutionOutput";
 import { DownloadOutlined } from "@ant-design/icons";
 import { Alert, Button, Table } from "antd";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 
 
 export interface ViewActionExecutionOutputProps {
@@ -95,9 +96,28 @@ export interface ViewActionExecutionTableOutputProps {
 }
 
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
-    const { TableOutput, ActionExecution, ActionDefinition } = props
+    const setChatContext = useContext(SetChatContext)
+    const { TableOutput , ActionExecution, ActionDefinition } = props as any
     const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionOutput(ActionExecution?.OutputFilePath || "NA", 5)
     const { downloadExecutionOutputFromS3, download } = useDownloadExecutionOutputFromS3()
+    
+    const preview: TablePreview = JSON.parse(TableOutput?.preview) 
+    const dataGridColumns = (preview?.schema?.fields || []).map(f => { return { ...f, dataIndex: f.name, title: f.name, } }).filter(col => col.dataIndex !== 'datafacadeindex')
+    const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
+
+    useEffect(() => {
+        
+        isTableOutputSuccessfulFormat(TableOutput) && setChatContext({
+            type: "setTableData",
+            payload: {
+                tableData: {
+                    dataGridColumns: dataGridColumns,
+                    dataGridRows: dataGridRows
+                }
+            }
+        })
+       
+       },[])
 
     const handleDownloadResult = () => {
         useGetPresignedDowloadUrl.mutate(
@@ -124,7 +144,6 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridColumns = (preview?.schema?.fields || []).map(f => { return { ...f, dataIndex: f.name, title: f.name, } }).filter(col => col.dataIndex !== 'datafacadeindex')
         const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
-
         return (
             <Table
                 columns={dataGridColumns}
@@ -132,6 +151,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                 size="small"
                 pagination={false}
                 bordered={true}
+
             />
         )
     } else if (isTableOutputSizeExceededErrorFormat(TableOutput)) {

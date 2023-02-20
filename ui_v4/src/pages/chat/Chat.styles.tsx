@@ -16,3 +16,18 @@ export const MessageWrapper = styled.div`
         width: 0px;
     }
 `
+
+export const DeepDiveWrapperStyled = styled.div`
+    height:100%;
+    width: 100%;
+`
+
+export const ChatWrapperStyled = styled.div`
+    position: relative;
+    height:100%;
+    width: 100%;
+`
+export const MainWrapper = styled.div`
+    display:flex;
+    position:relative;
+`

@@ -62,7 +62,7 @@ const AppSidebar = () => {
         if (item.key === "chats") {
             let chatID = getRandomId();
             setLocalStorage(`chat_${chatID}`, chatID)
-            navigate(`/chats/${chatID}?tab=chats`);
+            navigate(`/chats/${chatID}?tabKey=chats`);
 
         }
     

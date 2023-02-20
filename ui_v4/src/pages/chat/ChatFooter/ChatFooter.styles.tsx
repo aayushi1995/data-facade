@@ -30,7 +30,8 @@ export const StyledCardChartFooterWrapper = styled.div`
     display: block;
     position: fixed;
     bottom: 25px;
-    width:90%
+    width:90%;
+    z-index:2;
 `
 export const StyledSendIcon = styled(SendIcon)`
     position: relative;
