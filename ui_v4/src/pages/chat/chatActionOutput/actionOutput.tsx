@@ -1,13 +1,13 @@
 
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper"
-import useActionExecutionDetails from "@/hooks/actionExecution/useActionExecutionDetails"
+import useActionExecutionDetails from "@/hooks/actionOutput/useActionExecutionDetails"
+import { ReactComponent as DeepDiveIcon } from '@assets/icons/scuba_diving.svg'
 import { Badge, Button, Card, Col, Row, Skeleton, Tag, Typography } from "antd"
-import React, { useState } from "react"
+import React from "react"
 import styled from "styled-components"
+import { FlexBox } from "../ChatFooter/ChatFooter.styles"
 import FailedActionOutput from "./failedActionOutput"
 import SuccessActionOutput from "./successActionOutput"
-import { ReactComponent as DeepDiveIcon} from '@assets/icons/scuba_diving.svg'
-import { FlexBox } from "../ChatFooter/ChatFooter.styles"
 
 const ActionCard = styled(Card)`
     border-radius: 0px 8px 8px 8px;

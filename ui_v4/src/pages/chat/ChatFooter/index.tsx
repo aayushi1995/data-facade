@@ -1,10 +1,9 @@
+import { ConnectionHistoryIcon } from '@/assets/icon.theme';
+import { getLocalStorage, setLocalStorage } from '@/utils';
 import { BulbOutlined, CloseOutlined, FileExcelOutlined, MinusOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Col, Popover, Row, Space, Typography } from 'antd';
-import React, { useEffect, useRef, useState } from 'react'
-import { ChatInput, StyledChatInputWrapper, StyledCardChartFooterWrapper, StyledSendIcon, ConnectionButton, PopOverCard } from './ChatFooter.styles'
-import { getLocalStorage, setLocalStorage } from '@/utils';
-import { ConnectionHistoryIcon } from '@/assets/icon.theme';
-import { SubmitButton } from '@/assets/component.theme';
+import React, { useEffect, useRef, useState } from 'react';
+import { ChatInput, ConnectionButton, PopOverCard, StyledCardChartFooterWrapper, StyledChatInputWrapper, StyledSendIcon } from './ChatFooter.styles';
 
 
 const ChatFooter = ({ handleSend, loading }: any) => {
@@ -28,7 +27,7 @@ const ChatFooter = ({ handleSend, loading }: any) => {
 
 
     const handleClick = () => {
-        handleSend(inputRef.current.value, 'user')
+        handleSend({text: inputRef.current.value}, 'user')
         inputRef.current.value = '';
         inputRef.current.focus()
     }

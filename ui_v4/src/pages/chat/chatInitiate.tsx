@@ -2,21 +2,23 @@
 import { initiateChat, startConversation } from "@/actions/chat.actions";
 import Loader from "@/components/Loader";
 import AppContext from "@/contexts/AppContext";
-import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
 import { ChatContext, SetChatContext } from "@/contexts/ChatContext/index";
+import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
+import { ActionDefinitionDetail, ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
 
 import { getLocalStorage } from "@/utils";
+import { ChatProvider } from '@contexts/ChatContext/index';
 import { Alert, Col, Row, Spin } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MessageWrapper, ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper } from "./Chat.styles";
+import { ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper, MessageWrapper } from "./Chat.styles";
+import ActionDefination from "./chatActionDefination/actionDefination";
 import ActionOutput from "./chatActionOutput/actionOutput";
 import ChatComponentIconTabExperience from "./chatActionOutput/Chat_DeepDive_Tab";
 import DeepDive from "./chatActionOutput/DeepDive/DeepDiveTabs";
 import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
-import { ChatProvider } from '@contexts/ChatContext/index';
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
@@ -30,20 +32,27 @@ const defaultBotMessage = (username: string): IChatMessage => {
     }
 }
 
+type ActionMessageContent = {actionInstanceWithParameterInstances: ActionInstanceWithParameters, actionDefinitionDetail?: ActionDefinitionDetail}
 
-const MessageOutputs = ({ messages, executionId, loading, showActionOutput, handleDeepDive }: any) => {
+
+const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation, handleDeepDive }: any ) => {
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-
     useEffect(() => {
         chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
+    const handleActionInstanceSubmit = (messageContent: ActionInstanceWithParameters, type: string) => {
+        handleConversation({actionInstanceWithParameterInstances: messageContent}, 'user', type, undefined, true)
+    }
+
+    console.log(messages)
     return (
         <div>
             {messages?.map(({ id, type, ...props }: IChatMessage) =>
                 <React.Fragment key={id}>
-                    {type !== "action_output" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
-                    {(Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} />}
+                    {type !== "action_output"  && type !== "action_instance" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
+                    {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} />}
+                    {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={handleActionInstanceSubmit} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
                 </React.Fragment>
             )}
             {loading && <Spin />}
@@ -71,6 +80,7 @@ const InitiateChat = () => {
     const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
     const [showActionOutput, setShowActionOutput] = useState(false)
     const [executionId, setExecutionId]: any = useState({})
+    const [actionDefinitions, setActionDefinitions] = useState<Record<string, ActionMessageContent>>({})
     const [showDeepDive, setShowDeepDive] = useState(false)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
 
@@ -90,11 +100,11 @@ const InitiateChat = () => {
 
     //persist the chat if there is any chatData in the DataProvider
     useEffect(() => {
-        if (chatId){
+        if (chatId) {
             setMessages(dataContext?.chatData[chatId]?.messages || [defaultBotMessage(appContext?.userName)])
             setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
         }
-            
+
     }, [chatId])
 
 
@@ -124,9 +134,7 @@ const InitiateChat = () => {
         }
     }, [chatId])
 
-
-
-    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string) => {
+    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean) => {
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
             message: message,
@@ -135,12 +143,14 @@ const InitiateChat = () => {
             username: user === 'system' ? 'Data-Facade' : appContext?.userName,
             type: type ? type : 'text'
         }
-
-        setMessages(messages => messages ? [...messages, temp] : [temp])
+        if(!ignoreMessage) {
+            setMessages(messages => messages ? [...messages, {...temp, message: message?.text}] : [{...temp, message: message?.text}])
+            
+        }
 
         if (user === "user") {
             setLoadingMessage(true)
-            startConversation(chatId, appContext.userName, message).then(response => {
+            startConversation(chatId, appContext.userName, message, type).then(response => {
                 if (response.length > 0) {
                     for (let i = 0; i < response.length; i++) {
                         handleBOTMessage(response[i])
@@ -170,6 +180,9 @@ const InitiateChat = () => {
                 case 'action_output': {
                     return handleActionOutput(messageBody)
                 }
+                case 'action_instance': {
+                    return handleActionDefinition(messageBody)
+                }
                 case 'error': {
                     return handleConversation(messageBody?.MessageContent, 'system', 'error', messageBody?.Id)
                 }
@@ -183,15 +196,28 @@ const InitiateChat = () => {
     }
 
     const handleActionOutput = (messageBody: IChatResponse | any) => {
-        const actionExecutionId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
+        const actionOutputId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
         handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'action_output', messageBody?.Id);
-        if (actionExecutionId) {
+        if (actionOutputId) {
             setShowActionOutput(true)
             setExecutionId((prevState: any) => ({
                 ...prevState,
-                [messageBody?.Id]: actionExecutionId
+                [messageBody?.Id]: actionOutputId
             }))
         }
+    }
+
+    
+    const handleActionDefinition = (messageBody: IChatResponse) => {
+        const messageContent = JSON.parse(messageBody.MessageContent) as ActionMessageContent
+        handleConversation(messageBody, 'system', 'action_instance', messageBody?.Id)
+        console.log(messageBody)
+
+        setActionDefinitions(prevState => ({
+            ...prevState,
+            [messageBody.Id!]: messageContent
+        }))
+
     }
 
     const handleDeepDive = (data:any) => {
@@ -226,7 +252,7 @@ const InitiateChat = () => {
                                         :
                                         <Col sm={24}>
                                             <MessageWrapper>
-                                                <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} />
+                                                <MessageOutputs actionDefinitions={actionDefinitions} handleConversation={handleConversation} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} />
                                             </MessageWrapper>
                                             <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
         

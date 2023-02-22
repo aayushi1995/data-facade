@@ -1,426 +1,386 @@
-
 /**
  * This is a generated code based on interface yaml. Please don't edit it
  * (c) Data Facade LLC.
  */
- 
-import * as Entity from '../entities/Entities';
- 
-export interface UpdateRequest<T> {
-   newProperties: T
-   filter: T
-}
 
+import * as Entity from "../entities/Entities";
+
+export interface UpdateRequest<T> {
+    newProperties: T;
+    filter: T;
+}
 
 export interface ActionDefinitionCardViewResponse {
-   DefinitionId?: string
-  DefinitionName?: string
-  DefinitionActionType?: string
-  DefinitionDescription?: string
-  DefinitionCreatedBy?: string
-  UsageStatus?: string
-  DefinitionCreatedOn?: number
-  NumberOfUsers?: number
-  DefinitionPublishStatus?: string
+    DefinitionId?: string;
+    DefinitionName?: string;
+    DefinitionActionType?: string;
+    DefinitionDescription?: string;
+    DefinitionCreatedBy?: string;
+    UsageStatus?: string;
+    DefinitionCreatedOn?: number;
+    NumberOfUsers?: number;
+    DefinitionPublishStatus?: string;
 }
-
 
 export interface ActionDefinitionDetail {
-   ActionDefinition?: ActionDefinitionWithTags
-  ActionTemplatesWithParameters?: ActionTemplatesWithParameters[]
+    ActionDefinition?: ActionDefinitionWithTags;
+    ActionTemplatesWithParameters?: ActionTemplatesWithParameters[];
 }
-
 
 export interface ActionDefinitionSelectorResponse {
-   ActionId?: string
-  ActionDisplayName?: string
-  ActionOutputType?: string
-  ActionParameterCount?: number
-  ActionRuns?: number
-  ActionDescription?: String
+    ActionId?: string;
+    ActionDisplayName?: string;
+    ActionOutputType?: string;
+    ActionParameterCount?: number;
+    ActionRuns?: number;
+    ActionDescription?: String;
 }
-
 
 export interface ActionDefinitionWithTags {
-   model?: Entity.ActionDefinition
-  tags?: Entity.Tag[]
+    model?: Entity.ActionDefinition;
+    tags?: Entity.Tag[];
 }
-
 
 export interface ActionDependency {
-   RelationshipType?: string
-  ParentName?: string
-  ParentId?: string
-  CreatedOn?: number
-  Id?: string
+    RelationshipType?: string;
+    ParentName?: string;
+    ParentId?: string;
+    CreatedOn?: number;
+    Id?: string;
 }
-
 
 export interface ActionDetailsForApplication {
-   model?: Entity.ActionDefinition
-  stagesOrParameters?: number
-  numberOfRuns?: number
-  numberOfWorkflowActions?: number
-  averageRunTime?: number
+    model?: Entity.ActionDefinition;
+    stagesOrParameters?: number;
+    numberOfRuns?: number;
+    numberOfWorkflowActions?: number;
+    averageRunTime?: number;
 }
-
 
 export interface ActionExecutionIncludeDefinitionInstanceDetailsResponse {
-   ActionDefinition?: Entity.ActionDefinition
-  ActionInstance?: Entity.ActionInstance
-  ActionExecution?: Entity.ActionExecution
-  ActionParameterDefinitions?: Entity.ActionParameterDefinition[]
-  ActionParameterInstances?: Entity.ActionParameterInstance[]
+    ActionDefinition?: Entity.ActionDefinition;
+    ActionInstance?: Entity.ActionInstance;
+    ActionExecution?: Entity.ActionExecution;
+    ActionParameterDefinitions?: Entity.ActionParameterDefinition[];
+    ActionParameterInstances?: Entity.ActionParameterInstance[];
 }
-
 
 export interface ActionInstanceCardViewResponse {
-   InstanceId?: string
-  InstanceName?: string
-  DefinitionId?: string
-  DefinitionName?: string
-  DefinitionActionType?: string
-  DefinitionDescription?: string
-  Status?: string
-  DefinitionCreatedBy?: string
-  DefinitionCreatedOn?: number
-  NumberOfUsers?: number
+    InstanceId?: string;
+    InstanceName?: string;
+    DefinitionId?: string;
+    DefinitionName?: string;
+    DefinitionActionType?: string;
+    DefinitionDescription?: string;
+    Status?: string;
+    DefinitionCreatedBy?: string;
+    DefinitionCreatedOn?: number;
+    NumberOfUsers?: number;
 }
-
 
 export interface ActionInstanceDetails {
-   ActionDefinition?: Entity.ActionDefinition
-  ActionInstance?: Entity.ActionInstance
-  ActionParameterDefinition?: Entity.ActionParameterDefinition[]
-  ActionParameterInstance?: Entity.ActionParameterInstance[]
+    ActionDefinition?: Entity.ActionDefinition;
+    ActionInstance?: Entity.ActionInstance;
+    ActionParameterDefinition?: Entity.ActionParameterDefinition[];
+    ActionParameterInstance?: Entity.ActionParameterInstance[];
 }
-
 
 export interface ActionInstanceWithParameters {
-   model?: Entity.ActionInstance
-  ParameterInstances?: Entity.ActionParameterInstance[]
+    model?: Entity.ActionInstance;
+    ParameterInstances?: Entity.ActionParameterInstance[];
 }
-
 
 export interface ActionParameterDefinitionWithTags {
-   model?: Entity.ActionParameterDefinition
-  tags?: Entity.Tag[]
+    model?: Entity.ActionParameterDefinition;
+    tags?: Entity.Tag[];
 }
-
 
 export interface ActionRun {
-   ActionExecutionId?: string
-  ActionInstanceId?: string
-  ActionDefinitionId?: string
-  ActionDefinitionActionType?: string
-  ActionDefinitionName?: string
-  ActionExecutionStartedOn?: number
-  ActionExecutionCompletedOn?: number
-  ActionExecutionStatus?: string
-  isWorkflow?: boolean
-  RanBy?: string
-  ActionInstanceName?: string
+    ActionExecutionId?: string;
+    ActionInstanceId?: string;
+    ActionDefinitionId?: string;
+    ActionDefinitionActionType?: string;
+    ActionDefinitionName?: string;
+    ActionExecutionStartedOn?: number;
+    ActionExecutionCompletedOn?: number;
+    ActionExecutionStatus?: string;
+    isWorkflow?: boolean;
+    RanBy?: string;
+    ActionInstanceName?: string;
 }
-
 
 export interface ActionTemplatesWithParameters {
-   model?: Entity.ActionTemplate
-  tags?: Entity.Tag[]
-  actionParameterDefinitions?: ActionParameterDefinitionWithTags[]
+    model?: Entity.ActionTemplate;
+    tags?: Entity.Tag[];
+    actionParameterDefinitions?: ActionParameterDefinitionWithTags[];
 }
-
 
 export interface ApplicationCardViewResponse {
-   ApplicationId?: string
-  ApplicationName?: string
-  ApplicationDescription?: string
-  ApplicationCreatedBy?: string
-  Status?: string
-  ApplicationArtifactLocation?: string
-  ApplicationCreatedOn?: number
-  NumberOfFlows?: number
-  NumberOfActions?: number
-  NumberOfDashboards?: number
-  NumberOfUsers?: number
-  InstallationStatus?: boolean
+    ApplicationId?: string;
+    ApplicationName?: string;
+    ApplicationDescription?: string;
+    ApplicationCreatedBy?: string;
+    Status?: string;
+    ApplicationArtifactLocation?: string;
+    ApplicationCreatedOn?: number;
+    NumberOfFlows?: number;
+    NumberOfActions?: number;
+    NumberOfDashboards?: number;
+    NumberOfUsers?: number;
+    InstallationStatus?: boolean;
 }
-
 
 export interface ApplicationDetails {
-   numberOfActions?: number
-  numberOfFlows?: number
-  actions?: ActionDetailsForApplication[]
-  workflows?: ActionDetailsForApplication[]
-  model?: Entity.Application
-  gitSyncStatus?: boolean
+    numberOfActions?: number;
+    numberOfFlows?: number;
+    actions?: ActionDetailsForApplication[];
+    workflows?: ActionDetailsForApplication[];
+    model?: Entity.Application;
+    gitSyncStatus?: boolean;
 }
-
 
 export interface ApplicationRunsByMe {
-   ApplicationModel?: Entity.Application
-  ActionDefinitions?: Entity.ActionDefinition[]
-  ActionInstances?: Entity.ActionInstance[]
-  ActionExecutions?: Entity.ActionExecution[]
+    ApplicationModel?: Entity.Application;
+    ActionDefinitions?: Entity.ActionDefinition[];
+    ActionInstances?: Entity.ActionInstance[];
+    ActionExecutions?: Entity.ActionExecution[];
 }
-
 
 export interface ChartWithData {
-   model?: Entity.Chart
-  chartData?: object
-  rawData?: object
+    model?: Entity.Chart;
+    chartData?: object;
+    rawData?: object;
 }
-
 
 export interface ColumnDetailUpload {
-   ColumnEntity?: Entity.ColumnProperties
-  Tags?: Entity.Tag[]
+    ColumnEntity?: Entity.ColumnProperties;
+    Tags?: Entity.Tag[];
 }
-
 
 export interface ColumnInfo {
-   ColumnProperties?: Entity.ColumnProperties
-  NumberOfActions?: number
+    ColumnProperties?: Entity.ColumnProperties;
+    NumberOfActions?: number;
 }
-
 
 export interface CopyActionDefinitionPayload {
-   ExistingActionId?: string
+    ExistingActionId?: string;
 }
-
 
 export interface CreateApplicationRequest {
-   model?: Entity.Application
-  tags?: Entity.Tag[]
+    model?: Entity.Application;
+    tags?: Entity.Tag[];
 }
-
 
 export interface DashboardChartWithData {
-   chartWithData?: ChartWithData
-  layout?: string
-  ActionInstanceId?: string
+    chartWithData?: ChartWithData;
+    layout?: string;
+    ActionInstanceId?: string;
 }
-
 
 export interface DashboardDetails {
-   numberOfCharts?: number
-  model?: Entity.Dashboard
+    numberOfCharts?: number;
+    model?: Entity.Dashboard;
 }
-
 
 export interface ExecutionLogsStatus {
-   logsPresent?: boolean
+    logsPresent?: boolean;
 }
-
 
 export interface FilteredColumnsResponse {
-   Columns?: Entity.ColumnProperties[]
-  FilteredBasedOnTags?: boolean
+    Columns?: Entity.ColumnProperties[];
+    FilteredBasedOnTags?: boolean;
 }
-
 
 export interface GetSlackChannelsResponse {
-   entity?: Entity.ProviderInstance
-  channels?: SlackConversation[]
+    entity?: Entity.ProviderInstance;
+    channels?: SlackConversation[];
 }
-
 
 export interface ManagementServiceUser {
-   id?: string
-  firstName?: string
-  lastName?: string
-  org_name?: string
-  email?: string
-  featureConfig?: string
-  persona?: string
-  signedEULA?: boolean
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    org_name?: string;
+    email?: string;
+    featureConfig?: string;
+    persona?: string;
+    signedEULA?: boolean;
 }
-
 
 export interface OOBActionStatus {
-   ActionDefinitionId?: string
-  ActionExecutionId?: string
-  ActionExecutionStatus?: string
+    ActionDefinitionId?: string;
+    ActionExecutionId?: string;
+    ActionExecutionStatus?: string;
 }
-
 
 export interface PossibleAutoFlows {
-   PossibleAutoFlow?: string[]
+    PossibleAutoFlow?: string[];
 }
-
 
 export interface ProviderCardView {
-   ProviderInstance?: Entity.ProviderInstance
-  ProviderDefinition?: Entity.ProviderDefinition
-  ProviderInstanceStat?: ProviderInstanceStat
-  SyncActionInstance?: Entity.ActionInstance
+    ProviderInstance?: Entity.ProviderInstance;
+    ProviderDefinition?: Entity.ProviderDefinition;
+    ProviderInstanceStat?: ProviderInstanceStat;
+    SyncActionInstance?: Entity.ActionInstance;
 }
-
 
 export interface ProviderDefinitionDetail {
-   ProviderDefinition?: Entity.ProviderDefinition
-  ProviderParameterDefinition?: Entity.ProviderParameterDefinition[]
+    ProviderDefinition?: Entity.ProviderDefinition;
+    ProviderParameterDefinition?: Entity.ProviderParameterDefinition[];
 }
-
 
 export interface ProviderHistoryStat {
-   ActionRunHistory?: number[]
-  FailedActionCount?: number
+    ActionRunHistory?: number[];
+    FailedActionCount?: number;
 }
-
 
 export interface ProviderInformation {
-   ProviderInstance?: ProviderInstanceWithTags
-  ProviderParameterInstance?: Entity.ProviderParameterInstance[]
+    ProviderInstance?: ProviderInstanceWithTags;
+    ProviderParameterInstance?: Entity.ProviderParameterInstance[];
 }
-
 
 export interface ProviderInstanceStat {
-   NumberOfExecutions?: number
-  NumberOfTables?: number
-  LastSyncedOn?: number
-  NumberOfCompletedExecutions?: number
-  NumberOfRunningExecutions?: number
-  NumberOfFailedExecutions?: number
-  SyncRunning?: number
-  SyncCompleted?: number
-  SyncFailed?: number
+    NumberOfExecutions?: number;
+    NumberOfTables?: number;
+    LastSyncedOn?: number;
+    NumberOfCompletedExecutions?: number;
+    NumberOfRunningExecutions?: number;
+    NumberOfFailedExecutions?: number;
+    SyncRunning?: number;
+    SyncCompleted?: number;
+    SyncFailed?: number;
 }
-
 
 export interface ProviderInstanceWithTags {
-   model?: Entity.ProviderInstance
-  tags?: Entity.Tag[]
+    model?: Entity.ProviderInstance;
+    tags?: Entity.Tag[];
 }
-
 
 export interface RecurringActionInstanceDetails {
-   model?: Entity.ActionInstance
-  NumberOfRuns?: number
-  NumberOfFailed?: number
-  Status?: string
-  NextScheduledTime?: number
-  StartTime?: number
-  ProviderInstance?: Entity.ProviderInstance
-  AverageRunTime?: number
-  HistoricalActionExecutions?: Entity.ActionExecution[]
-  ProviderName?: string
-  ActionType?: string
+    model?: Entity.ActionInstance;
+    NumberOfRuns?: number;
+    NumberOfFailed?: number;
+    Status?: string;
+    NextScheduledTime?: number;
+    StartTime?: number;
+    ProviderInstance?: Entity.ProviderInstance;
+    AverageRunTime?: number;
+    HistoricalActionExecutions?: Entity.ActionExecution[];
+    ProviderName?: string;
+    ActionType?: string;
 }
-
 
 export interface SaveDashboardForExecution {
-   entityProperties?: Entity.Dashboard
-  withExecutionId?: string
+    entityProperties?: Entity.Dashboard;
+    withExecutionId?: string;
 }
-
 
 export interface SlackConversation {
-   Name?: string
-  Id?: string
-  Type?: string
+    Name?: string;
+    Id?: string;
+    Type?: string;
 }
-
 
 export interface TableAndColumns {
-   Table?: TableDetailUpload
-  Columns?: ColumnDetailUpload[]
+    Table?: TableDetailUpload;
+    Columns?: ColumnDetailUpload[];
 }
-
 
 export interface TableBrowserResponse {
-   TableUniqueName?: string
-  TableId?: string
-  TableCreatedBy?: string
-  TableLastSyncedOn?: number
-  ProviderInstanceName?: string
-  ProviderInstanceId?: string
-  ProviderDefinitionName?: string
-  ProviderDefinitionId?: string
-  TableSchemaName?: string
-  TableInfo?: string
+    TableUniqueName?: string;
+    TableId?: string;
+    TableCreatedBy?: string;
+    TableLastSyncedOn?: number;
+    ProviderInstanceName?: string;
+    ProviderInstanceId?: string;
+    ProviderDefinitionName?: string;
+    ProviderDefinitionId?: string;
+    TableSchemaName?: string;
+    TableInfo?: string;
 }
-
 
 export interface TableDetailUpload {
-   TableEntity?: Entity.TableProperties
-  Tags?: Entity.Tag[]
+    TableEntity?: Entity.TableProperties;
+    Tags?: Entity.Tag[];
 }
-
 
 export interface TableOOBActionStatus {
-   OOBActionsStatus?: OOBActionStatus[]
-  TableId?: string
+    OOBActionsStatus?: OOBActionStatus[];
+    TableId?: string;
 }
-
 
 export interface TablePropertiesInfo {
-   Health?: number
-  SyncStatus?: string
-  ReSyncInProgress?: boolean
-  SyncOOBActionStatus?: OOBActionStatus[]
+    Health?: number;
+    SyncStatus?: string;
+    ReSyncInProgress?: boolean;
+    SyncOOBActionStatus?: OOBActionStatus[];
 }
-
 
 export interface TablePropertiesWithColumns {
-   columns?: Entity.ColumnProperties[]
-  table?: Entity.TableProperties
+    columns?: Entity.ColumnProperties[];
+    table?: Entity.TableProperties;
 }
-
 
 export interface TableView {
-   Columns?: ColumnInfo[]
-  TableData?: Entity.ActionExecution
+    Columns?: ColumnInfo[];
+    TableData?: Entity.ActionExecution;
 }
-
 
 export interface TagDetails {
-   Id?: string
-  Name?: string
-  TagGroup?: string
-  ParentTagName?: string
-  Scope?: string
-  CreatedBy?: string
-  Description?: string
-  CountOfLinkedTableProperties?: number
-  CountOfLinkedActionDefinition?: number
-  CountOfLinkedActionParameterDefinition?: number
-  CountOfLinkedColumnProperties?: number
-  TotalLinkedEntities?: number
-  LinkedSubsidiaries?: Entity.Tag[]
+    Id?: string;
+    Name?: string;
+    TagGroup?: string;
+    ParentTagName?: string;
+    Scope?: string;
+    CreatedBy?: string;
+    Description?: string;
+    CountOfLinkedTableProperties?: number;
+    CountOfLinkedActionDefinition?: number;
+    CountOfLinkedActionParameterDefinition?: number;
+    CountOfLinkedColumnProperties?: number;
+    TotalLinkedEntities?: number;
+    LinkedSubsidiaries?: Entity.Tag[];
 }
-
 
 export interface UpdateActionDefinitionWithTemplate {
-   filter?: Entity.ActionDefinition
-  newProperties?: Entity.ActionDefinition
-  ActionTemplateWithParameters?: ActionTemplatesWithParameters[]
+    filter?: Entity.ActionDefinition;
+    newProperties?: Entity.ActionDefinition;
+    ActionTemplateWithParameters?: ActionTemplatesWithParameters[];
 }
-
 
 export interface WebAppDetails {
-   WebApp?: ActionDefinitionDetail
-  Components?: Entity.ComponentDefinition[]
+    WebApp?: ActionDefinitionDetail;
+    Components?: Entity.ComponentDefinition[];
 }
-
 
 export interface WorkflowActionExecutions {
-   WorkflowDefinition?: Entity.ActionDefinition
-  WorkflowExecution?: Entity.ActionExecution
-  ChildExecutionsWithDefinitions?: WorkflowDefinitionWithExecutionDetails[]
+    WorkflowDefinition?: Entity.ActionDefinition;
+    WorkflowExecution?: Entity.ActionExecution;
+    ChildExecutionsWithDefinitions?: WorkflowDefinitionWithExecutionDetails[];
 }
-
 
 export interface WorkflowDefinitionWithExecutionDetails {
-   ActionDefinition?: Entity.ActionDefinition
-  ActionExecution?: Entity.ActionExecution
-  stageId?: string
-  stageName?: string
+    ActionDefinition?: Entity.ActionDefinition;
+    ActionExecution?: Entity.ActionExecution;
+    stageId?: string;
+    stageName?: string;
 }
-
 
 export interface WorkflowStagesWithActions {
-   Actions?: Entity.ActionDefinition[]
-  stageName?: string
+    Actions?: Entity.ActionDefinition[];
+    stageName?: string;
 }
 
+export type ActionParameterDefinitionParentRelationshipNameType = "TableColumn"
 
+export type TableColumnRelationshipConfig = {
+
+}
+
+export type ActionParameterDefinitionParentRelationshipConfigType = TableColumnRelationshipConfig
+
+export type ActionParameterDefinitionConfig = {
+    ParentParameterDefinitionId?: string,
+    ParentRelationshipName?: ActionParameterDefinitionParentRelationshipNameType,
+    ParentRelationshipConfig?: ActionParameterDefinitionParentRelationshipConfigType
+}

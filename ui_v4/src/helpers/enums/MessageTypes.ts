@@ -8,7 +8,10 @@ const MessageTypes = {
     PYTHON: "python",
     TEXT: "text",
     ACTION_OUTPUT: "action_output",
-    SUGGESTIONS: "suggestions"
+    SUGGESTIONS: "suggestions",
+    ACTION: "action",
+    ACTION_INSTANCE: "action_instance"
 }
 
-export default MessageTypes;    
+export default MessageTypes;
+

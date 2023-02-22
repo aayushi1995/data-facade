@@ -545,3 +545,5 @@ export interface Application extends BaseEntity{
 
 export type ApplicationColumns = keyof Application
 
+export type UpstreamAction = {stageId: string, stageName: string, actionName: string, actionId: string, actionIndex: number}
+

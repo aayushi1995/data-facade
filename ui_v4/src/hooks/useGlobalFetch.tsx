@@ -1,4 +1,4 @@
-import { userSettingsSingleton } from "@/settings/userSettingsSingleton"
+import { userSettingsSingleton } from "@/settings/userSettingsSingleton";
 
 const accessToken = userSettingsSingleton.token;
 const globalFetch = (url: string, method = "GET", data = {}) => {

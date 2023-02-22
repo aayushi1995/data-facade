@@ -1,17 +1,17 @@
 export interface IChatMessage {
-  id: string;
-  message: any;
-  time: number;
-  from: "user" | "system";
-  username?: string;
-  type?: "text" | "action_output" | "error" | any;
+    id: string;
+    message: any;
+    time: number;
+    from: "user" | "system";
+    username?: string;
+    type?: "text" | "action_output" | "error" | any;
 }
 
 export interface IChatResponse {
-  Id?: string;
-  ChatId?: string;
-  SentBy?: string;
-  Index?: string | number;
-  MessageType?: "text" | "action_output" | "error";
-  MessageContent?: any
+    Id?: string;
+    ChatId?: string;
+    SentBy?: string;
+    Index?: string | number;
+    MessageType?: "text" | "action_output" | "action" | "error" | "action_instance";
+    MessageContent?: any;
 }

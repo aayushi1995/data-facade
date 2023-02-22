@@ -2,9 +2,9 @@ import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrap
 import {  SetChatContext } from "@/contexts/ChatContext/index";
 import { ActionDefinition, ActionExecution, ActionInstance } from "@/generated/entities/Entities";
 import ActionDefinitionPresentationFormat from "@/helpers/enums/ActionDefinitionPresentationFormat";
-import { useActionExecutionParsedOutput } from "@/hooks/actionExecution/useActionExecutionParsedOutput";
-import { useDownloadExecutionOutputFromS3 } from "@/hooks/actionExecution/useDownloadExecutionOutputFromS3";
-import { useGetPreSignedUrlForExecutionOutput } from "@/hooks/actionExecution/useGetPreSignedUrlForExecutionOutput";
+import { useActionExecutionParsedOutput } from "@/hooks/actionOutput/useActionExecutionParsedOutput";
+import { useDownloadExecutionOutputFromS3 } from "@/hooks/actionOutput/useDownloadExecutionOutputFromS3";
+import { useGetPreSignedUrlForExecutionOutput } from "@/hooks/actionOutput/useGetPreSignedUrlForExecutionOutput";
 import { DownloadOutlined } from "@ant-design/icons";
 import { Alert, Button, Table } from "antd";
 import React, { useContext, useEffect } from "react";

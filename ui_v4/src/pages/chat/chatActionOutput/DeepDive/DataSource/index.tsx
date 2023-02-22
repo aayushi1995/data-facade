@@ -1,8 +1,7 @@
-import ProviderInstanceId from '@/helpers/enums/ProviderInstanceId';
-import { Select, Skeleton } from 'antd'
+import { Select, Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
-import UseFetchProviderInstanceDetailsHook from '../../../../../hooks/actionExecution/UseFetchProviderInstanceDetailsHook';
-import { createProviderInstanceSelectData } from '../../utils'
+import UseFetchProviderInstanceDetailsHook from '../../../../../hooks/actionOutput/UseFetchProviderInstanceDetailsHook';
+import { createProviderInstanceSelectData } from '../../utils';
 
 
 

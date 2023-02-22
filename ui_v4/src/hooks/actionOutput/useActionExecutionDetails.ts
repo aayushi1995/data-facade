@@ -7,7 +7,7 @@ import { ActionExecutionDetailProps } from "@/pages/chat/chatActionOutput/action
 import React from "react"
 import { useQuery } from "react-query"
 
-import FetchActionExecutionDetails from "@hooks/actionExecution/fetchActionExecutionDetails"
+import FetchActionExecutionDetails from "@/hooks/actionOutput/fetchActionExecutionDetails"
 
 
 const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
