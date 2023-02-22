@@ -13,6 +13,9 @@ const ActionCard = styled(Card)`
     border-radius: 0px 8px 8px 8px;
     border: 0.87659px solid #D1D5DB;
     margin-bottom:20px;
+    & .ant-card-body {
+        padding: 20px;
+    }
 `
 
 export interface ActionExecutionDetailProps {
@@ -25,7 +28,7 @@ export interface ActionExecutionDetailProps {
     onExecutionCreate?: (actionExecutionId: string) => void,
     displayPostProcessed?: boolean
     showChart?: boolean
-    handleDeepDive?: (data:any) => void
+    handleDeepDive?: (data:any, title?:string) => void
     onlyTable?:boolean
 }
 
@@ -44,27 +47,25 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
     } = useActionExecutionDetails(props)
 
 
-    const handleDeepDiveData = (data:any) => {
-        props.handleDeepDive && props.handleDeepDive(data)
+    const handleDeepDiveData = (data:any, title:any) => {
+        props.handleDeepDive && props.handleDeepDive(data, title)
     }
 
     return ( 
         <ReactQueryWrapper  {...actionExecutionDetailQuery}>
             <FlexBox style={{alignItems:'center'}}>
                 <>
-                    <Col span={8}>
-                        <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}>
-                            <ActionCard headStyle={{ border: 0 }} size="small" title={<><Typography.Text ellipsis={true} strong>{actionExecutionDetailQuery.data?.ActionInstance?.Name}</Typography.Text></>}>
-                                <Row gutter={36}>
+                    <div style={{minWidth:'400px'}}>
+                        {/* <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}> */}
+                            <ActionCard headStyle={{ border: 0 }} size="small">
+                                {/* <Row gutter={36}>
                                     <Col>
                                         <Typography.Paragraph>Created by : <Tag color="green">{actionExecutionDetailQuery.data?.ActionInstance?.CreatedBy}</Tag></Typography.Paragraph>
                                     </Col>
-
                                     <Col>
                                         <Typography.Paragraph>Runtime :  <Tag color="blue">{getElapsedTime()}</Tag></Typography.Paragraph>
                                     </Col>
-
-                                </Row>
+                                </Row> */}
                                 {
                                     !actionExecutionTerminalState ?
                                         <Skeleton active />
@@ -75,12 +76,13 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                                     <FailedActionOutput actionExecutionDetail={actionExecutionDetailQuery?.data || {}} />
                                                     :
                                                     <>
-                                                    <SuccessActionOutput
-                                                        ActionExecution={actionExecutionDetailQuery?.data?.ActionExecution!}
-                                                        ActionDefinition={actionExecutionDetailQuery?.data?.ActionDefinition!}
-                                                        ActionInstance={actionExecutionDetailQuery?.data?.ActionInstance!}
-                                                        showCharts={false}
-                                                    />
+                                                        <SuccessActionOutput
+                                                            ActionExecution={actionExecutionDetailQuery?.data?.ActionExecution!}
+                                                            ActionDefinition={actionExecutionDetailQuery?.data?.ActionDefinition!}
+                                                            ActionInstance={actionExecutionDetailQuery?.data?.ActionInstance!}
+                                                            showCharts={false}
+                                                            title={actionExecutionDetailQuery.data?.ActionInstance?.Name}
+                                                        />
                                                     </>
                                                     
                                                 
@@ -98,10 +100,10 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                 }
                                 {childActionExecutionId && <ActionOutput actionExecutionId={childActionExecutionId} />}
                             </ActionCard>
-                        </Badge.Ribbon>
-                    </Col>
+                        {/* </Badge.Ribbon> */}
+                    </div>
                 </>
-                <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}}>DeepDive</Button>
+                {props.handleDeepDive && <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
             </FlexBox>
         </ReactQueryWrapper>
     )

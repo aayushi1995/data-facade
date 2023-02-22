@@ -220,6 +220,7 @@ const InitiateChat = () => {
     }
 
     const handleDeepDive = (data:any) => {
+        handleTerminalClick()
         setShowDeepDive(true)
         setDeepDiveData(data)
     }

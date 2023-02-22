@@ -8,6 +8,9 @@ import { useGetPreSignedUrlForExecutionOutput } from "@/hooks/actionOutput/useGe
 import { DownloadOutlined } from "@ant-design/icons";
 import { Alert, Button, Table } from "antd";
 import React, { useContext, useEffect } from "react";
+import { OutputTableStyled } from "./successActionOutput.styles";
+import OutputComponent from "./TableChartComponent/OutputComponent";
+import TableComponent from "./TableChartComponent/TableComponent";
 
 
 export interface ViewActionExecutionOutputProps {
@@ -17,6 +20,7 @@ export interface ViewActionExecutionOutputProps {
     showCharts?: boolean,
     onDeepDiveActionSelected?: (actionId: string) => void
     getTableData?: (data: any) => void
+    title?:string
 }
 
 const SuccessActionOutput = (props: ViewActionExecutionOutputProps) => {
@@ -30,9 +34,9 @@ const SuccessActionOutput = (props: ViewActionExecutionOutputProps) => {
     const outputComponentToRender = (output?: any) => {
         switch (ActionDefinition?.PresentationFormat || "NA") {
             case ActionDefinitionPresentationFormat.TABLE_VALUE:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected} />
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected} title={props.title}/>
             case ActionDefinitionPresentationFormat.OBJECT:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} />
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} title={props.title}/>
             default:
                 return <Alert message="Not Supported Format" description={ActionDefinition?.PresentationFormat} />
         }
@@ -93,6 +97,7 @@ export interface ViewActionExecutionTableOutputProps {
     ActionExecution: ActionExecution,
     ActionDefinition: ActionDefinition,
     onDeepDiveActionSelected?: (actionId: string) => void
+    title?:string
 }
 
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
@@ -106,7 +111,6 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
     const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
     useEffect(() => {
-        
         isTableOutputSuccessfulFormat(TableOutput) && setChatContext({
             type: "setTableData",
             payload: {
@@ -116,7 +120,6 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                 }
             }
         })
-       
        },[])
 
     const handleDownloadResult = () => {
@@ -145,14 +148,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
         return (
-            <Table
-                columns={dataGridColumns}
-                dataSource={dataGridRows}
-                size="small"
-                pagination={false}
-                bordered={true}
-
-            />
+           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title}/>
         )
     } else if (isTableOutputSizeExceededErrorFormat(TableOutput)) {
         const errorType: string = TableOutput.errorType

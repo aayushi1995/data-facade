@@ -11,10 +11,12 @@ import { TableProperties, TablePropertiesColumns } from "@/generated/entities/En
 import { labels } from "@/helpers/constant";
 import dataManager from "@/api/dataManager";
 import RenderAllActions from "./RecommendedActions";
-import TableOutput from "./TableOutput";
 import LineChartWrapper from './Visualization/Charts/LineChartWrapper'
 import { getData } from "../utils";
 import Visualization from "./Visualization";
+import TableComponent from "../TableChartComponent/TableComponent";
+import ActionOutput from "../actionOutput";
+import OutputComponent from "../TableChartComponent/OutputComponent";
 
 interface IObj {
     email: string;
@@ -179,23 +181,13 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery}:any) => {
                         extra={<EditIcon/>}
                        
                     >
-                        <Divider plain>Tables</Divider>
-                       {defaultCode && !actionExecutionId && (
-                        <Table
-                            columns={chatContext?.tableData?.dataGridColumns || []}
-                            dataSource={chatContext?.tableData?.dataGridRows || []}
-                            size="small"
-                            pagination={false}
-                            bordered={true}
-                        />
+                        {defaultCode && !actionExecutionId && (
+                            <OutputComponent dataGridColumns={chatContext?.tableData?.dataGridColumns || []} dataGridRows={chatContext?.tableData?.dataGridRows || []}/>
                         )}
-                        {actionExecutionId ? (
-                            <TableOutput actionExecutionId={actionExecutionId}/>
-                        ) : <PlaceHolderText>After setting up Data Source and Actions, your final data tables will be here.</PlaceHolderText>}
-                       {/* Table Output */}
-                       <Divider plain>Charts</Divider>
-                        <Visualization/>
-                       {/* Charts Output */}
+                        {actionExecutionId && (
+                            <ActionOutput actionExecutionId={actionExecutionId} />
+                        )}
+                        {!defaultCode && !actionExecutionId && <PlaceHolderText>After setting up Data Source and Actions, your final data tables will be here.</PlaceHolderText>}
                        <Divider plain>Insights</Divider>
                        {/* Charts Output */}
                     </StyledPanel>

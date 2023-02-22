@@ -26,6 +26,7 @@ export const ChatWrapperStyled = styled.div`
     position: relative;
     height:100%;
     width: 100%;
+    // min-width:550px;
 `
 export const MainWrapper = styled.div`
     display:flex;
@@ -41,6 +42,17 @@ export const MainWrapper = styled.div`
     & div[dir="Horizontal"] > div {
         background: #9CA3AF;
         position: relative;
-        right: -30px;
+        right: -25px;
+        border-radius: 0px;
+    }
+
+    & div[dir="Horizontal"] > div::before {
+        content: "";
+        display: block;
+        height: 24px;
+        width: 4px;
+        position: relative;
+        background: #9CA3AF;
+        right: -8px;
     }
 `
