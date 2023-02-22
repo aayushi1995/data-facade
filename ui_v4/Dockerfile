@@ -28,5 +28,5 @@ RUN PUBLIC_URL="${ENDPOINT}" npm run-script build
 
 EXPOSE 3000
 # start app
-CMD ["serve", "-l", "3000", "-s", "build"]
+CMD ["npx", "serve", "-l", "3000", "-s", "build"]
 # CMD ["npm","start"]

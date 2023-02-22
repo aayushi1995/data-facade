@@ -516,6 +516,23 @@ export interface TagMap extends BaseEntity{
 
 export type TagMapColumns = keyof TagMap
 
+export interface TrainingData extends BaseEntity{
+    Id?: string
+	DeletedStatus?: string
+	DeletedOn?: number
+	CreatedOn?: number
+	CreatedBy?: string
+	Question?: string
+	AnswerType?: string
+	Reference?: string
+	TargetUser?: string
+	Author?: string
+	ParameterValues?: string
+}
+
+
+export type TrainingDataColumns = keyof TrainingData
+
 export interface DataCheckDefinition extends BaseEntity{
     Id?: string
 	DeletedStatus?: string

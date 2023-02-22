@@ -8,6 +8,7 @@ import DataHeader from "../../../pages/data/DataHeader";
 import DataLandingPage from "../../../pages/data/landing/DataLandingPage";
 import { HomePage } from "../../../pages/home_page/HomePage";
 import { InsightsContent } from "../../../pages/insights/InsightsContent";
+import TrainingDataSetHomePage from "../../../pages/ml/training/TrainingDataSetHomePage";
 import { Users } from "../../../pages/users/Users";
 import {
     DATA_CONNECTIONS_ROUTE,
@@ -72,6 +73,7 @@ export const MainContent = () => {
                 <Route path={USER_ROUTE} component={Users}/>
                 <Route exact path={LEARN_ROUTE} component={HomePage}/>
                 <Route exact path={HOME_ROUTE} component={DataLandingPage}/>
+                <Route path={"/training"} component={TrainingDataSetHomePage} />
             </Switch>
         </Box>
     )

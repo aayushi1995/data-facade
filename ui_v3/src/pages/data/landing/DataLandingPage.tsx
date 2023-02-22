@@ -6,12 +6,12 @@ import CreateConnectionIcon from "../../../assets/images/createConnection.svg";
 import UploadFileIcon from "../../../assets/images/uploadFile.svg";
 import { SetModuleContextState } from "../../../common/components/main_module/context/ModuleContext";
 import { DATA_CONNECTION_CHOOSE } from "../../../common/components/route_consts/data/DataRoutesConfig";
+import useContextStorageFile from '../../../hooks/useContextStorage';
+import { SetDataContext } from '../../../utils/DataContextProvider';
 import { HeaderButtonsStyle, IconConatiner, SearchBarTextField, StyledTypographyDataHeader } from "../components/StyledComponents";
 import RecommendedApps from "../upload_table/components/RecommendedApps";
 import UploadTableContextProvider from "../upload_table/context/UploadTablePageContext";
 import UploadTablePage from "../upload_table/UploadTablePage";
-import useContextStorageFile from '../../../hooks/useContextStorage';
-import { SetDataContext } from '../../../utils/DataContextProvider';
 
 
 export const DataLandingPage = () => {

@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+iframe {
+    pointer-events: none;
+}
+
 @font-face {
     font-family: 'SF Pro Display';
     src: url('../src/assets/fonts/SF-Pro-Display-Regular.otf') format('opentype');

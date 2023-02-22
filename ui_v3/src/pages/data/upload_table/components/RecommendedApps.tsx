@@ -83,6 +83,11 @@ function RecommendedApps(props: RecommendedAppsProps) {
                         </Card>
                     </Grid>
                     <Grid item xs={6} md={4} lg={2.4} sx={{ px: 1, py: 2 }}>
+                        <Card sx={{...AddActionCard}} to="/training?source=browser&name=Train" component={NavLink}>
+                            <Typography sx={{...ScratchPadTabStyle}}>Train Model</Typography> 
+                        </Card>
+                    </Grid>
+                    <Grid item xs={6} md={4} lg={2.4} sx={{ px: 1, py: 2 }}>
                         <Card sx={{ ...AddActionCard }} to="application/edit-action/Add" component={NavLink}>
                             <Box sx={{ height: '12vh', p: 3 }}>
                                 <Typography sx={{ ...ActionCardHeader }}>Create New action</Typography>

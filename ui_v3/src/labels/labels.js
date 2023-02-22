@@ -47,7 +47,8 @@ const labels = {
         TABLE_PROPERTIES: "TableProperties",
         COLUMN_PROPERTIES: "ColumnProperties",
         APPLICATION: "Application",
-        "Dashboard": "Dashboard"
+        "Dashboard": "Dashboard",
+        TrainingData: "TrainingData"
     },
     "CreateCleaningTrigger": {
         "passed": "Cleanup Trigger Creation Successful",
