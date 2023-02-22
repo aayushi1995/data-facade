@@ -50,35 +50,38 @@ const ChatFooter = ({ handleSend, loading }: any) => {
         <Row>
             <Col span={24}>
                 <StyledCardChartFooterWrapper>
-                    {
-                        showFileUpload &&
-                        <Row>
-                            <Col>
-                                <PopOverCard bordered={false} size="small">
-                                    <Space direction='vertical' style={{ width: '100%' }}>
-                                        <ConnectionButton block type='text' icon={<FileExcelOutlined />}>Connect Google Sheets</ConnectionButton>
-                                        <ConnectionButton block type='text' icon={<ConnectionHistoryIcon />}>Previously Connected</ConnectionButton>
-                                        <ConnectionButton block type='text' icon={<UploadOutlined />}>Upload CSV</ConnectionButton>
-                                    </Space>
-                                </PopOverCard>
+                    <div>
+                        {
+                            showFileUpload &&
+                            <Row>
+                                <Col>
+                                    <PopOverCard bordered={false} size="small">
+                                        <Space direction='vertical' style={{ width: '100%' }}>
+                                            <ConnectionButton block type='text' icon={<FileExcelOutlined />}>Connect Google Sheets</ConnectionButton>
+                                            <ConnectionButton block type='text' icon={<ConnectionHistoryIcon />}>Previously Connected</ConnectionButton>
+                                            <ConnectionButton block type='text' icon={<UploadOutlined />}>Upload CSV</ConnectionButton>
+                                        </Space>
+                                    </PopOverCard>
+                                </Col>
+                            </Row>
+                        }
+
+                        <Row align="middle">
+                            <Col span={1}>
+                                <Popover placement="topLeft" title={popOverTitle} open={isTourOpen} trigger="" content={tourContent}>
+                                    <Button onClick={toggleFileUpload} ref={tourRef} type="text" icon={showFileUpload?<MinusOutlined style={{ color: '#9CA3AF' }}/>: <PlusOutlined style={{ color: '#9CA3AF' }} />}></Button>
+                                </Popover>
+                            </Col>
+                            <Col span={23}>
+                                <StyledChatInputWrapper>
+                                    <ChatInput disabled={loading} type="text" placeholder="Type a message..." ref={inputRef} onKeyDown={handleKeyDown} />
+                                    <StyledSendIcon onClick={handleClick} onKeyDown={handleClick} />
+                                </StyledChatInputWrapper>
+
                             </Col>
                         </Row>
-                    }
-
-                    <Row align="middle">
-                        <Col span={1}>
-                            <Popover placement="topLeft" title={popOverTitle} open={isTourOpen} trigger="" content={tourContent}>
-                                <Button onClick={toggleFileUpload} ref={tourRef} type="text" icon={showFileUpload?<MinusOutlined style={{ color: '#9CA3AF' }}/>: <PlusOutlined style={{ color: '#9CA3AF' }} />}></Button>
-                            </Popover>
-                        </Col>
-                        <Col span={23}>
-                            <StyledChatInputWrapper>
-                                <ChatInput disabled={loading} type="text" placeholder="Type a message..." ref={inputRef} onKeyDown={handleKeyDown} />
-                                <StyledSendIcon onClick={handleClick} onKeyDown={handleClick} />
-                            </StyledChatInputWrapper>
-
-                        </Col>
-                    </Row>
+                    </div>
+                    
                 </StyledCardChartFooterWrapper>
             </Col>
         </Row>

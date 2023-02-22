@@ -30,4 +30,17 @@ export const ChatWrapperStyled = styled.div`
 export const MainWrapper = styled.div`
     display:flex;
     position:relative;
+
+    & div[dir="Horizontal"] {
+        height: 80vh;
+        background-color: transparent !important;
+    }
+    & div[dir="Horizontal"] ~ div {
+        min-width: 50px !important;
+    }
+    & div[dir="Horizontal"] > div {
+        background: #9CA3AF;
+        position: relative;
+        right: -30px;
+    }
 `

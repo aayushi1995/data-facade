@@ -19,6 +19,8 @@ import DeepDive from "./chatActionOutput/DeepDive/DeepDiveTabs";
 import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
+import ReactSplit, { SplitDirection } from '@devbookhq/splitter'
+import { FlexBox } from "./ChatFooter/ChatFooter.styles";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
@@ -81,7 +83,7 @@ const InitiateChat = () => {
     const [showActionOutput, setShowActionOutput] = useState(false)
     const [executionId, setExecutionId]: any = useState({})
     const [actionDefinitions, setActionDefinitions] = useState<Record<string, ActionMessageContent>>({})
-    const [showDeepDive, setShowDeepDive] = useState(false)
+    const [showDeepDive, setShowDeepDive] = useState(true)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
 
     // function that calls setChatData reducer to store message data in context
@@ -190,9 +192,6 @@ const InitiateChat = () => {
             }
 
         }, 1000)
-
-
-
     }
 
     const handleActionOutput = (messageBody: IChatResponse | any) => {
@@ -223,49 +222,60 @@ const InitiateChat = () => {
     const handleDeepDive = (data:any) => {
         setShowDeepDive(true)
         setDeepDiveData(data)
-        console.log(data)
     }
 
     const handleChatClick = () => {
         setShowDeepDive(false)
+        setSize([96,4])
     }
 
     const handleTerminalClick = () => {
         setShowDeepDive(true)
+        setSize([60,40])
     }
 
+    const [size, setSize] = useState([96,4])
+
+
     return (
+        
        <ChatProvider>
             <MainWrapper>
+                <ReactSplit 
+                    initialSizes={[...size]}>
                     <ChatWrapperStyled>
-                    {
-                        isError ? <Alert
-                            message="Error!!"
-                            description="The chat session is not matching. Please initiate the chat again"
-                            type="error"
-                        />
-                            :
-                            <Row>
-                                {
-                                    loading ?
-                                        <Loader />
-                                        :
-                                        <Col sm={24}>
-                                            <MessageWrapper>
-                                                <MessageOutputs actionDefinitions={actionDefinitions} handleConversation={handleConversation} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} />
-                                            </MessageWrapper>
-                                            <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
-        
-                                        </Col>
-                                }
-                            </Row>
-        
-                    }
+                        {
+                            isError ? <Alert
+                                message="Error!!"
+                                description="The chat session is not matching. Please initiate the chat again"
+                                type="error"
+                            />
+                                :
+                                <Row>
+                                    {
+                                        loading ?
+                                            <Loader />
+                                            :
+                                            <Col sm={24}>
+                                                <MessageWrapper>
+                                                    <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation}  />
+                                                </MessageWrapper>
+                                                <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
+            
+                                            </Col>
+                                    }
+                                </Row>
+            
+                        }
                     </ChatWrapperStyled>
-                    <ChatComponentIconTabExperience handleChatClick={handleChatClick} handleTerminalClick={handleTerminalClick} showDeepDive={showDeepDive}/>
-                    {showDeepDive && (<DeepDiveWrapperStyled>
-                    <DeepDive deepdiveData={deepdiveData}/>
-                </DeepDiveWrapperStyled>)}
+                    <FlexBox>
+                    <ChatComponentIconTabExperience handleChatClick={handleChatClick} handleTerminalClick={handleTerminalClick} showDeepDive={showDeepDive} />
+                        <DeepDiveWrapperStyled>
+                            <DeepDive deepdiveData={deepdiveData} />
+                        </DeepDiveWrapperStyled>
+                    </FlexBox>
+                </ReactSplit>
+                
             </MainWrapper>
         </ChatProvider>
     )

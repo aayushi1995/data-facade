@@ -2,13 +2,13 @@ import { Button } from 'antd'
 import styled from 'styled-components'
 
 export const StyledWrapper = styled.div`
-    // position: absolute;
     height: 80vh;
     right: 0px;
     background: #f3f4f6;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    width: 50px;
     // z-index: 1;
 `
 export const CustomButton = styled<any>(Button)`
