@@ -4,10 +4,11 @@
  * (c) Data Facade LLC.
  */  
 
-
-import { userSettingsSingleton } from '@/settings/userSettingsSingleton'
 import * as Entity from '../entities/Entities'
 import * as CustomInterface from '../interfaces/Interfaces'
+import { userSettingsSingleton } from '@/settings/userSettingsSingleton'
+import { getDefaultRequestQuery } from '@/utils/getDefaultRequestQuery'
+
 
 const endPoint = require("../../settings/config").FDSEndpoint
 
@@ -302,7 +303,7 @@ export class Fetcher {
 			body: JSON.stringify(inputPayload)
 		}
 
-		const fn = await fetch(endPoint + `${endpoint}?email=` + userSettingsSingleton.userEmail, header)
+		const fn = await fetch(endPoint + `${endpoint}${getDefaultRequestQuery()}`, header)
 		return fn.json()
     }
 }

@@ -2,6 +2,7 @@ import { useQueries, useQuery, useQueryClient} from "react-query";
 import { userSettingsSingleton } from "@settings/userSettingsSingleton";
 import { FDSEndpoint } from "@/settings/config";
 import { S3RequestType } from "@/helpers/constant";
+import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
 
 const endPoint = FDSEndpoint
 
@@ -9,18 +10,20 @@ const  dataManager:any = {
     getInstance: {}
 };
 
+function getDefaultHeader(token: string) {
+    return {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+}
 
 const isValidUserSettings = () => userSettingsSingleton.userEmail && userSettingsSingleton.token
 
-
-const retreiveHeader =  (entityName:string, actionProperties:any, token:string) => {
+const defaultPostRequest =  (entityName:string, actionProperties:any, token:string) => {
     return {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getDefaultHeader(token),
         body: JSON.stringify({
             "entityName": entityName,
             "actionProperties": actionProperties
@@ -28,43 +31,10 @@ const retreiveHeader =  (entityName:string, actionProperties:any, token:string) 
     }
 }
 
-const saveHeader =  (entityName:string, actionProperties:any, token:string) =>  {
-    return {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            "entityName": entityName,
-            "actionProperties": actionProperties
-        })
-    }
-}
-
-const deleteHeader =   (entityName:string, actionProperties:any, token:string) =>  {
-    return {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            "entityName": entityName,
-            "actionProperties": actionProperties
-        })
-    }
-}
 const patchHeader =  (entityName:string, actionProperties:any, token:string) =>  {
     return {
         method: 'PATCH',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getDefaultHeader(token),
         body: JSON.stringify({
             "entityName": entityName,
             "actionProperties": actionProperties
@@ -75,22 +45,14 @@ const patchHeader =  (entityName:string, actionProperties:any, token:string) => 
 const dummyDataHeader =  (token:string) =>  {
     return {
         method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
+        headers: getDefaultHeader(token)
     }
 }
 
 const dummyPatchHeader = (token:string, body:any) => {
     return {
         method: 'PATCH',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getDefaultHeader(token),
         body: JSON.stringify(body)
     }
 }
@@ -98,11 +60,7 @@ const dummyPatchHeader = (token:string, body:any) => {
 const s3PresignedUploadUrlRequestHeader = function (tableFilename:string, expirationDurationInMinutes:string, contentType:any, uploadPath:any, token:string, providerInstanceId:any) {
     return {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getDefaultHeader(token),
         body: JSON.stringify({
             key: tableFilename,
             expirationDurationInMinutes: expirationDurationInMinutes,
@@ -114,14 +72,11 @@ const s3PresignedUploadUrlRequestHeader = function (tableFilename:string, expira
         })
     }
 }
+
 const s3PresignedDownloadUrlRequestHeader = function (tableFileName:string, expirationDurationInMinutes:string, token:string, contentType:any, providerInstanceId:any) {
     return {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getDefaultHeader(token),
         body: JSON.stringify({
             key: tableFileName,
             expirationDurationInMinutes: expirationDurationInMinutes,
@@ -137,11 +92,7 @@ const s3PresignedDownloadUrlRequestHeader = function (tableFileName:string, expi
 const s3CheckIfFileExistsHeader = function (tableFilename:any, token:any, providerInstanceId:any) {
     return {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getDefaultHeader(token),
         body: JSON.stringify({
             key: tableFilename,
             provider: "S3",
@@ -169,11 +120,7 @@ const s3DownloadRequestHeader = function (headers:any) {
 const parseApplicationRequestHeader = function (config:any, token:string) {
     return {
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: getDefaultHeader(token),
         body: JSON.stringify(config)
     }
 }
@@ -195,7 +142,7 @@ dataManager.getInstance.retreiveData = async function (entityName:string, action
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + '/entity/getproxy?email=' + userSettingsSingleton.userEmail, retreiveHeader(entityName, actionProperties, userSettingsSingleton.token))
+    const fn = await fetch(endPoint + '/entity/getproxy' + getDefaultRequestQuery(), defaultPostRequest(entityName, actionProperties, userSettingsSingleton.token))
     return await fn.json()
 }
 
@@ -203,7 +150,7 @@ dataManager.getInstance.saveData = async function (entityName:string, actionProp
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + '/entity?email=' + userSettingsSingleton.userEmail, saveHeader(entityName, actionProperties, userSettingsSingleton.token))
+    const fn = await fetch(endPoint + '/entity' + getDefaultRequestQuery(), defaultPostRequest(entityName, actionProperties, userSettingsSingleton.token))
     return await fn.json()
 }
 
@@ -212,7 +159,7 @@ dataManager.getInstance.executeInstance = async function (entityName:string, act
         return;
     }
 
-    const fn = await fetch(endPoint + '/executeInstance?email=' + userSettingsSingleton.userEmail, saveHeader(entityName, actionProperties, userSettingsSingleton.token))
+    const fn = await fetch(endPoint + '/executeInstance' + getDefaultRequestQuery(), defaultPostRequest(entityName, actionProperties, userSettingsSingleton.token))
 
     return await fn.json()
 }
@@ -221,7 +168,7 @@ dataManager.getInstance.patchData = async function (entityName:string, actionPro
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + '/entity?email=' + userSettingsSingleton.userEmail, patchHeader(entityName, actionProperties, userSettingsSingleton.token))
+    const fn = await fetch(endPoint + '/entity' + getDefaultRequestQuery(), patchHeader(entityName, actionProperties, userSettingsSingleton.token))
     return await fn.json()
 }
 
@@ -229,7 +176,7 @@ dataManager.getInstance.addUser = async function (newUserDetails:any) {
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + `/addUser?email=${userSettingsSingleton.userEmail}${Object.entries(newUserDetails).reduce((a, [key, value]) => a + `&${key}=${value}`, '')}`, dummyDataHeader(userSettingsSingleton.token))
+    const fn = await fetch(endPoint + `/addUser${getDefaultRequestQuery()}${Object.entries(newUserDetails).reduce((a, [key, value]) => a + `&${key}=${value}`, '')}`, dummyDataHeader(userSettingsSingleton.token))
     return fn
 }
 
@@ -237,7 +184,7 @@ dataManager.getInstance.fetchUsers = async function () {
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + `/users?email=${userSettingsSingleton.userEmail}`, dummyDataHeader(userSettingsSingleton.token))
+    const fn = await fetch(endPoint + `/users${getDefaultRequestQuery()}`, dummyDataHeader(userSettingsSingleton.token))
     return fn
 }
 
@@ -246,7 +193,7 @@ dataManager.getInstance.fetchSingleUser = async function () {
         return;
     }
 
-    const fn = await fetch(endPoint + `/singleUser?email=${userSettingsSingleton.userEmail}`, dummyDataHeader(userSettingsSingleton.token))
+    const fn = await fetch(endPoint + `/singleUser${getDefaultRequestQuery()}`, dummyDataHeader(userSettingsSingleton.token))
     return fn.json()
 }
 
@@ -254,14 +201,15 @@ dataManager.getInstance.updateUser = async function (user:any) {
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + `/updateUser?email=${userSettingsSingleton.userEmail}`, dummyPatchHeader(userSettingsSingleton.token, user))
+    const fn = await fetch(endPoint + `/updateUser${getDefaultRequestQuery()}`, dummyPatchHeader(userSettingsSingleton.token, user))
     return fn.json()
 }
+
 dataManager.getInstance.deleteUser = async function (targetUserEmail:string) {
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + `/deleteUser?email=${userSettingsSingleton.userEmail}&targetUserEmail=${targetUserEmail}`, dummyDataHeader(userSettingsSingleton.token))
+    const fn = await fetch(endPoint + `/deleteUser${getDefaultRequestQuery()}&targetUserEmail=${targetUserEmail}`, dummyDataHeader(userSettingsSingleton.token))
     return fn
 }
 
@@ -269,7 +217,7 @@ dataManager.getInstance.deleteData = async function (entityName:string, actionPr
     if (!isValidUserSettings()) {
         return;
     }
-    const fn = await fetch(endPoint + '/entity/deleteproxy?email=' + userSettingsSingleton.userEmail, deleteHeader(entityName, actionProperties, userSettingsSingleton.token))
+    const fn = await fetch(endPoint + '/entity/deleteproxy' + getDefaultRequestQuery(), defaultPostRequest(entityName, actionProperties, userSettingsSingleton.token))
     return await fn.json()
 }
 
@@ -283,7 +231,7 @@ dataManager.getInstance.s3PresignedUploadUrlRequest = async function (file:any, 
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedUploadUrlRequestHeader(file.name, expirationDurationInMinutes, contentType, uploadPath, userSettingsSingleton.token, providerInstanceId))
+    const response = await fetch(endPoint + '/external/transfer' + getDefaultRequestQuery(), s3PresignedUploadUrlRequestHeader(file.name, expirationDurationInMinutes, contentType, uploadPath, userSettingsSingleton.token, providerInstanceId))
     return response.json()
 }
 
@@ -291,7 +239,7 @@ dataManager.getInstance.s3PresignedDownloadUrlRequest = async function (tableFil
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3PresignedDownloadUrlRequestHeader(tableFileName, expirationDurationInMinutes, userSettingsSingleton.token, contentType, providerInstanceId))
+    const response = await fetch(endPoint + '/external/transfer' + getDefaultRequestQuery(), s3PresignedDownloadUrlRequestHeader(tableFileName, expirationDurationInMinutes, userSettingsSingleton.token, contentType, providerInstanceId))
     return response.json()
 }
 
@@ -299,7 +247,7 @@ dataManager.getInstance.getTableAndColumnTags = async function (tableData:any) {
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/getTags?email=' + userSettingsSingleton.userEmail, 
+    const response = await fetch(endPoint + '/getTags' + getDefaultRequestQuery(), 
         createPostRequestBody(tableData))
     return response.json()
 }
@@ -308,7 +256,7 @@ dataManager.getInstance.getGeneratedActionTemplate = async function (requestBody
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/getGeneratedAction?email=' + userSettingsSingleton.userEmail, 
+    const response = await fetch(endPoint + '/getGeneratedAction' + getDefaultRequestQuery(), 
         createPostRequestBody(JSON.stringify(requestBody)))
     return response.json()
 }
@@ -317,7 +265,7 @@ dataManager.getInstance.s3CheckIfFileExistsRequest = async function (tableFileNa
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + '/external/transfer?email=' + userSettingsSingleton.userEmail, s3CheckIfFileExistsHeader(tableFileName, userSettingsSingleton.token,providerInstanceId) )
+    const response = await fetch(endPoint + '/external/transfer' + getDefaultRequestQuery(), s3CheckIfFileExistsHeader(tableFileName, userSettingsSingleton.token,providerInstanceId) )
     return response.json()
 }
 
@@ -330,7 +278,7 @@ dataManager.getInstance.parseApplicationRequest = async function (config:any) {
     if(!isValidUserSettings){
         return;
     }
-    const response = await fetch(endPoint + '/external/application?email=' + userSettingsSingleton.userEmail, parseApplicationRequestHeader(config, userSettingsSingleton.token))
+    const response = await fetch(endPoint + '/external/application' + getDefaultRequestQuery(), parseApplicationRequestHeader(config, userSettingsSingleton.token))
     const responseBody = await response.json()
 
     if(response.ok) {
@@ -355,7 +303,7 @@ dataManager.getInstance.getRecommendedQuestions = async function(tableId:any) {
     if (!isValidUserSettings()) {
         return;
     }
-    const response = await fetch(endPoint + "/getTableQuestions?email=" + userSettingsSingleton.userEmail + "&tableId=" + tableId, dummyDataHeader(userSettingsSingleton.token))
+    const response = await fetch(endPoint + "/getTableQuestions" + getDefaultRequestQuery()+ "&tableId=" + tableId, dummyDataHeader(userSettingsSingleton.token))
     if(response.ok) {
         return response.json()
     } else {
@@ -366,7 +314,7 @@ dataManager.getInstance.getRecommendedQuestions = async function(tableId:any) {
 
 
 export const fetchEntityBrowser = async (path:any) => {
-    const res = await fetch(endPoint + `/entityBrowser?path=${path}&email=${userSettingsSingleton.userEmail}`, dummyDataHeader(userSettingsSingleton.token))
+    const res = await fetch(endPoint + `/entityBrowser${getDefaultRequestQuery()}&path=${path}`, dummyDataHeader(userSettingsSingleton.token))
     return res.json();
 };
 
@@ -398,8 +346,6 @@ export const useFetchMultipleRetreiveData = (keys:any, options:any) => {
     const queries = keys?.map((key:any)=>({queryKey: key, queryFn: ()=>dataManager.getInstance.retreiveData(...key), options}));
     return useQueries(queries || dummyQuery);
 }
-
-
 
 
 export default dataManager;

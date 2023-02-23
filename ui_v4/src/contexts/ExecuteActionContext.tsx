@@ -1,6 +1,7 @@
 import { ActionParameterAdditionalConfig, ActionParameterColumnAdditionalConfig, ActionParameterTableAdditionalConfig } from "@/components/parameters/ParameterInput";
 import { ActionDefinition, ActionInstance, ActionParameterDefinition, ActionParameterInstance, ActionTemplate, ProviderInstance, TableProperties, Tag } from "@/generated/entities/Entities";
-import { ActionDefinitionDetail, ActionInstanceWithParameters, ActionParameterDefinitionConfig } from "@/generated/interfaces/Interfaces";
+import { ActionDefinitionDetail, ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
+import { ActionParameterDefinitionConfig } from "@/api/interfaces"
 import ActionParameterDefinitionTag from "@/helpers/enums/ActionParameterDefinitionTag";
 import { getDefaultTemplateParameters, safelyParseJSON } from "@/utils";
 import ActionParameterDefinitionDatatype from "@helpers/enums/ActionParameterDefinitionDatatype";

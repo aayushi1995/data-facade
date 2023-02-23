@@ -64,7 +64,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={handleActionInstanceSubmit} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
                     {type === "table_input" && (Object.keys(tableInputs).length > 0 && tableInputs[id] && 
                         <>
-                        <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Sorry we could not understand the question. Please select a table to answer better"}/>
+                        <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Looks like a new question. Please select a table to answer it better."}/>
                         <ChatTableInput onChange={onTableSelected} prompt={tableInputs[id].prompt} selectedTableId={tableInputs[id].tableId}/>
                         </>
                     )}

@@ -1,14 +1,16 @@
+
 /**
  * This is a generated code based on interface yaml. Please don't edit it
  * (c) Data Facade LLC.
  */
-
-import * as Entity from "../entities/Entities";
-
+ 
+import * as Entity from '../entities/Entities';
+ 
 export interface UpdateRequest<T> {
-    newProperties: T;
-    filter: T;
+   newProperties: T
+   filter: T
 }
+
 
 export interface ActionDefinitionCardViewResponse {
     DefinitionId?: string;
@@ -22,10 +24,12 @@ export interface ActionDefinitionCardViewResponse {
     DefinitionPublishStatus?: string;
 }
 
+
 export interface ActionDefinitionDetail {
     ActionDefinition?: ActionDefinitionWithTags;
     ActionTemplatesWithParameters?: ActionTemplatesWithParameters[];
 }
+
 
 export interface ActionDefinitionSelectorResponse {
     ActionId?: string;
@@ -36,10 +40,12 @@ export interface ActionDefinitionSelectorResponse {
     ActionDescription?: String;
 }
 
+
 export interface ActionDefinitionWithTags {
     model?: Entity.ActionDefinition;
     tags?: Entity.Tag[];
 }
+
 
 export interface ActionDependency {
     RelationshipType?: string;
@@ -49,6 +55,7 @@ export interface ActionDependency {
     Id?: string;
 }
 
+
 export interface ActionDetailsForApplication {
     model?: Entity.ActionDefinition;
     stagesOrParameters?: number;
@@ -57,6 +64,7 @@ export interface ActionDetailsForApplication {
     averageRunTime?: number;
 }
 
+
 export interface ActionExecutionIncludeDefinitionInstanceDetailsResponse {
     ActionDefinition?: Entity.ActionDefinition;
     ActionInstance?: Entity.ActionInstance;
@@ -64,6 +72,7 @@ export interface ActionExecutionIncludeDefinitionInstanceDetailsResponse {
     ActionParameterDefinitions?: Entity.ActionParameterDefinition[];
     ActionParameterInstances?: Entity.ActionParameterInstance[];
 }
+
 
 export interface ActionInstanceCardViewResponse {
     InstanceId?: string;
@@ -78,6 +87,7 @@ export interface ActionInstanceCardViewResponse {
     NumberOfUsers?: number;
 }
 
+
 export interface ActionInstanceDetails {
     ActionDefinition?: Entity.ActionDefinition;
     ActionInstance?: Entity.ActionInstance;
@@ -85,15 +95,18 @@ export interface ActionInstanceDetails {
     ActionParameterInstance?: Entity.ActionParameterInstance[];
 }
 
+
 export interface ActionInstanceWithParameters {
     model?: Entity.ActionInstance;
     ParameterInstances?: Entity.ActionParameterInstance[];
 }
 
+
 export interface ActionParameterDefinitionWithTags {
     model?: Entity.ActionParameterDefinition;
     tags?: Entity.Tag[];
 }
+
 
 export interface ActionRun {
     ActionExecutionId?: string;
@@ -109,11 +122,13 @@ export interface ActionRun {
     ActionInstanceName?: string;
 }
 
+
 export interface ActionTemplatesWithParameters {
     model?: Entity.ActionTemplate;
     tags?: Entity.Tag[];
     actionParameterDefinitions?: ActionParameterDefinitionWithTags[];
 }
+
 
 export interface ApplicationCardViewResponse {
     ApplicationId?: string;
@@ -130,6 +145,7 @@ export interface ApplicationCardViewResponse {
     InstallationStatus?: boolean;
 }
 
+
 export interface ApplicationDetails {
     numberOfActions?: number;
     numberOfFlows?: number;
@@ -139,6 +155,7 @@ export interface ApplicationDetails {
     gitSyncStatus?: boolean;
 }
 
+
 export interface ApplicationRunsByMe {
     ApplicationModel?: Entity.Application;
     ActionDefinitions?: Entity.ActionDefinition[];
@@ -146,30 +163,36 @@ export interface ApplicationRunsByMe {
     ActionExecutions?: Entity.ActionExecution[];
 }
 
+
 export interface ChartWithData {
     model?: Entity.Chart;
     chartData?: object;
     rawData?: object;
 }
 
+
 export interface ColumnDetailUpload {
     ColumnEntity?: Entity.ColumnProperties;
     Tags?: Entity.Tag[];
 }
+
 
 export interface ColumnInfo {
     ColumnProperties?: Entity.ColumnProperties;
     NumberOfActions?: number;
 }
 
+
 export interface CopyActionDefinitionPayload {
     ExistingActionId?: string;
 }
+
 
 export interface CreateApplicationRequest {
     model?: Entity.Application;
     tags?: Entity.Tag[];
 }
+
 
 export interface DashboardChartWithData {
     chartWithData?: ChartWithData;
@@ -177,24 +200,29 @@ export interface DashboardChartWithData {
     ActionInstanceId?: string;
 }
 
+
 export interface DashboardDetails {
     numberOfCharts?: number;
     model?: Entity.Dashboard;
 }
 
+
 export interface ExecutionLogsStatus {
     logsPresent?: boolean;
 }
+
 
 export interface FilteredColumnsResponse {
     Columns?: Entity.ColumnProperties[];
     FilteredBasedOnTags?: boolean;
 }
 
+
 export interface GetSlackChannelsResponse {
     entity?: Entity.ProviderInstance;
     channels?: SlackConversation[];
 }
+
 
 export interface ManagementServiceUser {
     id?: string;
@@ -207,15 +235,18 @@ export interface ManagementServiceUser {
     signedEULA?: boolean;
 }
 
+
 export interface OOBActionStatus {
     ActionDefinitionId?: string;
     ActionExecutionId?: string;
     ActionExecutionStatus?: string;
 }
 
+
 export interface PossibleAutoFlows {
     PossibleAutoFlow?: string[];
 }
+
 
 export interface ProviderCardView {
     ProviderInstance?: Entity.ProviderInstance;
@@ -224,20 +255,24 @@ export interface ProviderCardView {
     SyncActionInstance?: Entity.ActionInstance;
 }
 
+
 export interface ProviderDefinitionDetail {
     ProviderDefinition?: Entity.ProviderDefinition;
     ProviderParameterDefinition?: Entity.ProviderParameterDefinition[];
 }
+
 
 export interface ProviderHistoryStat {
     ActionRunHistory?: number[];
     FailedActionCount?: number;
 }
 
+
 export interface ProviderInformation {
     ProviderInstance?: ProviderInstanceWithTags;
     ProviderParameterInstance?: Entity.ProviderParameterInstance[];
 }
+
 
 export interface ProviderInstanceStat {
     NumberOfExecutions?: number;
@@ -251,10 +286,12 @@ export interface ProviderInstanceStat {
     SyncFailed?: number;
 }
 
+
 export interface ProviderInstanceWithTags {
     model?: Entity.ProviderInstance;
     tags?: Entity.Tag[];
 }
+
 
 export interface RecurringActionInstanceDetails {
     model?: Entity.ActionInstance;
@@ -270,10 +307,12 @@ export interface RecurringActionInstanceDetails {
     ActionType?: string;
 }
 
+
 export interface SaveDashboardForExecution {
     entityProperties?: Entity.Dashboard;
     withExecutionId?: string;
 }
+
 
 export interface SlackConversation {
     Name?: string;
@@ -281,10 +320,12 @@ export interface SlackConversation {
     Type?: string;
 }
 
+
 export interface TableAndColumns {
     Table?: TableDetailUpload;
     Columns?: ColumnDetailUpload[];
 }
+
 
 export interface TableBrowserResponse {
     TableUniqueName?: string;
@@ -299,15 +340,18 @@ export interface TableBrowserResponse {
     TableInfo?: string;
 }
 
+
 export interface TableDetailUpload {
     TableEntity?: Entity.TableProperties;
     Tags?: Entity.Tag[];
 }
 
+
 export interface TableOOBActionStatus {
     OOBActionsStatus?: OOBActionStatus[];
     TableId?: string;
 }
+
 
 export interface TablePropertiesInfo {
     Health?: number;
@@ -316,15 +360,18 @@ export interface TablePropertiesInfo {
     SyncOOBActionStatus?: OOBActionStatus[];
 }
 
+
 export interface TablePropertiesWithColumns {
     columns?: Entity.ColumnProperties[];
     table?: Entity.TableProperties;
 }
 
+
 export interface TableView {
     Columns?: ColumnInfo[];
     TableData?: Entity.ActionExecution;
 }
+
 
 export interface TagDetails {
     Id?: string;
@@ -342,22 +389,26 @@ export interface TagDetails {
     LinkedSubsidiaries?: Entity.Tag[];
 }
 
+
 export interface UpdateActionDefinitionWithTemplate {
     filter?: Entity.ActionDefinition;
     newProperties?: Entity.ActionDefinition;
     ActionTemplateWithParameters?: ActionTemplatesWithParameters[];
 }
 
+
 export interface WebAppDetails {
     WebApp?: ActionDefinitionDetail;
     Components?: Entity.ComponentDefinition[];
 }
+
 
 export interface WorkflowActionExecutions {
     WorkflowDefinition?: Entity.ActionDefinition;
     WorkflowExecution?: Entity.ActionExecution;
     ChildExecutionsWithDefinitions?: WorkflowDefinitionWithExecutionDetails[];
 }
+
 
 export interface WorkflowDefinitionWithExecutionDetails {
     ActionDefinition?: Entity.ActionDefinition;
@@ -366,21 +417,10 @@ export interface WorkflowDefinitionWithExecutionDetails {
     stageName?: string;
 }
 
+
 export interface WorkflowStagesWithActions {
     Actions?: Entity.ActionDefinition[];
     stageName?: string;
 }
 
-export type ActionParameterDefinitionParentRelationshipNameType = "TableColumn"
 
-export type TableColumnRelationshipConfig = {
-
-}
-
-export type ActionParameterDefinitionParentRelationshipConfigType = TableColumnRelationshipConfig
-
-export type ActionParameterDefinitionConfig = {
-    ParentParameterDefinitionId?: string,
-    ParentRelationshipName?: ActionParameterDefinitionParentRelationshipNameType,
-    ParentRelationshipConfig?: ActionParameterDefinitionParentRelationshipConfigType
-}

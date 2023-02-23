@@ -8,9 +8,9 @@ import { useLocation } from 'react-router-dom'
 import { useEffect, useState } from "react"
 import Icon from "@ant-design/icons"
 import { SidebarItems } from './utils'
-import { v4 as uuidv4 } from 'uuid';
 import { setLocalStorage } from "@/utils"
 import { LogoIcon } from "@/assets/icon.theme"
+import { getUniqueId } from "../utils/getUniqueId"
 
 const MenuText = styled(Typography)`
     font-size:11px;
@@ -27,12 +27,6 @@ const AntMenu = styled(Menu)`
     
 }    
 `
-
-export const getRandomId = () => {
-    let id = uuidv4();
-    return id;
-}
-
 
 const renderMenu = (item: any, selectedKey: string) => {
     return (
@@ -60,7 +54,7 @@ const AppSidebar = () => {
 
     const onMenuItemClick = (item: any) => {
         if (item.key === "chats") {
-            let chatID = getRandomId();
+            let chatID = getUniqueId();
             setLocalStorage(`chat_${chatID}`, chatID)
             navigate(`/chats/${chatID}?tabKey=chats`);
 

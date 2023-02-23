@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { getRandomId } from '@/layouts/sidebar';
+import { getUniqueId } from "@/utils/getUniqueId";
 import { ConnectionButton } from '@/pages/chat/ChatFooter/ChatFooter.styles';
 import { removeLocalStorage, setLocalStorage } from '@/utils';
 import { PlusOutlined } from '@ant-design/icons';
@@ -40,7 +40,7 @@ const dropdownStyle = {
 const AddMenu = () => {
     const navigate = useNavigate()
     const initiateChat = () => {
-        const chatId = getRandomId();
+        const chatId = getUniqueId();
         setLocalStorage(`chat_${chatId}`, chatId);
         navigate(`/chats/${chatId}?tab=chats`)
     }
