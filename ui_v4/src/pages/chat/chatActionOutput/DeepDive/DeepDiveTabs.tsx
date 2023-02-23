@@ -1,15 +1,15 @@
-import BrowserTab from "@/components/BrowserTab";
-import { Col, Row, TabsProps,Tabs } from "antd";
+import { Tabs } from "antd";
 import { useEffect, useState } from "react";
 import { DeepDiveMainWrapper } from "./DeepDive.styles";
 import DeepDiveDetails from "./index";
 
 const TabComponent = ({deepdiveData}:any) => {
+    console.log(deepdiveData)
     return ( <div>
         {/* <h2>{deepdiveData?.data?.ActionExecution?.ActionInstanceName || "New Deep Dive"}</h2> */}
         {/* Deep Dive Tabs pending */}
         {/* <DeepDiveTabs> */}
-        <DeepDiveDetails defaultCode={deepdiveData?.data?.ActionExecution?.ActionInstanceRenderedTemplate} actionExecutionDetailQuery={deepdiveData?.data}/>
+        <DeepDiveDetails defaultCode={deepdiveData?.data?.ActionInstance?.UserScript} actionExecutionDetailQuery={deepdiveData?.data}/>
         {/* </DeepDiveTabs> */}
         </div>)
 }

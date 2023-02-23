@@ -1,5 +1,5 @@
 
-import { ColumnProperties, TableProperties, UpstreamAction } from "@/generated/entities/Entities"
+import { ColumnProperties, TableProperties } from "@/generated/entities/Entities"
 import { FilteredColumnsResponse } from "@/generated/interfaces/Interfaces"
 import useFetchColumnsForTableAndTags from "@/hooks/useFetchColumnsForTableAndTags"
 import useSlackChannelInput from "@/hooks/useSlackChannelInput"
@@ -7,6 +7,7 @@ import useTables from "@/hooks/useTables"
 import { Input, Select } from "antd"
 import React, { ChangeEvent } from "react"
 
+export type UpstreamAction = {stageId: string, stageName: string, actionName: string, actionId: string, actionIndex: number}
 
 export interface StringParameterInput {
     parameterType: "STRING",

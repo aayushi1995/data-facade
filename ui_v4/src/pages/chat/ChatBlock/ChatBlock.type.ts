@@ -12,6 +12,6 @@ export interface IChatResponse {
     ChatId?: string;
     SentBy?: string;
     Index?: string | number;
-    MessageType?: "text" | "action_output" | "action" | "error" | "action_instance";
+    MessageType?: "text" | "action_output" | "action" | "error" | "action_instance" | "table_input";
     MessageContent?: any;
 }

@@ -378,6 +378,7 @@ export interface ActionInstance extends BaseEntity{
 	ResultTableName?: string
 	ResultSchemaName?: string
 	Config?: string
+	UserScript?: string
 }
 
 

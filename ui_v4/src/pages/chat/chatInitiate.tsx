@@ -8,6 +8,7 @@ import { ActionDefinitionDetail, ActionInstanceWithParameters } from "@/generate
 
 import { getLocalStorage } from "@/utils";
 import { ChatProvider } from '@contexts/ChatContext/index';
+import ReactSplit from '@devbookhq/splitter';
 import { Alert, Col, Row, Spin } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -19,8 +20,8 @@ import DeepDive from "./chatActionOutput/DeepDive/DeepDiveTabs";
 import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
-import ReactSplit, { SplitDirection } from '@devbookhq/splitter'
 import { FlexBox } from "./ChatFooter/ChatFooter.styles";
+import ChatTableInput from "./chatTableInput";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
@@ -36,8 +37,10 @@ const defaultBotMessage = (username: string): IChatMessage => {
 
 type ActionMessageContent = {actionInstanceWithParameterInstances: ActionInstanceWithParameters, actionDefinitionDetail?: ActionDefinitionDetail}
 
+export type TableInputContent = {tableId?: string, prompt: string}
 
-const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation, handleDeepDive }: any ) => {
+
+const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation, handleDeepDive, tableInputs }: any ) => {
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     useEffect(() => {
         chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
@@ -47,14 +50,24 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
         handleConversation({actionInstanceWithParameterInstances: messageContent}, 'user', type, undefined, true)
     }
 
+    const onTableSelected = (tableId: string, prompt: string) => {
+        handleConversation({tableId: tableId, prompt: prompt}, 'user', 'table_input', undefined, true)
+    }
+
     console.log(messages)
     return (
         <div>
             {messages?.map(({ id, type, ...props }: IChatMessage) =>
                 <React.Fragment key={id}>
-                    {type !== "action_output"  && type !== "action_instance" && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
+                    {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
                     {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} />}
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={handleActionInstanceSubmit} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
+                    {type === "table_input" && (Object.keys(tableInputs).length > 0 && tableInputs[id] && 
+                        <>
+                        <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Sorry we could not understand the question. Please select a table to answer better"}/>
+                        <ChatTableInput onChange={onTableSelected} prompt={tableInputs[id].prompt} selectedTableId={tableInputs[id].tableId}/>
+                        </>
+                    )}
                 </React.Fragment>
             )}
             {loading && <Spin />}
@@ -83,6 +96,7 @@ const InitiateChat = () => {
     const [showActionOutput, setShowActionOutput] = useState(false)
     const [executionId, setExecutionId]: any = useState({})
     const [actionDefinitions, setActionDefinitions] = useState<Record<string, ActionMessageContent>>({})
+    const [tableInnputIds, setTableInputIds] = useState<Record<string, TableInputContent>>({})
     const [showDeepDive, setShowDeepDive] = useState(true)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
 
@@ -146,7 +160,7 @@ const InitiateChat = () => {
             type: type ? type : 'text'
         }
         if(!ignoreMessage) {
-            setMessages(messages => messages ? [...messages, {...temp, message: message?.text}] : [{...temp, message: message?.text}])
+            setMessages(messages => messages ? [...messages, {...temp, message: message?.text || message?.error}] : [{...temp, message: message?.text}])
             
         }
 
@@ -186,8 +200,12 @@ const InitiateChat = () => {
                     return handleActionDefinition(messageBody)
                 }
                 case 'error': {
-                    return handleConversation(messageBody?.MessageContent, 'system', 'error', messageBody?.Id)
+                    return handleConversation(JSON.parse(messageBody?.MessageContent)?.error, 'system', 'error', messageBody?.Id)
                 }
+                case 'table_input': {
+                    return handleTableInput(messageBody)
+                }
+
                 default: break;
             }
 
@@ -204,6 +222,17 @@ const InitiateChat = () => {
                 [messageBody?.Id]: actionOutputId
             }))
         }
+    }
+
+    const handleTableInput = (messageBody: IChatResponse) => {
+        const messageContent =  JSON.parse(messageBody?.MessageContent) as TableInputContent
+        handleConversation(messageBody, 'system', 'table_input', messageBody?.Id)
+
+        setTableInputIds(prevState => ({
+            ...prevState,
+            [messageBody.Id!]: messageContent
+        }))
+
     }
 
     
@@ -259,7 +288,7 @@ const InitiateChat = () => {
                                             :
                                             <Col sm={24}>
                                                 <MessageWrapper>
-                                                    <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation}  />
+                                                    <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} />
                                                 </MessageWrapper>
                                                 <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
             

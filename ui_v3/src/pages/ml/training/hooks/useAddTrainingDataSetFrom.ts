@@ -75,6 +75,7 @@ const useAddTrainingDataSetForm = (props: AddTrainingDataSetFormProps) => {
                 AnswerType: trainingDataSetState.answerType,
                 TargetUser: trainingDataSetState.targetUser?.join(','),
                 CreatedBy: userSettingsSingleton.userEmail,
+                Author: userSettingsSingleton.userEmail,
                 CreatedOn: Date.now()
             }
 
