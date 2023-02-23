@@ -6,7 +6,7 @@ import DeepDiveDetails from "./index";
 const TabComponent = ({deepdiveData}:any) => {
     return ( 
         <div>
-            <DeepDiveDetails defaultCode={deepdiveData?.data?.ActionExecution?.ActionInstanceRenderedTemplate} actionExecutionDetailQuery={deepdiveData?.data} ResultTableName={deepdiveData?.data?.ActionInstance?.ResultTableName}/>
+            <DeepDiveDetails defaultCode={deepdiveData?.data?.ActionInstance?.UserScript} actionExecutionDetailQuery={deepdiveData?.data} ResultTableName={deepdiveData?.data?.ActionInstance?.ResultTableName}/>
         </div>
     )
 }
