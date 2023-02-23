@@ -12,7 +12,7 @@ import Editor from "@monaco-editor/react";
 
 const CodeEditor = (props) => {
     const readOnly = props.readOnly || false
-    const [fontSize, setFontSize] = React.useState(12)
+    const [fontSize, setFontSize] = React.useState(15)
     const languageToSyntaxMap = {
         [TemplateLanguage.PYTHON]: "python",
         [TemplateLanguage.SQL]: "sql",
