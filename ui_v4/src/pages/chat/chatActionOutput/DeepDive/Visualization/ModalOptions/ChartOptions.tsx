@@ -6,23 +6,25 @@ import { getData } from '../../../utils'
 import { SelectWrapper } from './ChartOptions.styles'
 
 
-const ChartOptions = ({type, ...props}:any) => {
+const ChartOptions = ({type, tableName, ...props}:any) => {
+    const chatContext = useContext(ChatContext)
+    const tableData = chatContext?.tableData?.[tableName]
 
     switch (type){
         case 'line': {
-            return <LineChartOptions {...props}/>
+            return <LineChartOptions tableData={tableData} {...props}/>
         }
         case 'bar': {
-            return <BarChartOptions {...props}/>
+            return <BarChartOptions  tableData={tableData} {...props}/>
         }
         case 'linebar': {
-            return <LineBarOptions {...props}/>
+            return <LineBarOptions  tableData={tableData} {...props}/>
         }
         case 'pie': {
-            return <PieChartOptions {...props}/>
+            return <PieChartOptions  tableData={tableData} {...props}/>
         }
         case 'scatter': {
-            return <ScatterChartOptions {...props}/>
+            return <ScatterChartOptions  tableData={tableData} {...props}/>
         }
         default: {
             return <div>Something went wrong</div>
@@ -34,13 +36,12 @@ const ChartOptions = ({type, ...props}:any) => {
 export default ChartOptions
 
 
-const LineChartOptions = ({handleChartData}:any) => {
-    const chatContext = useContext(ChatContext)
-    
+const LineChartOptions = ({handleChartData,tableData }:any) => {
+
     let [axis, setaxis] = useState<any>()
 
     const handleXaxis = (value:any) => {
-        const data = getData(chatContext?.tableData?.dataGridRows, value)
+        const data = getData(tableData?.dataGridRows, value)
         setaxis({
             xaxis: data,
             yaxis: axis?.yaxis,
@@ -51,7 +52,7 @@ const LineChartOptions = ({handleChartData}:any) => {
     const handleYaxis = (value:any) => {
         // set yaxis
         // set ydata
-        const data = getData(chatContext?.tableData?.dataGridRows, value)
+        const data = getData(tableData?.dataGridRows, value)
         setaxis({
             xaxis: axis?.xaxis || '',
             yaxis: data,
@@ -66,7 +67,7 @@ const LineChartOptions = ({handleChartData}:any) => {
     }
 
     // TODO : add memoization
-    const columns = chatContext?.tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
+    const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
 
 
     return (
@@ -96,13 +97,13 @@ const LineChartOptions = ({handleChartData}:any) => {
     )
 }
 
-const BarChartOptions = ({handleChartData}:any) => {
-    const chatContext = useContext(ChatContext)
+const BarChartOptions = ({handleChartData, tableData}:any) => {
+   
     
     let [axis, setaxis] = useState<any>()
 
     const handleXaxis = (value:any) => {
-        const data = getData(chatContext?.tableData?.dataGridRows, value)
+        const data = getData(tableData?.dataGridRows, value)
         setaxis({
             xaxis: data,
             yaxis: axis?.yaxis,
@@ -113,7 +114,7 @@ const BarChartOptions = ({handleChartData}:any) => {
     const handleYaxis = (value:any) => {
         // set yaxis
         // set ydata
-        const data = getData(chatContext?.tableData?.dataGridRows, value)
+        const data = getData(tableData?.dataGridRows, value)
         setaxis({
             xaxis: axis?.xaxis || '',
             yaxis: value,
@@ -128,7 +129,7 @@ const BarChartOptions = ({handleChartData}:any) => {
     }
 
     // TODO : add memoization
-    const columns = chatContext?.tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
+    const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
 
 
     return (
@@ -158,13 +159,13 @@ const BarChartOptions = ({handleChartData}:any) => {
     )
 }
 
-const LineBarOptions = ({handleChartData}:any) => {
+const LineBarOptions = ({handleChartData, tableData}:any) => {
     const chatContext = useContext(ChatContext)
     
     let [axis, setaxis] = useState<any>()
 
     const handleXaxis = (value:any) => {
-        const data = getData(chatContext?.tableData?.dataGridRows, value)
+        const data = getData(tableData?.dataGridRows, value)
         setaxis({
             xaxis: data,
             yaxis: axis?.yaxis,
@@ -175,7 +176,7 @@ const LineBarOptions = ({handleChartData}:any) => {
     const handleYaxis = (type:any,value:any) => {
         // set yaxis
         // set ydata
-        const data = getData(chatContext?.tableData?.dataGridRows, value)
+        const data = getData(tableData?.dataGridRows, value)
         const actualData = axis?.data ? [...axis.data, {
                 name: value,
                 type: type,
@@ -202,7 +203,7 @@ const LineBarOptions = ({handleChartData}:any) => {
     }
 
     // TODO : add memoization
-    const columns = chatContext?.tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
+    const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
 
 
     return (
@@ -240,14 +241,14 @@ const LineBarOptions = ({handleChartData}:any) => {
     )
 }
 
-const PieChartOptions = ({handleChartData}:any) => {
+const PieChartOptions = ({handleChartData, tableData}:any) => {
     const chatContext = useContext(ChatContext)
     
     let [axis, setaxis] = useState<any>()
 
     
     const handleXaxis = (value:any) => {
-        const data = getData(chatContext?.tableData?.dataGridRows, value)
+        const data = getData(tableData?.dataGridRows, value)
         setaxis({
             xaxis: value,
             yaxis: axis?.yaxis,
@@ -261,7 +262,7 @@ const PieChartOptions = ({handleChartData}:any) => {
         let data:any[] = []
         
         if(axis.xaxis) {
-                chatContext?.tableData?.dataGridRows?.map((obj:any) => {
+                tableData?.dataGridRows?.map((obj:any) => {
                     if(obj?.[value] || obj?.[axis.xaxis]){
                         data.push({
                             value: obj?.[value],
@@ -284,7 +285,7 @@ const PieChartOptions = ({handleChartData}:any) => {
     }
 
     // TODO : add memoization
-    const columns = chatContext?.tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
+    const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
 
 
     return (
@@ -315,14 +316,14 @@ const PieChartOptions = ({handleChartData}:any) => {
 }
 
 
-const ScatterChartOptions = ({handleChartData}:any) => {
+const ScatterChartOptions = ({handleChartData, tableData}:any) => {
         const chatContext = useContext(ChatContext)
         let [axis, setaxis] = useState<any>()
     
         const handleXaxis = (value:any) => {
             let data:any[] = []
             if(axis?.yaxis) {
-                    chatContext?.tableData?.dataGridRows?.map((obj:any) => {
+                    tableData?.dataGridRows?.map((obj:any) => {
                         if(obj?.[value] || obj?.[axis.yaxis]){
                             data.push({
                                 value: obj?.[value],
@@ -342,7 +343,7 @@ const ScatterChartOptions = ({handleChartData}:any) => {
             let data:any[] = []
             
             if(axis?.xaxis) {
-                    chatContext?.tableData?.dataGridRows?.map((obj:any) => {
+                    tableData?.dataGridRows?.map((obj:any) => {
                         if(obj?.[value] || obj?.[axis.xaxis]){
                             data.push({
                                 value: obj?.[value],
@@ -366,7 +367,7 @@ const ScatterChartOptions = ({handleChartData}:any) => {
         }
     
         // TODO : add memoization
-        const columns = chatContext?.tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
+        const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
     
     
         return (

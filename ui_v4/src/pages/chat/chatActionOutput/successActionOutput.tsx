@@ -24,7 +24,7 @@ export interface ViewActionExecutionOutputProps {
 }
 
 const SuccessActionOutput = (props: ViewActionExecutionOutputProps) => {
-    const { ActionExecution, ActionDefinition } = props
+    const { ActionExecution, ActionDefinition, ActionInstance } = props
     const actionExecutionParsedOutputQuery = useActionExecutionParsedOutput({ actionExecutionFilter: { Id: ActionExecution?.Id }, queryOptions: { staleTime: 1000 } })
 
     React.useEffect(() => {
@@ -34,9 +34,9 @@ const SuccessActionOutput = (props: ViewActionExecutionOutputProps) => {
     const outputComponentToRender = (output?: any) => {
         switch (ActionDefinition?.PresentationFormat || "NA") {
             case ActionDefinitionPresentationFormat.TABLE_VALUE:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected} title={props.title}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected} title={props.title} ActionInstance={ActionInstance}/>
             case ActionDefinitionPresentationFormat.OBJECT:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} title={props.title}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} title={props.title} ActionInstance={ActionInstance}/>
             default:
                 return <Alert message="Not Supported Format" description={ActionDefinition?.PresentationFormat} />
         }
@@ -96,13 +96,15 @@ export interface ViewActionExecutionTableOutputProps {
     TableOutput: TableOutputSuccessfulFormat | TableOutputSizeExceededErrorFormat,
     ActionExecution: ActionExecution,
     ActionDefinition: ActionDefinition,
+    ActionInstance: ActionInstance
     onDeepDiveActionSelected?: (actionId: string) => void
     title?:string
+    
 }
 
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
     const setChatContext = useContext(SetChatContext)
-    const { TableOutput , ActionExecution, ActionDefinition } = props as any
+    const { TableOutput , ActionExecution, ActionDefinition, ActionInstance } = props as any
     const useGetPresignedDowloadUrl = useGetPreSignedUrlForExecutionOutput(ActionExecution?.OutputFilePath || "NA", 5)
     const { downloadExecutionOutputFromS3, download } = useDownloadExecutionOutputFromS3()
     
@@ -115,8 +117,12 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
             type: "setTableData",
             payload: {
                 tableData: {
-                    dataGridColumns: dataGridColumns,
-                    dataGridRows: dataGridRows
+                    tableId: ActionInstance?.ResultTableName,
+                    data: {
+                        dataGridColumns: dataGridColumns,
+                        dataGridRows: dataGridRows
+                    }
+                   
                 }
             }
         })
@@ -148,7 +154,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
         return (
-           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title}/>
+           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName}/>
         )
     } else if (isTableOutputSizeExceededErrorFormat(TableOutput)) {
         const errorType: string = TableOutput.errorType

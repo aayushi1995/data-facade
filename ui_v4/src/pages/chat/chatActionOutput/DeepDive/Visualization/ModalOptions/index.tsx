@@ -7,14 +7,9 @@ import { ChartConfigModalStyled, SelectWrapper } from './ChartOptions.styles'
 
 const type = ['line', 'bar', 'linebar', 'pie', 'scatter']
 
-const ModalOptions = ({showChartModal, setShowChartModal, columms, handleChartData }:any) => {
+const ModalOptions = ({showChartModal, setShowChartModal, handleChartData, tableName }:any) => {
 
     const [chartType, setChartType] = useState<any | undefined>()
-    const [data, setData] = useState()
-
-    const handleData = (data:any) => {
-        setData(data)
-    }
 
 
     const handleChartType = (type:string) => {
@@ -26,15 +21,6 @@ const ModalOptions = ({showChartModal, setShowChartModal, columms, handleChartDa
         setShowChartModal(false)
     }
 
-    const [popover, setPopOver] = useState(false)
-
-    const hide = () => {
-        setPopOver(false)
-    }
-
-    const handleOpenChange = (value:boolean) => {
-        setPopOver(value)
-    }
 
     return (
         <Modal centered title="Chart Settings" open={showChartModal} onOk={handleModalOK} onCancel={() => setShowChartModal(false)} footer={null}>
@@ -49,7 +35,7 @@ const ModalOptions = ({showChartModal, setShowChartModal, columms, handleChartDa
                     />
                 </SelectWrapper>
                
-                 {chartType && <ChartOptions type={chartType} handleChartData={handleChartData}/>}
+                 {chartType && <ChartOptions type={chartType} handleChartData={handleChartData} tableName={tableName}/>}
             </ChartConfigModalStyled>
            
         </Modal>

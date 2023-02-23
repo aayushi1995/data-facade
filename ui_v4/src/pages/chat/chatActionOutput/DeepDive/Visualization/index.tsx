@@ -8,8 +8,10 @@ import ModalOptions from './ModalOptions'
 
 
 
-const Visualization = () => {
+const Visualization = ({tableName}:any) => {
     const chatContext = useContext(ChatContext)
+    const tableData = chatContext?.tableData?.[tableName]
+
     const [showChart, setShowChart] = useState(false)
     const [showChartModal, setShowChartModal] = useState(false)
 
@@ -22,7 +24,7 @@ const Visualization = () => {
     }
 
 
-    const columns = chatContext?.tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
+    const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
     
     return (
         <div>
@@ -43,7 +45,7 @@ const Visualization = () => {
                         {ChartWrapper({...chartData})}
                     </div>
                 )}
-                <ModalOptions columns={columns} showChartModal={showChartModal} setShowChartModal={setShowChartModal} handleChartData={handleChartData}/>
+                <ModalOptions columns={columns} showChartModal={showChartModal} setShowChartModal={setShowChartModal} handleChartData={handleChartData} tableName={tableName}/>
         </div>
     )
 }

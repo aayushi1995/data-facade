@@ -11,10 +11,6 @@ import { TableProperties, TablePropertiesColumns } from "@/generated/entities/En
 import { labels } from "@/helpers/constant";
 import dataManager from "@/api/dataManager";
 import RenderAllActions from "./RecommendedActions";
-import LineChartWrapper from './Visualization/Charts/LineChartWrapper'
-import { getData } from "../utils";
-import Visualization from "./Visualization";
-import TableComponent from "../TableChartComponent/TableComponent";
 import ActionOutput from "../actionOutput";
 import OutputComponent from "../TableChartComponent/OutputComponent";
 
@@ -33,12 +29,14 @@ interface IObj {
     actionExecutionToBeCreatedId: string;
 }
 
-const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery}:any) => {
+const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableName}:any) => {
     // chat global context 
     const chatContext = useContext(ChatContext)
-    
+
     // ref to scroll into view
-    const scrollRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+    const bottomRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+    const topRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+
 
     // local states 
     const [actionExecutionId, setActionExecutionId] = useState<any>(false)
@@ -50,7 +48,9 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery}:any) => {
 
     useEffect(() => {
         setProviderInstance("231646c0-3e6c-4d35-aff6-ebdd62089c3e")
-        fetchAutoCompletionData("231646c0-3e6c-4d35-aff6-ebdd62089c3e")    
+        fetchAutoCompletionData("231646c0-3e6c-4d35-aff6-ebdd62089c3e") 
+        // scroll to output 
+        scrollToTop()  
     },[])
 
     useEffect(() => {
@@ -138,11 +138,16 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery}:any) => {
     }
     
     const scrollToBottom = () => {
-        scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
+        bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    const scrollToTop = () => {
+        topRef?.current?.scrollIntoView({ behavior: "smooth" });
     }
 
     return (
+
         <DeepDiveCollapsable>
+            <div ref={topRef}></div>
               <Collapse ghost style={{fontSize: '20px'}} activeKey={activeKey} onChange={handleActive}>
                     <StyledPanel
                         header="Data Source"
@@ -182,7 +187,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery}:any) => {
                        
                     >
                         {defaultCode && !actionExecutionId && (
-                            <OutputComponent dataGridColumns={chatContext?.tableData?.dataGridColumns || []} dataGridRows={chatContext?.tableData?.dataGridRows || []}/>
+                            <OutputComponent dataGridColumns={chatContext?.tableData[ResultTableName]?.dataGridColumns || []} dataGridRows={chatContext?.tableData[ResultTableName]?.dataGridRows || []} tableName={ResultTableName}/>
                         )}
                         {actionExecutionId && (
                             <ActionOutput actionExecutionId={actionExecutionId} />
@@ -193,7 +198,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery}:any) => {
                     </StyledPanel>
             </Collapse>
             {/* Actions on Deep Dive Terminal */}
-            <Row justify="end" gutter={8} ref={scrollRef}>
+            <Row justify="end" gutter={8} ref={bottomRef}>
                 <Space>
                     <Button type="primary" ghost>Discard Changes</Button>
                     <Button type="primary">Save</Button>

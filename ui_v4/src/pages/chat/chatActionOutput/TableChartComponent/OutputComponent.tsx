@@ -7,7 +7,7 @@ import {ReactComponent as ChartIcon} from '@assets/icons/bar_chart.svg'
 import {ReactComponent as TableIcon} from '@assets/icons/table.svg'
 import { TabsWrapper } from './OutputComponent.styles';
 
-const items = (dataGridColumns:any, dataGridRows:any) => {
+const items = (dataGridColumns:any, dataGridRows:any, tableName:string) => {
     return [
         {
           key: '1',
@@ -17,12 +17,12 @@ const items = (dataGridColumns:any, dataGridRows:any) => {
         {
           key: '2',
           label: <div><ChartIcon/></div>,
-          children:  <Visualization/>,
+          children:  <Visualization tableName={tableName}/>,
         },
        
       ];
 }
-const OutputComponent = ({dataGridColumns, dataGridRows,title}:any) => {
+const OutputComponent = ({dataGridColumns, dataGridRows,title, tableName}:any) => {
 
     const onChange = (key: string) => {
         console.log(key);
@@ -30,8 +30,8 @@ const OutputComponent = ({dataGridColumns, dataGridRows,title}:any) => {
 
     return (
         <div style={{width: '100%',minWidth:'400px'}}>
-                <Typography.Text ellipsis={true} strong>{title}</Typography.Text>
-                <TabsWrapper><Tabs type="card" defaultActiveKey="1" items={items(dataGridColumns,dataGridRows)} onChange={onChange} /></TabsWrapper>
+                {/* <Typography.Text ellipsis={true} strong>{title}</Typography.Text> */}
+                <TabsWrapper><Tabs type="card" defaultActiveKey="1" items={items(dataGridColumns,dataGridRows, tableName)} onChange={onChange} /></TabsWrapper>
         </div>
     )
 }

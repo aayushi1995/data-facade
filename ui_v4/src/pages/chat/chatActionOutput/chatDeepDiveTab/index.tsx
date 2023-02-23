@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button} from 'antd'
-import { StyledWrapper, CustomButton } from './Chat_DeepDive_Tab.styles'
+import { StyledWrapper, CustomButton } from './chatDeepDiveTab.styles'
 import { ReactComponent as CommentChatIcon } from '../../../../assets/icons/commentChat.svg'
 import { ReactComponent as TerminalIcon } from '../../../../assets/icons/terminal.svg'
 

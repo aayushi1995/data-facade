@@ -2,7 +2,6 @@
 import { initiateChat, startConversation } from "@/actions/chat.actions";
 import Loader from "@/components/Loader";
 import AppContext from "@/contexts/AppContext";
-import { ChatContext, SetChatContext } from "@/contexts/ChatContext/index";
 import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
 import { ActionDefinitionDetail, ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
 
@@ -15,8 +14,8 @@ import { useParams } from "react-router-dom";
 import { ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper, MessageWrapper } from "./Chat.styles";
 import ActionDefination from "./chatActionDefination/actionDefination";
 import ActionOutput from "./chatActionOutput/actionOutput";
-import ChatComponentIconTabExperience from "./chatActionOutput/Chat_DeepDive_Tab";
-import DeepDive from "./chatActionOutput/DeepDive/DeepDiveTabs";
+import ChatComponentIconTabExperience from "./chatActionOutput/chatDeepDiveTab";
+import DeepDiveTabs from "./chatActionOutput/DeepDive/DeepDiveTabs";
 import ChatBlock from "./ChatBlock";
 import { IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
@@ -25,9 +24,10 @@ import ChatTableInput from "./chatTableInput";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
+   
     return {
         id: new Date().toTimeString(),
-        message: `Welcome ${username} ! What insight do you need ?`,
+        message: `Welcome ${username.split(' ')[0]} ! What insight do you need ?`,
         time: new Date().getTime(),
         from: 'system',
         username: 'Data-Facade',
@@ -84,9 +84,6 @@ const InitiateChat = () => {
     const setDataContext = useContext(SetDataContext);
     const dataContext = useContext(DataContext);
     const appContext: any = useContext(AppContext);
-    // chat context
-    const setChatContext = useContext(SetChatContext);
-    const chatContext = useContext(ChatContext);
 
     const { chatId } = useParams();
     const [isError, setIsError] = useState(false);
@@ -97,7 +94,7 @@ const InitiateChat = () => {
     const [executionId, setExecutionId]: any = useState({})
     const [actionDefinitions, setActionDefinitions] = useState<Record<string, ActionMessageContent>>({})
     const [tableInnputIds, setTableInputIds] = useState<Record<string, TableInputContent>>({})
-    const [showDeepDive, setShowDeepDive] = useState(true)
+    const [showDeepDive, setShowDeepDive] = useState(false)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
 
     // function that calls setChatData reducer to store message data in context
@@ -239,7 +236,6 @@ const InitiateChat = () => {
     const handleActionDefinition = (messageBody: IChatResponse) => {
         const messageContent = JSON.parse(messageBody.MessageContent) as ActionMessageContent
         handleConversation(messageBody, 'system', 'action_instance', messageBody?.Id)
-        console.log(messageBody)
 
         setActionDefinitions(prevState => ({
             ...prevState,
@@ -301,7 +297,7 @@ const InitiateChat = () => {
                     <FlexBox>
                     <ChatComponentIconTabExperience handleChatClick={handleChatClick} handleTerminalClick={handleTerminalClick} showDeepDive={showDeepDive} />
                         <DeepDiveWrapperStyled>
-                            <DeepDive deepdiveData={deepdiveData} />
+                            <DeepDiveTabs deepdiveData={deepdiveData} />
                         </DeepDiveWrapperStyled>
                     </FlexBox>
                 </ReactSplit>

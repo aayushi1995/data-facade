@@ -17,7 +17,10 @@ export const SetChatContext = createContext<SetDataContextType>(initialSetModule
 type setChatDataAction = {
   type: "setTableData",
   payload: {
-    tableData?: any | null,
+    tableData: {
+      tableId: string,
+      data?: any | null
+    },
   }
 }
 
@@ -26,10 +29,23 @@ type DataAction = setChatDataAction
 const reducer = (state: DataType, action: DataAction): DataType => {
 
   switch (action.type) {
-    case "setTableData" : {
+    // case "setTableData" : {
+    //   return {
+    //     ...state,
+    //     tableData: action?.payload?.tableData || null
+    //   }
+    // }
+    case "setTableData": {
+      const tableId = action.payload?.tableData?.tableId;
+      const tableData = action.payload?.tableData?.data;
       return {
         ...state,
-        tableData: action?.payload?.tableData || null
+        tableData: {
+          ...state.tableData,
+          [tableId]: {
+            ...tableData 
+          }
+        }
       }
     }
     default:
