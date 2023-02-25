@@ -4,7 +4,7 @@ export interface IChatMessage {
     time: number;
     from: "user" | "system";
     username?: string;
-    type?: "text" | "action_output" | "error" | any;
+    type?: "text" | "action_output" | "error" | "table_upload" | any;
 }
 
 export interface IChatResponse {
@@ -12,6 +12,13 @@ export interface IChatResponse {
     ChatId?: string;
     SentBy?: string;
     Index?: string | number;
-    MessageType?: "text" | "action_output" | "action" | "error" | "action_instance" | "table_input";
+    MessageType?: "text" | "action_output" | "action" | "error" | "action_instance" | "table_input" | "table_upload" | "recommended_actions" | 'confirmation';
     MessageContent?: any;
+}
+
+export type ConfirmationPayloadType = {
+    header: string,
+    moreinfo?: string,
+    onAccept?: Function,
+    onReject?: Function
 }

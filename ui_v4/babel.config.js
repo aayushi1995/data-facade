@@ -1,4 +1,8 @@
 const packageConfig = require('./package');
+require("babel-plugin-lodash");
+require("babel-plugin-antd");
+require("babel-plugin-typescript-to-proptypes");
+
 
 module.exports = {
   sourceMaps: true,
@@ -30,6 +34,9 @@ module.exports = {
     ],
   ],
   plugins: [
+    'babel-plugin-lodash',
+    'babel-plugin-antd',
+    'babel-plugin-typescript-to-proptypes',
     'lodash',
     'antd',
     '@babel/plugin-syntax-dynamic-import',

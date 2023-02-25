@@ -143,6 +143,5 @@ const findHeaderRows = (csvFile, callBackToSendParsingResult) => {
 
 export {
     convertToCsv,
-    findHeaderRows,
-    findHeader
+    findHeaderRows
 };

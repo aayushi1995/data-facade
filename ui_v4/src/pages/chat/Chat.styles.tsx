@@ -1,3 +1,4 @@
+import { List } from 'antd'
 import styled from 'styled-components'
 
 export const ChatWrapper = styled.div`
@@ -54,5 +55,18 @@ export const MainWrapper = styled.div`
         position: relative;
         background: #9CA3AF;
         right: -8px;
+    }
+`
+
+export const RecommendedActionsMainDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    min-width: 30vw;
+`
+
+export const RecommendedActionsMainListItem = styled(List.Item)`
+    &:hover {
+      cursor: pointer;
+      background-color: #e7e7e7;
     }
 `

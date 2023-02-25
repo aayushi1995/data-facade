@@ -1,6 +1,6 @@
 import globalFetch from "@/hooks/useGlobalFetch";
 import { FDSEndpoint } from "@/settings/config";
-import { userSettingsSingleton } from "@/settings/userSettingsSingleton";
+import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
 import { v4 as uuidv4 } from "uuid";
 
 const initiateChat = async (id?: string, user?: string) => {
@@ -52,7 +52,7 @@ const startConversation = async (
 
     try {
         const response = await globalFetch(
-            `${FDSEndpoint}/entity?email=${userSettingsSingleton.userEmail}`,
+            `${FDSEndpoint}/entity${getDefaultRequestQuery()}`,
             "POST",
             data
         );
@@ -69,7 +69,7 @@ const getActionDefinitionDetails = async (id?: string) => {
 
     try {
         const response = await globalFetch(
-            `${FDSEndpoint}/getActionDefinitionDetails`,
+            `${FDSEndpoint}/getActionDefinitionDetails${getDefaultRequestQuery()}`,
             "POST",
             data
         );
@@ -91,7 +91,7 @@ const fetchTableProperties = async (id?: string) => {
 
     try {
         const response = await globalFetch(
-            `${FDSEndpoint}/getproxy`,
+            `${FDSEndpoint}/getproxy${getDefaultRequestQuery()}`,
             "POST",
             data
         );

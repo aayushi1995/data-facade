@@ -1,12 +1,12 @@
-import { useQueries, useQuery, useQueryClient} from "react-query";
-import { userSettingsSingleton } from "@settings/userSettingsSingleton";
-import { FDSEndpoint } from "@/settings/config";
 import { S3RequestType } from "@/helpers/constant";
+import { FDSEndpoint } from "@/settings/config";
 import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
+import { userSettingsSingleton } from "@settings/userSettingsSingleton";
+import { useQueries, useQuery, useQueryClient } from "react-query";
 
 const endPoint = FDSEndpoint
 
-const  dataManager:any = {
+const dataManager:any = {
     getInstance: {}
 };
 

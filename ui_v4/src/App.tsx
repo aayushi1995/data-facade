@@ -8,6 +8,7 @@ import { useAppInternal } from './hooks/useAppInternal';
 import AppLayout from './layouts';
 import PrivateRoutes from '@routes/privateRoutes';
 import PublicRoutes from '@routes/publicRoutes'
+import UploadTableContextProvider from './contexts/UploadTablePageContext';
 
 
 
@@ -62,9 +63,11 @@ const App = ({ children = noop }) => {
 
     <AppContext.Provider value={userSettings}>
       <DataProvider>
+      <UploadTableContextProvider>
         <ErrorBoundary>
           {children(restProps)}
         </ErrorBoundary>
+        </UploadTableContextProvider>
       </DataProvider>
     </AppContext.Provider>
   </ConfigProvider>

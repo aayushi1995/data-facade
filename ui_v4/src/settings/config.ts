@@ -16,7 +16,7 @@ export const isNonProductionEnv = function () {
   return origin.includes("stage") || origin.includes("localhost");
 };
 
-export const LACK_REDIRECT_URL = (origin + "/slackredirect").replace(
+export const SLACK_REDIRECT_URL = (origin + "/slackredirect").replace(
   "http://",
   "https://"
 );

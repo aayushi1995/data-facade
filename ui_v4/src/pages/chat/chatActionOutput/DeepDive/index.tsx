@@ -1,18 +1,18 @@
-import { Button, Collapse, Divider, Row, Space, Table,Empty, Modal, Select } from "antd"
-import {ReactComponent as EditIcon} from '@assets/icons/edit.svg'
-import { ChatContext } from "@/contexts/ChatContext/index";
-import DataSource from "./DataSource";
-import { DeepDiveCollapsable, StyledPanel, PlaceHolderText } from './DeepDive.styles'
-import { useContext, useEffect, useRef, useState } from "react";
+import dataManager from "@/api/dataManager";
 import ReactAceEditor from "@/components/Editor";
-import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
-import { v4 } from "uuid";
+import { ChatContext } from "@/contexts/ChatContext/index";
 import { TableProperties, TablePropertiesColumns } from "@/generated/entities/Entities";
 import { labels } from "@/helpers/constant";
-import dataManager from "@/api/dataManager";
-import RenderAllActions from "./RecommendedActions";
-import ActionOutput from "../actionOutput";
+import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
+import { ReactComponent as EditIcon } from '@assets/icons/edit.svg';
+import { Button, Collapse, Divider, Row, Space } from "antd";
+import { useContext, useEffect, useRef, useState } from "react";
+import { v4 } from "uuid";
 import OutputComponent from "../TableChartComponent/OutputComponent";
+import ActionOutput from "../actionOutput";
+import DataSource from "./DataSource";
+import { DeepDiveCollapsable, PlaceHolderText, StyledPanel } from './DeepDive.styles';
+import RenderAllActions from "./RecommendedActions";
 
 interface IObj {
     email: string;
@@ -77,6 +77,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
 
             const newExecutedId = v4()
             const actionInstanceId = v4()
+            // TODO: Is this intended ?
             let obj = {
                 email: 'aayushi@data-facade.com',
                 actionInstance: {
