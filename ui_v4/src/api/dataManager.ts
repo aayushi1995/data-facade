@@ -311,6 +311,21 @@ dataManager.getInstance.getRecommendedQuestions = async function(tableId:any) {
     }
 }
 
+dataManager.getInstance.getRelatedQuestions = async function (question: string) {
+    if(!isValidUserSettings()){
+        return;
+    }
+
+    const response = await fetch(endPoint + "/getRelatedQuestions" + getDefaultRequestQuery() + "&message=" + question, dummyDataHeader(userSettingsSingleton.token))
+
+    if(response.ok) {
+        return response.json()
+    } else {
+        throw response.json()
+    }
+
+}
+
 
 
 export const fetchEntityBrowser = async (path:any) => {

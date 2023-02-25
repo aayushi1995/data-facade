@@ -1,9 +1,9 @@
+import { AutoComplete, Button, Card } from 'antd';
 import styled from 'styled-components';
-import { ReactComponent as SendIcon } from '../../../assets/icons/send.svg'
-import { ReactComponent as DBConnectionIcon } from '../../../assets/icons/database.svg'
-import { ReactComponent as UploadIcon } from '../../../assets/icons/upload.svg'
-import { ReactComponent as FileReplaceIcon } from '../../../assets/icons/find_replace.svg'
-import { Button, Card } from 'antd';
+import { ReactComponent as DBConnectionIcon } from '../../../assets/icons/database.svg';
+import { ReactComponent as FileReplaceIcon } from '../../../assets/icons/find_replace.svg';
+import { ReactComponent as SendIcon } from '../../../assets/icons/send.svg';
+import { ReactComponent as UploadIcon } from '../../../assets/icons/upload.svg';
 
 
 export const ChatInput = styled.input`
@@ -19,6 +19,23 @@ export const ChatInput = styled.input`
     width: 100%;
     height: 56px;
 `;
+
+export const ChatAutocomplete = (props: any) => <AutoComplete 
+dropdownAlign={{
+    points: ['bl', 'tl'], // align dropdown bottom-left to top-left of input element
+    offset: [0, -4], // align offset
+        overflow: {
+        adjustX: 0, 
+        adjustY: 0, // do not auto flip in y-axis
+    },
+}}
+style={{
+    width: '100%'
+}}
+{...props}
+>
+    <ChatInput />
+</AutoComplete>
 
 export const StyledChatInputWrapper = styled.div`
     width:100%;

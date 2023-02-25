@@ -1,19 +1,21 @@
+import dataManager from '@/api/dataManager';
 import { ConnectionHistoryIcon } from '@/assets/icon.theme';
 import { getLocalStorage, setLocalStorage } from '@/utils';
 import { BulbOutlined, CloseOutlined, FileExcelOutlined, MinusOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Col, Popover, Row, Space, Typography } from 'antd';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { useMutation } from 'react-query';
 // import { SubmitButton } from '@/assets/component.theme';
 import { DataContext, SetDataContext } from '@/contexts/UploadFileDataContextProvider';
 import useContextStorageFile from '@/hooks/useContextStorage';
 import { useLocation } from 'react-router-dom';
 import { ConfirmationPayloadType } from '../ChatBlock/ChatBlock.type';
 import useTableUpload from '../tableUpload/useTableUpload';
-import { ChatInput, ConnectionButton, PopOverCard, StyledCardChartFooterWrapper, StyledChatInputWrapper, StyledSendIcon } from './ChatFooter.styles';
-
+import { ChatAutocomplete, ConnectionButton, PopOverCard, StyledCardChartFooterWrapper, StyledChatInputWrapper, StyledSendIcon } from './ChatFooter.styles';
+import React from 'react';
 
 const ChatFooter = ({ handleSend, loading }: any) => {
-    let inputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+    let inputRef = useRef<HTMLInputElement>(null);
     let fileUploadInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const location = useLocation();
     const s3Url = new URLSearchParams(location.search)?.get("s3Url") || undefined
@@ -21,10 +23,30 @@ const ChatFooter = ({ handleSend, loading }: any) => {
     const shouldShowTour = getLocalStorage('isTourOpen') === "open" ? false : true;
     const [isTourOpen, setIsTourOpen] = useState(shouldShowTour);
     const [showFileUpload, setShowFileUpload] = useState(false);
+    const [relatedQuestions, setRelatedQuestions] = useState<string[]>([])
     const tourRef = useRef(null);
     const dataContext = useContext(DataContext);
     const setDataContext = React.useContext(SetDataContext)
-    
+        const [chatMessage, setChatMessage] = useState<string | undefined>()
+
+    const getRelatedQuestionsMutations = useMutation("GetRelatedQuestion", 
+        (config: {question: string}) => {
+            const fetchedDataManager = dataManager.getInstance as {getRelatedQuestions: Function}
+            return fetchedDataManager.getRelatedQuestions(config.question)
+        }
+    )
+
+    const handleChange = (e: string) => {
+        setChatMessage(e)
+        getRelatedQuestionsMutations.mutate({question: e}, {
+            onSuccess(data, variables, context) {
+                const castedData = data as {RelatedQuestions: string[]}
+                const relatedQuestions = castedData?.RelatedQuestions
+                setRelatedQuestions(relatedQuestions)
+            },
+        })
+    }
+
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
@@ -38,9 +60,12 @@ const ChatFooter = ({ handleSend, loading }: any) => {
 
 
     const handleClick = () => {
-        handleSend({text: inputRef.current.value}, 'user')
-        inputRef.current.value = '';
-        inputRef.current.focus()
+        if(inputRef !== null) {
+            console.log(inputRef)
+            handleSend({text: chatMessage}, 'user')
+            setChatMessage(undefined)
+            inputRef?.current?.focus()
+        }
     }
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
@@ -134,7 +159,14 @@ const ChatFooter = ({ handleSend, loading }: any) => {
                         </Col>
                         <Col span={23}>
                             <StyledChatInputWrapper>
-                                <ChatInput disabled={loading} type="text" placeholder="Type a message..." ref={inputRef} onKeyDown={handleKeyDown} />
+                                {/* <ChatInput onChange={handleChange} disabled={loading} type="text" placeholder="Type a message..." ref={inputRef} onKeyDown={handleKeyDown} /> */}
+                                    <ChatAutocomplete 
+                                        options={relatedQuestions.map(question => ({value: question, label: question}))}
+                                        onChange={handleChange}
+                                        onKeyDown={handleKeyDown}
+                                        value={chatMessage}
+                                        ref={inputRef}
+                                    />
                                 <StyledSendIcon onClick={handleClick} onKeyDown={handleClick} />
                             </StyledChatInputWrapper>
 
