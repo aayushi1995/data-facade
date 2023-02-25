@@ -28,14 +28,12 @@ export const StyledChatInputWrapper = styled.div`
 `
 export const StyledCardChartFooterWrapper = styled.div`
     display: block;
-    position: fixed;
-    bottom: 25px;
     width:100%;
-    z-index:2;
+    z-index:0;
     background-color:white;
     
     & > div {
-        width:90%;
+        width:100%;
     }
 
 `

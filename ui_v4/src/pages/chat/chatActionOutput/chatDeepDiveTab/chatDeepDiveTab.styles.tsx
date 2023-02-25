@@ -2,7 +2,7 @@ import { Button } from 'antd'
 import styled from 'styled-components'
 
 export const StyledWrapper = styled.div`
-    height: 80vh;
+    height: 85vh;
     right: 0px;
     background: #f3f4f6;
     display: flex;
