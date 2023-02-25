@@ -11,6 +11,7 @@ interface MatchParams {
 
 
 const ActionDefination = ({ ActionDefinitionId, ExistingModels, onSubmit }: MatchParams) => {
+    console.log('inside action defintion',ActionDefinitionId, ExistingModels, onSubmit )
 
     const onActionSubmit = (messageContent: ActionInstanceWithParameters) => {
         onSubmit?.(messageContent, MessageTypes.ACTION_INSTANCE)

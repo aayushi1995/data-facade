@@ -3,23 +3,23 @@ import { useEffect, useRef, useState } from "react";
 import { DeepDiveMainWrapper } from "./DeepDive.styles";
 import DeepDiveDetails from "./index";
 
-const TabComponent = ({deepdiveData}:any) => {
+const TabComponent = ({deepdiveData, handleActionSelected}:any) => {
     return ( 
         <div>
-            <DeepDiveDetails defaultCode={deepdiveData?.data?.ActionInstance?.UserScript} actionExecutionDetailQuery={deepdiveData?.data} ResultTableName={deepdiveData?.data?.ActionInstance?.ResultTableName}/>
+            <DeepDiveDetails defaultCode={deepdiveData?.data?.ActionInstance?.UserScript} actionExecutionDetailQuery={deepdiveData?.data} ResultTableName={deepdiveData?.data?.ActionInstance?.ResultTableName} handleActionSelected={handleActionSelected}/>
         </div>
     )
 }
 
-const initialItems = (deepdiveData:any) => [{
+const initialItems = (deepdiveData:any, handleActionSelected:any) => [{
     label: 'New Deep Dive',
-    children: <TabComponent deepdiveData={deepdiveData}/>,
+    children: <TabComponent deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>,
     key: '0',
     closable: true,
   }]
 
-const DeepDive = ({deepdiveData}:any) => {
-        const [items, setItems] = useState(initialItems(deepdiveData));
+const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
+        const [items, setItems] = useState(initialItems(deepdiveData, handleActionSelected));
         const [activeKey, setActiveKey] = useState<any>('0');
         const newTabIndex = useRef(0);
 
@@ -31,7 +31,7 @@ const DeepDive = ({deepdiveData}:any) => {
         const add = () => {
             const newActiveKey = `${newTabIndex.current++}`;
             const newPanes = [...items];
-            newPanes.push({ label: 'title', children: <TabComponent deepdiveData={deepdiveData}/>, key: newActiveKey, closable: true });
+            newPanes.push({ label: 'title', children: <TabComponent deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>, key: newActiveKey, closable: true });
             setItems(newPanes);
             setActiveKey(newActiveKey);
         };
@@ -69,7 +69,7 @@ const DeepDive = ({deepdiveData}:any) => {
             if(!DDobj){
                 let temp = {
                     label: deepdiveData?.data?.ActionDefinition?.UniqueName || 'New Tab',
-                    children: <TabComponent deepdiveData={deepdiveData}/>,
+                    children: <TabComponent deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>,
                     key: deepdiveData?.data?.ActionInstance?.ResultTableName,
                     closable: true,
                 }
@@ -77,7 +77,7 @@ const DeepDive = ({deepdiveData}:any) => {
             } 
            
             if(items.length === 0) {
-                setItems(initialItems(deepdiveData))
+                setItems(initialItems(deepdiveData, handleActionSelected))
             }
             setActiveKey(deepdiveData?.data?.ActionInstance?.ResultTableName)
         },[deepdiveData])

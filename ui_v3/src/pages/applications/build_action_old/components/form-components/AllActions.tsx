@@ -17,7 +17,7 @@ const AllActions = (props: AllActionsProps) => {
     return (
         <LoadingWrapper isLoading={allActionDefinitionsIsLoading} error={allActionDefinitionsError} data={allActionDefinitionsData}>
             <Grid container spacing={3} sx={{px: 2}}>
-                {allActionDefinitionsData.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
+                {allActionDefinitionsData?.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>
                     <Grid item xs={12}>
                         <ActionCard
                             actionId={actionDefinition?.ActionDefinition?.model?.Id||"NA"}

@@ -21,6 +21,7 @@
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-typescript-to-proptypes": "^2.0.0",
     "brace": "^0.11.1",
+    "echarts": "^5.4.1",
     "echarts-for-react": "^3.0.2",
     "history": "^5.3.0",
     "lodash": "^4.17.21",
@@ -68,6 +69,8 @@
     "@types/react-query": "^1.2.9",
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^9.0.0",
-    "craco-alias": "^3.0.1"
+    "babel-plugin-react-hot-loader": "^3.0.0-beta.6",
+    "craco-alias": "^3.0.1",
+    "react-hot-loader": "^4.13.1"
   }
 }

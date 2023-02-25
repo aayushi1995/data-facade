@@ -5,16 +5,16 @@ import useFetchActionDefinitions from '@/hooks/actionDefinitions/useFetchActionD
 import ActionDefinitionActionType from '@/utils/actionDefinitionLabels'
 import { Skeleton } from 'antd';
 
-const RenderAllActions = () => {
+const RenderAllActions = ({handleActionSelection}:any) => {
     const [actions, setActions] = useState<any[]>([])
     const [displayActions, setDisplayActions] = useState<any[]>([])
     const [showSeeAllModal, setShowSeeAllModal]= useState(false)
-
+    
     // hoooks
     const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({})
     
     useEffect(() => {
-        const filteredActionDefinitions:any[] = allActionDefinitionsData.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.WORKFLOW && actionDefinition.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.AUTO_FLOW)
+        const filteredActionDefinitions:any[] = allActionDefinitionsData?.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.WORKFLOW && actionDefinition.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.AUTO_FLOW)
         setActions(filteredActionDefinitions)
         const filteredActions = [...filteredActionDefinitions].slice(0,3)
         setDisplayActions(filteredActions)
@@ -23,6 +23,12 @@ const RenderAllActions = () => {
 
     const handleSeeAll = (value:boolean) => {
         setShowSeeAllModal(value)
+    }
+
+    const handleActionClick = (obj:any) => {
+       
+        handleActionSelection(obj)
+        setShowSeeAllModal(false)
     }
 
     return (
@@ -37,7 +43,7 @@ const RenderAllActions = () => {
                                     <Col sm={8} key={index}>
                                         <Card size="small">
                                             <Space direction="vertical" style={{ width: '100%' }} size="small">
-                                                <Button type="link" shape="circle" icon={<PlayCircleOutlined style={{ fontSize: 24 }} />} />
+                                                <Button type="link" shape="circle" icon={<PlayCircleOutlined style={{ fontSize: 24 }}/>}  onClick={() => handleActionClick(action)}/>
                                                 <Typography.Text strong >{action?.ActionDefinition?.model?.UniqueName}</Typography.Text>
                                                 <Typography.Paragraph ellipsis={true}>{action.action?.ActionDefinition?.model?.DisplayName}</Typography.Paragraph>
                                             </Space>
@@ -59,7 +65,7 @@ const RenderAllActions = () => {
                                 <Col sm={8} key={index}>
                                 <Card size="small">
                                     <Space direction="vertical" style={{ width: '100%' }} size="small">
-                                        <Button type="link" shape="circle" icon={<PlayCircleOutlined style={{ fontSize: 24 }} />} />
+                                        <Button type="link" shape="circle" icon={<PlayCircleOutlined style={{ fontSize: 24 }} />} onClick={() => handleActionClick(action)}/>
                                         <Typography.Text strong >{action?.ActionDefinition?.model?.UniqueName}</Typography.Text>
                                         <Typography.Paragraph ellipsis={true}>{action.action?.ActionDefinition?.model?.DisplayName}</Typography.Paragraph>
                                     </Space>

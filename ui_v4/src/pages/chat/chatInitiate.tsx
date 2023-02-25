@@ -11,6 +11,7 @@ import ReactSplit from '@devbookhq/splitter';
 import { Alert, Col, List, Row, Spin } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { v4 } from "uuid";
 import { ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper, MessageWrapper, RecommendedActionsMainDiv, RecommendedActionsMainListItem } from "./Chat.styles";
 import ChatBlock from "./ChatBlock";
 import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
@@ -41,6 +42,7 @@ export type TableInputContent = {tableId?: string, prompt: string}
 
 
 const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation, handleDeepDive, tableInputs }: any ) => {
+    
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     useEffect(() => {
         chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
@@ -53,11 +55,13 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
     const onTableSelected = (tableId: string, prompt: string) => {
         handleConversation({tableId: tableId, prompt: prompt}, 'user', 'table_input', undefined, true)
     }
+    console.log('message outputs', messages, actionDefinitions)
 
     return (
         <div>
-            {messages?.map(({ id, type, ...props }: IChatMessage) =>
-                <React.Fragment key={id}>
+            {messages?.map(({ id, type, ...props }: IChatMessage) => {
+                console.log(id, type, props)
+               return ( <React.Fragment key={id}>
                     {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
                     {type === "recommended_actions" && 
                         <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
@@ -77,7 +81,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                         <ChatTableInput onChange={onTableSelected} prompt={tableInputs[id].prompt} selectedTableId={tableInputs[id].tableId}/>
                         </>
                     )}
-                </React.Fragment>
+                </React.Fragment>)}
             )}
             {loading && <Spin />}
 
@@ -105,6 +109,8 @@ const InitiateChat = () => {
     const [tableInnputIds, setTableInputIds] = useState<Record<string, TableInputContent>>({})
     const [showDeepDive, setShowDeepDive] = useState(false)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
+    const [size, setSize] = useState([100,0])
+
 
     // function that calls setChatData reducer to store message data in context
     const persistState = () => {
@@ -134,7 +140,6 @@ const InitiateChat = () => {
     useEffect(() => {
         return (() => {
             persistState()
-
         })
     }, [messages])
 
@@ -156,7 +161,8 @@ const InitiateChat = () => {
         }
     }, [chatId])
 
-    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean) => {
+    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternal?:boolean) => {
+
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
             message: message,
@@ -165,6 +171,10 @@ const InitiateChat = () => {
             username: user === 'system' ? 'DataFacade' : appContext?.userName,
             type: type ? type : 'text'
         }
+        if(isExternal) {
+           setMessages((prevState:any) => [...prevState, temp])
+        }
+
         
         if(!ignoreMessage) {
             setMessages(messages => messages ? [...messages, {...temp, message: message?.text || message?.error}] : [{...temp, message: message?.text}])
@@ -187,10 +197,14 @@ const InitiateChat = () => {
 
             });
         }
+       
+
     }
 
     const handleBOTMessage = (messageBody: IChatResponse) => {
+
         const messageType = messageBody ? messageBody.MessageType : 'error';
+
         setTimeout(() => {
             setLoadingMessage(false)
             switch (messageType) {
@@ -234,8 +248,11 @@ const InitiateChat = () => {
     }
 
     const handleActionOutput = (messageBody: IChatResponse | any) => {
+       
         const actionOutputId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
         handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'action_output', messageBody?.Id);
+        console.log(messages)
+
         if (actionOutputId) {
             setShowActionOutput(true)
             setExecutionId((prevState: any) => ({
@@ -259,7 +276,12 @@ const InitiateChat = () => {
     
     const handleActionDefinition = (messageBody: IChatResponse) => {
         const messageContent = JSON.parse(messageBody.MessageContent) as ActionMessageContent
+
+        console.log('Action definition Message Body',messageBody)
+
         handleConversation(messageBody, 'system', 'action_instance', messageBody?.Id)
+
+        console.log('action defintion',messageContent)
 
         setActionDefinitions(prevState => ({
             ...prevState,
@@ -283,8 +305,52 @@ const InitiateChat = () => {
         setShowDeepDive(true)
         setSize([60,40])
     }
+    
+    const handleActionSelected = (data:any) => {
+        // console.log('action selected',data)
+        const actionInstanceWithParameterInstances_model_id = v4()
+        const MessageId = v4()
+        // Create an action object similar to that we recieve from backend
+        const obj = {
+            actionDefinitionDetail: data,
+            actionInstanceWithParameterInstances: {
+                model : {
+                    DefinitionId: data?.ActionDefinition?.model?.Id,
+                    DisplayName: data?.ActionDefinition?.model?.DisplayName,
+                    Id: actionInstanceWithParameterInstances_model_id,
+                    Name: data?.ActionDefinition?.model?.UniqueName,
+                    RenderTemplate: true,
+                    ResultSchemaName: "datafacade_tmp",
+                    ResultTableName: `${data?.ActionDefinition?.model?.DisplayName}${actionInstanceWithParameterInstances_model_id}`,
+                    TemplateId: data?.ActionDefinition?.model?.DefaultActionTemplateId
+                },
+                ParameterInstances: data?.ActionTemplatesWithParameters[0]?.actionParameterDefinitions?.map((obj:any) => {
+                    return {
+                        ActionInstanceId: actionInstanceWithParameterInstances_model_id,
+                        ActionParameterDefinitionId: obj?.model?.Id,
+                        Id: v4()
+                    }
+                })
+            }
+        }
+    
+        let messageContent = {
+            ChatId: v4(),
+            Id: MessageId,
+            MessageContent: JSON.stringify(obj),
+            MessageType: "action_instance",
+            SentBy: "Bot",
+            SentOn: new Date().getTime()
+        }
 
-    const [size, setSize] = useState([96,4])
+        handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true)
+
+        setActionDefinitions((prevState:any) => ({
+            ...prevState,
+            [MessageId]: messageContent
+        }))
+    }
+
 
 
     return (
@@ -321,7 +387,7 @@ const InitiateChat = () => {
                     <FlexBox>
                     <ChatComponentIconTabExperience handleChatClick={handleChatClick} handleTerminalClick={handleTerminalClick} showDeepDive={showDeepDive} />
                         <DeepDiveWrapperStyled>
-                            <DeepDiveTabs deepdiveData={deepdiveData} />
+                            <DeepDiveTabs deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>
                         </DeepDiveWrapperStyled>
                     </FlexBox>
                 </ReactSplit>

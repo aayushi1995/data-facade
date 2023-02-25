@@ -17,7 +17,7 @@ const SelectFromAllActions = (props: SelectFromAllActionsProps) => {
     } else if(!!allActionDefinitionsError) {
         return <>{allActionDefinitionsError}</>
     } else {
-        const filteredActionDefinitions = allActionDefinitionsData.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.WORKFLOW && actionDefinition.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.AUTO_FLOW)
+        const filteredActionDefinitions = allActionDefinitionsData?.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.WORKFLOW && actionDefinition.ActionDefinition?.model?.ActionType !== ActionDefinitionActionType.AUTO_FLOW)
         return(
             <Grid container spacing={1} sx={{overflowY: 'auto', maxHeight: '550px'}}>
                 {filteredActionDefinitions.filter(actionDefinition => actionDefinition?.ActionDefinition?.model?.UniqueName?.toLocaleLowerCase()?.includes(props.actionDefinitionNameSearchQuery.toLocaleLowerCase())).map(actionDefinition =>

@@ -1,11 +1,11 @@
 import dataManager from "@/api/dataManager";
 import ReactAceEditor from "@/components/Editor";
+import { Button, Collapse, Divider, Row, Space, Table,Empty, Modal, Select, Input } from "antd"
+import {ReactComponent as EditIcon} from '@assets/icons/edit.svg'
 import { ChatContext } from "@/contexts/ChatContext/index";
 import { TableProperties, TablePropertiesColumns } from "@/generated/entities/Entities";
 import { labels } from "@/helpers/constant";
 import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
-import { ReactComponent as EditIcon } from '@assets/icons/edit.svg';
-import { Button, Collapse, Divider, Row, Space } from "antd";
 import { useContext, useEffect, useRef, useState } from "react";
 import { v4 } from "uuid";
 import OutputComponent from "../TableChartComponent/OutputComponent";
@@ -29,7 +29,7 @@ interface IObj {
     actionExecutionToBeCreatedId: string;
 }
 
-const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableName}:any) => {
+const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableName, handleActionSelected}:any) => {
     // chat global context 
     const chatContext = useContext(ChatContext)
 
@@ -39,12 +39,16 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
 
 
     // local states 
-    const [actionExecutionId, setActionExecutionId] = useState<any>(false)
     const [autoCompleteionData, setAutoCompleteionData] = useState<any>([])
     const [providerInstance, setProviderInstance] = useState<string | null>(null)
     const [activeKey, setActiveKeys] = useState<string[]>(defaultCode ? ['2','4']: ['1'])
+    
+    // store generated ID for future use
+    const [actionExecutionId, setActionExecutionId] = useState<any>(false)
+    const [newExecutedId, setnewExecutedId]= useState('')
+    const [actionSelected, setActionSelected] = useState<any>()
+    
 
-  
 
     useEffect(() => {
         setProviderInstance("231646c0-3e6c-4d35-aff6-ebdd62089c3e")
@@ -74,9 +78,13 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     })
 
     const handleRunQuery = async (code:any) => {
-
+        
             const newExecutedId = v4()
             const actionInstanceId = v4()
+
+            setnewExecutedId(newExecutedId)
+            setActionExecutionId(actionInstanceId)
+
             // TODO: Is this intended ?
             let obj = {
                 email: 'aayushi@data-facade.com',
@@ -145,6 +153,13 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
         topRef?.current?.scrollIntoView({ behavior: "smooth" });
     }
 
+    const handleActionSelection = (data:any) => {
+        console.log(data)
+        setActionSelected(data)
+        handleActionSelected(data)
+    }
+    
+
     return (
 
         <DeepDiveCollapsable>
@@ -177,7 +192,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                         extra={<EditIcon/>}
                        
                     >
-                        <RenderAllActions/>
+                        <RenderAllActions handleActionSelection={handleActionSelection}/>
                     </StyledPanel>
            
                     <StyledPanel
@@ -205,6 +220,9 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                     <Button type="primary">Save</Button>
                 </Space>
             </Row>
+        
+            
+            
         </DeepDiveCollapsable>
   
         
@@ -213,5 +231,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
 }
 
 export default DeepDiveDetails
+
+
 
 
