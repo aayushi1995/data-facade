@@ -193,7 +193,13 @@ function useTableUpload(params: UseTableUploadParam) {
           });
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.FDS_TABLE_FETCH_SUCCESS } });
           
-          await tableDeleteMutation.mutateAsync({ tableName: fileSchema.tableName })
+          // TODO (Ritesh): Delete old table if it exists (if the user is uploading a new file with the same name) from backend
+          try {
+            await tableDeleteMutation.mutateAsync({ tableName: fileSchema.tableName })  
+          } catch (error) {
+            console.log("Error while deleting old table. It probably does not exist!", error);
+          }
+          
 
           await createTableColumnMutation.mutateAsync(fileSchema);
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS } });
@@ -216,9 +222,10 @@ function useTableUpload(params: UseTableUploadParam) {
         //   } else {
         //     setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.GENERATING_QUESTIONS_ERROR } });
         //   }
-          setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.CREATING_TABLE_IN_SYSTEM_FAILURE } });
-          setUploading(false);
-            }
+            console.log("Error while uploading table!", error);
+            setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.CREATING_TABLE_IN_SYSTEM_FAILURE } });
+            setUploading(false);
+        }
     }
         
 

@@ -16,7 +16,7 @@ const initiateChat = async (id?: string, user?: string) => {
 
     try {
         const response = await globalFetch(
-            `${FDSEndpoint}/entity`,
+            `${FDSEndpoint}/entity${getDefaultRequestQuery()}`,
             "POST",
             data
         );
