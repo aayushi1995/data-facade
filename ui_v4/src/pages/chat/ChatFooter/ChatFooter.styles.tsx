@@ -1,4 +1,4 @@
-import { AutoComplete, Button, Card } from 'antd';
+import { AutoComplete, Button, Card, Popover } from 'antd';
 import styled from 'styled-components';
 import { ReactComponent as DBConnectionIcon } from '../../../assets/icons/database.svg';
 import { ReactComponent as FileReplaceIcon } from '../../../assets/icons/find_replace.svg';

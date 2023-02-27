@@ -3,7 +3,6 @@ import GsheetIcon from "@assets/icons/GSheet.svg"
 import chevron_rightIcon from "@assets/icons/chevron_right.svg"
 export type SenderPreviewProps = {
     fileName : String,
-    sendBy : String
 }
 
 export const SenderPreview = (props:SenderPreviewProps)=>{
@@ -15,7 +14,6 @@ export const SenderPreview = (props:SenderPreviewProps)=>{
                 </div>
                 <FileNameContainer>
                     <Filename>{props.fileName}</Filename>
-                    <FileSendBy>{props.sendBy}</FileSendBy>
                 </FileNameContainer>
                 <div>
                     <img src={chevron_rightIcon} alt="" />

@@ -8,11 +8,11 @@ import { ActionDefinitionDetail, ActionInstanceWithParameters } from "@/generate
 import { getLocalStorage } from "@/utils";
 import { ChatProvider } from '@contexts/ChatContext/index';
 import ReactSplit from '@devbookhq/splitter';
-import { Alert, Col, List, Row, Spin } from "antd";
+import { Alert, Button, Col, List, Row, Spin, Typography } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper, MessageWrapper, RecommendedActionsMainDiv, RecommendedActionsMainListItem } from "./Chat.styles";
+import { ButtonContainer, ChatinputContainer, ChatWrapperStyled, DeepDiveWrapperStyled, LoaderContainer, MainWrapper, MessageWrapper, RecommendedActionsMainDiv, RecommendedActionsMainListItem, StyledListItem } from "./Chat.styles";
 import ChatBlock from "./ChatBlock";
 import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
 import ChatFooter from "./ChatFooter";
@@ -22,6 +22,9 @@ import DeepDiveTabs from "./chatActionOutput/DeepDive/DeepDiveTabs";
 import ActionOutput from "./chatActionOutput/actionOutput";
 import ChatComponentIconTabExperience from "./chatActionOutput/chatDeepDiveTab";
 import ChatTableInput from "./chatTableInput";
+import { SenderPreview } from "./tableUpload/SenderPreview";
+import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
+import Title from "antd/es/typography/Title";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
@@ -55,12 +58,12 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
     const onTableSelected = (tableId: string, prompt: string) => {
         handleConversation({tableId: tableId, prompt: prompt}, 'user', 'table_input', undefined, true)
     }
-    console.log('message outputs', messages, actionDefinitions)
+    // console.log('message outputs', messages, actionDefinitions)
 
     return (
         <div>
             {messages?.map(({ id, type, ...props }: IChatMessage) => {
-                console.log(id, type, props)
+                // console.log(id, type, props)
                return ( <React.Fragment key={id}>
                     {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
                     {type === "recommended_actions" && 
@@ -73,17 +76,27 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                             <ConfirmationInput {...props?.message}/>
                         </ChatBlock>
                     }
+                    {type === 'fileInput' &&
+                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
+                        <SenderPreview fileName={props?.message} />
+                    </ChatBlock>
+
+                    }
                     {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} />}
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={handleActionInstanceSubmit} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
                     {type === "table_input" && (Object.keys(tableInputs).length > 0 && tableInputs[id] && 
                         <>
                         <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Looks like a new question. Please select a table to answer it better."}/>
+                        <ChatinputContainer>
                         <ChatTableInput onChange={onTableSelected} prompt={tableInputs[id].prompt} selectedTableId={tableInputs[id].tableId}/>
+                        </ChatinputContainer>
                         </>
                     )}
                 </React.Fragment>)}
             )}
+            <LoaderContainer>
             {loading && <Spin />}
+            </LoaderContainer>
 
             <div ref={chatWrapperRef} />
         </div>
@@ -110,8 +123,15 @@ const InitiateChat = () => {
     const [showDeepDive, setShowDeepDive] = useState(false)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
     const [size, setSize] = useState([100,0])
-
-
+    const uploadTableContext = React.useContext(UploadTableStateContext)
+    useEffect(()=>{
+        if(uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
+            setLoadingMessage(true)
+        }else if(uploadTableContext.status?.message=='Questions generated for table'){
+            setLoadingMessage(false)
+        }
+        
+    },[uploadTableContext])
     // function that calls setChatData reducer to store message data in context
     const persistState = () => {
         messages !== undefined && setDataContext({
@@ -218,7 +238,7 @@ const InitiateChat = () => {
                     return handleActionDefinition(messageBody)
                 }
                 case 'error': {
-                    return handleConversation(JSON.parse(messageBody?.MessageContent)?.error, 'system', 'error', messageBody?.Id)
+                    return handleConversation(({text:JSON.parse(messageBody?.MessageContent)?.error}), 'system', 'error', messageBody?.Id)
                 }
                 case 'recommended_actions': {
                     return handleRecommendedActions(messageBody)
@@ -376,7 +396,7 @@ const InitiateChat = () => {
                                                 <MessageWrapper>
                                                     <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} />
                                                 </MessageWrapper>
-                                                <ChatFooter handleSend={handleConversation} loading={loadingMessage} />
+                                                <ChatFooter handleSend={handleConversation} loading={loadingMessage}/>
             
                                             </Col>
                                     }
@@ -407,16 +427,18 @@ function RecommendedActionsInput(props: {recommendedActions?: ActionDefinitionDe
 
     return (
         <RecommendedActionsMainDiv>
-            <h2>Recommended Actions</h2>
             <List
                 itemLayout="horizontal"
                 dataSource={props?.recommendedActions?.slice(0, 5) || []}
                 size="small"
                 renderItem={(item) => (
-                <RecommendedActionsMainListItem onClick={() => onSelect(item)} className="list-item" style={{ cursor: 'pointer' }}>
-                    <List.Item.Meta
+                <RecommendedActionsMainListItem onClick={() => onSelect(item)} className="list-item" style={{ cursor: 'pointer' , borderBottom: '0px',paddingLeft:'0px' }}>
+                    {/* <List.Item.Meta
                         title={item?.ActionDefinition?.model?.UniqueName || "NA"}
-                    />
+                    /> */}
+                    <StyledListItem>
+                        {item?.ActionDefinition?.model?.UniqueName || "NA"}
+                    </StyledListItem>
                 </RecommendedActionsMainListItem>
             )}
             />
@@ -426,7 +448,7 @@ function RecommendedActionsInput(props: {recommendedActions?: ActionDefinitionDe
 
 function ConfirmationInput(props: ConfirmationPayloadType) {
     const [clicked, setClicked] = React.useState(false)
-    console.log(props)
+    // console.log(props)
     const handleConfirm = () => {
         setClicked(true)
         props?.onAccept?.()
@@ -440,12 +462,10 @@ function ConfirmationInput(props: ConfirmationPayloadType) {
       return (
         <div className="confirm-dialog">
             <div className="confirm-dialog-content">
-            <h2>{props?.header}</h2>
-            <p>{props?.moreinfo}</p>
-            <div className="confirm-dialog-buttons">
-                <button disabled={clicked} onClick={handleConfirm}>Confirm</button>
-                <button disabled={clicked} onClick={handleCancel}>Cancel</button>
-            </div>
+            <Title level={4}>{props?.header}</Title>
+            <Typography.Paragraph>{props?.moreinfo}</Typography.Paragraph>
+                <Button style={{marginRight:'10px'}} type="primary"  disabled={clicked} ghost onClick={handleConfirm}>Confirm</Button>
+                <Button type="primary"  disabled={clicked} onClick={handleCancel}>Cancel</Button>
             </div>
         </div>
       );

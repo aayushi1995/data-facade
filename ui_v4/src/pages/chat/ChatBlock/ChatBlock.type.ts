@@ -12,7 +12,7 @@ export interface IChatResponse {
     ChatId?: string;
     SentBy?: string;
     Index?: string | number;
-    MessageType?: "text" | "action_output" | "action" | "error" | "action_instance" | "table_input" | "table_upload" | "recommended_actions" | 'confirmation';
+    MessageType?: "text" | "action_output" | "action" | "error" | "action_instance" | "table_input" | "table_upload" | "recommended_actions" | 'confirmation' | 'fileInput';
     MessageContent?: any;
 }
 

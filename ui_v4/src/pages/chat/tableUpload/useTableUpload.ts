@@ -154,7 +154,7 @@ function useTableUpload(params: UseTableUploadParam) {
     const uploadFile = () => {
         if(activeFile && activeFileSchema) {
             setUploading(true)
-            params?.onStatusChangeInfo?.(S3UploadState?.UPLOADING)
+            // params?.onStatusChangeInfo?.(S3UploadState?.UPLOADING)
             setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.BUIDING_FILE_FOR_UPLOAD }});
             Papa.parse(activeFile?.CsvFile,
                 {
@@ -231,7 +231,7 @@ function useTableUpload(params: UseTableUploadParam) {
 
 
     const setSourceFile = (file: File) => {
-        params?.onStatusChangeInfo?.(S3UploadState?.SELECTED_FILE_OK(file.name, file.size))
+        // params?.onStatusChangeInfo?.(S3UploadState?.SELECTED_FILE_OK(file.name, file.size))
         setUploadTableContext({
             type: "SetSourceFile",
             payload: file

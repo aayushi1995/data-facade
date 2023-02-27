@@ -3,11 +3,25 @@ import { FlexBox } from '../ChatFooter/ChatFooter.styles'
 import { ChatBlockWrapper, ChatMetaData, ChatStyles, StyledTime, StyledUserName } from './ChatBlock.styles'
 
 const ChatBlock = ({message, id, type, ...props}:any) => {
+   
+    const getTime = (time:any)=>{
+        var hours = new Date(time).getHours()
+        var minutes = new Date(time).getMinutes()
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        var minute = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minute + ' ' + ampm;
+        return (strTime)
+    }
+    
     return (
         <ChatBlockWrapper {...props}>
             <FlexBox style={{alignItems: 'flex-end'}}>
                 <div>
-                    <ChatMetaData {...props}><StyledUserName>{props.username || 'DataFacade'} </StyledUserName> <StyledTime>{new Date(props.time).getHours()+':'+new Date(props.time).getMinutes() }</StyledTime></ChatMetaData>
+                    {(type=='recommended_actions' || type=='confirmation')?<></>:
+                    <ChatMetaData {...props}><StyledUserName>{props.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(props.time)}</StyledTime></ChatMetaData>
+                    }
                     <ChatStyles {...props} key={id} type={type}>{props?.children === undefined ? message : props?.children}</ChatStyles>
                 </div>
                 <div style={{marginLeft: '10px'}}>

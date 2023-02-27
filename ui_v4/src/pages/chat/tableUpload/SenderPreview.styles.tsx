@@ -22,7 +22,8 @@ export const UploadFileContainer = styled.div`
 export const FileNameContainer = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     padding: 0px;
     gap: 4px;
     width: 98px;
@@ -33,6 +34,7 @@ export const FileNameContainer = styled.div`
 export const Filename = styled.p`
 width: 98px;
 height: 15px;
+overflow: hidden;
 font-family: 'Archivo';
 font-style: normal;
 font-weight: 500;

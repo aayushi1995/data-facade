@@ -128,9 +128,21 @@ const ChatFooter = ({ handleSend, loading }: any) => {
 
     React.useEffect(() => {
         if(fileToUpload){
+            handleSend({ text: fileToUpload.name}, 'user', 'fileInput')
             setSourceFile(fileToUpload)
         }
     }, [fileToUpload])
+
+    const uploadComponent = (
+        <>
+            <input type="file" ref={fileUploadInputRef} accept={".csv,.xlsx"} hidden onChange={changeHandler} />
+            <Space direction='vertical' style={{ width: '100%' }}>
+                {/* TODO: Ritesh - enable googole sheet connectors */}
+                {/* <ConnectionButton block type='text' icon={<FileExcelOutlined />}>Connect Google Sheets (Coming Soon!)</ConnectionButton> */}
+                <ConnectionButton block type='text' icon={<UploadOutlined />} onClick={uploadClick}>Upload CSV</ConnectionButton>
+            </Space>
+        </>
+    )
     return (
         <Row>
             <Col span={24}>
@@ -140,12 +152,7 @@ const ChatFooter = ({ handleSend, loading }: any) => {
                         <Row>
                             <Col>
                                 <PopOverCard bordered={false} size="small">
-                                    <input type="file" ref={fileUploadInputRef} accept={".csv,.xlsx"} hidden onChange={changeHandler} />
-                                    <Space direction='vertical' style={{ width: '100%' }}>
-                                        {/* TODO: Ritesh - enable googole sheet connectors */}
-                                        {/* <ConnectionButton block type='text' icon={<FileExcelOutlined />}>Connect Google Sheets (Coming Soon!)</ConnectionButton> */}
-                                        <ConnectionButton block type='text' icon={<UploadOutlined />} onClick={uploadClick}>Upload CSV</ConnectionButton>
-                                    </Space>
+                                    
                                 </PopOverCard>
                             </Col>
                         </Row>
@@ -153,8 +160,8 @@ const ChatFooter = ({ handleSend, loading }: any) => {
                     
                     <Row align="middle">
                         <Col span={1}>
-                            <Popover placement="topLeft" title={popOverTitle} open={isTourOpen} trigger="" content={tourContent}>
-                                <Button onClick={toggleFileUpload} ref={tourRef} type="text" icon={showFileUpload?<MinusOutlined style={{ color: '#9CA3AF' }}/>: <PlusOutlined style={{ color: '#9CA3AF' }} />}></Button>
+                            <Popover placement="topLeft"  trigger="click" content={uploadComponent} showArrow={false}>
+                                <Button  type="text" icon={<PlusOutlined style={{ color: '#9CA3AF' }} />}></Button>
                             </Popover>
                         </Col>
                         <Col span={23}>

@@ -65,8 +65,29 @@ export const RecommendedActionsMainDiv = styled.div`
 `
 
 export const RecommendedActionsMainListItem = styled(List.Item)`
+    padding: 0px;
+`
+export const StyledListItem = styled.div`
+    color: #0770E3;
+    background: #FFFFFF;
+    border: 1px solid #0770E3;
+    border-radius: 8px;
+    padding: 8px;
     &:hover {
       cursor: pointer;
       background-color: #e7e7e7;
     }
+`
+
+export const ButtonContainer = styled.div`
+    gap:10px;
+`
+
+export const LoaderContainer = styled.div`
+    margin-top:20px;
+    margin-left:5px;
+`
+export const ChatinputContainer = styled.div`
+max-width:300px;
+margin-top:10px;
 `
