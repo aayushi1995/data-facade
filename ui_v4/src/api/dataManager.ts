@@ -3,6 +3,7 @@ import { FDSEndpoint } from "@/settings/config";
 import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
 import { userSettingsSingleton } from "@settings/userSettingsSingleton";
 import { useQueries, useQuery, useQueryClient } from "react-query";
+import { v4 as uuidv4 } from 'uuid';
 
 const endPoint = FDSEndpoint
 
@@ -14,7 +15,8 @@ function getDefaultHeader(token: string) {
     return {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'RequestId': uuidv4()
     };
 }
 
