@@ -1,16 +1,14 @@
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper";
-import {  SetChatContext } from "@/contexts/ChatContext/index";
+import { SetChatContext } from "@/contexts/ChatContext/index";
 import { ActionDefinition, ActionExecution, ActionInstance } from "@/generated/entities/Entities";
 import ActionDefinitionPresentationFormat from "@/helpers/enums/ActionDefinitionPresentationFormat";
 import { useActionExecutionParsedOutput } from "@/hooks/actionOutput/useActionExecutionParsedOutput";
 import { useDownloadExecutionOutputFromS3 } from "@/hooks/actionOutput/useDownloadExecutionOutputFromS3";
 import { useGetPreSignedUrlForExecutionOutput } from "@/hooks/actionOutput/useGetPreSignedUrlForExecutionOutput";
 import { DownloadOutlined } from "@ant-design/icons";
-import { Alert, Button, Table } from "antd";
+import { Alert, Button } from "antd";
 import React, { useContext, useEffect } from "react";
-import { OutputTableStyled } from "./successActionOutput.styles";
 import OutputComponent from "./TableChartComponent/OutputComponent";
-import TableComponent from "./TableChartComponent/TableComponent";
 
 
 export interface ViewActionExecutionOutputProps {
@@ -154,7 +152,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
         return (
-           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName}/>
+           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.ActionInstance.Name} tableName={ActionInstance?.ResultTableName}/>
         )
     } else if (isTableOutputSizeExceededErrorFormat(TableOutput)) {
         const errorType: string = TableOutput.errorType
