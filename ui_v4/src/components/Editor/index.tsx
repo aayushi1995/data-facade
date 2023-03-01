@@ -14,7 +14,6 @@ const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData}:any) 
     const code = React.useRef<ReactAce>(null)
 
     const handleCodeRun = () => {
-            console.log(code?.current?.refEditor?.outerText)
             handleRunQuery(code?.current?.refEditor?.outerText)
     }
     

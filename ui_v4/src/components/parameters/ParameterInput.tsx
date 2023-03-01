@@ -5,7 +5,24 @@ import useFetchColumnsForTableAndTags from "@/hooks/useFetchColumnsForTableAndTa
 import useSlackChannelInput from "@/hooks/useSlackChannelInput"
 import useTables from "@/hooks/useTables"
 import { Input, Select } from "antd"
+import styled from 'styled-components'
 import React, { ChangeEvent } from "react"
+
+const StyledSelect = styled(Select)`
+    width: 100%;
+    min-width: 150px;
+    max-width: 300px;
+    border: 1px solid #D1D5DB;
+    display:flex;
+    align-items: center;
+`
+const StyledInput = styled(Input)`
+    width:100%;
+    min-width: 150px;
+    max-width: 300px;
+`
+
+
 
 export type UpstreamAction = {stageId: string, stageName: string, actionName: string, actionId: string, actionIndex: number}
 
@@ -215,29 +232,29 @@ const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
     const { parameterName, availableOptions, selectedOptions, onChange } = props.inputProps
 
     return (
-        <Select style={{ width: '100%' }}
+        <StyledSelect
             mode="multiple"
             placeholder={parameterName}
             value={selectedOptions?.map(option => option.name)}
-            onChange={(value) => {
-                onChange(value?.map(option => ({name: option})))
+            onChange={(value:any) => {
+                onChange(value?.map((option:any) => ({name: option})))
             } 
         }
         >
             {availableOptions.map(value => <Select.Option key={value?.name} value={value?.name}>
                 {value?.name}
             </Select.Option>)}
-        </Select>
+        </StyledSelect>
     )
 }
 
 const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
     const { parameterName, availableOptions, selectedOptions, onChange } = props.inputProps
     return (
-        <Select style={{ width: '100%' }}
+        <StyledSelect
             placeholder={parameterName}
             value={availableOptions.find(option => option.name === selectedOptions?.name)}
-            onChange={(value) => {
+            onChange={(value:any) => {
                 onChange(value ?? undefined)
             }
             }
@@ -245,7 +262,7 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
             {availableOptions.map(value => <Select.Option key={value?.name} value={value?.name}>
                 {value?.name}
             </Select.Option>)}
-        </Select>
+        </StyledSelect>
     )
 }
 
@@ -259,7 +276,7 @@ export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
     })
 
     return (
-        <Select style={{ width: '100%' }}
+        <StyledSelect
             placeholder={props?.inputProps?.parameterName}
             value={selectedChannels?.[0] || null}
             onChange={(value) => {
@@ -269,7 +286,7 @@ export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
             {avialableChannels.map(value => <Select.Option key={value.Id} value={value.Id}>
                 {value?.Name}
             </Select.Option>)}
-        </Select>
+        </StyledSelect>
     )
 }
 
@@ -284,18 +301,18 @@ const SlackChannelMultiple = (props: SlackChannelMultipleInput) => {
     })
 
     return (
-        <Select style={{ width: '100%' }}
+        <StyledSelect
             placeholder={props?.inputProps?.parameterName}
             value={selectedChannels || null}
             mode="multiple"
-            onChange={(value) => {
+            onChange={(value:any) => {
                 onSelectedChannelChange(!!value ? value : undefined)
             }}
         >
             {avialableChannels.map(value => <Select.Option key={value.Id} value={value.Id}>
                 {value?.Name}
             </Select.Option>)}
-        </Select>
+        </StyledSelect>
     )
 }
 
@@ -336,16 +353,13 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
     }, [fetchColumnsQuery.data])
 
     return (
-        <Select
-            style={{ width: '100%' }}
+        <StyledSelect
             placeholder={parameterName}
             mode="multiple"
             maxTagCount={2}
             value={getAutoCompleteValue()?.map(column => column.UniqueName)}
-            onChange={(value) => {
-                console.log(value, fetchColumnsQuery?.data?.[0]?.Columns)
-                const columns = value?.map(selectedColumnName => fetchColumnsQuery?.data?.[0]?.Columns?.find(cData => cData.UniqueName === selectedColumnName)!)
-                console.log(columns)
+            onChange={(value: any) => {
+                const columns = value?.map?.((selectedColumnName:any) => fetchColumnsQuery?.data?.[0]?.Columns?.find(cData => cData.UniqueName === selectedColumnName)!)
                 onChange?.(columns ?? undefined)
             }}
         >
@@ -358,7 +372,7 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
             }
 
 
-        </Select>
+        </StyledSelect>
     )
 }
 
@@ -419,12 +433,12 @@ const ColumnInput = (props: ColumnParameterInput) => {
     }, [availableColumnsState])
 
     return (
-        <Select style={{ width: '100%' }}
+        <StyledSelect
             placeholder={parameterName}
             showSearch
             optionFilterProp="children"
             loading={fetchTableQuery.isLoading || fetchTableQuery.isRefetching}
-            onChange={(value) => {
+            onChange={(value:any) => {
                 if (value?.Id === "NA") {
                     const column = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange(column)
@@ -437,7 +451,7 @@ const ColumnInput = (props: ColumnParameterInput) => {
             {AvailableColumns.map(value => <Select.Option key={value.Id} value={value.Id}>
                 {value.UniqueName}
             </Select.Option>)}
-        </Select>
+        </StyledSelect>
     )
 }
 
@@ -463,7 +477,7 @@ const StringInput = (props: StringParameterInput) => {
         setInput(event.target.value);
     };
 
-    return <Input style={{ width: '100%' }} value={input} onChange={handleChange} onBlur={() => onChange(input)}
+    return <StyledInput style={{ width: '100%' }} value={input} onChange={handleChange} onBlur={() => onChange(input)}
         onKeyDown={(event) => event.stopPropagation()}
         placeholder={parameterName || 'N/a'} />
 }
@@ -485,7 +499,7 @@ const IntInput = (props: IntParameterInput) => {
         }
     }
 
-    return <Input value={input} onChange={onValueChange} onBlur={() => onChange(input)}
+    return <StyledInput value={input} onChange={onValueChange} onBlur={() => onChange(input)}
         onKeyDown={(event) => event.stopPropagation()}
         placeholder={parameterName || 'N/a'} />
 }
@@ -513,7 +527,7 @@ const FloatInput = (props: FloatParameterInput) => {
         }
     }
 
-    return <Input value={input} onChange={onValueChange} onBlur={() => onChange(input)}
+    return <StyledInput value={input} onChange={onValueChange} onBlur={() => onChange(input)}
         onKeyDown={(event) => event.stopPropagation()}
         placeholder={parameterName || 'N/a'}
     />
@@ -523,15 +537,14 @@ const BooleanInput = (props: BooleanParameterInput) => {
     const { value, onChange } = props.inputProps
 
     return (
-            <Select
+            <StyledSelect
                 value={value || ""}
                 onChange={(value) => onChange(value)}
-                style={{ width: '100%' }}
                 placeholder={props.inputProps.parameterName || "Parameter Name NA"}
             >
                 <Select.Option value="true">True</Select.Option>
                 <Select.Option value="false">False</Select.Option>
-            </Select>
+            </StyledSelect>
     )
 }
 
@@ -542,11 +555,13 @@ const TableInput = (props: TableParameterInput) => {
         const tableById = availableTables?.find(table => table?.Id === selectedTableFilter?.Id)
         const tableByName = availableTables?.find(table => table?.UniqueName === selectedTableFilter?.UniqueName)
         if (!!props.inputProps.parentExecutionId) {
+          
             const upstreamTable: TableProperties = {
                 UniqueName: "Previous Execution",
                 Id: props.inputProps.parentExecutionId,
                 ProviderInstanceName: "Upstream Action",
                 TableType: "UpstreamExecution",
+                DisplayName:"Previous Execution"
             }
             if (!availableTables?.find(table => table.Id === props.inputProps.parentExecutionId)) {
                 (availableTables || []).push(upstreamTable)
@@ -599,19 +614,20 @@ const TableInput = (props: TableParameterInput) => {
 
     const { tables, loading } = useTables({ tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived })
     const { SelectedTable, AvailableTables } = getTableSelectionInfo(tables, selectedTableFilter)
-    return (
 
-        <Select loading={loading} style={{ width: '100%' }} placeholder="Table name"
+    return (
+       
+        <StyledSelect loading={loading} placeholder="Table name"
             showSearch
             optionFilterProp="children"
-
-            onChange={(value) => {
+            defaultValue={SelectedTable?.Id}
+            onChange={(value:any) => {
                 if (value === "NA") {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange(table)
                 } else {
                     const table = AvailableTables?.find(table => table.Id === value)
-                    onChange(!!value ? { Id: value } : undefined)
+                    onChange(!!value ? { ...table } : undefined)
                 }
                 value = { SelectedTable }
 
@@ -622,7 +638,7 @@ const TableInput = (props: TableParameterInput) => {
                     {value.DisplayName}
                 </Select.Option>)
             }
-        </Select>
+        </StyledSelect>
 
     )
 }
@@ -630,7 +646,7 @@ const TableInput = (props: TableParameterInput) => {
 
 const NoInput = () => {
     return (
-        <Input disabled value="Default Value not valid for this type of parameter" />
+        <StyledInput disabled value="Default Value not valid for this type of parameter" />
     )
 }
 

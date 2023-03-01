@@ -37,20 +37,18 @@ const dropdownStyle = {
     width: 200
 }
 
-const AddMenu = () => {
-    const navigate = useNavigate()
-    const initiateChat = () => {
-        const chatId = getUniqueId();
-        setLocalStorage(`chat_${chatId}`, chatId);
-        navigate(`/chats/${chatId}?tab=chats`)
-    }
+const AddMenu = ({handleNewTab}:any) => {
+
+
     const dropdownContent = () => <div style={dropdownStyle}>
-        <ConnectionButton onClick={() => initiateChat()} block type="text">Initiate new chat</ConnectionButton>
+        <ConnectionButton onClick={() =>  handleNewTab()} block type="text">Initiate new chat</ConnectionButton>
     </div>
     return (
         <Dropdown dropdownRender={() => dropdownContent()} arrow={true} trigger={['click']}><Button size="small" type='text' icon={<PlusOutlined />} /></Dropdown>
     )
 }
+
+
 
 
 const BrowserTab = ({ children }: ChildrenProps) => {
@@ -79,12 +77,19 @@ const BrowserTab = ({ children }: ChildrenProps) => {
 
     }, [location.search])
 
+
     const handleChange = (value: string) => {
         const tab = routes.find((route: any) => route.key === value);
         setActiveTab(value)
         tab ? navigate(`${value}${tab['params']}`) : navigate(value)
 
     };
+
+    const handleNewTab = () => {
+        const chatId = getUniqueId();
+        setLocalStorage(`chat_${chatId}`, chatId);
+        setActiveTab(`/chats/${chatId}`)
+    }
 
     const removeTab = (path: string) => {
         const index = routes.findIndex((route: any) => route.key === path);
@@ -109,6 +114,8 @@ const BrowserTab = ({ children }: ChildrenProps) => {
         }
     }
 
+   
+
     const onEdit = (
         targetKey: any,
         action: 'add' | 'remove',
@@ -130,7 +137,7 @@ const BrowserTab = ({ children }: ChildrenProps) => {
                     activeKey={activeTab}
                     onEdit={onEdit}
                     items={routes}
-                    addIcon={<AddMenu />}
+                    addIcon={<AddMenu handleNewTab={handleNewTab} />}
                 />
             }
             <RouteContext.Provider value={routes}>

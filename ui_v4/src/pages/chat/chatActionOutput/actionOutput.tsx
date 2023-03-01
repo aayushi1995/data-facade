@@ -2,21 +2,14 @@
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper"
 import useActionExecutionDetails from "@/hooks/actionOutput/useActionExecutionDetails"
 import { ReactComponent as DeepDiveIcon } from '@assets/icons/scuba_diving.svg'
-import { Badge, Button, Card, Col, Row, Skeleton, Tag, Typography } from "antd"
+import { Badge, Button, Card, Col, Row, Skeleton, Space, Tag, Typography } from "antd"
 import React from "react"
 import styled from "styled-components"
 import { FlexBox } from "../ChatFooter/ChatFooter.styles"
+import { ActionCard, StyledActionOutput, StyledIcon } from "./ActionOutput.styles"
 import FailedActionOutput from "./failedActionOutput"
 import SuccessActionOutput from "./successActionOutput"
-
-const ActionCard = styled(Card)`
-    border-radius: 0px 8px 8px 8px;
-    border: 0.87659px solid #D1D5DB;
-    margin-bottom:20px;
-    & .ant-card-body {
-        padding: 20px;
-    }
-`
+import {ReactComponent as BotIcon } from '@assets/icons/smart_toy.svg'
 
 export interface ActionExecutionDetailProps {
     actionExecutionId: string,
@@ -46,6 +39,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
         postProcessedAction,
     } = useActionExecutionDetails(props)
 
+    console.log(actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy)
 
     const handleDeepDiveData = (data:any, title:any) => {
         props.handleDeepDive && props.handleDeepDive(data, title)
@@ -56,16 +50,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
             <FlexBox style={{alignItems:'center'}}>
                 <>
                     <div style={{minWidth:'400px'}}>
-                        {/* <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}> */}
                             <ActionCard headStyle={{ border: 0 }} size="small">
-                                {/* <Row gutter={36}>
-                                    <Col>
-                                        <Typography.Paragraph>Created by : <Tag color="green">{actionExecutionDetailQuery.data?.ActionInstance?.CreatedBy}</Tag></Typography.Paragraph>
-                                    </Col>
-                                    <Col>
-                                        <Typography.Paragraph>Runtime :  <Tag color="blue">{getElapsedTime()}</Tag></Typography.Paragraph>
-                                    </Col>
-                                </Row> */}
                                 {
                                     !actionExecutionTerminalState ?
                                         <Skeleton active />
@@ -84,26 +69,33 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                                             title={actionExecutionDetailQuery.data?.ActionInstance?.Name}
                                                         />
                                                     </>
-                                                    
-                                                
                                             }
                                         </React.Fragment>
-                                }
-
-                                {
-                                    fetchChildActionExecutionQuery.data &&
-                                    <ReactQueryWrapper {...fetchChildActionExecutionQuery}>
-                                        {
-                                            postProcessedAction?.map(value => <ActionOutput actionExecutionId={value?.Id!} displayPostProcessed={false} />)
-                                        }
-                                    </ReactQueryWrapper>
-                                }
+                                    }
+                                    {
+                                        fetchChildActionExecutionQuery.data &&
+                                            <ReactQueryWrapper {...fetchChildActionExecutionQuery}>
+                                                {
+                                                    postProcessedAction?.map(value => <ActionOutput actionExecutionId={value?.Id!} displayPostProcessed={false} />)
+                                                }
+                                            </ReactQueryWrapper>
+                                    }
                                 {childActionExecutionId && <ActionOutput actionExecutionId={childActionExecutionId} />}
+                              
                             </ActionCard>
-                        {/* </Badge.Ribbon> */}
+                            <StyledActionOutput isBot={actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot"}>
+                                <StyledIcon> 
+                                    <Space size={6}>
+                                        {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot"
+                                        ? <><BotIcon/> AI Insight</> 
+                                        : <><BotIcon/> {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy}</>}
+                                    </Space> 
+                                </StyledIcon> 
+                                <Button type="link" disabled={actionExecutionError} style={{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
+                            </StyledActionOutput>
                     </div>
                 </>
-                {props.handleDeepDive && <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
+                {props.handleDeepDive && <Button disabled={actionExecutionError} icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
             </FlexBox>
         </ReactQueryWrapper>
     )

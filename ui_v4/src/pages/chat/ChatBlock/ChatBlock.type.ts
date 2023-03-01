@@ -5,6 +5,7 @@ export interface IChatMessage {
     from: "user" | "system";
     username?: string;
     type?: "text" | "action_output" | "error" | "table_upload" | any;
+    isExternalExecutionId?: string
 }
 
 export interface IChatResponse {

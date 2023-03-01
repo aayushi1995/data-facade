@@ -9,14 +9,24 @@ import useFetchActionInstancesForFilter from '@hooks/actionDefination/useFetchAc
 import useGetExistingParameterInstances from '@hooks/actionOutput/useGetExistingParameterInstances';
 import useActionDefinitionDetail from "@hooks/useActionDefinitionDetail";
 import { Button, Card, Col, Row } from "antd";
+import styled from "styled-components";
 import React from "react";
 import { useLocation } from "react-router-dom";
-
-
 import SelectProviderInstanceHook from "@hooks/actionDefination/SelectProviderInstanceHook";
 import SelectProviderInstance from "./SelectProviderInstance";
 
-
+const CardWrapperStyled = styled.div`
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: row;
+    margin: 20px 0px;
+    & > div {
+        margin-right:20px;
+    }
+    max-width:600px;
+`
 
 
 interface ExecuteActionProps {
@@ -40,12 +50,26 @@ interface ExecuteActionProps {
 }
 
 const ExecuteActionNew = (props: ExecuteActionProps) => {
+
+    const [showSubmit, setShowSubmit] = React.useState(true)
+
     const actionDefinitionId = props.actionDefinitionId
     const useUrlToFindId = (props.fromDeepDive === undefined || props.fromDeepDive == false)
     const location = useLocation()
     const actionInstanceId = props.fromTestRun ? props.actionInstanceId : useUrlToFindId && location.search ? new URLSearchParams(location.search).get("instanceId") : undefined
 
 
+    const { availableProviderInstanceQuery } = SelectProviderInstanceHook()
+    const defaultProviderInstance = availableProviderInstanceQuery?.data?.find(prov => prov?.IsDefaultProvider)
+
+    const setExecuteActionContext = React.useContext(SetExecuteActionContext)
+    const executeActionContext = React.useContext(ExecuteActionContext)
+    
+    const tableTypeParameterExists = executeActionContext.ExistingModels.ActionParameterDefinitions?.some(apd => apd.Tag === ActionParameterDefinitionTag.TABLE_NAME)
+    const pandasDataframeParameterExists = executeActionContext.ExistingModels.ActionParameterDefinitions?.some(apd => apd.Tag === ActionParameterDefinitionTag.DATA && apd.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME)
+
+
+    // fetch data from hooks
     const { data, error, isLoading, refetch, isRefetching } = useActionDefinitionDetail({
         actionDefinitionId: actionDefinitionId, options: {
             enabled: false, onSuccess(data) {
@@ -64,6 +88,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             },
         }
     })
+
     const fetchExistingActionParameterInstancesQuery = useGetExistingParameterInstances({
         filter: { ActionInstanceId: actionInstanceId === null ? undefined : actionInstanceId },
         queryOptions: {
@@ -73,6 +98,7 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             enabled: false
         }
     })
+
     const fetchExistingActionInstance = useFetchActionInstancesForFilter({
         filter: { Id: actionInstanceId === null ? undefined : actionInstanceId },
         queryParams: {
@@ -90,28 +116,15 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             }
         }
     })
-    const { availableProviderInstanceQuery } = SelectProviderInstanceHook()
-    const defaultProviderInstance = availableProviderInstanceQuery?.data?.find(prov => prov?.IsDefaultProvider)
 
-    const setExecuteActionContext = React.useContext(SetExecuteActionContext)
-    const executeActionContext = React.useContext(ExecuteActionContext)
-    const tableTypeParameterExists = executeActionContext.ExistingModels.ActionParameterDefinitions?.some(apd => apd.Tag === ActionParameterDefinitionTag.TABLE_NAME)
-    const pandasDataframeParameterExists = executeActionContext.ExistingModels.ActionParameterDefinitions?.some(apd => apd.Tag === ActionParameterDefinitionTag.DATA && apd.Datatype === ActionParameterDefinitionDatatype.PANDAS_DATAFRAME)
+    // React.useEffect(() => {
+        
+    //     handleSubmitMessage()
+    // },[executeActionContext])
 
-    const handleChange = (newActionParameterInstances: ActionParameterInstance[]) => {
-        setExecuteActionContext({
-            type: "SetActionParameterInstances",
-            payload: {
-                newActionParameterInstances: newActionParameterInstances
-            }
-        })
-    }
+     // TODO: WHY???
 
-
-
-    // TODO: WHY???
-
-    React.useEffect(() => {
+     React.useEffect(() => {
         if (actionInstanceId === undefined || actionInstanceId === null) {
             refetch()
         } else {
@@ -127,9 +140,15 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         }
     }, [defaultProviderInstance])
 
-
-
-
+   
+    const handleChange = (newActionParameterInstances: ActionParameterInstance[]) => {
+        setExecuteActionContext({
+            type: "SetActionParameterInstances",
+            payload: {
+                newActionParameterInstances: newActionParameterInstances
+            }
+        })
+    }
 
     const StepNumberToComponent: { component: React.ReactNode, label: string }[] = []
 
@@ -151,8 +170,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
             label: "Required Inputs"
         })
     }
-
-
 
     if (executeActionContext.ExistingModels.ActionParameterDefinitions.filter(apd => isDefaultValueDefined(apd?.DefaultParameterValue)).length > 0) {
         StepNumberToComponent.push({
@@ -194,6 +211,17 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
         })
     }
 
+
+    React.useEffect(() => {
+        const messageContent = getMessageRequest(executeActionContext)
+        console.log(executeActionContext)
+        if(Object.keys(executeActionContext?.ExistingModels.ActionDefinition)?.length > 0 && executeActionContext?.ExistingModels?.ActionParameterDefinitions?.length === 0) {
+            setShowSubmit(false)
+            props.onSubmit?.(messageContent)
+        }
+    },[executeActionContext])
+
+
     const handleSubmitMessage = () => {
         const messageContent = getMessageRequest(executeActionContext)
         props.onSubmit?.(messageContent)
@@ -202,26 +230,27 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: 2, padding: 3 }}>
             <ReactQueryWrapper isLoading={isRefetching || isLoading || fetchExistingActionParameterInstancesQuery.isRefetching} error={error} data={data}>
-                <Row>
-                    <Col sm={8}>
-                        <Card size="small" style={{display: 'flex', gap: 2}}>
-                            <ConfigureParametersNew
-                                mode="GENERAL"
-                                ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
-                                ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
-                                ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
-                                handleParametersChange={handleChange}
-                                showOnlyParameters={props.showOnlyParameters}
-                                parentExecutionId={props.parentExecutionId}
-                                fromTestRun={props.fromTestRun}
-                            />
-
-                            <Button onClick={handleSubmitMessage}>
-                                Submit
-                            </Button>
-                        </Card>
-                    </Col>
-                </Row>
+             
+                        {/* <Card size="small" style={{display: 'flex', gap: 2}}> */}
+                            <CardWrapperStyled>
+                                <ConfigureParametersNew
+                                    mode="GENERAL"
+                                    ActionParameterDefinitions={executeActionContext.ExistingModels.ActionParameterDefinitions}
+                                    ActionParameterInstances={executeActionContext.ToCreateModels.ActionParameterInstances}
+                                    ParameterAdditionalConfig={executeActionContext.ExistingModels.ParameterAdditionalConfig || []}
+                                    handleParametersChange={handleChange}
+                                    showOnlyParameters={props.showOnlyParameters}
+                                    parentExecutionId={props.parentExecutionId}
+                                    fromTestRun={props.fromTestRun}
+                                />
+                                {showSubmit && <Button type="primary" onClick={handleSubmitMessage}>
+                                    Submit
+                                </Button>}
+                                
+                            </CardWrapperStyled>
+                          
+                        {/* </Card> */}
+                   
             </ReactQueryWrapper>
 
         </div>

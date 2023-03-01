@@ -10,16 +10,17 @@ interface MatchParams {
 }
 
 
-const ActionDefination = ({ ActionDefinitionId, ExistingModels, onSubmit }: MatchParams) => {
-    console.log('inside action defintion',ActionDefinitionId, ExistingModels, onSubmit )
+const ActionDefination = ({ ActionDefinitionId, ExistingModels, onSubmit}: MatchParams) => {
 
     const onActionSubmit = (messageContent: ActionInstanceWithParameters) => {
         onSubmit?.(messageContent, MessageTypes.ACTION_INSTANCE)
+        
     }
+
 
     return (
         <ExecuteActionContextProvider>
-                <ExecuteAction existingModels={ExistingModels} actionDefinitionId={ActionDefinitionId} showActionDescription={true} onSubmit={onActionSubmit}/>
+            <ExecuteAction existingModels={ExistingModels} actionDefinitionId={ActionDefinitionId} showActionDescription={true} onSubmit={onActionSubmit} parentExecutionId={ExistingModels?.ParameterInstances?.[0]?.SourceExecutionId}/>
         </ExecuteActionContextProvider>
     )
 }

@@ -62,7 +62,7 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
                 {
                     pramameterBody.map(parameterDef => {
                         return (
-                            <Space direction="vertical" style={{ width: '100%' }} size="large">
+                            <Space direction="vertical" size="large">
                                 <ParameterDefinitionsConfigPlane
                                     parameterDefinitions={[parameterDef]}
                                     parameterInstances={props.ActionParameterInstances}
@@ -95,7 +95,7 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
     return (
         <>
             {getParamsToShowInGroups().map((groupParams) => (
-                <Space style={{width:'100%'}} direction="vertical" size="large">
+                <Space direction="vertical" size="large">
                     <ParameterDefinitionsConfigPlane parameterDefinitions={groupParams}
                         parameterInstances={props.ActionParameterInstances}
                         parameterAdditionalConfigs={props.ParameterAdditionalConfig || []}

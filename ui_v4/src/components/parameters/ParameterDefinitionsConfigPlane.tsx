@@ -347,7 +347,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
     }
 
     return (
-        <div style={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', gap: 2, minWidth: '120px'}}>
+        <div style={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', gap: 2}}>
             {parameterDefinitions.length === 0 && 
                 <div  style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <span> No Parameters Present</span>

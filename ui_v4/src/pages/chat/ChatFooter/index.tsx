@@ -61,7 +61,6 @@ const ChatFooter = ({ handleSend, loading }: any) => {
 
     const handleClick = () => {
         if(inputRef !== null) {
-            console.log(inputRef)
             handleSend({text: chatMessage}, 'user')
             setChatMessage(undefined)
             inputRef?.current?.focus()
@@ -107,7 +106,6 @@ const ChatFooter = ({ handleSend, loading }: any) => {
             handleSend({text: newStatus?.message}, 'system', 'text')
         },
         onCSVToUploadValidationFail: (reason: string, fileName?: string) => {
-            console.log(reason)
             handleSend({text: {
                 header: "File Validation Failed. Upload Anyway ?",
                 moreinfo: reason,

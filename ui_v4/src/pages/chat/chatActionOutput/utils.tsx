@@ -5,7 +5,8 @@ export const findAll = (inputArray:any[], key:string) => {
         if(obj?.ProviderDefinitionId === key) {
             output.push({
                 label: obj?.Name, 
-                value: obj?.Id
+                value: obj?.Id,
+                ...obj
             })
         }
     })

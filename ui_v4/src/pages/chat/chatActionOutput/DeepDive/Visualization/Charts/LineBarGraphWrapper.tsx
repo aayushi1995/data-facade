@@ -1,6 +1,5 @@
 import ReactEcharts from "echarts-for-react"; 
 const LineChart =(props: {  xaxis?: String; yaxis?: String; data?:any})=>{
-    console.log(props.data)
 
     let LineChar = {
       tooltip: {

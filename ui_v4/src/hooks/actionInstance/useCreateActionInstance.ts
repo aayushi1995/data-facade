@@ -11,6 +11,7 @@ export interface MutationContext {
     slack?: string,
     email?: string,
     actionExecutionToBeCreatedId?: string
+    withActionParameterInstance?:boolean
 }
 
 export interface UseCreateActionInstanceParams {
@@ -36,7 +37,7 @@ const useCreateActionInstance = (params: UseCreateActionInstanceParams): UseCrea
             ActionParameterInstanceEntityProperties: config.actionParameterInstances,
             slack: config.slack,
             email: config.email,
-            withActionParameterInstance: false,
+            withActionParameterInstance: config.withActionParameterInstance,
             executionScheduledDate: config.executionScheduledDate,
             withExecutionId: config?.actionExecutionToBeCreatedId
         }), {...asyncOptions})

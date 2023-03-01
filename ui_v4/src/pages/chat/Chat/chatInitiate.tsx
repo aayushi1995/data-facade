@@ -1,34 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { initiateChat, startConversation } from "@/actions/chat.actions";
+import { fetchChats, initiateChat, startConversation } from "@/actions/chat.actions";
 import Loader from "@/components/Loader";
 import AppContext from "@/contexts/AppContext";
 import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
-import { ActionDefinitionDetail, ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
-
+import { ActionDefinitionDetail } from "@/generated/interfaces/Interfaces";
 import { getLocalStorage } from "@/utils";
 import { ChatProvider } from '@contexts/ChatContext/index';
 import ReactSplit from '@devbookhq/splitter';
-import { Alert, Button, Col, List, Row, Spin, Typography } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { Alert,  Col, Row,  } from "antd";
+import  { useContext, useEffect,  useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { ButtonContainer, ChatinputContainer, ChatWrapperStyled, DeepDiveWrapperStyled, LoaderContainer, MainWrapper, MessageWrapper, RecommendedActionsMainDiv, RecommendedActionsMainListItem, StyledListItem } from "./Chat.styles";
-import ChatBlock from "./ChatBlock";
-import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "./ChatBlock/ChatBlock.type";
-import ChatFooter from "./ChatFooter";
-import { FlexBox } from "./ChatFooter/ChatFooter.styles";
-import ActionDefination from "./chatActionDefination/actionDefination";
-import DeepDiveTabs from "./chatActionOutput/DeepDive/DeepDiveTabs";
-import ActionOutput from "./chatActionOutput/actionOutput";
-import ChatComponentIconTabExperience from "./chatActionOutput/chatDeepDiveTab";
-import ChatTableInput from "./chatTableInput";
-import { SenderPreview } from "./tableUpload/SenderPreview";
+import { ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper, MessageWrapper } from "./Chat.styles";
+import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "../ChatBlock/ChatBlock.type";
+import ChatFooter from "../ChatFooter";
+import { FlexBox } from "../ChatFooter/ChatFooter.styles";
+import DeepDiveTabs from "../chatActionOutput/DeepDive/DeepDiveTabs";
+import ChatComponentIconTabExperience from "../chatActionOutput/chatDeepDiveTab";
+import { ActionMessageContent, TableInputContent } from "./ConfirmationInput/Chat.types";
+import MessageOutputs from "./MessageOutput/MessageOutput";
+import globalFetch from "@/hooks/useGlobalFetch";
+import { FDSEndpoint } from "@/settings/config";
+import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
 import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
-import Title from "antd/es/typography/Title";
+import React from "react";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
-   
     return {
         id: new Date().toTimeString(),
         message: `Welcome ${username.split(' ')[0]} ! What insight do you need ?`,
@@ -39,70 +37,6 @@ const defaultBotMessage = (username: string): IChatMessage => {
     }
 }
 
-type ActionMessageContent = {actionInstanceWithParameterInstances: ActionInstanceWithParameters, actionDefinitionDetail?: ActionDefinitionDetail}
-
-export type TableInputContent = {tableId?: string, prompt: string}
-
-
-const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation, handleDeepDive, tableInputs }: any ) => {
-    
-    const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-    useEffect(() => {
-        chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
-
-    const handleActionInstanceSubmit = (messageContent: ActionInstanceWithParameters, type: string) => {
-        handleConversation({actionInstanceWithParameterInstances: messageContent}, 'user', type, undefined, true)
-    }
-
-    const onTableSelected = (tableId: string, prompt: string) => {
-        handleConversation({tableId: tableId, prompt: prompt}, 'user', 'table_input', undefined, true)
-    }
-    // console.log('message outputs', messages, actionDefinitions)
-
-    return (
-        <div>
-            {messages?.map(({ id, type, ...props }: IChatMessage) => {
-                // console.log(id, type, props)
-               return ( <React.Fragment key={id}>
-                    {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
-                    {type === "recommended_actions" && 
-                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
-                            <RecommendedActionsInput recommendedActions={props?.message} handleConversation={handleConversation}/>
-                        </ChatBlock>
-                    }
-                    {type === 'confirmation' &&
-                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
-                            <ConfirmationInput {...props?.message}/>
-                        </ChatBlock>
-                    }
-                    {type === 'fileInput' &&
-                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
-                        <SenderPreview fileName={props?.message} />
-                    </ChatBlock>
-
-                    }
-                    {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} />}
-                    {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={handleActionInstanceSubmit} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
-                    {type === "table_input" && (Object.keys(tableInputs).length > 0 && tableInputs[id] && 
-                        <>
-                        <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Looks like a new question. Please select a table to answer it better."}/>
-                        <ChatinputContainer>
-                        <ChatTableInput onChange={onTableSelected} prompt={tableInputs[id].prompt} selectedTableId={tableInputs[id].tableId}/>
-                        </ChatinputContainer>
-                        </>
-                    )}
-                </React.Fragment>)}
-            )}
-            <LoaderContainer>
-            {loading && <Spin />}
-            </LoaderContainer>
-
-            <div ref={chatWrapperRef} />
-        </div>
-    )
-}
-
 
 const InitiateChat = () => {
 
@@ -111,6 +45,7 @@ const InitiateChat = () => {
     const dataContext = useContext(DataContext);
     const appContext: any = useContext(AppContext);
 
+    // local states
     const { chatId } = useParams();
     const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -146,13 +81,12 @@ const InitiateChat = () => {
         })
     }
 
-    //persist the chat if there is any chatData in the DataProvider
+    // persist the chat if there is any chatData in the DataProvider
     useEffect(() => {
         if (chatId) {
             setMessages(dataContext?.chatData[chatId]?.messages || [defaultBotMessage(appContext?.userName)])
             setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
         }
-
     }, [chatId])
 
 
@@ -163,9 +97,29 @@ const InitiateChat = () => {
         })
     }, [messages])
 
+    
+    useEffect(() => {
+        
+        if(chatId) {
+            console.log('CHATID', chatId)
+            if(!dataContext?.chatData[chatId]?.messages.length || dataContext?.chatData[chatId]?.messages.length < 0) {
+                
+                fetchChats(chatId).then((response:any) => {
+                    console.log(response)
+                }).catch((error:any) => {
+                    console.log(error)
+                })
+                   
+                
+            }
+        }
+       
+    },[chatId])
+
 
     useEffect(() => {
         if (chatId) {
+            
             if (chatId !== getLocalStorage(`chat_${chatId}`)) {
                 setIsError(true);
             }
@@ -181,7 +135,9 @@ const InitiateChat = () => {
         }
     }, [chatId])
 
-    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternal?:boolean) => {
+   
+
+    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean) => {
 
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
@@ -191,11 +147,12 @@ const InitiateChat = () => {
             username: user === 'system' ? 'DataFacade' : appContext?.userName,
             type: type ? type : 'text'
         }
-        if(isExternal) {
-           setMessages((prevState:any) => [...prevState, temp])
+
+        if(isExternalExecutionId) {
+            
+           setMessages((prevState:any) => [...prevState, {...temp, isExternalExecutionId: isExternalExecutionId}])
         }
 
-        
         if(!ignoreMessage) {
             setMessages(messages => messages ? [...messages, {...temp, message: message?.text || message?.error}] : [{...temp, message: message?.text}])
         }
@@ -268,11 +225,8 @@ const InitiateChat = () => {
     }
 
     const handleActionOutput = (messageBody: IChatResponse | any) => {
-       
         const actionOutputId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
         handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'action_output', messageBody?.Id);
-        console.log(messages)
-
         if (actionOutputId) {
             setShowActionOutput(true)
             setExecutionId((prevState: any) => ({
@@ -295,13 +249,9 @@ const InitiateChat = () => {
 
     
     const handleActionDefinition = (messageBody: IChatResponse) => {
+
         const messageContent = JSON.parse(messageBody.MessageContent) as ActionMessageContent
-
-        console.log('Action definition Message Body',messageBody)
-
         handleConversation(messageBody, 'system', 'action_instance', messageBody?.Id)
-
-        console.log('action defintion',messageContent)
 
         setActionDefinitions(prevState => ({
             ...prevState,
@@ -326,10 +276,13 @@ const InitiateChat = () => {
         setSize([60,40])
     }
     
-    const handleActionSelected = (data:any) => {
-        // console.log('action selected',data)
+    const handleActionSelected = (paramsData:any) => {
+
+        let data = paramsData?.action
+        // // ids generated
         const actionInstanceWithParameterInstances_model_id = v4()
         const MessageId = v4()
+
         // Create an action object similar to that we recieve from backend
         const obj = {
             actionDefinitionDetail: data,
@@ -345,10 +298,19 @@ const InitiateChat = () => {
                     TemplateId: data?.ActionDefinition?.model?.DefaultActionTemplateId
                 },
                 ParameterInstances: data?.ActionTemplatesWithParameters[0]?.actionParameterDefinitions?.map((obj:any) => {
-                    return {
+                    let DefaultObj = {
                         ActionInstanceId: actionInstanceWithParameterInstances_model_id,
                         ActionParameterDefinitionId: obj?.model?.Id,
-                        Id: v4()
+                        Id: v4(),
+                    }
+                    
+                    return (obj?.model?.ParameterName === "table_name" && paramsData?.executionId) ? {
+                        ParameterValue: "Previous Execution",
+                        SourceExecutionId: paramsData?.executionId,
+                        TableId: paramsData?.executionId,
+                        ...DefaultObj
+                    }: {
+                        ...DefaultObj
                     }
                 })
             }
@@ -360,21 +322,20 @@ const InitiateChat = () => {
             MessageContent: JSON.stringify(obj),
             MessageType: "action_instance",
             SentBy: "Bot",
-            SentOn: new Date().getTime()
+            SentOn: new Date().getTime(),
+
         }
 
-        handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true)
-
+        handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true)
+        
         setActionDefinitions((prevState:any) => ({
             ...prevState,
-            [MessageId]: messageContent
+            [MessageId]: obj
         }))
-    }
-
-
-
-    return (
         
+    }
+    
+    return (
        <ChatProvider>
             <MainWrapper>
                 <ReactSplit 
@@ -416,60 +377,9 @@ const InitiateChat = () => {
         </ChatProvider>
     )
 
-}
-
-function RecommendedActionsInput(props: {recommendedActions?: ActionDefinitionDetail[], handleConversation?: Function}) {
-    const options = (props?.recommendedActions || [])?.map(action => action?.ActionDefinition?.model?.UniqueName)
-
-    const onSelect = (action: ActionDefinitionDetail) => {
-        props?.handleConversation?.({text: action?.ActionDefinition?.model?.UniqueName}, "user", "text")
     }
 
-    return (
-        <RecommendedActionsMainDiv>
-            <List
-                itemLayout="horizontal"
-                dataSource={props?.recommendedActions?.slice(0, 5) || []}
-                size="small"
-                renderItem={(item) => (
-                <RecommendedActionsMainListItem onClick={() => onSelect(item)} className="list-item" style={{ cursor: 'pointer' , borderBottom: '0px',paddingLeft:'0px' }}>
-                    {/* <List.Item.Meta
-                        title={item?.ActionDefinition?.model?.UniqueName || "NA"}
-                    /> */}
-                    <StyledListItem>
-                        {item?.ActionDefinition?.model?.UniqueName || "NA"}
-                    </StyledListItem>
-                </RecommendedActionsMainListItem>
-            )}
-            />
-        </RecommendedActionsMainDiv>
-    )
-}
-
-function ConfirmationInput(props: ConfirmationPayloadType) {
-    const [clicked, setClicked] = React.useState(false)
-    // console.log(props)
-    const handleConfirm = () => {
-        setClicked(true)
-        props?.onAccept?.()
-      };
-    
-      const handleCancel = () => {
-        setClicked(true)
-        props?.onReject?.()
-      };
-    
-      return (
-        <div className="confirm-dialog">
-            <div className="confirm-dialog-content">
-            <Title level={4}>{props?.header}</Title>
-            <Typography.Paragraph>{props?.moreinfo}</Typography.Paragraph>
-                <Button style={{marginRight:'10px'}} type="primary"  disabled={clicked} ghost onClick={handleConfirm}>Confirm</Button>
-                <Button type="primary"  disabled={clicked} onClick={handleCancel}>Cancel</Button>
-            </div>
-        </div>
-      );
-}
 
 
 export default InitiateChat
+

@@ -49,10 +49,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     const [actionSelected, setActionSelected] = useState<any>()
     
 
-
     useEffect(() => {
-        setProviderInstance("231646c0-3e6c-4d35-aff6-ebdd62089c3e")
-        fetchAutoCompletionData("231646c0-3e6c-4d35-aff6-ebdd62089c3e") 
         // scroll to output 
         scrollToTop()  
     },[])
@@ -99,12 +96,12 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                         RenderedTemplate: code
                     },
                     actionExecutionToBeCreatedId: newExecutedId
-                }
+            }
            
             createActionInstanceAsyncMutation.mutate((obj as MutationContext), {
-                    onSuccess: () => {
-                        setActionExecutionId(newExecutedId)
-                    }
+                onSuccess: () => {
+                    setActionExecutionId(newExecutedId)
+                }
             })
 
             // set Collapsible
@@ -154,9 +151,13 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     }
 
     const handleActionSelection = (data:any) => {
-        console.log(data)
         setActionSelected(data)
-        handleActionSelected(data)
+        // send all data for executing action
+        handleActionSelected({
+            action: data,
+            providerInstanceId: providerInstance,
+            executionId: newExecutedId || actionExecutionDetailQuery?.ActionExecution?.Id || undefined
+        })
     }
     
 

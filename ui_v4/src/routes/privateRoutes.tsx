@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 const Home = React.lazy(() => import("@pages/home"))
 const Data = React.lazy(() => import("@pages/data"))
 const Playground = React.lazy(() => import("@pages/playground"))
-const ChatInitiate = React.lazy(() => import("@/pages/chat/chatInitiate"))
+const ChatInitiate = React.lazy(() => import("@/pages/chat/Chat/chatInitiate"))
 
 
 const NotFound = React.lazy(() => import("@pages/404"))

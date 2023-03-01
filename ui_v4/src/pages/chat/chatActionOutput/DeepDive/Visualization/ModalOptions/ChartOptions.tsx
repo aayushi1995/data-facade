@@ -360,7 +360,6 @@ const ScatterChartOptions = ({handleChartData, tableData}:any) => {
         }
     
         const handleOk = () => {
-            console.log(axis)
             // call handleChartData
             handleChartData({...axis, chartType: 'scatter'})
     

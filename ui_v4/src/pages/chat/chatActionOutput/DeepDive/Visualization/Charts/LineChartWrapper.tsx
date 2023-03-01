@@ -2,7 +2,6 @@
 import ReactEcharts from "echarts-for-react"; 
 
 const LineChartWrapper =(props: { xaxis?:any[]; yaxis?:any[], data?: any[]})=>{
-    console.log(props.data)
 
     const LineChar = {
         legend: {},

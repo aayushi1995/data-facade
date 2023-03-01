@@ -101,9 +101,31 @@ const fetchTableProperties = async (id?: string) => {
     }
 };
 
+
+const fetchChats = async (chatId?:string) => {
+    const data = {
+        entityName: "Chat",
+        filter: {
+            ChatId: chatId
+        },
+    };
+
+    try {
+        const response = await globalFetch(
+            `${FDSEndpoint}/entity${getDefaultRequestQuery()}`,
+            "POST",
+            data
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
 export {
     initiateChat,
     startConversation,
     getActionDefinitionDetails,
     fetchTableProperties,
+    fetchChats
 };

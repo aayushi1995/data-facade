@@ -213,6 +213,38 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
             if(!!action.payload.existingParameterInstances) {
                 return reducer(newState, {type: 'SetActionParameterInstances', payload: {newActionParameterInstances: action.payload.existingParameterInstances}})
             }
+            // previous execution is considered
+            if(!!action.payload.existingModels && (!!action.payload.parentExecutionId || action.payload.tableId)) {
+                const newObj = {
+                    ...newState,
+                    ToCreateModels: {
+                        ActionInstance: action.payload.existingModels.model!,
+                        ActionParameterInstances: action.payload.existingModels.ParameterInstances!.map(api => {
+                            const apd = newState.ExistingModels.ActionParameterDefinitions.find(apd => apd.Id === api.ActionParameterDefinitionId)!
+                            if(apd.Tag === ActionParameterDefinitionTag.DATA || apd.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
+                                return {
+                                    ...api,
+                                    TableId: action.payload.parentExecutionId || action.payload.tableId,
+                                    ParameterValue: action.payload.parentExecutionId && "Previous Execution"
+                                }
+                            }
+                            return api
+                        })
+                    }
+                }
+                return newObj
+            }
+            // normal scenario
+            if(!!action.payload.existingModels) {
+                return {
+                    ...newState,
+                    ToCreateModels: {
+                        ActionInstance: action.payload.existingModels.model!,
+                        ActionParameterInstances: action.payload.existingModels.ParameterInstances!
+                    }
+                }
+            }
+            // 
             if(!!action.payload.parentExecutionId || action.payload.tableId) {
                 return {
                     ...newState,
@@ -232,16 +264,41 @@ const reducer = (state: ExecuteActionContextState, action: ExecuteActionAction):
                     }
                 }
             }
-            if(!!action.payload.existingModels) {
-                return {
-                    ...newState,
-                    ToCreateModels: {
-                        ActionInstance: action.payload.existingModels.model!,
-                        ActionParameterInstances: action.payload.existingModels.ParameterInstances!
-                    }
-                }
-            }
+            
             return newState
+            // const newState = state?.ExistingModels?.ActionDefinition?.Id===action.payload.ActionDefinitionDetail?.ActionDefinition?.model?.Id ? safeMergeState(state, action.payload.ActionDefinitionDetail) : resetStateFromActionDefinitionDetail(state, action.payload.ActionDefinitionDetail)
+            // if(!!action.payload.existingParameterInstances) {
+            //     return reducer(newState, {type: 'SetActionParameterInstances', payload: {newActionParameterInstances: action.payload.existingParameterInstances}})
+            // }
+            // if(!!action.payload.parentExecutionId || action.payload.tableId) {
+            //     return {
+            //         ...newState,
+            //         ToCreateModels: {
+            //             ...newState.ToCreateModels,
+            //             ActionParameterInstances: newState.ToCreateModels.ActionParameterInstances.map(api => {
+            //                 const apd = newState.ExistingModels.ActionParameterDefinitions.find(apd => apd.Id === api.ActionParameterDefinitionId)!
+            //                 if(apd.Tag === ActionParameterDefinitionTag.DATA || apd.Tag === ActionParameterDefinitionTag.TABLE_NAME) {
+            //                     return {
+            //                         ...api,
+            //                         TableId: action.payload.parentExecutionId || action.payload.tableId,
+            //                         ParameterValue: action.payload.parentExecutionId && "Previous Execution"
+            //                     }
+            //                 }
+            //                 return api
+            //             })
+            //         }
+            //     }
+            // }
+            // if(!!action.payload.existingModels) {
+            //     return {
+            //         ...newState,
+            //         ToCreateModels: {
+            //             ActionInstance: action.payload.existingModels.model!,
+            //             ActionParameterInstances: action.payload.existingModels.ParameterInstances!
+            //         }
+            //     }
+            // }
+            // return newState
         }
 
         case "SetActionParameterInstances":
