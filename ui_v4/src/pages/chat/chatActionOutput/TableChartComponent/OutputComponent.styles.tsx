@@ -1,3 +1,4 @@
+import { Typography } from "antd";
 import styled from "styled-components";
 
 export const TabsWrapper = styled.div`
@@ -9,3 +10,8 @@ export const TabsWrapper = styled.div`
     }
 `
 
+
+export const TitleHeader = styled(Typography.Text)`
+    position:relative;
+    top:18px
+`

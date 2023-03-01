@@ -12,3 +12,8 @@ export const OutputTableStyled = styled.div`
         z-index: 1;
     }
 `
+
+export const OutputContainer = styled.div`
+    min-width:400px;
+    margin-top:10px;
+`

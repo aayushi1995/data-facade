@@ -9,7 +9,10 @@ import { FlexBox } from "../ChatFooter/ChatFooter.styles"
 import { ActionCard, StyledActionOutput, StyledIcon } from "./ActionOutput.styles"
 import FailedActionOutput from "./failedActionOutput"
 import SuccessActionOutput from "./successActionOutput"
+import { OutputContainer } from "./successActionOutput.styles"
 import {ReactComponent as BotIcon } from '@assets/icons/smart_toy.svg'
+
+
 
 export interface ActionExecutionDetailProps {
     actionExecutionId: string,
@@ -49,7 +52,8 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
         <ReactQueryWrapper  {...actionExecutionDetailQuery}>
             <FlexBox style={{alignItems:'center'}}>
                 <>
-                    <div style={{minWidth:'400px'}}>
+                <OutputContainer> 
+                        {/* <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}> */}
                             <ActionCard headStyle={{ border: 0 }} size="small">
                                 {
                                     !actionExecutionTerminalState ?
@@ -93,7 +97,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                 </StyledIcon> 
                                 <Button type="link" disabled={actionExecutionError} style={{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
                             </StyledActionOutput>
-                    </div>
+                            </OutputContainer>
                 </>
                 {props.handleDeepDive && <Button disabled={actionExecutionError} icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
             </FlexBox>
