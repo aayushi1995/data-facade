@@ -5,8 +5,8 @@ import useFetchColumnsForTableAndTags from "@/hooks/useFetchColumnsForTableAndTa
 import useSlackChannelInput from "@/hooks/useSlackChannelInput"
 import useTables from "@/hooks/useTables"
 import { Input, Select } from "antd"
-import styled from 'styled-components'
 import React, { ChangeEvent } from "react"
+import styled from 'styled-components'
 
 const StyledSelect = styled(Select)`
     width: 100%;
@@ -253,9 +253,9 @@ const OptionSetSingleInput = (props: OptionSetStringParameterInput) => {
     return (
         <StyledSelect
             placeholder={parameterName}
-            value={availableOptions.find(option => option.name === selectedOptions?.name)}
-            onChange={(value:any) => {
-                onChange(value ?? undefined)
+            value={availableOptions.find(option => option.name === selectedOptions?.name)?.name}
+            onChange={(value: unknown) => {
+                onChange(value ? {name: value as string} : undefined)
             }
             }
         >
@@ -355,8 +355,10 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
     return (
         <StyledSelect
             placeholder={parameterName}
+            showSearch
             mode="multiple"
             maxTagCount={2}
+            style={{ width: '100%' }}
             value={getAutoCompleteValue()?.map(column => column.UniqueName)}
             onChange={(value: any) => {
                 const columns = value?.map?.((selectedColumnName:any) => fetchColumnsQuery?.data?.[0]?.Columns?.find(cData => cData.UniqueName === selectedColumnName)!)
