@@ -1,17 +1,16 @@
 
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper"
 import useActionExecutionDetails from "@/hooks/actionOutput/useActionExecutionDetails"
+import { UserOutlined } from "@ant-design/icons"
 import { ReactComponent as DeepDiveIcon } from '@assets/icons/scuba_diving.svg'
-import { Badge, Button, Card, Col, Row, Skeleton, Space, Tag, Typography } from "antd"
+import { ReactComponent as BotIcon } from '@assets/icons/smart_toy.svg'
+import { Button, Skeleton, Space } from "antd"
 import React from "react"
-import styled from "styled-components"
 import { FlexBox } from "../ChatFooter/ChatFooter.styles"
 import { ActionCard, StyledActionOutput, StyledIcon } from "./ActionOutput.styles"
 import FailedActionOutput from "./failedActionOutput"
 import SuccessActionOutput from "./successActionOutput"
 import { OutputContainer } from "./successActionOutput.styles"
-import {ReactComponent as BotIcon } from '@assets/icons/smart_toy.svg'
-import { UserOutlined } from "@ant-design/icons"
 
 
 
@@ -42,6 +41,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
         childActionExecutionId,
         fetchChildActionExecutionQuery,
         postProcessedAction,
+        onTrainModel
     } = useActionExecutionDetails(props)
     
 
@@ -98,6 +98,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                     </Space> 
                                 </StyledIcon> 
                                 <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
+                                {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot" && <Button onClick={onTrainModel} type="link">Train Model</Button>}
                             </StyledActionOutput>}  
                     </OutputContainer>
                 </>

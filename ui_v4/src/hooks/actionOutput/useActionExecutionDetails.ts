@@ -5,7 +5,7 @@ import { labels } from "@/helpers/constant"
 import ActionExecutionStatus from "@/helpers/enums/ActionExecutionStatus"
 import { ActionExecutionDetailProps } from "@/pages/chat/chatActionOutput/actionOutput"
 import React from "react"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 
 import FetchActionExecutionDetails from "@/hooks/actionOutput/fetchActionExecutionDetails"
 
@@ -20,8 +20,9 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
     const [postProcessedAction, setPostProcessedAction] = React.useState<ActionExecution[] | undefined>()
     const [childActionExecutionId, setChildActionExecutionId] = React.useState<string | undefined>(props.childActionExecutionId)
     const [selectedActionId, setSelectedActionId] = React.useState<string | undefined>()
+    const fetchedDataManager = dataManager.getInstance as {retreiveData: Function, saveData: Function}
     const fetchChildActionExecutionQuery = useQuery([labels.entities.ActionExecution, "Child", {Id: actionExecutionId}], () => {
-        const fetchedDataManager = dataManager.getInstance as {retreiveData: Function}
+        
         return fetchedDataManager.retreiveData(labels.entities.ActionExecution, {
             filter: {
                 RunId: actionExecutionId
@@ -93,8 +94,23 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
         setChildActionExecutionId(actionExecutionId)
     }
 
+    const trainActionDefinition = useMutation("TrainActionDefinition", 
+        (actionDefinitionId: string) => fetchedDataManager.saveData(labels.entities.TrainingData, {
+            TrainActionDefinition: true,
+            withActionDefinitionId: actionDefinitionId
+        })
+    )
+
     const getProviderInstanceId = () => {
         return actionExecutionDetailQuery.data?.ActionParameterInstances?.find(pi => !!pi.ProviderInstanceId)?.ProviderInstanceId || actionExecutionDetailQuery?.data?.ActionInstance?.ProviderInstanceId
+    }
+
+    const onTrainModel = () => {
+        trainActionDefinition.mutate(actionExecutionDetailQuery?.data?.ActionDefinition?.Id!, {
+            onSuccess: () => {
+                console.log('trained')
+            }
+        })
     }
 
     return {
@@ -110,7 +126,8 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
         fetchChildActionExecutionQuery,
         selectedActionId,
         setSelectedActionId,
-        getProviderInstanceId
+        getProviderInstanceId,
+        onTrainModel
     }
 }
 

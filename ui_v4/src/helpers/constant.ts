@@ -11,6 +11,7 @@ export const S3RequestType = {
 
 export const labels = {
     "entities": {
+        "TrainingData": "TrainingData",
         "ActionTemplate": "ActionTemplate",
         "Alert": "Alert",
         "ActionExecution": "ActionExecution",

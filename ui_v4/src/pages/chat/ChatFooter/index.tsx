@@ -1,18 +1,17 @@
 import dataManager from '@/api/dataManager';
-import { ConnectionHistoryIcon } from '@/assets/icon.theme';
 import { getLocalStorage, setLocalStorage } from '@/utils';
-import { BulbOutlined, CloseOutlined, FileExcelOutlined, MinusOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { BulbOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Col, Popover, Row, Space, Typography } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 // import { SubmitButton } from '@/assets/component.theme';
 import { DataContext, SetDataContext } from '@/contexts/UploadFileDataContextProvider';
 import useContextStorageFile from '@/hooks/useContextStorage';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { ConfirmationPayloadType } from '../ChatBlock/ChatBlock.type';
 import useTableUpload from '../tableUpload/useTableUpload';
 import { ChatAutocomplete, ConnectionButton, PopOverCard, StyledCardChartFooterWrapper, StyledChatInputWrapper, StyledSendIcon } from './ChatFooter.styles';
-import React from 'react';
 
 const ChatFooter = ({ handleSend, loading }: any) => {
     let inputRef = useRef<HTMLInputElement>(null);
@@ -63,6 +62,7 @@ const ChatFooter = ({ handleSend, loading }: any) => {
         if(inputRef !== null) {
             handleSend({text: chatMessage}, 'user')
             setChatMessage(undefined)
+            setRelatedQuestions([])
             inputRef?.current?.focus()
         }
     }
