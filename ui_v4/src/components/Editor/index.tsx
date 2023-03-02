@@ -47,7 +47,7 @@ const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData}:any) 
             width="100%"
             height="200px"
             ref={code}
-            defaultValue={defaultCode}
+            defaultValue={defaultCode || ''}
             focus
             fontSize={14}
             placeholder={"--Enter SQL Code"}

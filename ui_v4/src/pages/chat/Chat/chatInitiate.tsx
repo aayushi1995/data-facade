@@ -24,6 +24,9 @@ import { FDSEndpoint } from "@/settings/config";
 import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
 import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
 import React from "react";
+import dataManager from "@/api/dataManager";
+import { AnyARecord } from "dns";
+import { postProcessingFetchingMessage } from "../chatActionOutput/utils";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
@@ -59,6 +62,7 @@ const InitiateChat = () => {
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
     const [size, setSize] = useState([100,0])
     const uploadTableContext = React.useContext(UploadTableStateContext)
+
     useEffect(()=>{
         if(uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
             setLoadingMessage(true)
@@ -83,9 +87,30 @@ const InitiateChat = () => {
 
     // persist the chat if there is any chatData in the DataProvider
     useEffect(() => {
+        console.log('setting data from context')
         if (chatId) {
-            setMessages(dataContext?.chatData[chatId]?.messages || [defaultBotMessage(appContext?.userName)])
-            setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
+
+            if(dataContext?.chatData[chatId]?.messages.length > 0) {
+                setMessages(dataContext?.chatData[chatId]?.messages)
+                setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
+            } else {
+
+                    dataManager.getInstance.retreiveData("Message",{filter: {ChatId: chatId}}).then((response:any) => {
+                        if(response.length > 0){
+                            let {messagesArray, executionId, table_input, actionDefinition} = postProcessingFetchingMessage(response)
+                            messagesArray.length > 0 && setMessages([defaultBotMessage(appContext?.userName), ...messagesArray])
+                            Object.keys(executionId).length > 0 && setExecutionId({...executionId})
+                            Object.keys(table_input).length > 0 && setTableInputIds({...table_input})
+                            Object.keys(actionDefinition).length > 0 && setTableInputIds({...actionDefinition})
+
+                        } else {
+                            setMessages([defaultBotMessage(appContext?.userName)])
+                        }
+                    }).catch((error:any) => {
+                        console.log(error)
+                    })
+            }
+            
         }
     }, [chatId])
 
@@ -98,23 +123,6 @@ const InitiateChat = () => {
     }, [messages])
 
     
-    useEffect(() => {
-        
-        if(chatId) {
-            console.log('CHATID', chatId)
-            if(!dataContext?.chatData[chatId]?.messages.length || dataContext?.chatData[chatId]?.messages.length < 0) {
-                
-                fetchChats(chatId).then((response:any) => {
-                    console.log(response)
-                }).catch((error:any) => {
-                    console.log(error)
-                })
-                   
-                
-            }
-        }
-       
-    },[chatId])
 
 
     useEffect(() => {
@@ -225,8 +233,13 @@ const InitiateChat = () => {
     }
 
     const handleActionOutput = (messageBody: IChatResponse | any) => {
+
         const actionOutputId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
-        handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'action_output', messageBody?.Id);
+
+        console.log(messageBody)
+
+        handleConversation(messageBody, 'system', 'action_output', messageBody?.Id);
+
         if (actionOutputId) {
             setShowActionOutput(true)
             setExecutionId((prevState: any) => ({
@@ -334,6 +347,8 @@ const InitiateChat = () => {
         }))
         
     }
+
+    console.log('messages',messages,'executionId', executionId, 'actionDefinitions',actionDefinitions)
     
     return (
        <ChatProvider>

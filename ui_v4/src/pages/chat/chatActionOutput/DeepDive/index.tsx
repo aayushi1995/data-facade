@@ -37,16 +37,14 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     const bottomRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const topRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
-
     // local states 
     const [autoCompleteionData, setAutoCompleteionData] = useState<any>([])
-    const [providerInstance, setProviderInstance] = useState<string | null>(null)
+    const [providerInstance, setProviderInstance] = useState<any | null>(null)
     const [activeKey, setActiveKeys] = useState<string[]>(defaultCode ? ['2','4']: ['1'])
     
     // store generated ID for future use
     const [actionExecutionId, setActionExecutionId] = useState<any>(false)
     const [newExecutedId, setnewExecutedId]= useState('')
-    const [actionSelected, setActionSelected] = useState<any>()
     
 
     useEffect(() => {
@@ -55,7 +53,13 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     },[])
 
     useEffect(() => {
-        fetchAutoCompletionData(providerInstance)     
+        let PID:string
+        if(providerInstance! && typeof providerInstance === "object"){
+            PID = providerInstance?.options?.[0]?.Id
+        } else {
+            PID = providerInstance
+        }
+        fetchAutoCompletionData(PID)     
     },[providerInstance])
 
     const handleDataSource = (providerInstance:string) => {
@@ -151,7 +155,6 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     }
 
     const handleActionSelection = (data:any) => {
-        setActionSelected(data)
         // send all data for executing action
         handleActionSelected({
             action: data,
@@ -183,7 +186,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                         extra={<EditIcon/>}
                        
                     >
-                        <ReactAceEditor defaultCode={defaultCode} handleRunQuery={handleRunQuery} autoCompleteionData={autoCompleteionData}/>
+                        <ReactAceEditor defaultCode={defaultCode || ''} handleRunQuery={handleRunQuery} autoCompleteionData={autoCompleteionData}/>
                     </StyledPanel>
             
                     <StyledPanel
@@ -204,10 +207,10 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                        
                     >
                         {defaultCode && !actionExecutionId && (
-                            <OutputComponent dataGridColumns={chatContext?.tableData[ResultTableName]?.dataGridColumns || []} dataGridRows={chatContext?.tableData[ResultTableName]?.dataGridRows || []} tableName={ResultTableName}/>
+                            <OutputComponent dataGridColumns={chatContext?.tableData?.[ResultTableName]?.dataGridColumns || []} dataGridRows={chatContext?.tableData?.[ResultTableName]?.dataGridRows || []} tableName={ResultTableName || ''}/>
                         )}
                         {actionExecutionId && (
-                            <ActionOutput actionExecutionId={actionExecutionId} />
+                            <ActionOutput actionExecutionId={actionExecutionId} showFooter={false}/>
                         )}
                         {!defaultCode && !actionExecutionId && <PlaceHolderText>After setting up Data Source and Actions, your final data tables will be here.</PlaceHolderText>}
                        <Divider plain>Insights</Divider>

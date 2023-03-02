@@ -36,7 +36,7 @@ const renderMenu = (item: any, selectedKey: string) => {
             <MenuText>{item.text}</MenuText>
             <NavLink to={{
                 pathname: item.location,
-                search: `?tab=${item.text.toLowerCase()}`
+                search: `?tabKey=${item.text.toLowerCase()}`
             }} />
         </Menu.Item>
     )

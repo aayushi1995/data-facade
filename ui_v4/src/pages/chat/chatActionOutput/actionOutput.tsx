@@ -11,6 +11,7 @@ import FailedActionOutput from "./failedActionOutput"
 import SuccessActionOutput from "./successActionOutput"
 import { OutputContainer } from "./successActionOutput.styles"
 import {ReactComponent as BotIcon } from '@assets/icons/smart_toy.svg'
+import { UserOutlined } from "@ant-design/icons"
 
 
 
@@ -26,6 +27,7 @@ export interface ActionExecutionDetailProps {
     showChart?: boolean
     handleDeepDive?: (data:any, title?:string) => void
     onlyTable?:boolean
+    showFooter?:boolean
 }
 
 
@@ -41,8 +43,8 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
         fetchChildActionExecutionQuery,
         postProcessedAction,
     } = useActionExecutionDetails(props)
+    
 
-    console.log(actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy)
 
     const handleDeepDiveData = (data:any, title:any) => {
         props.handleDeepDive && props.handleDeepDive(data, title)
@@ -87,19 +89,20 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                 {childActionExecutionId && <ActionOutput actionExecutionId={childActionExecutionId} />}
                               
                             </ActionCard>
-                            <StyledActionOutput isBot={actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot"}>
+                            {props?.showFooter && <StyledActionOutput isBot={actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot"}>
                                 <StyledIcon> 
                                     <Space size={6}>
                                         {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot"
                                         ? <><BotIcon/> AI Insight</> 
-                                        : <><BotIcon/> {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy}</>}
+                                        : <><UserOutlined /> {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy}</>}
                                     </Space> 
                                 </StyledIcon> 
-                                <Button type="link" disabled={actionExecutionError} style={{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
-                            </StyledActionOutput>
-                            </OutputContainer>
+                                <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
+                            </StyledActionOutput>}
+                           
+                    </OutputContainer>
                 </>
-                {props.handleDeepDive && <Button disabled={actionExecutionError} icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
+                {props.handleDeepDive && <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
             </FlexBox>
         </ReactQueryWrapper>
     )

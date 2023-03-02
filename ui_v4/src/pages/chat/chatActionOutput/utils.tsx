@@ -34,3 +34,45 @@ export const getData = (rows:any, value:any) => {
     })
     return newArray
 }
+
+export const postProcessingFetchingMessage = (messages:any) => {
+    let executionId = {}
+    let table_input = {}
+    let actionDefinition = {}
+
+    let messagesArray =  messages?.map((obj:any, index:number) => {
+
+        let retreiveMessage:string = ''
+
+        if(obj?.MessageType === 'text') {
+            retreiveMessage = JSON.parse(obj?.MessageContent)?.text
+
+        } else if (obj?.MessageType === 'action_output') {
+            executionId =  {
+                ...executionId,
+                [obj?.Id]: JSON.parse(obj?.MessageContent)?.['executionId']
+            }
+        } else if (obj?.MessageType === "action_instance"){
+            actionDefinition = {
+                ...actionDefinition,
+                [obj?.Id]: JSON.parse(obj?.MessageContent)
+            }
+        } else if (obj?.MessageType === "table_input"){
+            table_input = {
+                ...table_input,
+                [obj?.Id]: JSON.parse(obj?.MessageContent)
+            }
+        }
+
+        return {
+            id: obj?.Id,
+            message: retreiveMessage,
+            // if we dont get a sentBy then add previoous message time
+            time: obj?.SentOn ? parseInt(obj?.SentOn) : index > 1 ? parseInt(messages?.[index-1]?.sentOn): new Date().getTime(),
+            from: obj?.MessageType === "table_input" || obj?.SentBy === "Bot" ? "system" : 'user',
+            username: obj?.SentBy === "Bot" ? "Data Facade" : obj?.SentBy,
+            type: obj?.MessageType
+        }
+    })
+    return { messagesArray, executionId, table_input, actionDefinition}
+}

@@ -14,13 +14,13 @@ const ChatBlock = ({message, id, type, ...props}:any) => {
         var strTime = hours + ':' + minute + ' ' + ampm;
         return (strTime)
     }
-    
+
     return (
         <ChatBlockWrapper {...props}>
             <FlexBox style={{alignItems: 'flex-end'}}>
                 <div>
                     {(type=='recommended_actions' || type=='confirmation')?<></>:
-                    <ChatMetaData {...props}><StyledUserName>{props.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(props.time)}</StyledTime></ChatMetaData>
+                        <ChatMetaData {...props}><StyledUserName>{props.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(Number.isNaN(props.time) ? new Date().getTime() : props.time)}</StyledTime></ChatMetaData>
                     }
                     <ChatStyles {...props} key={id} type={type}>{props?.children === undefined ? message : props?.children}</ChatStyles>
                 </div>

@@ -80,6 +80,7 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
                 setItems(initialItems(deepdiveData, handleActionSelected))
             }
             setActiveKey(deepdiveData?.data?.ActionInstance?.ResultTableName)
+            
         },[deepdiveData])
        
     

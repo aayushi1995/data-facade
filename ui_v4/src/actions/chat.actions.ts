@@ -104,7 +104,7 @@ const fetchTableProperties = async (id?: string) => {
 
 const fetchChats = async (chatId?:string) => {
     const data = {
-        entityName: "Chat",
+        entityName: "Message",
         filter: {
             ChatId: chatId
         },
@@ -112,7 +112,7 @@ const fetchChats = async (chatId?:string) => {
 
     try {
         const response = await globalFetch(
-            `${FDSEndpoint}/entity${getDefaultRequestQuery()}`,
+            `${FDSEndpoint}/getproxy${getDefaultRequestQuery()}`,
             "POST",
             data
         );

@@ -6,7 +6,7 @@ import { removeLocalStorage, setLocalStorage } from '@/utils';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Dropdown } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import React from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { NavigationTabs } from './navigationtab.style';
 
@@ -38,17 +38,24 @@ const dropdownStyle = {
 }
 
 const AddMenu = ({handleNewTab}:any) => {
+    const [open, setOpen] = useState(false)
 
+    const handleOpenChange = (open:boolean) => {
+        setOpen(open)
+    }
+
+    const handleInitiateNewTab = () => {
+        handleNewTab()
+        setOpen(false)
+    }
 
     const dropdownContent = () => <div style={dropdownStyle}>
-        <ConnectionButton onClick={() =>  handleNewTab()} block type="text">Initiate new chat</ConnectionButton>
+        <ConnectionButton onClick={handleInitiateNewTab} block type="text">Initiate new chat</ConnectionButton>
     </div>
     return (
-        <Dropdown dropdownRender={() => dropdownContent()} arrow={true} trigger={['click']}><Button size="small" type='text' icon={<PlusOutlined />} /></Dropdown>
+        <Dropdown open={open} dropdownRender={() => dropdownContent()} arrow={true} trigger={['click']} onOpenChange={handleOpenChange}><Button size="small" type='text' icon={<PlusOutlined />} /></Dropdown>
     )
 }
-
-
 
 
 const BrowserTab = ({ children }: ChildrenProps) => {
@@ -78,17 +85,19 @@ const BrowserTab = ({ children }: ChildrenProps) => {
     }, [location.search])
 
 
-    const handleChange = (value: string) => {
+    const handleChange = (value: string, params?:string) => {
         const tab = routes.find((route: any) => route.key === value);
         setActiveTab(value)
-        tab ? navigate(`${value}${tab['params']}`) : navigate(value)
+        tab ? navigate(`${value}${tab['params']}`) : params ? navigate(`${value}${params}`) : navigate(value)
 
     };
 
     const handleNewTab = () => {
         const chatId = getUniqueId();
+        const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
+        setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: name, params: location.search, isPermanent: true }]);
         setLocalStorage(`chat_${chatId}`, chatId);
-        setActiveTab(`/chats/${chatId}`)
+        handleChange(`/chats/${chatId}`,location.search)
     }
 
     const removeTab = (path: string) => {
@@ -115,13 +124,12 @@ const BrowserTab = ({ children }: ChildrenProps) => {
     }
 
    
-
     const onEdit = (
         targetKey: any,
         action: 'add' | 'remove',
     ) => {
         if (action === 'add') {
-            console.log('add action here')
+            // handleNewTab()
         } else {
             removeTab(targetKey);
         }
