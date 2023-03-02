@@ -7,6 +7,8 @@ import ActionOutput from "../../chatActionOutput/actionOutput";
 import ChatBlock from "../../ChatBlock";
 import { IChatMessage } from "../../ChatBlock/ChatBlock.type";
 import ChatTableInput from "../../chatTableInput";
+import { SenderPreview } from "../../tableUpload/SenderPreview";
+import { LoaderContainer } from "../Chat.styles";
 import ConfirmationInput from "../ConfirmationInput";
 import { ActionMessageContent } from "../ConfirmationInput/Chat.types";
 import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
@@ -46,6 +48,11 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                             <ConfirmationInput {...props?.message}/>
                         </ChatBlock>
                     }
+                    {type === 'fileInput' &&
+                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
+                        <SenderPreview fileName={props?.message} />
+                    </ChatBlock>
+                    }
                     {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} />}
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
                     {type === "table_input" && (Object.keys(tableInputs).length > 0 && tableInputs[id] && 
@@ -56,7 +63,9 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                     )}
                 </React.Fragment>)}
             )}
+            <LoaderContainer>
             {loading && <Spin />}
+            </LoaderContainer>
 
             <div ref={chatWrapperRef} />
         </div>
