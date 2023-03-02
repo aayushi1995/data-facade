@@ -24,13 +24,14 @@ import React from "react";
 import dataManager from "@/api/dataManager";
 import { AnyARecord } from "dns";
 import { postProcessingFetchingMessage } from "../chatActionOutput/utils";
+import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
    
     return {
         id: new Date().toTimeString(),
-        message: `Welcome ${username.split(' ')[0]} ! What insight do you need ?`,
+        message: `Welcome ${username.split(' ')[0]} ! What insight do you need ?` ,
         time: new Date().getTime(),
         from: 'system',
         username: 'DataFacade',
@@ -38,9 +39,38 @@ const defaultBotMessage = (username: string): IChatMessage => {
     }
 }
 
+function getRandomItems(arr: any[], numItems: number): any[] {
+    const result = new Array(numItems);
+    let len = arr.length;
+    const taken = new Array(len);
+    if (numItems > len) {
+      throw new RangeError("getRandomItems: more elements taken than available");
+    }
+    while (numItems--) {
+      const randomIndex = Math.floor(Math.random() * len);
+      result[numItems] = arr[randomIndex in taken ? taken[randomIndex] : randomIndex];
+      taken[randomIndex] = --len in taken ? taken[len] : len;
+    }
+    return result;
+  }
 
+const defaultActions = (allActionDefinitionsData: ActionDefinitionDetail[]): IChatMessage => {
+   
+    return {
+        id: new Date().toTimeString(),
+        message: allActionDefinitionsData,
+        time: new Date().getTime(),
+        from: 'system',
+        username: 'DataFacade',
+        type: 'recommended_actions'
+    }
+}
 const InitiateChat = () => {
-
+    const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
+    let fiveActions: any[] = []
+    if(!allActionDefinitionsIsLoading){
+    fiveActions = getRandomItems(allActionDefinitionsData, 5)
+    }
     // central data provider context
     const setDataContext = useContext(SetDataContext);
     const dataContext = useContext(DataContext);
@@ -68,6 +98,13 @@ const InitiateChat = () => {
         }
         
     },[uploadTableContext])
+    useEffect(()=>{
+        if(allActionDefinitionsIsLoading){
+            setLoadingMessage(true)
+        }else{
+            setLoadingMessage(false)
+        }
+    },[allActionDefinitionsIsLoading])
     // function that calls setChatData reducer to store message data in context
     const persistState = () => {
         messages !== undefined && setDataContext({
@@ -99,9 +136,14 @@ const InitiateChat = () => {
                             Object.keys(executionId).length > 0 && setExecutionId({...executionId})
                             Object.keys(table_input).length > 0 && setTableInputIds({...table_input})
                             Object.keys(actionDefinition).length > 0 && setTableInputIds({...actionDefinition})
-
-                        } else {
+ 
+                        } else { 
+                            if(allActionDefinitionsIsLoading){
                             setMessages([defaultBotMessage(appContext?.userName)])
+                            }else{
+                                setMessages([defaultBotMessage(appContext?.userName),defaultActions(fiveActions)])
+                             
+                            }
                         }
                     }).catch((error:any) => {
                         console.log(error)
@@ -111,6 +153,18 @@ const InitiateChat = () => {
         }
     }, [chatId])
 
+    useEffect(()=>{
+        if(allActionDefinitionsData.length>0){
+                if(messages){
+                setMessages([...messages,defaultActions(fiveActions)])
+                }else{
+                    setMessages([defaultActions(fiveActions)])
+                }
+            
+        }
+        console.log(allActionDefinitionsData.length);
+        
+    },[allActionDefinitionsData])
 
     // persists data whenever messages are added
     useEffect(() => {
@@ -124,7 +178,6 @@ const InitiateChat = () => {
 
     useEffect(() => {
         if (chatId) {
-            
             if (chatId !== getLocalStorage(`chat_${chatId}`)) {
                 setIsError(true);
             }
@@ -342,14 +395,16 @@ const InitiateChat = () => {
         }))
         
     }
-
-    console.log('messages',messages,'executionId', executionId, 'actionDefinitions',actionDefinitions)
+    // handleConversation(allActionDefinitionsData.slice(0,5), 'system', 'recommended_actions',new Date().toTimeString())
+    // console.log(allActionDefinitionsData.slice(0,5));
+    
+    // console.log('messages',messages,'executionId', executionId, 'actionDefinitions',actionDefinitions)
     
     return (
        <ChatProvider>
             <MainWrapper>
                 <ReactSplit 
-                    initialSizes={[...size]}>
+                    initialSizes={[...size]}> 
                     <ChatWrapperStyled>
                         {
                             isError ? <Alert
