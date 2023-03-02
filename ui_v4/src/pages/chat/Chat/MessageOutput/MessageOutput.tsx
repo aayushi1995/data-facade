@@ -34,11 +34,6 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
         }
     }
 
-    const getExecutionId= (message:string) => {
-        console.log(message)
-
-    }
-
     return (
         <div>
             {messages?.map(({ id, type, ...props }: IChatMessage) => {

@@ -214,7 +214,6 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
 
     React.useEffect(() => {
         const messageContent = getMessageRequest(executeActionContext)
-        console.log(executeActionContext)
         if(Object.keys(executeActionContext?.ExistingModels.ActionDefinition)?.length > 0 && executeActionContext?.ExistingModels?.ActionParameterDefinitions?.length === 0) {
             setShowSubmit(false)
             props.onSubmit?.(messageContent)

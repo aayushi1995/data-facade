@@ -12,16 +12,13 @@ import  { useContext, useEffect,  useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
 import { ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper, MessageWrapper } from "./Chat.styles";
+import ChatComponentIconTabExperience from "../chatActionOutput/chatDeepDiveTab";
+import DeepDiveTabs from "../chatActionOutput/DeepDive/DeepDiveTabs";
 import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "../ChatBlock/ChatBlock.type";
 import ChatFooter from "../ChatFooter";
 import { FlexBox } from "../ChatFooter/ChatFooter.styles";
-import DeepDiveTabs from "../chatActionOutput/DeepDive/DeepDiveTabs";
-import ChatComponentIconTabExperience from "../chatActionOutput/chatDeepDiveTab";
 import { ActionMessageContent, TableInputContent } from "./ConfirmationInput/Chat.types";
 import MessageOutputs from "./MessageOutput/MessageOutput";
-import globalFetch from "@/hooks/useGlobalFetch";
-import { FDSEndpoint } from "@/settings/config";
-import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
 import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
 import React from "react";
 import dataManager from "@/api/dataManager";
@@ -30,6 +27,7 @@ import { postProcessingFetchingMessage } from "../chatActionOutput/utils";
 
 
 const defaultBotMessage = (username: string): IChatMessage => {
+   
     return {
         id: new Date().toTimeString(),
         message: `Welcome ${username.split(' ')[0]} ! What insight do you need ?`,
@@ -62,7 +60,6 @@ const InitiateChat = () => {
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
     const [size, setSize] = useState([100,0])
     const uploadTableContext = React.useContext(UploadTableStateContext)
-
     useEffect(()=>{
         if(uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
             setLoadingMessage(true)
@@ -236,8 +233,6 @@ const InitiateChat = () => {
 
         const actionOutputId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
 
-        console.log(messageBody)
-
         handleConversation(messageBody, 'system', 'action_output', messageBody?.Id);
 
         if (actionOutputId) {
@@ -382,12 +377,11 @@ const InitiateChat = () => {
                     </ChatWrapperStyled>
                     <FlexBox>
                     <ChatComponentIconTabExperience handleChatClick={handleChatClick} handleTerminalClick={handleTerminalClick} showDeepDive={showDeepDive} />
-                        <DeepDiveWrapperStyled>
-                            <DeepDiveTabs deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>
-                        </DeepDiveWrapperStyled>
+                    <DeepDiveWrapperStyled>
+                        <DeepDiveTabs deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>
+                    </DeepDiveWrapperStyled>
                     </FlexBox>
                 </ReactSplit>
-                
             </MainWrapper>
         </ChatProvider>
     )

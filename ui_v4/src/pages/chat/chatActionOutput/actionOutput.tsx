@@ -98,8 +98,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                     </Space> 
                                 </StyledIcon> 
                                 <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
-                            </StyledActionOutput>}
-                           
+                            </StyledActionOutput>}  
                     </OutputContainer>
                 </>
                 {props.handleDeepDive && <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}

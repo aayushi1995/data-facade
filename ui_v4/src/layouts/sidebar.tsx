@@ -57,7 +57,6 @@ const AppSidebar = () => {
             let chatID = getUniqueId();
             setLocalStorage(`chat_${chatID}`, chatID)
             navigate(`/chats/${chatID}?tabKey=chats`);
-
         }
     
     }
@@ -65,6 +64,7 @@ const AppSidebar = () => {
     useEffect(() => {
         itemIndex > -1 && setSelectedKey(itemIndex === 0 ? 'home' : items?.find((_item: any) => location.pathname.includes(_item.key))['key'])
     }, [location])
+
     return (
         <Sider trigger={null} collapsible theme="light" collapsedWidth={81} collapsed={true} style={{
             ...LAYOUT_STYLE.sidebar, overflow: 'auto',
