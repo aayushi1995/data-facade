@@ -68,7 +68,10 @@ const InitiateChat = () => {
     const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
     let fiveActions: any[] = []
     if(!allActionDefinitionsIsLoading){
-    fiveActions = getRandomItems(allActionDefinitionsData, 5)
+        if(allActionDefinitionsData.length>5){
+            fiveActions = getRandomItems(allActionDefinitionsData, 5)
+        }
+        
     }
     // central data provider context
     const setDataContext = useContext(SetDataContext);
@@ -155,7 +158,11 @@ const InitiateChat = () => {
     useEffect(()=>{
         if(allActionDefinitionsData.length>0){
                 if(messages){
-                setMessages([...messages,defaultActions(fiveActions)])
+                    if(messages.length<2){
+                        setMessages([...messages,defaultActions(fiveActions)])
+                    }else{
+                        setMessages([...messages])
+                    }
                 }else{
                     setMessages([defaultActions(fiveActions)])
                 }

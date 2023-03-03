@@ -22,7 +22,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
     
     useEffect(() => {
         chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+    }, [messages,loading]);
 
     const handleActionInstanceSubmit = (messageContent: ActionInstanceWithParameters, type: string, id?:string, isExternalExecutionId?:string) => {           
             handleConversation({actionInstanceWithParameterInstances: messageContent}, 'user', type, undefined, isExternalExecutionId)

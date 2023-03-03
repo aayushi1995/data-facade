@@ -43,7 +43,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
         postProcessedAction,
         onTrainModel
     } = useActionExecutionDetails(props)
-    
+
 
 
     const handleDeepDiveData = (data:any, title:any) => {
@@ -72,7 +72,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                                             ActionDefinition={actionExecutionDetailQuery?.data?.ActionDefinition!}
                                                             ActionInstance={actionExecutionDetailQuery?.data?.ActionInstance!}
                                                             showCharts={false}
-                                                            title={actionExecutionDetailQuery.data?.ActionInstance?.Name}
+                                                            title={actionExecutionDetailQuery.data?.ActionInstance?.Name || "Run Time : "+getElapsedTime()}
                                                         />
                                                     </>
                                             }

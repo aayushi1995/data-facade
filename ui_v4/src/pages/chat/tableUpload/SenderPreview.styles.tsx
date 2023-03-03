@@ -1,3 +1,5 @@
+import { Typography } from "antd"
+import Paragraph from "antd/es/typography/Paragraph"
 import styled from "styled-components"
 
 export const UploadFileContainer = styled.div`
@@ -31,9 +33,9 @@ export const FileNameContainer = styled.div`
     flex: none;
 `
 
-export const Filename = styled.p`
+export const Filename = styled(Paragraph)`
 width: 98px;
-height: 15px;
+margin-top:1em;
 overflow: hidden;
 font-family: 'Archivo';
 font-style: normal;
@@ -42,7 +44,6 @@ font-size: 14px;
 display: flex;
 align-items: center;
 color: #4B5563;
-margin: 0px;
 flex: none;
 `
 export const FileSendBy = styled.p`

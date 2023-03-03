@@ -13,7 +13,7 @@ export const SenderPreview = (props:SenderPreviewProps)=>{
                     <img src={GsheetIcon} alt="" />
                 </div>
                 <FileNameContainer>
-                    <Filename>{props.fileName}</Filename>
+                    <Filename ellipsis={{rows:1}}>{props.fileName}</Filename>
                 </FileNameContainer>
                 <div>
                     <img src={chevron_rightIcon} alt="" />
