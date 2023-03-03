@@ -1,7 +1,7 @@
 
 import ReactSplit from '@devbookhq/splitter';
 import DraggableSliderTab from './DraggableSliderTab';
-import {DraggableSliderWrapper, FlexBox } from './DraggableSlider.styles'
+import {DraggableSliderWrapper, SliderFlexBox } from './DraggableSlider.styles'
 
 
 // Index Type
@@ -28,10 +28,10 @@ const DraggableSlider = ({size, leftChild, rightChild, iconStack, activeTab}:IPl
         <DraggableSliderWrapper>
             <ReactSplit initialSizes={[...size]}>
                 {leftChild}
-                <FlexBox>
+                <SliderFlexBox>
                     <DraggableSliderTab iconStack={iconStack} activeTab={activeTab}/> 
                     {rightChild}
-                </FlexBox>
+                </SliderFlexBox>
             </ReactSplit>
         </DraggableSliderWrapper>
     )

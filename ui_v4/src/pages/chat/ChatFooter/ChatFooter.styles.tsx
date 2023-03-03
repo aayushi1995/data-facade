@@ -84,6 +84,7 @@ export const StyledFileReplaceIcon = styled(FileReplaceIcon)`
 
 export const FlexBox = styled.div`
     display:flex;
+    
 `
 
 export const ConnectionButton = styled(Button)`

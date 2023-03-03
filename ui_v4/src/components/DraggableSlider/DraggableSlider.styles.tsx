@@ -5,16 +5,20 @@ export const DraggableSliderWrapper = styled.div`
     position:relative;
 
     & div[dir="Horizontal"] {
+        position: relative;
+        width: 50px;
+        right: -50px;
         height: 80vh;
         background-color: transparent !important;
     }
+    
     & div[dir="Horizontal"] ~ div {
         min-width: 50px !important;
     }
     & div[dir="Horizontal"] > div {
         background: #9CA3AF;
         position: relative;
-        right: -25px;
+        right: 4px;
         border-radius: 0px;
         z-index: 2;
     }
@@ -28,8 +32,11 @@ export const DraggableSliderWrapper = styled.div`
         background: #9CA3AF;
         right: -8px;
     }
+    & div[dir="Horizontal"]:hover {
+        background: transparent! important;
+    }
 `
-export const FlexBox = styled.div`
+export const SliderFlexBox = styled.div`
     display:flex;
     z-index: 1;
     position: relative;

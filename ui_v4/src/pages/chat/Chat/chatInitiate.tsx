@@ -22,7 +22,6 @@ import MessageOutputs from "./MessageOutput/MessageOutput";
 import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
 import React from "react";
 import dataManager from "@/api/dataManager";
-import { AnyARecord } from "dns";
 import { postProcessingFetchingMessage } from "../chatActionOutput/utils";
 import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
 
@@ -172,8 +171,6 @@ const InitiateChat = () => {
             persistState()
         })
     }, [messages])
-
-    
 
 
     useEffect(() => {
@@ -392,14 +389,8 @@ const InitiateChat = () => {
         setActionDefinitions((prevState:any) => ({
             ...prevState,
             [MessageId]: obj
-        }))
-        
+        }))   
     }
-    // handleConversation(allActionDefinitionsData.slice(0,5), 'system', 'recommended_actions',new Date().toTimeString())
-    // console.log(allActionDefinitionsData.slice(0,5));
-    
-    // console.log('messages',messages,'executionId', executionId, 'actionDefinitions',actionDefinitions)
-    
     return (
        <ChatProvider>
             <MainWrapper>

@@ -13,13 +13,13 @@ const Visualization = ({tableName}:any) => {
     const tableData = chatContext?.tableData?.[tableName]
 
     const [showChart, setShowChart] = useState(false)
-    const [showChartModal, setShowChartModal] = useState(false)
+    const [showOptions, setOptions] = useState(true)
 
     const [chartData, setChartData] = useState<any>(null)
 
     const handleChartData = (data:any) => {
         setShowChart(true)
-        setShowChartModal(false)
+        setOptions(false)
         setChartData(data)
     }
 
@@ -28,24 +28,13 @@ const Visualization = ({tableName}:any) => {
     
     return (
         <div>
-             {!chartData ? 
-                <Empty
-                    image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                    imageStyle={{ height: 60 }}
-                    description={
-                    <span>
-                        Customize Visualizations
-                    </span>
-                    }
-                >
-                <Button type="primary" onClick={() => setShowChartModal(true)}>Create a Chart</Button>
-                </Empty> : showChart && (
-                    <div>
-                        <SettingOutlined onClick={() => setShowChartModal(true)} style={{display:'flex', margin: '0px 30px', justifyContent:'flex-end'}}/>
-                        {ChartWrapper({...chartData})}
-                    </div>
-                )}
-                <ModalOptions columns={columns} showChartModal={showChartModal} setShowChartModal={setShowChartModal} handleChartData={handleChartData} tableName={tableName}/>
+            {showOptions && <ModalOptions columns={columns} showChartModal={showOptions} setShowChartModal={setOptions} handleChartData={handleChartData} tableName={tableName}/>}
+            {showChart && (
+                <div>
+                    <SettingOutlined onClick={() => setOptions(!showOptions)} style={{display:'flex', margin: '0px 30px', justifyContent:'flex-end'}}/>
+                    {ChartWrapper({...chartData})}
+                </div>
+            )}
         </div>
     )
 }

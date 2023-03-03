@@ -71,29 +71,11 @@ const LineChartOptions = ({handleChartData,tableData }:any) => {
 
 
     return (
-        <div>
-            <SelectWrapper>
-                <label>X Axis</label>
-                <Select
-                    style={{ width: "100%" }}
-                    onChange={handleXaxis}
-                    options={columns}
-            />
-            </SelectWrapper>
-           <SelectWrapper>
-            <label>Y Axis</label>
-                <Select
-                    style={{ width: '100%' }}
-                    onChange={handleYaxis}
-                    options={columns}
-                />
-           </SelectWrapper>
-            <FlexBox>
-                <Button type='primary' onClick={handleOk} style={{justifyContent: 'center', marginTop:'30px'}}>Show Charts</Button>
-            </FlexBox>
-           
-            
-        </div>
+        <>
+            <CommonSelectOptions label={LABEL_CONSTANTS.xAxis} options={columns} onChange={handleXaxis}/>
+            <CommonSelectOptions label={LABEL_CONSTANTS.yAXis} options={columns} onChange={handleYaxis}/>
+            <CommonButtonComponent handleOk={handleOk}/>
+        </>
     )
 }
 
@@ -133,34 +115,16 @@ const BarChartOptions = ({handleChartData, tableData}:any) => {
 
 
     return (
-        <div>
-            <SelectWrapper>
-                <label>X Axis</label>
-                <Select
-                    style={{ width: "100%" }}
-                    onChange={handleXaxis}
-                    options={columns}
-            />
-            </SelectWrapper>
-           <SelectWrapper>
-            <label>Y Axis</label>
-                <Select
-                    style={{ width: '100%' }}
-                    onChange={handleYaxis}
-                    options={columns}
-                />
-           </SelectWrapper>
-           <SelectWrapper>
-            <Button type='primary' onClick={handleOk} style={{justifyContent: 'center', marginTop:'30px'}}>Show Charts</Button>
-           </SelectWrapper>
-           
-            
-        </div>
+        <>
+            <CommonSelectOptions label={LABEL_CONSTANTS.xAxis} options={columns} onChange={handleXaxis}/>
+            <CommonSelectOptions label={LABEL_CONSTANTS.yAXis} options={columns} onChange={handleYaxis}/>
+            <CommonButtonComponent handleOk={handleOk}/>
+        </>
     )
 }
 
 const LineBarOptions = ({handleChartData, tableData}:any) => {
-    const chatContext = useContext(ChatContext)
+    
     
     let [axis, setaxis] = useState<any>()
 
@@ -207,42 +171,17 @@ const LineBarOptions = ({handleChartData, tableData}:any) => {
 
 
     return (
-        <div>
-            <SelectWrapper>
-                <label>X Axis</label>
-                <Select
-                    style={{ width: "100%" }}
-                    onChange={handleXaxis}
-                    options={columns}
-            />
-            </SelectWrapper>
-           <SelectWrapper>
-            <label>Y Axis - Line</label>
-                <Select
-                    style={{ width: '100%' }}
-                    onChange={(value:any) => handleYaxis('line',value)}
-                    options={columns}
-                />
-           </SelectWrapper>
-           <SelectWrapper>
-            <label>Y Axis - Bar</label>
-                <Select
-                    style={{ width: '100%' }}
-                    onChange={(value:any) => handleYaxis('bar',value)}
-                    options={columns}
-                />
-           </SelectWrapper>
-           <SelectWrapper>
-            <Button type='primary' onClick={handleOk} style={{justifyContent: 'center', marginTop:'30px'}}>Show Charts</Button>
-           </SelectWrapper>
-           
-            
-        </div>
+        <>
+            <CommonSelectOptions label={LABEL_CONSTANTS.xAxis} options={columns} onChange={handleXaxis}/>
+            <CommonSelectOptions label={LABEL_CONSTANTS.yAXis+'-Line'} options={columns} onChange={(value:any) => handleYaxis('line',value)}/>
+            <CommonSelectOptions label={LABEL_CONSTANTS.yAXis+'-Bar'} options={columns} onChange={(value:any) => handleYaxis('bar',value)}/>
+            <CommonButtonComponent handleOk={handleOk}/>
+        </>
     )
 }
 
 const PieChartOptions = ({handleChartData, tableData}:any) => {
-    const chatContext = useContext(ChatContext)
+    
     
     let [axis, setaxis] = useState<any>()
 
@@ -289,35 +228,17 @@ const PieChartOptions = ({handleChartData, tableData}:any) => {
 
 
     return (
-        <div>
-            <SelectWrapper>
-                <label>X Axis</label>
-                <Select
-                    style={{ width: "100%" }}
-                    onChange={handleXaxis}
-                    options={columns}
-            />
-            </SelectWrapper>
-           <SelectWrapper>
-            <label>Y Axis</label>
-                <Select
-                    style={{ width: '100%' }}
-                    onChange={handleYaxis}
-                    options={columns}
-                />
-           </SelectWrapper>
-           <SelectWrapper>
-            <Button type='primary' onClick={handleOk} style={{justifyContent: 'center', marginTop:'30px'}}>Show Charts</Button>
-           </SelectWrapper>
-           
-            
-        </div>
+        <>
+            <CommonSelectOptions label={LABEL_CONSTANTS.xAxis} options={columns} onChange={handleXaxis}/>
+            <CommonSelectOptions label={LABEL_CONSTANTS.yAXis} options={columns} onChange={handleYaxis}/>
+            <CommonButtonComponent handleOk={handleOk}/>
+        </>
     )
 }
 
 
 const ScatterChartOptions = ({handleChartData, tableData}:any) => {
-        const chatContext = useContext(ChatContext)
+        
         let [axis, setaxis] = useState<any>()
     
         const handleXaxis = (value:any) => {
@@ -370,28 +291,38 @@ const ScatterChartOptions = ({handleChartData, tableData}:any) => {
     
     
         return (
-            <div>
-                <SelectWrapper>
-                    <label>X Axis</label>
-                    <Select
-                        style={{ width: "100%" }}
-                        onChange={handleXaxis}
-                        options={columns}
-                />
-                </SelectWrapper>
-               <SelectWrapper>
-                <label>Y Axis</label>
+            <>
+               <CommonSelectOptions label={LABEL_CONSTANTS.xAxis} options={columns} onChange={handleXaxis}/>
+               <CommonSelectOptions label={LABEL_CONSTANTS.yAXis} options={columns} onChange={handleYaxis}/>
+               <CommonButtonComponent handleOk={handleOk}/>
+            </>
+        )
+}
+
+
+const CommonButtonComponent = ({handleOk}:any) => {
+    return (
+        <FlexBox style={{minWidth:'300px',justifyContent:'center'}}>
+            <Button type='primary' onClick={handleOk} style={{justifyContent: 'center', marginTop:'0px'}}>Show Charts</Button>
+       </FlexBox>
+    )
+}
+
+const CommonSelectOptions = ({label, options, onChange}:any) => {
+    console.log(options)
+    return (
+        <SelectWrapper>
+                <label>{label}</label>
                     <Select
                         style={{ width: '100%' }}
-                        onChange={handleYaxis}
-                        options={columns}
+                        onChange={onChange}
+                        options={options}
                     />
-               </SelectWrapper>
-               <SelectWrapper>
-                <Button type='primary' onClick={handleOk} style={{justifyContent: 'center', marginTop:'30px'}}>Show Charts</Button>
-               </SelectWrapper>
-               
-                
-            </div>
-        )
+        </SelectWrapper>
+    )
+}
+
+const LABEL_CONSTANTS = {
+    'xAxis': 'X Axis',
+    'yAXis': 'Y Axis'
 }

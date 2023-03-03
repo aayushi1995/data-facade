@@ -34,6 +34,9 @@ export const MainWrapper = styled.div`
     position:relative;
 
     & div[dir="Horizontal"] {
+        position: relative;
+        width: 50px;
+        right: -50px;
         height: 80vh;
         background-color: transparent !important;
     }
@@ -43,7 +46,7 @@ export const MainWrapper = styled.div`
     & div[dir="Horizontal"] > div {
         background: #9CA3AF;
         position: relative;
-        right: -25px;
+        right: 4px;
         border-radius: 0px;
     }
 

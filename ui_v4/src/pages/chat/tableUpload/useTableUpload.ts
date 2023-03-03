@@ -56,7 +56,6 @@ function useTableUpload(params: UseTableUploadParam) {
             uploadFile()
         } else if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary === false) {
             if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationsPerformed === true) {
-                console.log(uploadTableContext?.activeExtractedCSVFileForUpload)
                 params?.onCSVToUploadValidationFail?.(uploadTableContext?.activeExtractedCSVFileForUpload?.validationComments || "", activeFile?.CsvFile?.name)
             }
         }

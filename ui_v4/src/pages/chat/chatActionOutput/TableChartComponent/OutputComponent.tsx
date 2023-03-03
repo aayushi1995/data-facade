@@ -9,12 +9,12 @@ const items = (dataGridColumns:any, dataGridRows:any, tableName:string, label?: 
     return [
         {
           key: '1',
-          label: <div><TableIcon/></div>,
+          label: <div><TableIcon/> Table </div>,
           children: <TableComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={label}/>,
         },
         {
           key: '2',
-          label: <div><ChartIcon/></div>,
+          label: <div><ChartIcon/> Chart </div>,
           children:  <Visualization tableName={tableName}/>,
         },
        

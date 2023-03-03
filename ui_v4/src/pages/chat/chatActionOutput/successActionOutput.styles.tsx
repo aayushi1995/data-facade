@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const OutputTableStyled = styled.div`
     width: auto;
-    height: 300px;
+    height: 330px;
     overflow:scroll;
 
     & .ant-table-thead {
@@ -11,9 +11,14 @@ export const OutputTableStyled = styled.div`
         background-color: white;
         z-index: 1;
     }
+    &  .ant-select.ant-pagination-options-size-changer {
+        display:none;
+    }
 `
 
 export const OutputContainer = styled.div`
     min-width:400px;
     margin-top:10px;
+    width:100%;
+    height:100%;
 `

@@ -21,9 +21,8 @@ const ModalOptions = ({showChartModal, setShowChartModal, handleChartData, table
         setShowChartModal(false)
     }
 
-
     return (
-        <Modal centered title="Chart Settings" open={showChartModal} onOk={handleModalOK} onCancel={() => setShowChartModal(false)} footer={null}>
+        // <Modal centered title="Chart Settings" open={showChartModal} onOk={handleModalOK} onCancel={() => setShowChartModal(false)} footer={null}>
             <ChartConfigModalStyled>
                 <SelectWrapper>
                     <label>Chart Type</label>
@@ -38,7 +37,7 @@ const ModalOptions = ({showChartModal, setShowChartModal, handleChartData, table
                  {chartType && <ChartOptions type={chartType} handleChartData={handleChartData} tableName={tableName}/>}
             </ChartConfigModalStyled>
            
-        </Modal>
+        // </Modal>
     )
 }
 export default ModalOptions

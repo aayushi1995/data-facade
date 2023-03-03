@@ -53,7 +53,7 @@ const BarGraphWrapper =(props: { xaxis?: any, yaxis?:any, data?:any})=>{
 
     return(
         <div>
-            <ReactEcharts option={Bar} />;
+            <ReactEcharts option={Bar} />
         </div>
     )
 }
