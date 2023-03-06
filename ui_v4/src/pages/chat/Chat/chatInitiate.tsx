@@ -95,10 +95,8 @@ const InitiateChat = () => {
     useEffect(() => {
         if (chatId) {
             if(dataContext?.chatData[chatId]?.messages.length > 0) {
-
                 setMessages(dataContext?.chatData[chatId]?.messages)
                 setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
-
             } else {
                 dataManager.getInstance.retreiveData("Message",{filter: {ChatId: chatId}}).then((response:any) => {
                     if(response.length > 0){
@@ -159,6 +157,9 @@ const InitiateChat = () => {
                     setLoading(false);
                     setIsError(true)
                 })
+                
+                /* resize the slider*/
+                handleTabClick('chat')
             }
         }
     }, [chatId])
@@ -283,31 +284,17 @@ const InitiateChat = () => {
 
     
     const handleActionDefinition = (messageBody: IChatResponse) => {
-
         const messageContent = JSON.parse(messageBody.MessageContent) as ActionMessageContent
         handleConversation(messageBody, 'system', 'action_instance', messageBody?.Id)
-
         setActionDefinitions(prevState => ({
             ...prevState,
             [messageBody.Id!]: messageContent
         }))
-
     }
 
     const handleDeepDive = (data:any) => {
-        handleTerminalClick()
-        setShowDeepDive(true)
         setDeepDiveData(data)
-    }
-
-    const handleChatClick = () => {
-        setShowDeepDive(false)
-        setSize([96,4])
-    }
-
-    const handleTerminalClick = () => {
-        setShowDeepDive(true)
-        setSize([60,40])
+        handleTabClick('deepdive')
     }
     
     const handleActionSelected = (paramsData:any) => {

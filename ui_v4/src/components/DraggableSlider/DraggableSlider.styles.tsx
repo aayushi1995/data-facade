@@ -12,17 +12,21 @@ export const DraggableSliderWrapper = styled.div`
         position: relative;
         width: 50px;
         right: -50px;
-        height: 80vh;
+        height: 60vh;
         background-color: transparent !important;
+        z-index: 2;
+        top:150px;
     }
     & div[dir="Horizontal"] ~ div {
         min-width: 50px !important;
+        z-index:1;
     }
     & div[dir="Horizontal"] > div {
         background: #9CA3AF;
         position: relative;
         right: 4px;
         border-radius: 0px;
+    
     }
 
     & div[dir="Horizontal"] > div::before {
@@ -37,6 +41,5 @@ export const DraggableSliderWrapper = styled.div`
 `
 export const SliderFlexBox = styled.div`
     display:flex;
-    z-index: 1;
     position: relative;
 `

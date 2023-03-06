@@ -10,14 +10,13 @@ import { StyledCustomInput,SearchInputWrapper,  ChatHistoryItems, StickyHeader, 
 import Typography from 'antd/es/typography'
 import { FlexBox } from '../ChatFooter/ChatFooter.styles'
 import { Button, Space } from 'antd'
-import { useNavigate } from 'react-router-dom'
 
 
 const ChatHistory = () => {
-    const {value, handleNewTabWithId} = useContext(RouteContext)
+    const {handleNewTabWithId} = useContext(RouteContext)
 
-    console.log(value, handleNewTabWithId)
     const [chatHistory, setChatHistory] = useState<Chat[] | []>([])
+    const [searchKey, setSearchKey] = useState<string>('')
 
     useEffect(() => {
         dataManager.getInstance.retreiveData("Chat",{}).then((response:any) => {
@@ -30,7 +29,7 @@ const ChatHistory = () => {
     },[])
 
     const handleSearchChange= (event:any) => {
-        console.log(event.target.value)
+        setSearchKey(event.target.value)
     }
 
     const handleChatClick= (id:any) => {
@@ -49,24 +48,29 @@ const ChatHistory = () => {
             </StickyHeader>
 
             <div style={{marginTop:'20px'}}>
-                {chatHistory?.map((obj:Chat) => {
-                    return <>
-                    <ChatHistoryItems>
-                        <FlexBox style={{alignItems: 'center'}}>
-                            <ChatBubble/>
-                            <StyledChatName level={5} >
-                                {obj?.Name || obj?.Id}
-                            </StyledChatName>
-                        </FlexBox>
-                        <div>
-                            <Button type="ghost" icon={<EditIcon />} onClick={() => handleChatClick(obj?.Id)}></Button>
-                        </div>
-                    </ChatHistoryItems>
-                    </>
+                {searchKey === "" ?  chatHistory?.map((obj:Chat) => {
+                    return <ChatItem {...obj} handleChatClick={handleChatClick}/>
+                }) : chatHistory?.filter((obj:Chat) => obj?.Id?.toLowerCase()?.includes(searchKey.toLowerCase())).map((obj:Chat) => {
+                    return <ChatItem {...obj} handleChatClick={handleChatClick}/>
                 })}
             </div>
-            
         </Card>
     )
 }
 export default ChatHistory
+
+const ChatItem = ({handleChatClick, ...props}:any) => {
+        return (
+            <ChatHistoryItems>
+            <FlexBox style={{alignItems: 'center'}}>
+                <ChatBubble/>
+                <StyledChatName level={5} >
+                    {props?.Name || props?.Id}
+                </StyledChatName>
+            </FlexBox>
+            <div>
+                <Button type="ghost" icon={<EditIcon />} onClick={() => handleChatClick(props?.Id)}></Button>
+            </div>
+        </ChatHistoryItems>
+        )
+}

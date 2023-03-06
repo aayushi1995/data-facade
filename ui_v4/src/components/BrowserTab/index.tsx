@@ -99,12 +99,17 @@ const BrowserTab = ({ children }: ChildrenProps) => {
         handleChange(`/chats/${chatId}`,location.search)
     }
     const handleNewTabWithId = (chatId: string) => {
-        const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
-        setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: name, params: location.search, isPermanent: true }]);
-        setLocalStorage(`chat_${chatId}`, chatId);
-        handleChange(`/chats/${chatId}`,location.search)
+        const tab = routes.find((route: any) => route.key === `/chats/${chatId}`);
+        if(tab) {
+            handleChange(`/chats/${chatId}`, location.search)
+        } else {
+            const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
+            setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: name, params: location.search, isPermanent: true }]);
+            setLocalStorage(`chat_${chatId}`, chatId);
+            handleChange(`/chats/${chatId}`,location.search)
+        }
     }
-
+    
     const removeTab = (path: string) => {
         const index = routes.findIndex((route: any) => route.key === path);
         if (index > -1) {
