@@ -68,6 +68,7 @@ const ChatFooter = ({ handleSend, loading }: any) => {
 
     const { setSourceFile, uploading, forceUpload, tableNameExists } = useTableUpload({
         onRecommendedQuestionsGenerated: (recommended_actions) => {
+            console.log(recommended_actions)
             handleSend({text: recommended_actions}, 'system', 'recommended_actions')
         },
         onStatusChangeInfo(newStatus) {

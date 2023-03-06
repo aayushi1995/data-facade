@@ -34,7 +34,8 @@ const startConversation = async (
     id?: string,
     user?: string,
     message?: string,
-    type?: string
+    type?: string,
+    getResponseFromBot?: boolean
 ) => {
     const data = {
         entityName: "Message",
@@ -46,7 +47,7 @@ const startConversation = async (
                 MessageType: type ? type : "text",
                 MessageContent: JSON.stringify(message),
             },
-            addBotResponseToChat: true,
+            addBotResponseToChat: getResponseFromBot === undefined ? true : getResponseFromBot,
         },
     };
 
