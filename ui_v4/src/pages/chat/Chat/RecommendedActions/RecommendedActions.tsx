@@ -1,25 +1,14 @@
-import { List } from 'antd';
-import { v4 } from "uuid";
 import { ActionDefinitionDetail } from "../../../../generated/interfaces/Interfaces";
 import { RecommendedActionsMainDiv, RecommendedActionsMainListItem, StyledListItem } from "../Chat.styles";
-import { makeActionInstancesWithParameterInstances } from "../chatInitiate";
+import { List } from 'antd';
 import { useMemo } from "react";
 
 
-const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDetail[], handleConversation?: Function, setActionDefinitions?: Function}) =>  {
+const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDetail[], handleConversation?: Function}) =>  {
     const options = (props?.recommendedActions || [])?.map(action => action?.ActionDefinition?.model?.UniqueName)
 
     const onSelect = (action: ActionDefinitionDetail) => {
-        const actionInstanceWithParameterInstances = makeActionInstancesWithParameterInstances({action: action})
-        const MessageId = v4()
-
-        props?.handleConversation?.({text: action?.ActionDefinition?.model?.UniqueName}, "user", "text", undefined, undefined, undefined, false)
-        props?.handleConversation?.(JSON.stringify(actionInstanceWithParameterInstances), 'system', 'action_instance', MessageId, true, true)
-        props?.setActionDefinitions?.((prevState:any) => ({
-            ...prevState,
-            [MessageId]: actionInstanceWithParameterInstances
-        }))
-        
+        props?.handleConversation?.({text: action?.ActionDefinition?.model?.UniqueName}, "user", "text")
     }
 
     const recommendedActionsArray = useMemo(() => {

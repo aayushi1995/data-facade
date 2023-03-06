@@ -3,11 +3,8 @@ import configJson from "./auth_config.json";
 export const FDSEndpoint =
   process.env.REACT_APP_FDS_ENDPOINT !== undefined
     ? process.env.REACT_APP_FDS_ENDPOINT
-    // : "https://stage.datafacade.io/fds/v1";
-    : "http://localhost:9000/v1"
-
-export const ui_v3_url = process.env.REACT_APP_FDS_ENDPONT !== undefined ? 
-    "https://stage.datafacade.io" : "http://localhost:3000"
+    : "https://stage.datafacade.io/fds/v1";
+    //: "http://localhost:9000/v1"
 
 export const auth0ClientId =
   process.env.REACT_APP_AUTH0_CLIENT_ID !== undefined
