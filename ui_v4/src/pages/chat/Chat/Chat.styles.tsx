@@ -18,7 +18,7 @@ export const MessageWrapper = styled.div`
     }
 `
 
-export const DeepDiveWrapperStyled = styled.div`
+export const RightWrapperStyled = styled.div`
     height:100%;
     width: 100%;
 `
@@ -33,6 +33,10 @@ export const MainWrapper = styled.div`
     display:flex;
     position:relative;
 
+    & .Horizontal {
+        overflow: inherit;
+    }
+    
     & div[dir="Horizontal"] {
         position: relative;
         width: 50px;

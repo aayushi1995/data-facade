@@ -1,6 +1,7 @@
 import { ActionDefinitionDetail } from "../../../../generated/interfaces/Interfaces";
 import { RecommendedActionsMainDiv, RecommendedActionsMainListItem, StyledListItem } from "../Chat.styles";
 import { List } from 'antd';
+import { useMemo } from "react";
 
 
 const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDetail[], handleConversation?: Function}) =>  {
@@ -10,11 +11,15 @@ const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDe
         props?.handleConversation?.({text: action?.ActionDefinition?.model?.UniqueName}, "user", "text")
     }
 
+    const recommendedActionsArray = useMemo(() => {
+        return props?.recommendedActions?.filter((obj:any) => !!obj?.ActionDefinition?.model?.UniqueName).slice(0, 5)
+    },[props?.recommendedActions])
+
     return (
         <RecommendedActionsMainDiv>
         <List
             itemLayout="horizontal"
-            dataSource={props?.recommendedActions?.slice(0, 5) || []}
+            dataSource={recommendedActionsArray || []}
             size="small"
             renderItem={(item) => (
             <RecommendedActionsMainListItem onClick={() => onSelect(item)} className="list-item" style={{ cursor: 'pointer' , borderBottom: '0px',paddingLeft:'0px' }}>
@@ -22,7 +27,7 @@ const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDe
                     title={item?.ActionDefinition?.model?.UniqueName || "NA"}
                 /> */}
                 <StyledListItem>
-                    {item?.ActionDefinition?.model?.UniqueName || "NA"}
+                    {item?.ActionDefinition?.model?.UniqueName || item?.ActionDefinition?.model?.DisplayName || item?.ActionDefinition?.model?.Description || "Action Name" }
                 </StyledListItem>
             </RecommendedActionsMainListItem>
         )}

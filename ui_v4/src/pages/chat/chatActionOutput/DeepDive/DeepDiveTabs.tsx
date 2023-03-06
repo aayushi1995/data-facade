@@ -77,6 +77,7 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
             } 
            
             if(items.length === 0) {
+                console.log('over here')
                 setItems(initialItems(deepdiveData, handleActionSelected))
             }
             setActiveKey(deepdiveData?.data?.ActionInstance?.ResultTableName)

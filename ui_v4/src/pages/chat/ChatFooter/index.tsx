@@ -18,62 +18,27 @@ const ChatFooter = ({ handleSend, loading }: any) => {
     let fileUploadInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const location = useLocation();
     const s3Url = new URLSearchParams(location.search)?.get("s3Url") || undefined
-    const s3UrlProviderInstanceId = new URLSearchParams(location.search)?.get("s3UrlProviderInstanceId") || localStorage.getItem('s3Url') || undefined
-    const shouldShowTour = getLocalStorage('isTourOpen') === "open" ? false : true;
-    const [isTourOpen, setIsTourOpen] = useState(shouldShowTour);
     const [showFileUpload, setShowFileUpload] = useState(false);
     const [relatedQuestions, setRelatedQuestions] = useState<string[]>([])
-    const tourRef = useRef(null);
-    const dataContext = useContext(DataContext);
-    const setDataContext = React.useContext(SetDataContext)
-        const [chatMessage, setChatMessage] = useState<string | undefined>()
-
+    const [chatMessage, setChatMessage] = useState<string | undefined>()
+    const [showPopover, setShowPopover]= useState(false)
+    
     const getRelatedQuestionsMutations = useMutation("GetRelatedQuestion", 
         (config: {question: string}) => {
             const fetchedDataManager = dataManager.getInstance as {getRelatedQuestions: Function}
             return fetchedDataManager.getRelatedQuestions(config.question)
         }
     )
-
-    const handleChange = (e: string) => {
-        setChatMessage(e)
-        getRelatedQuestionsMutations.mutate({question: e}, {
-            onSuccess(data, variables, context) {
-                const castedData = data as {RelatedQuestions: string[]}
-                const relatedQuestions = castedData?.RelatedQuestions
-                setRelatedQuestions(relatedQuestions)
-            },
-        })
-    }
-
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
     }, []);
 
-    const onCloseTour = () => {
-        setIsTourOpen(false);
-        setLocalStorage('isTourOpen', 'open')
-    }
+    const [handleFileRetrieval]: any = useContextStorageFile('file');
 
+    const [fileToUpload, setFileToUpload] = React.useState<File | undefined>(handleFileRetrieval && handleFileRetrieval())
 
-    const handleClick = () => {
-        if(inputRef !== null) {
-            handleSend({text: chatMessage}, 'user')
-            setChatMessage(undefined)
-            setRelatedQuestions([])
-            inputRef?.current?.focus()
-        }
-    }
-    const handleKeyDown = (event: any) => {
-        if (event.key === 'Enter') {
-            handleClick()
-        }
-    }
-
-    const [file, handleFileUpload, handleFileRetrieval]: any = useContextStorageFile('file');
-    const [fileToUpload, setFileToUpload] = React.useState<File | undefined>(handleFileRetrieval())
     const uploadClick = () => {
         //toggleFileUpload()
         fileUploadInputRef.current.click()
@@ -83,20 +48,23 @@ const ChatFooter = ({ handleSend, loading }: any) => {
         // handleFileUpload(event)
         setFileToUpload(file)
         // handleSend(<SenderPreview fileName={file.name} sendBy={uploadTableStateContext?.uploadState?.message || 'local db'}/>,'user')
+   
     };
+
     useEffect(() => {
         if (s3Url) {
             localStorage.setItem('s3Url', s3Url)
         }
 
     }, [s3Url])
-    const toggleFileUpload = () => {
-        setShowFileUpload(!showFileUpload)
-    }
 
-    const popOverTitle = () => <Row justify="space-between"><Col><BulbOutlined style={{ color: '#3488E4' }} /> Getting Insights</Col><Col><Button onClick={() => onCloseTour()} size="small" type="link" icon={<CloseOutlined style={{ fontSize: 8 }} />} /></Col></Row>
-
-    const tourContent = () => <div style={{ width: 300 }}><Typography.Text style={{ fontSize: 12 }}>Remember, you can always start a chat by connecting to a data source, sending us a file, or resuming the conversation based on previous file connections.</Typography.Text></div>
+    React.useEffect(() => {
+        if(fileToUpload){
+            handleSend({ text: fileToUpload.name}, 'user', 'fileInput')
+            setSourceFile(fileToUpload)
+        }
+    }, [fileToUpload])
+    
 
     const { setSourceFile, uploading, forceUpload, tableNameExists } = useTableUpload({
         onRecommendedQuestionsGenerated: (recommended_actions) => {
@@ -123,17 +91,36 @@ const ChatFooter = ({ handleSend, loading }: any) => {
         }
     })
 
-
-    React.useEffect(() => {
-        if(fileToUpload){
-            handleSend({ text: fileToUpload.name}, 'user', 'fileInput')
-            setSourceFile(fileToUpload)
+    const handleChange = (e: string) => {
+        setChatMessage(e)
+        getRelatedQuestionsMutations.mutate({question: e}, {
+            onSuccess(data, variables, context) {
+                const castedData = data as {RelatedQuestions: string[]}
+                const relatedQuestions = castedData?.RelatedQuestions
+                setRelatedQuestions(relatedQuestions)
+            },
+        })
+    }
+    const handleClick = () => {
+        if(inputRef !== null) {
+            handleSend({text: chatMessage}, 'user')
+            setChatMessage(undefined)
+            setRelatedQuestions([])
+            inputRef?.current?.focus()
         }
-    }, [fileToUpload])
+    }
+    const handleKeyDown = (event: any) => {
+        if (event.key === 'Enter') {
+            handleClick()
+        }
+    }
+    const handleOpenChange = () => {
+        setShowPopover(!showPopover)
+    }
 
     const uploadComponent = (
         <>
-            <input type="file" ref={fileUploadInputRef} accept={".csv,.xlsx"} hidden onChange={changeHandler} />
+            <input type="file" ref={fileUploadInputRef} accept={".csv,.xlsx"} hidden onChange={changeHandler} onClick={handleOpenChange}/>
             <Space direction='vertical' style={{ width: '100%' }}>
                 {/* TODO: Ritesh - enable googole sheet connectors */}
                 {/* <ConnectionButton block type='text' icon={<FileExcelOutlined />}>Connect Google Sheets (Coming Soon!)</ConnectionButton> */}
@@ -141,6 +128,10 @@ const ChatFooter = ({ handleSend, loading }: any) => {
             </Space>
         </>
     )
+
+ 
+
+
     return (
         <Row>
             <Col span={24}>
@@ -150,7 +141,6 @@ const ChatFooter = ({ handleSend, loading }: any) => {
                         <Row>
                             <Col>
                                 <PopOverCard bordered={false} size="small">
-                                    
                                 </PopOverCard>
                             </Col>
                         </Row>
@@ -158,7 +148,7 @@ const ChatFooter = ({ handleSend, loading }: any) => {
                     
                     <Row align="middle">
                         <Col span={1}>
-                            <Popover placement="topLeft"  trigger="click" content={uploadComponent} showArrow={false}>
+                            <Popover open={showPopover} placement="topLeft" trigger="click" content={uploadComponent} showArrow={false} onOpenChange={handleOpenChange}>
                                 <Button  type="text" icon={<PlusOutlined style={{ color: '#9CA3AF' }} />}></Button>
                             </Popover>
                         </Col>

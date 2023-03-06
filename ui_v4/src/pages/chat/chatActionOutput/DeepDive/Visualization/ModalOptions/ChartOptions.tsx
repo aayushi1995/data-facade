@@ -2,7 +2,7 @@ import { ChatContext } from '@/contexts/ChatContext'
 import { FlexBox } from '@/pages/chat/ChatFooter/ChatFooter.styles'
 import { Button, Select } from 'antd'
 import React, { useContext, useMemo, useState } from 'react'
-import { getData } from '../../../utils'
+import { getData } from '../../../../utils'
 import { SelectWrapper } from './ChartOptions.styles'
 
 

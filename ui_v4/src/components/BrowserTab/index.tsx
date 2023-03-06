@@ -24,7 +24,7 @@ interface TabProps {
     isPermanent?: boolean | undefined
 }   
 
-export const RouteContext = React.createContext([]);
+export const RouteContext = React.createContext<any>([]);
 
 
 const dropdownStyle = {
@@ -81,7 +81,6 @@ const BrowserTab = ({ children }: ChildrenProps) => {
         if (index > -1) {
             setRoutes((oldRoutes: any) => oldRoutes.map((route: any) => route.key === location.pathname ? { ...route, params: location.search } : route))
         }
-
     }, [location.search])
 
 
@@ -99,10 +98,15 @@ const BrowserTab = ({ children }: ChildrenProps) => {
         setLocalStorage(`chat_${chatId}`, chatId);
         handleChange(`/chats/${chatId}`,location.search)
     }
+    const handleNewTabWithId = (chatId: string) => {
+        const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
+        setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: name, params: location.search, isPermanent: true }]);
+        setLocalStorage(`chat_${chatId}`, chatId);
+        handleChange(`/chats/${chatId}`,location.search)
+    }
 
     const removeTab = (path: string) => {
         const index = routes.findIndex((route: any) => route.key === path);
-
         if (index > -1) {
             const updatedRoutes = [...routes.slice(0, index), ...routes.slice(index + 1)];
             const permanentRoutes: TabProps[] = updatedRoutes.filter((route: any) => route.isPermanent === true);
@@ -119,7 +123,6 @@ const BrowserTab = ({ children }: ChildrenProps) => {
             else {
                 navigate('/')
             }
-
         }
     }
 
@@ -148,10 +151,14 @@ const BrowserTab = ({ children }: ChildrenProps) => {
                     addIcon={<AddMenu handleNewTab={handleNewTab} />}
                 />
             }
-            <RouteContext.Provider value={routes}>
+            <RouteContext.Provider value={{
+                    routes: routes,
+                    handleNewTabWithId: handleNewTabWithId
+                }}>
                 <Content style={{ minHeight: '80vh', background: '#fff', paddingLeft: 30, paddingRight: 30 ,paddingTop:3}}>
                     {children}
                 </Content>
+                
             </RouteContext.Provider>
         </React.Fragment>
     )

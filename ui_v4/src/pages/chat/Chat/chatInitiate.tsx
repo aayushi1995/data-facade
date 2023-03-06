@@ -11,7 +11,7 @@ import { Alert,  Col, Row,  } from "antd";
 import  { useContext, useEffect,  useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { ChatWrapperStyled, DeepDiveWrapperStyled, MainWrapper, MessageWrapper } from "./Chat.styles";
+import { ChatWrapperStyled, RightWrapperStyled, MessageWrapper } from "./Chat.styles";
 import ChatComponentIconTabExperience from "../chatActionOutput/chatDeepDiveTab";
 import DeepDiveTabs from "../chatActionOutput/DeepDive/DeepDiveTabs";
 import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "../ChatBlock/ChatBlock.type";
@@ -22,57 +22,13 @@ import MessageOutputs from "./MessageOutput/MessageOutput";
 import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
 import React from "react";
 import dataManager from "@/api/dataManager";
-import { postProcessingFetchingMessage } from "../chatActionOutput/utils";
+import { defaultActions, defaultBotMessage, getRandomItems, IconStack, postProcessingFetchingMessage } from "../utils";
 import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
+import DraggableSlider from "@/components/DraggableSlider";
+import ChatHistory from "../ChatHistory";
 
 
-const defaultBotMessage = (username: string): IChatMessage => {
-   
-    return {
-        id: new Date().toTimeString(),
-        message: `Welcome ${username.split(' ')[0]} ! What insight do you need ?` ,
-        time: new Date().getTime(),
-        from: 'system',
-        username: 'DataFacade',
-        type: 'text'
-    }
-}
-
-function getRandomItems(arr: any[], numItems: number): any[] {
-    const result = new Array(numItems);
-    let len = arr.length;
-    const taken = new Array(len);
-    if (numItems > len) {
-      throw new RangeError("getRandomItems: more elements taken than available");
-    }
-    while (numItems--) {
-      const randomIndex = Math.floor(Math.random() * len);
-      result[numItems] = arr[randomIndex in taken ? taken[randomIndex] : randomIndex];
-      taken[randomIndex] = --len in taken ? taken[len] : len;
-    }
-    return result;
-  }
-
-const defaultActions = (allActionDefinitionsData: ActionDefinitionDetail[]): IChatMessage => {
-   
-    return {
-        id: new Date().toTimeString(),
-        message: allActionDefinitionsData,
-        time: new Date().getTime(),
-        from: 'system',
-        username: 'DataFacade',
-        type: 'recommended_actions'
-    }
-}
 const InitiateChat = () => {
-    const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
-    let fiveActions: any[] = []
-    if(!allActionDefinitionsIsLoading){
-        if(allActionDefinitionsData.length>5){
-            fiveActions = getRandomItems(allActionDefinitionsData, 5)
-        }
-        
-    }
     // central data provider context
     const setDataContext = useContext(SetDataContext);
     const dataContext = useContext(DataContext);
@@ -90,16 +46,33 @@ const InitiateChat = () => {
     const [tableInnputIds, setTableInputIds] = useState<Record<string, TableInputContent>>({})
     const [showDeepDive, setShowDeepDive] = useState(false)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
-    const [size, setSize] = useState([100,0])
+    const [size, setSize] = useState([96,3])
     const uploadTableContext = React.useContext(UploadTableStateContext)
+    const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
+
+
+    // Caching the calculation of fetching random items again and again 
+    let fiveActions: any[] = React.useMemo(() => {
+        let arr:any[] = []
+        if(!allActionDefinitionsIsLoading){
+            if(allActionDefinitionsData.length > 5 ){
+                arr = getRandomItems(allActionDefinitionsData, 5)
+            }
+        }
+        return arr
+    },[allActionDefinitionsData, allActionDefinitionsIsLoading])
+
+    console.log(fiveActions)
+   
+
     useEffect(()=>{
         if(uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
             setLoadingMessage(true)
         }else if(uploadTableContext.status?.message=='Questions generated for table'){
             setLoadingMessage(false)
         }
-        
     },[uploadTableContext])
+
     useEffect(()=>{
         if(allActionDefinitionsIsLoading){
             setLoadingMessage(true)
@@ -107,6 +80,7 @@ const InitiateChat = () => {
             setLoadingMessage(false)
         }
     },[allActionDefinitionsIsLoading])
+
     // function that calls setChatData reducer to store message data in context
     const persistState = () => {
         messages !== undefined && setDataContext({
@@ -121,37 +95,34 @@ const InitiateChat = () => {
         })
     }
 
-    // persist the chat if there is any chatData in the DataProvider
+    // persist the chat if there is any chatData in the DataProvider or get from the BE
     useEffect(() => {
-        console.log('setting data from context')
         if (chatId) {
-
             if(dataContext?.chatData[chatId]?.messages.length > 0) {
+
                 setMessages(dataContext?.chatData[chatId]?.messages)
                 setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
-            } else {
 
-                    dataManager.getInstance.retreiveData("Message",{filter: {ChatId: chatId}}).then((response:any) => {
-                        if(response.length > 0){
-                            let {messagesArray, executionId, table_input, actionDefinition} = postProcessingFetchingMessage(response)
-                            messagesArray.length > 0 && setMessages([defaultBotMessage(appContext?.userName), ...messagesArray])
-                            Object.keys(executionId).length > 0 && setExecutionId({...executionId})
-                            Object.keys(table_input).length > 0 && setTableInputIds({...table_input})
-                            Object.keys(actionDefinition).length > 0 && setTableInputIds({...actionDefinition})
- 
-                        } else { 
-                            if(allActionDefinitionsIsLoading){
+            } else {
+                dataManager.getInstance.retreiveData("Message",{filter: {ChatId: chatId}}).then((response:any) => {
+                    if(response.length > 0){
+                        let {messagesArray, executionId, table_input, actionDefinition} = postProcessingFetchingMessage(response)
+                        messagesArray.length > 0 && setMessages([defaultBotMessage(appContext?.userName), ...messagesArray])
+                        Object.keys(executionId).length > 0 && setExecutionId({...executionId})
+                        Object.keys(table_input).length > 0 && setTableInputIds({...table_input})
+                        Object.keys(actionDefinition).length > 0 && setTableInputIds({...actionDefinition})
+
+                    } else { 
+                        if(allActionDefinitionsIsLoading){
                             setMessages([defaultBotMessage(appContext?.userName)])
-                            }else{
-                                setMessages([defaultBotMessage(appContext?.userName),defaultActions(fiveActions)])
-                             
-                            }
+                        }else{
+                            setMessages([defaultBotMessage(appContext?.userName),defaultActions(fiveActions)])
                         }
-                    }).catch((error:any) => {
-                        console.log(error)
-                    })
+                    }
+                }).catch((error:any) => {
+                    console.log(error)
+                })
             }
-            
         }
     }, [chatId])
 
@@ -168,7 +139,6 @@ const InitiateChat = () => {
                 }
             
         }
-        console.log(allActionDefinitionsData.length);
         
     },[allActionDefinitionsData])
 
@@ -380,16 +350,6 @@ const InitiateChat = () => {
                 })
             }
         }
-    
-        let messageContent = {
-            ChatId: v4(),
-            Id: MessageId,
-            MessageContent: JSON.stringify(obj),
-            MessageType: "action_instance",
-            SentBy: "Bot",
-            SentOn: new Date().getTime(),
-
-        }
 
         handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true)
         
@@ -398,12 +358,30 @@ const InitiateChat = () => {
             [MessageId]: obj
         }))   
     }
+
+
+    // Draggable Slider Component states and functions
+    const [visibleTab, setVisibleTab] = useState<string>('chat')
+  
+    const handleTabClick = (value:string) => {
+        if(value === 'chat') {
+            setSize([96,3])
+            setVisibleTab('chat')
+        } else if (value === 'deepdive'){
+            setSize([60,40])
+            setVisibleTab('deepdive')
+        } else if (value === 'history') {
+            setSize([60,40])
+            setVisibleTab('history')
+        }
+    }
+
     return (
        <ChatProvider>
-            <MainWrapper>
-                <ReactSplit 
-                    initialSizes={[...size]}> 
-                    <ChatWrapperStyled>
+            <DraggableSlider 
+                    size={[...size]}
+                    leftChild={
+                        <ChatWrapperStyled>
                         {
                             isError ? <Alert
                                 message="Error!!"
@@ -427,18 +405,22 @@ const InitiateChat = () => {
                                 </Row>
             
                         }
-                    </ChatWrapperStyled>
-                    <FlexBox>
-                    <ChatComponentIconTabExperience handleChatClick={handleChatClick} handleTerminalClick={handleTerminalClick} showDeepDive={showDeepDive} />
-                    <DeepDiveWrapperStyled>
-                        <DeepDiveTabs deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>
-                    </DeepDiveWrapperStyled>
-                    </FlexBox>
-                </ReactSplit>
-            </MainWrapper>
+                        </ChatWrapperStyled>
+                    }
+                    rightChild={
+                        visibleTab === "deepdive" ?
+                        <RightWrapperStyled>
+                            <DeepDiveTabs deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>
+                        </RightWrapperStyled> 
+                        :  visibleTab === "history" ? <RightWrapperStyled >
+                            <ChatHistory />
+                        </RightWrapperStyled> : <></>
+                    }
+                    iconStack={IconStack(handleTabClick)}
+                    activeTab={visibleTab}
+                    />
         </ChatProvider>
-    )
-
+        )
     }
 
 

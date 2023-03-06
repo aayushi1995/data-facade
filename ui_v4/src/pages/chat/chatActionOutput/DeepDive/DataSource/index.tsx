@@ -2,7 +2,7 @@ import SelectProviderInstance from '@/pages/chat/chatActionDefination/SelectProv
 import { Select, Skeleton } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import UseFetchProviderInstanceDetailsHook from '../../../../../hooks/actionOutput/UseFetchProviderInstanceDetailsHook';
-import { createProviderInstanceSelectData } from '../../utils';
+import { createProviderInstanceSelectData } from '../../../utils';
 
 
 

@@ -1,7 +1,7 @@
 import ChartType from '@/helpers/enums/ChartType'
 import { Button, Modal, Popover, Select, Switch } from 'antd'
 import React, { useState } from 'react'
-import { getData } from '../../../utils'
+import { getData } from '../../../../utils'
 import ChartOptions from './ChartOptions'
 import { ChartConfigModalStyled, SelectWrapper } from './ChartOptions.styles'
 

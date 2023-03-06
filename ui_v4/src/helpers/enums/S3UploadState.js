@@ -32,7 +32,7 @@ const S3UploadState = {
         icon: <></>
     },
     GENERATING_QUESTIONS: {
-        message: "Finding some Actions for this table",
+        message: "Finding some insights for this table",
         colour: "#F3C583",
         icon: <></>
     },

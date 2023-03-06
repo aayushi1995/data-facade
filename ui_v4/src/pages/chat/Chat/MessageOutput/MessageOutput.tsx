@@ -34,6 +34,15 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
         }
     }
 
+    
+//  id: string;
+// message: any;
+// time: number;
+// from: "user" | "system";
+// username?: string;
+// type?: "text" | "action_output" | "error" | "table_upload" | any;
+// isExternalExecutionId?: string
+
     return (
         <div>
             {messages?.map(({ id, type, ...props }: IChatMessage) => {
@@ -54,7 +63,12 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                         <SenderPreview fileName={props?.message} />
                     </ChatBlock>
                     }
-                    {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true}/>}
+                    {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && 
+                        <>
+                            <ChatBlock id={id} key={id + 'Chat'} message="Here is your response" type={'text'} time={props?.time || new Date().getTime()} from="system"/>
+                            <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true}/>
+                        </>
+                    }
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
                     {type === "table_input" && (Object.keys(tableInputs).length > 0 && tableInputs[id] && 
                         <>

@@ -1,8 +1,6 @@
 import { ChatContext } from '@/contexts/ChatContext'
 import {  SettingOutlined } from '@ant-design/icons'
-import { Button, Empty } from 'antd'
 import { useContext, useState } from 'react'
-import { getData } from '../../utils'
 import ChartWrapper from './ChartWrapper'
 import ModalOptions from './ModalOptions'
 

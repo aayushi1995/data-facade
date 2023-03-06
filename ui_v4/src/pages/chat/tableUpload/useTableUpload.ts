@@ -179,7 +179,11 @@ function useTableUpload(params: UseTableUploadParam) {
     }
 
     const netowrkCallsToUploadFile = async (fileToUpload: File, fileSchema: FileSchema) => {
+
         try {
+            // loading or Uploading in the beginning
+            setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.UPLOADING } });
+
           const presignedUrlData = await fetchPresignedUrlMutation.mutateAsync({ file: fileToUpload, expirationDurationInMinutes: 5 });
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.PRESIGNED_URL_FETCH_SUCCESS } });
       
@@ -196,6 +200,7 @@ function useTableUpload(params: UseTableUploadParam) {
           try {
             await tableDeleteMutation.mutateAsync({ tableName: fileSchema.tableName })  
           } catch (error) {
+            setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.CREATING_TABLE_IN_SYSTEM_FAILURE } });
             console.log("Error while deleting old table. It probably does not exist!", error);
           }
           
@@ -208,6 +213,7 @@ function useTableUpload(params: UseTableUploadParam) {
           const recommendedQuestionsData = await getRecommenededQuestions.mutateAsync({ tableId: fileSchema.tableId! });
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.GENERATING_QUESTIONS_SUCCESS } });
           params?.onRecommendedQuestionsGenerated?.(recommendedQuestionsData);
+          
         } catch (error) {
             // TODO(Ritesh): Handle error
         //   if (error?.response?.data?.code === "AWSS3Error") {

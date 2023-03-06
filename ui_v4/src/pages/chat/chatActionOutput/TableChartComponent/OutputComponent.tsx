@@ -20,7 +20,7 @@ const items = (dataGridColumns:any, dataGridRows:any, tableName:string, label?: 
        
       ];
 }
-const OutputComponent = ({dataGridColumns, dataGridRows,title, tableName}:any) => {
+const OutputComponent = ({dataGridColumns, dataGridRows, title, tableName, time}:any) => {
 
     const onChange = (key: string) => {
         console.log(key);
@@ -29,7 +29,8 @@ const OutputComponent = ({dataGridColumns, dataGridRows,title, tableName}:any) =
     return (
         <div style={{width: '100%',minWidth:'400px'}}>
                 <TitleHeader ellipsis={true} strong style={{}}>{title}</TitleHeader>
-                <TabsWrapper><Tabs type="card" defaultActiveKey="1" items={items(dataGridColumns,dataGridRows, tableName)} onChange={onChange} /></TabsWrapper>
+                <TabsWrapper><Tabs type="card" defaultActiveKey="1" items={items(dataGridColumns,dataGridRows, tableName, title)} onChange={onChange}/></TabsWrapper>
+                <div>{time}</div>
         </div>
     )
 }

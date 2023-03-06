@@ -1,6 +1,7 @@
 import { Pagination, Table } from 'antd'
 import { useState } from 'react';
-import { OutputTableStyled } from '../successActionOutput.styles'
+import { FlexBox } from '../../ChatFooter/ChatFooter.styles';
+import { OutputTableStyled} from '../successActionOutput.styles'
 
 let pageSize = 6;
 
@@ -10,7 +11,7 @@ const getData = (current:number, pageSize:number, data:any) => {
   };
 
   // Custom pagination component
-const MyPagination = ({ total, onChange, current }:any) => {
+const MyPagination = ({ total, onChange, current,}:any) => {
     return (
     <div style={{marginTop:'10px', width:'100%', textAlign:'center'}}>
       <Pagination
@@ -30,9 +31,10 @@ const TableComponent = ({dataGridColumns,dataGridRows, title}:any) => {
 
     return (
         <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
-            <div>
+            {/* Removing this because we are already showing title name on top of the table */}
+            {/* <div>
                 {title}
-            </div>
+            </div> */}
             <OutputTableStyled>
                 <Table
                     columns={dataGridColumns}
@@ -46,6 +48,8 @@ const TableComponent = ({dataGridColumns,dataGridRows, title}:any) => {
                     current={currentPage}
                     onChange={setCurrentPage}
                 />
+              <FlexBox>
+              </FlexBox>
             </OutputTableStyled>
         </div>
     )

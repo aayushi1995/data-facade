@@ -42,8 +42,6 @@ const renderMenu = (item: any, selectedKey: string) => {
     )
 }
 
-
-
 const AppSidebar = () => {
     const location = useLocation();
     const navigate = useNavigate()
@@ -56,7 +54,7 @@ const AppSidebar = () => {
         if (item.key === "chats") {
             let chatID = getUniqueId();
             setLocalStorage(`chat_${chatID}`, chatID)
-            navigate(`/chats/${chatID}?tabKey=chats`);
+            navigate(`/chats/${chatID}?tabKey=New Chats`);
         }
     
     }

@@ -72,7 +72,8 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                                             ActionDefinition={actionExecutionDetailQuery?.data?.ActionDefinition!}
                                                             ActionInstance={actionExecutionDetailQuery?.data?.ActionInstance!}
                                                             showCharts={false}
-                                                            title={actionExecutionDetailQuery.data?.ActionInstance?.Name || "Run Time : "+getElapsedTime()}
+                                                            title={actionExecutionDetailQuery.data?.ActionInstance?.Name || ""}
+                                                            time={"Run Time : "+getElapsedTime()}
                                                         />
                                                     </>
                                             }
@@ -89,16 +90,16 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                 {childActionExecutionId && <ActionOutput actionExecutionId={childActionExecutionId} />}
                               
                             </ActionCard>
-                            {props?.showFooter && <StyledActionOutput isBot={actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot"}>
+                            {props?.showFooter && <StyledActionOutput isBot={actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy === "AI"}>
                                 <StyledIcon> 
                                     <Space size={6}>
-                                        {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot"
+                                        {actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy === "AI"
                                         ? <><BotIcon/> AI Insight</> 
-                                        : <><UserOutlined /> {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy}</>}
+                                        : <><UserOutlined /> {actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy}</>}
                                     </Space> 
                                 </StyledIcon> 
                                 <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
-                                {actionExecutionDetailQuery?.data?.ActionInstance?.CreatedBy === "Bot" && <Button onClick={onTrainModel} type="link">Train Model</Button>}
+                                {actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy === "AI" && <Button onClick={onTrainModel} type="link">Train Model</Button>}
                             </StyledActionOutput>}  
                     </OutputContainer>
                 </>

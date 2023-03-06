@@ -4,7 +4,7 @@ import React from 'react';
 import { ArrowRightOutlined, LoginOutlined, UserOutlined } from '@ant-design/icons';
 import './login.css'
 import styled from 'styled-components';
-import {ReactComponent as LoginLogo} from '@assets/icons/loginLogo.svg'
+import { LogoIcon } from "@/assets/icon.theme"
 
 const LoginCardWrapper = styled.div`
     height: 100vh;
@@ -45,7 +45,7 @@ const Login = () => {
 
     const cardHeader = () => <React.Fragment>
         <LogoStyled>
-                <LoginLogo/> <span>Data Facade</span>
+                <LogoIcon/> <span>Data Facade</span>
         </LogoStyled>
         <Typography.Title level={3} >Login</Typography.Title>
         <LoginTitle>Please login to access your organisation.</LoginTitle>
@@ -53,7 +53,9 @@ const Login = () => {
 
     return (
         <LoginCardWrapper>
+            
             <Card title={cardHeader()} headStyle={{ border: 'none' }} bordered={false} hoverable style={{width:'500px', border:' 1px solid #C9CEDD',padding: '30px 50px'}}>
+                
                 <Space size="large" direction="vertical" style={{width:'100%',textAlign:'center'}}>
                 {
                     user && user.name &&

@@ -19,6 +19,7 @@ export interface ViewActionExecutionOutputProps {
     onDeepDiveActionSelected?: (actionId: string) => void
     getTableData?: (data: any) => void
     title?:string
+    time?:string
 }
 
 const SuccessActionOutput = (props: ViewActionExecutionOutputProps) => {
@@ -32,9 +33,9 @@ const SuccessActionOutput = (props: ViewActionExecutionOutputProps) => {
     const outputComponentToRender = (output?: any) => {
         switch (ActionDefinition?.PresentationFormat || "NA") {
             case ActionDefinitionPresentationFormat.TABLE_VALUE:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected} title={props.title} ActionInstance={ActionInstance}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected} title={props.title} ActionInstance={ActionInstance} time={props?.time}/>
             case ActionDefinitionPresentationFormat.OBJECT:
-                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} title={props.title} ActionInstance={ActionInstance}/>
+                return <ViewActionExecutionTableOutput TableOutput={output as TableOutputSuccessfulFormat} ActionExecution={ActionExecution} ActionDefinition={ActionDefinition} title={props.title} ActionInstance={ActionInstance} time={props?.time}/>
             default:
                 return <Alert message="Not Supported Format" description={ActionDefinition?.PresentationFormat} />
         }
@@ -97,7 +98,7 @@ export interface ViewActionExecutionTableOutputProps {
     ActionInstance: ActionInstance
     onDeepDiveActionSelected?: (actionId: string) => void
     title?:string
-    
+    time?:string
 }
 
 const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputProps) => {
@@ -152,7 +153,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
         return (
-           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName}/>
+           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName} time={props?.time}/>
         )
     } else if (isTableOutputSizeExceededErrorFormat(TableOutput)) {
         const errorType: string = TableOutput.errorType

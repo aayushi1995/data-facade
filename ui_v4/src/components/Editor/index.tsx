@@ -11,9 +11,10 @@ require("ace-builds/webpack-resolver");
 
 const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData}:any) => {
     
-    const code = React.useRef<ReactAce>(null)
+    const code = React.useRef<ReactAce>(null) as any
     const handleCodeRun = () => {
-        handleRunQuery && handleRunQuery(code?.current?.refEditor?.outerText)
+        // If we dont find a value then check the outerText
+        handleRunQuery && handleRunQuery(code?.current.editor.getValue() || code?.current?.refEditor?.outerText)
     }
     
     useEffect(() => {
@@ -54,7 +55,7 @@ const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData}:any) 
             name="edit"
             setOptions={{
                 enableLiveAutocompletion: true,
-                showLineNumbers: false,
+                showLineNumbers: true,
                 tabSize: 2
             }}
             />
