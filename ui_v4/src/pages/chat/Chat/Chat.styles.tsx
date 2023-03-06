@@ -12,7 +12,7 @@ export const StyledPrivacyPolicyFooter = styled.div`
 export const MessageWrapper = styled.div`
     margin: 0 .6%;
     overflow-y: scroll;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 180px);
     &::-webkit-scrollbar {
         width: 0px;
     }

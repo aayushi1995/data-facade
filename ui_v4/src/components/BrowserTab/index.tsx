@@ -149,7 +149,7 @@ const BrowserTab = ({ children }: ChildrenProps) => {
                 />
             }
             <RouteContext.Provider value={routes}>
-                <Content style={{ minHeight: '80vh', background: '#fff', padding: 30 }}>
+                <Content style={{ minHeight: '80vh', background: '#fff', paddingLeft: 30, paddingRight: 30 ,paddingTop:3}}>
                     {children}
                 </Content>
             </RouteContext.Provider>
