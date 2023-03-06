@@ -47,6 +47,7 @@ const ChatFooter = ({ handleSend, loading }: any) => {
         const file = event.target.files[0];
         // handleFileUpload(event)
         setFileToUpload(file)
+        event.target.value='';
         // handleSend(<SenderPreview fileName={file.name} sendBy={uploadTableStateContext?.uploadState?.message || 'local db'}/>,'user')
    
     };

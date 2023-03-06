@@ -153,7 +153,7 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
         return (
-           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName} time={props?.time}/>
+           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName} actionexecution={ActionExecution} time={props?.time}/>
         )
     } else if (isTableOutputSizeExceededErrorFormat(TableOutput)) {
         const errorType: string = TableOutput.errorType

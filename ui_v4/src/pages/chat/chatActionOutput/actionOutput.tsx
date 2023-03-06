@@ -104,7 +104,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                     </Space> 
                                 </StyledIcon> 
                                 <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" onClick={handleShowReference}>Reference</Button>
-                                {actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy === "AI" && <Button onClick={onTrainModel} type="link">Train Model</Button>}
+                                {actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy === "AI" && <Button onClick={onTrainModel} type="link">  </Button>}
                             </StyledActionOutput>}  
                     </OutputContainer>
                 </>

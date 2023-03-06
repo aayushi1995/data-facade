@@ -1,11 +1,15 @@
+import { InfoCircleOutlined } from '@ant-design/icons/lib/icons';
 import { ReactComponent as ChartIcon } from '@assets/icons/bar_chart.svg';
 import { ReactComponent as TableIcon } from '@assets/icons/table.svg';
 import { Tabs, Typography } from 'antd';
+import DisplayLogs from '../DeepDive/ DisplayLogs';
 import Visualization from '../DeepDive/Visualization';
 import { TabsWrapper, TitleHeader } from './OutputComponent.styles';
 import TableComponent from './TableComponent';
 
-const items = (dataGridColumns:any, dataGridRows:any, tableName:string, label?: string) => {
+
+const OutputComponent = ({dataGridColumns, dataGridRows, title, tableName, actionexecution,time}:any) => {
+  const items = (dataGridColumns:any, dataGridRows:any, tableName:string, label?: string) => {
     return [
         {
           key: '1',
@@ -17,11 +21,14 @@ const items = (dataGridColumns:any, dataGridRows:any, tableName:string, label?: 
           label: <div><ChartIcon/> Chart </div>,
           children:  <Visualization tableName={tableName}/>,
         },
+        {
+          key: '3',
+          label: <div><InfoCircleOutlined /> Logs </div>,
+          children:  <><DisplayLogs actionExecution={actionexecution|| {}} /></>
+        },
        
       ];
 }
-const OutputComponent = ({dataGridColumns, dataGridRows, title, tableName, time}:any) => {
-
     const onChange = (key: string) => {
         console.log(key);
       };
