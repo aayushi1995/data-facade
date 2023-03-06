@@ -1,7 +1,6 @@
-import { ActionDefinitionDetail, ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
+import { ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
 import { Spin } from "antd";
-import React from "react";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import ActionDefination from "../../chatActionDefination/actionDefination";
 import ActionOutput from "../../chatActionOutput/actionOutput";
 import ChatBlock from "../../ChatBlock";
@@ -16,7 +15,7 @@ import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
 
 
 
-const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation,  handleDeepDive, tableInputs }: any ) => {
+const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation,  handleDeepDive, tableInputs, setActionDefinitions }: any ) => {
     
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     
@@ -50,7 +49,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                     {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
                     {type === "recommended_actions" && 
                         <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
-                            <RecommendedActionsInput recommendedActions={props?.message} handleConversation={handleConversation}/>
+                            <RecommendedActionsInput setActionDefinitions={setActionDefinitions} recommendedActions={props?.message} handleConversation={handleConversation}/>
                         </ChatBlock>
                     }
                     {type === 'confirmation' &&

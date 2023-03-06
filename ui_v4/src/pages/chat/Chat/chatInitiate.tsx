@@ -1,31 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { fetchChats, initiateChat, startConversation } from "@/actions/chat.actions";
+import { initiateChat, startConversation } from "@/actions/chat.actions";
+import dataManager from "@/api/dataManager";
+import DraggableSlider from "@/components/DraggableSlider";
 import Loader from "@/components/Loader";
 import AppContext from "@/contexts/AppContext";
 import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
+import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
 import { ActionDefinitionDetail } from "@/generated/interfaces/Interfaces";
+import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
 import { getLocalStorage } from "@/utils";
 import { ChatProvider } from '@contexts/ChatContext/index';
-import ReactSplit from '@devbookhq/splitter';
-import { Alert,  Col, Row,  } from "antd";
-import  { useContext, useEffect,  useState } from "react";
+import { Alert, Col, Row } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { ChatWrapperStyled, RightWrapperStyled, MessageWrapper } from "./Chat.styles";
-import ChatComponentIconTabExperience from "../chatActionOutput/chatDeepDiveTab";
 import DeepDiveTabs from "../chatActionOutput/DeepDive/DeepDiveTabs";
 import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "../ChatBlock/ChatBlock.type";
 import ChatFooter from "../ChatFooter";
-import { FlexBox } from "../ChatFooter/ChatFooter.styles";
+import ChatHistory from "../ChatHistory";
+import { defaultActions, defaultBotMessage, getRandomItems, IconStack, postProcessingFetchingMessage } from "../utils";
+import { ChatWrapperStyled, MessageWrapper, RightWrapperStyled } from "./Chat.styles";
 import { ActionMessageContent, TableInputContent } from "./ConfirmationInput/Chat.types";
 import MessageOutputs from "./MessageOutput/MessageOutput";
-import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
-import React from "react";
-import dataManager from "@/api/dataManager";
-import { defaultActions, defaultBotMessage, getRandomItems, IconStack, postProcessingFetchingMessage } from "../utils";
-import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
-import DraggableSlider from "@/components/DraggableSlider";
-import ChatHistory from "../ChatHistory";
 
 
 const InitiateChat = () => {
@@ -169,7 +165,7 @@ const InitiateChat = () => {
 
    
 
-    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean) => {
+    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean, getResponseFromBot?: boolean) => {
 
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
@@ -191,10 +187,12 @@ const InitiateChat = () => {
 
         if (user === "user") {
             setLoadingMessage(true)
-            startConversation(chatId, appContext.userName, message, type).then(response => {
+            startConversation(chatId, appContext.userName, message, type, getResponseFromBot).then(response => {
                 if (response.length > 0) {
-                    for (let i = 0; i < response.length; i++) {
-                        handleBOTMessage(response[i])
+                    if(getResponseFromBot !== false) {
+                        for (let i = 0; i < response.length; i++) {
+                            handleBOTMessage(response[i])
+                        }
                     }
                 }
                 else {
@@ -230,6 +228,7 @@ const InitiateChat = () => {
                     return handleConversation(({text:JSON.parse(messageBody?.MessageContent)?.error}), 'system', 'error', messageBody?.Id)
                 }
                 case 'recommended_actions': {
+                    console.log(messageBody)
                     return handleRecommendedActions(messageBody)
                 }
 
@@ -313,42 +312,18 @@ const InitiateChat = () => {
     
     const handleActionSelected = (paramsData:any) => {
 
-        let data = paramsData?.action
-        // // ids generated
-        const actionInstanceWithParameterInstances_model_id = v4()
         const MessageId = v4()
 
-        // Create an action object similar to that we recieve from backend
-        const obj = {
-            actionDefinitionDetail: data,
-            actionInstanceWithParameterInstances: {
-                model : {
-                    DefinitionId: data?.ActionDefinition?.model?.Id,
-                    DisplayName: data?.ActionDefinition?.model?.DisplayName,
-                    Id: actionInstanceWithParameterInstances_model_id,
-                    Name: data?.ActionDefinition?.model?.UniqueName,
-                    RenderTemplate: true,
-                    ResultSchemaName: "datafacade_tmp",
-                    ResultTableName: `${data?.ActionDefinition?.model?.DisplayName}${actionInstanceWithParameterInstances_model_id}`,
-                    TemplateId: data?.ActionDefinition?.model?.DefaultActionTemplateId
-                },
-                ParameterInstances: data?.ActionTemplatesWithParameters[0]?.actionParameterDefinitions?.map((obj:any) => {
-                    let DefaultObj = {
-                        ActionInstanceId: actionInstanceWithParameterInstances_model_id,
-                        ActionParameterDefinitionId: obj?.model?.Id,
-                        Id: v4(),
-                    }
-                    
-                    return (obj?.model?.ParameterName === "table_name" && paramsData?.executionId) ? {
-                        ParameterValue: "Previous Execution",
-                        SourceExecutionId: paramsData?.executionId,
-                        TableId: paramsData?.executionId,
-                        ...DefaultObj
-                    }: {
-                        ...DefaultObj
-                    }
-                })
-            }
+        const obj = makeActionInstancesWithParameterInstances(paramsData)
+        
+        let messageContent = {
+            ChatId: v4(),
+            Id: MessageId,
+            MessageContent: JSON.stringify(obj),
+            MessageType: "action_instance",
+            SentBy: "Bot",
+            SentOn: new Date().getTime(),
+
         }
 
         handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true)
@@ -396,7 +371,7 @@ const InitiateChat = () => {
                                             :
                                             <Col sm={24}>
                                                 <MessageWrapper>
-                                                    <MessageOutputs messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} />
+                                                    <MessageOutputs setActionDefinitions={setActionDefinitions} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} />
                                                 </MessageWrapper>
                                                 <ChatFooter handleSend={handleConversation} loading={loadingMessage}/>
             
@@ -423,6 +398,48 @@ const InitiateChat = () => {
         )
     }
 
+
+export const makeActionInstancesWithParameterInstances = (paramsData: any) => {
+    let data = paramsData?.action
+        // // ids generated
+    const actionInstanceWithParameterInstances_model_id = v4()
+
+
+    // Create an action object similar to that we recieve from backend
+    const obj = {
+        actionDefinitionDetail: data,
+        actionInstanceWithParameterInstances: {
+            model : {
+                DefinitionId: data?.ActionDefinition?.model?.Id,
+                DisplayName: data?.ActionDefinition?.model?.DisplayName,
+                Id: actionInstanceWithParameterInstances_model_id,
+                Name: data?.ActionDefinition?.model?.UniqueName,
+                RenderTemplate: true,
+                ResultSchemaName: "datafacade_tmp",
+                ResultTableName: `${data?.ActionDefinition?.model?.DisplayName}${actionInstanceWithParameterInstances_model_id}`,
+                TemplateId: data?.ActionDefinition?.model?.DefaultActionTemplateId
+            },
+            ParameterInstances: data?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions?.map((obj:any) => {
+                let DefaultObj = {
+                    ActionInstanceId: actionInstanceWithParameterInstances_model_id,
+                    ActionParameterDefinitionId: obj?.model?.Id,
+                    Id: v4(),
+                }
+                
+                return (obj?.model?.ParameterName === "table_name" && paramsData?.executionId) ? {
+                    ParameterValue: "Previous Execution",
+                    SourceExecutionId: paramsData?.executionId,
+                    TableId: paramsData?.executionId,
+                    ...DefaultObj
+                }: {
+                    ...DefaultObj
+                }
+            })
+        }
+    }
+
+    return obj
+}
 
 
 export default InitiateChat

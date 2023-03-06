@@ -1,6 +1,7 @@
 
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper"
 import useActionExecutionDetails from "@/hooks/actionOutput/useActionExecutionDetails"
+import { ui_v3_url } from "@/settings/config"
 import { UserOutlined } from "@ant-design/icons"
 import { ReactComponent as DeepDiveIcon } from '@assets/icons/scuba_diving.svg'
 import { ReactComponent as BotIcon } from '@assets/icons/smart_toy.svg'
@@ -48,6 +49,10 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
 
     const handleDeepDiveData = (data:any, title:any) => {
         props.handleDeepDive && props.handleDeepDive(data, title)
+    }
+
+    const handleShowReference = () => {
+        window.open(`${ui_v3_url}/application/edit-action/${actionExecutionDetailQuery?.data?.ActionDefinition?.Id}`)
     }
 
     return ( 
@@ -98,7 +103,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                                         : <><UserOutlined /> {actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy}</>}
                                     </Space> 
                                 </StyledIcon> 
-                                <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" >Ask for review</Button>
+                                <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" onClick={handleShowReference}>Reference</Button>
                                 {actionExecutionDetailQuery?.data?.ActionDefinition?.CreatedBy === "AI" && <Button onClick={onTrainModel} type="link">Train Model</Button>}
                             </StyledActionOutput>}  
                     </OutputContainer>
