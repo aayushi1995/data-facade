@@ -422,8 +422,8 @@ const UploadTableContextProvider = ({children}: {children: React.ReactElement}) 
                 header: false,
                 preview: 200,
                 complete: (result) => {
-                    const tableName = activeFile?.CsvFile?.name?.split('.')?.slice(0, -1)?.join('')
-                    const columnNames = (result?.data?.[0] as any[])?.map?.((cellValue, index) => (cellValue||"").length>0?cellValue.trim():`Column-${index+1}`)
+                    const tableName = activeFile?.CsvFile?.name?.split('.')?.slice(0, -1)?.join('')?.split(' ')?.join('_')
+                    const columnNames = (result?.data?.[0] as any[])?.map?.((cellValue, index) => (cellValue||"").length>0?cellValue.trim().split(' ').join('_'):`Column-${index+1}`)
 
                     const columnSchemas: ColumnSchema[] = columnNames.map((columnName, columnIndex) => {
                         const calculatedDataType = getTypeOfValue((result?.data as any[])?.map?.(x => x?.[columnIndex]))
