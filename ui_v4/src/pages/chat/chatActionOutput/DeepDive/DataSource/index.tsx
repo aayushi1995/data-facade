@@ -18,7 +18,8 @@ const DataSource = ({handleDataSource}:any) => {
             let defaultValue =  data?.find((obj:any) => {
                 return obj?.options?.find((o:any) => !!o?.IsDefaultProvider)
             })
-            handleDataSource(defaultValue)
+            console.log(defaultValue)
+            handleDataSource(defaultValue?.options?.[0]?.value)
         }
     }, [childNodes.data, parentNodes.data])
 

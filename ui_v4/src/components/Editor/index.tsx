@@ -5,17 +5,19 @@ import AceEditor from 'react-ace';
 import ReactAce from 'react-ace/lib/ace';
 import "ace-builds/src-noconflict/mode-mysql";
 import "ace-builds/src-noconflict/ext-language_tools";
+import "ace-builds/src-noconflict/mode-python";
 require("ace-builds/webpack-resolver");
 
 
 
-const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData}:any) => {
+const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData, language}:any) => {
     
     const code = React.useRef<ReactAce>(null) as any
     const handleCodeRun = () => {
         // If we dont find a value then check the outerText
         handleRunQuery && handleRunQuery(code?.current.editor.getValue() || code?.current?.refEditor?.outerText)
     }
+    console.log(language)
     
     useEffect(() => {
         var staticWordCompleter = {
@@ -51,7 +53,8 @@ const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData}:any) 
             focus
             fontSize={14}
             placeholder={"--Enter SQL Code"}
-            mode="mysql"
+            // mode="mysql"
+            mode={language === "python" ? "python" : "mysql"}
             name="edit"
             setOptions={{
                 enableLiveAutocompletion: true,

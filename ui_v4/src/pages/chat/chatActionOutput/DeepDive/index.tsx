@@ -1,15 +1,18 @@
 import dataManager from "@/api/dataManager";
 import ReactAceEditor from "@/components/Editor";
-import { Button, Collapse, Divider, Row, Space, Table,Empty, Modal, Select, Input } from "antd"
-import {ReactComponent as EditIcon} from '@assets/icons/edit.svg'
 import { ChatContext } from "@/contexts/ChatContext/index";
 import { TableProperties, TablePropertiesColumns } from "@/generated/entities/Entities";
 import { labels } from "@/helpers/constant";
+import ActionDefinitionId from "@/helpers/enums/ActionDefinitionId";
+import ActionDefinitionQueryLanguage from "@/helpers/enums/ActionDefinitionQueryLanguage";
+import ProviderInstanceId from "@/helpers/enums/ProviderInstanceId";
 import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
+import { ReactComponent as EditIcon } from '@assets/icons/edit.svg';
+import { Button, Collapse, Divider, Row, Space } from "antd";
 import { useContext, useEffect, useRef, useState } from "react";
 import { v4 } from "uuid";
-import OutputComponent from "../TableChartComponent/OutputComponent";
 import ActionOutput from "../actionOutput";
+import OutputComponent from "../TableChartComponent/OutputComponent";
 import DataSource from "./DataSource";
 import { DeepDiveCollapsable, PlaceHolderText, StyledPanel } from './DeepDive.styles';
 import RenderAllActions from "./RecommendedActions";
@@ -39,7 +42,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
 
     // local states 
     const [autoCompleteionData, setAutoCompleteionData] = useState<any>([])
-    const [providerInstance, setProviderInstance] = useState<any | null>(null)
+    const [providerInstance, setProviderInstance] = useState<any | undefined>(undefined)
     const [activeKey, setActiveKeys] = useState<string[]>(defaultCode ? ['2','4']: ['1'])
     
     // store generated ID for future use
@@ -86,18 +89,23 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             setnewExecutedId(newExecutedId)
             setActionExecutionId(actionInstanceId)
 
+            const previousProviderInstanceId = actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage === ActionDefinitionQueryLanguage.PYTHON ? ProviderInstanceId.PYTHON_LAMBDA_DEV_INSTANCE : actionExecutionDetailQuery?.ActionInstance?.ProviderInstanceId
+            const definitionId = actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage === ActionDefinitionQueryLanguage.PYTHON ? "01" : ActionDefinitionId.SCRATCHPAD_ACTION
+            
+            console.log(providerInstance)
             // TODO: Is this intended ?
             let obj = {
                 email: 'aayushi@data-facade.com',
                 actionInstance: {
                         ActionType: "Profiling",
                         CreatedBy: "aayushi@data-facade.com",
-                        DefinitionId: "0",
+                        DefinitionId: definitionId,
                         DisplayName: "Aayushi Action",
                         Id: actionInstanceId,
-                        ProviderInstanceId: actionExecutionDetailQuery?.ActionInstance?.ProviderInstanceId,
+                        ProviderInstanceId: previousProviderInstanceId ,
                         RenderTemplate: false,
-                        RenderedTemplate: code
+                        RenderedTemplate: code,
+                        DataProviderInstanceId: providerInstance
                     },
                     actionExecutionToBeCreatedId: newExecutedId
             }
@@ -186,7 +194,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                         extra={<EditIcon/>}
                        
                     >
-                        <ReactAceEditor defaultCode={defaultCode || ''} handleRunQuery={handleRunQuery} autoCompleteionData={autoCompleteionData}/>
+                        <ReactAceEditor defaultCode={defaultCode || ''} language={actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage} handleRunQuery={handleRunQuery} autoCompleteionData={autoCompleteionData}/>
                     </StyledPanel>
             
                     <StyledPanel
