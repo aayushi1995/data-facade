@@ -350,7 +350,8 @@ const InitiateChat = () => {
         // Run 1000 Rows
     const handlefetch1000Rows = (tableName?:string) => {
         const Table1000Obj = allActionDefinitionsData?.find((obj:any) => {
-            return obj?.ActionDefinition?.model?.Id === "5915e917-a4a7-4df7-9702-2d7fff5b4b1f" 
+            // TODO(Aayushi): Is this required, I can see you are crafting SQL anyway. 
+            return obj?.ActionDefinition?.model?.UniqueName === "Table1000Rows" 
         })
         handleRunQuery(Table1000Obj, tableName)
     }
@@ -379,9 +380,10 @@ const InitiateChat = () => {
                     DefinitionId: "0",
                     DisplayName: 'Aayushi Action',
                     Id: actionInstanceId,
-                    ProviderInstanceId: "43f468e9-3d59-4daa-9e3d-1df5a81bdba5",
+                    // TODO(Aayushi): We can't hardcode this. We need to find the LocalDB provider instance id. 
+                    // ProviderInstanceId: "b126b33f-114c-470f-a56f-e2ecf7b3ff77",
                     RenderTemplate: false,
-                    RenderedTemplate: `select * from "${tablename}" limit 1000`
+                    RenderedTemplate: `select * from "${tablename}" limit 100`
                 },
                 actionExecutionToBeCreatedId: newExecutedId
         }
