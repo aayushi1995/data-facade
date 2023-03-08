@@ -8,6 +8,7 @@ import ChatBlock from "../../ChatBlock";
 import { IChatMessage } from "../../ChatBlock/ChatBlock.type";
 import ChatTableInput from "../../chatTableInput";
 import { SenderPreview } from "../../tableUpload/SenderPreview";
+import { detectDefaultMessage } from "../../utils";
 import { LoaderContainer } from "../Chat.styles";
 import ChatTablePropeties from "../chatTableProperties";
 import ConfirmationInput from "../ConfirmationInput";
@@ -22,6 +23,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     
     useEffect(() => {
+        console.log(detectDefaultMessage(messages,'defaultFirstBOTMessage'))
         chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
     }, [messages,loading]);
 
@@ -35,21 +37,21 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
         }
     }
 
-    
-//  id: string;
-// message: any;
-// time: number;
-// from: "user" | "system";
-// username?: string;
-// type?: "text" | "action_output" | "error" | "table_upload" | any;
-// isExternalExecutionId?: string
-
     return (
         <div>
-            {messages?.map(({ id, type, ...props }: IChatMessage) => {
-                console.log(type)
+            {messages?.map(({ id, type, ...props }: IChatMessage, index:number) => {
+
+                const tempArr = messages?.slice(0,index)
+
+                tempArr?.reverse()
+
+                const latestMessage = tempArr?.find((message:IChatMessage)=> {
+                    return message?.from === "user" && message?.type === "text"
+                }) || " "
+                
                return ( <React.Fragment key={id}>
                     {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
+                    
                     {type === "recommended_actions" && 
                         <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
                             <RecommendedActionsInput setActionDefinitions={setActionDefinitions} recommendedActions={props?.message} handleConversation={handleConversation}/>
@@ -67,8 +69,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                     }
                     {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && 
                         <>
-                            <ChatBlock id={id} key={id + 'Chat'} message="Here is your response" type={'text'} time={props?.time || new Date().getTime()} from="system"/>
-                            <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true}/>
+                            <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} preMessage={props?.preMessage || "Here is the response generated: "+ latestMessage?.message || " "}/>
                         </>
                     }
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}

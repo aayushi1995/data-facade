@@ -66,7 +66,8 @@ type ExtractedCSVFile = {
 export type Status = {
     message: string,
     colour: string,
-    icon: JSX.Element
+    icon: JSX.Element,
+    tableName?:string
 }
 
 type SourceFileValidations = {

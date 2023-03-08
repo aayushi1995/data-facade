@@ -32,8 +32,9 @@ const ChatHistory = () => {
         setSearchKey(event.target.value)
     }
 
-    const handleChatClick= (id:any) => {
-        handleNewTabWithId(id)
+    const handleChatClick= (id:any, name?:string) => {
+        console.log(name)
+        handleNewTabWithId(id,name)
     }
 
 
@@ -69,7 +70,7 @@ const ChatItem = ({handleChatClick, ...props}:any) => {
                 </StyledChatName>
             </FlexBox>
             <div>
-                <Button type="ghost" icon={<EditIcon />} onClick={() => handleChatClick(props?.Id)}></Button>
+                <Button type="ghost" icon={<EditIcon />} onClick={() => handleChatClick(props?.Id, props?.Name || props?.Id)}></Button>
             </div>
         </ChatHistoryItems>
         )

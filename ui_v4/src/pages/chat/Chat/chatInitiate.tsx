@@ -9,10 +9,11 @@ import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
 import { ActionDefinitionDetail } from "@/generated/interfaces/Interfaces";
 import MessageTypes from "@/helpers/enums/MessageTypes";
 import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
+import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
 import { getLocalStorage } from "@/utils";
 import { ChatProvider } from '@contexts/ChatContext/index';
 import { Alert, Col, Row } from "antd";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
 import DeepDiveTabs from "../chatActionOutput/DeepDive/DeepDiveTabs";
@@ -48,6 +49,7 @@ const InitiateChat = () => {
     const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
     const [tableProperties, setTableProperties] = React.useState<Record<string, TablePropertiesContent>>({})
 
+    const conversationStarted = useRef(false)
 
     // Caching the calculation of fetching random items again and again 
     let fiveActions: any[] = React.useMemo(() => {
@@ -60,7 +62,6 @@ const InitiateChat = () => {
         return arr
     },[allActionDefinitionsData, allActionDefinitionsIsLoading])
 
-    console.log(fiveActions)
    
 
     useEffect(()=>{
@@ -152,23 +153,31 @@ const InitiateChat = () => {
                 setIsError(true);
             }
             else {
-                setLoading(true)
-                initiateChat(chatId, appContext.userName).then(response => {
-                    setLoading(false)
-                }).catch(err => {
-                    setLoading(false);
-                    setIsError(true)
-                })
-                
                 /* resize the slider*/
                 handleTabClick('chat')
             }
         }
     }, [chatId])
 
+    useEffect(() => {
+        const userObj = messages?.filter((obj:any) => {
+            return obj?.from === 'user'
+           })
+        if(!conversationStarted.current && userObj && userObj?.length === 1) {
+                setLoading(true)
+                initiateChat(chatId, appContext.userName, userObj[0]?.message).then(response => {
+                    conversationStarted.current = true
+                    setLoading(false)
+                }).catch(err => {
+                    setLoading(false);
+                    setIsError(true)
+                })
+         }
+    }, [messages])
+
    
 
-    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean, getResponseFromBot?: boolean) => {
+    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean, getResponseFromBot?: boolean, preMessage?:string) => {
 
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
@@ -176,7 +185,9 @@ const InitiateChat = () => {
             time: new Date().getTime(),
             from: user,
             username: user === 'system' ? 'DataFacade' : appContext?.userName,
-            type: type ? type : 'text'
+            type: type ? type : 'text',
+            preMessage: preMessage || ''
+
         }
 
         if(isExternalExecutionId) {
@@ -231,10 +242,8 @@ const InitiateChat = () => {
                     return handleConversation(({text:JSON.parse(messageBody?.MessageContent)?.error}), 'system', 'error', messageBody?.Id)
                 }
                 case 'recommended_actions': {
-                    console.log(messageBody)
                     return handleRecommendedActions(messageBody)
                 }
-
                 case 'confirmation': {
                     return handleConfirmationActions(messageBody)
                 }
@@ -247,7 +256,6 @@ const InitiateChat = () => {
 
                 default: break;
             }
-
         }, 1000)
     }
 
@@ -275,11 +283,10 @@ const InitiateChat = () => {
         }
     }
 
-    const handleActionOutput = (messageBody: IChatResponse | any) => {
+    const handleActionOutput = (messageBody: IChatResponse | any, preMessage?:string) => {
 
         const actionOutputId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
-
-        handleConversation(messageBody, 'system', 'action_output', messageBody?.Id);
+        handleConversation(messageBody, 'system', 'action_output', messageBody?.Id, false, undefined, undefined, preMessage);
 
         if (actionOutputId) {
             setShowActionOutput(true)
@@ -293,15 +300,12 @@ const InitiateChat = () => {
     const handleTableInput = (messageBody: IChatResponse) => {
         const messageContent =  JSON.parse(messageBody?.MessageContent) as TableInputContent
         handleConversation(messageBody, 'system', 'table_input', messageBody?.Id)
-
         setTableInputIds(prevState => ({
             ...prevState,
             [messageBody.Id!]: messageContent
         }))
-
     }
 
-    
     const handleActionDefinition = (messageBody: IChatResponse) => {
         const messageContent = JSON.parse(messageBody.MessageContent) as ActionMessageContent
         handleConversation(messageBody, 'system', 'action_instance', messageBody?.Id)
@@ -317,23 +321,9 @@ const InitiateChat = () => {
     }
     
     const handleActionSelected = (paramsData:any) => {
-
         const MessageId = v4()
-
         const obj = makeActionInstancesWithParameterInstances(paramsData)
-        
-        let messageContent = {
-            ChatId: v4(),
-            Id: MessageId,
-            MessageContent: JSON.stringify(obj),
-            MessageType: "action_instance",
-            SentBy: "Bot",
-            SentOn: new Date().getTime(),
-
-        }
-
         handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true)
-        
         setActionDefinitions((prevState:any) => ({
             ...prevState,
             [MessageId]: obj
@@ -355,6 +345,59 @@ const InitiateChat = () => {
             setSize([60,40])
             setVisibleTab('history')
         }
+    }
+
+        // Run 1000 Rows
+    const handlefetch1000Rows = (tableName?:string) => {
+        const Table1000Obj = allActionDefinitionsData?.find((obj:any) => {
+            return obj?.ActionDefinition?.model?.Id === "5915e917-a4a7-4df7-9702-2d7fff5b4b1f" 
+        })
+        handleRunQuery(Table1000Obj, tableName)
+    }
+
+    const { createActionInstanceAsyncMutation } = useCreateActionInstance({
+        asyncOptions: {
+            onMutate: () => {
+            }
+        },
+        syncOptions: {
+            onMutate: () => {
+                console.log('syncOptions')
+            }
+        }
+    })
+    
+    const handleRunQuery = async (actionDefinitionObj:any, tablename?:string) => {
+        const newExecutedId = v4()
+        const actionInstanceId = v4()
+
+        let obj = {
+            email: 'aayushi@data-facade.com',
+            actionInstance: {
+                    ActionType: "Profiling",
+                    CreatedBy: "aayushi@data-facade.com",
+                    DefinitionId: "0",
+                    DisplayName: 'Aayushi Action',
+                    Id: actionInstanceId,
+                    ProviderInstanceId: "43f468e9-3d59-4daa-9e3d-1df5a81bdba5",
+                    RenderTemplate: false,
+                    RenderedTemplate: `select * from "${tablename}" limit 1000`
+                },
+                actionExecutionToBeCreatedId: newExecutedId
+        }
+        createActionInstanceAsyncMutation.mutate((obj as unknown as MutationContext), {
+            onSuccess: () => {
+                const ChatObj = {
+                    ChatId: chatId,
+                    Id: v4(),
+                    MessageContent: JSON.stringify({executionId:newExecutedId}),
+                    MessageType: "action_output",
+                    SentBy: "Bot",
+                    SentOn: new Date().getTime()
+                }
+                handleActionOutput(ChatObj, "Previewing the Table you uploaded.")
+            }
+        })
     }
 
     return (
@@ -379,7 +422,7 @@ const InitiateChat = () => {
                                                 <MessageWrapper>
                                                     <MessageOutputs setActionDefinitions={setActionDefinitions} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} tableProperties={tableProperties}/>
                                                 </MessageWrapper>
-                                                <ChatFooter handleSend={handleConversation} loading={loadingMessage}/>
+                                                <ChatFooter handleSend={handleConversation} loading={loadingMessage} handlefetch1000Rows={handlefetch1000Rows}/>
             
                                             </Col>
                                     }

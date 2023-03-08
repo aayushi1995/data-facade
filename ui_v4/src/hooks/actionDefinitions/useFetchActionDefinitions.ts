@@ -29,3 +29,11 @@ const useFetchActionDefinitions = (params: UseFetchActionDefinitionsProps): [Act
 }
 
 export default useFetchActionDefinitions;
+
+export const fetchAllActions = async (params:any) => {
+    await Fetcher.fetchData('GET', '/getActionDefinitionDetails', params.filter || {}).then((response) => {
+        return response
+    }).catch((error) => {
+        console.log(error)
+    })
+}

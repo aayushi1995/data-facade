@@ -3,13 +3,14 @@ import { FDSEndpoint } from "@/settings/config";
 import { getDefaultRequestQuery } from "@/utils/getDefaultRequestQuery";
 import { v4 as uuidv4 } from "uuid";
 
-const initiateChat = async (id?: string, user?: string) => {
+const initiateChat = async (id?: string, user?: string, name?:any) => {
     const data = {
         entityName: "Chat",
         actionProperties: {
             entityProperties: {
                 Id: id,
                 CreatedBy: user,
+                Name: name
             },
         },
     };

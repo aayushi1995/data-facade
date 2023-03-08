@@ -103,7 +103,7 @@ const sortAndMap = (arr:any[]) => {
  export const defaultBotMessage = (username: string): IChatMessage => {
    
     return {
-        id: new Date().toTimeString(),
+        id: 'defaultFirstBOTMessage',
         message: `Welcome ${username.split(' ')[0]} ! What insight do you need ?` ,
         time: new Date().getTime(),
         from: 'system',
@@ -158,3 +158,9 @@ export const IconStack = (handleClick:any) => [
         onClick: handleClick,
     }
 ]
+
+export const detectDefaultMessage = (messages:IChatMessage[], messageToFind:string) => {
+    let defaultMessages = messages?.filter((message:IChatMessage) => message?.id === messageToFind)
+    return defaultMessages.length > 1
+}
+

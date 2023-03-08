@@ -7,6 +7,7 @@ import { ReactComponent as DeepDiveIcon } from '@assets/icons/scuba_diving.svg'
 import { ReactComponent as BotIcon } from '@assets/icons/smart_toy.svg'
 import { Button, Skeleton, Space } from "antd"
 import React from "react"
+import ChatBlock from "../ChatBlock"
 import { FlexBox } from "../ChatFooter/ChatFooter.styles"
 import { ActionCard, StyledActionOutput, StyledIcon } from "./ActionOutput.styles"
 import FailedActionOutput from "./failedActionOutput"
@@ -27,7 +28,8 @@ export interface ActionExecutionDetailProps {
     showChart?: boolean
     handleDeepDive?: (data:any, title?:string) => void
     onlyTable?:boolean
-    showFooter?:boolean
+    showFooter?:boolean,
+    preMessage?:string
 }
 
 
@@ -60,6 +62,11 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
             <FlexBox style={{alignItems:'center'}}>
                 <>
                 <OutputContainer> 
+                    <Space style={{marginBottom: '20px'}}>
+                        <ChatBlock id={"Dummy Message"} key={"Dummy Message" + 'Chat'} message={props?.preMessage} type={'text'} time={new Date().getTime()} from="system"/>
+                    </Space>
+                        
+                        {/* <div>{props?.preMessage}</div> */}
                         {/* <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}> */}
                             <ActionCard headStyle={{ border: 0 }} size="small">
                                 {

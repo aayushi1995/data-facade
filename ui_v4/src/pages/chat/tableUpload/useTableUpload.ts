@@ -6,6 +6,7 @@ import { labels } from "@/helpers/constant"
 import ExternalStorageUploadRequestContentType from "@/helpers/enums/ExternalStorageUploadRequestContentType"
 import S3UploadState from "@/helpers/enums/S3UploadState"
 import Papa from "papaparse"
+import { config } from "process"
 import React from "react"
 import { useMutation } from "react-query"
 import { v4 as uuidv4 } from 'uuid'
@@ -47,6 +48,7 @@ function useTableUpload(params: UseTableUploadParam) {
 
     const [uploading, setUploading] = React.useState(false)
     const [tableNameExists, setTableNameExists] = React.useState(false)
+    const [tableId, setTableId] = React.useState<string | undefined>(undefined)
 
     const activeFile = getActiveExtractedCSV(uploadTableContext)
     const activeFileSchema = activeFile?.FileSchema
@@ -104,7 +106,7 @@ function useTableUpload(params: UseTableUploadParam) {
         {
             onMutate: () => {
                 setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.FETCHING_TABLE_QUESTIONS }})
-                params?.onStatusChangeInfo?.(S3UploadState?.GENERATING_QUESTIONS)
+                params?.onStatusChangeInfo?.(S3UploadState?.GENERATING_QUESTIONS(activeFileSchema?.tableName))
             }
         }
     )
@@ -169,6 +171,7 @@ function useTableUpload(params: UseTableUploadParam) {
                         const csvToUpload = new File([newCsvFileContent], fileName, { type: activeFile?.CsvFile?.type })
                         setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.FILE_BUILT_FOR_UPLOAD }});
                         netowrkCallsToUploadFile(csvToUpload, activeFileSchema)
+                        setTableId(activeFileSchema?.tableId)
                     },
                     error: (errors, file) => {
                         setUploading(false)
@@ -204,12 +207,11 @@ function useTableUpload(params: UseTableUploadParam) {
             console.log("Error while deleting old table. It probably does not exist!", error);
           }
           
-
           await createTableColumnMutation.mutateAsync(fileSchema);
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS } });
           setUploading(false);
-          params?.onStatusChangeInfo?.(S3UploadState?.UPLOAD_COMPLETED_SUCCESSFULLY);
-      
+          params?.onStatusChangeInfo?.({...S3UploadState?.UPLOAD_COMPLETED_SUCCESSFULLY(fileSchema?.tableName), tableName: fileSchema?.tableName});
+          
           const recommendedQuestionsData = await getRecommenededQuestions.mutateAsync({ tableId: fileSchema.tableId! });
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.GENERATING_QUESTIONS_SUCCESS } });
           params?.onRecommendedQuestionsGenerated?.(recommendedQuestionsData);
@@ -233,8 +235,6 @@ function useTableUpload(params: UseTableUploadParam) {
         }
     }
         
-
-
     const setSourceFile = (file: File) => {
         // params?.onStatusChangeInfo?.(S3UploadState?.SELECTED_FILE_OK(file.name, file.size))
         setUploadTableContext({
@@ -247,7 +247,8 @@ function useTableUpload(params: UseTableUploadParam) {
         uploading,
         tableNameExists,
         setSourceFile,
-        forceUpload: uploadFile
+        forceUpload: uploadFile,
+        tableId: tableId,
     }
 }
 

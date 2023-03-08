@@ -6,10 +6,14 @@ const S3UploadState = {
         colour: "#F3C583",
         icon: <></>
     },
-    UPLOAD_COMPLETED_SUCCESSFULLY: {
-        message: "Uploaded Successfully",
-        colour: "#F3C583",
-        icon: <></>
+    UPLOAD_COMPLETED_SUCCESSFULLY: (tableName) => {
+        return {
+            message: `Uploaded ${tableName} Successfully`,
+            colour: "#F3C583",
+            icon: <></>,
+            isSuccess: true
+        }
+       
     },
     CREATING_TABLE_IN_SYSTEM_SUCCESS: {
         message: "Table Synced into System",
@@ -31,10 +35,12 @@ const S3UploadState = {
         colour: "#F3C583",
         icon: <></>
     },
-    GENERATING_QUESTIONS: {
-        message: "Finding some insights for this table",
-        colour: "#F3C583",
-        icon: <></>
+    GENERATING_QUESTIONS: (tableName) => {
+        return {
+            message: `Finding some insights for ${tableName} table`,
+            colour: "#F3C583",
+            icon: <></>
+        }
     },
     CREATING_TABLE_IN_SYSTEM: {
         message: "Table Sync in Progress",

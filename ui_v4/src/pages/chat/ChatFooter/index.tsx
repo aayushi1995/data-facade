@@ -15,7 +15,7 @@ import { ChatAutocomplete, ConnectionButton, PopOverCard, StyledCardChartFooterW
 import { ActionDefinitionDetail } from '@/generated/interfaces/Interfaces';
 import useFetchActionDefinitions from '@/hooks/actionDefinitions/useFetchActionDefinitions';
 
-const ChatFooter = ({ handleSend, loading }: any) => {
+const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     let inputRef = useRef<HTMLInputElement>(null);
     let fileUploadInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const location = useLocation();
@@ -80,6 +80,9 @@ const ChatFooter = ({ handleSend, loading }: any) => {
         },
         onStatusChangeInfo(newStatus) {
             handleSend({text: newStatus?.message}, 'system', 'text')
+            if(newStatus?.tableName) {
+                handlefetch1000Rows(newStatus?.tableName)
+            }
         },
         onCSVToUploadValidationFail: (reason: string, fileName?: string) => {
             handleSend({text: {
