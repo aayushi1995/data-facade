@@ -38,7 +38,7 @@ const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDe
                     title={item?.ActionDefinition?.model?.UniqueName || "NA"}
                 /> */}
                 <StyledListItem>
-                    {item?.ActionDefinition?.model?.UniqueName || item?.ActionDefinition?.model?.DisplayName || item?.ActionDefinition?.model?.Description || "Action Name" }
+                    {item?.ActionDefinition?.model?.DisplayName || item?.ActionDefinition?.model?.UniqueName || item?.ActionDefinition?.model?.Description || "Action Name" }
                 </StyledListItem>
             </RecommendedActionsMainListItem>
         )}
