@@ -7,6 +7,7 @@ import AppContext from "@/contexts/AppContext";
 import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
 import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
 import { ActionDefinitionDetail } from "@/generated/interfaces/Interfaces";
+import MessageTypes from "@/helpers/enums/MessageTypes";
 import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
 import { getLocalStorage } from "@/utils";
 import { ChatProvider } from '@contexts/ChatContext/index';
@@ -20,7 +21,7 @@ import ChatFooter from "../ChatFooter";
 import ChatHistory from "../ChatHistory";
 import { defaultActions, defaultBotMessage, getRandomItems, IconStack, postProcessingFetchingMessage } from "../utils";
 import { ChatWrapperStyled, MessageWrapper, RightWrapperStyled } from "./Chat.styles";
-import { ActionMessageContent, TableInputContent } from "./ConfirmationInput/Chat.types";
+import { ActionMessageContent, TableInputContent, TablePropertiesContent } from "./ConfirmationInput/Chat.types";
 import MessageOutputs from "./MessageOutput/MessageOutput";
 
 
@@ -45,6 +46,7 @@ const InitiateChat = () => {
     const [size, setSize] = useState([96,3])
     const uploadTableContext = React.useContext(UploadTableStateContext)
     const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
+    const [tableProperties, setTableProperties] = React.useState<Record<string, TablePropertiesContent>>({})
 
 
     // Caching the calculation of fetching random items again and again 
@@ -239,6 +241,9 @@ const InitiateChat = () => {
                 case 'table_input': {
                     return handleTableInput(messageBody)
                 }
+                case MessageTypes.TABLE_PROPERTIES: {
+                    return handleTableProperties(messageBody)
+                }
 
                 default: break;
             }
@@ -254,6 +259,20 @@ const InitiateChat = () => {
     const handleRecommendedActions = (messageBody: IChatResponse) => {
         const recommendedActions = messageBody?.MessageContent as ActionDefinitionDetail[]
         handleConversation(recommendedActions, 'system', 'recommended_actions', messageBody?.Id)
+    }
+
+    const handleTableProperties = (messageBody: IChatResponse) => {
+        console.log(messageBody)
+        const tables = JSON.parse(messageBody?.MessageContent) as TablePropertiesContent
+
+        handleConversation(messageBody, 'system', MessageTypes.TABLE_PROPERTIES, messageBody?.Id)
+
+        if(tables) {
+            setTableProperties(prevState => ({
+                ...prevState,
+                [messageBody?.Id!]: tables
+            }))
+        }
     }
 
     const handleActionOutput = (messageBody: IChatResponse | any) => {
@@ -358,7 +377,7 @@ const InitiateChat = () => {
                                             :
                                             <Col sm={24}>
                                                 <MessageWrapper>
-                                                    <MessageOutputs setActionDefinitions={setActionDefinitions} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} />
+                                                    <MessageOutputs setActionDefinitions={setActionDefinitions} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} tableProperties={tableProperties}/>
                                                 </MessageWrapper>
                                                 <ChatFooter handleSend={handleConversation} loading={loadingMessage}/>
             

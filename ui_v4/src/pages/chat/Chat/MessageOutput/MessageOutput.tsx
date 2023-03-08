@@ -1,4 +1,5 @@
 import { ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
+import MessageTypes from "@/helpers/enums/MessageTypes";
 import { Spin } from "antd";
 import React, { useEffect, useRef } from "react";
 import ActionDefination from "../../chatActionDefination/actionDefination";
@@ -8,6 +9,7 @@ import { IChatMessage } from "../../ChatBlock/ChatBlock.type";
 import ChatTableInput from "../../chatTableInput";
 import { SenderPreview } from "../../tableUpload/SenderPreview";
 import { LoaderContainer } from "../Chat.styles";
+import ChatTablePropeties from "../chatTableProperties";
 import ConfirmationInput from "../ConfirmationInput";
 import { ActionMessageContent } from "../ConfirmationInput/Chat.types";
 import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
@@ -15,7 +17,7 @@ import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
 
 
 
-const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation,  handleDeepDive, tableInputs, setActionDefinitions }: any ) => {
+const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation,  handleDeepDive, tableInputs, setActionDefinitions, tableProperties }: any ) => {
     
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     
@@ -45,6 +47,7 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
     return (
         <div>
             {messages?.map(({ id, type, ...props }: IChatMessage) => {
+                console.log(type)
                return ( <React.Fragment key={id}>
                     {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
                     {type === "recommended_actions" && 
@@ -73,6 +76,11 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                         <>
                         <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Looks like a new question. Please select a table to answer it better."}/>
                         <ChatTableInput onChange={onTableSelected} prompt={tableInputs[id].prompt} selectedTableId={tableInputs[id].tableId}/>
+                        </>
+                    )}
+                    {type === MessageTypes.TABLE_PROPERTIES && (Object.keys(tableProperties).length > 0 && tableProperties[id] && 
+                        <>
+                        <ChatTablePropeties Tables={tableProperties[id]}/>
                         </>
                     )}
                 </React.Fragment>)}

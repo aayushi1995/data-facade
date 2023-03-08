@@ -43,7 +43,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     // local states 
     const [autoCompleteionData, setAutoCompleteionData] = useState<any>([])
     const [providerInstance, setProviderInstance] = useState<any | undefined>(undefined)
-    const [activeKey, setActiveKeys] = useState<string[]>(defaultCode ? ['2','4']: ['1'])
+    const [activeKey, setActiveKeys] = useState<string[]>(defaultCode ? ['2','4', '1']: ['1'])
     
     // store generated ID for future use
     const [actionExecutionId, setActionExecutionId] = useState<any>(false)

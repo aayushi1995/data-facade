@@ -12,6 +12,8 @@ import { useLocation } from 'react-router-dom';
 import { ConfirmationPayloadType } from '../ChatBlock/ChatBlock.type';
 import useTableUpload from '../tableUpload/useTableUpload';
 import { ChatAutocomplete, ConnectionButton, PopOverCard, StyledCardChartFooterWrapper, StyledChatInputWrapper, StyledSendIcon } from './ChatFooter.styles';
+import { ActionDefinitionDetail } from '@/generated/interfaces/Interfaces';
+import useFetchActionDefinitions from '@/hooks/actionDefinitions/useFetchActionDefinitions';
 
 const ChatFooter = ({ handleSend, loading }: any) => {
     let inputRef = useRef<HTMLInputElement>(null);
@@ -22,7 +24,11 @@ const ChatFooter = ({ handleSend, loading }: any) => {
     const [relatedQuestions, setRelatedQuestions] = useState<string[]>([])
     const [chatMessage, setChatMessage] = useState<string | undefined>()
     const [showPopover, setShowPopover]= useState(false)
+
+    const [actionDefinitions, setActionDefinitions] = React.useState<ActionDefinitionDetail[]>()
     
+    const [] = useFetchActionDefinitions({handleSuccess: (data: ActionDefinitionDetail[]) => setActionDefinitions(data), filter: {IsVisibleOnUI: true}})
+
     const getRelatedQuestionsMutations = useMutation("GetRelatedQuestion", 
         (config: {question: string}) => {
             const fetchedDataManager = dataManager.getInstance as {getRelatedQuestions: Function}

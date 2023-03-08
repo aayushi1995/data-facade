@@ -33,6 +33,7 @@ style={{
     width: '100%'
 }}
 {...props}
+showSearch
 >
     <ChatInput />
 </AutoComplete>
