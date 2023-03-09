@@ -27,7 +27,6 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
             setActiveKey(newActiveKey);
         };
         
-
         const add = () => {
             const newActiveKey = `${newTabIndex.current++}`;
             const newPanes = [...items];
@@ -62,7 +61,7 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
             } else {
               remove(targetKey);
             }
-          };
+        };
 
         useEffect(() => {
             let DDobj = items?.find((obj:any) => obj?.key === deepdiveData?.data?.ActionInstance?.ResultTableName)
@@ -84,7 +83,6 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
             
         },[deepdiveData])
        
-    
     return (
             <DeepDiveMainWrapper>
                 <Tabs

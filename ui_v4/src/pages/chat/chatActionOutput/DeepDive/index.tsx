@@ -1,6 +1,8 @@
+import { getActionDefinitionDetails } from "@/actions/chat.actions";
 import dataManager from "@/api/dataManager";
 import ReactAceEditor from "@/components/Editor";
 import { ChatContext } from "@/contexts/ChatContext/index";
+import { Fetcher } from "@/generated/apis/api";
 import { TableProperties, TablePropertiesColumns } from "@/generated/entities/Entities";
 import { labels } from "@/helpers/constant";
 import ActionDefinitionId from "@/helpers/enums/ActionDefinitionId";
@@ -9,7 +11,9 @@ import ProviderInstanceId from "@/helpers/enums/ProviderInstanceId";
 import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
 import { ReactComponent as EditIcon } from '@assets/icons/edit.svg';
 import { Button, Collapse, Divider, Row, Space } from "antd";
+import React from "react";
 import { useContext, useEffect, useRef, useState } from "react";
+import ReactAce from "react-ace/lib/ace";
 import { v4 } from "uuid";
 import ActionOutput from "../actionOutput";
 import OutputComponent from "../TableChartComponent/OutputComponent";
@@ -39,6 +43,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     // ref to scroll into view
     const bottomRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const topRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+    const codeRef = React.useRef<ReactAce>(null) as any
 
     // local states 
     const [autoCompleteionData, setAutoCompleteionData] = useState<any>([])
@@ -48,11 +53,13 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     // store generated ID for future use
     const [actionExecutionId, setActionExecutionId] = useState<any>(false)
     const [newExecutedId, setnewExecutedId]= useState('')
-    
+    const [code, setCode] = useState('')
+    const [actionDef, setActionDef]= useState<any>('')
 
     useEffect(() => {
         // scroll to output 
         scrollToTop()  
+        handleFetchActionDefinitionById(actionExecutionDetailQuery?.ActionDefinition?.Id)
     },[])
 
     useEffect(() => {
@@ -83,6 +90,8 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
 
     const handleRunQuery = async (code:any) => {
         
+            setCode(code)
+
             const newExecutedId = v4()
             const actionInstanceId = v4()
 
@@ -92,7 +101,6 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             const previousProviderInstanceId = actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage === ActionDefinitionQueryLanguage.PYTHON ? ProviderInstanceId.PYTHON_LAMBDA_DEV_INSTANCE : actionExecutionDetailQuery?.ActionInstance?.ProviderInstanceId
             const definitionId = actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage === ActionDefinitionQueryLanguage.PYTHON ? "01" : ActionDefinitionId.SCRATCHPAD_ACTION
             
-            console.log(providerInstance)
             // TODO: Is this intended ?
             let obj = {
                 email: 'aayushi@data-facade.com',
@@ -144,7 +152,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                handleReponseData(response)  
            }))
  
-       }
+    }
 
     const handleReponseData = (response:any) => {
         let newResponse = response?.map((obj:any) => ({name: obj?.UniqueName, description: obj?.UniqueName}))
@@ -170,6 +178,62 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             executionId: newExecutedId || actionExecutionDetailQuery?.ActionExecution?.Id || undefined
         })
     }
+
+    const handleFetchActionDefinitionById = (id?:string) => {
+        getActionDefinitionDetails(id).then((response) => {
+           
+            setActionDef({...response})
+        }).catch((error) => {
+            if(error) {
+                console.log(error)
+            } else {
+                console.log("Action Definition not found")
+            }
+            
+        })
+    }
+
+    const handleSaveClick = () => {
+        
+        let obj = {
+            ActionDefinitionForm: true,
+            UpdatedAction: {
+                ActionDefinition: {
+                    model: {
+                        ...actionDef?.[0]?.ActionDefinition?.model,
+                        DeepDiveConfig: "[]",
+                        UpdatedBy: "aayushi@datafacade.com",
+                        UpdatedOn: new Date().getTime()
+                    },
+                    tags: [],
+                },
+                ActionTemplatesWithParameters: [{
+                    model: {
+                        ...actionDef?.[0].ActionTemplatesWithParameters[0]?.model,
+                        Text: code
+                    },
+                    actionParameterDefinitions: [],
+                    tags:[]
+                }]
+            }
+            
+        }
+        
+        handleActionDefinitionUpdationCall(obj)
+
+    }
+    
+    const handleActionDefinitionUpdationCall = (obj:any) => {
+        dataManager.getInstance.patchData('ActionDefinition',obj).then((response:any) => {
+            // if(response && response?.length > 0) {
+                console.log('response',response)
+            // }
+        }).catch((error:any) => {
+            console.log(error)
+        })
+
+    }
+
     
 
     return (
@@ -194,7 +258,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                         extra={<EditIcon/>}
                        
                     >
-                        <ReactAceEditor defaultCode={defaultCode || ''} language={actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage} handleRunQuery={handleRunQuery} autoCompleteionData={autoCompleteionData}/>
+                        <ReactAceEditor codeRef={codeRef} defaultCode={defaultCode || ''} language={actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage} handleRunQuery={handleRunQuery} autoCompleteionData={autoCompleteionData}/>
                     </StyledPanel>
             
                     <StyledPanel
@@ -229,7 +293,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             <Row justify="end" gutter={8} ref={bottomRef}>
                 <Space>
                     <Button type="primary" ghost>Discard Changes</Button>
-                    <Button type="primary">Save</Button>
+                    <Button type="primary" onClick={handleSaveClick}>Save</Button>
                 </Space>
             </Row>
         

@@ -65,9 +65,9 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
             <FlexBox style={{alignItems:'center'}}>
                 <>
                 <OutputContainer> 
-                    <Space style={{marginBottom: '20px'}}>
+                    {props?.preMessage && <Space style={{marginBottom: '20px'}}>
                         <ChatBlock id={"Dummy Message"} key={"Dummy Message" + 'Chat'} message={props?.preMessage} type={'text'} time={new Date().getTime()} from="system"/>
-                    </Space>
+                    </Space>}
                         
                         {/* <div>{props?.preMessage}</div> */}
                         {/* <Badge.Ribbon text={actionExecutionDetailQuery.data?.ActionExecution?.Status}> */}

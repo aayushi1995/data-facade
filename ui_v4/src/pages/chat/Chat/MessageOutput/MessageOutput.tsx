@@ -67,14 +67,6 @@ const MessageOutputs = ({setMessages, messages, executionId, loading, showAction
         })
     }
 
-    
-//  id: string;
-// message: any;
-// time: number;
-// from: "user" | "system";
-// username?: string;
-// type?: "text" | "action_output" | "error" | "table_upload" | any;
-// isExternalExecutionId?: string
 
     return (
         <div>
@@ -108,8 +100,7 @@ const MessageOutputs = ({setMessages, messages, executionId, loading, showAction
                     }
                     {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && 
                         <>
-                            <ChatBlock id={id} key={id + 'Chat'} message="Here is your response" type={'text'} time={props?.time || new Date().getTime()} from="system"/>
-                            <ActionOutput messageFeedback={props?.messageFeedback} messageId={id} handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} handleLikeDislike={hanldeLikeDislike}/>
+                            <ActionOutput messageFeedback={props?.messageFeedback} messageId={id} handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} handleLikeDislike={hanldeLikeDislike} preMessage={props?.preMessage || "Here is the response generated: "+ latestMessage?.message || " "}/>
                         </>
                     }
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}

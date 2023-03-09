@@ -10,12 +10,12 @@ require("ace-builds/webpack-resolver");
 
 
 
-const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData, language}:any) => {
+const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData, language, codeRef}:any) => {
     
-    const code = React.useRef<ReactAce>(null) as any
+    // const code = React.useRef<ReactAce>(null) as any
     const handleCodeRun = () => {
         // If we dont find a value then check the outerText
-        handleRunQuery && handleRunQuery(code?.current.editor.getValue() || code?.current?.refEditor?.outerText)
+        handleRunQuery && handleRunQuery(codeRef?.current.editor.getValue() || codeRef?.current?.refEditor?.outerText)
     }
     console.log(language)
     
@@ -34,7 +34,7 @@ const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData, langu
             }
         }
     
-        code?.current?.editor?.completers?.push(staticWordCompleter)
+        codeRef?.current?.editor?.completers?.push(staticWordCompleter)
             
         var sqlTables = autoCompleteionData || [
             { name: 'table', description: 'Table' }
@@ -48,7 +48,7 @@ const ReactAceEditor = ({defaultCode, handleRunQuery, autoCompleteionData, langu
          <AceEditor
             width="100%"
             height="200px"
-            ref={code}
+            ref={codeRef}
             defaultValue={defaultCode || ''}
             focus
             fontSize={14}
