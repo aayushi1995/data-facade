@@ -11,7 +11,7 @@ flex-direction: row;
 align-items: flex-start;
 padding: 16px;
 gap: 8px;
-width: 263px;
+width: 350px;
 height: 52px;
 margin: 25px 0px 15px 0px;
 `;

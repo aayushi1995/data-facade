@@ -1,6 +1,7 @@
 import dataManager from "@/api/dataManager"
 import { CommentBlankIcon } from "@/assets/icon.theme"
 import { RouteContext } from "@/components/BrowserTab"
+import AppContext from "@/contexts/AppContext"
 import { Chat } from "@/generated/entities/Entities"
 import { ChatInput, StyledChatInputWrapper, StyledSendIcon } from "@/pages/chat/ChatFooter/ChatFooter.styles"
 import Icon, { CloseOutlined } from "@ant-design/icons"
@@ -47,9 +48,10 @@ export const ChatHeader = ()=>{
         )
     }
     const top3ChatHistory = chatHistory.slice(0,3)
+    const appContext: any = useContext(AppContext)
     return(
         <div>
-            <HeaderWelcm><HeaderStyledTypo>Welcome, Andarson</HeaderStyledTypo></HeaderWelcm>
+            <HeaderWelcm><HeaderStyledTypo>Welcome, {appContext.userName.split(' ')[0]}</HeaderStyledTypo></HeaderWelcm>
             <div>
             <StyledChatInputWrapper>
             <ChatInput placeholder="Ask Datafacade anything..."/>
