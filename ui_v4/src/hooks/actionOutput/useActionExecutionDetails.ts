@@ -109,6 +109,7 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
         trainActionDefinition.mutate(actionExecutionDetailQuery?.data?.ActionDefinition?.Id!, {
             onSuccess: () => {
                 console.log('trained')
+                actionExecutionDetailQuery.refetch()
             }
         })
     }

@@ -447,7 +447,8 @@ export interface Message extends BaseEntity{
 	SentBy?: string;
 	Index?: number;
 	MessageType?: string;
-	MessageContent?: string
+	MessageContent?: string;
+	MessageFeedback?: boolean
 }
 
 

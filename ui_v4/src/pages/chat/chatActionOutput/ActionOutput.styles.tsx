@@ -16,7 +16,6 @@ export const StyledActionOutput = styled.div<any>`
     display:flex;
     color: black;
     display:inline-flex;
-    margin-bottom: 20px;
     padding:10px;
 `
 

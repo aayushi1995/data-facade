@@ -1,7 +1,12 @@
+import dataManager from "@/api/dataManager";
+import { Message } from "@/generated/entities/Entities";
 import { ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
+import { labels } from "@/helpers/constant";
 import MessageTypes from "@/helpers/enums/MessageTypes";
-import { Spin } from "antd";
+import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
+import { Button, Spin } from "antd";
 import React, { useEffect, useRef } from "react";
+import { useMutation } from "react-query";
 import ActionDefination from "../../chatActionDefination/actionDefination";
 import ActionOutput from "../../chatActionOutput/actionOutput";
 import ChatBlock from "../../ChatBlock";
@@ -18,7 +23,7 @@ import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
 
 
 
-const MessageOutputs = ({ messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation,  handleDeepDive, tableInputs, setActionDefinitions, tableProperties }: any ) => {
+const MessageOutputs = ({setMessages, messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation,  handleDeepDive, tableInputs, setActionDefinitions, tableProperties }: any ) => {
     
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     
@@ -36,6 +41,40 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
             handleConversation({tableId: tableId, prompt: prompt}, 'user', 'table_input', undefined, true)
         }
     }
+
+    const updateMessageMutation = useMutation("UpdateMessage", 
+        (config: {filter: Message, newProperties: Message}) => {
+            const fetchedDataManager = dataManager.getInstance as {patchData: Function}
+
+            return fetchedDataManager.patchData(labels.entities.Message, {
+                filter: config.filter,
+                newProperties: config.newProperties
+            })
+        }
+    )
+
+    const hanldeLikeDislike = (value: boolean, id: string) => {
+        updateMessageMutation.mutate({
+            filter: {Id: id},
+            newProperties: {MessageFeedback: value}
+        }, {
+            onSuccess: () => {
+                setMessages((messages: IChatMessage[]) => messages.map(message => message.id !== id ? message : {
+                    ...message,
+                    messageFeedback: value
+                }))
+            }
+        })
+    }
+
+    
+//  id: string;
+// message: any;
+// time: number;
+// from: "user" | "system";
+// username?: string;
+// type?: "text" | "action_output" | "error" | "table_upload" | any;
+// isExternalExecutionId?: string
 
     return (
         <div>
@@ -69,7 +108,8 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                     }
                     {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && 
                         <>
-                            <ActionOutput handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} preMessage={props?.preMessage || "Here is the response generated: "+ latestMessage?.message || " "}/>
+                            <ChatBlock id={id} key={id + 'Chat'} message="Here is your response" type={'text'} time={props?.time || new Date().getTime()} from="system"/>
+                            <ActionOutput messageFeedback={props?.messageFeedback} messageId={id} handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} handleLikeDislike={hanldeLikeDislike}/>
                         </>
                     }
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
@@ -84,6 +124,8 @@ const MessageOutputs = ({ messages, executionId, loading, showActionOutput, acti
                         <ChatTablePropeties Tables={tableProperties[id]}/>
                         </>
                     )}
+                    
+                    
                 </React.Fragment>)}
             )}
             <LoaderContainer>

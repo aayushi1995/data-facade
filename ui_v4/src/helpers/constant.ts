@@ -29,7 +29,8 @@ export const labels = {
         TABLE_PROPERTIES: "TableProperties",
         COLUMN_PROPERTIES: "ColumnProperties",
         APPLICATION: "Application",
-        "Dashboard": "Dashboard"
+        "Dashboard": "Dashboard",
+        "Message": "Message"
     },
     "AddActionPage":{
         "searchText": "Search and Add existing action from library",

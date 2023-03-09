@@ -74,7 +74,8 @@ export const postProcessingFetchingMessage = (messages:any) => {
             from: obj?.MessageType === "table_input" || obj?.SentBy === "Bot" ? "system" : 'user',
             username: obj?.SentBy === "Bot" ? "Data Facade" : obj?.SentBy,
             type: obj?.MessageType,
-            index: obj?.Index
+            index: obj?.Index,
+            messageFeedback: obj?.MessageFeedback
         }
     })
 

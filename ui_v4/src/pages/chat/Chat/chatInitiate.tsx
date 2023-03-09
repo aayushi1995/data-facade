@@ -422,7 +422,7 @@ const InitiateChat = () => {
                                             :
                                             <Col sm={24}>
                                                 <MessageWrapper>
-                                                    <MessageOutputs setActionDefinitions={setActionDefinitions} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} tableProperties={tableProperties}/>
+                                                    <MessageOutputs setMessages={setMessages} setActionDefinitions={setActionDefinitions} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} tableProperties={tableProperties}/>
                                                 </MessageWrapper>
                                                 <ChatFooter handleSend={handleConversation} loading={loadingMessage} handlefetch1000Rows={handlefetch1000Rows}/>
             
