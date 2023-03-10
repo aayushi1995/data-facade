@@ -42,4 +42,5 @@ export const DraggableSliderWrapper = styled.div`
 export const SliderFlexBox = styled.div`
     display:flex;
     position: relative;
+    background: white;
 `

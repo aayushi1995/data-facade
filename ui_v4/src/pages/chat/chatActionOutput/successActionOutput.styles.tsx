@@ -16,7 +16,8 @@ export const OutputTableStyled = styled.div`
     }
 `
 
-export const OutputContainer = styled.div`
+export const OutputContainer = styled.div<any>`
+    max-width: ${props => props.fromDeepDive ? "1000px" : "100%"};
     min-width:400px;
     margin-top:10px;
     width:100%;

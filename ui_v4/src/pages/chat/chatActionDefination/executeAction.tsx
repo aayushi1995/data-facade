@@ -24,6 +24,7 @@ const CardWrapperStyled = styled.div`
     margin: 20px 0px;
     & > div {
         margin-right:20px;
+        margin-bottom: 10px;
     }
     max-width:600px;
 `

@@ -15,6 +15,7 @@ import ChatTableInput from "../../chatTableInput";
 import { SenderPreview } from "../../tableUpload/SenderPreview";
 import { detectDefaultMessage } from "../../utils";
 import { LoaderContainer } from "../Chat.styles";
+import ChatLoader from "../ChatLoader";
 import ChatTablePropeties from "../chatTableProperties";
 import ConfirmationInput from "../ConfirmationInput";
 import { ActionMessageContent } from "../ConfirmationInput/Chat.types";
@@ -100,7 +101,7 @@ const MessageOutputs = ({setMessages, messages, executionId, loading, showAction
                     }
                     {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && 
                         <>
-                            <ActionOutput messageFeedback={props?.messageFeedback} messageId={id} handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} handleLikeDislike={hanldeLikeDislike} preMessage={props?.preMessage || "Here is the response generated: "+ latestMessage?.message || " "}/>
+                            <ActionOutput messageFeedback={props?.messageFeedback} messageId={id} handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} handleLikeDislike={hanldeLikeDislike} preMessage={props?.preMessage || "Here is the response generated: "+(latestMessage?.message || " ")} fromDeepDive={true}/>
                         </>
                     }
                     {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
@@ -120,7 +121,7 @@ const MessageOutputs = ({setMessages, messages, executionId, loading, showAction
                 </React.Fragment>)}
             )}
             <LoaderContainer>
-            {loading && <Spin />}
+            {loading && <ChatLoader />}
             </LoaderContainer>
 
             <div ref={chatWrapperRef} />

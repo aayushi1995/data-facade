@@ -1,10 +1,11 @@
 import { createContext, useReducer } from 'react';
 
 export type DataType = {
-  tableData?: any | null
+  tableData?: any | null,
+  actionData?: any | null
 }
 
-const initialState: DataType = { tableData: null };
+const initialState: DataType = { tableData: null, actionData: null };
 
 export const ChatContext = createContext<DataType>(initialState)
 
@@ -23,18 +24,20 @@ type setChatDataAction = {
     },
   }
 }
+type setActionOwner = {
+  type: "setActionOwner",
+  payload: {
+    actionData: {
+      [actionId:string]: string
+    },
+  }
+}
 
-type DataAction = setChatDataAction
+type DataAction = setChatDataAction | setActionOwner
 
 const reducer = (state: DataType, action: DataAction): DataType => {
 
   switch (action.type) {
-    // case "setTableData" : {
-    //   return {
-    //     ...state,
-    //     tableData: action?.payload?.tableData || null
-    //   }
-    // }
     case "setTableData": {
       const tableId = action.payload?.tableData?.tableId;
       const tableData = action.payload?.tableData?.data;
@@ -48,6 +51,20 @@ const reducer = (state: DataType, action: DataAction): DataType => {
         }
       }
     }
+
+    case "setActionOwner": {
+      const id = action.payload.actionData?.actionId
+      const data = action.payload.actionData?.actionUpdatedBy
+
+      return {
+        ...state,
+        actionData: {
+          ...state.actionData,
+          [id]:data
+        }
+      }
+    }
+
     default:
       break
   }
@@ -58,7 +75,7 @@ const reducer = (state: DataType, action: DataAction): DataType => {
 export const ChatProvider = ({ children }: { children: React.ReactElement }) => {
   const [chatData, dispatch] = useReducer(reducer, initialState);
   const setChatData: SetDataContextType = (args: DataAction) => dispatch(args)
-  
+
 
   return (
     <ChatContext.Provider value={chatData}>

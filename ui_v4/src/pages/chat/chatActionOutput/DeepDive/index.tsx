@@ -1,7 +1,8 @@
 import { getActionDefinitionDetails } from "@/actions/chat.actions";
 import dataManager from "@/api/dataManager";
 import ReactAceEditor from "@/components/Editor";
-import { ChatContext } from "@/contexts/ChatContext/index";
+import AppContext from "@/contexts/AppContext";
+import { ChatContext,SetChatContext } from "@/contexts/ChatContext/index";
 import { Fetcher } from "@/generated/apis/api";
 import { TableProperties, TablePropertiesColumns } from "@/generated/entities/Entities";
 import { labels } from "@/helpers/constant";
@@ -10,7 +11,7 @@ import ActionDefinitionQueryLanguage from "@/helpers/enums/ActionDefinitionQuery
 import ProviderInstanceId from "@/helpers/enums/ProviderInstanceId";
 import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
 import { ReactComponent as EditIcon } from '@assets/icons/edit.svg';
-import { Button, Collapse, Divider, Row, Space } from "antd";
+import { Button, Collapse, Divider, Row, Space, Tooltip } from "antd";
 import React from "react";
 import { useContext, useEffect, useRef, useState } from "react";
 import ReactAce from "react-ace/lib/ace";
@@ -39,6 +40,8 @@ interface IObj {
 const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableName, handleActionSelected}:any) => {
     // chat global context 
     const chatContext = useContext(ChatContext)
+    const appContext: any = useContext(AppContext);
+    const setChatContext = useContext(SetChatContext)
 
     // ref to scroll into view
     const bottomRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -55,6 +58,9 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     const [newExecutedId, setnewExecutedId]= useState('')
     const [code, setCode] = useState('')
     const [actionDef, setActionDef]= useState<any>('')
+    const [allowEditActionDefinition, setAllowEditActionDefinition]= useState(true)
+
+
 
     useEffect(() => {
         // scroll to output 
@@ -101,12 +107,11 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             const previousProviderInstanceId = actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage === ActionDefinitionQueryLanguage.PYTHON ? ProviderInstanceId.PYTHON_LAMBDA_DEV_INSTANCE : actionExecutionDetailQuery?.ActionInstance?.ProviderInstanceId
             const definitionId = actionExecutionDetailQuery?.ActionDefinition?.QueryLanguage === ActionDefinitionQueryLanguage.PYTHON ? "01" : ActionDefinitionId.SCRATCHPAD_ACTION
             
-            // TODO: Is this intended ?
             let obj = {
-                email: 'aayushi@data-facade.com',
+                email: appContext?.userEmail || "admin@data-facade.com",
                 actionInstance: {
                         ActionType: "Profiling",
-                        CreatedBy: "aayushi@data-facade.com",
+                        CreatedBy: appContext?.userEmail || "admin@data-facade.com",
                         DefinitionId: definitionId,
                         DisplayName: "Aayushi Action",
                         Id: actionInstanceId,
@@ -181,7 +186,9 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
 
     const handleFetchActionDefinitionById = (id?:string) => {
         getActionDefinitionDetails(id).then((response) => {
-           
+            if(response?.[0]?.ActionTemplatesWithParameters?.[0]?.actionParameterDefinitions.length > 0) {
+                setAllowEditActionDefinition(false)
+            }
             setActionDef({...response})
         }).catch((error) => {
             if(error) {
@@ -194,7 +201,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
     }
 
     const handleSaveClick = () => {
-        
+       
         let obj = {
             ActionDefinitionForm: true,
             UpdatedAction: {
@@ -202,7 +209,7 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
                     model: {
                         ...actionDef?.[0]?.ActionDefinition?.model,
                         DeepDiveConfig: "[]",
-                        UpdatedBy: "aayushi@datafacade.com",
+                        UpdatedBy: appContext?.userEmail || "admin@datafacade.com",
                         UpdatedOn: new Date().getTime()
                     },
                     tags: [],
@@ -218,16 +225,21 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             }
             
         }
-        
         handleActionDefinitionUpdationCall(obj)
-
     }
     
     const handleActionDefinitionUpdationCall = (obj:any) => {
-        dataManager.getInstance.patchData('ActionDefinition',obj).then((response:any) => {
-            // if(response && response?.length > 0) {
-                console.log('response',response)
-            // }
+        dataManager.getInstance.patchData('ActionDefinition',obj).then((_response:any) => {            
+            setChatContext({
+                type: "setActionOwner",
+                payload: {
+                    actionData: {
+                        actionId: obj?.UpdatedAction?.ActionDefinition?.model?.Id,
+                        actionUpdatedBy: obj?.UpdatedAction?.ActionDefinition?.model?.UpdatedBy,
+                    }
+                }
+            })
+
         }).catch((error:any) => {
             console.log(error)
         })
@@ -293,18 +305,18 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             <Row justify="end" gutter={8} ref={bottomRef}>
                 <Space>
                     <Button type="primary" ghost>Discard Changes</Button>
-                    <Button type="primary" onClick={handleSaveClick}>Save</Button>
+                        {!allowEditActionDefinition 
+                        ? <Tooltip placement="topRight" title={"Use the reference button to edit the action"}>
+                            <Button type="primary" onClick={handleSaveClick} disabled={true}>Save</Button>
+                        </Tooltip> 
+                        : <Button type="primary" onClick={handleSaveClick}>Save</Button>}
                 </Space>
             </Row>
-        
-            
             
         </DeepDiveCollapsable>
-  
-        
-     
     )
 }
+
 
 export default DeepDiveDetails
 

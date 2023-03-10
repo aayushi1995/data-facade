@@ -1,3 +1,4 @@
+import ChatLoader from "@/pages/chat/Chat/ChatLoader";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 
 
@@ -9,7 +10,7 @@ const REACT_QUERY_WRAPPER = ({
 }: any) => {
     let El = children;
     if (isLoading) {
-        El = <div >Loading...</div>
+        El = <div ><ChatLoader/></div>
     } else if (error || (!isLoading && (!data))) {
         El = (<div></div>);
     } else {

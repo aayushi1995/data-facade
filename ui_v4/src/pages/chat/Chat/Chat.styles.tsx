@@ -21,13 +21,15 @@ export const MessageWrapper = styled.div`
 export const RightWrapperStyled = styled.div`
     height:100%;
     width: 100%;
+    background-color:white;
+    z-index:1
 `
 
 export const ChatWrapperStyled = styled.div`
     position: relative;
     height:100%;
     width: 100%;
-    // min-width:550px;
+    min-width: 800px;
 `
 export const MainWrapper = styled.div`
     display:flex;

@@ -11,7 +11,7 @@ import MessageTypes from "@/helpers/enums/MessageTypes";
 import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
 import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
 import { getLocalStorage } from "@/utils";
-import { ChatProvider } from '@contexts/ChatContext/index';
+import { ChatContext, ChatProvider, SetChatContext } from '@contexts/ChatContext/index';
 import { Alert, Col, Row } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -22,6 +22,7 @@ import ChatFooter from "../ChatFooter";
 import ChatHistory from "../ChatHistory";
 import { defaultActions, defaultBotMessage, getRandomItems, IconStack, postProcessingFetchingMessage } from "../utils";
 import { ChatWrapperStyled, MessageWrapper, RightWrapperStyled } from "./Chat.styles";
+import ChatLoader from "./ChatLoader";
 import { ActionMessageContent, TableInputContent, TablePropertiesContent } from "./ConfirmationInput/Chat.types";
 import MessageOutputs from "./MessageOutput/MessageOutput";
 
@@ -178,7 +179,7 @@ const InitiateChat = () => {
    
 
     const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean, getResponseFromBot?: boolean, preMessage?:string) => {
-
+        console.log(preMessage)
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
             message: message,
@@ -323,7 +324,7 @@ const InitiateChat = () => {
     const handleActionSelected = (paramsData:any) => {
         const MessageId = v4()
         const obj = makeActionInstancesWithParameterInstances(paramsData)
-        handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true)
+        handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true, undefined, paramsData?.action?.ActionDefinition?.model?.DisplayName || "Action run on chat")
         setActionDefinitions((prevState:any) => ({
             ...prevState,
             [MessageId]: obj
@@ -418,7 +419,10 @@ const InitiateChat = () => {
                                 <Row>
                                     {
                                         loading ?
-                                            <Loader />
+                                        <>
+                                            <ChatLoader/>
+                                        </>
+                                          
                                             :
                                             <Col sm={24}>
                                                 <MessageWrapper>
@@ -494,4 +498,3 @@ export const makeActionInstancesWithParameterInstances = (paramsData: any) => {
 
 
 export default InitiateChat
-
