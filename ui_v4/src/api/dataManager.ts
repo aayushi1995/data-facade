@@ -328,6 +328,28 @@ dataManager.getInstance.getRelatedQuestions = async function (question: string) 
 
 }
 
+dataManager.getInstance.getErrorDescription = async function (errorMessage: string) {
+    console.log(errorMessage)
+    if(!isValidUserSettings()){
+        return;
+    }
+
+    const response = await fetch(endPoint + "/getErrorDescription" + getDefaultRequestQuery(), {
+        method: 'POST',
+        body:JSON.stringify({
+            errorMessage: errorMessage
+        }),
+        headers: getDefaultHeader(userSettingsSingleton.token),
+        
+    })  
+
+    if(response.ok) {
+        return response.json()
+    } else {
+        throw response.json()
+    }
+}
+
 
 
 export const fetchEntityBrowser = async (path:any) => {
