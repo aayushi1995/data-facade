@@ -124,7 +124,7 @@ const ParameterDefinitionsConfigPlane = (props: ParameterDefinitionsConfigPlaneP
                     onChange: (selectedTable?: TableProperties) => {
                         const newParameterInstance: ActionParameterInstance = {
                             TableId: selectedTable?.Id,
-                            ParameterValue: selectedTable?.UniqueName,
+                            ParameterValue: selectedTable?.SchemaName !== undefined ? selectedTable?.SchemaName + "." + selectedTable?.UniqueName : selectedTable?.UniqueName,
                             ActionParameterDefinitionId: parameterDefinition.Id,
                             ProviderInstanceId: selectedTable?.ProviderInstanceID
                         }
