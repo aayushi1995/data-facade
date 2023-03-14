@@ -1,5 +1,7 @@
 import { TableParameterInput } from "@/components/parameters/ParameterInput"
 import { TableProperties } from "@/generated/entities/Entities"
+import Button from "antd/es/button"
+import { useState } from "react"
 import ParameterInput from "../../../components/parameters/ParameterInput"
 
 
@@ -10,6 +12,18 @@ export interface ChatTableInputProps {
 }
 
 const ChatTableInput = (props: ChatTableInputProps) => {
+    const [paramObj, setParamObject] = useState<any | undefined>()
+    
+    const handleParameterInputChange = (tableId?:any, prompt?:any) => {
+
+        setParamObject({
+            tableId: tableId,
+            prompt: prompt
+        })
+    }
+    const handleSubmit = () => {
+        props.onChange(paramObj?.tableId, paramObj.prompt)
+    }
 
     const parameterInputProps: TableParameterInput = {
         parameterType: 'TABLE',
@@ -18,13 +32,19 @@ const ChatTableInput = (props: ChatTableInputProps) => {
             selectedTableFilter: props.selectedTableId ? {Id: props.selectedTableId} : undefined,
             availableTablesFilter: undefined,
             onChange: (newTable?: TableProperties) => {
-                props.onChange(newTable?.Id!, props.prompt)
+                // props.onChange(newTable?.Id!, props.prompt)
+                handleParameterInputChange(newTable?.Id!, props.prompt)
             },
         }
     }
 
     return (
-        <ParameterInput {...parameterInputProps}/>
+        <>
+            <ParameterInput {...parameterInputProps}/>
+            <Button onClick={handleSubmit}>Submit</Button>
+        </>
+       
+
     )
 
 }

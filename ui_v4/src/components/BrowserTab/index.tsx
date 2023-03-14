@@ -76,15 +76,19 @@ const BrowserTab = ({ children }: ChildrenProps) => {
         }
     }, [location.pathname, name]);
 
-    React.useEffect(() => {
-        const index = routes.findIndex((route: any) => route.key === location.pathname);
-        if (index > -1) {
-            setRoutes((oldRoutes: any) => oldRoutes.map((route: any) => route.key === location.pathname ? { ...route, params: location.search } : route))
-        }
-    }, [location.search])
+
+    // I dont why, this was added by Kallol ?
+
+    // React.useEffect(() => {
+    //     const index = routes.findIndex((route: any) => route.key === location.pathname);
+    //     if (index > -1) {
+    //         setRoutes((oldRoutes: any) => oldRoutes.map((route: any) => route.key === location.pathname ? { ...route, params: location.search } : route))
+    //     }
+    // }, [location.search])
 
 
     const handleChange = (value: string, params?:string) => {
+        console.log(value)
         const tab = routes.find((route: any) => route.key === value);
         setActiveTab(value)
         tab ? navigate(`${value}${tab['params']}`) : params ? navigate(`${value}${params}`) : navigate(value)
@@ -93,20 +97,29 @@ const BrowserTab = ({ children }: ChildrenProps) => {
 
     const handleNewTab = () => {
         const chatId = getUniqueId();
+
+        // why do we need permnanent route logic, is there a requirement for temporary routes ?
         const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
-        setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: name, params: location.search, isPermanent: true }]);
+
+        setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: "New Tab", params: "?tabKey=New Tab", isPermanent: true }]);
         setLocalStorage(`chat_${chatId}`, chatId);
-        handleChange(`/chats/${chatId}`,location.search)
+        handleChange(`/chats/${chatId}`,'?tabKey=New Tab')
     }
-    const handleNewTabWithId = (chatId: string) => {
+
+    const handleNewTabWithId = (chatId: string, tabName:string) => {
+
+        // find if the tab is already open in the Chat Tabs
         const tab = routes.find((route: any) => route.key === `/chats/${chatId}`);
+
         if(tab) {
-            handleChange(`/chats/${chatId}`, location.search)
+            // if its already there, just make it active tab
+            handleChange(`/chats/${chatId}`, `?tabKey=${tabName}`)
         } else {
+            // if not, then create a route and add to the Routes[] Array and then navigate to the tab and also make it an active Tab
             const permanentRoutes = routes.filter((route: any) => route.isPermanent === true);
-            setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: name, params: location.search, isPermanent: true }]);
+            setRoutes([...permanentRoutes, { id: Date.now(), key: `/chats/${chatId}`, label: tabName, params: `?tabKey=${tabName}`, isPermanent: true }]);
             setLocalStorage(`chat_${chatId}`, chatId);
-            handleChange(`/chats/${chatId}`,location.search)
+            handleChange(`/chats/${chatId}`,`?tabKey=${tabName}`)
         }
     }
     

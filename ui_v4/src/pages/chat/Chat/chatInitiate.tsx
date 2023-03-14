@@ -2,7 +2,6 @@
 import { initiateChat, startConversation } from "@/actions/chat.actions";
 import dataManager from "@/api/dataManager";
 import DraggableSlider from "@/components/DraggableSlider";
-import Loader from "@/components/Loader";
 import AppContext from "@/contexts/AppContext";
 import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
 import { UploadTableStateContext } from "@/contexts/UploadTablePageContext";
@@ -11,7 +10,7 @@ import MessageTypes from "@/helpers/enums/MessageTypes";
 import useFetchActionDefinitions from "@/hooks/actionDefinitions/useFetchActionDefinitions";
 import useCreateActionInstance, { MutationContext } from "@/hooks/actionInstance/useCreateActionInstance";
 import { getLocalStorage } from "@/utils";
-import { ChatContext, ChatProvider, SetChatContext } from '@contexts/ChatContext/index';
+import {  ChatProvider } from '@contexts/ChatContext/index';
 import { Alert, Col, Row } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -43,7 +42,6 @@ const InitiateChat = () => {
     const [executionId, setExecutionId]: any = useState({})
     const [actionDefinitions, setActionDefinitions] = useState<Record<string, ActionMessageContent>>({})
     const [tableInnputIds, setTableInputIds] = useState<Record<string, TableInputContent>>({})
-    const [showDeepDive, setShowDeepDive] = useState(false)
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
     const [size, setSize] = useState([96,3])
     const uploadTableContext = React.useContext(UploadTableStateContext)
@@ -166,20 +164,22 @@ const InitiateChat = () => {
            })
         if(!conversationStarted.current && userObj && userObj?.length === 1) {
                 setLoading(true)
-                initiateChat(chatId, appContext.userName, userObj[0]?.message).then(response => {
+                initiateChat(chatId, appContext.userName, userObj[0]?.message.substring(0,10)).then(response => {
                     conversationStarted.current = true
                     setLoading(false)
+                    
                 }).catch(err => {
                     setLoading(false);
                     setIsError(true)
                 })
+                setDeepDiveData(undefined)
          }
     }, [messages])
 
    
 
     const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean, getResponseFromBot?: boolean, preMessage?:string) => {
-        console.log(preMessage)
+        
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
             message: message,
@@ -188,7 +188,6 @@ const InitiateChat = () => {
             username: user === 'system' ? 'DataFacade' : appContext?.userName,
             type: type ? type : 'text',
             preMessage: preMessage || ''
-
         }
 
         if(isExternalExecutionId) {
@@ -203,10 +202,12 @@ const InitiateChat = () => {
         if (user === "user") {
             setLoadingMessage(true)
             startConversation(chatId, appContext.userName, message, type, getResponseFromBot).then(response => {
+                setLoadingMessage(false)
                 if (response.length > 0) {
                     if(getResponseFromBot !== false) {
                         for (let i = 0; i < response.length; i++) {
                             handleBOTMessage(response[i])
+
                         }
                     }
                 }
@@ -226,38 +227,37 @@ const InitiateChat = () => {
     const handleBOTMessage = (messageBody: IChatResponse) => {
 
         const messageType = messageBody ? messageBody.MessageType : 'error';
+        
 
-        setTimeout(() => {
-            setLoadingMessage(false)
-            switch (messageType) {
-                case 'text': {
-                    return handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'text', messageBody?.Id);
-                }
-                case 'action_output': {
-                    return handleActionOutput(messageBody)
-                }
-                case 'action_instance': {
-                    return handleActionDefinition(messageBody)
-                }
-                case 'error': {
-                    return handleConversation(({text:JSON.parse(messageBody?.MessageContent)?.error}), 'system', 'error', messageBody?.Id)
-                }
-                case 'recommended_actions': {
-                    return handleRecommendedActions(messageBody)
-                }
-                case 'confirmation': {
-                    return handleConfirmationActions(messageBody)
-                }
-                case 'table_input': {
-                    return handleTableInput(messageBody)
-                }
-                case MessageTypes.TABLE_PROPERTIES: {
-                    return handleTableProperties(messageBody)
-                }
-
-                default: break;
+        switch (messageType) {
+            case 'text': {
+                return handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'text', messageBody?.Id);
             }
-        }, 1000)
+            case 'action_output': {
+                return handleActionOutput(messageBody)
+            }
+            case 'action_instance': {
+                return handleActionDefinition(messageBody)
+            }
+            case 'error': {
+                return handleConversation(({text:JSON.parse(messageBody?.MessageContent)?.error}), 'system', 'error', messageBody?.Id)
+            }
+            case 'recommended_actions': {
+                return handleRecommendedActions(messageBody)
+            }
+            case 'confirmation': {
+                return handleConfirmationActions(messageBody)
+            }
+            case 'table_input': {
+                return handleTableInput(messageBody)
+            }
+            case MessageTypes.TABLE_PROPERTIES: {
+                return handleTableProperties(messageBody)
+            }
+
+            default: break;
+            }
+       
     }
 
     const handleConfirmationActions = (messageBody: IChatResponse) => {

@@ -46,7 +46,16 @@ export const postProcessingFetchingMessage = (messages:any) => {
     let executionId = {}
     let table_input = {}
     let actionDefinition = {}
-    let messagesArray =  messages?.map((obj:any, index:number) => {
+
+    // sort all chats according to Index Id
+    let sortedArray =  sortAndMap(messages)
+
+    let messagesArray:any[] = []
+
+    sortedArray?.forEach((obj:any, index:number) => {
+
+        let skipThisObj = false
+
         let retreiveMessage:string = ''
         if(obj?.MessageType === 'text' || obj?.MessageType === "fileInput") {
             retreiveMessage = JSON.parse(obj?.MessageContent)?.text
@@ -61,36 +70,41 @@ export const postProcessingFetchingMessage = (messages:any) => {
                 [obj?.Id]: JSON.parse(obj?.MessageContent)
             }
         } else if (obj?.MessageType === "table_input"){
-            table_input = {
-                ...table_input,
-                [obj?.Id]: JSON.parse(obj?.MessageContent)
+            // there were multiple occurences of messageType="table_input" was occuring so I am removing the duplicate ones which are not needed.
+            if(determineWhetherToSkipThisOne(obj, sortedArray?.[index+1])) {
+                table_input = {
+                    ...table_input,
+                    [obj?.Id]: JSON.parse(obj?.MessageContent)
+                }
+            } else {
+                skipThisObj = true
             }
+            
         } 
-        return {
+
+        let temp =  {
             id: obj?.Id,
             message: retreiveMessage || obj?.MessageContent,
             // if we dont get a sentBy then add previoous message time
-            time: obj?.SentOn ? parseInt(obj?.SentOn) : index > 1 ? parseInt(messages?.[index-1]?.sentOn): new Date().getTime(),
+            time: obj?.SentOn ? parseInt(obj?.SentOn) : index > 1 ? parseInt(sortedArray?.[index-1]?.sentOn): new Date().getTime(),
             from: obj?.MessageType === "table_input" || obj?.SentBy === "Bot" ? "system" : 'user',
             username: obj?.SentBy === "Bot" ? "Data Facade" : obj?.SentBy,
             type: obj?.MessageType,
             index: obj?.Index,
             messageFeedback: obj?.MessageFeedback
         }
+        !skipThisObj && messagesArray.push(temp)
     })
 
-    // sort all chats according to Index Id
-    let sortedMessageArray = sortAndMap(messagesArray)
-    
 
-    return { messagesArray:sortedMessageArray , executionId, table_input, actionDefinition}
+    return { messagesArray:messagesArray , executionId, table_input, actionDefinition}
 }
 
 const sortAndMap = (arr:any[]) => {
     const copy = arr.slice();
 
     const sorter = (a:any, b:any) => {
-       return a['index'] - b['index'];
+       return a['Index'] - b['Index'];
     };
 
     copy.sort(sorter);
@@ -98,6 +112,7 @@ const sortAndMap = (arr:any[]) => {
     const res = copy.map((obj) => {
        return obj;
     });
+
     return res;
  };
 
@@ -165,3 +180,14 @@ export const detectDefaultMessage = (messages:IChatMessage[], messageToFind:stri
     return defaultMessages.length > 1
 }
 
+
+const determineWhetherToSkipThisOne = (obj:any, nextObj:any) => {
+    let currentprompt = JSON.parse(obj?.MessageContent)?.prompt
+    let messageContent = nextObj?.MessageContent && JSON.parse(nextObj?.MessageContent) || undefined
+    if(nextObj?.MessageType === "table_input" && currentprompt === messageContent?.prompt) {
+        if(!!messageContent?.tableId){
+            return false
+        } 
+    }
+    return true
+}

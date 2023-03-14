@@ -108,7 +108,7 @@ const fetchChats = async (chatId?:string) => {
     const data = {
         entityName: "Message",
         filter: {
-            ChatId: chatId
+            ChatId: chatId,
         },
     };
 
@@ -124,10 +124,34 @@ const fetchChats = async (chatId?:string) => {
     }
 }
 
+
+const updateChatName = async (chatId?:string, Name?:string) => {
+    const data = {
+        entityName: "Message",
+        filter: {
+            ChatId: chatId,
+            name: Name
+        },
+    };
+
+    try {
+        const response = await globalFetch(
+            `${FDSEndpoint}/getproxy${getDefaultRequestQuery()}`,
+            "POST",
+            data
+        );
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+
 export {
     initiateChat,
     startConversation,
     getActionDefinitionDetails,
     fetchTableProperties,
-    fetchChats
+    fetchChats,
+    updateChatName
 };

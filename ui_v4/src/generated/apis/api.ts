@@ -8,6 +8,7 @@ import * as Entity from '../entities/Entities'
 import * as CustomInterface from '../interfaces/Interfaces'
 import { userSettingsSingleton } from '@/settings/userSettingsSingleton'
 import { getDefaultRequestQuery } from '@/utils/getDefaultRequestQuery'
+import { v4 } from 'uuid'
 
 
 const endPoint = require("../../settings/config").FDSEndpoint
@@ -298,7 +299,8 @@ export class Fetcher {
 			headers: {
 				'Accept': 'application/json',
 				'Content-type': 'application/json',
-				'Authorization': `Bearer ${userSettingsSingleton.token}`
+				'Authorization': `Bearer ${userSettingsSingleton.token}`,
+				'RequestId': v4()
 			},
 			body: JSON.stringify(inputPayload)
 		}

@@ -29,7 +29,6 @@ const MessageOutputs = ({setMessages, messages, executionId, loading, showAction
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     
     useEffect(() => {
-        console.log(detectDefaultMessage(messages,'defaultFirstBOTMessage'))
         chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
     }, [messages,loading]);
 

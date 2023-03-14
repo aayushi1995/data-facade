@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import dataManager from '@/api/dataManager'
 import { Chat } from '@/generated/entities/Entities'
 import Card from 'antd/es/card'
@@ -9,7 +9,8 @@ import { RouteContext } from '@components/BrowserTab/index'
 import { StyledCustomInput,SearchInputWrapper,  ChatHistoryItems, StickyHeader, StyledChatName } from './ChatHistory.styles'
 import Typography from 'antd/es/typography'
 import { FlexBox } from '../ChatFooter/ChatFooter.styles'
-import { Button, Space } from 'antd'
+import { Button, Input, Space } from 'antd'
+import { CheckOutlined } from '@ant-design/icons'
 
 
 const ChatHistory = () => {
@@ -50,9 +51,9 @@ const ChatHistory = () => {
 
             <div style={{marginTop:'20px'}}>
                 {searchKey === "" ?  chatHistory?.map((obj:Chat) => {
-                    return <ChatItem {...obj} handleChatClick={handleChatClick}/>
-                }) : chatHistory?.filter((obj:Chat) => obj?.Id?.toLowerCase()?.includes(searchKey.toLowerCase())).map((obj:Chat) => {
-                    return <ChatItem {...obj} handleChatClick={handleChatClick}/>
+                    return <ChatItem {...obj} handleChatClick={handleChatClick} handleSaveChatName/>
+                }) : chatHistory?.filter((obj:Chat) => obj?.Name?.toLowerCase()?.includes(searchKey.toLowerCase())).map((obj:Chat) => {
+                    return <ChatItem {...obj} handleChatClick={handleChatClick} handleSaveChatName/>
                 })}
             </div>
         </Card>
@@ -60,14 +61,33 @@ const ChatHistory = () => {
 }
 export default ChatHistory
 
-const ChatItem = ({handleChatClick, ...props}:any) => {
+const ChatItem = ({handleChatClick, handleSaveChatName, ...props}:any) => {
+    const [showEditable, setEditable]= useState(false)
+    const [name, setName] = useState(props?.Name || '')
+    
+    const handleShowEditable = () => {
+        setEditable(!showEditable)
+    }
+
+    const handleNameChange = (event?:any) => {
+        setName(event?.target?.value)
+    }
+
+    const handleSaveName = () => {
+        // call the api to save the name and everything
+        setEditable(false)
+        handleSaveChatName(props?.id, name)
+    }
+
         return (
             <ChatHistoryItems>
             <FlexBox style={{alignItems: 'center'}}>
                 <ChatBubble/>
-                <StyledChatName level={5} >
+                {!showEditable 
+                ? <StyledChatName level={5} >
                     {props?.Name || props?.Id}
-                </StyledChatName>
+                </StyledChatName> 
+                : <FlexBox style={{margin:'0px 30px'}}><Input onChange={handleNameChange} type="text" /><Button type="ghost" icon={<CheckOutlined />}  onClick={handleSaveName}/></FlexBox>}
             </FlexBox>
             <div>
                 <Button type="ghost" icon={<EditIcon />} onClick={() => handleChatClick(props?.Id, props?.Name || props?.Id)}></Button>

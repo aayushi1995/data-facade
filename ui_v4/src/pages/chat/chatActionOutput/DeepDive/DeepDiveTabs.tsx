@@ -52,7 +52,7 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
             }
             }
             setItems(newPanes);
-            setActiveKey(newActiveKey);
+            newPanes.length > 0 && setActiveKey(newActiveKey);
         };
 
         const onEdit = (targetKey: any, action: 'add' | 'remove') => {
@@ -72,13 +72,13 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
                     key: deepdiveData?.data?.ActionInstance?.ResultTableName,
                     closable: true,
                 }
-                items[0].key === '0' ? setItems([temp]) :  setItems([...items,temp])
+                // add the new tab item to the listofItems
+                if(items?.[0]?.key === '0') {
+                    setItems([temp])
+                } else {
+                    setItems([...items,temp])
+                }
             } 
-           
-            if(items.length === 0) {
-                console.log('over here')
-                setItems(initialItems(deepdiveData, handleActionSelected))
-            }
             setActiveKey(deepdiveData?.data?.ActionInstance?.ResultTableName)
             
         },[deepdiveData])

@@ -23,23 +23,19 @@ export const ChatHeader = ()=>{
             console.log(error)
         })
     },[])
-    const handleChatClick= (id:any) => {
-        handleNewTabWithId(id)
+    const handleChatClick= (id:any, name?:string) => {
+        handleNewTabWithId(id, name )
     }
     const ChatCard = ({handleChatClick, ...props}:any)=>{
         const [showCard,setShowCard] = useState<boolean>(true)
-        const styles = `
-    .my-typography {
-      margin-bottom: 0em;
-    }
-  `;
+
         return(
             showCard?
             <Col span={5}>
             <ChatStyledCard>
                 <div style={{display:'flex',flexDirection:'row',gap:20}}>
                 <Icon style={{ color: '#0770E3'}}  component={CommentBlankIcon as React.ForwardRefExoticComponent<any>} />
-                <TextTypo2 onClick={() => handleChatClick(props?.Id)} ><Paragraph ellipsis={{ rows: 1}}>{props?.Name || props?.Id}</Paragraph></TextTypo2>
+                <TextTypo2 onClick={() => handleChatClick(props?.Id, props?.Name)} ><Paragraph ellipsis={{ rows: 1}}>{props?.Name || props?.Id}</Paragraph></TextTypo2>
                 <CloseOutlined style={{marginLeft:'auto',color:'#9CA3AF'}} onClick={()=>{setShowCard(false)}}/>
                 </div>
             </ChatStyledCard>
