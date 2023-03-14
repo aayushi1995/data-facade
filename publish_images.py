@@ -46,6 +46,14 @@ image_confs = [
         fds_endpoint="stage.datafacade.io",
         repo_prefix="df-uiapp-v4",
         image_tag=f"Stage_{args.image_tag}"
+    ),
+    ImageConf(
+        env_name="NextProd",
+        endpoint="app.datafacade.io",
+        client_id="41G3SgeWWolaLO6AeJ4nOgB3xtJuZEYg",
+        fds_endpoint="datafacade.io",
+        repo_prefix="df-uiapp-v4",
+        image_tag=f"Prod_{args.image_tag}"
     )
 
 ]
