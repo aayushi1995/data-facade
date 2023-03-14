@@ -16,13 +16,16 @@ const Visualization = ({tableName}:any) => {
     const [chartData, setChartData] = useState<any>(null)
 
     const handleChartData = (data:any) => {
+        console.log(data, 'handleChartData')
         setShowChart(true)
         setOptions(false)
         setChartData(data)
     }
 
-
     const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
+
+
+
     
     return (
         <div>

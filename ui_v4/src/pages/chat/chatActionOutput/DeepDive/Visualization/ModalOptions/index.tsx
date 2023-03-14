@@ -1,43 +1,55 @@
 import ChartType from '@/helpers/enums/ChartType'
-import { Button, Modal, Popover, Select, Switch } from 'antd'
+import { Button, Modal, Popover, Select, Switch, Typography } from 'antd'
 import React, { useState } from 'react'
 import { getData } from '../../../../utils'
 import ChartOptions from './ChartOptions'
 import { ChartConfigModalStyled, SelectWrapper } from './ChartOptions.styles'
+import AggregationChartOptions from './AggregationChartOptions'
+import { FlexBox } from '@/pages/chat/ChatFooter/ChatFooter.styles'
+import Title from 'antd/es/skeleton/Title'
 
-const type = ['line', 'bar', 'linebar', 'pie', 'scatter']
+const type = (aggregration?:boolean) => {
+    return !aggregration ? ['line', 'bar', 'linebar', 'pie', 'scatter'] : ['line', 'bar', 'pie']
+}
 
-const ModalOptions = ({showChartModal, setShowChartModal, handleChartData, tableName }:any) => {
+const ModalOptions = ({ handleChartData, tableName }:any) => {
 
     const [chartType, setChartType] = useState<any | undefined>()
-
+    const [showAdvancedAggregation, setShowAdvancedAggregation] = useState(false)
 
     const handleChartType = (type:string) => {
         setChartType(type)
     } 
 
-    const handleModalOK = () => {
-        // setShowChart(true)
-        setShowChartModal(false)
+    const handleShowAggregationOptions = () => {
+        setShowAdvancedAggregation(!showAdvancedAggregation)
     }
 
     return (
-        // <Modal centered title="Chart Settings" open={showChartModal} onOk={handleModalOK} onCancel={() => setShowChartModal(false)} footer={null}>
+        <>
+            <FlexBox> 
+                <Switch defaultChecked={false} onChange={handleShowAggregationOptions} /><Typography.Title style={{marginLeft:'20px'}} level={5}>{!showAdvancedAggregation ? "Perform Aggregations" : "Perform Basic Chart Visualizations"}</Typography.Title>
+            </FlexBox>
             <ChartConfigModalStyled>
+                
                 <SelectWrapper>
                     <label>Chart Type</label>
-                    
                     <Select
                         style={{ width: "100%" }}
                         onChange={handleChartType}
-                        options={type.map((chart:any) => {return {label: chart, value: chart}})}
+                        options={type(showAdvancedAggregation).map((chart:any) => {return {label: chart, value: chart}})}
                     />
                 </SelectWrapper>
                
-                 {chartType && <ChartOptions type={chartType} handleChartData={handleChartData} tableName={tableName}/>}
+                 {!showAdvancedAggregation && chartType && <ChartOptions type={chartType} handleChartData={handleChartData} tableName={tableName}/>}
+                 
+                 <FlexBox>
+                 {showAdvancedAggregation && <AggregationChartOptions type={chartType} handleChartData={handleChartData} tableName={tableName}/>}
+
+                 </FlexBox>
+                
             </ChartConfigModalStyled>
-           
-        // </Modal>
+        </>
     )
 }
 export default ModalOptions
