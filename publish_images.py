@@ -53,9 +53,8 @@ image_confs = [
         client_id="41G3SgeWWolaLO6AeJ4nOgB3xtJuZEYg",
         fds_endpoint="datafacade.io",
         repo_prefix="df-uiapp-v4",
-        image_tag=f"Prod_{args.image_tag}"
+        image_tag=f"Production_{args.image_tag}"
     )
-
 ]
 
 print(args.env_name)
