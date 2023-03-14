@@ -528,7 +528,8 @@ export interface TrainingData extends BaseEntity{
 	Reference?: string
 	TargetUser?: string
 	Author?: string
-	ParameterValues?: string
+	ParameterValues?: string,
+	ApplicationId?: string
 }
 
 

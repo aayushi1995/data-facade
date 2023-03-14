@@ -30,6 +30,13 @@ const useAddTrainingDataSetForm = (props: AddTrainingDataSetFormProps) => {
         }))
     }
 
+    const onApplicationIdChange = (value?: string) => {
+        setTraingDataSetState(oldState => ({
+            ...oldState,
+            applicationId: value
+        }))
+    }
+
     const handleAnswerTypeChange = (event: SelectChangeEvent<AnswerTypes>) => {
         setTraingDataSetState(oldState => ({
             ...oldState,
@@ -76,6 +83,7 @@ const useAddTrainingDataSetForm = (props: AddTrainingDataSetFormProps) => {
                 TargetUser: trainingDataSetState.targetUser?.join(','),
                 CreatedBy: userSettingsSingleton.userEmail,
                 Author: userSettingsSingleton.userEmail,
+                ApplicationId: trainingDataSetState.applicationId,
                 CreatedOn: Date.now()
             }
 
@@ -98,7 +106,8 @@ const useAddTrainingDataSetForm = (props: AddTrainingDataSetFormProps) => {
         selectedActionDefinitionId,
         onParameterValueChange,
         onTargetUserChange,
-        handleAddRecord
+        handleAddRecord,
+        onApplicationIdChange
     }
 }
 

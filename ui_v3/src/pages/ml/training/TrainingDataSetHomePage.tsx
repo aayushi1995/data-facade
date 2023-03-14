@@ -18,7 +18,8 @@ export type TrainingDataRow = {
     reference?: string,
     targetUser?: string[],
     parameterValues?: Record<string, string>,
-    targetTables?: string[]
+    targetTables?: string[],
+    applicationId?: string
 }
 
 const TrainingDataSetHomePage = () => {

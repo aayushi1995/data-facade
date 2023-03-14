@@ -18,7 +18,8 @@ const AddTrainingDataSetForm = (props: AddTrainingDataSetFormProps) => {
         selectedActionDefinitionId,
         onParameterValueChange,
         onTargetUserChange,
-        handleAddRecord
+        handleAddRecord,
+        onApplicationIdChange
     } = useAddTrainingDataSetForm(props)
 
     return (
@@ -46,7 +47,7 @@ const AddTrainingDataSetForm = (props: AddTrainingDataSetFormProps) => {
                 <Typography sx={{width: '30%'}}>
                     Reference
                 </Typography>
-                <AddReference trainingData={trainingDataSetState} onActionReferenceValueChange={handleReferenceValueChange} setSelectedActionId={setSelectedActionId}/>
+                <AddReference onApplicationIdChange={onApplicationIdChange} trainingData={trainingDataSetState} onActionReferenceValueChange={handleReferenceValueChange} setSelectedActionId={setSelectedActionId}/>
             </Grid>
             <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 3}}>
                 <Typography sx={{width: '30%'}}>

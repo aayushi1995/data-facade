@@ -637,7 +637,7 @@ const TableInput = (props: TableParameterInput) => {
         >
             {
                 tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
-                    {value.SchemaName + "." + value.DisplayName}
+                    {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}
                 </Select.Option>)
             }
         </StyledSelect>

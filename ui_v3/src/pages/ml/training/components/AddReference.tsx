@@ -9,7 +9,8 @@ import { TrainingDataRow } from "../TrainingDataSetHomePage"
 export interface AddReferenceProps {
     trainingData?: TrainingDataRow,
     onActionReferenceValueChange: (value: string) => void,
-    setSelectedActionId: (value?: string) => void
+    setSelectedActionId: (value?: string) => void,
+    onApplicationIdChange: (value?: string) => void
 }
 
 const AddReference = (props: AddReferenceProps) => {

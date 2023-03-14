@@ -8,7 +8,7 @@ import { AddReferenceProps } from "../components/AddReference"
 
 const useAddReference = (props: AddReferenceProps) => {
 
-    const {trainingData, onActionReferenceValueChange, setSelectedActionId} = props
+    const {trainingData, onActionReferenceValueChange, setSelectedActionId, onApplicationIdChange} = props
 
     const fetchedDataManager = dataManager.getInstance as {retreiveData: Function}
     const fetchAllActionsNameAndId = useQuery(
@@ -42,6 +42,7 @@ const useAddReference = (props: AddReferenceProps) => {
         const value = (application?.UniqueName || "NA") + "." + (actionDefinition.UniqueName || "NA")
 
         onActionReferenceValueChange(value)
+        onApplicationIdChange(actionDefinition?.ApplicationId)
     }
 
     const getActionValue = () => {
