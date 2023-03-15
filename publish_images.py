@@ -50,7 +50,7 @@ image_confs = [
     ImageConf(
         env_name="NextProd",
         endpoint="app.datafacade.io",
-        client_id="41G3SgeWWolaLO6AeJ4nOgB3xtJuZEYg",
+        client_id="kePnswt7atumtWO5veaWdgLfX5TtqcsG",
         fds_endpoint="datafacade.io",
         repo_prefix="df-uiapp-v4",
         image_tag=f"Production_{args.image_tag}"
