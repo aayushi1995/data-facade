@@ -5,13 +5,14 @@ import { ChatBlockWrapper, ChatMetaData, ChatStyles, StyledTime, StyledUserName 
 const ChatBlock = ({message, id, type, ...props}:any) => {
    
     const getTime = (time:any)=>{
+        var date = new Date(time).toLocaleDateString()
         var hours = new Date(time).getHours()
         var minutes = new Date(time).getMinutes()
         var ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12;
         hours = hours ? hours : 12;
         var minute = minutes < 10 ? '0'+minutes : minutes;
-        var strTime = hours + ':' + minute + ' ' + ampm;
+        var strTime = date +" "+ hours + ':' + minute + ' ' + ampm;
         return (strTime)
     }
 
@@ -20,7 +21,7 @@ const ChatBlock = ({message, id, type, ...props}:any) => {
             <FlexBox style={{alignItems: 'flex-end'}}>
                 <div>
                     {(type=='recommended_actions' || type=='confirmation')?<></>:
-                        <ChatMetaData {...props}><StyledUserName>{props?.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(Number.isNaN(props.time) ? new Date().getTime() : props.time)}</StyledTime></ChatMetaData>
+                        <ChatMetaData {...props}><StyledUserName>{props?.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(Number.isNaN(props.time) ? new Date() : props.time)}</StyledTime></ChatMetaData>
                     }
                     <ChatStyles {...props} key={id} type={type}>{props?.children === undefined ? message : props?.children}</ChatStyles>
                 </div>

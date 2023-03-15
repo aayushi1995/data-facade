@@ -3,13 +3,13 @@ import { AppsContainer } from "../apps/apps.style"
 import { RecenetChats } from "../chat/RecentChats/Recentchats"
 import { TutsCard } from "../home/tutsAndDocs/TutsCard"
 
-const Data = () => {
+const PlayGroundLand = () => {
     const HEADER_ENUMS = {
-        title:"Your Connections",
-        desc:"Manage all your Connections.",
-        btnText:"+  Add Data Source",
-        page:'data',
-        Ipplace:'Search Connector, data base, table...'
+        title:"Your Playground",
+        desc:"Manage all your Scratchpads and Actions.",
+        btnText:"Start new Scratchpad",
+        page:'playground',
+        Ipplace:'Search for a Scratchpad or Action'
     }
     return (
         <>
@@ -25,4 +25,4 @@ const Data = () => {
     )
 }
 
-export default Data
+export default PlayGroundLand

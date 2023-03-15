@@ -64,7 +64,9 @@ const InitiateChat = () => {
    
 
     useEffect(()=>{
-        if(uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
+        console.log(uploadTableContext.status?.message);
+        
+        if(uploadTableContext.status?.message=='Loading Table into System' || uploadTableContext.status?.message=='Authorising Upload' || uploadTableContext.status?.message=='Preparing File' || uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
             setLoadingMessage(true)
         }else if(uploadTableContext.status?.message=='Questions generated for table'){
             setLoadingMessage(false)

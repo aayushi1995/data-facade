@@ -1,4 +1,4 @@
-import { ChatIcon, DatabaseIcon, HomeIcon, PlaygroundIcon } from "@/assets/icon.theme"
+import { ChatIcon, DatabaseIcon, GridViewIcon, HomeIcon, PlaygroundIcon } from "@/assets/icon.theme"
 
 
 
@@ -6,9 +6,10 @@ import { ChatIcon, DatabaseIcon, HomeIcon, PlaygroundIcon } from "@/assets/icon.
 // Constant list of the sidebar menu Items
 export const SidebarItems = () => [
 { key: 'home', text: 'Home', location: '/', icon: HomeIcon },
-{ key: 'chats', text: 'Chats', location: `/chats`, icon: ChatIcon },
+{ key: 'chatland', text: 'Chats', location: '/chatland', icon: ChatIcon },
 { key: 'data', text: 'Data', location: '/data', icon: DatabaseIcon },
-{ key: 'playground', text: 'Playground', location: '/playground', icon: PlaygroundIcon },
+{ key: 'PlayGroundLand', text: 'Playground', location: '/PlayGroundLand', icon: PlaygroundIcon },
+{ key: 'apps', text: 'Apps', location: '/apps', icon: GridViewIcon },
 ]
 
 // clean data for charts

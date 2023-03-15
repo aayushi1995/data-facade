@@ -51,12 +51,8 @@ const AppSidebar = () => {
 
 
     const onMenuItemClick = (item: any) => {
-        if (item.key === "chats") {
-            let chatID = getUniqueId();
-            setLocalStorage(`chat_${chatID}`, chatID)
-            navigate(`/chats/${chatID}?tabKey=New Chats`);
-        }
-    
+     console.log("");
+     
     }
     
     useEffect(() => {

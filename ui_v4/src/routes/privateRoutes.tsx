@@ -1,3 +1,6 @@
+import Apps from "@/pages/apps"
+import { ChatLandingPage } from "@/pages/chat/ChatLandingPage/ChatLandingPage"
+import PlayGroundLand from "@/pages/playground/PlayGroundLandingPage"
 import React, { Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
@@ -18,6 +21,9 @@ const PrivateRoutes = () => {
                 <Route path="/data" element={<Data />} />
                 <Route path="/chats/:chatId" element={<ChatInitiate />} />
                 <Route path="/playground" element={<Playground />} />
+                <Route path="/PlayGroundLand" element={<PlayGroundLand/>}/>
+                <Route path="/chatland" element={<ChatLandingPage />} />
+                <Route path="/apps" element={<Apps />} />
                 <Route
                     path="/tableBrowser"
                     element={<Navigate to="/" replace />}

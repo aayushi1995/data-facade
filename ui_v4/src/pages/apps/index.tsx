@@ -1,28 +1,28 @@
 import { LandingPageHeader } from "@/components/LandingPageHeader/LandingPageHeader"
-import { AppsContainer } from "../apps/apps.style"
-import { RecenetChats } from "../chat/RecentChats/Recentchats"
+import { AppinOrg } from "../home/appinOrg/AppinOrg"
 import { TutsCard } from "../home/tutsAndDocs/TutsCard"
+import { AppsContainer, Container } from "./apps.style"
 
-const Data = () => {
+const Apps = () => {
     const HEADER_ENUMS = {
-        title:"Your Connections",
-        desc:"Manage all your Connections.",
-        btnText:"+  Add Data Source",
-        page:'data',
-        Ipplace:'Search Connector, data base, table...'
+        title:"Your Apps",
+        desc:"Manage and share all your Apps",
+        btnText:"Create a New App",
+        page:'apps',
+        Ipplace:'Search for an App'
     }
     return (
-        <>
+        <Container>
         <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace}/>
         
         <AppsContainer >
-            <RecenetChats/>
+        <AppinOrg/>
         </AppsContainer >
         <div>
         <TutsCard/>
         </div>
-        </>
+        </Container>
     )
 }
 
-export default Data
+export default Apps
