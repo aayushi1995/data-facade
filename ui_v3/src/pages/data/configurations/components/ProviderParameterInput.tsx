@@ -60,6 +60,8 @@ const ProviderParameterInput = ( props: ProviderParameterInputProps ) => {
                                                             label={paramDef?.ParameterName} 
                                                             value={paramInstance?.ParameterValue} 
                                                             required 
+                                                            multiline
+                                                            maxRows={4}
                                                             onChange={(event) => props?.onParameterValueChange?.(paramDef?.Id, event.target.value)}
                                                         />
                                                 }

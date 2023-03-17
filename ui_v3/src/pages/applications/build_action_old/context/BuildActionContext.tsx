@@ -1617,7 +1617,7 @@ function get_match_for_df_helper(line: string) {
 
     for (let i=0, len=expressions.length, text=""; i<len; i++){
         const match = get_match_from_regx(expressions[i], line);
-        if (match != null &&  match?.groups?.["Type"]!="connection")
+        if (match != null &&  match?.groups?.["Type"]!=="connection")
             return match;
     }
 }
