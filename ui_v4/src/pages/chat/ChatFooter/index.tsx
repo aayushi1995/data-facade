@@ -51,6 +51,7 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
         fileUploadInputRef.current.click()
     }
     const changeHandler = (event: any) => {
+        console.log('file is getting uploaded')
         const file = event.target.files[0];
         // handleFileUpload(event)
         setFileToUpload(file)

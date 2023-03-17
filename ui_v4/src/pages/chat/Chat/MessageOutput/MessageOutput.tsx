@@ -3,8 +3,6 @@ import { Message } from "@/generated/entities/Entities";
 import { ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
 import { labels } from "@/helpers/constant";
 import MessageTypes from "@/helpers/enums/MessageTypes";
-import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
-import { Button, Spin } from "antd";
 import React, { useEffect, useRef } from "react";
 import { useMutation } from "react-query";
 import ActionDefination from "../../chatActionDefination/actionDefination";
@@ -13,19 +11,16 @@ import ChatBlock from "../../ChatBlock";
 import { IChatMessage } from "../../ChatBlock/ChatBlock.type";
 import ChatTableInput from "../../chatTableInput";
 import { SenderPreview } from "../../tableUpload/SenderPreview";
-import { detectDefaultMessage } from "../../utils";
 import { LoaderContainer } from "../Chat.styles";
 import ChatLoader from "../ChatLoader";
 import ChatTablePropeties from "../chatTableProperties";
 import ConfirmationInput from "../ConfirmationInput";
-import { ActionMessageContent } from "../ConfirmationInput/Chat.types";
+import { ActionMessageContent, TablePropertiesContent } from "../ConfirmationInput/Chat.types";
 import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
 
 
 
-
-const MessageOutputs = ({setMessages, messages, executionId, loading, showActionOutput, actionDefinitions, handleConversation,  handleDeepDive, tableInputs, setActionDefinitions, tableProperties }: any ) => {
-    
+const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  handleConversation,  handleDeepDive }: any ) => {
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     
     useEffect(() => {
@@ -33,7 +28,8 @@ const MessageOutputs = ({setMessages, messages, executionId, loading, showAction
     }, [messages,loading]);
 
     const handleActionInstanceSubmit = (messageContent: ActionInstanceWithParameters, type: string, id?:string, isExternalExecutionId?:string) => {           
-            handleConversation({actionInstanceWithParameterInstances: messageContent}, 'user', type, undefined, isExternalExecutionId)
+            const messageObj = {actionInstanceWithParameterInstances: messageContent}
+            handleConversation(JSON.stringify(messageObj), 'user', type, undefined, isExternalExecutionId)
     }
 
     const onTableSelected = (tableId: string, prompt: string) => {
@@ -66,65 +62,97 @@ const MessageOutputs = ({setMessages, messages, executionId, loading, showAction
             }
         })
     }
-
+    
 
     return (
         <div>
-            {messages?.map(({ id, type, ...props }: IChatMessage, index:number) => {
+            {messages?.map((message: IChatMessage, index:number) => {
 
                 const tempArr = messages?.slice(0,index)
-
                 tempArr?.reverse()
-
+                // calculate latest message
                 const latestMessage = tempArr?.find((message:IChatMessage)=> {
                     return message?.from === "user" && message?.type === "text"
                 }) || " "
-                
-               return ( <React.Fragment key={id}>
-                    {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
-                    
-                    {type === "recommended_actions" && 
-                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
-                            <RecommendedActionsInput setActionDefinitions={setActionDefinitions} recommendedActions={props?.message} handleConversation={handleConversation}/>
-                        </ChatBlock>
-                    }
-                    {type === 'confirmation' &&
-                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
-                            <ConfirmationInput {...props?.message}/>
-                        </ChatBlock>
-                    }
-                    {type === 'fileInput' &&
-                        <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
-                        <SenderPreview fileName={props?.message} />
-                    </ChatBlock>
-                    }
-                    {type === "action_output" && (Object.keys(executionId).length > 0 || showActionOutput) && 
-                        <>
-                            <ActionOutput messageFeedback={props?.messageFeedback} messageId={id} handleDeepDive={handleDeepDive} actionExecutionId={executionId[id]} showFooter={true} handleLikeDislike={hanldeLikeDislike} preMessage={props?.preMessage || "Here is the response generated: "+(latestMessage?.message || " ")} fromDeepDive={true}/>
-                        </>
-                    }
-                    {type === "action_instance" && (Object.keys(actionDefinitions).length > 0) && actionDefinitions[id] && <ActionDefination  onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} ActionDefinitionId={(actionDefinitions[id] as ActionMessageContent).actionDefinitionDetail?.ActionDefinition?.model?.Id!} ExistingModels={(actionDefinitions[id] as ActionMessageContent).actionInstanceWithParameterInstances}/>}
-                    {type === "table_input" && (Object.keys(tableInputs).length > 0 && tableInputs[id] && 
-                        <>
-                        <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Looks like a new question. Please select a table to answer it better."}/>
-                        <ChatTableInput onChange={onTableSelected} prompt={tableInputs[id].prompt} selectedTableId={tableInputs[id].tableId}/>
-                        </>
-                    )}
-                    {type === MessageTypes.TABLE_PROPERTIES && (Object.keys(tableProperties).length > 0 && tableProperties[id] && 
-                        <>
-                        <ChatTablePropeties Tables={tableProperties[id]}/>
-                        </>
-                    )}
-                    
-                    
-                </React.Fragment>)}
-            )}
-            <LoaderContainer>
-            {loading && <ChatLoader />}
-            </LoaderContainer>
 
+               return (<SmartChatBlock 
+                    message={{...message,preMessage: `Here is the response generated: ${latestMessage?.message}`}} 
+                    handleConversation={handleConversation} 
+                    handleDeepDive={handleDeepDive} 
+                    handleActionInstanceSubmit={handleActionInstanceSubmit}
+                    onTableSelected={onTableSelected}
+                    hanldeLikeDislike={hanldeLikeDislike}
+                />)}
+            )}
             <div ref={chatWrapperRef} />
+            <LoaderContainer>
+                    {loading && <ChatLoader />}
+            </LoaderContainer>
         </div>
     )
 }
 export default MessageOutputs
+
+
+interface ISmartBlock {
+    message: IChatMessage,
+    handleConversation: (props:any) => void,  
+    handleDeepDive: (props:any) => void, 
+    onTableSelected: (tableId: string, prompt: string) => void, 
+    handleActionInstanceSubmit: (messageContent: ActionInstanceWithParameters, type: string, id?:string, isExternalExecutionId?:string) => void,  
+    hanldeLikeDislike: (value: boolean, id: string) => void
+}
+const SmartChatBlock = ({ message,handleConversation,  handleDeepDive, onTableSelected, handleActionInstanceSubmit,  hanldeLikeDislike}:ISmartBlock) => {
+    const {id, type, ...props} = message
+    
+    return (
+            <React.Fragment key={id}>
+                {(type === "text" || type === "error") && <ChatBlock id={id} key={id + 'Chat'} {...props} type={type} />}
+                {type === "recommended_actions" && props?.message && (
+                    <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
+                    <RecommendedActionsInput recommendedActions={props?.message} handleConversation={handleConversation}/>
+                    </ChatBlock>
+                )}
+                {type === 'confirmation' &&
+                    <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
+                        <ConfirmationInput {...props?.message}/>
+                    </ChatBlock>
+                }
+                {type === 'fileInput' &&
+                    <ChatBlock id={id} key={id + 'Chat'} {...props} type={type}>
+                    <SenderPreview fileName={props?.message} />
+                </ChatBlock>
+                }
+                {type === "action_output" && (JSON.parse(message?.message)?.['executionId']) && 
+                    <>
+                        <ActionOutput messageFeedback={props?.messageFeedback} 
+                        messageId={id} 
+                        handleDeepDive={handleDeepDive} 
+                        actionExecutionId={message?.message ? JSON.parse(message?.message)?.executionId : null} 
+                        showFooter={true} 
+                        handleLikeDislike={hanldeLikeDislike} 
+                        preMessage={props?.preMessage} fromDeepDive={true}/>
+                    </>
+                }
+                {type === "action_instance" && message?.message && JSON.parse(message?.message)?.actionInstanceWithParameterInstances?.ParameterInstances && <ActionDefination  
+                onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} 
+                ActionDefinitionId={(JSON.parse(message?.message) as ActionMessageContent)?.actionDefinitionDetail?.ActionDefinition?.model?.Id!} 
+                ExistingModels={(JSON.parse(message?.message) as ActionMessageContent)?.actionInstanceWithParameterInstances}/>}
+
+                {type === "table_input" && (JSON.parse(message?.message) && 
+                    <>
+                    <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Looks like a new question. Please select a table to answer it better."}/>
+                    <ChatTableInput onChange={onTableSelected} prompt={JSON.parse(message?.message)?.prompt} selectedTableId={JSON.parse(message?.message)?.tableId}/>
+                    </>
+                )}
+                {type === MessageTypes.TABLE_PROPERTIES && (JSON.parse(message?.message) as TablePropertiesContent && 
+                    <>
+                    <ChatTablePropeties Tables={JSON.parse(message?.message)}/>
+                    </>
+                )}
+             
+            </React.Fragment>
+                
+    
+    )
+}

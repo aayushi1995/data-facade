@@ -31,22 +31,18 @@ const InitiateChat = () => {
     const setDataContext = useContext(SetDataContext);
     const dataContext = useContext(DataContext);
     const appContext: any = useContext(AppContext);
-
+    
+    console.log('dataContext',dataContext)
     // local states
     const { chatId } = useParams();
     const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState(false);
     const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
-    const [showActionOutput, setShowActionOutput] = useState(false)
-    const [executionId, setExecutionId]: any = useState({})
-    const [actionDefinitions, setActionDefinitions] = useState<Record<string, ActionMessageContent>>({})
-    const [tableInnputIds, setTableInputIds] = useState<Record<string, TableInputContent>>({})
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
     const [size, setSize] = useState([96,3])
     const uploadTableContext = React.useContext(UploadTableStateContext)
     const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
-    const [tableProperties, setTableProperties] = React.useState<Record<string, TablePropertiesContent>>({})
 
     const conversationStarted = useRef(false)
 
@@ -88,7 +84,6 @@ const InitiateChat = () => {
             payload: {
                 chatData: {
                     messages: messages,
-                    executionId: executionId,
                     chatId: chatId,
                 }
             }
@@ -100,15 +95,11 @@ const InitiateChat = () => {
         if (chatId) {
             if(dataContext?.chatData[chatId]?.messages.length > 0) {
                 setMessages(dataContext?.chatData[chatId]?.messages)
-                setExecutionId(dataContext?.chatData[chatId]?.executionId || {})
             } else {
                 dataManager.getInstance.retreiveData("Message",{filter: {ChatId: chatId}}).then((response:any) => {
                     if(response.length > 0){
-                        let {messagesArray, executionId, table_input, actionDefinition} = postProcessingFetchingMessage(response)
+                        let {messagesArray} = postProcessingFetchingMessage(response)
                         messagesArray.length > 0 && setMessages([defaultBotMessage(appContext?.userName), ...messagesArray])
-                        Object.keys(executionId).length > 0 && setExecutionId({...executionId})
-                        Object.keys(table_input).length > 0 && setTableInputIds({...table_input})
-                        Object.keys(actionDefinition).length > 0 && setTableInputIds({...actionDefinition})
 
                     } else { 
                         if(allActionDefinitionsIsLoading){
@@ -198,11 +189,12 @@ const InitiateChat = () => {
         }
 
         if(!ignoreMessage) {
-            setMessages(messages => messages ? [...messages, {...temp, message: message?.text || message?.error}] : [{...temp, message: message?.text}])
+            setMessages(messages => messages ? [...messages, {...temp, message: message?.text || message }] : [{...temp, message: message?.text}])
         }
 
         if (user === "user") {
             setLoadingMessage(true)
+            console.log(chatId, appContext.userName, message, type, getResponseFromBot)
             startConversation(chatId, appContext.userName, message, type, getResponseFromBot).then(response => {
                 setLoadingMessage(false)
                 if (response.length > 0) {
@@ -212,8 +204,7 @@ const InitiateChat = () => {
 
                         }
                     }
-                }
-                else {
+                } else {
                     handleConversation('No output found for this message :(', 'system', 'error')
                     setLoadingMessage(false)
                 }
@@ -229,94 +220,46 @@ const InitiateChat = () => {
     const handleBOTMessage = (messageBody: IChatResponse) => {
 
         const messageType = messageBody ? messageBody.MessageType : 'error';
-        
+
 
         switch (messageType) {
             case 'text': {
                 return handleConversation(JSON.stringify(messageBody?.MessageContent?.text), 'system', 'text', messageBody?.Id);
             }
             case 'action_output': {
-                return handleActionOutput(messageBody)
+                return handleConversation(messageBody?.MessageContent, 'system', 'action_output', messageBody?.Id, false, undefined, undefined);
+                // return handleActionOutput(messageBody)
             }
             case 'action_instance': {
-                return handleActionDefinition(messageBody)
+                return handleConversation(messageBody.MessageContent, 'system', 'action_instance', messageBody?.Id)
+
+                //  handleActionDefinition(messageBody)
             }
             case 'error': {
                 return handleConversation(({text:JSON.parse(messageBody?.MessageContent)?.error}), 'system', 'error', messageBody?.Id)
             }
             case 'recommended_actions': {
-                return handleRecommendedActions(messageBody)
+                return handleConversation(messageBody?.MessageContent as ActionDefinitionDetail[], 'system', 'recommended_actions', messageBody?.Id)
+                // return handleRecommendedActions(messageBody)
             }
             case 'confirmation': {
-                return handleConfirmationActions(messageBody)
+                return handleConversation(messageBody?.MessageContent as ConfirmationPayloadType, 'system', 'confirmation', messageBody?.Id)
+                // return handleConfirmationActions(messageBody)
             }
             case 'table_input': {
-                return handleTableInput(messageBody)
+                return handleConversation(messageBody?.MessageContent, 'system', 'table_input', messageBody?.Id)
+                // return handleTableInput(messageBody)
             }
             case MessageTypes.TABLE_PROPERTIES: {
-                return handleTableProperties(messageBody)
+                return handleConversation(messageBody?.MessageContent, 'system', MessageTypes.TABLE_PROPERTIES, messageBody?.Id)
+                // return handleTableProperties(messageBody)
             }
-
             default: break;
             }
        
     }
 
-    const handleConfirmationActions = (messageBody: IChatResponse) => {
-        const confirmations = messageBody?.MessageContent as ConfirmationPayloadType
-        handleConversation(confirmations, 'system', 'confirmation', messageBody?.Id)
-    }
-
-    const handleRecommendedActions = (messageBody: IChatResponse) => {
-        const recommendedActions = messageBody?.MessageContent as ActionDefinitionDetail[]
-        handleConversation(recommendedActions, 'system', 'recommended_actions', messageBody?.Id)
-    }
-
-    const handleTableProperties = (messageBody: IChatResponse) => {
-        console.log(messageBody)
-        const tables = JSON.parse(messageBody?.MessageContent) as TablePropertiesContent
-
-        handleConversation(messageBody, 'system', MessageTypes.TABLE_PROPERTIES, messageBody?.Id)
-
-        if(tables) {
-            setTableProperties(prevState => ({
-                ...prevState,
-                [messageBody?.Id!]: tables
-            }))
-        }
-    }
-
-    const handleActionOutput = (messageBody: IChatResponse | any, preMessage?:string) => {
-
-        const actionOutputId = messageBody?.MessageContent ? JSON.parse(messageBody?.MessageContent)['executionId'] : null
-        handleConversation(messageBody, 'system', 'action_output', messageBody?.Id, false, undefined, undefined, preMessage);
-
-        if (actionOutputId) {
-            setShowActionOutput(true)
-            setExecutionId((prevState: any) => ({
-                ...prevState,
-                [messageBody?.Id]: actionOutputId
-            }))
-        }
-    }
-
-    const handleTableInput = (messageBody: IChatResponse) => {
-        const messageContent =  JSON.parse(messageBody?.MessageContent) as TableInputContent
-        handleConversation(messageBody, 'system', 'table_input', messageBody?.Id)
-        setTableInputIds(prevState => ({
-            ...prevState,
-            [messageBody.Id!]: messageContent
-        }))
-    }
-
-    const handleActionDefinition = (messageBody: IChatResponse) => {
-        const messageContent = JSON.parse(messageBody.MessageContent) as ActionMessageContent
-        handleConversation(messageBody, 'system', 'action_instance', messageBody?.Id)
-        setActionDefinitions(prevState => ({
-            ...prevState,
-            [messageBody.Id!]: messageContent
-        }))
-    }
+  
 
     const handleDeepDive = (data:any) => {
         setDeepDiveData(data)
@@ -326,11 +269,7 @@ const InitiateChat = () => {
     const handleActionSelected = (paramsData:any) => {
         const MessageId = v4()
         const obj = makeActionInstancesWithParameterInstances(paramsData)
-        handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true, undefined, paramsData?.action?.ActionDefinition?.model?.DisplayName || "Action run on chat")
-        setActionDefinitions((prevState:any) => ({
-            ...prevState,
-            [MessageId]: obj
-        }))   
+        handleConversation(JSON.stringify(obj), 'system', 'action_instance', MessageId, true, paramsData?.executionId || true, undefined, paramsData?.action?.ActionDefinition?.model?.DisplayName || "Action run on chat")  
     }
 
 
@@ -383,8 +322,6 @@ const InitiateChat = () => {
                     DefinitionId: "0",
                     DisplayName: 'Aayushi Action',
                     Id: actionInstanceId,
-                    // TODO(Aayushi): We can't hardcode this. We need to find the LocalDB provider instance id. 
-                    // ProviderInstanceId: "b126b33f-114c-470f-a56f-e2ecf7b3ff77",
                     RenderTemplate: false,
                     RenderedTemplate: `select * from "${tablename}" limit 100`
                 },
@@ -400,7 +337,7 @@ const InitiateChat = () => {
                     SentBy: "Bot",
                     SentOn: new Date().getTime()
                 }
-                handleActionOutput(ChatObj, "Previewing the Table you uploaded.")
+                handleConversation(ChatObj?.MessageContent, 'system', 'action_output', ChatObj?.Id, false, undefined, undefined, "Previewing the Table you uploaded.");
             }
         })
     }
@@ -424,14 +361,17 @@ const InitiateChat = () => {
                                         <>
                                             <ChatLoader/>
                                         </>
-                                          
                                             :
                                             <Col sm={24}>
                                                 <MessageWrapper>
-                                                    <MessageOutputs setMessages={setMessages} setActionDefinitions={setActionDefinitions} messages={messages} executionId={executionId} loading={loadingMessage} showActionOutput={showActionOutput} handleDeepDive={handleDeepDive} actionDefinitions={actionDefinitions} handleConversation={handleConversation} tableInputs={tableInnputIds} tableProperties={tableProperties}/>
+                                                    <MessageOutputs 
+                                                    setMessages={setMessages} 
+                                                    messages={messages}
+                                                    loading={loadingMessage} 
+                                                    handleDeepDive={handleDeepDive}
+                                                    handleConversation={handleConversation}/>
                                                 </MessageWrapper>
                                                 <ChatFooter handleSend={handleConversation} loading={loadingMessage} handlefetch1000Rows={handlefetch1000Rows}/>
-            
                                             </Col>
                                     }
                                 </Row>

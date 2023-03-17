@@ -46,45 +46,14 @@ export const postProcessingFetchingMessage = (messages:any) => {
     let executionId = {}
     let table_input = {}
     let actionDefinition = {}
-
     // sort all chats according to Index Id
     let sortedArray =  sortAndMap(messages)
-
     let messagesArray:any[] = []
-
     sortedArray?.forEach((obj:any, index:number) => {
-
         let skipThisObj = false
-
-        let retreiveMessage:string = ''
-        if(obj?.MessageType === 'text' || obj?.MessageType === "fileInput") {
-            retreiveMessage = JSON.parse(obj?.MessageContent)?.text
-        } else if (obj?.MessageType === 'action_output') {
-            executionId =  {
-                ...executionId,
-                [obj?.Id]: JSON.parse(obj?.MessageContent)?.['executionId']
-            }
-        } else if (obj?.MessageType === "action_instance"){
-            actionDefinition = {
-                ...actionDefinition,
-                [obj?.Id]: JSON.parse(obj?.MessageContent)
-            }
-        } else if (obj?.MessageType === "table_input"){
-            // there were multiple occurences of messageType="table_input" was occuring so I am removing the duplicate ones which are not needed.
-            if(determineWhetherToSkipThisOne(obj, sortedArray?.[index+1])) {
-                table_input = {
-                    ...table_input,
-                    [obj?.Id]: JSON.parse(obj?.MessageContent)
-                }
-            } else {
-                skipThisObj = true
-            }
-            
-        } 
-
         let temp =  {
             id: obj?.Id,
-            message: retreiveMessage || obj?.MessageContent,
+            message: obj?.MessageType === 'text' ? JSON.parse(obj?.MessageContent)?.text : obj?.MessageContent,
             // if we dont get a sentBy then add previoous message time
             time: obj?.SentOn ? parseInt(obj?.SentOn) : index > 1 ? parseInt(sortedArray?.[index-1]?.sentOn): new Date().getTime(),
             from: obj?.MessageType === "table_input" || obj?.SentBy === "Bot" ? "system" : 'user',
@@ -93,10 +62,13 @@ export const postProcessingFetchingMessage = (messages:any) => {
             index: obj?.Index,
             messageFeedback: obj?.MessageFeedback
         }
+
+        if(obj?.MessageType === "action_instance" && JSON.parse(obj?.MessageContent)?.actionInstanceWithParameterInstances?.ParameterInstances?.length === 0) {
+            skipThisObj = true
+        }
+
         !skipThisObj && messagesArray.push(temp)
     })
-
-
     return { messagesArray:messagesArray , executionId, table_input, actionDefinition}
 }
 

@@ -20,7 +20,6 @@ interface ConfigureParametersPropsNew {
 
 export const isDefaultValueDefined = (parameterDefaultValue?: string) => {
     const defaultParameterInstance = JSON.parse(parameterDefaultValue || "{}") as ActionParameterInstance
-
     return !!defaultParameterInstance.ParameterValue || !!defaultParameterInstance.TableId || !!defaultParameterInstance.ColumnId
 }
 
@@ -60,9 +59,9 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
 
             <>
                 {
-                    pramameterBody.map(parameterDef => {
+                    pramameterBody.map((parameterDef, index) => {
                         return (
-                            <Space direction="vertical" size="large">
+                            <Space direction="vertical" size="large" key={index}>
                                 <ParameterDefinitionsConfigPlane
                                     parameterDefinitions={[parameterDef]}
                                     parameterInstances={props.ActionParameterInstances}
@@ -94,8 +93,8 @@ const ConfigureParametersNew = (props: ConfigureParametersPropsNew) => {
 
     return (
         <>
-            {getParamsToShowInGroups().map((groupParams) => (
-                <Space direction="vertical" size="large">
+            {getParamsToShowInGroups().map((groupParams, index) => (
+                <Space direction="vertical" size="large" key={index}>
                     <ParameterDefinitionsConfigPlane parameterDefinitions={groupParams}
                         parameterInstances={props.ActionParameterInstances}
                         parameterAdditionalConfigs={props.ParameterAdditionalConfig || []}

@@ -46,7 +46,7 @@ const startConversation = async (
                 ChatId: id,
                 SentBy: user,
                 MessageType: type ? type : "text",
-                MessageContent: JSON.stringify(message),
+                MessageContent: typeof message === 'string' ? message : JSON.stringify(message),
             },
             addBotResponseToChat: getResponseFromBot === undefined ? true : getResponseFromBot,
         },

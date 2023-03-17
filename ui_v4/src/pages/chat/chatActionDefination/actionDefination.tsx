@@ -14,10 +14,7 @@ const ActionDefination = ({ ActionDefinitionId, ExistingModels, onSubmit}: Match
 
     const onActionSubmit = (messageContent: ActionInstanceWithParameters) => {
         onSubmit?.(messageContent, MessageTypes.ACTION_INSTANCE)
-        
     }
-
-
     return (
         <ExecuteActionContextProvider>
             <ExecuteAction existingModels={ExistingModels} actionDefinitionId={ActionDefinitionId} showActionDescription={true} onSubmit={onActionSubmit} parentExecutionId={ExistingModels?.ParameterInstances?.[0]?.SourceExecutionId}/>

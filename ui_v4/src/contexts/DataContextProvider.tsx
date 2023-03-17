@@ -50,7 +50,8 @@ const reducer = (state: FileType, action: DataAction): FileType => {
 export const DataProvider = ({ children }: { children: React.ReactElement }) => {
   const [fileData, dispatch] = useReducer(reducer, initialState);
   const setFileData: SetDataContextType = (args: DataAction) => dispatch(args)
-
+  // const [fileData, dispatch] = useReducer(reducer, initialState);
+  // const setFileData: SetDataContextType = (args: DataAction) => dispatch(args)
 
   return (
     <DataContext.Provider value={fileData}>

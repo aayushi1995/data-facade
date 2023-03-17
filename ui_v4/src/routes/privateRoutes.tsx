@@ -19,7 +19,7 @@ const PrivateRoutes = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/data" element={<Data />} />
-                <Route path="/chats/:chatId" element={<ChatInitiate />} />
+                <Route path="/chats/:chatId" element={<ChatInitiate key={window.location.href}/>} />
                 <Route path="/playground" element={<Playground />} />
                 <Route path="/PlayGroundLand" element={<PlayGroundLand/>}/>
                 <Route path="/chatland" element={<ChatLandingPage />} />

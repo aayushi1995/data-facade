@@ -15,10 +15,6 @@ const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDe
 
         props?.handleConversation?.({text: action?.ActionDefinition?.model?.DisplayName}, "user", "text", undefined, undefined, undefined, false)
         props?.handleConversation?.(JSON.stringify(actionInstanceWithParameterInstances), 'system', 'action_instance', MessageId, true, true)
-        props?.setActionDefinitions?.((prevState:any) => ({
-            ...prevState,
-            [MessageId]: actionInstanceWithParameterInstances
-        }))
         
     }
 
