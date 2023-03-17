@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { ConfigProvider, Alert } from 'antd';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import Loader from '@components/Loader';
@@ -9,6 +9,7 @@ import AppLayout from './layouts';
 import PrivateRoutes from '@routes/privateRoutes';
 import PublicRoutes from '@routes/publicRoutes'
 import UploadTableContextProvider from './contexts/UploadTablePageContext';
+import { HomeChatContextProvider } from './contexts/HomeChatContext';
 
 
 
@@ -58,10 +59,12 @@ const App = ({ children = noop }) => {
     userSettings,
     ...restProps
   } = useAppInternal();
+  const [value, setValue] = useState('');
   return <ConfigProvider>
     {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}
-
+  
     <AppContext.Provider value={userSettings}>
+    <HomeChatContextProvider>
       <DataProvider>
       <UploadTableContextProvider>
         <ErrorBoundary>
@@ -69,6 +72,7 @@ const App = ({ children = noop }) => {
         </ErrorBoundary>
         </UploadTableContextProvider>
       </DataProvider>
+      </HomeChatContextProvider>
     </AppContext.Provider>
   </ConfigProvider>
 }

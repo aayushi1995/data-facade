@@ -1,7 +1,9 @@
+import { HomeChatContext } from "@/contexts/HomeChatContext"
 import { setLocalStorage } from "@/utils"
 import { getUniqueId } from "@/utils/getUniqueId"
 import { SearchOutlined } from "@ant-design/icons"
 import { Col, Input, Row } from "antd"
+import { useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { BtnText, ChatCreateButton, HeaderTextTypo, HeaderTypo, InputStyle } from "./LandingPageHeader.style"
 
@@ -14,10 +16,13 @@ interface LandingPageHeaderProps{
 }
 
 export const LandingPageHeader = (props:LandingPageHeaderProps)=>{
+    const { myValue ,setMyValue } = useContext(HomeChatContext);
+
     const InputBox = () => <Input prefix={<SearchOutlined style={{color:"#9CA3AF"}}/>} size="large" placeholder={props.IpPlaceholder} bordered={false} style={InputStyle} />
     const navigate = useNavigate()
     const onMenuItemClick = () => {
             if(props.HeaderPage=='chat'){
+                setMyValue('')
             let chatID = getUniqueId();
             setLocalStorage(`chat_${chatID}`, chatID)
             navigate(`/chats/${chatID}?tabKey=New Chats`);

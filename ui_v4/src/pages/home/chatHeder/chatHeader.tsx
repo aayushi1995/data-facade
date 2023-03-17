@@ -2,12 +2,16 @@ import dataManager from "@/api/dataManager"
 import { CommentBlankIcon } from "@/assets/icon.theme"
 import { RouteContext } from "@/components/BrowserTab"
 import AppContext from "@/contexts/AppContext"
+import { HomeChatContext } from '@/contexts/HomeChatContext';
 import { Chat } from "@/generated/entities/Entities"
 import { ChatInput, StyledChatInputWrapper, StyledSendIcon } from "@/pages/chat/ChatFooter/ChatFooter.styles"
+import { setLocalStorage } from "@/utils"
+import { getUniqueId } from "@/utils/getUniqueId"
 import Icon, { CloseOutlined } from "@ant-design/icons"
 import { Card, Col, Row } from "antd"
 import Paragraph from "antd/es/typography/Paragraph"
-import { useContext, useEffect, useState } from "react"
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { ChatCardContainer, ChatStyledCard, HeaderStyledTypo, HeaderWelcm, TextTypo1, TextTypo2 } from "./chatHeader.style"
 
 export const ChatHeader = ()=>{
@@ -26,6 +30,12 @@ export const ChatHeader = ()=>{
     const handleChatClick= (id:any, name?:string) => {
         handleNewTabWithId(id, name )
     }
+    const navigate = useNavigate()
+    const handleChatopen = ()=>{
+        let chatID = getUniqueId();
+        setLocalStorage(`chat_${chatID}`, chatID)
+        navigate(`/chats/${chatID}?tabKey=New Chats`);
+    }
     const ChatCard = ({handleChatClick, ...props}:any)=>{
         const [showCard,setShowCard] = useState<boolean>(true)
 
@@ -43,6 +53,18 @@ export const ChatHeader = ()=>{
             :<></>
         )
     }
+    let inputRef = useRef<HTMLInputElement>(null);
+    const handleKeyDown = (event: any) => {
+        if (event.key === 'Enter') {
+            handleChatopen()
+        }
+    }
+    const { myValue, setMyValue } = useContext(HomeChatContext);
+    const [chatMessage, setChatMessage] = useState<string | undefined>()
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setChatMessage(e.target.value)
+        setMyValue(e.target.value || "")
+    }
     const top3ChatHistory = chatHistory.slice(0,3)
     const appContext: any = useContext(AppContext)
     return(
@@ -50,8 +72,8 @@ export const ChatHeader = ()=>{
             <HeaderWelcm><HeaderStyledTypo>Welcome, {appContext.userName.split(' ')[0]}</HeaderStyledTypo></HeaderWelcm>
             <div>
             <StyledChatInputWrapper>
-            <ChatInput placeholder="Ask Datafacade anything..."/>
-            <StyledSendIcon  />
+            <ChatInput placeholder="Ask Datafacade anything..." type="text" onChange={handleChange} value={chatMessage} onKeyDown={handleKeyDown} ref={inputRef}/>
+            <StyledSendIcon  onClick={handleChatopen} onKeyDown={handleChatopen}/>
             </StyledChatInputWrapper>
             </div>
             <ChatCardContainer>

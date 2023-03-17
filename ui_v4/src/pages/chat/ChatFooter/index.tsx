@@ -14,6 +14,7 @@ import useTableUpload from '../tableUpload/useTableUpload';
 import { ChatAutocomplete, ConnectionButton, PopOverCard, StyledCardChartFooterWrapper, StyledChatInputWrapper, StyledSendIcon } from './ChatFooter.styles';
 import { ActionDefinitionDetail } from '@/generated/interfaces/Interfaces';
 import useFetchActionDefinitions from '@/hooks/actionDefinitions/useFetchActionDefinitions';
+import { HomeChatContext } from '@/contexts/HomeChatContext';
 
 const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     let inputRef = useRef<HTMLInputElement>(null);
@@ -140,9 +141,12 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
         </>
     )
 
- 
-
-
+    const { myValue ,setMyValue } = useContext(HomeChatContext);
+    useEffect(()=>{
+        if(myValue!=""){
+            handleSend({text: myValue}, 'user');
+        }
+    },[myValue])
     return (
         <Row>
             <Col span={24}>
