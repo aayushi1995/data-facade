@@ -11,7 +11,7 @@ import FetchActionExecutionDetails from "@/hooks/actionOutput/fetchActionExecuti
 
 
 const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
-    const {actionExecutionId, displayPostProcessed} = props
+    const {actionExecutionId, displayPostProcessed, onCompletion} = props
     const [actionExecutionTerminalState, setActionExecutionTerminalState] = React.useState(false)
     const [actionExecutionError, setActionExecutionError] = React.useState(false)
     const [intervalId, setIntervalId] = React.useState<any>()
@@ -49,6 +49,7 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
                 } else {
                     setActionExecutionError(false)
                 }
+                onCompletion?.(actionExecutionDetails, props.messageIndex)
             }
         }
     }

@@ -15,9 +15,11 @@ const ActionDefination = ({ ActionDefinitionId, ExistingModels, onSubmit}: Match
     const onActionSubmit = (messageContent: ActionInstanceWithParameters) => {
         onSubmit?.(messageContent, MessageTypes.ACTION_INSTANCE)
     }
+    const parentExecutionId = ExistingModels?.ParameterInstances?.find(pi => !!pi.SourceExecutionId)?.SourceExecutionId
+
     return (
         <ExecuteActionContextProvider>
-            <ExecuteAction existingModels={ExistingModels} actionDefinitionId={ActionDefinitionId} showActionDescription={true} onSubmit={onActionSubmit} parentExecutionId={ExistingModels?.ParameterInstances?.[0]?.SourceExecutionId}/>
+            <ExecuteAction existingModels={ExistingModels} actionDefinitionId={ActionDefinitionId} showActionDescription={true} onSubmit={onActionSubmit} parentExecutionId={parentExecutionId}/>
         </ExecuteActionContextProvider>
     )
 }

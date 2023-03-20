@@ -12,7 +12,7 @@ export interface FetchActionExecutionDetailsParams {
 const FetchActionExecutionDetails = (params: FetchActionExecutionDetailsParams) => {
     const { actionExecutionId, queryOptions } = params
 
-    const query = useQuery(["ActionExecutionDetail", actionExecutionId], () => Fetcher.fetchData("GET", "/actionExecutionDetail", {Id: actionExecutionId}), 
+    const query = useQuery(["ActionExecutionDetail", actionExecutionId], () => Fetcher.fetchData("GET", "/actionExecutionDetail", {Id: actionExecutionId}, actionExecutionId), 
     {
         ...queryOptions,
         enabled: (!!params.actionExecutionId) && queryOptions.enabled,

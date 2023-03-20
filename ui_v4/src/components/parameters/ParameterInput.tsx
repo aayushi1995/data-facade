@@ -274,13 +274,14 @@ export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
             onSelectedChannelIdChange?.(selectedChannelIds?.[0])
         },
     })
-
     return (
         <StyledSelect
             placeholder={props?.inputProps?.parameterName}
-            value={selectedChannels?.[0] || null}
+            value={selectedChannels?.[0]?.Id || null}
             onChange={(value) => {
-                onSelectedChannelChange(!!value ? [value] : undefined)
+                console.log(value)
+                const selectedChannel = avialableChannels.find(channel => channel.Id === value)
+                onSelectedChannelChange(!!selectedChannel ? [selectedChannel] : undefined)
             }}
         >
             {avialableChannels.map(value => <Select.Option key={value.Id} value={value.Id}>

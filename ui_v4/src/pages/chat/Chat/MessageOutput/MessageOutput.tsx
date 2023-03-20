@@ -4,7 +4,7 @@ import { ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces"
 import { labels } from "@/helpers/constant";
 import MessageTypes from "@/helpers/enums/MessageTypes";
 import React, { useEffect, useRef } from "react";
-import { useMutation } from "react-query";
+import { useMutation, UseMutationResult } from "react-query";
 import ActionDefination from "../../chatActionDefination/actionDefination";
 import ActionOutput from "../../chatActionOutput/actionOutput";
 import ChatBlock from "../../ChatBlock";
@@ -13,6 +13,7 @@ import ChatTableInput from "../../chatTableInput";
 import { SenderPreview } from "../../tableUpload/SenderPreview";
 import { LoaderContainer } from "../Chat.styles";
 import ChatLoader from "../ChatLoader";
+import MultipleTypeMessageComponent from "../chatMultipleMessages";
 import ChatTablePropeties from "../chatTableProperties";
 import ConfirmationInput from "../ConfirmationInput";
 import { ActionMessageContent, TablePropertiesContent } from "../ConfirmationInput/Chat.types";
@@ -20,7 +21,7 @@ import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
 
 
 
-const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  handleConversation,  handleDeepDive }: any ) => {
+const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  handleConversation,  handleDeepDive, setLoadingMessage }: any ) => {
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     
     useEffect(() => {
@@ -30,6 +31,27 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
     const handleActionInstanceSubmit = (messageContent: ActionInstanceWithParameters, type: string, id?:string, isExternalExecutionId?:string) => {           
             const messageObj = {actionInstanceWithParameterInstances: messageContent}
             handleConversation(JSON.stringify(messageObj), 'user', type, undefined, isExternalExecutionId)
+            // if(isExternalExecutionId) {
+            //     handleConversation(JSON.stringify(messageObj), 'user', type, undefined, isExternalExecutionId)
+            // } else {
+            //     updateMessageMutation.mutate({
+            //         filter: {Id: id},
+            //         newProperties: {MessageContent: JSON.stringify(messageObj)},
+            //         trigger: true
+            //     }, {
+            //         onSuccess: (data) => {
+            //             setMessages((messages: IChatMessage[]) => {
+            //                 const newMessages = messages.map((message: IChatMessage) => {
+            //                     if(message.id === id) {
+            //                         message.message = JSON.stringify(messageObj)
+            //                     }
+            //                     return message
+            //                 })
+            //                 return newMessages
+            //             })
+            //         }
+            //     })
+            // }
     }
 
     const onTableSelected = (tableId: string, prompt: string) => {
@@ -39,12 +61,13 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
     }
 
     const updateMessageMutation = useMutation("UpdateMessage", 
-        (config: {filter: Message, newProperties: Message}) => {
+        (config: {filter: Message, newProperties: Message, trigger?: boolean}) => {
             const fetchedDataManager = dataManager.getInstance as {patchData: Function}
-
+            
             return fetchedDataManager.patchData(labels.entities.Message, {
                 filter: config.filter,
-                newProperties: config.newProperties
+                newProperties: config.newProperties,
+                "addBotResponseToChat": config.trigger
             })
         }
     )
@@ -52,7 +75,8 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
     const hanldeLikeDislike = (value: boolean, id: string) => {
         updateMessageMutation.mutate({
             filter: {Id: id},
-            newProperties: {MessageFeedback: value}
+            newProperties: {MessageFeedback: value},
+            trigger: false
         }, {
             onSuccess: () => {
                 setMessages((messages: IChatMessage[]) => messages.map(message => message.id !== id ? message : {
@@ -74,7 +98,7 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
                 const latestMessage = tempArr?.find((message:IChatMessage)=> {
                     return message?.from === "user" && message?.type === "text"
                 }) || " "
-
+                console.log("latestMessage", latestMessage)
                return (<SmartChatBlock 
                     message={{...message,preMessage: `Here is the response generated: ${latestMessage?.message}`}} 
                     handleConversation={handleConversation} 
@@ -82,6 +106,9 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
                     handleActionInstanceSubmit={handleActionInstanceSubmit}
                     onTableSelected={onTableSelected}
                     hanldeLikeDislike={hanldeLikeDislike}
+                    updateMessageMutation={updateMessageMutation}
+                    setMessages={setMessages}
+                    setLoadingMessage={setLoadingMessage}
                 />)}
             )}
             <div ref={chatWrapperRef} />
@@ -100,9 +127,12 @@ interface ISmartBlock {
     handleDeepDive: (props:any) => void, 
     onTableSelected: (tableId: string, prompt: string) => void, 
     handleActionInstanceSubmit: (messageContent: ActionInstanceWithParameters, type: string, id?:string, isExternalExecutionId?:string) => void,  
-    hanldeLikeDislike: (value: boolean, id: string) => void
+    hanldeLikeDislike: (value: boolean, id: string) => void,
+    updateMessageMutation: UseMutationResult<unknown, unknown, {filter: Message, newProperties: Message}, unknown>,
+    setMessages: any,
+    setLoadingMessage: any
 }
-const SmartChatBlock = ({ message,handleConversation,  handleDeepDive, onTableSelected, handleActionInstanceSubmit,  hanldeLikeDislike}:ISmartBlock) => {
+const SmartChatBlock = ({ message,handleConversation,  handleDeepDive, onTableSelected, handleActionInstanceSubmit,  hanldeLikeDislike, updateMessageMutation, setMessages, setLoadingMessage}:ISmartBlock) => {
     const {id, type, ...props} = message
     
     return (
@@ -136,12 +166,14 @@ const SmartChatBlock = ({ message,handleConversation,  handleDeepDive, onTableSe
                 }
                 {type === "action_instance" && message?.message && JSON.parse(message?.message)?.actionInstanceWithParameterInstances?.ParameterInstances && <ActionDefination  
                 onSubmit={(messageContent:any, type:any) => props?.isExternalExecutionId ? handleActionInstanceSubmit(messageContent,type, id, props.isExternalExecutionId) : handleActionInstanceSubmit(messageContent,type, id)} 
-                ActionDefinitionId={(JSON.parse(message?.message) as ActionMessageContent)?.actionDefinitionDetail?.ActionDefinition?.model?.Id!} 
-                ExistingModels={(JSON.parse(message?.message) as ActionMessageContent)?.actionInstanceWithParameterInstances}/>}
+                ActionDefinitionId={(JSON.parse(message?.message) as ActionMessageContent)?.actionInstanceWithParameterInstances?.model?.DefinitionId!} 
+                ExistingModels={(JSON.parse(message?.message) as ActionMessageContent)?.actionInstanceWithParameterInstances}
+                
+                />}
 
                 {type === "table_input" && (JSON.parse(message?.message) && 
                     <>
-                    <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={"Looks like a new question. Please select a table to answer it better."}/>
+                    <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={`"${JSON.parse(message?.message)?.prompt}" Looks like a new question. Please select a table to answer it better.`}/>
                     <ChatTableInput onChange={onTableSelected} prompt={JSON.parse(message?.message)?.prompt} selectedTableId={JSON.parse(message?.message)?.tableId}/>
                     </>
                 )}
@@ -150,6 +182,14 @@ const SmartChatBlock = ({ message,handleConversation,  handleDeepDive, onTableSe
                     <ChatTablePropeties Tables={JSON.parse(message?.message)}/>
                     </>
                 )}
+                {type === MessageTypes.MULTIPLE && 
+                    <MultipleTypeMessageComponent messageContent={message?.message!} Id={id} handleDeepDive={handleDeepDive} 
+                        updateMessageMutation={updateMessageMutation}
+                        setMessages={setMessages}
+                        setLoadingMessage={setLoadingMessage}
+
+                    />
+                }
              
             </React.Fragment>
                 

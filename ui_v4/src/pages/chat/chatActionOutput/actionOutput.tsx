@@ -1,6 +1,7 @@
 
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper"
 import { ChatContext } from "@/contexts/ChatContext"
+import { ActionExecutionIncludeDefinitionInstanceDetailsResponse } from "@/generated/interfaces/Interfaces"
 import useActionExecutionDetails from "@/hooks/actionOutput/useActionExecutionDetails"
 import { ui_v3_url } from "@/settings/config"
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined, UserOutlined } from "@ant-design/icons"
@@ -35,7 +36,9 @@ export interface ActionExecutionDetailProps {
     preMessage?:string
     handleLikeDislike?: (value: boolean, messageId: string) => void,
     messageId?: string,
-    messageFeedback?: boolean
+    messageFeedback?: boolean,
+    onCompletion?: (actionExecutionDetails: ActionExecutionIncludeDefinitionInstanceDetailsResponse, messageIndex?: number) => void,
+    messageIndex?: number
 }
 
 

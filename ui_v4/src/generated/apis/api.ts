@@ -22,187 +22,187 @@ export class Fetcher {
 	Returns an ActionExecution along with it's ActionInstance and ActionDefinition
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/actionExecutionDetail", inputPayload: Entity.ActionExecution): Promise<CustomInterface.ActionExecutionIncludeDefinitionInstanceDetailsResponse[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/actionExecutionDetail", inputPayload: Entity.ActionExecution, requestId?: string): Promise<CustomInterface.ActionExecutionIncludeDefinitionInstanceDetailsResponse[]>; 
 	
 	/**
 	Returns data needed to render an Action Definition Card
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/allActionDefinitionCardView", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionCardViewResponse[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/allActionDefinitionCardView", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionDefinitionCardViewResponse[]>; 
 	
 	/**
 	Returns data needed to render an Application Card
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/applicationCardView", inputPayload: Entity.Application): Promise<CustomInterface.ApplicationCardViewResponse[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/applicationCardView", inputPayload: Entity.Application, requestId?: string): Promise<CustomInterface.ApplicationCardViewResponse[]>; 
 	
 	/**
 	Checks if execution logs are present on s3 or not
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/checkIfExecutionLogsPresent", inputPayload: Entity.ActionExecution): Promise<CustomInterface.ExecutionLogsStatus[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/checkIfExecutionLogsPresent", inputPayload: Entity.ActionExecution, requestId?: string): Promise<CustomInterface.ExecutionLogsStatus[]>; 
 	
 	/**
 	Creates and saves a copy of the action definition whose ID you send in the payload
 	*/
 	
-	static async fetchData(httpsVerb: "POST", endpoint: "/copyAndSaveActionDefinition", inputPayload: CustomInterface.CopyActionDefinitionPayload): Promise<Entity.ActionDefinition[]>; 
+	static async fetchData(httpsVerb: "POST", endpoint: "/copyAndSaveActionDefinition", inputPayload: CustomInterface.CopyActionDefinitionPayload, requestId?: string): Promise<Entity.ActionDefinition[]>; 
 	
 	/**
 	Returns data needed to render an Application Card
 	*/
 	
-	static async fetchData(httpsVerb: "POST", endpoint: "/createApplication", inputPayload: CustomInterface.CreateApplicationRequest): Promise<Entity.Application[]>; 
+	static async fetchData(httpsVerb: "POST", endpoint: "/createApplication", inputPayload: CustomInterface.CreateApplicationRequest, requestId?: string): Promise<Entity.Application[]>; 
 	
 	/**
 	Accepts data needed to create a ProviderInstance
 	*/
 	
-	static async fetchData(httpsVerb: "POST", endpoint: "/createProviderInstance", inputPayload: Entity.ProviderInstance): Promise<Entity.ProviderInstance>; 
+	static async fetchData(httpsVerb: "POST", endpoint: "/createProviderInstance", inputPayload: Entity.ProviderInstance, requestId?: string): Promise<Entity.ProviderInstance>; 
 	
 	/**
 	Returns Provider Definition on which actions can be configured
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/filterProviderDefinitionByActionRunnable", inputPayload: Entity.ProviderDefinition): Promise<Entity.ProviderDefinition[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/filterProviderDefinitionByActionRunnable", inputPayload: Entity.ProviderDefinition, requestId?: string): Promise<Entity.ProviderDefinition[]>; 
 	
 	/**
 	Returns Provider Instance on which actions can be configured
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/filterProviderInstanceByActionRunnable", inputPayload: Entity.ProviderInstance): Promise<Entity.ProviderInstance[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/filterProviderInstanceByActionRunnable", inputPayload: Entity.ProviderInstance, requestId?: string): Promise<Entity.ProviderInstance[]>; 
 	
 	/**
 	Gives you the details of an action definition. Details include the definition tags, it's template and parameters all with their respective tags
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getActionDefinitionDetails", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionDetail[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getActionDefinitionDetails", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionDefinitionDetail[]>; 
 	
 	/**
 	Gives you the dependencies of any action
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getActionDependencies", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDependency[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getActionDependencies", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionDependency[]>; 
 	
 	/**
 	Gives you the the action instances for the given filter
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getActionInstances", inputPayload: Entity.ActionInstance): Promise<Entity.ActionInstance[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getActionInstances", inputPayload: Entity.ActionInstance, requestId?: string): Promise<Entity.ActionInstance[]>; 
 	
 	/**
 	Gives you the the action instances for the given filter along with it's details
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getActionInstancesDetail", inputPayload: Entity.ActionInstance): Promise<CustomInterface.ActionInstanceDetails[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getActionInstancesDetail", inputPayload: Entity.ActionInstance, requestId?: string): Promise<CustomInterface.ActionInstanceDetails[]>; 
 	
 	/**
 	Gives you the details of an application. It's actions, workflows etc.
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getApplicationDetails", inputPayload: Entity.Application): Promise<CustomInterface.ApplicationDetails[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getApplicationDetails", inputPayload: Entity.Application, requestId?: string): Promise<CustomInterface.ApplicationDetails[]>; 
 	
 	/**
 	Gives you the applications based on filter
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getApplications", inputPayload: Entity.Application): Promise<Entity.Application[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getApplications", inputPayload: Entity.Application, requestId?: string): Promise<Entity.Application[]>; 
 	
 	/**
 	Gives you the chart details for the filter provided
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getChartData", inputPayload: Entity.Chart): Promise<CustomInterface.ChartWithData[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getChartData", inputPayload: Entity.Chart, requestId?: string): Promise<CustomInterface.ChartWithData[]>; 
 	
 	/**
 	Gives you the list of chart with it's data and layout for a given dashboard
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getChartsForDashboard", inputPayload: Entity.Dashboard): Promise<CustomInterface.DashboardChartWithData[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getChartsForDashboard", inputPayload: Entity.Dashboard, requestId?: string): Promise<CustomInterface.DashboardChartWithData[]>; 
 	
 	/**
 	Gives you the dashboards based on filter
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboards", inputPayload: Entity.Dashboard): Promise<Entity.Dashboard[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboards", inputPayload: Entity.Dashboard, requestId?: string): Promise<Entity.Dashboard[]>; 
 	
 	/**
 	Gives you the details of a dashboard for the given filter
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboardDetails", inputPayload: Entity.Dashboard): Promise<CustomInterface.DashboardDetails[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboardDetails", inputPayload: Entity.Dashboard, requestId?: string): Promise<CustomInterface.DashboardDetails[]>; 
 	
 	/**
 	Gives you the list of dashboards for a chart. Filter should always point to a unique chart for this API
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboardForChart", inputPayload: Entity.Chart): Promise<Entity.Dashboard[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getDashboardForChart", inputPayload: Entity.Chart, requestId?: string): Promise<Entity.Dashboard[]>; 
 	
 	/**
 	Gives you the details of the associated deep dive actions of an action definition
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getDeepDiveActions", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionDetail[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getDeepDiveActions", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionDefinitionDetail[]>; 
 	
 	/**
 	Gives you the the action definitions of the types that should be visible to the user.
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getFilteredActionDefinitions", inputPayload: Entity.ActionDefinition): Promise<Entity.ActionDefinition[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getFilteredActionDefinitions", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<Entity.ActionDefinition[]>; 
 	
 	/**
 	Gives you the the action instances that should be visible to the user.
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getFilteredActionInstances", inputPayload: Entity.ActionInstance): Promise<Entity.ActionInstance[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getFilteredActionInstances", inputPayload: Entity.ActionInstance, requestId?: string): Promise<Entity.ActionInstance[]>; 
 	
 	/**
 	Gives you the the past runs of the action definition
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getPastRunsForActions", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionRun[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getPastRunsForActions", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionRun[]>; 
 	
 	/**
 	Gives you the list of possible auto flows that can run on this table
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getPossibleAutoFlowsList", inputPayload: Entity.TableProperties): Promise<CustomInterface.PossibleAutoFlows[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getPossibleAutoFlowsList", inputPayload: Entity.TableProperties, requestId?: string): Promise<CustomInterface.PossibleAutoFlows[]>; 
 	
 	/**
 	Gives you the number of runs on any provider in the last five days. Also gives you the list of provider parameter instances.
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getProviderHistory", inputPayload: Entity.ProviderInstance): Promise<CustomInterface.ProviderHistoryStat[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getProviderHistory", inputPayload: Entity.ProviderInstance, requestId?: string): Promise<CustomInterface.ProviderHistoryStat[]>; 
 	
 	/**
 	Returns data related to a ProviderInstance
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getProviderInstance", inputPayload: Entity.ProviderInstance): Promise<CustomInterface.ProviderInformation[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getProviderInstance", inputPayload: Entity.ProviderInstance, requestId?: string): Promise<CustomInterface.ProviderInformation[]>; 
 	
 	/**
 	Gives you the list of action instances which are recurring along with it's details.
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getRecurringActionInstanceDetails", inputPayload: Entity.ActionInstance): Promise<CustomInterface.RecurringActionInstanceDetails[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getRecurringActionInstanceDetails", inputPayload: Entity.ActionInstance, requestId?: string): Promise<CustomInterface.RecurringActionInstanceDetails[]>; 
 	
 	/**
 	Gives you the list of tables along with it's columns for the given filter
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getTableWithColumns", inputPayload: Entity.TableProperties): Promise<CustomInterface.TablePropertiesWithColumns[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getTableWithColumns", inputPayload: Entity.TableProperties, requestId?: string): Promise<CustomInterface.TablePropertiesWithColumns[]>; 
 	
 	/**
 	Gives you the details of all tags along with it's subsidiaries.
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getTagDetailsWithSubsidiary", inputPayload: Entity.Tag): Promise<CustomInterface.TagDetails[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getTagDetailsWithSubsidiary", inputPayload: Entity.Tag, requestId?: string): Promise<CustomInterface.TagDetails[]>; 
 	
 	/**
 	Gives you the details of a web app along with all its components
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getWebAppDetails", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.WebAppDetails[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getWebAppDetails", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.WebAppDetails[]>; 
 	
 	/**
 	For a single workflow, this endpoint gives you the list of child Action Instances and it's parameters.
@@ -210,89 +210,89 @@ export class Fetcher {
 	The response will be a list of interface WorkflowActionInstances
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/getWorkflowActionInstances", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionInstanceWithParameters[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/getWorkflowActionInstances", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionInstanceWithParameters[]>; 
 	
 	/**
 	Returns data needed to render an Action Definition Card
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/orgActionDefinitionCardView", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionCardViewResponse[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/orgActionDefinitionCardView", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionDefinitionCardViewResponse[]>; 
 	
 	/**
 	Returns data needed to render an Action Instance Card
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/orgActionInstanceCardView", inputPayload: Entity.ActionInstance): Promise<CustomInterface.ActionInstanceCardViewResponse[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/orgActionInstanceCardView", inputPayload: Entity.ActionInstance, requestId?: string): Promise<CustomInterface.ActionInstanceCardViewResponse[]>; 
 	
 	/**
 	Returns data needed to render an Action Definition Card
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/pinnedActionDefinitionCardView", inputPayload: Entity.ActionDefinition): Promise<CustomInterface.ActionDefinitionCardViewResponse[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/pinnedActionDefinitionCardView", inputPayload: Entity.ActionDefinition, requestId?: string): Promise<CustomInterface.ActionDefinitionCardViewResponse[]>; 
 	
 	/**
 	Returns data needed to render an Action Instance Card
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/pinnedActionInstanceCardView", inputPayload: Entity.ActionInstance): Promise<CustomInterface.ActionInstanceCardViewResponse[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/pinnedActionInstanceCardView", inputPayload: Entity.ActionInstance, requestId?: string): Promise<CustomInterface.ActionInstanceCardViewResponse[]>; 
 	
 	/**
 	Returns Information needed to render the card for a Provider Instance
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/providerCardView", inputPayload: Entity.ProviderInstance): Promise<CustomInterface.ProviderCardView[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/providerCardView", inputPayload: Entity.ProviderInstance, requestId?: string): Promise<CustomInterface.ProviderCardView[]>; 
 	
 	/**
 	Returns data related to a ProviderDefinition needed to create a ProviderInstance
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/providerDefinitionDetail", inputPayload: Entity.ProviderDefinition): Promise<CustomInterface.ProviderDefinitionDetail[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/providerDefinitionDetail", inputPayload: Entity.ProviderDefinition, requestId?: string): Promise<CustomInterface.ProviderDefinitionDetail[]>; 
 	
 	/**
 	Saves the action instance along with it's parameters. Also creates an action execution by default after it's creation is complete
 	*/
 	
-	static async fetchData(httpsVerb: "POST", endpoint: "/saveInstanceWithParameters", inputPayload: CustomInterface.ActionInstanceWithParameters): Promise<Entity.ActionInstance[]>; 
+	static async fetchData(httpsVerb: "POST", endpoint: "/saveInstanceWithParameters", inputPayload: CustomInterface.ActionInstanceWithParameters, requestId?: string): Promise<Entity.ActionInstance[]>; 
 	
 	/**
 	Creates a dashboard for all the charts returned by an execution
 	*/
 	
-	static async fetchData(httpsVerb: "POST", endpoint: "/saveDashboardForExecutionId", inputPayload: CustomInterface.SaveDashboardForExecution): Promise<Entity.Dashboard[]>; 
+	static async fetchData(httpsVerb: "POST", endpoint: "/saveDashboardForExecutionId", inputPayload: CustomInterface.SaveDashboardForExecution, requestId?: string): Promise<Entity.Dashboard[]>; 
 	
 	/**
 	Updates the action definition properties. You can also send the updated template in the 'new' property of the request.
 	It will edit the text of aciton template along with the action definition. You can add new parameters but not edit existing parameters using this API
 	*/
 	
-	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateActionDefinitionWithTemplateAndParameters", inputPayload: CustomInterface.UpdateActionDefinitionWithTemplate): Promise<Entity.ActionDefinition[]>; 
+	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateActionDefinitionWithTemplateAndParameters", inputPayload: CustomInterface.UpdateActionDefinitionWithTemplate, requestId?: string): Promise<Entity.ActionDefinition[]>; 
 	
 	/**
 	Retrieves an action instance based on the filter and updates it with new properties
 	*/
 	
-	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateActionInstance", inputPayload: CustomInterface.UpdateRequest<Entity.ActionInstance>): Promise<Entity.ActionInstance[]>; 
+	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateActionInstance", inputPayload: CustomInterface.UpdateRequest<Entity.ActionInstance>, requestId?: string): Promise<Entity.ActionInstance[]>; 
 	
 	/**
 	Retrieves a card based on the filter and updates it with new properties
 	*/
 	
-	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateChart", inputPayload: CustomInterface.UpdateRequest<Entity.Chart>): Promise<Entity.Chart[]>; 
+	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateChart", inputPayload: CustomInterface.UpdateRequest<Entity.Chart>, requestId?: string): Promise<Entity.Chart[]>; 
 	
 	/**
 	Accepts data needed to create a ProviderInstance
 	*/
 	
-	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateProviderInstance", inputPayload: CustomInterface.UpdateRequest<Entity.ProviderInstance>): Promise<Entity.ProviderInstance>; 
+	static async fetchData(httpsVerb: "PATCH", endpoint: "/updateProviderInstance", inputPayload: CustomInterface.UpdateRequest<Entity.ProviderInstance>, requestId?: string): Promise<Entity.ProviderInstance>; 
 	
 	/**
 	Gives details about child action executions of a workflow
 	*/
 	
-	static async fetchData(httpsVerb: "GET", endpoint: "/workflowActionExecutionsStatus", inputPayload: Entity.ActionExecution): Promise<CustomInterface.WorkflowActionExecutions[]>; 
+	static async fetchData(httpsVerb: "GET", endpoint: "/workflowActionExecutionsStatus", inputPayload: Entity.ActionExecution, requestId?: string): Promise<CustomInterface.WorkflowActionExecutions[]>; 
 	
     
-    static async fetchData(httpsVerb: HttpsVerb, endpoint: string, inputPayload: any): Promise<any> {
+    static async fetchData(httpsVerb: HttpsVerb, endpoint: string, inputPayload: any, requestId?: string): Promise<any> {
         const type = httpsVerb === 'GET' ? 'POST': httpsVerb
         const header = {
 			method: type,
@@ -300,7 +300,7 @@ export class Fetcher {
 				'Accept': 'application/json',
 				'Content-type': 'application/json',
 				'Authorization': `Bearer ${userSettingsSingleton.token}`,
-				'RequestId': v4()
+				'RequestId': requestId || v4()
 			},
 			body: JSON.stringify(inputPayload)
 		}

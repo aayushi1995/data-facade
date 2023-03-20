@@ -254,6 +254,10 @@ const InitiateChat = () => {
                 return handleConversation(messageBody?.MessageContent, 'system', MessageTypes.TABLE_PROPERTIES, messageBody?.Id)
                 // return handleTableProperties(messageBody)
             }
+
+            case MessageTypes.MULTIPLE : {
+                return handleConversation(messageBody?.MessageContent, 'system', MessageTypes.MULTIPLE, messageBody?.Id)
+            }
             default: break;
             }
        
@@ -365,6 +369,7 @@ const InitiateChat = () => {
                                             <Col sm={24}>
                                                 <MessageWrapper>
                                                     <MessageOutputs 
+                                                    setLoadingMessage={setLoadingMessage}
                                                     setMessages={setMessages} 
                                                     messages={messages}
                                                     loading={loadingMessage} 
