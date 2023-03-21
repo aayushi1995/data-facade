@@ -22,8 +22,10 @@ const FailedActionOutput = (props: ResolvedActionExecutionProps) => {
     const [errorDescription, setErrorDescription] = React.useState<string | undefined>()
     const { actionExecutionDetail } = props;
     const actionOutput = JSON.parse(actionExecutionDetail?.ActionExecution?.Output || "{}")
+    const buttonRef = React.useRef<HTMLButtonElement>(null)
     const failureMessage = getFailureMessage(actionOutput)
     const script = actionOutput?.script
+    const traceId = actionOutput?.traceId
 
     const fetchErrorDescriptionMutation = useMutation("GetErrorDescription", 
         (config: {errorMessage: string}) => {
@@ -42,7 +44,14 @@ const FailedActionOutput = (props: ResolvedActionExecutionProps) => {
                 setErrorDescription(casetedData.ErrorDescription)
             }
         })
+        
     }
+
+    React.useEffect(() => {
+        if(buttonRef.current) {
+            buttonRef.current.click()
+        }
+    }, [props])
 
     return (
         <Space direction="vertical" style={{width:'100%'}}>
@@ -55,15 +64,18 @@ const FailedActionOutput = (props: ResolvedActionExecutionProps) => {
                 </Card>
             }
             <Card size="small" title="Error">
-                <Typography.Text type="danger" code>
+                <Typography.Text style={{whiteSpace: 'pre-line'}} code type="danger">
                     {failureMessage as string}
                 </Typography.Text>
+                <Typography>
+                    Request Id: {traceId || "Not found"}
+                </Typography>
             </Card>
             {!!errorDescription ? <Typography>
                 {errorDescription}
             </Typography> : 
             <>
-                {fetchErrorDescriptionMutation.isLoading ? <>Loading...</> : <Button onClick={onGetErrorDescription}>
+                {fetchErrorDescriptionMutation.isLoading ? <>Explaining Error...</> : <Button ref={buttonRef} onClick={onGetErrorDescription}>
                     Explain this error
                 </Button>}
                 
