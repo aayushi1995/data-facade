@@ -5,7 +5,7 @@ import { MessageTypeAndContent } from "../chatMultipleMessages";
 
 export interface ActionMessageContent {actionInstanceWithParameterInstances: ActionInstanceWithParameters, actionDefinitionDetail?: ActionDefinitionDetail}
 
-export interface TableInputContent {tableId?: string, prompt: string, tableType?: "table" | "execution"}
+export interface TableInputContent {tableId?: string[], prompt: string, tableType?: "table" | "execution"}
 
 export interface ActionOutputContent {executionId: string}
 

@@ -39,7 +39,7 @@ const MultipleTypeMessageComponent = (props: MultipleTypeMessageComponentProps) 
                     const tableInputContent = parsedMessageContent.messages[indexToProcess].messageContent as TableInputContent
                     const newTableInput: TableInputContent = {
                         ...tableInputContent,
-                        tableId: actionExecutionDetails.ActionExecution?.Id,
+                        tableId: [actionExecutionDetails.ActionExecution?.Id || "NA"],
                         tableType: "execution"
                     }
                     parsedMessageContent.messages[indexToProcess].messageContent = newTableInput
@@ -76,7 +76,7 @@ const MultipleTypeMessageComponent = (props: MultipleTypeMessageComponentProps) 
         })
     }
 
-    const handleTableChange = (tableId: string) => {
+    const handleTableChange = (tableIds: string[]) => {
         const indexToProcess = (parsedMessageContent.processedIndex || 0)
         if(indexToProcess < parsedMessageContent.messages.length) {
             if(parsedMessageContent.messages[indexToProcess].messageType === MessageTypes.TABLE_INPUT) {
@@ -84,7 +84,7 @@ const MultipleTypeMessageComponent = (props: MultipleTypeMessageComponentProps) 
                 
                 const newTableInput: TableInputContent = {
                     ...tableInputContent,
-                    tableId: tableId
+                    tableId: tableIds
                 }
                 parsedMessageContent.messages[indexToProcess].messageContent = newTableInput
             }
@@ -129,7 +129,7 @@ const MultipleTypeMessageComponent = (props: MultipleTypeMessageComponentProps) 
                             <ChatBlock id={index} key={index + 'chat'} {...props} type={'text'} message={`"${parsedMessage.prompt}" Looks like a new question. Please select a table to answer it better.`}/>
                             <ChatTableInput
                             prompt={parsedMessage.prompt}
-                            selectedTableId={parsedMessage?.tableId}
+                            selectedTableIds={parsedMessage?.tableId}
                             onChange={handleTableChange}
                         />  
                     </div>

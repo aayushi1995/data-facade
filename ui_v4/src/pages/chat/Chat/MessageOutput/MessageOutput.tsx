@@ -54,9 +54,10 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
             // }
     }
 
-    const onTableSelected = (tableId: string, prompt: string) => {
-        if(!!tableId && tableId !== "") {
-            handleConversation({tableId: tableId, prompt: prompt}, 'user', 'table_input', undefined, true)
+    const onTableSelected = (tableIds: string[], prompt: string) => {
+        console.log(tableIds)
+        if(!!tableIds && tableIds.length > 0) {
+            handleConversation({tableId: tableIds, prompt: prompt}, 'user', 'table_input', undefined, true)
         }
     }
 
@@ -124,7 +125,7 @@ interface ISmartBlock {
     message: IChatMessage,
     handleConversation: (props:any) => void,  
     handleDeepDive: (props:any) => void, 
-    onTableSelected: (tableId: string, prompt: string) => void, 
+    onTableSelected: (tableIds: string[], prompt: string) => void, 
     handleActionInstanceSubmit: (messageContent: ActionInstanceWithParameters, type: string, id?:string, isExternalExecutionId?:string) => void,  
     hanldeLikeDislike: (value: boolean, id: string) => void,
     updateMessageMutation: UseMutationResult<unknown, unknown, {filter: Message, newProperties: Message}, unknown>,
@@ -173,7 +174,7 @@ const SmartChatBlock = ({ message,handleConversation,  handleDeepDive, onTableSe
                 {type === "table_input" && (JSON.parse(message?.message) && 
                     <>
                     <ChatBlock id={id} key={id + 'chat'} {...props} type={'text'} message={`"${JSON.parse(message?.message)?.prompt}" Looks like a new question. Please select a table to answer it better.`}/>
-                    <ChatTableInput onChange={onTableSelected} prompt={JSON.parse(message?.message)?.prompt} selectedTableId={JSON.parse(message?.message)?.tableId}/>
+                    <ChatTableInput onChange={onTableSelected} prompt={JSON.parse(message?.message)?.prompt} selectedTableIds={JSON.parse(message?.message)?.tableId}/>
                     </>
                 )}
                 {type === MessageTypes.TABLE_PROPERTIES && (JSON.parse(message?.message) as TablePropertiesContent && 

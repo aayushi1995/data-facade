@@ -169,6 +169,19 @@ export interface SlackChannelMultipleInput {
     }
 }
 
+export interface TableListParameterInput {
+    parameterType: "TABLE_LIST",
+    parameterId?: string,
+    inputProps: {
+        parameterName: string,
+        selectedTableFilters?: TableProperties[],
+        availableTableFilter?: TableProperties,
+        onChange: (newTable?: TableProperties[]) => void,
+        parameterDefinitionId?: string,
+        parentExecutionId?: string
+    }
+}
+
 export type ParameterInputProps = StringParameterInput
     | IntParameterInput
     | FloatParameterInput
@@ -182,6 +195,7 @@ export type ParameterInputProps = StringParameterInput
     | UpstreamActionWebAppInput
     | SlackChannelSingleInput
     | SlackChannelMultipleInput
+    | TableListParameterInput
 
 
 export type ActionParameterColumnAdditionalConfig = {
@@ -212,6 +226,8 @@ const getParameterInputField = (props: ParameterInputProps) => {
         case "OPTION_SET_MULTIPLE": return <OptionSetMultipleInput {...props} />
         case "SLACK_CHANNEL_SINGLE": return <SlackChannelSingle {...props} />
         case "SLACK_CHANNEL_MULTIPLE": return <SlackChannelMultiple {...props} />
+        case "TABLE_LIST": return <TableListInput {...props} />
+        // case "TA"
         default: return <NoInput />
     }
 }
@@ -551,6 +567,97 @@ const BooleanInput = (props: BooleanParameterInput) => {
     )
 }
 
+const TableListInput = (props: TableListParameterInput) => {
+    const { selectedTableFilters, onChange, parameterDefinitionId } = props.inputProps
+    const getTableSelectionInfo: (availableTables?: TableProperties[], selectedTableFilters?: TableProperties[]) => { AvailableTables: TableProperties[], SelectedTables?: TableProperties[] } = (availableTables?: TableProperties[], selectedTableFilters?: TableProperties[]) => {
+        const selectedTables: TableProperties[] = []
+        const selectedTableIds: string[] = []
+        const selectedTableNames: string[] = []
+        selectedTableFilters?.forEach(table => {
+            const tableById = availableTables?.find(table => table?.Id === table?.Id)
+            const tableByName = availableTables?.find(table => table?.UniqueName === table?.UniqueName)
+            if (!!props.inputProps.parentExecutionId) {
+          
+                const upstreamTable: TableProperties = {
+                    UniqueName: "Previous Execution",
+                    Id: props.inputProps.parentExecutionId,
+                    ProviderInstanceName: "Upstream Action",
+                    TableType: "UpstreamExecution",
+                    DisplayName:"Previous Execution"
+                }
+                if (!availableTables?.find(table => table.Id === props.inputProps.parentExecutionId)) {
+                    (availableTables || []).push(upstreamTable)
+                }
+                if (selectedTableFilters?.[0].Id === props.inputProps.parentExecutionId) {
+                    selectedTables.push(upstreamTable)
+                }
+            }
+            if (tableById !== undefined) {
+                selectedTables.push(tableById)
+                selectedTableIds.push(tableById.Id || "ID NA")
+            } else if (tableByName !== undefined) {
+                selectedTables.push(tableByName)
+                selectedTableNames.push(tableByName.UniqueName || "NA")
+            } else if (table?.UniqueName !== undefined && table?.UniqueName?.length > 0) {
+                selectedTables.push(table)
+                selectedTableNames.push(table.UniqueName)
+            }
+        })
+        const filteredAvailableTables = availableTables?.filter(table => !selectedTableIds.includes(table.Id || "ID NA") && !selectedTableNames.includes(table.UniqueName || "NA"))
+        return {
+            AvailableTables: filteredAvailableTables || [],
+            SelectedTables: selectedTables
+        }
+    }
+
+    const handleTablesReceived = (tables: TableProperties[]) => {
+        if (!!tables) {
+            const { SelectedTables } = getTableSelectionInfo(tables, selectedTableFilters)
+            if (selectedTableFilters !== undefined) {
+                if (SelectedTables !== undefined) {
+                    onChange(SelectedTables)
+                }
+            }
+        }
+    }
+
+    const { tables, loading } = useTables({ tableFilter: props?.inputProps?.availableTableFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived })
+
+    const { AvailableTables, SelectedTables } = getTableSelectionInfo(tables, selectedTableFilters)
+
+    return (
+        <StyledSelect loading={loading} placeholder="Table name"
+        style={{width: "100%"}}
+            showSearch
+            mode="multiple"
+            optionFilterProp="children"
+            defaultValue={SelectedTables?.map(table => table.Id)}
+            onChange={(value: any) => {
+
+                console.log(value)
+                if (value === "NA") {
+                    const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
+                    onChange([table])
+                } else {
+                    const tables: TableProperties[] = value?.map((tableId: string) => AvailableTables?.find(table => table.Id === tableId))
+                    onChange(!!value ? [...tables] : undefined)
+                }
+                value = { SelectedTables }
+
+            }}
+        >
+            {
+                tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
+                    {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}
+                </Select.Option>)
+            }
+        </StyledSelect>
+    )
+
+
+}
+    
+
 const TableInput = (props: TableParameterInput) => {
 
     const { selectedTableFilter, onChange, parameterDefinitionId } = props.inputProps
@@ -631,6 +738,7 @@ const TableInput = (props: TableParameterInput) => {
                 } else {
                     const table = AvailableTables?.find(table => table.Id === value)
                     onChange(!!value ? { ...table } : undefined)
+                    console.log(table)
                 }
                 value = { SelectedTable }
 
