@@ -112,6 +112,7 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
                 const latestMessage = tempArr?.find((message:IChatMessage)=> {
                     return message?.from === "user" && message?.type === "text"
                 }) || " "
+                
                return (<SmartChatBlock 
                     message={{...message, preMessage: message?.preMessage || `Here is the response generated: ${latestMessage?.message}`}} 
                     handleConversation={handleConversation} 
