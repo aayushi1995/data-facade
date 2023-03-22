@@ -7,7 +7,7 @@ export const FDSEndpoint =
     // : "http://localhost:9000/v1"
 
 export const ui_v3_url = process.env.REACT_APP_FDS_ENDPOINT !== undefined ? 
-    "https://stage.datafacade.io" : "http://localhost:3000"
+FDSEndpoint.slice(0, -7) : "https://stage.datafacade.io/fds/v1".slice(0, -7);
 
 export const auth0ClientId =
   process.env.REACT_APP_AUTH0_CLIENT_ID !== undefined
