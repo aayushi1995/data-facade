@@ -7,7 +7,8 @@ export interface IChatMessage {
     type?: "text" | "action_output" | "error" | "table_upload" | any;
     isExternalExecutionId?: string
     preMessage?: string,
-    messageFeedback?: boolean
+    messageFeedback?: boolean,
+    chat_id?:string
 }
 
 export interface IChatResponse {

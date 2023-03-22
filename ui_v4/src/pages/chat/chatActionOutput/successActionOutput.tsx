@@ -1,3 +1,4 @@
+import Loader from "@/components/Loader";
 import { ReactQueryWrapper } from "@/components/ReactQueryWrapper/ReactQueryWrapper";
 import { SetChatContext } from "@/contexts/ChatContext/index";
 import { ActionDefinition, ActionExecution, ActionInstance } from "@/generated/entities/Entities";
@@ -5,8 +6,8 @@ import ActionDefinitionPresentationFormat from "@/helpers/enums/ActionDefinition
 import { useActionExecutionParsedOutput } from "@/hooks/actionOutput/useActionExecutionParsedOutput";
 import { useDownloadExecutionOutputFromS3 } from "@/hooks/actionOutput/useDownloadExecutionOutputFromS3";
 import { useGetPreSignedUrlForExecutionOutput } from "@/hooks/actionOutput/useGetPreSignedUrlForExecutionOutput";
-import { DownloadOutlined } from "@ant-design/icons";
-import { Alert, Button } from "antd";
+import { DownloadOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Alert, Button, Spin } from "antd";
 import React, { useContext, useEffect } from "react";
 import OutputComponent from "./TableChartComponent/OutputComponent";
 
@@ -145,7 +146,15 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         )
     }
 
-    const downloadButton = downloadExecutionOutputFromS3.isLoading && (<Button type="link" onClick={handleDownloadResult} icon={<DownloadOutlined />} />)
+    // const downloadButton = downloadExecutionOutputFromS3.isLoading && (<Button type="link" onClick={handleDownloadResult} icon={<DownloadOutlined />} />)
+    const downloadButton = downloadExecutionOutputFromS3.isLoading ? (
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 14 }} spin />} />
+    ) : (
+        <Button onClick={handleDownloadResult} icon={<DownloadOutlined />}>
+           Download 
+        </Button>
+    )
+    console.log(downloadButton)
 
     if (isTableOutputSuccessfulFormat(TableOutput)) {
         const preview: TablePreview = JSON.parse(TableOutput.preview)
@@ -153,7 +162,11 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
         const dataGridRows = (preview?.data || []).map((row, index) => ({ ...row, key: row?.Id || index }))
 
         return (
-           <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName} actionexecution={ActionExecution} time={props?.time}/>
+            <>
+            
+            <OutputComponent dataGridColumns={dataGridColumns} dataGridRows={dataGridRows} title={props.title} tableName={ActionInstance?.ResultTableName} actionexecution={ActionExecution} time={props?.time} downloadButton={downloadButton}/>
+
+            </>
         )
     } else if (isTableOutputSizeExceededErrorFormat(TableOutput)) {
         const errorType: string = TableOutput.errorType

@@ -1,6 +1,7 @@
 import Avatar from 'antd/es/avatar'
 import { FlexBox } from '../ChatFooter/ChatFooter.styles'
 import { ChatBlockWrapper, ChatMetaData, ChatStyles, StyledTime, StyledUserName } from './ChatBlock.styles'
+import {ReactComponent as WarningIcon} from '@assets/icons/chat_warning.svg';
 
 const ChatBlock = ({message, id, type, ...props}:any) => {
    
@@ -20,10 +21,11 @@ const ChatBlock = ({message, id, type, ...props}:any) => {
         <ChatBlockWrapper {...props}>
             <FlexBox style={{alignItems: 'flex-end'}}>
                 <div>
-                    {(type=='recommended_actions' || type=='confirmation')?<></>:
+                    {(type=='recommended_actions' || type=='confirmation' || type == "error")?<></>:
                         <ChatMetaData {...props}><StyledUserName>{props?.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(Number.isNaN(props.time) ? new Date() : props.time)}</StyledTime></ChatMetaData>
                     }
-                    <ChatStyles {...props} key={id} type={type}>{props?.children === undefined ? message : props?.children}</ChatStyles>
+                    
+                    <ChatStyles {...props} key={id} type={type}>{type === "error" && <WarningIcon width="50"/>} {props?.children === undefined ? message : props?.children}</ChatStyles>
                 </div>
                 <div style={{marginLeft: '10px'}}>
                     {props.from === "user" && <Avatar style={{ backgroundColor: '#0770E3', verticalAlign: 'middle' }} size="default" gap={5}>

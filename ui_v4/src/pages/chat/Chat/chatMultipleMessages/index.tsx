@@ -3,6 +3,8 @@ import { ActionExecutionIncludeDefinitionInstanceDetailsResponse, ActionInstance
 import ActionExecutionStatus from "@/helpers/enums/ActionExecutionStatus"
 import MessageTypes from "@/helpers/enums/MessageTypes"
 import { UseMutationResult } from "react-query"
+import { useSelector } from "react-redux"
+import { useParams } from "react-router"
 import ActionDefination from "../../chatActionDefination/actionDefination"
 import ActionOutput from "../../chatActionOutput/actionOutput"
 import ChatBlock from "../../ChatBlock"
@@ -26,7 +28,9 @@ interface MultipleTypeMessageComponentProps {
 }
 
 const MultipleTypeMessageComponent = (props: MultipleTypeMessageComponentProps) => {
-
+    const { chatId } = useParams<string>();
+    const chats = useSelector((state:any) => state.chats)
+    const messages = chatId && chats?.[chatId]
 
     const {Id, messageContent} = props
     const parsedMessageContent = JSON.parse(messageContent) as MultipleMessageContent
@@ -60,14 +64,13 @@ const MultipleTypeMessageComponent = (props: MultipleTypeMessageComponentProps) 
                 props.setLoadingMessage(false)
                 const updateMessage = (data as Message[])?.[0]
                 if(updateMessage) {
-                    props?.setMessages((messages: IChatMessage[]) => {
-                        const newMessages = [...messages]
-                        const index = messages.findIndex((message: IChatMessage) => message.id === updateMessage.Id)
-                        if(index >= 0) {
-                            newMessages[index]!.message = updateMessage?.MessageContent
-                        }
-                        return newMessages
-                    })
+                    const newMessages = [...messages]
+                    const index = messages.findIndex((message: IChatMessage) => message.id === updateMessage.Id)
+                    if(index >= 0) {
+                        newMessages[index]!.message = updateMessage?.MessageContent
+                    }
+                    
+                    props?.setMessages(newMessages, chatId)
                 }
             },
             onError: () => {

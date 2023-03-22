@@ -2,13 +2,14 @@ import { InfoCircleOutlined } from '@ant-design/icons/lib/icons';
 import { ReactComponent as ChartIcon } from '@assets/icons/bar_chart.svg';
 import { ReactComponent as TableIcon } from '@assets/icons/table.svg';
 import { Tabs, Typography } from 'antd';
+import { FlexBox } from '../../ChatFooter/ChatFooter.styles';
 import DisplayLogs from '../DeepDive/ DisplayLogs';
 import Visualization from '../DeepDive/Visualization';
 import { TabsWrapper, TitleHeader } from './OutputComponent.styles';
 import TableComponent from './TableComponent';
 
 
-const OutputComponent = ({dataGridColumns, dataGridRows, title, tableName, actionexecution,time}:any) => {
+const OutputComponent = ({dataGridColumns, dataGridRows, title, tableName, actionexecution,time, downloadButton}:any) => {
   const items = (dataGridColumns:any, dataGridRows:any, tableName:string, label?: string) => {
     return [
         {
@@ -36,8 +37,14 @@ const OutputComponent = ({dataGridColumns, dataGridRows, title, tableName, actio
     return (
         <div style={{width: '100%',minWidth:'400px'}}>
                 <TitleHeader ellipsis={true} strong style={{}}>{title}</TitleHeader>
-                <TabsWrapper><Tabs type="card" defaultActiveKey="1" items={items(dataGridColumns,dataGridRows, tableName, title)} onChange={onChange}/></TabsWrapper>
-                <div>{time}</div>
+                
+                <TabsWrapper>
+                  <Tabs type="card" defaultActiveKey="1" items={items(dataGridColumns,dataGridRows, tableName, title)} onChange={onChange}/>
+                </TabsWrapper>
+                <FlexBox style={{justifyContent:'space-between'}}>
+                  <div>{time}</div> 
+                  {downloadButton}
+                </FlexBox>
         </div>
     )
 }

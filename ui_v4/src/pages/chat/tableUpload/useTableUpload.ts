@@ -9,15 +9,16 @@ import Papa from "papaparse"
 import { config } from "process"
 import React from "react"
 import { useMutation } from "react-query"
+import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid'
 
 const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function, getRecommendedQuestions?: Function }
 
 export type UseTableUploadParam = {
     onStatusChangeDebug?: (newStatus: Status) => void
-    onStatusChangeInfo?: (newStatus: Status) => void
-    onCSVToUploadValidationFail?: (reason: string, fileName?: string) => void
-    onRecommendedQuestionsGenerated?: (recommendedActions: any) => void
+    onStatusChangeInfo?: (newStatus: Status, chatId?:string) => void
+    onCSVToUploadValidationFail?: (reason: string, fileName?: string, chatId?:string) => void
+    onRecommendedQuestionsGenerated?: (recommendedActions: any, chatId?:string) => void
 }
 
 export type UseTableUploadReturnValue = {
@@ -43,6 +44,9 @@ type S3UploadInformation = {
 // 7. Create the tags
 // 8. Create the recommended questions
 function useTableUpload(params: UseTableUploadParam) {
+
+    const dispatch = useDispatch()
+
     const uploadTableContext = React.useContext(UploadTableStateContext)
     const setUploadTableContext = React.useContext(SetUploadTableStateContext)
 
@@ -53,12 +57,16 @@ function useTableUpload(params: UseTableUploadParam) {
     const activeFile = getActiveExtractedCSV(uploadTableContext)
     const activeFileSchema = activeFile?.FileSchema
 
+    const [chatId, setChatId] =  React.useState<string | null>(null)
+
+
+
     React.useEffect(() => {
         if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary === true) {
             uploadFile()
         } else if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary === false) {
             if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationsPerformed === true) {
-                params?.onCSVToUploadValidationFail?.(uploadTableContext?.activeExtractedCSVFileForUpload?.validationComments || "", activeFile?.CsvFile?.name)
+                chatId && params?.onCSVToUploadValidationFail?.(uploadTableContext?.activeExtractedCSVFileForUpload?.validationComments || "", activeFile?.CsvFile?.name, chatId)
             }
         }
     }, [uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary, uploadTableContext?.activeExtractedCSVFileForUpload?.validationsPerformed])
@@ -80,7 +88,16 @@ function useTableUpload(params: UseTableUploadParam) {
         "GetS3PreSignedUrl",
         (config) => dataManagerInstance.s3PresignedUploadUrlRequest(config.file, config.expirationDurationInMinutes, ExternalStorageUploadRequestContentType.TABLE),
         {
-            onMutate: () => setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.PRESIGNED_URL_FETCH_LOADING }})
+            onMutate: () => {
+                setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.PRESIGNED_URL_FETCH_LOADING }})
+                dispatch({
+                    type: "SET_LOADING",
+                    payload: {
+                        id: chatId,
+                        isLoading: true
+                    }
+                })
+            }
         }
     );
 
@@ -88,7 +105,17 @@ function useTableUpload(params: UseTableUploadParam) {
         "UploadToS3",
         (config) => dataManagerInstance.s3UploadRequest(config.requestUrl, config.headers, config.file),
         {
-            onMutate: () => setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.S3_UPLOAD_LOADING }})
+            onMutate: () => {
+                setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.S3_UPLOAD_LOADING }})
+                dispatch({
+                    type: "SET_LOADING",
+                    payload: {
+                        id: chatId,
+                        isLoading: true
+                    }
+                })
+            }
+            
         }
     );
 
@@ -96,7 +123,16 @@ function useTableUpload(params: UseTableUploadParam) {
         "LoadTableFromS3",
         (config) => dataManagerInstance.saveData(config.entityName, config.actionProperties),
         {
-            onMutate: () => setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.FDS_TABLE_FETCH_LOADING }})
+            onMutate: () => {
+                setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.FDS_TABLE_FETCH_LOADING }})
+                dispatch({
+                    type: "SET_LOADING",
+                    payload : {
+                        id: chatId,
+                        isLoading: true,
+                    }
+                })
+            }
         }
     );
 
@@ -106,7 +142,7 @@ function useTableUpload(params: UseTableUploadParam) {
         {
             onMutate: () => {
                 setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.FETCHING_TABLE_QUESTIONS }})
-                params?.onStatusChangeInfo?.(S3UploadState?.GENERATING_QUESTIONS(activeFileSchema?.tableName))
+                chatId && params?.onStatusChangeInfo?.(S3UploadState?.GENERATING_QUESTIONS(activeFileSchema?.tableName),chatId)
             }
         }
     )
@@ -157,6 +193,13 @@ function useTableUpload(params: UseTableUploadParam) {
             setUploading(true)
             // params?.onStatusChangeInfo?.(S3UploadState?.UPLOADING)
             setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.BUIDING_FILE_FOR_UPLOAD }});
+            dispatch({
+                type: "SET_LOADING",
+                payload: {
+                    id: chatId,
+                    isLoading: true
+                }
+            })
             Papa.parse(activeFile?.CsvFile,
                 {
                     dynamicTyping: true,
@@ -186,7 +229,13 @@ function useTableUpload(params: UseTableUploadParam) {
         try {
             // loading or Uploading in the beginning
             setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.UPLOADING } });
-
+            dispatch({
+                type: "SET_LOADING",
+                payload: {
+                    id:chatId,
+                    isLoading: true
+                }
+            })
           const presignedUrlData = await fetchPresignedUrlMutation.mutateAsync({ file: fileToUpload, expirationDurationInMinutes: 5 });
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.PRESIGNED_URL_FETCH_SUCCESS } });
       
@@ -210,11 +259,18 @@ function useTableUpload(params: UseTableUploadParam) {
           await createTableColumnMutation.mutateAsync(fileSchema);
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.CREATING_TABLE_IN_SYSTEM_SUCCESS } });
           setUploading(false);
-          params?.onStatusChangeInfo?.({...S3UploadState?.UPLOAD_COMPLETED_SUCCESSFULLY(fileSchema?.tableName), tableName: fileSchema?.tableName});
+          chatId && params?.onStatusChangeInfo?.({...S3UploadState?.UPLOAD_COMPLETED_SUCCESSFULLY(fileSchema?.tableName), tableName: fileSchema?.tableName}, chatId);
           
           const recommendedQuestionsData = await getRecommenededQuestions.mutateAsync({ tableId: fileSchema.tableId! });
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.GENERATING_QUESTIONS_SUCCESS } });
-          params?.onRecommendedQuestionsGenerated?.(recommendedQuestionsData);
+          chatId && params?.onRecommendedQuestionsGenerated?.(recommendedQuestionsData, chatId);
+          dispatch({
+            type: 'SET_LOADING',
+            payload: {
+                id: chatId,
+                isLoading: false
+            }
+          })
           
         } catch (error) {
             // TODO(Ritesh): Handle error
@@ -235,12 +291,13 @@ function useTableUpload(params: UseTableUploadParam) {
         }
     }
         
-    const setSourceFile = (file: File) => {
+    const setSourceFile = (file: File, chatId:string) => {
         // params?.onStatusChangeInfo?.(S3UploadState?.SELECTED_FILE_OK(file.name, file.size))
         setUploadTableContext({
             type: "SetSourceFile",
             payload: file
         })
+        setChatId(chatId)
     }
 
     return {

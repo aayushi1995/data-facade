@@ -6,10 +6,12 @@ export const ChatStyles = styled.div<any>`
     width:auto;
     max-width: 60vw;
     color: black;
-    padding: ${props => props.type==='recommended_actions'?'0px':'16px'};
+    padding: ${props => (props.type==='recommended_actions') ? '0px':'16px'};
     font-weight:500;
     border-radius: ${props => props.from === "user" ? '16px 16px 0px 16px' : '0px 16px 16px 16px' }; 
-    background-color: ${props => props.type==='recommended_actions'?'#fff' : (props.from === "user" ? '#E0F2FE' : '#F3F4F6;') };
+    background-color: ${props => props.type==='recommended_actions'? '#fff' : props.type==='error' ? "#FFFBEB" : (props.from === "user" ? '#E0F2FE' : '#F3F4F6') };
+    align-items: center;
+
 `
 export const ChatBlockWrapper = styled.div<any>`
     display:flex;

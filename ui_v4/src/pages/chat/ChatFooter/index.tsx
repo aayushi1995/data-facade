@@ -8,7 +8,7 @@ import { useMutation } from 'react-query';
 import { DataContext, SetDataContext } from '@/contexts/UploadFileDataContextProvider';
 import useContextStorageFile from '@/hooks/useContextStorage';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { ConfirmationPayloadType } from '../ChatBlock/ChatBlock.type';
 import useTableUpload from '../tableUpload/useTableUpload';
 import { ChatAutocomplete, ConnectionButton, PopOverCard, StyledCardChartFooterWrapper, StyledChatInputWrapper, StyledSendIcon } from './ChatFooter.styles';
@@ -20,11 +20,13 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     let inputRef = useRef<HTMLInputElement>(null);
     let fileUploadInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const location = useLocation();
+
     const s3Url = new URLSearchParams(location.search)?.get("s3Url") || undefined
     const [showFileUpload, setShowFileUpload] = useState(false);
     const [relatedQuestions, setRelatedQuestions] = useState<string[]>([])
     const [chatMessage, setChatMessage] = useState<string | undefined>()
     const [showPopover, setShowPopover]= useState(false)
+    const {chatId} = useParams()
 
     const [actionDefinitions, setActionDefinitions] = React.useState<ActionDefinitionDetail[]>()
     
@@ -69,24 +71,25 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
 
     React.useEffect(() => {
         if(fileToUpload){
-            handleSend({ text: fileToUpload.name}, 'user', 'fileInput')
-            setSourceFile(fileToUpload)
+            handleSend({ text: fileToUpload.name}, 'user', 'fileInput', chatId)
+            chatId && setSourceFile(fileToUpload,chatId)
         }
     }, [fileToUpload])
     
 
     const { setSourceFile, uploading, forceUpload, tableNameExists } = useTableUpload({
-        onRecommendedQuestionsGenerated: (recommended_actions) => {
-            console.log(recommended_actions)
-            handleSend({text: recommended_actions}, 'system', 'recommended_actions')
+        onRecommendedQuestionsGenerated: (recommended_actions, chatId) => {
+        handleSend({text: recommended_actions}, 'system', 'recommended_actions',   chatId)
+
         },
-        onStatusChangeInfo(newStatus) {
-            handleSend({text: newStatus?.message}, 'system', 'text')
+        onStatusChangeInfo(newStatus, chatId) {
+            console.log(chatId)
+            handleSend({text: newStatus?.message}, 'system', 'text',  chatId)
             if(newStatus?.tableName) {
                 handlefetch1000Rows(newStatus?.tableName)
             }
         },
-        onCSVToUploadValidationFail: (reason: string, fileName?: string) => {
+        onCSVToUploadValidationFail: (reason: string, fileName?: string, chatId?:string) => {
             handleSend({text: {
                 header: "File Validation Failed. Upload Anyway ?",
                 moreinfo: reason,
@@ -100,7 +103,7 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
                 onReject: () => {
                     handleSend({ text: `Upload Aborted for ${fileName}`}, 'system', 'text')
                 }
-            } as ConfirmationPayloadType}, 'system', 'confirmation')
+            } as ConfirmationPayloadType}, 'system', 'confirmation', chatId)
         }
     })
 
@@ -116,7 +119,7 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     }
     const handleClick = () => {
         if(inputRef !== null) {
-            handleSend({text: chatMessage}, 'user')
+            handleSend({text: chatMessage}, 'user', undefined, chatId)
             setChatMessage(undefined)
             setRelatedQuestions([])
             inputRef?.current?.focus()

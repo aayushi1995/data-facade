@@ -19,7 +19,7 @@ const Apps = () => {
         <AppinOrg/>
         </AppsContainer >
         <div>
-        <TutsCard/>
+        <TutsCard key={new Date().getTime()}/>
         </div>
         </Container>
     )

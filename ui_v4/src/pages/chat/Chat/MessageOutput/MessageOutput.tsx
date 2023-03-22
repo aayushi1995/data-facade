@@ -3,8 +3,12 @@ import { Message } from "@/generated/entities/Entities";
 import { ActionInstanceWithParameters } from "@/generated/interfaces/Interfaces";
 import { labels } from "@/helpers/constant";
 import MessageTypes from "@/helpers/enums/MessageTypes";
+import { message } from "antd";
 import React, { useEffect, useRef } from "react";
 import { useMutation, UseMutationResult } from "react-query";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import ActionDefination from "../../chatActionDefination/actionDefination";
 import ActionOutput from "../../chatActionOutput/actionOutput";
 import ChatBlock from "../../ChatBlock";
@@ -21,9 +25,15 @@ import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
 
 
 
-const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  handleConversation,  handleDeepDive, setLoadingMessage }: any ) => {
+const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handleConversation,  handleDeepDive }: any ) => {
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-    
+    const {chatId} = useParams()
+
+    const chats = useSelector((state:any) => state.chats)
+
+    const messages = chatId && chats?.[chatId]
+
+
     useEffect(() => {
         chatWrapperRef.current.scrollIntoView({ behavior: "smooth" });
     }, [messages,loading]);
@@ -80,10 +90,13 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
             trigger: false
         }, {
             onSuccess: () => {
-                setMessages((messages: IChatMessage[]) => messages.map(message => message.id !== id ? message : {
+                let newChats = messages && messages?.map((message:any) => message.id !== id ? message : {
                     ...message,
                     messageFeedback: value
-                }))
+                })
+                handleAddMessage(newChats, chatId)
+
+                // setMessages((messages: IChatMessage[]) => )
             }
         })
     }
@@ -91,7 +104,7 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
 
     return (
         <div>
-            {messages?.map((message: IChatMessage, index:number) => {
+            {messages?.length > 0 && messages?.map((message: IChatMessage, index:number) => {
 
                 const tempArr = messages?.slice(0,index)
                 tempArr?.reverse()
@@ -100,14 +113,14 @@ const MessageOutputs = ({setMessages, messages,  loading, showActionOutput,  han
                     return message?.from === "user" && message?.type === "text"
                 }) || " "
                return (<SmartChatBlock 
-                    message={{...message,preMessage: `Here is the response generated: ${latestMessage?.message}`}} 
+                    message={{...message, preMessage: message?.preMessage || `Here is the response generated: ${latestMessage?.message}`}} 
                     handleConversation={handleConversation} 
                     handleDeepDive={handleDeepDive} 
                     handleActionInstanceSubmit={handleActionInstanceSubmit}
                     onTableSelected={onTableSelected}
                     hanldeLikeDislike={hanldeLikeDislike}
                     updateMessageMutation={updateMessageMutation}
-                    setMessages={setMessages}
+                    setMessages={handleAddMessage}
                     setLoadingMessage={setLoadingMessage}
                 />)}
             )}

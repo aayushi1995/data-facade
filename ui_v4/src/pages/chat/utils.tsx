@@ -53,7 +53,7 @@ export const postProcessingFetchingMessage = (messages:any) => {
         let skipThisObj = false
         let temp =  {
             id: obj?.Id,
-            message: obj?.MessageType === 'text' ? JSON.parse(obj?.MessageContent)?.text : obj?.MessageContent,
+            message: obj?.MessageType === 'text' ? JSON.parse(obj?.MessageContent)?.text :  obj?.MessageType === 'error' ? JSON.parse(obj?.MessageContent)?.error : obj?.MessageContent,
             // if we dont get a sentBy then add previoous message time
             time: obj?.SentOn ? parseInt(obj?.SentOn) : index > 1 ? parseInt(sortedArray?.[index-1]?.sentOn): new Date().getTime(),
             from: obj?.MessageType === "table_input" || obj?.SentBy === "Bot" ? "system" : 'user',
@@ -99,6 +99,21 @@ const sortAndMap = (arr:any[]) => {
         type: 'text'
     }
 }
+
+
+
+export const furtherAssistanceMessage = (): IChatMessage => {
+   
+    return {
+        id: 'furtherAssistanceMessage',
+        message: `Can I help with anything else? Here’s a few suggestions:` ,
+        time: new Date().getTime(),
+        from: 'system',
+        username: 'DataFacade',
+        type: 'text'
+    }
+}
+
 
 export const getRandomItems = (arr: any[], numItems: number): any[] => {
     const result = new Array(numItems);
@@ -148,7 +163,7 @@ export const IconStack = (handleClick:any) => [
 ]
 
 export const detectDefaultMessage = (messages:IChatMessage[], messageToFind:string) => {
-    let defaultMessages = messages?.filter((message:IChatMessage) => message?.id === messageToFind)
+    let defaultMessages = messages && messages?.filter((message:IChatMessage) => message?.id === messageToFind)
     return defaultMessages.length > 1
 }
 

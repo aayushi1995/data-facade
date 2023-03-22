@@ -13,13 +13,15 @@ import { getLocalStorage } from "@/utils";
 import {  ChatProvider } from '@contexts/ChatContext/index';
 import { Alert, Col, Row } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
 import DeepDiveTabs from "../chatActionOutput/DeepDive/DeepDiveTabs";
 import { ConfirmationPayloadType, IChatMessage, IChatResponse } from "../ChatBlock/ChatBlock.type";
 import ChatFooter from "../ChatFooter";
 import ChatHistory from "../ChatHistory";
-import { defaultActions, defaultBotMessage, getRandomItems, IconStack, postProcessingFetchingMessage } from "../utils";
+import { defaultActions, defaultBotMessage, getRandomItems, IconStack, postProcessingFetchingMessage, furtherAssistanceMessage } from "../utils";
 import { ChatWrapperStyled, MessageWrapper, RightWrapperStyled } from "./Chat.styles";
 import ChatLoader from "./ChatLoader";
 import { ActionMessageContent, TableInputContent, TablePropertiesContent } from "./ConfirmationInput/Chat.types";
@@ -28,23 +30,47 @@ import MessageOutputs from "./MessageOutput/MessageOutput";
 
 const InitiateChat = () => {
     // central data provider context
-    const setDataContext = useContext(SetDataContext);
     const dataContext = useContext(DataContext);
     const appContext: any = useContext(AppContext);
-    
-    console.log('dataContext',dataContext)
-    // local states
-    const { chatId } = useParams();
+        // local states
+    const { chatId } = useParams<string>();
     const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState(false);
-    const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
+    // const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
     const [size, setSize] = useState([96,3])
     const uploadTableContext = React.useContext(UploadTableStateContext)
     const [allActionDefinitionsData, allActionDefinitionsIsLoading, allActionDefinitionsError]  = useFetchActionDefinitions({filter: {IsVisibleOnUI:true}}) 
-
     const conversationStarted = useRef(false)
+
+    // reducer
+    const dispatch = useDispatch()
+    const chats = useSelector((state:any) => state.chats)
+    const uploadTable = useSelector((state:any) => state.loading)
+
+    const messages = chatId && chats?.[chatId]
+    const uploadTableLoading = chatId && uploadTable?.[chatId]
+
+
+    const handleAddMessage = (data:any, id?:string) => {
+        id && dispatch({type: "ADD_CHAT", payload: {
+            data: data,
+            id: id
+        }})
+    }
+
+    const handleUpdateMessages = (message:any, id?:string) => {
+        id && dispatch({type: "SET_CHAT", payload: {
+            message: message,
+            id: id
+        }})
+    }
+
+    const handleConversationFooter = (message?: any, user?: any, type?: string, chatId?:string) => {
+        chatId && handleConversation(message,user,type, undefined, undefined, undefined, undefined, undefined, chatId)
+    }
+
 
     // Caching the calculation of fetching random items again and again 
     let fiveActions: any[] = React.useMemo(() => {
@@ -55,19 +81,29 @@ const InitiateChat = () => {
             }
         }
         return arr
-    },[allActionDefinitionsData, allActionDefinitionsIsLoading])
+    },[chatId, allActionDefinitionsData, allActionDefinitionsIsLoading])
 
    
+    const fetchFiveRandomItems = () => {
+        let arr:any[] = []
+        if(!allActionDefinitionsIsLoading){
+            if(allActionDefinitionsData.length > 5 ){
+                arr = getRandomItems(allActionDefinitionsData, 5)
+            }
+        }
+        return arr
+    }
 
     useEffect(()=>{
-        console.log(uploadTableContext.status?.message);
         
-        if(uploadTableContext.status?.message=='Loading Table into System' || uploadTableContext.status?.message=='Authorising Upload' || uploadTableContext.status?.message=='Preparing File' || uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
-            setLoadingMessage(true)
-        }else if(uploadTableContext.status?.message=='Questions generated for table'){
-            setLoadingMessage(false)
-        }
-    },[uploadTableContext])
+        // if(uploadTableContext.status?.message=='Loading Table into System' || uploadTableContext.status?.message=='Authorising Upload' || uploadTableContext.status?.message=='Preparing File' || uploadTableContext.status?.message=='Fetching Table Questions' || uploadTableContext.status?.message=='Uploading File'){
+        //     setLoadingMessage(true)
+        // }else if(uploadTableContext.status?.message=='Questions generated for table'){
+        //     setLoadingMessage(false)
+        // }
+        uploadTableLoading ? setLoadingMessage(uploadTableLoading) : setLoadingMessage(false)
+
+    },[uploadTableLoading])
 
     useEffect(()=>{
         if(allActionDefinitionsIsLoading){
@@ -77,66 +113,50 @@ const InitiateChat = () => {
         }
     },[allActionDefinitionsIsLoading])
 
-    // function that calls setChatData reducer to store message data in context
-    const persistState = () => {
-        messages !== undefined && setDataContext({
-            type: "setChatData",
-            payload: {
-                chatData: {
-                    messages: messages,
-                    chatId: chatId,
-                }
-            }
-        })
-    }
 
     // persist the chat if there is any chatData in the DataProvider or get from the BE
     useEffect(() => {
         if (chatId) {
-            if(dataContext?.chatData[chatId]?.messages.length > 0) {
-                setMessages(dataContext?.chatData[chatId]?.messages)
-            } else {
-                dataManager.getInstance.retreiveData("Message",{filter: {ChatId: chatId}}).then((response:any) => {
-                    if(response.length > 0){
-                        let {messagesArray} = postProcessingFetchingMessage(response)
-                        messagesArray.length > 0 && setMessages([defaultBotMessage(appContext?.userName), ...messagesArray])
-
-                    } else { 
-                        if(allActionDefinitionsIsLoading){
-                            setMessages([defaultBotMessage(appContext?.userName)])
-                        }else{
-                            setMessages([defaultBotMessage(appContext?.userName),defaultActions(fiveActions)])
-                        }
-                    }
-                }).catch((error:any) => {
-                    console.log(error)
-                })
-            }
+                    if(!messages || messages?.length < 1) { 
+                        dataManager.getInstance.retreiveData("Message",{filter: {ChatId: chatId}}).then((response:any) => {
+                            if(response.length > 0){
+                                let {messagesArray} = postProcessingFetchingMessage(response)
+                                messagesArray.length > 0 && handleAddMessage([defaultBotMessage(appContext?.userName), ...messagesArray], chatId)
+        
+                            } else { 
+                                handleDummyDataAdding()
+                            }
+                        }).catch((error:any) => {
+                            console.log(error)
+                            handleDummyDataAdding()
+                        })
+                    } 
         }
     }, [chatId])
 
+    const handleDummyDataAdding = () => {
+        if(allActionDefinitionsIsLoading){
+            handleAddMessage([defaultBotMessage(appContext?.userName)], chatId)
+        }else{
+            handleAddMessage([defaultBotMessage(appContext?.userName),defaultActions(fiveActions)],chatId)
+        }
+    }
+
     useEffect(()=>{
         if(allActionDefinitionsData.length>0){
-                if(messages){
-                    if(messages.length<2){
-                        setMessages([...messages,defaultActions(fiveActions)])
-                    }else{
-                        setMessages([...messages])
+                if(!!messages){
+                    if(messages?.length<2){
+                        handleUpdateMessages(defaultActions(fiveActions), chatId)
                     }
                 }else{
-                    setMessages([defaultActions(fiveActions)])
+                    handleUpdateMessages(defaultActions(fiveActions), chatId)
                 }
             
         }
         
     },[allActionDefinitionsData])
 
-    // persists data whenever messages are added
-    useEffect(() => {
-        return (() => {
-            persistState()
-        })
-    }, [messages])
+
 
 
     useEffect(() => {
@@ -152,7 +172,7 @@ const InitiateChat = () => {
     }, [chatId])
 
     useEffect(() => {
-        const userObj = messages?.filter((obj:any) => {
+        const userObj = messages?.length > 0 && messages?.filter((obj:any) => {
             return obj?.from === 'user'
            })
         if(!conversationStarted.current && userObj && userObj?.length === 1) {
@@ -171,7 +191,10 @@ const InitiateChat = () => {
 
    
 
-    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean, getResponseFromBot?: boolean, preMessage?:string) => {
+    const handleConversation = (message?: any, user?: any, type?: string, responseID?: string, ignoreMessage?: boolean, isExternalExecutionId?:string | boolean, getResponseFromBot?: boolean, preMessage?:string, mainId?:string) => {
+        
+        // if didnt recieve from Function then use the chatId from the state 
+        let chat_id = mainId || chatId
         
         let temp: IChatMessage = {
             id: responseID ? responseID : new Date().toTimeString(),
@@ -180,32 +203,30 @@ const InitiateChat = () => {
             from: user,
             username: user === 'system' ? 'DataFacade' : appContext?.userName,
             type: type ? type : 'text',
-            preMessage: preMessage || ''
+            preMessage: preMessage || '',
+            chat_id: chat_id || ''
         }
 
         if(isExternalExecutionId) {
-            
-           setMessages((prevState:any) => [...prevState, {...temp, isExternalExecutionId: isExternalExecutionId}])
+            handleUpdateMessages({...temp, isExternalExecutionId: isExternalExecutionId}, chat_id)
         }
 
         if(!ignoreMessage) {
-            setMessages(messages => messages ? [...messages, {...temp, message: message?.text || message }] : [{...temp, message: message?.text}])
+           handleUpdateMessages({...temp, message: message?.text || message }, chat_id) 
         }
 
         if (user === "user") {
             setLoadingMessage(true)
-            console.log(chatId, appContext.userName, message, type, getResponseFromBot)
-            startConversation(chatId, appContext.userName, message, type, getResponseFromBot).then(response => {
+            startConversation(chat_id, appContext.userName, message, type, getResponseFromBot).then(response => {
                 setLoadingMessage(false)
                 if (response.length > 0) {
                     if(getResponseFromBot !== false) {
                         for (let i = 0; i < response.length; i++) {
                             handleBOTMessage(response[i])
-
                         }
                     }
                 } else {
-                    handleConversation('No output found for this message :(', 'system', 'error')
+                    handleConversation('No output found for this message :(', 'system', 'error', undefined, undefined, undefined, undefined, undefined)
                     setLoadingMessage(false)
                 }
             }).catch(error => {
@@ -213,10 +234,13 @@ const InitiateChat = () => {
 
             });
         }
-       
 
+        if(type === "error") {
+            handleUpdateMessages(furtherAssistanceMessage(), chatId)
+            handleUpdateMessages(defaultActions(fetchFiveRandomItems()), chatId) 
+        }
     }
-
+    
     const handleBOTMessage = (messageBody: IChatResponse) => {
 
         const messageType = messageBody ? messageBody.MessageType : 'error';
@@ -347,6 +371,7 @@ const InitiateChat = () => {
         })
     }
 
+
     return (
        <ChatProvider>
             <DraggableSlider 
@@ -370,13 +395,14 @@ const InitiateChat = () => {
                                             <Col sm={24}>
                                                 <MessageWrapper>
                                                     <MessageOutputs 
-                                                    setMessages={setMessages} 
+                                                    setLoadingMessage={setLoadingMessage}
+                                                    setMessages={handleAddMessage} 
                                                     messages={messages}
                                                     loading={loadingMessage} 
                                                     handleDeepDive={handleDeepDive}
                                                     handleConversation={handleConversation}/>
                                                 </MessageWrapper>
-                                                <ChatFooter handleSend={handleConversation} loading={loadingMessage} handlefetch1000Rows={handlefetch1000Rows}/>
+                                                <ChatFooter handleSend={handleConversationFooter} loading={loadingMessage} handlefetch1000Rows={handlefetch1000Rows}/>
                                             </Col>
                                     }
                                 </Row>

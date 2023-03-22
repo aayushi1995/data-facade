@@ -9,7 +9,7 @@ const Home = () => {
             <ChatHeader/>
             <QuickoptionCard/>
             <AppinOrg/>
-            <TutsCard/>
+            <TutsCard key={new Date().getTime()}/>
         </div>
     )
 }
