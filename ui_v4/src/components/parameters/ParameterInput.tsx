@@ -1,20 +1,33 @@
 
 import { ColumnProperties, TableProperties } from "@/generated/entities/Entities"
 import { FilteredColumnsResponse } from "@/generated/interfaces/Interfaces"
+import UseFetchProviderInstanceDetailsHook from "@/hooks/actionOutput/UseFetchProviderInstanceDetailsHook"
 import useFetchColumnsForTableAndTags from "@/hooks/useFetchColumnsForTableAndTags"
 import useSlackChannelInput from "@/hooks/useSlackChannelInput"
 import useTables from "@/hooks/useTables"
 import { Input, Select } from "antd"
 import React, { ChangeEvent } from "react"
 import styled from 'styled-components'
+import { ReactComponent as PostgreSQLIcon } from "@assets/icons/postgreSQL.svg"
+import { ReactComponent as SnowFlakeIcon } from "@assets/icons/snowflake.svg"
+import { ReactComponent as DataBricksIcon } from "@assets/icons/databricks.svg"
+import { ReactComponent as RedShiftIcon } from "@assets/icons/redshift.svg"
+import { ReactComponent as SalesForceIcon } from "@assets/icons/salesforce.svg"
+import { ReactComponent as ClickHouseIcon } from "@assets/icons/clickhouse.svg"
+import { ReactComponent as GoogleIcon } from "@assets/icons/Google.svg"
+// import { ReactComponent as HubSpotIcon } from "@assets/icons/Hubspot.png"
+// import { ReactComponent as MixPanelIcon } from "@assets/icons/Mixpanel.png"
 
 const StyledSelect = styled(Select)`
     width: 100%;
-    min-width: 150px;
+    min-width: 300px;
     max-width: 300px;
     border: 1px solid #D1D5DB;
     display:flex;
     align-items: center;
+    .ant-select-selection-item {
+        display: flex;
+    }
 `
 const StyledInput = styled(Input)`
     width:100%;
@@ -724,7 +737,9 @@ const TableInput = (props: TableParameterInput) => {
 
     const { tables, loading } = useTables({ tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived })
     const { SelectedTable, AvailableTables } = getTableSelectionInfo(tables, selectedTableFilter)
-
+    const { availableProviderInstanceQuery: childNodes, availableProviderDefinitionQuery: parentNodes } = UseFetchProviderInstanceDetailsHook()
+    console.log(childNodes, parentNodes, tables)
+    
     return (
        
         <StyledSelect loading={loading} placeholder="Table name"
@@ -745,15 +760,20 @@ const TableInput = (props: TableParameterInput) => {
             }}
         >
             {
-                tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
-                    {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}
-                </Select.Option>)
+                tables?.map((value, index) =>  {
+                    {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} 
+                    return (
+                        <Select.Option key={index} value={value.Id} style={{display:'flex', justifyContent: 'center',alignItems:'center'}}>
+                           {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
+                        </Select.Option>
+                    )
+                })
+               
             }
         </StyledSelect>
 
     )
 }
-
 
 const NoInput = () => {
     return (
@@ -762,3 +782,39 @@ const NoInput = () => {
 }
 
 export default getParameterInputField;
+
+const getIconForProviderInstance = (childNode: any[] , providerInstanceId?: string, ) => {
+    // providerInstance id in child array , get providerDefinitionId and get the icon
+    const obj = childNode?.find((obj) => obj.Id === providerInstanceId)
+    const iconComponent = getIcon(obj?.ProviderDefinitionId)
+    return iconComponent
+}
+
+const getIcon = (id:string) => {
+    switch (id) {
+        case "0": {
+            return <DataBricksIcon width="20" height="30"/>
+        }
+        case "2": {
+            return <SnowFlakeIcon width="20" height="30"/>
+        }
+        case "7": {
+            return <RedShiftIcon width="20" height="30"/>
+        }
+        case "10": {
+            return <PostgreSQLIcon width="20" height="30"/>
+        }
+        case "22": {
+            return <SalesForceIcon width="20" height="30"/>
+        }
+        case "1000": {
+            return <ClickHouseIcon width="20" height="30"/>
+        }
+        case "100": {
+            return <GoogleIcon width="20" height="30"/>
+        }
+        default: {
+            <PostgreSQLIcon width="20" height="30"/>
+        }
+    }
+}
