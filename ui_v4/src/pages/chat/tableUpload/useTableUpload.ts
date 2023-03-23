@@ -7,7 +7,7 @@ import ExternalStorageUploadRequestContentType from "@/helpers/enums/ExternalSto
 import S3UploadState from "@/helpers/enums/S3UploadState"
 import Papa from "papaparse"
 import { config } from "process"
-import React from "react"
+import React, { useEffect } from "react"
 import { useMutation } from "react-query"
 import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid'
@@ -43,7 +43,7 @@ type S3UploadInformation = {
 // 6. Create the columns
 // 7. Create the tags
 // 8. Create the recommended questions
-function useTableUpload(params: UseTableUploadParam) {
+function useTableUpload(params: UseTableUploadParam, chatIdFromChatFooter:string) {
 
     const dispatch = useDispatch()
 
@@ -57,19 +57,25 @@ function useTableUpload(params: UseTableUploadParam) {
     const activeFile = getActiveExtractedCSV(uploadTableContext)
     const activeFileSchema = activeFile?.FileSchema
 
-    const [chatId, setChatId] =  React.useState<string | null>(null)
+    const [chatId, setChatId] =  React.useState<string | null>(chatIdFromChatFooter)
 
+    useEffect(() => {
+        console.log('chatId inside useTableUpload Hook',chatId)
+    },[chatId])
 
 
     React.useEffect(() => {
-        if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary === true) {
-            uploadFile()
-        } else if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary === false) {
-            if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationsPerformed === true) {
-                chatId && params?.onCSVToUploadValidationFail?.(uploadTableContext?.activeExtractedCSVFileForUpload?.validationComments || "", activeFile?.CsvFile?.name, chatId)
+        if(chatId) {
+            if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary === true) {
+                uploadFile()
+            } else if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary === false) {
+                if(uploadTableContext?.activeExtractedCSVFileForUpload?.validationsPerformed === true) {
+                    chatId && params?.onCSVToUploadValidationFail?.(uploadTableContext?.activeExtractedCSVFileForUpload?.validationComments || "", activeFile?.CsvFile?.name, chatId)
+                }
             }
         }
-    }, [uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary, uploadTableContext?.activeExtractedCSVFileForUpload?.validationsPerformed])
+        
+    }, [chatId, uploadTableContext?.activeExtractedCSVFileForUpload?.validationSummary, uploadTableContext?.activeExtractedCSVFileForUpload?.validationsPerformed])
 
     React.useEffect(() => {
         setTableNameExists(activeFile?.validations?.TABLE_NAME_NOT_PRESENT_IN_SYSTEM?.value || false)
@@ -290,14 +296,18 @@ function useTableUpload(params: UseTableUploadParam) {
             setUploading(false);
         }
     }
+
+    const handleSetChatId = (id:string) => {
+        setChatId(id)
+    }
         
-    const setSourceFile = (file: File, chatId:string) => {
+    const setSourceFile = (file: File) => {
         // params?.onStatusChangeInfo?.(S3UploadState?.SELECTED_FILE_OK(file.name, file.size))
         setUploadTableContext({
             type: "SetSourceFile",
             payload: file
         })
-        setChatId(chatId)
+        
     }
 
     return {
@@ -306,6 +316,7 @@ function useTableUpload(params: UseTableUploadParam) {
         setSourceFile,
         forceUpload: uploadFile,
         tableId: tableId,
+        handleSetChatId
     }
 }
 

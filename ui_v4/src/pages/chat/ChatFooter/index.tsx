@@ -15,8 +15,13 @@ import { ChatAutocomplete, ConnectionButton, PopOverCard, StyledCardChartFooterW
 import { ActionDefinitionDetail } from '@/generated/interfaces/Interfaces';
 import useFetchActionDefinitions from '@/hooks/actionDefinitions/useFetchActionDefinitions';
 import { HomeChatContext } from '@/contexts/HomeChatContext';
+import { useSelector } from 'react-redux';
 
 const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
+
+
+    const isUploadInProgress = useSelector((state:any) => state.loading)
+
     let inputRef = useRef<HTMLInputElement>(null);
     let fileUploadInputRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const location = useLocation();
@@ -26,10 +31,12 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     const [relatedQuestions, setRelatedQuestions] = useState<string[]>([])
     const [chatMessage, setChatMessage] = useState<string | undefined>()
     const [showPopover, setShowPopover]= useState(false)
-    const {chatId} = useParams()
+    let {chatId}= useParams()
+    chatId = chatId || '0'
 
     const [actionDefinitions, setActionDefinitions] = React.useState<ActionDefinitionDetail[]>()
-    
+
+
     const [] = useFetchActionDefinitions({handleSuccess: (data: ActionDefinitionDetail[]) => setActionDefinitions(data), filter: {IsVisibleOnUI: true}})
 
     const getRelatedQuestionsMutations = useMutation("GetRelatedQuestion", 
@@ -43,6 +50,8 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
             inputRef.current.focus();
         }
     }, []);
+
+    
 
     const [handleFileRetrieval]: any = useContextStorageFile('file');
 
@@ -71,16 +80,17 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
 
     React.useEffect(() => {
         if(fileToUpload){
+            chatId && handleSetChatId(chatId)
+            chatId && setSourceFile(fileToUpload)
             handleSend({ text: fileToUpload.name}, 'user', 'fileInput', chatId)
-            chatId && setSourceFile(fileToUpload,chatId)
+            
         }
     }, [fileToUpload])
     
 
-    const { setSourceFile, uploading, forceUpload, tableNameExists } = useTableUpload({
+    const { setSourceFile, uploading, forceUpload, tableNameExists, handleSetChatId } = useTableUpload({
         onRecommendedQuestionsGenerated: (recommended_actions, chatId) => {
-        handleSend({text: recommended_actions}, 'system', 'recommended_actions',   chatId)
-
+            handleSend({text: recommended_actions}, 'system', 'recommended_actions',   chatId)
         },
         onStatusChangeInfo(newStatus, chatId) {
             console.log(chatId)
@@ -90,22 +100,21 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
             }
         },
         onCSVToUploadValidationFail: (reason: string, fileName?: string, chatId?:string) => {
+
+            console.log("File Validation failed","Upload anyway ?",reason, fileName, chatId)
+
             handleSend({text: {
                 header: "File Validation Failed. Upload Anyway ?",
                 moreinfo: reason,
                 onAccept: () => {
-                    // onConfirm
-                    // SAME_TABLE_NAME
-                    // serializeMutations(deleteTableMutaion, forceUpload)
-                    
-                    forceUpload()
+                   forceUpload()
                 },
                 onReject: () => {
                     handleSend({ text: `Upload Aborted for ${fileName}`}, 'system', 'text')
                 }
             } as ConfirmationPayloadType}, 'system', 'confirmation', chatId)
         }
-    })
+    }, chatId)
 
     const handleChange = (e: string) => {
         setChatMessage(e)
@@ -146,6 +155,7 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     )
 
     const { myValue ,setMyValue } = useContext(HomeChatContext);
+
     useEffect(()=>{
         if(myValue!=""){
             handleSend({text: myValue}, 'user');
@@ -167,9 +177,9 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
                     
                     <Row align="middle">
                         <Col span={1}>
-                            <Popover open={showPopover} placement="topLeft" trigger="click" content={uploadComponent} showArrow={false} onOpenChange={handleOpenChange}>
-                                <Button  type="text" icon={<PlusOutlined style={{ color: '#9CA3AF' }} />}></Button>
-                            </Popover>
+                            <input type="file" ref={fileUploadInputRef} accept={".csv,.xlsx"} hidden onChange={changeHandler} onClick={handleOpenChange}/>
+                            <Button type="ghost" icon={<UploadOutlined/>} onClick={uploadClick} disabled={chatId && isUploadInProgress?.[chatId]}/>
+                          
                         </Col>
                         <Col span={23}>
                             <StyledChatInputWrapper>

@@ -68,6 +68,7 @@ const InitiateChat = () => {
     }
 
     const handleConversationFooter = (message?: any, user?: any, type?: string, chatId?:string) => {
+        console.log('Message from Chat Footer', message)
         chatId && handleConversation(message,user,type, undefined, undefined, undefined, undefined, undefined, chatId)
     }
 
@@ -177,7 +178,7 @@ const InitiateChat = () => {
            })
         if(!conversationStarted.current && userObj && userObj?.length === 1) {
                 setLoading(true)
-                initiateChat(chatId, appContext.userName, userObj[0]?.message.substring(0,10)).then(response => {
+                initiateChat(chatId, appContext.userName, userObj[0]?.message).then(response => {
                     conversationStarted.current = true
                     setLoading(false)
                     

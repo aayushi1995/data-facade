@@ -34,8 +34,7 @@ const ChatHistory = () => {
     }
 
     const handleChatClick= (id:any, name?:string) => {
-        console.log(name)
-        handleNewTabWithId(id,name)
+        handleNewTabWithId(id,`${name?.substring(0,10)}...`)
     }
 
 

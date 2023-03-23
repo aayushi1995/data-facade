@@ -24,8 +24,6 @@ const Visualization = ({tableName}:any) => {
 
     const columns = tableData?.dataGridColumns?.map((obj:any) => {return {label: obj.title, value: obj.dataIndex}})
 
-
-
     
     return (
         <div>

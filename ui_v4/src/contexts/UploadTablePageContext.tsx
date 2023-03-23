@@ -522,8 +522,7 @@ const UploadTableContextProvider = ({children}: {children: React.ReactElement}) 
             ]
             const activeFileAllValidationsSuccessful = areValidationsSuccessful(validationsToCheck)
             const validationComments = validationsToCheck?.filter(validation => validation?.value === false)?.map(validation => validation?.comments)?.join("\n")
-            console.log(validationComments)
-
+        
             setContextState({
                 type: "SetActiveExtractedCSVFileForUpload",
                 payload: {

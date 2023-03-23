@@ -139,10 +139,11 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
                 <img src={DownloadIcon} />
             </IconButton>
     )
+
     const deepdiveBtn = (<Box sx={{display:'flex',flexDirection:'row',mr:1}}>
-                        {downloadButton}
-                    <DeepDiveActionButton ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
-                    </Box>
+            {downloadButton}
+        <DeepDiveActionButton ActionDefinition={ActionDefinition} onDeepDiveActionSelected={props.onDeepDiveActionSelected}/>
+        </Box>
     )
 
     if(isTableOutputSuccessfulFormat(TableOutput)) {

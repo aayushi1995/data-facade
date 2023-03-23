@@ -25,8 +25,28 @@ const StyledSelect = styled(Select)`
     border: 1px solid #D1D5DB;
     display:flex;
     align-items: center;
+
+    .ant-select-selector {
+        height:50px;
+        align-items:center;
+    }
+    
     .ant-select-selection-item {
         display: flex;
+    }
+    & .ant-select-item-option-content {
+        display:flex;
+        align-items:center;
+    }
+`
+
+
+const StyledOption = styled(Select.Option)`
+
+    .ant-select-item-option-content {
+        display:flex;
+        justify-content: center;
+        align-items:center;
     }
 `
 const StyledInput = styled(Input)`
@@ -255,8 +275,6 @@ type WebAppTableOption = {
 
 export type WebAppAutocompleteOption = WebAppTableOption | WebAppUpstreamActionOption
 
-
-
 const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
     const { parameterName, availableOptions, selectedOptions, onChange } = props.inputProps
 
@@ -319,7 +337,6 @@ export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
         </StyledSelect>
     )
 }
-
 
 const SlackChannelMultiple = (props: SlackChannelMultipleInput) => {
     const { selectedChannelIDs, onSelectedChannelIdsChange } = props?.inputProps
@@ -491,12 +508,13 @@ type TableOption = {
     value: TableProperties,
     type: "TableProperties"
 }
+
 type UpstreamActionOption = {
     value: UpstreamAction,
     type: "UpstreamAction"
 }
-export type AutoCompleteOption = TableOption | UpstreamActionOption
 
+export type AutoCompleteOption = TableOption | UpstreamActionOption
 
 
 const StringInput = (props: StringParameterInput) => {
@@ -763,9 +781,9 @@ const TableInput = (props: TableParameterInput) => {
                 tables?.map((value, index) =>  {
                     {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} 
                     return (
-                        <Select.Option key={index} value={value.Id} style={{display:'flex', justifyContent: 'center',alignItems:'center'}}>
+                        <StyledOption key={index} value={value.Id}>
                            {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
-                        </Select.Option>
+                        </StyledOption>
                     )
                 })
                
@@ -780,8 +798,6 @@ const NoInput = () => {
         <StyledInput disabled value="Default Value not valid for this type of parameter" />
     )
 }
-
-export default getParameterInputField;
 
 const getIconForProviderInstance = (childNode: any[] , providerInstanceId?: string, ) => {
     // providerInstance id in child array , get providerDefinitionId and get the icon
@@ -818,3 +834,5 @@ const getIcon = (id:string) => {
         }
     }
 }
+
+export default getParameterInputField;
