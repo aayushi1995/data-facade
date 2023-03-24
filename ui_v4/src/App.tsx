@@ -12,6 +12,7 @@ import UploadTableContextProvider from './contexts/UploadTablePageContext';
 import { HomeChatContextProvider } from './contexts/HomeChatContext';
 import {Provider} from 'react-redux';
 import { store } from './store/store';
+import { ConnectionsProvider } from './contexts/ConnectionsContext';
 
 
 const { ErrorBoundary } = Alert;
@@ -69,11 +70,13 @@ const App = ({ children = noop }) => {
         <AppContext.Provider value={userSettings}>
         <HomeChatContextProvider>
           <DataProvider>
+          <ConnectionsProvider>
           <UploadTableContextProvider>
             <ErrorBoundary>
               {children(restProps)}
             </ErrorBoundary>
             </UploadTableContextProvider>
+            </ConnectionsProvider>
           </DataProvider>
           </HomeChatContextProvider>
         </AppContext.Provider>

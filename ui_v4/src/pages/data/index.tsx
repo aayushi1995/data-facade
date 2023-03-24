@@ -2,24 +2,21 @@ import { LandingPageHeader } from "@/components/LandingPageHeader/LandingPageHea
 import { AppsContainer } from "../apps/apps.style"
 import { RecenetChats } from "../chat/RecentChats/Recentchats"
 import { TutsCard } from "../home/tutsAndDocs/TutsCard"
+import { ConnectionDialogContent } from "./components/ConnectionDialogContent"
 
 const Data = () => {
-    const HEADER_ENUMS = {
-        title:"Your Connections",
-        desc:"Manage all your Connections.",
-        btnText:"+  Add Data Source",
-        page:'data',
-        Ipplace:'Search Connector, data base, table...'
-    }
+    
     return (
         <>
-        <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace}/>
+        {/* <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace}/> */}
         
-        <AppsContainer >
-            <RecenetChats key={'data'}/>
-        </AppsContainer >
         <div>
-        <TutsCard  key={new Date().getTime()}/>
+            {/* <RecenetChats/> */}
+
+            <ConnectionDialogContent />
+        </div>
+        <div>
+        <TutsCard/>
         </div>
         </>
     )

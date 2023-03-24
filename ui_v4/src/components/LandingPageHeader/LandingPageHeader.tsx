@@ -29,6 +29,8 @@ export const LandingPageHeader = (props:LandingPageHeaderProps)=>{
             }
             else if(props.HeaderPage=='playground'){
                 navigate(`/playground?tabKey=playground`)
+            }else if(props.HeaderPage=='data'){
+                navigate('source')
             }
     
     }
