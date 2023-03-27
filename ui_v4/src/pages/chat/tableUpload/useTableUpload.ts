@@ -18,7 +18,7 @@ export type UseTableUploadParam = {
     onStatusChangeDebug?: (newStatus: Status) => void
     onStatusChangeInfo?: (newStatus: Status, chatId?:string) => void
     onCSVToUploadValidationFail?: (reason: string, fileName?: string, chatId?:string) => void
-    onRecommendedQuestionsGenerated?: (recommendedActions: any, chatId?:string) => void
+    onRecommendedQuestionsGenerated?: (recommendedActions: any, chatId?:string, tableName?:string) => void
 }
 
 export type UseTableUploadReturnValue = {
@@ -148,7 +148,7 @@ function useTableUpload(params: UseTableUploadParam, chatIdFromChatFooter:string
         {
             onMutate: () => {
                 setUploadTableContext({ type: "SetStatus" , payload: { uploadState: S3UploadState.FETCHING_TABLE_QUESTIONS }})
-                chatId && params?.onStatusChangeInfo?.(S3UploadState?.GENERATING_QUESTIONS(activeFileSchema?.tableName),chatId)
+                // chatId && params?.onStatusChangeInfo?.(S3UploadState?.GENERATING_QUESTIONS(activeFileSchema?.tableName),chatId)
             }
         }
     )
@@ -269,7 +269,8 @@ function useTableUpload(params: UseTableUploadParam, chatIdFromChatFooter:string
           
           const recommendedQuestionsData = await getRecommenededQuestions.mutateAsync({ tableId: fileSchema.tableId! });
           setUploadTableContext({ type: "SetStatus", payload: { uploadState: S3UploadState.GENERATING_QUESTIONS_SUCCESS } });
-          chatId && params?.onRecommendedQuestionsGenerated?.(recommendedQuestionsData, chatId);
+          chatId && params?.onRecommendedQuestionsGenerated?.(recommendedQuestionsData, chatId, fileSchema?.tableName);
+          
           dispatch({
             type: 'SET_LOADING',
             payload: {

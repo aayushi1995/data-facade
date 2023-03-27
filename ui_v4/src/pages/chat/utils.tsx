@@ -51,9 +51,20 @@ export const postProcessingFetchingMessage = (messages:any) => {
     let messagesArray:any[] = []
     sortedArray?.forEach((obj:any, index:number) => {
         let skipThisObj = false
+
+        let message
+        if(obj?.MessageType === 'text' || obj?.MessageType === 'fileInput'){
+            message = JSON.parse(obj?.MessageContent)?.text
+        } else if(obj?.MessageType === 'error') {
+            message = JSON.parse(obj?.MessageContent)?.error
+        } else {
+            message = obj?.MessageContent
+        }
+
+
         let temp =  {
             id: obj?.Id,
-            message: obj?.MessageType === 'text' ? JSON.parse(obj?.MessageContent)?.text :  obj?.MessageType === 'error' ? JSON.parse(obj?.MessageContent)?.error : obj?.MessageContent,
+            message: message,
             // if we dont get a sentBy then add previoous message time
             time: obj?.SentOn ? parseInt(obj?.SentOn) : index > 1 ? parseInt(sortedArray?.[index-1]?.sentOn): new Date().getTime(),
             from: obj?.MessageType === "table_input" || obj?.SentBy === "Bot" ? "system" : 'user',

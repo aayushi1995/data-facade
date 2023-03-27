@@ -114,7 +114,7 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
                 }) || " "
                 
                return (<SmartChatBlock 
-                    message={{...message, preMessage: message?.preMessage || `Here is the response generated: ${latestMessage?.message}`}} 
+                    message={{...message, preMessage: message?.preMessage || `${latestMessage?.message ? "Here is the response generated: "+latestMessage?.message : "Here it is:"}`}} 
                     handleConversation={handleConversation} 
                     handleDeepDive={handleDeepDive} 
                     handleActionInstanceSubmit={handleActionInstanceSubmit}

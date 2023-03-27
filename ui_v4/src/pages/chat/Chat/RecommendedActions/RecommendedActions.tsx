@@ -29,11 +29,11 @@ const RecommendedActionsInput = (props: {recommendedActions?: ActionDefinitionDe
             dataSource={recommendedActionsArray || []}
             size="small"
             renderItem={(item) => (
-            <RecommendedActionsMainListItem onClick={() => onSelect(item)} className="list-item" style={{ cursor: 'pointer' , borderBottom: '0px',paddingLeft:'0px' }}>
+            <RecommendedActionsMainListItem className="list-item" style={{ cursor: 'pointer' , borderBottom: '0px',paddingLeft:'0px' }}>
                 {/* <List.Item.Meta
                     title={item?.ActionDefinition?.model?.UniqueName || "NA"}
                 /> */}
-                <StyledListItem>
+                <StyledListItem onClick={() => onSelect(item)} >
                     {item?.ActionDefinition?.model?.DisplayName || item?.ActionDefinition?.model?.UniqueName || item?.ActionDefinition?.model?.Description || "Action Name" }
                 </StyledListItem>
             </RecommendedActionsMainListItem>

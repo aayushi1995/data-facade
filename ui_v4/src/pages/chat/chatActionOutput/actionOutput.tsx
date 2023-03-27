@@ -65,15 +65,22 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
         window.open(`${ui_v3_url}/application/edit-action/${actionExecutionDetailQuery?.data?.ActionDefinition?.Id}`)
     }
 
-    const [updatedBy, setUpdatedBy] = useState<string | undefined>(undefined)
+    const [updatedBy, setUpdatedBy] = useState<string | undefined>()
+    const [updatedBySlider, setUpdatedBySlider] = useState<string | undefined>()
 
     useEffect(() => {
         let actionDefiniton = actionExecutionDetailQuery?.data?.ActionDefinition
         if(!!chatContext?.actionData?.hasOwnProperty(actionDefiniton?.Id)){
             actionDefiniton?.Id && setUpdatedBy(chatContext?.actionData?.[actionDefiniton?.Id])
+            actionDefiniton?.Id && setUpdatedBySlider(chatContext?.actionData?.[actionDefiniton?.Id])
         }
     },[chatContext?.actionData])
 
+
+    useEffect(() => {
+        setUpdatedBy(actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy || "AI")
+    },[actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy])
+    console.log('updatedBY',updatedBy)
 
     return ( 
         <ReactQueryWrapper  {...actionExecutionDetailQuery}>
@@ -119,16 +126,16 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                             </ActionCard>
                             {props?.showFooter && 
                             <div style={{display: 'flex', gap: 3, alignItems: 'center'}}>
-                            <StyledActionOutputFooter isBot={updatedBy === "AI" || actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy === "AI"}>
+                            <StyledActionOutputFooter isBot={updatedBy === "AI"}>
                                 <StyledIcon> 
                                     <Space size={6}>
-                                        {updatedBy === "AI"
+                                        {updatedBy == "AI"
                                         ? <><BotIcon/> AI Insight</> 
-                                        : actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy === "AI" ? <><BotIcon/> AI Insight</>  : <><UserOutlined /> {updatedBy || actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy}</>}
+                                        : updatedBy == "AI" ? <><BotIcon/> AI Insight</>  : <><UserOutlined /> {updatedBy || actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy}</>}
                                     </Space> 
                                 </StyledIcon> 
                                 <Button type="link" style=  {{marginRight:'10px'}} onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)}>Check Code</Button><Button type="link" onClick={handleShowReference}>Reference</Button>
-                                {updatedBy === "AI" || actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy === "AI" && <Button onClick={onTrainModel} type="link"> Accept Answer </Button>}
+                                {updatedBy == "AI" && <Button onClick={onTrainModel} type="link"> Accept Answer </Button>}
                                 <FlexBox style={{justifyContent: 'space-between', width: '70px'}}>
                                     <Button icon={props.messageFeedback ? <LikeFilled /> : <LikeOutlined />} onClick={() => props?.handleLikeDislike?.(true, props.messageId || "")}/>
                                     <Button icon={props.messageFeedback === false ? <DislikeFilled /> : <DislikeOutlined />} onClick={() => props?.handleLikeDislike?.(false, props.messageId || "")}/>
@@ -139,7 +146,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                 </>
                 <div>
                     {props.handleDeepDive && actionExecutionTerminalState && <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
-                    {props?.fromDeepDive && <ActionUpdatedByPopup updatedBy={updatedBy}/>}
+                    {props?.fromDeepDive && <ActionUpdatedByPopup updatedBy={updatedBySlider}/>}
                 </div>
             </FlexBox>
         </ReactQueryWrapper>

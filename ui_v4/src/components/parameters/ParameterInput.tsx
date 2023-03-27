@@ -27,8 +27,28 @@ const StyledSelect = styled(Select)`
     align-items: center;
 
     .ant-select-selector {
-        height:50px;
+        height:50px !important;
+        align-items:center !important;
+        border-radius: 0px;
+        width:100% !important;
+        overflow:scroll;
+    }
+    .ant-select-selector > div {
+        flex-wrap: nowrap !important;
+    }
+    .ant-select-selection-item{
         align-items:center;
+        height: 30px !important;
+        display: flex;
+        background-color: white !important;
+        border: 0px !important;
+    }
+    .ant-select-selection-search {
+        width: 100% !important;
+    }
+    .ant-select-selection-search-input {
+        height:50px !important;
+        width:100% !important;
     }
     
     .ant-select-selection-item {
@@ -38,21 +58,27 @@ const StyledSelect = styled(Select)`
         display:flex;
         align-items:center;
     }
+  
 `
 
-
-const StyledOption = styled(Select.Option)`
-
-    .ant-select-item-option-content {
-        display:flex;
-        justify-content: center;
-        align-items:center;
+const StyledOption = styled.div`
+    display:flex !important;
+    align-items:center !important;
+    
+    & > span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width:250px;
     }
+   
 `
 const StyledInput = styled(Input)`
     width:100%;
-    min-width: 150px;
+    min-width: 300px;
     max-width: 300px;
+    height:50px;
+    
 `
 
 
@@ -288,8 +314,11 @@ const OptionSetMultipleInput = (props: OptionSetMultipleParameterInput) => {
             } 
         }
         >
-            {availableOptions.map(value => <Select.Option key={value?.name} value={value?.name}>
-                {value?.name}
+            {availableOptions.map(value => 
+            <Select.Option key={value?.name} value={value?.name}>
+                <StyledOption>
+                    {value?.name}
+                </StyledOption>
             </Select.Option>)}
         </StyledSelect>
     )
@@ -416,7 +445,9 @@ const ColumnListInput = (props: ColumnListParameterInput) => {
             {
                 fetchColumnsQuery.data && fetchColumnsQuery.data?.[0] && fetchColumnsQuery.data?.[0]?.Columns && fetchColumnsQuery.data?.[0]?.Columns.map((value: ColumnProperties) =>
                     <Select.Option key={value.Id} style={{width:'100%'}} value={value.UniqueName}>
-                        {value.UniqueName}
+                        <StyledOption>
+                            {value.UniqueName}
+                        </StyledOption>
                     </Select.Option>)
             }
 
@@ -655,17 +686,16 @@ const TableListInput = (props: TableListParameterInput) => {
     const { tables, loading } = useTables({ tableFilter: props?.inputProps?.availableTableFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived })
 
     const { AvailableTables, SelectedTables } = getTableSelectionInfo(tables, selectedTableFilters)
+    const { availableProviderInstanceQuery: childNodes, availableProviderDefinitionQuery: parentNodes } = UseFetchProviderInstanceDetailsHook()
 
     return (
         <StyledSelect loading={loading} placeholder="Table name"
-        style={{width: "100%"}}
+            style={{width: "100%"}}
             showSearch
             mode="multiple"
             optionFilterProp="children"
             defaultValue={SelectedTables?.map(table => table.Id)}
             onChange={(value: any) => {
-
-                console.log(value)
                 if (value === "NA") {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange([table])
@@ -679,7 +709,9 @@ const TableListInput = (props: TableListParameterInput) => {
         >
             {
                 tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
-                    {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}
+                    <StyledOption>
+                        {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
+                    </StyledOption>
                 </Select.Option>)
             }
         </StyledSelect>
@@ -751,15 +783,16 @@ const TableInput = (props: TableParameterInput) => {
         }
     }
 
+   
+
 
 
     const { tables, loading } = useTables({ tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived })
     const { SelectedTable, AvailableTables } = getTableSelectionInfo(tables, selectedTableFilter)
     const { availableProviderInstanceQuery: childNodes, availableProviderDefinitionQuery: parentNodes } = UseFetchProviderInstanceDetailsHook()
-    console.log(childNodes, parentNodes, tables)
     
     return (
-       
+        
         <StyledSelect loading={loading} placeholder="Table name"
             showSearch
             optionFilterProp="children"
@@ -779,11 +812,12 @@ const TableInput = (props: TableParameterInput) => {
         >
             {
                 tables?.map((value, index) =>  {
-                    {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} 
                     return (
-                        <StyledOption key={index} value={value.Id}>
-                           {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
-                        </StyledOption>
+                        <Select.Option key={index} value={value.Id}>
+                            <StyledOption>
+                                {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
+                            </StyledOption>
+                        </Select.Option>
                     )
                 })
                

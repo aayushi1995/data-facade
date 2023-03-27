@@ -1,9 +1,11 @@
 import { TableListParameterInput, TableParameterInput } from "@/components/parameters/ParameterInput"
 import { TableProperties } from "@/generated/entities/Entities"
 import useFeatureConfig from "@/hooks/useFetaureConfig"
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons"
 import Button from "antd/es/button"
 import { useState } from "react"
 import ParameterInput from "../../../components/parameters/ParameterInput"
+import { FlexBox } from "../ChatFooter/ChatFooter.styles"
 
 
 export interface ChatTableInputProps {
@@ -63,10 +65,10 @@ const ChatTableInput = (props: ChatTableInputProps) => {
     }
 
     return (
-        <>
+        <FlexBox style={{alignItems:'center', margin: '20px 0px'}}>
             <ParameterInput {...featureConfigData?.multiTableInput ? {...parameterListInputProps} : {...parameterInputProps}}/>
-            <Button onClick={handleSubmit}>Submit</Button>
-        </>
+            <Button type="ghost" onClick={handleSubmit} icon={ <CheckOutlined style={{color:'green', fontSize: '20px'}}/>} style={{marginLeft:'20px'}}/>
+        </FlexBox>
        
 
     )

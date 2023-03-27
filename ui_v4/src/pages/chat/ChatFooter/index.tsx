@@ -89,11 +89,11 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     
 
     const { setSourceFile, uploading, forceUpload, tableNameExists, handleSetChatId } = useTableUpload({
-        onRecommendedQuestionsGenerated: (recommended_actions, chatId) => {
+        onRecommendedQuestionsGenerated: (recommended_actions, chatId, tableName) => {    
+            // handleSend({text: `Finding some insights for ${tableName} table`}, 'system', 'text',   chatId)
             handleSend({text: recommended_actions}, 'system', 'recommended_actions',   chatId)
         },
         onStatusChangeInfo(newStatus, chatId) {
-            console.log(chatId)
             handleSend({text: newStatus?.message}, 'system', 'text',  chatId)
             if(newStatus?.tableName) {
                 handlefetch1000Rows(newStatus?.tableName)

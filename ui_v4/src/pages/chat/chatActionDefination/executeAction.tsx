@@ -14,6 +14,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import SelectProviderInstanceHook from "@hooks/actionDefination/SelectProviderInstanceHook";
 import SelectProviderInstance from "./SelectProviderInstance";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 const CardWrapperStyled = styled.div`
     display:flex;
@@ -243,9 +244,15 @@ const ExecuteActionNew = (props: ExecuteActionProps) => {
                                     parentExecutionId={props.parentExecutionId}
                                     fromTestRun={props.fromTestRun}
                                 />
-                                {showSubmit && <Button type="primary" onClick={handleSubmitMessage}>
-                                    Submit
-                                </Button>}
+                                {showSubmit && 
+                                    <>
+                                        <Button type="ghost" onClick={handleSubmitMessage} icon={ <CheckOutlined style={{color:'green', fontSize: '20px'}}/>}/>
+                                        {/* <Button type="ghost" onClick={} icon={ <CloseOutlined  style={{color:'red',fontSize: '20px'}}/>}/> */}
+                                        {/* <Button type="ghost" onClick={} icon={ <CloseOutlined  style={{color:'red',fontSize: '20px'}}/>}/> */}
+                                    </>
+                                    
+                        
+                                }
                                 
                             </CardWrapperStyled>
                           

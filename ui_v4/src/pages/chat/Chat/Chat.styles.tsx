@@ -1,4 +1,4 @@
-import { List } from 'antd'
+import { Button, List } from 'antd'
 import styled from 'styled-components'
 
 export const ChatWrapper = styled.div`
@@ -75,6 +75,8 @@ export const RecommendedActionsMainDiv = styled.div`
 
 export const RecommendedActionsMainListItem = styled(List.Item)`
     padding: 0px;
+    width:auto;
+    cursor:default !important;
 `
 export const StyledListItem = styled.div`
     color: #0770E3;
@@ -86,6 +88,7 @@ export const StyledListItem = styled.div`
       cursor: pointer;
       background-color: #e7e7e7;
     }
+    cursor:pointer;
 `
 
 export const ButtonContainer = styled.div`

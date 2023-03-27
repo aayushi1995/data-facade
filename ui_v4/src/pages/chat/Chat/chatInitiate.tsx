@@ -367,7 +367,10 @@ const InitiateChat = () => {
                     SentBy: "Bot",
                     SentOn: new Date().getTime()
                 }
+
                 handleConversation(ChatObj?.MessageContent, 'system', 'action_output', ChatObj?.Id, false, undefined, undefined, "Previewing the Table you uploaded.");
+                handleConversation(`Finding some insights for ${tablename} table`, 'system', 'text', ChatObj?.Id, false, undefined, undefined, undefined);
+
             }
         })
     }

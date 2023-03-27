@@ -48,9 +48,7 @@ const SuccessActionOutput = (props: ViewActionExecutionOutputProps) => {
             isLoading={actionExecutionParsedOutputQuery.isLoading}
             error={actionExecutionParsedOutputQuery.error}
         >
-
             {outputComponentToRender(actionExecutionParsedOutputQuery.data?.Output)}
-
         </ReactQueryWrapper>
 
     )
