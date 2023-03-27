@@ -13,6 +13,9 @@ height: 190px;
 background: linear-gradient(265.76deg, rgba(255, 255, 255, 0) -21.4%, #FFFFFF 51.08%),url(${props => props.backgroundImage});
 background-repeat: no-repeat;
 background-size: cover;
+&:hover { 
+      box-shadow: 0 0 11px rgba(33,33,33,.2)
+  }
 `
 
 export const CardTitleTypo = styled(Typography)`

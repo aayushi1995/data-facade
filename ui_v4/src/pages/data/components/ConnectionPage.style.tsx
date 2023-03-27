@@ -62,10 +62,15 @@ color: #4B5563;
 `
 export const ConnectionCard = styled(Card)`
 width: 100%;
+min-width:500px;
 height: 230px;
 background: #FFFFFF;
 border: 1px solid #E5E7EB;
 border-radius: 10px;
+cursor: pointer;
+&:hover {
+  box-shadow: 0 0 8px rgba(0,128,255,1);; 
+}
 `
 export const LastSyncMsg = styled(Typography)`
 font-style: normal;

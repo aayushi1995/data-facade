@@ -6,9 +6,9 @@ import { ChatIcon, DatabaseIcon, GridViewIcon, HomeIcon, PlaygroundIcon } from "
 // Constant list of the sidebar menu Items
 export const SidebarItems = () => [
 { key: 'home', text: 'Home', location: '/', icon: HomeIcon },
-{ key: 'chatland', text: 'Chats', location: '/chatland', icon: ChatIcon },
+{ key: 'chats', text: 'Chats', location: '/chats/land', icon: ChatIcon },
 { key: 'data', text: 'Data', location: '/data', icon: DatabaseIcon },
-{ key: 'PlayGroundLand', text: 'Playground', location: '/PlayGroundLand', icon: PlaygroundIcon },
+{ key: 'playground', text: 'Playground', location: '/playground/land', icon: PlaygroundIcon },
 { key: 'apps', text: 'Apps', location: '/apps', icon: GridViewIcon },
 ]
 

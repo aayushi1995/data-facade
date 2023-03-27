@@ -3,6 +3,10 @@ import styled from "styled-components";
 
 export const ChatStyledCard = styled(Card)`
     height: 175px;
+    cursor: pointer;
+    &:hover { 
+      box-shadow: 0 0 11px rgba(33,33,33,.2)
+  }
 `
 
 export const TextTypo2 = styled(Typography)`
@@ -24,5 +28,5 @@ color: #6B7280;
 margin-top:30px;
 `
 export const ChatCardContainer = styled.div`
-
+margin: 70px 0px 70px 0px;
 `

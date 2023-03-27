@@ -1,3 +1,4 @@
+import DraggableSlider from '@/components/DraggableSlider';
 import { LandingPageHeader } from '@/components/LandingPageHeader/LandingPageHeader';
 import { ReactQueryWrapper } from '@/components/ReactQueryWrapper/ReactQueryWrapper';
 import { DATA_CONNECTIONS_ROUTE } from '@/contexts/ConnectionsContext';
@@ -11,9 +12,11 @@ import { useDeleteActionInstance } from '@/hooks/connections/hooks/useDeleteActi
 import { useDeleteProviderInstance } from '@/hooks/connections/hooks/useDeleteProviderInstance';
 import useSyncProviderInstance from '@/hooks/connections/hooks/useSyncProviderInstance';
 import useUpdateSyncActionInstance from '@/hooks/connections/hooks/useUpdateSyncActionInstance';
+import { useGetTables } from '@/hooks/tableView/AllTableViewHooks';
+import { ChatWrapperStyled } from '@/pages/chat/Chat/Chat.styles';
 import Icon, { CloudSyncOutlined, DeleteFilled, MoreOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Collapse, Divider, Input, Modal, Popover, Row, Switch, Tooltip, Typography } from 'antd';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { generatePath, useNavigate } from "react-router";
 import { Route, Routes } from 'react-router-dom';
@@ -22,6 +25,8 @@ import { v4 as uuidv4 } from 'uuid';
 // import { ViewFailedActionExecution } from "../../../../common/components/action_execution/view_action_execution/VIewActionExecution";
 import { ConnectionDialogContent, ProviderIcon } from './ConnectionDialogContent';
 import { CardUniqeName, ConnectionCard, ConnectorCardHeader, LastSyncMsg, NumTableDetails, StyledIconContainer } from './ConnectionPage.style';
+import { IconStack } from './constants';
+import TableDetails from './TableDetails';
 // type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 interface DataGridRow {
     [key: string]: any;
@@ -164,12 +169,56 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
         acc[category].push(obj);
         return acc;
       }, {}));
-    if(NewRows.length==0){
+    if(providerCardQuery.isSuccess && providerCardQuery.data.length==0){
         history('/data/source')
     }
-    const { Panel } = Collapse;
-    const DataCards = ()=>{
 
+    const [size, setSize] = useState([96,3])
+    const [visibleTab, setVisibleTab] = useState<string>('connections')
+    const [connectionVisible , setConnectionVisible] = useState<boolean>(true)
+    const [tableVisible , setTableVisible] = useState<boolean>(false)
+    useEffect(()=>{
+        if(connectionVisible && tableVisible){
+            setSize([50,50])
+            setVisibleTab('tables')
+        }else if(connectionVisible && !tableVisible){
+            setSize([96,3])
+            setVisibleTab('connections')
+        }else if(!connectionVisible && tableVisible){
+            setSize([3,96])
+            setVisibleTab('tables')
+        }else if(!connectionVisible && ! tableVisible){
+            setSize([96,3])
+            setConnectionVisible(true)
+            setVisibleTab('connections')
+        }
+    },[tableVisible,connectionVisible])
+    const handleTabClick = (value:string) => {
+        if(value === 'connections') {
+            setConnectionVisible(!connectionVisible)
+        } else if (value === 'tables'){
+            setTableVisible(!tableVisible)
+        } 
+    }
+    const { Panel } = Collapse;
+    const DataItemsCard = (props: { ProviderDefinition: { Id: any; }; ProviderInstance: ProviderInstance | undefined; ProviderInstanceStat: ProviderInstanceStat | undefined; SyncActionInstance: ActionInstance | undefined; })=>{
+        const tableQuery = useGetTables({ options: {}, tableFilter:{ProviderInstanceID:  props.ProviderInstance?.Id}})
+    
+        return(<>
+        <ConnectionCard>
+                    <ConnectionCell providerDefination={props?.ProviderDefinition} providerInstance={props?.ProviderInstance} providerInstancestat={props?.ProviderInstanceStat} handleForceSync={handleForceSync} syncActionInstance={props?.SyncActionInstance}/>
+                    
+                    {/* <DefaultProviderCell providerInstance={row?.ProviderInstance!}/> */}
+        </ConnectionCard>
+        <div>
+                {/* {tableQuery.data?.map(tab=>
+                    <div onClick={()=>{history(`/data/${tab.TableUniqueName}?tabKey=${tab.TableUniqueName}`);setTableVisible(true)}}>{tab.TableUniqueName}</div>
+                    )} */}
+            </div>
+        </>
+        )
+    }
+    const DataCards = ()=>{
         return(
             <Collapse ghost>
                 {NewRows?.map(rowd=>
@@ -179,11 +228,14 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                     <Row gutter={16}>
                     {rowd.map((row: { ProviderDefinition: { Id: any; }; ProviderInstance: ProviderInstance | undefined; ProviderInstanceStat: ProviderInstanceStat | undefined; SyncActionInstance: ActionInstance | undefined; })=>
                     <Col span={8}>
-                    <ConnectionCard>
+                        <DataItemsCard ProviderDefinition={row.ProviderDefinition} ProviderInstance={row?.ProviderInstance} ProviderInstanceStat={row?.ProviderInstanceStat} SyncActionInstance={row?.SyncActionInstance}/>
+                    {/* <ConnectionCard>
                     <ConnectionCell providerDefination={row.ProviderDefinition} providerInstance={row?.ProviderInstance} providerInstancestat={row?.ProviderInstanceStat} handleForceSync={handleForceSync} syncActionInstance={row?.SyncActionInstance}/>
-                    
-                    {/* <DefaultProviderCell providerInstance={row?.ProviderInstance!}/> */}
-                    </ConnectionCard>
+                    <DefaultProviderCell providerInstance={row?.ProviderInstance!}/>
+                    </ConnectionCard> */}
+                    {
+
+                    }
                     </Col>
                     )}
                     </Row>
@@ -248,27 +300,32 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                             
                         </div>
                     </Modal>
-                </div>
+                </div> 
                  )}
                  />
-    <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace}/>
-     <div style={{margin:'30px 0px 0px 0px'}}>  
-    {DataCards() }
-    </div> 
-    <Routes>
-        <Route path={'/data/connections/datasource'} element={
-            <>
-                <Modal
-                    open={true}
-                    title="Title"
-                    onCancel={()=>history('/data/connections')}
-                    footer={[]}
-                            >
-                        <ConnectionDialogContent />
-                </Modal>
-            </>
-        }/>
-    </Routes>
+
+        <DraggableSlider
+            size={[...size]}
+            leftChild={
+                <ChatWrapperStyled>
+                    {connectionVisible && 
+                    <>
+                <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace} />
+                    <div style={{ margin: '30px 0px 0px 0px' }}>
+                        {DataCards()}
+                    </div></>
+            }
+                </ChatWrapperStyled>
+            }
+            rightChild={
+                <>
+                {tableVisible && <><TableDetails/></>}
+                </>
+            }
+            iconStack={IconStack(handleTabClick)}
+            activeTab={visibleTab}
+        />
+    
 </>
             
     )
@@ -387,6 +444,7 @@ export const ConnectionCell = (props: {providerDefination:any,providerInstance?:
         })
     }
 
+   
     return (
         <div>
             <Modal open={createActionInstanceDialog}>

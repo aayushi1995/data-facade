@@ -16,7 +16,7 @@ const PlayGroundLand = () => {
         <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace}/>
         
         <AppsContainer >
-            <RecenetChats key={'Playground'}/>
+            
         </AppsContainer >
         <div>
         <TutsCard key={new Date().getTime()}/>

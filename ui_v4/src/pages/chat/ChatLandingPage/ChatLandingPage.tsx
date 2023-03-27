@@ -12,13 +12,7 @@ import { BtnText, ChatCreateButton, HeaderTextTypo, HeaderTypo, InputStyle } fro
 
 export const ChatLandingPage = ()=>{
 
-    const HEADER_ENUMS = {
-        title:"Your Chats",
-        desc:"Manage all your Chats.",
-        btnText:"Start new Chat",
-        page:'chat',
-        Ipplace:'Search for a Chat'
-    }
+    
     const ChatHisCard = ()=>{
         return(
             <>
@@ -36,11 +30,10 @@ export const ChatLandingPage = ()=>{
     
     return(
         <>
-        <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace}/>
-        
-        <AppsContainer >
+        {/* <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace}/> */}
+        {/* <AppsContainer > */}
         <RecenetChats key={'Chat'}/>             
-        </AppsContainer >
+        {/* </AppsContainer > */}
         <div>
         <TutsCard  key={new Date().getTime()}/>
         </div>

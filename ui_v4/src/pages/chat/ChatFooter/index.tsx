@@ -155,10 +155,10 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     )
 
     const { myValue ,setMyValue } = useContext(HomeChatContext);
-
+    
     useEffect(()=>{
         if(myValue!=""){
-            handleSend({text: myValue}, 'user');
+            handleSend({text: myValue}, 'user',undefined, chatId);
         }
     },[myValue])
     return (

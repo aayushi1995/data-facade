@@ -317,7 +317,7 @@ export const ConnectionsProvider = ({children}: { children: React.ReactElement }
         options: {
             onSuccess: (data, varibles, context) => {
                 if(connectionState.mode === "CREATE"){
-                    history(DATA_CONNECTIONS_ROUTE)
+                    history('/data')
                 } else {
                     loadProviderInstance.refetch()
                 }

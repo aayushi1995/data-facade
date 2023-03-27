@@ -89,7 +89,7 @@ export const ConnectionDialogContent = () => {
             <>
             <Row style={{marginTop:'35px',marginBottom:'35px'}}>
             <Col span={6}>
-                <HeaderTypo>Data Sources</HeaderTypo>
+                <HeaderTypo>Connection</HeaderTypo>
                 <HeaderTextTypo>Get started with our available Connectors.</HeaderTextTypo>
             </Col>
             <Col span={10}>

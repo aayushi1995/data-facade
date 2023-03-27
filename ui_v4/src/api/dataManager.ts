@@ -358,7 +358,7 @@ export const fetchEntityBrowser = async (path:any) => {
 };
 
 
-export const useRetreiveData = (entityName:any, actionProperties:any, options:any) => useQuery(
+export const useRetreiveData = (entityName:any, actionProperties:any, options?:any) => useQuery(
     [entityName, actionProperties],
     () => dataManager.getInstance.retreiveData(entityName, actionProperties),
     options

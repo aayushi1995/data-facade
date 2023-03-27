@@ -8,6 +8,9 @@ export const StyledCard = styled(Card)`
  border-radius : 0px;
  height: 135px;
  pading:10px;
+ &:hover { 
+      box-shadow: 0 0 11px rgba(33,33,33,.2)
+  }
 `;
 
 export const StyledTypo1 = styled(Typography)`

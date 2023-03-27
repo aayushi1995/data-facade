@@ -44,9 +44,9 @@ export const ChatHeader = ()=>{
             <Col span={5}>
             <ChatStyledCard>
                 <div style={{display:'flex',flexDirection:'row',gap:20}}>
-                <Icon style={{ color: '#0770E3'}}  component={CommentBlankIcon as React.ForwardRefExoticComponent<any>} />
+                <Icon style={{ color: '#0770E3'}} onClick={() => handleChatClick(props?.Id, props?.Name)}  component={CommentBlankIcon as React.ForwardRefExoticComponent<any>} />
                 <TextTypo2 onClick={() => handleChatClick(props?.Id, props?.Name)} ><Paragraph ellipsis={{ rows: 1}}>{props?.Name || props?.Id}</Paragraph></TextTypo2>
-                <CloseOutlined style={{marginLeft:'auto',color:'#9CA3AF'}} onClick={()=>{setShowCard(false)}}/>
+                <CloseOutlined style={{marginLeft:'auto',color:'#9CA3AF',zIndex:3}} onClick={()=>{setShowCard(false)}}/>
                 </div>
             </ChatStyledCard>
             </Col>
