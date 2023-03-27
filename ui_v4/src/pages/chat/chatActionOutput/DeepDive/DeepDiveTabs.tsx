@@ -19,6 +19,7 @@ const initialItems = (deepdiveData:any, handleActionSelected:any) => [{
   }]
 
 const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
+
         const [items, setItems] = useState(initialItems(deepdiveData, handleActionSelected));
         const [activeKey, setActiveKey] = useState<any>('0');
         const newTabIndex = useRef(0);
@@ -67,7 +68,7 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
             let DDobj = items?.find((obj:any) => obj?.key === deepdiveData?.data?.ActionInstance?.ResultTableName)
             if(!DDobj){
                 let temp = {
-                    label: deepdiveData?.data?.ActionDefinition?.UniqueName || 'New Tab',
+                    label: `${deepdiveData?.data?.ActionDefinition?.UniqueName.substring(0,10)}...` || 'New Tab',
                     children: <TabComponent deepdiveData={deepdiveData} handleActionSelected={handleActionSelected}/>,
                     key: deepdiveData?.data?.ActionInstance?.ResultTableName,
                     closable: true,
@@ -79,11 +80,11 @@ const DeepDive = ({deepdiveData, handleActionSelected}:any) => {
                     setItems([...items,temp])
                 }
             } 
-            setActiveKey(deepdiveData?.data?.ActionInstance?.ResultTableName)
-            
+            setActiveKey(deepdiveData?.data?.ActionInstance?.ResultTableName)            
         },[deepdiveData])
+
        
-    return (
+        return (
             <DeepDiveMainWrapper>
                 <Tabs
                     hideAdd

@@ -12,6 +12,7 @@ import FetchActionExecutionDetails from "@/hooks/actionOutput/fetchActionExecuti
 
 const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
     const {actionExecutionId, displayPostProcessed, onCompletion} = props
+
     const [actionExecutionTerminalState, setActionExecutionTerminalState] = React.useState(false)
     const [actionExecutionError, setActionExecutionError] = React.useState(false)
     const [intervalId, setIntervalId] = React.useState<any>()
@@ -21,6 +22,7 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
     const [childActionExecutionId, setChildActionExecutionId] = React.useState<string | undefined>(props.childActionExecutionId)
     const [selectedActionId, setSelectedActionId] = React.useState<string | undefined>()
     const fetchedDataManager = dataManager.getInstance as {retreiveData: Function, saveData: Function}
+
     const fetchChildActionExecutionQuery = useQuery([labels.entities.ActionExecution, "Child", {Id: actionExecutionId}], () => {
         
         return fetchedDataManager.retreiveData(labels.entities.ActionExecution, {
@@ -31,6 +33,7 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
     }, {
         enabled: false,
         onSuccess: (data: ActionExecution[]) => {
+            console.log('INSIDE HOOK', data)
             setPostProcessedAction(data)
         }
     })
@@ -91,6 +94,7 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
             onSuccess: handlePollingDataFetched
         }
     })
+    
     const onChildExecutionCreated = (actionExecutionId: string) => {
         setChildActionExecutionId(actionExecutionId)
     }

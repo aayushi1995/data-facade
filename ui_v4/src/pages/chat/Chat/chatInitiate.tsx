@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { initiateChat, startConversation } from "@/actions/chat.actions";
 import dataManager from "@/api/dataManager";
+import { RouteContext } from "@/components/BrowserTab";
 import DraggableSlider from "@/components/DraggableSlider";
 import AppContext from "@/contexts/AppContext";
 import { DataContext, SetDataContext } from "@/contexts/DataContextProvider";
@@ -32,12 +33,14 @@ const InitiateChat = () => {
     // central data provider context
     const dataContext = useContext(DataContext);
     const appContext: any = useContext(AppContext);
-        // local states
+    const {removeTab, handleNewTabWithId} = useContext(RouteContext)
+
+    
+    // local states
     const { chatId } = useParams<string>();
     const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState(false);
-    // const [messages, setMessages] = useState<IChatMessage[] | undefined>([])
     const [deepdiveData, setDeepDiveData] = useState<any | undefined>()
     const [size, setSize] = useState([96,3])
     const uploadTableContext = React.useContext(UploadTableStateContext)
@@ -159,19 +162,6 @@ const InitiateChat = () => {
 
 
 
-
-    useEffect(() => {
-        if (chatId) {
-            if (chatId !== getLocalStorage(`chat_${chatId}`)) {
-                setIsError(true);
-            }
-            else {
-                /* resize the slider*/
-                handleTabClick('chat')
-            }
-        }
-    }, [chatId])
-
     useEffect(() => {
         const userObj = messages?.length > 0 && messages?.filter((obj:any) => {
             return obj?.from === 'user'
@@ -181,6 +171,9 @@ const InitiateChat = () => {
                 initiateChat(chatId, appContext.userName, userObj[0]?.message).then(response => {
                     conversationStarted.current = true
                     setLoading(false)
+                    // handleNewTabWithId(id,`${name?.substring(0,10)}`)
+                    removeTab(`chats/${chatId}`)
+                    handleNewTabWithId(chatId, userObj[0]?.message)
                     
                 }).catch(err => {
                     setLoading(false);

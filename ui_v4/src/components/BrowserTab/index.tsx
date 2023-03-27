@@ -91,7 +91,7 @@ const BrowserTab = ({ children }: ChildrenProps) => {
         console.log(value)
         const tab = routes.find((route: any) => route.key === value);
         setActiveTab(value)
-        tab ? navigate(`${value}${tab['params']}`) : params ? navigate(`${value}${params}`) : navigate(value)
+        tab ? navigate(`${value}${tab['params'].substring(0,10)}...`) : params ? navigate(`${value}${params.substring(0,10)}...`) : navigate(value)
 
     };
 
@@ -171,7 +171,8 @@ const BrowserTab = ({ children }: ChildrenProps) => {
             }
             <RouteContext.Provider value={{
                     routes: routes,
-                    handleNewTabWithId: handleNewTabWithId
+                    handleNewTabWithId: handleNewTabWithId,
+                    removeTab: removeTab
                 }}>
                 <Content style={{ minHeight: '80vh', background: '#fff', paddingLeft: 30, paddingRight: 30 ,paddingTop:3}}>
                     {children}

@@ -80,7 +80,6 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
     useEffect(() => {
         setUpdatedBy(actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy || "AI")
     },[actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy])
-    console.log('updatedBY',updatedBy)
 
     return ( 
         <ReactQueryWrapper  {...actionExecutionDetailQuery}>
@@ -145,7 +144,7 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
                     </OutputContainer>
                 </>
                 <div>
-                    {props.handleDeepDive && actionExecutionTerminalState && <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
+                    {props.handleDeepDive && <Button icon={<DeepDiveIcon />} type="default" onClick={() => handleDeepDiveData(actionExecutionDetailQuery,actionExecutionDetailQuery.data?.ActionInstance?.Name)} size="large" style={{display: 'flex',margin: '0px 20px',width: '150px',alignItems: 'center',justifyContent: 'space-around'}} >DeepDive</Button>}
                     {props?.fromDeepDive && <ActionUpdatedByPopup updatedBy={updatedBySlider}/>}
                 </div>
             </FlexBox>

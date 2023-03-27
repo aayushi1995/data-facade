@@ -64,9 +64,15 @@ const ChatFooter = ({ handleSend, loading, handlefetch1000Rows }: any) => {
     const changeHandler = (event: any) => {
         console.log('file is getting uploaded')
         const file = event.target.files[0];
+        const fileInMB = file.size / 1024 ** 2;
+        if(fileInMB <= 10) {
+            setFileToUpload(file)
+            event.target.value='';
+        } else {
+            handleSend("File size should be less than or equal to 10 MB", 'system', 'text', chatId)
+        }
         // handleFileUpload(event)
-        setFileToUpload(file)
-        event.target.value='';
+       
         // handleSend(<SenderPreview fileName={file.name} sendBy={uploadTableStateContext?.uploadState?.message || 'local db'}/>,'user')
    
     };

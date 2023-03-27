@@ -152,7 +152,6 @@ const ViewActionExecutionTableOutput = (props: ViewActionExecutionTableOutputPro
            Download 
         </Button>
     )
-    console.log(downloadButton)
 
     if (isTableOutputSuccessfulFormat(TableOutput)) {
         const preview: TablePreview = JSON.parse(TableOutput.preview)

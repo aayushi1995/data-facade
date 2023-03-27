@@ -31,7 +31,7 @@ const StyledSelect = styled(Select)`
         align-items:center !important;
         border-radius: 0px;
         width:100% !important;
-        overflow:scroll;
+        overflow:hidden;
     }
     .ant-select-selector > div {
         flex-wrap: nowrap !important;

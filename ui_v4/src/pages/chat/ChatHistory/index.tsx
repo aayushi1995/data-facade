@@ -22,7 +22,7 @@ const ChatHistory = () => {
     useEffect(() => {
         dataManager.getInstance.retreiveData("Chat",{}).then((response:any) => {
            if(response.length > 0) {
-                setChatHistory(response)
+                setChatHistory(response.reverse())
            }
         }).catch((error:any) => {
             console.log(error)
@@ -34,7 +34,7 @@ const ChatHistory = () => {
     }
 
     const handleChatClick= (id:any, name?:string) => {
-        handleNewTabWithId(id,`${name?.substring(0,10)}...`)
+        handleNewTabWithId(id,`${name?.substring(0,10)}`)
     }
 
 
