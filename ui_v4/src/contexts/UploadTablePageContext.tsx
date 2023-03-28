@@ -305,9 +305,11 @@ const reducer = (state: UploadTableState, action: UploadTableStateAction): Uploa
                 columnSchema: activeFile?.FileSchema?.columnSchema?.map(column => {
                     const columnName = column?.columnName
                     const columnTags = tagsResponse?.column_tags?.find(col => col?.column_name === column?.columnName)?.column_tags || []
+                    const columnDatatypeFromTags = getDatatypeFromTag(columnTags)
                     return {
                         ...column,
-                        columnTags: columnTags?.map(tagName => ({ Name: tagName }))
+                        columnTags: columnTags?.map(tagName => ({ Name: tagName })),
+                        columnDatatype: columnDatatypeFromTags!==undefined ? columnDatatypeFromTags : column.columnDatatype
                     }
                 })
             }
@@ -642,6 +644,13 @@ const getTypeOfValue = (dataPoints?: any[]) => {
     } else {
         return DatafacadeDatatype.STRING
     }
+}
+
+const getDatatypeFromTag = (tags: string[]) => {
+    const validDataTypes = Object.values(DatafacadeDatatype)
+    const columnDataType = validDataTypes.map(dataType => tags.includes(dataType) && dataType).filter(x => !!x)
+    
+    columnDataType.length === 1 ? columnDataType?.[0] : undefined
 }
 
 export default UploadTableContextProvider;

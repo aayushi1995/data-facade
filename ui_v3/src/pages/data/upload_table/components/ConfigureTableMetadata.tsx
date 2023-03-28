@@ -24,7 +24,7 @@ import labels from '../../../../labels/labels';
 import { DataContext, SetDataContext } from '../../../../utils/DataContextProvider';
 import { SetUploadTableState, SetUploadTableStateContext, UploadState, UploadTableState, UploadTableStateContext } from '../context/UploadTablePageContext';
 import './../presentation/css/TableBrowser.css';
-import { CancelButtonCss, columnDataTypeSelectCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, statusTypoCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer } from './CssProperties';
+import { CancelButtonCss, ColumnHeaderConatiner, ColumnHeaderTextFieldCss, HeaderButtonContainerCss, HeaderTextFieldConatinerCss, HeaderTextFieldCss, MetaDataContainerBoxCss, SaveButtonCss, StatusContainerCss, TableCss, TableHeaderButtonCss, TableHeaderCardCss, TagHeaderSelButtonContainer, columnDataTypeSelectCss, statusTypoCss } from './CssProperties';
 import SelectHeaderRowsButton from './SelectHeaderRowsButton';
 import { findHeaderRows } from './util';
 const dataManagerInstance = dataManager?.getInstance as { saveData: Function, s3PresignedUploadUrlRequest: Function, s3UploadRequest: Function, getTableAndColumnTags: Function, getRecommendedQuestions?: Function }
