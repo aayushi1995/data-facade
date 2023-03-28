@@ -70,6 +70,7 @@ const InitiateChat = () => {
         }})
     }
 
+
     const handleConversationFooter = (message?: any, user?: any, type?: string, chatId?:string) => {
         console.log('Message from Chat Footer', message)
         chatId && handleConversation(message,user,type, undefined, undefined, undefined, undefined, undefined, chatId)
@@ -397,7 +398,9 @@ const InitiateChat = () => {
                                                     messages={messages}
                                                     loading={loadingMessage} 
                                                     handleDeepDive={handleDeepDive}
-                                                    handleConversation={handleConversation}/>
+                                                    handleBOTMessage={handleBOTMessage}
+                                                    handleConversation={handleConversation}
+                                                    handleUpdateMessages={handleUpdateMessages}/>
                                                 </MessageWrapper>
                                                 <ChatFooter handleSend={handleConversationFooter} loading={loadingMessage} handlefetch1000Rows={handlefetch1000Rows}/>
                                             </Col>

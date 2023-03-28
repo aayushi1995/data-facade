@@ -55,6 +55,9 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
                 onCompletion?.(actionExecutionDetails, props.messageIndex)
             }
         }
+        if(data?.length === 0) {
+            setActionExecutionTerminalState(true)
+        }
     }
 
     const increaseTime = () => {

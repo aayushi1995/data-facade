@@ -25,7 +25,7 @@ import RecommendedActionsInput from "../RecommendedActions/RecommendedActions";
 
 
 
-const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handleConversation,  handleDeepDive }: any ) => {
+const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handleConversation,  handleDeepDive, handleUpdateMessages, handleBOTMessage }: any ) => {
     const chatWrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const {chatId} = useParams()
 
@@ -40,33 +40,27 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
 
     const handleActionInstanceSubmit = (messageContent: ActionInstanceWithParameters, type: string, id?:string, isExternalExecutionId?:string) => {           
             const messageObj = {actionInstanceWithParameterInstances: messageContent}
-            handleConversation(JSON.stringify(messageObj), 'user', type, undefined, isExternalExecutionId)
-            // if(isExternalExecutionId) {
-            //     handleConversation(JSON.stringify(messageObj), 'user', type, undefined, isExternalExecutionId)
-            // } else {
-            //     updateMessageMutation.mutate({
-            //         filter: {Id: id},
-            //         newProperties: {MessageContent: JSON.stringify(messageObj)},
-            //         trigger: true
-            //     }, {
-            //         onSuccess: (data) => {
-            //             setMessages((messages: IChatMessage[]) => {
-            //                 const newMessages = messages.map((message: IChatMessage) => {
-            //                     if(message.id === id) {
-            //                         message.message = JSON.stringify(messageObj)
-            //                     }
-            //                     return message
-            //                 })
-            //                 return newMessages
-            //             })
-            //         }
-            //     })
-            // }
+            if(isExternalExecutionId) {
+                handleConversation(JSON.stringify(messageObj), 'user', type, undefined, isExternalExecutionId)
+            } else {
+                updateMessageMutation.mutate({
+                    filter: {Id: id},
+                    newProperties: {MessageContent: JSON.stringify(messageObj)},
+                    trigger: true
+                }, {
+                    onSuccess: (data: any) => {
+                        const castedData = data as Message[]
+                        setLoadingMessage(false)
+                        handleBOTMessage(castedData[0])
+                    }
+                })
+            }
     }
 
     const onTableSelected = (tableIds: string[], prompt: string) => {
         console.log(tableIds)
         if(!!tableIds && tableIds.length > 0) {
+            
             handleConversation({tableId: tableIds, prompt: prompt}, 'user', 'table_input', undefined, true)
         }
     }
@@ -80,6 +74,8 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
                 newProperties: config.newProperties,
                 "addBotResponseToChat": config.trigger
             })
+        }, {
+            onMutate: () => setLoadingMessage(true)
         }
     )
 

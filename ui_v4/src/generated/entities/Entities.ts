@@ -340,7 +340,8 @@ export interface ActionDefinition extends BaseEntity{
 	Config?: string;
 	IsUpdatedAfterSync?: boolean;
 	DeepDiveConfig?: string;
-	TableId?: string
+	TableId?: string;
+	GenerationPrompt?: string
 }
 
 
@@ -480,7 +481,8 @@ export interface ActionParameterInstance extends BaseEntity{
 	ColumnId?: string;
 	ProviderInstanceId?: string;
 	SourceExecutionId?: string;
-	GlobalParameterId?: string
+	GlobalParameterId?: string;
+	PythonSqlQuery?: string
 }
 
 
@@ -531,7 +533,8 @@ export interface TrainingData extends BaseEntity{
 	TargetUser?: string;
 	Author?: string;
 	ParameterValues?: string;
-	UniqueReference?: string
+	UniqueReference?: string;
+	ApplicationId?: string
 }
 
 
