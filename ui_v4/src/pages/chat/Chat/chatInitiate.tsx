@@ -31,7 +31,6 @@ import MessageOutputs from "./MessageOutput/MessageOutput";
 
 const InitiateChat = () => {
     // central data provider context
-    const dataContext = useContext(DataContext);
     const appContext: any = useContext(AppContext);
     const {removeTab, handleNewTabWithId} = useContext(RouteContext)
 
@@ -72,7 +71,6 @@ const InitiateChat = () => {
 
 
     const handleConversationFooter = (message?: any, user?: any, type?: string, chatId?:string) => {
-        console.log('Message from Chat Footer', message)
         chatId && handleConversation(message,user,type, undefined, undefined, undefined, undefined, undefined, chatId)
     }
 
@@ -394,7 +392,7 @@ const InitiateChat = () => {
                                                 <MessageWrapper>
                                                     <MessageOutputs 
                                                     setLoadingMessage={setLoadingMessage}
-                                                    setMessages={handleAddMessage} 
+                                                    handleAddMessage={handleAddMessage} 
                                                     messages={messages}
                                                     loading={loadingMessage} 
                                                     handleDeepDive={handleDeepDive}

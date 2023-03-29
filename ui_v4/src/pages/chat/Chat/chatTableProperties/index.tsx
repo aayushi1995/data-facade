@@ -16,7 +16,6 @@ const column = [{
 const ChatTablePropeties = (props: ChatTablePropertiesProps) => {
     const { Tables } = props
 
-    console.log(Tables.Tables, Tables)
     return (
 
         <Table dataSource={Tables.Tables} columns={column}/>

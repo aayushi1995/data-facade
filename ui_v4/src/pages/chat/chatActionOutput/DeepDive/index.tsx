@@ -196,7 +196,6 @@ const DeepDiveDetails = ({defaultCode, actionExecutionDetailQuery, ResultTableNa
             } else {
                 console.log("Action Definition not found")
             }
-            
         })
     }
 

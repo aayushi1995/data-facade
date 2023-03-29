@@ -89,7 +89,6 @@ const BrowserTab = ({ children }: ChildrenProps) => {
 
 
     const handleChange = (value: string, params?:string) => {
-        console.log(value)
         const tab = routes.find((route: any) => route.key === value);
         setActiveTab(value)
         tab ? navigate(`${value}${tab['params'].substring(0,10)}...`) : params ? navigate(`${value}${params.substring(0,10)}...`) : navigate(value)

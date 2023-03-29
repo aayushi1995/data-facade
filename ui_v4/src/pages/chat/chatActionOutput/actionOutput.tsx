@@ -77,9 +77,15 @@ const ActionOutput = (props: ActionExecutionDetailProps) => {
     },[chatContext?.actionData])
 
 
+
     useEffect(() => {
         setUpdatedBy(actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy || "AI")
     },[actionExecutionDetailQuery?.data?.ActionDefinition?.UpdatedBy])
+
+    useEffect(() => {
+        // props?.sendMessageAsSlack()
+        console.log("SLACK MESSAGES")
+    },[actionExecutionTerminalState])
 
     return ( 
         <ReactQueryWrapper  {...actionExecutionDetailQuery}>

@@ -60,7 +60,6 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
     const onTableSelected = (tableIds: string[], prompt: string) => {
         console.log(tableIds)
         if(!!tableIds && tableIds.length > 0) {
-            
             handleConversation({tableId: tableIds, prompt: prompt}, 'user', 'table_input', undefined, true)
         }
     }
@@ -92,6 +91,7 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
                     messageFeedback: value
                 })
                 handleAddMessage(newChats, chatId)
+                setLoadingMessage(false)
             }
         })
     }
@@ -100,7 +100,6 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
     return (
         <div>
             {messages?.length > 0 && messages?.map((message: IChatMessage, index:number) => {
-
                 const tempArr = messages?.slice(0,index)
                 tempArr?.reverse()
                 // calculate latest message
@@ -165,12 +164,12 @@ const SmartChatBlock = ({ message,handleConversation,  handleDeepDive, onTableSe
                 {type === "action_output" && (JSON.parse(message?.message)?.['executionId']) && 
                     <>
                         <ActionOutput messageFeedback={props?.messageFeedback} 
-                        messageId={id} 
-                        handleDeepDive={handleDeepDive} 
-                        actionExecutionId={message?.message ? JSON.parse(message?.message)?.executionId : null} 
-                        showFooter={true} 
-                        handleLikeDislike={hanldeLikeDislike} 
-                        preMessage={props?.preMessage} fromDeepDive={true}/>
+                            messageId={id} 
+                            handleDeepDive={handleDeepDive} 
+                            actionExecutionId={message?.message ? JSON.parse(message?.message)?.executionId : null} 
+                            showFooter={true} 
+                            handleLikeDislike={hanldeLikeDislike} 
+                            preMessage={props?.preMessage} fromDeepDive={true}/>
                     </>
                 }
                 {type === "action_instance" && message?.message && JSON.parse(message?.message)?.actionInstanceWithParameterInstances?.ParameterInstances && <ActionDefination  

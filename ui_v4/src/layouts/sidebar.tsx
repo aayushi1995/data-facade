@@ -11,6 +11,7 @@ import { SidebarItems } from './utils'
 import { setLocalStorage } from "@/utils"
 import { LogoIcon } from "@/assets/icon.theme"
 import { getUniqueId } from "../utils/getUniqueId"
+// import { GENERATE_URL_PARAMS, SLACK_URL } from "@/settings/config"
 
 const MenuText = styled(Typography)`
     font-size:11px;
@@ -78,6 +79,9 @@ const AppSidebar = () => {
                     items.map((item: any, index: number) => renderMenu(item, selectedKey))
                 }
             </AntMenu>
+            {/* <div>
+                <a href={`${SLACK_URL}?` + GENERATE_URL_PARAMS().toString()}>Connect to Slack</a>
+            </div> */}
         </Sider>
     )
 }

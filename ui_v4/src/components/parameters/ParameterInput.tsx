@@ -355,7 +355,6 @@ export const SlackChannelSingle = (props: SlackChannelSingleInput) => {
             placeholder={props?.inputProps?.parameterName}
             value={selectedChannels?.[0]?.Id || null}
             onChange={(value) => {
-                console.log(value)
                 const selectedChannel = avialableChannels.find(channel => channel.Id === value)
                 onSelectedChannelChange(!!selectedChannel ? [selectedChannel] : undefined)
             }}
@@ -694,12 +693,19 @@ const TableListInput = (props: TableListParameterInput) => {
         setLocalValue(value)
     }
 
+    const [search, setSearch] = useState('')
+
+    const handleSearch = (value:any) => {
+        setSearch(value)
+    }
+
     return (
         <StyledSelect loading={loading} placeholder="Table name"
             style={{width: "100%"}}
             showSearch
             mode="multiple"
             optionFilterProp="children"
+            onSearch={handleSearch}
             // defaultValue={SelectedTables?.map(table => table.Id)}
             value={localValue}
             onChange={(value: any) => {
@@ -717,11 +723,17 @@ const TableListInput = (props: TableListParameterInput) => {
             }}
         >
             {
-                tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
+                search === "" ? tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
                     <StyledOption>
                         {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
                     </StyledOption>
                 </Select.Option>)
+                // chatHistory?.filter((obj:Chat) => obj?.Name?.toLowerCase()?.includes(searchKey.toLowerCase())).map((obj:Chat) => 
+                : tables?.filter((obj) => obj?.DisplayName?.toLowerCase()?.includes(search?.toLocaleLowerCase()))?.map((value, index) => <Select.Option key={index} value={value.Id}>
+                <StyledOption>
+                    {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
+                </StyledOption>
+            </Select.Option>)
             }
         </StyledSelect>
     )
@@ -793,9 +805,6 @@ const TableInput = (props: TableParameterInput) => {
     }
 
    
-
-
-
     const { tables, loading } = useTables({ tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived })
     const { SelectedTable, AvailableTables } = getTableSelectionInfo(tables, selectedTableFilter)
     const { availableProviderInstanceQuery: childNodes, availableProviderDefinitionQuery: parentNodes } = UseFetchProviderInstanceDetailsHook()
@@ -804,6 +813,13 @@ const TableInput = (props: TableParameterInput) => {
     const handleValue = (value:string) => {
         setValue(value)
     }
+    const [displayTables, setDisplayTables] = useState(tables)
+
+    const handleSearch = (value:any) => {
+        setDisplayTables(tables?.filter((obj) => obj?.DisplayName?.toLowerCase()?.includes(value?.toLocaleLowerCase())) || [])
+    }
+
+    
 
     return (
         
@@ -812,6 +828,7 @@ const TableInput = (props: TableParameterInput) => {
             optionFilterProp="children"
             // defaultValue={SelectedTable?.Id}
             value={value}
+            onSearch={handleSearch}
             onChange={(value:any) => {
                 if (value === "NA") {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
@@ -824,19 +841,16 @@ const TableInput = (props: TableParameterInput) => {
                     handleValue(value)
                 }
                 value = { SelectedTable }
-
             }}
         >
-            {
-                tables?.map((value, index) =>  {
-                    return (
-                        <Select.Option key={index} value={value.Id}>
-                            <StyledOption>
-                                {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
-                            </StyledOption>
-                        </Select.Option>
-                    )
-                })
+            {displayTables?.map((value:any, index:number) =>  (
+                 <Select.Option key={index} value={value.Id}>
+                 <StyledOption>
+                     {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
+                 </StyledOption>
+                </Select.Option>
+            )
+            )
                
             }
         </StyledSelect>

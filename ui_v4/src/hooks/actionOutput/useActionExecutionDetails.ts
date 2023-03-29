@@ -33,7 +33,6 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
     }, {
         enabled: false,
         onSuccess: (data: ActionExecution[]) => {
-            console.log('INSIDE HOOK', data)
             setPostProcessedAction(data)
         }
     })
@@ -116,7 +115,6 @@ const useActionExecutionDetails = (props: ActionExecutionDetailProps) => {
     const onTrainModel = () => {
         trainActionDefinition.mutate(actionExecutionDetailQuery?.data?.ActionDefinition?.Id!, {
             onSuccess: () => {
-                console.log('trained')
                 actionExecutionDetailQuery.refetch()
             }
         })

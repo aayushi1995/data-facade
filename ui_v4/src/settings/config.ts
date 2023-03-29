@@ -31,7 +31,7 @@ export const SLACK_URL = "https://slack.com/oauth/v2/authorize";
 export const GENERATE_URL_PARAMS = () => {
   const slackUrlSearchParams = new URLSearchParams();
   slackUrlSearchParams.append("scope", "files:write,chat:write");
-  slackUrlSearchParams.append("redirect_uri", exports.SLACK_REDIRECT_URL);
+  slackUrlSearchParams.append("redirect_uri", SLACK_REDIRECT_URL);
   slackUrlSearchParams.append(
     "client_id",
     process.env.SLACK_APP_CLIENT_ID !== undefined
