@@ -1,4 +1,4 @@
-import { Card, Typography } from "antd";
+import { Card, Row, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import styled from "styled-components";
 
@@ -61,15 +61,14 @@ text-align: left;
 color: #4B5563;
 `
 export const ConnectionCard = styled(Card)`
-width: 100%;
-min-width:500px;
+max-width:500px;
 height: 230px;
 background: #FFFFFF;
 border: 1px solid #E5E7EB;
 border-radius: 10px;
 cursor: pointer;
 &:hover {
-  box-shadow: 0 0 8px rgba(0,128,255,1);; 
+  box-shadow: 0 0 8px rgba(0,128,255,1); 
 }
 `
 export const LastSyncMsg = styled(Typography)`
@@ -105,4 +104,52 @@ color: #6B7280;
 
 export const DilogTypoContaioner = styled.div`
 margin : 20px 0px 20px 0px;
+`
+export const TableNameTypo = styled(Typography)`
+margin-top:5px ;
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 21px;
+letter-spacing: 0.02em;
+color: #374151;
+`
+
+export const StyledRow = styled(Row)`
+margin : 10px 0px 0px 5px;
+cursor:pointer;
+padding: 5px;
+border-radius: 8px;
+&:hover{
+    border: 1px solid #0770E3;
+    background-color: #EFF8FD;
+}
+`
+export const StyledRow2 = styled(Row)`
+margin : 10px 0px 0px 0px;
+cursor:pointer;
+border-radius: 8px;
+`
+export const TableOwnerNameTypo = styled(Typography)`
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 20px;
+letter-spacing: 0.02em;
+color: #6B7280;
+`
+
+export const StyledCertify = styled.div`
+padding: 5px 10px 5px 10px;
+width:150px;
+border-radius: 4px;
+`
+export const CertifyTypo = styled(Typography)`
+margin-left:10px;
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 18px;
+text-align: center;
+color: #FFFFFF;
 `

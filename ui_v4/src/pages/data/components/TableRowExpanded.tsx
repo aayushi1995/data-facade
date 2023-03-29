@@ -47,7 +47,7 @@ const TableRowExpanded = (props: TableRowExpandedProps) => {
                         <TableSummary TableId={tableDetailData?.Id}/>
                     </Col>
                     <Col span={24}>
-                        <TableView showBTN={true} TableId={tableDetailData?.Id}/>
+                        <TableView showBTN={false} TableId={tableDetailData?.Id}/>
                     </Col>
                 </Row>
             </ReactQueryWrapper>

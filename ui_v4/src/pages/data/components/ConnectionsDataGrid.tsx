@@ -24,9 +24,10 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 // import { ViewFailedActionExecution } from "../../../../common/components/action_execution/view_action_execution/VIewActionExecution";
 import { ConnectionDialogContent, ProviderIcon } from './ConnectionDialogContent';
-import { CardUniqeName, ConnectionCard, ConnectorCardHeader, LastSyncMsg, NumTableDetails, StyledIconContainer } from './ConnectionPage.style';
+import { CardUniqeName, ConnectionCard, ConnectorCardHeader, LastSyncMsg, NumTableDetails, StyledIconContainer, StyledRow, TableNameTypo } from './ConnectionPage.style';
 import { IconStack } from './constants';
 import TableDetails from './TableDetails';
+import TableChatIcon from '@/assets/icons/table_chart.svg'
 // type DataGridRow = ProviderCardView & {id?: string} & {providerName?: string}
 interface DataGridRow {
     [key: string]: any;
@@ -179,7 +180,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
     const [tableVisible , setTableVisible] = useState<boolean>(false)
     useEffect(()=>{
         if(connectionVisible && tableVisible){
-            setSize([50,50])
+            setSize([40,50])
             setVisibleTab('tables')
         }else if(connectionVisible && !tableVisible){
             setSize([96,3])
@@ -203,18 +204,18 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
     const { Panel } = Collapse;
     const DataItemsCard = (props: { ProviderDefinition: { Id: any; }; ProviderInstance: ProviderInstance | undefined; ProviderInstanceStat: ProviderInstanceStat | undefined; SyncActionInstance: ActionInstance | undefined; })=>{
         const tableQuery = useGetTables({ options: {}, tableFilter:{ProviderInstanceID:  props.ProviderInstance?.Id}})
-    
+        const [showTablesOp , setShowTablesOp] = useState<boolean>(false)
         return(<>
-        <ConnectionCard>
+        <ConnectionCard style={{boxShadow:showTablesOp?'0 0 8px rgba(0,128,255,1)':'' }} onClick={()=>setShowTablesOp(!showTablesOp)}>
                     <ConnectionCell providerDefination={props?.ProviderDefinition} providerInstance={props?.ProviderInstance} providerInstancestat={props?.ProviderInstanceStat} handleForceSync={handleForceSync} syncActionInstance={props?.SyncActionInstance}/>
                     
                     {/* <DefaultProviderCell providerInstance={row?.ProviderInstance!}/> */}
         </ConnectionCard>
-        <div>
-                {/* {tableQuery.data?.map(tab=>
-                    <div onClick={()=>{history(`/data/${tab.TableUniqueName}?tabKey=${tab.TableUniqueName}`);setTableVisible(true)}}>{tab.TableUniqueName}</div>
-                    )} */}
-            </div>
+        {showTablesOp && <div>
+                {tableQuery.data?.map(tab=>
+                    <StyledRow  onClick={()=>{history(`/data/${tab.TableUniqueName}?tabKey=${tab.TableUniqueName}`);setTableVisible(true)}}><img style={{margin:'0px 10px 0px 0px'}} src={TableChatIcon}/><TableNameTypo>{tab.TableUniqueName}</TableNameTypo></StyledRow>
+                    )}
+            </div>}
         </>
         )
     }
@@ -225,9 +226,9 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                 <>
                 
                     <Panel style={{borderBottom:'1px solid #E5E7EB'}} header={<DataSourceCell providerName={rowd[0]?.ProviderDefinition?.UniqueName} />} key={rowd[0]?.ProviderDefinition?.Id ||""}>
-                    <Row gutter={16}>
+                    <Row gutter={[16,16]}>
                     {rowd.map((row: { ProviderDefinition: { Id: any; }; ProviderInstance: ProviderInstance | undefined; ProviderInstanceStat: ProviderInstanceStat | undefined; SyncActionInstance: ActionInstance | undefined; })=>
-                    <Col span={8}>
+                    <Col span={tableVisible?24:8}>
                         <DataItemsCard ProviderDefinition={row.ProviderDefinition} ProviderInstance={row?.ProviderInstance} ProviderInstanceStat={row?.ProviderInstanceStat} SyncActionInstance={row?.SyncActionInstance}/>
                     {/* <ConnectionCard>
                     <ConnectionCell providerDefination={row.ProviderDefinition} providerInstance={row?.ProviderInstance} providerInstancestat={row?.ProviderInstanceStat} handleForceSync={handleForceSync} syncActionInstance={row?.SyncActionInstance}/>
@@ -310,7 +311,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                 <ChatWrapperStyled>
                     {connectionVisible && 
                     <>
-                <LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace} />
+                {tableVisible?<></>:<LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace} />}
                     <div style={{ margin: '30px 0px 0px 0px' }}>
                         {DataCards()}
                     </div></>

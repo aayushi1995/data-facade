@@ -4,7 +4,7 @@ import { labels } from '@/helpers/constant';
 import DatafacadeDatatype from '@/helpers/enums/DatafacadeDatatype';
 import { useTableAndColumnStats } from '@/hooks/tableView/ColumnInfoViewHooks';
 import TableComponent from '@/pages/chat/chatActionOutput/TableChartComponent/TableComponent';
-import { DownOutlined, MoreOutlined } from '@ant-design/icons';
+import { DownOutlined, MoreOutlined, SearchOutlined } from '@ant-design/icons';
 import { Card, Col, Divider, Input, Popover, Progress, Row, Select, Table, Tag, Tooltip, Typography } from 'antd';
 import React, { ChangeEvent, useState } from "react";
 import { formDataGridPropsFromResponse, isDataGridRenderPossible, useColumn, useColumnDataTypeMutation, useTableView } from './TableViewHooks';
@@ -31,24 +31,25 @@ const TableView = (props: { TableId?: string ,showBTN?:boolean }) => {
     
     const dataColumn = tableProps.columns;
     return (
-        <div>
+        <Card>
             <Row>
                 <Col span={24}>
                     <Input
+                        prefix={<SearchOutlined style={{color:"#9CA3AF"}}/>} 
+                        size="large"
                         value={searchQuery}
+                        placeholder="Search columns"
                         onChange={handleSearchChange} />
+                        
                 </Col>
                 {props.showBTN &&
                 <Col span={24}>
-                    <Card>
                         <div>
                             {/* <RunWorkflowButton TableId={props.TableId} /> */}
                         </div>
-                    </Card>
                 </Col>
                 } 
             </Row>
-            <Card>
                 <div>
                     <ReactQueryWrapper
                         isLoading={tableViewQuery.isLoading}
@@ -66,8 +67,7 @@ const TableView = (props: { TableId?: string ,showBTN?:boolean }) => {
                             </>
                         </ReactQueryWrapper>
                 </div>
-            </Card>
-        </div>
+        </Card>
     )
 }
 

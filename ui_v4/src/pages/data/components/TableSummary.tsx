@@ -6,6 +6,9 @@ import { useTableAndColumnStats } from '@/hooks/tableView/ColumnInfoViewHooks';
 import React from "react";
 import { relativeTimeFromTimestamp, useProviderDefinitionForTable, useTable, useTableCertificationMutation, useTableDescriptionMutation } from "@/hooks/tableView/TableSummaryHooks";
 import { Card, Col, Input, Progress, Row, Tooltip, Typography } from 'antd';
+import { CertifyTypo, StyledCertify, StyledRow, StyledRow2, TableNameTypo, TableOwnerNameTypo } from './ConnectionPage.style';
+import TableChatIcon from '@/assets/icons/table_chart.svg'
+import CertifyIcon from '@/assets/icons/certifyIcon.svg'
 export type TableSummaryProps = {
     TableId?: string
 }
@@ -33,13 +36,13 @@ const TableSummary = (props: TableSummaryProps) => {
                 </Col>
                 <Col span={24}>
                     <Row>
-                        <Col span={24} >
+                        {/* <Col span={24} >
                             <Card>
                                 <div>
                                     <TableHighLevelInfo TableId={props.TableId} />
                                 </div>
                             </Card>
-                        </Col>
+                        </Col> */}
                         {/* <Grid item xs={12} >
                             <Card sx={{ height: '8vh', borderRadius: '5px' }}>
                                 {!!health &&
@@ -111,40 +114,35 @@ const TableDescriptionEditor = (props: TableDescriptionEditorProps) => {
                         </Avatar>
                     </div> */}
                     <div>
-                        <div>
-                            <Typography>{TableName}</Typography>
-                        </div>
-                        <div className="meta">
-                            <div>
-                                <Typography>
-                                    <span>By {tableQuery.data?.Owner}</span>
-                                    <span> | </span>
-                                </Typography>
-
-                                <Typography>
-                                    <span>Updated {relativeTimeFromTimestamp(tableQuery.data?.ModifiedOn)}</span>
-
-                                </Typography>
-                                <span> | </span>
-                                <div>
-                                    <Tooltip title={isCertifiedTable ? "Click to Remove Certification" : "Click to Certify Table"}>
-                                        <div>
-                                            {tableCertificationStatusUpdateMutation.isLoading ?
-                                                <>Loading</>
+                        <StyledRow2><img style={{margin:'0px 10px 0px 0px'}} src={TableChatIcon}/>
+                            <TableNameTypo>{TableName}</TableNameTypo>
+                            <Tooltip title={isCertifiedTable ? "Click to Remove Certification" : "Click to Certify Table"}>
+                                <div style={{ marginLeft: 'auto' }}>
+                                    
+                                <StyledCertify style={{backgroundColor:isCertifiedTable?'#10B981':'#EF4444'}} onClick={() => toggleCertification()} >
+                                    {tableCertificationStatusUpdateMutation.isLoading ?
+                                       <Row><img src={CertifyIcon}/><CertifyTypo>Loading</CertifyTypo></Row>
+                                        :<>
+                                            {isCertifiedTable ?
+                                                <Row><img src={CertifyIcon}/> <CertifyTypo>Cerified</CertifyTypo></Row>
                                                 :
-                                                <div onClick={() => toggleCertification()} >
-                                                    {isCertifiedTable ?
-                                                        <>cerified</>
-                                                        :
-                                                        <>Not certified</>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
-                                    </Tooltip>
+                                                <Row><img src={CertifyIcon}/> <CertifyTypo>Not Certified</CertifyTypo></Row>
+                                            }</>
+                                        
+                                    }
+                                    </StyledCertify>
                                 </div>
+                            </Tooltip>
+                                        
+                        </StyledRow2>
+                            <div>
+                                <TableOwnerNameTypo>
+                                    Table Owner
+                                </TableOwnerNameTypo>
+                                <TableOwnerNameTypo>
+                                    {tableQuery.data?.Owner}
+                                </TableOwnerNameTypo>
                             </div>
-                        </div>
                     </div>
 
                 </div>
