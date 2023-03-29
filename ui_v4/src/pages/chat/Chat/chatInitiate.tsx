@@ -127,7 +127,7 @@ const InitiateChat = () => {
                             if(response.length > 0){
                                 let {messagesArray} = postProcessingFetchingMessage(response)
                                 messagesArray.length > 0 && handleAddMessage([defaultBotMessage(appContext?.userName), ...messagesArray], chatId)
-        
+                                conversationStarted.current = true
                             } else { 
                                 handleDummyDataAdding()
                             }

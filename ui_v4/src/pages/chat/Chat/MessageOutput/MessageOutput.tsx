@@ -86,13 +86,12 @@ const MessageOutputs = ({  handleAddMessage, loading, setLoadingMessage,  handle
             trigger: false
         }, {
             onSuccess: () => {
+
                 let newChats = messages && messages?.map((message:any) => message.id !== id ? message : {
                     ...message,
                     messageFeedback: value
                 })
                 handleAddMessage(newChats, chatId)
-
-                // setMessages((messages: IChatMessage[]) => )
             }
         })
     }

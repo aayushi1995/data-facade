@@ -6,7 +6,7 @@ import useFetchColumnsForTableAndTags from "@/hooks/useFetchColumnsForTableAndTa
 import useSlackChannelInput from "@/hooks/useSlackChannelInput"
 import useTables from "@/hooks/useTables"
 import { Input, Select } from "antd"
-import React, { ChangeEvent } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import styled from 'styled-components'
 import { ReactComponent as PostgreSQLIcon } from "@assets/icons/postgreSQL.svg"
 import { ReactComponent as SnowFlakeIcon } from "@assets/icons/snowflake.svg"
@@ -688,23 +688,32 @@ const TableListInput = (props: TableListParameterInput) => {
     const { AvailableTables, SelectedTables } = getTableSelectionInfo(tables, selectedTableFilters)
     const { availableProviderInstanceQuery: childNodes, availableProviderDefinitionQuery: parentNodes } = UseFetchProviderInstanceDetailsHook()
 
+    const [localValue, setLocalValue] = useState<any[] | undefined>(SelectedTables?.map(table => table?.Id))
+    
+    const handleSetLocalValue = (value:string[]) => {
+        setLocalValue(value)
+    }
+
     return (
         <StyledSelect loading={loading} placeholder="Table name"
             style={{width: "100%"}}
             showSearch
             mode="multiple"
             optionFilterProp="children"
-            defaultValue={SelectedTables?.map(table => table.Id)}
+            // defaultValue={SelectedTables?.map(table => table.Id)}
+            value={localValue}
             onChange={(value: any) => {
                 if (value === "NA") {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange([table])
+                    handleSetLocalValue(value)
                 } else {
-                    const tables: TableProperties[] = value?.map((tableId: string) => AvailableTables?.find(table => table.Id === tableId))
+                    const tables: TableProperties[] = value?.map((tableId: string) => AvailableTables && AvailableTables?.find(table => table.Id === tableId))
                     onChange(!!value ? [...tables] : undefined)
+                    handleSetLocalValue(value)
                 }
                 value = { SelectedTables }
-
+                
             }}
         >
             {
@@ -790,21 +799,29 @@ const TableInput = (props: TableParameterInput) => {
     const { tables, loading } = useTables({ tableFilter: props?.inputProps?.availableTablesFilter || {}, filterForParameterTags: true, parameterId: parameterDefinitionId, handleOnSucces: handleTablesReceived })
     const { SelectedTable, AvailableTables } = getTableSelectionInfo(tables, selectedTableFilter)
     const { availableProviderInstanceQuery: childNodes, availableProviderDefinitionQuery: parentNodes } = UseFetchProviderInstanceDetailsHook()
-    
+    const [value, setValue] = useState<string | undefined>(SelectedTable?.Id)
+
+    const handleValue = (value:string) => {
+        setValue(value)
+    }
+
     return (
         
         <StyledSelect loading={loading} placeholder="Table name"
             showSearch
             optionFilterProp="children"
-            defaultValue={SelectedTable?.Id}
+            // defaultValue={SelectedTable?.Id}
+            value={value}
             onChange={(value:any) => {
                 if (value === "NA") {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange(table)
+                    handleValue(value)
                 } else {
-                    const table = AvailableTables?.find(table => table.Id === value)
+                    const table = AvailableTables?.find(table => table?.Id === value)
                     onChange(!!value ? { ...table } : undefined)
                     console.log(table)
+                    handleValue(value)
                 }
                 value = { SelectedTable }
 

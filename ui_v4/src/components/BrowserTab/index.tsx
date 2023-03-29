@@ -8,6 +8,7 @@ import { Button, Dropdown } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Tabs } from 'antd';
 import { NavigationTabs } from './navigationtab.style';
 
 interface ChildrenProps {
@@ -155,6 +156,8 @@ const BrowserTab = ({ children }: ChildrenProps) => {
             removeTab(targetKey);
         }
     };
+
+    const TabPane = Tabs.TabPane;
 
     return (
         <React.Fragment>

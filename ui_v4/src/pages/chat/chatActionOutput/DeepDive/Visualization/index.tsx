@@ -27,6 +27,7 @@ const Visualization = ({tableName}:any) => {
     
     return (
         <div>
+            <div>Create a custom chart from table data using our styling options and select X and Y axes for a clear visual representation of your data:</div>
             {showOptions && <ModalOptions columns={columns} showChartModal={showOptions} setShowChartModal={setOptions} handleChartData={handleChartData} tableName={tableName}/>}
             {showChart && (
                 <div>

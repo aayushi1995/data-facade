@@ -3,7 +3,7 @@ import { FlexBox } from '@/pages/chat/ChatFooter/ChatFooter.styles'
 import { Button, Select } from 'antd'
 import React, { useContext, useMemo, useState } from 'react'
 import { getData } from '../../../../utils'
-import { SelectWrapper } from './ChartOptions.styles'
+import { SelectWrapper, StyledLabel } from './ChartOptions.styles'
 
 
 const ChartOptions = ({type, tableName, ...props}:any) => {
@@ -321,12 +321,12 @@ const CommonSelectOptions = ({label, options, onChange}:any) => {
     console.log(options)
     return (
         <SelectWrapper>
-                <label>{label}</label>
-                    <Select
+                <StyledLabel>{label}</StyledLabel>
+                <Select
                         style={{ width: '100%' }}
                         onChange={onChange}
                         options={options}
-                    />
+                />
         </SelectWrapper>
     )
 }

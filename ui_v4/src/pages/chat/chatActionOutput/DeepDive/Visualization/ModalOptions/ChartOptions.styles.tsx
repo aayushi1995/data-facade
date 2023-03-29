@@ -1,4 +1,4 @@
-import { Button } from 'antd'
+import { Button, Select } from 'antd'
 import styled from 'styled-components'
 
 
@@ -14,7 +14,7 @@ export const ChartConfigModalStyled = styled.div`
 export const SelectWrapper = styled.div`
     padding: 10px;
     font-size: 14px;
-    display:flex;
+    width:100%;
     
     & > label {
         min-width: 100px;
@@ -44,4 +44,26 @@ export const SelectedValueStyled = styled.div`
     & > input {
         width:200px;
     }
+`
+
+export const StyledLabel = styled.div`
+    font-weight:600;
+`
+export const ChartTypeSelectWrapper = styled.div`
+    display:block;
+
+`
+export const ChartTypeSelect = styled(Select)`
+`
+export const ChartTypeBlock = styled.div`
+    display: flex;
+    height: 100px;
+    width: 100px;
+    align-items: center;
+    flex-direction: column;
+    & > div {
+          word-wrap: break-word;
+    }
+}
+
 `

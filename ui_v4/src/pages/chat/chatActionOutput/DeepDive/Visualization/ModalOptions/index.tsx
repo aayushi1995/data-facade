@@ -3,7 +3,7 @@ import { Button, Modal, Popover, Select, Switch, Typography } from 'antd'
 import React, { useState } from 'react'
 import { getData } from '../../../../utils'
 import ChartOptions from './ChartOptions'
-import { ChartConfigModalStyled, SelectWrapper, StyledOptionWrap, OptionWrapperStyled, SelectedValueStyled} from './ChartOptions.styles'
+import { ChartConfigModalStyled, SelectWrapper, StyledLabel, ChartTypeSelectWrapper, ChartTypeSelect, ChartTypeBlock} from './ChartOptions.styles'
 import { ReactComponent as LineIcon } from '@assets/icons/line.svg'
 import { ReactComponent as LineAggregrateIcon } from '@assets/icons/line.svg'
 import { ReactComponent as BarIcon } from '@assets/icons/bar.svg'
@@ -12,8 +12,7 @@ import { ReactComponent as PieIcon } from '@assets/icons/pie.svg'
 import { ReactComponent as AggregratePieIcon } from '@assets/icons/aggregratePie.svg'
 import { ReactComponent as LineBarIcon } from '@assets/icons/line.svg'
 import { ReactComponent as ScatterIcon } from '@assets/icons/scatter.svg'
-import Input from 'antd/es/input/Input'
-import { DownOutlined } from '@ant-design/icons'
+import './styles.css'
 
 
 
@@ -32,33 +31,30 @@ const ModalOptions = ({ handleChartData, tableName }:any) => {
         <>
             <ChartConfigModalStyled>
                 <SelectWrapper>
+                    <ChartTypeSelectWrapper>
+                        <StyledLabel>Chart Type *</StyledLabel>
+                        <ChartTypeSelect
+                            
+                            style={{width:'100%'}}
+                            onChange={handleChartType}
+                            value={chartType}
+                        >
+                        
+                            {types?.map((obj:any) => {
+                                return (
+                                    <Select.Option key={obj?.value} className="ChartTypeOptions">
+                                        <ChartTypeBlock>
+                                            <div className='charticon'>{getIcon(obj?.value)}</div>
+                                            <div>{obj?.label}</div>
+                                        </ChartTypeBlock>
+                                    </Select.Option>
+                                )
+                            })}
+                       
+                        
 
-                    <label>Chart Type</label>
-
-                    <Select
-                        style={{width:'100%'}}
-                        onChange={handleChartType}
-                        options={types}
-                    />
-                    {/* <SelectedValueStyled onClick={handleShowSelect}>
-                        <Input type="text" value={chartType?.label || "Choose Chart Type"} width="300px" />
-                        <DownOutlined />
-                    </SelectedValueStyled>
-
-                    {showSelect && 
-                        <StyledOptionWrap>
-                            {types?.map((chartType:any) => (
-                                <Select.Option>
-                                        <OptionWrapperStyled onClick={() => handleChartType(chartType?.value)}>
-                                            <div>{getIcon(chartType?.value)}</div>
-                                            <div>{chartType?.label}</div>
-                                        </OptionWrapperStyled>
-                                </Select.Option>
-                            ))}
-                        </StyledOptionWrap>
-                    } */}
-
-
+                        </ChartTypeSelect>
+                    </ChartTypeSelectWrapper>
                 </SelectWrapper>
                 {chartType && <ChartOptions type={chartType} handleChartData={handleChartData} tableName={tableName}/>}
                 
@@ -108,31 +104,31 @@ const types = [{
 const getIcon = (id:string) => {
     switch (id) {
         case "line": {
-            return <LineIcon width="20" height="30"/>
+            return <LineIcon width="50" height="50"/>
         }
         case "aggregrateLine": {
-            return <LineAggregrateIcon width="20" height="30"/>
+            return <LineAggregrateIcon width="50" height="50"/>
         }
         case "bar": {
-            return <BarIcon width="20" height="30"/>
+            return <BarIcon width="50" height="50"/>
         }
         case "aggregrateBar": {
-            return <AggregrateBarIcon width="20" height="30"/>
+            return <AggregrateBarIcon width="50" height="50"/>
         }
         case "pie": {
-            return <PieIcon width="20" height="30"/>
+            return <PieIcon width="50" height="50"/>
         }
         case "aggregratePie": {
-            return <AggregratePieIcon width="20" height="30"/>
+            return <AggregratePieIcon width="50" height="50"/>
         }
         case "linebar": {
-            return <LineBarIcon width="20" height="30"/>
+            return <LineBarIcon width="50" height="50"/>
         }
         case "scatter": {
-            return <ScatterIcon width="20" height="30"/>
+            return <ScatterIcon width="50" height="50"/>
         }
         default: {
-            <LineAggregrateIcon width="20" height="30"/>
+            <LineAggregrateIcon width="50" height="50"/>
         }
     }
 }

@@ -1,0 +1,16 @@
+
+
+.rc-virtual-list-holder-inner {
+    display:block !important;
+}
+.ant-select-item:not(.ChartTypeOptions) {
+    display: flex !important;
+    width: 100%;
+
+}
+.ant-select-selection-item .charticon{
+    display:none !important;
+}
+.ChartTypeOptions {
+    display:inline-flex !important;
+}
