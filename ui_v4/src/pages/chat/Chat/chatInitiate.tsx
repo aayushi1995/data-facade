@@ -349,7 +349,8 @@ const InitiateChat = () => {
                     RenderTemplate: false,
                     RenderedTemplate: `select * from "${tablename}" limit 100`
                 },
-                actionExecutionToBeCreatedId: newExecutedId
+                actionExecutionToBeCreatedId: newExecutedId,
+                localDb: true
         }
         createActionInstanceAsyncMutation.mutate((obj as unknown as MutationContext), {
             onSuccess: () => {

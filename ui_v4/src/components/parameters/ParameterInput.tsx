@@ -693,14 +693,13 @@ const TableListInput = (props: TableListParameterInput) => {
             style={{width: "100%"}}
             showSearch
             mode="multiple"
-            optionFilterProp="children"
             defaultValue={SelectedTables?.map(table => table.Id)}
             onChange={(value: any) => {
                 if (value === "NA") {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange([table])
                 } else {
-                    const tables: TableProperties[] = value?.map((tableId: string) => AvailableTables?.find(table => table.Id === tableId))
+                    const tables: TableProperties[] = value?.map((tableUniqueName: string) => AvailableTables?.find(table => table.UniqueName === tableUniqueName))
                     onChange(!!value ? [...tables] : undefined)
                 }
                 value = { SelectedTables }
@@ -708,7 +707,7 @@ const TableListInput = (props: TableListParameterInput) => {
             }}
         >
             {
-                tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
+                tables?.map((value, index) => <Select.Option key={index} value={value.UniqueName}>
                     <StyledOption>
                         {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
                     </StyledOption>
@@ -802,7 +801,7 @@ const TableInput = (props: TableParameterInput) => {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange(table)
                 } else {
-                    const table = AvailableTables?.find(table => table.Id === value)
+                    const table = AvailableTables?.find(table => table.UniqueName === value)
                     onChange(!!value ? { ...table } : undefined)
                     console.log(table)
                 }
@@ -813,7 +812,7 @@ const TableInput = (props: TableParameterInput) => {
             {
                 tables?.map((value, index) =>  {
                     return (
-                        <Select.Option key={index} value={value.Id}>
+                        <Select.Option key={index} value={value.UniqueName}>
                             <StyledOption>
                                 {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
                             </StyledOption>
