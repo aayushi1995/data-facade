@@ -24,7 +24,7 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 // import { ViewFailedActionExecution } from "../../../../common/components/action_execution/view_action_execution/VIewActionExecution";
 import { ConnectionDialogContent, ProviderIcon } from './ConnectionDialogContent';
-import { CardUniqeName, ConnectionCard, ConnectorCardHeader, LastSyncMsg, NumTableDetails, StyledIconContainer, StyledRow, TableNameTypo } from './ConnectionPage.style';
+import { CardUniqeName, ConnectionCard, ConnectorCardHeader, DataLeftContainer, LastSyncMsg, NumTableDetails, StyledIconContainer, StyledRow, TableNameTypo } from './ConnectionPage.style';
 import { IconStack } from './constants';
 import TableDetails from './TableDetails';
 import TableChatIcon from '@/assets/icons/table_chart.svg'
@@ -308,7 +308,7 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
         <DraggableSlider
             size={[...size]}
             leftChild={
-                <ChatWrapperStyled>
+                <DataLeftContainer>
                     {connectionVisible && 
                     <>
                 {tableVisible?<></>:<LandingPageHeader HeaderTitle={HEADER_ENUMS.title} HeaderDesc={HEADER_ENUMS.desc} BtnText={HEADER_ENUMS.btnText} HeaderPage={HEADER_ENUMS.page} IpPlaceholder={HEADER_ENUMS.Ipplace} />}
@@ -316,12 +316,12 @@ export const ConnectionsDataGrid = (props: ConnectionDataGridProps) => {
                         {DataCards()}
                     </div></>
             }
-                </ChatWrapperStyled>
+                </DataLeftContainer>
             }
             rightChild={
-                <>
+                <DataLeftContainer>
                 {tableVisible && <><TableDetails/></>}
-                </>
+                </DataLeftContainer>
             }
             iconStack={IconStack(handleTabClick)}
             activeTab={visibleTab}

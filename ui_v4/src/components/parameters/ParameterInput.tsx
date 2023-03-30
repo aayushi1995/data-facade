@@ -704,17 +704,14 @@ const TableListInput = (props: TableListParameterInput) => {
             style={{width: "100%"}}
             showSearch
             mode="multiple"
-            optionFilterProp="children"
-            onSearch={handleSearch}
-            // defaultValue={SelectedTables?.map(table => table.Id)}
-            value={localValue}
+            defaultValue={SelectedTables?.map(table => table.Id)}
             onChange={(value: any) => {
                 if (value === "NA") {
                     const table = { UniqueName: value?.UniqueName?.substring(0, value?.UniqueName?.length - 21) }
                     onChange([table])
                     handleSetLocalValue(value)
                 } else {
-                    const tables: TableProperties[] = value?.map((tableId: string) => AvailableTables && AvailableTables?.find(table => table.Id === tableId))
+                    const tables: TableProperties[] = value?.map((tableUniqueName: string) => AvailableTables?.find(table => table.UniqueName === tableUniqueName))
                     onChange(!!value ? [...tables] : undefined)
                     handleSetLocalValue(value)
                 }
@@ -723,17 +720,11 @@ const TableListInput = (props: TableListParameterInput) => {
             }}
         >
             {
-                search === "" ? tables?.map((value, index) => <Select.Option key={index} value={value.Id}>
+                tables?.map((value, index) => <Select.Option key={index} value={value.UniqueName}>
                     <StyledOption>
                         {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
                     </StyledOption>
                 </Select.Option>)
-                // chatHistory?.filter((obj:Chat) => obj?.Name?.toLowerCase()?.includes(searchKey.toLowerCase())).map((obj:Chat) => 
-                : tables?.filter((obj) => obj?.DisplayName?.toLowerCase()?.includes(search?.toLocaleLowerCase()))?.map((value, index) => <Select.Option key={index} value={value.Id}>
-                <StyledOption>
-                    {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID, )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
-                </StyledOption>
-            </Select.Option>)
             }
         </StyledSelect>
     )
@@ -835,7 +826,7 @@ const TableInput = (props: TableParameterInput) => {
                     onChange(table)
                     handleValue(value)
                 } else {
-                    const table = AvailableTables?.find(table => table?.Id === value)
+                    const table = AvailableTables?.find(table => table.UniqueName === value)
                     onChange(!!value ? { ...table } : undefined)
                     console.log(table)
                     handleValue(value)
@@ -843,14 +834,16 @@ const TableInput = (props: TableParameterInput) => {
                 value = { SelectedTable }
             }}
         >
-            {displayTables?.map((value:any, index:number) =>  (
-                 <Select.Option key={index} value={value.Id}>
-                 <StyledOption>
-                     {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
-                 </StyledOption>
-                </Select.Option>
-            )
-            )
+            {
+                tables?.map((value, index) =>  {
+                    return (
+                        <Select.Option key={index} value={value.UniqueName}>
+                            <StyledOption>
+                                {getIconForProviderInstance(childNodes?.data as unknown as any, value?.ProviderInstanceID )} <span style={{paddingLeft:'20px', }}> {value.SchemaName ? value.SchemaName + "." + value.DisplayName : value.DisplayName}</span>
+                            </StyledOption>
+                        </Select.Option>
+                    )
+                })
                
             }
         </StyledSelect>

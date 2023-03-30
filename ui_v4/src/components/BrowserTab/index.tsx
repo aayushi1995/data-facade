@@ -4,7 +4,7 @@ import { getUniqueId } from "@/utils/getUniqueId";
 import { ConnectionButton } from '@/pages/chat/ChatFooter/ChatFooter.styles';
 import { removeLocalStorage, setLocalStorage } from '@/utils';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Dropdown } from 'antd';
+import { Button, Dropdown, Tabs, Tooltip } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -167,9 +167,22 @@ const BrowserTab = ({ children }: ChildrenProps) => {
                     onChange={handleChange}
                     activeKey={activeTab}
                     onEdit={onEdit}
-                    items={routes}
                     addIcon={<AddMenu handleNewTab={handleNewTab} />}
-                />
+                >
+                    {routes.map((pane:any) => (
+                            <Tabs.TabPane
+                            key={pane.key}
+                            tab={
+                                <Tooltip title={pane.label}>
+                                <div>{pane.label}</div>
+                                </Tooltip>
+                            }
+                            >
+                            {pane.children}
+                            </Tabs.TabPane>
+                        ))}
+                </NavigationTabs>
+
             }
             <RouteContext.Provider value={{
                     routes: routes,

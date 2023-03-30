@@ -58,7 +58,9 @@ const AppHeader = () => {
         <Affix offsetTop={0}>
             <Header style={LAYOUT_STYLE.header}>
                 <Row gutter={36}>
-                    <Col span={12} offset={6}>{InputBox()}</Col>
+                    <Col span={12} offset={6}>
+                        {/* {InputBox()} */}
+                        </Col>
                     <Col span={6}>
                         <Row justify="end" gutter={18}>
                             <Col>
