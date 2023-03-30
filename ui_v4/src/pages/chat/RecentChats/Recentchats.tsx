@@ -88,10 +88,10 @@ export const RecenetChats = ()=>{
             <Col span={5} style={{paddingRight:'20px'}}>
             <Input
                         prefix={<SearchOutlined style={{color:"#9CA3AF"}}/>} size="large"
-                        id="search connector"
+                        id="search Chats"
                         value={searchText}
                         onChange={handleSearchChange}
-                        placeholder="Search Connector"
+                        placeholder="Search for a Chat"
                         style={InputStyle} 
                     />
             </Col>

@@ -22,7 +22,7 @@ const ChatBlock = ({message, id, type, ...props}:any) => {
             <FlexBox style={{alignItems: 'flex-end'}}>
                 <div>
                     {(type=='recommended_actions' || type=='confirmation' || type == "error")?<></>:
-                        <ChatMetaData {...props}><StyledUserName>{props?.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(Number.isNaN(props.time) ? new Date() : props.time)}</StyledTime></ChatMetaData>
+                        <ChatMetaData {...props}><StyledUserName>{props?.username || 'DataFacade'} </StyledUserName> <StyledTime>{getTime(props.time || new Date())}</StyledTime></ChatMetaData>
                     }
                     
                     <ChatStyles {...props} key={id} type={type}>{type === "error" && <WarningIcon width="50"/>} {props?.children === undefined ? message : props?.children}</ChatStyles>

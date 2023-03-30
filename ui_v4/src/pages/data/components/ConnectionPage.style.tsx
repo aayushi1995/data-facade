@@ -153,3 +153,10 @@ line-height: 18px;
 text-align: center;
 color: #FFFFFF;
 `
+export const DataLeftContainer = styled.div`
+    position: relative;
+    height:85vh;
+    width: 100%;
+    overflow:scroll;
+
+`

@@ -8,8 +8,8 @@ export const SidebarItems = () => [
 { key: 'home', text: 'Home', location: '/', icon: HomeIcon },
 { key: 'chats', text: 'Chats', location: '/chats/land', icon: ChatIcon },
 { key: 'data', text: 'Data', location: '/data', icon: DatabaseIcon },
-{ key: 'playground', text: 'Playground', location: '/playground/land', icon: PlaygroundIcon },
-{ key: 'apps', text: 'Apps', location: '/apps', icon: GridViewIcon },
+// { key: 'playground', text: 'Playground', location: '/playground/land', icon: PlaygroundIcon },
+// { key: 'apps', text: 'Apps', location: '/apps', icon: GridViewIcon },
 ]
 
 // clean data for charts
